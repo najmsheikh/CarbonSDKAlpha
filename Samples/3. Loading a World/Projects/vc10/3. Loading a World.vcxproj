@@ -157,7 +157,7 @@
     <ResourceCompile Include="..\..\Res\Common.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Framework\Projects\vc9\Carbon.vcxproj">
+    <ProjectReference Include="..\..\..\..\Framework\Projects\vc10\Carbon.vcxproj">
       <Project>{457f7cc1-087a-47a4-811b-d0e606cc9c96}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
