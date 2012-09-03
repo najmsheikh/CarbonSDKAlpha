@@ -1,0 +1,39 @@
+--Table: Objects::Base::Light
+
+CREATE TABLE IF NOT EXISTS [Objects::Base::Light] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [DiffuseR] real DEFAULT (1), 
+  [DiffuseG] real DEFAULT (1), 
+  [DiffuseB] real DEFAULT (1), 
+  [DiffuseHDRScalar] real DEFAULT (1), 
+  [SpecularR] real DEFAULT (0), 
+  [SpecularG] real DEFAULT (0), 
+  [SpecularB] real DEFAULT (0), 
+  [SpecularHDRScalar] real DEFAULT (1), 
+  [AmbientR] real DEFAULT (0), 
+  [AmbientG] real DEFAULT (0), 
+  [AmbientB] real DEFAULT (0), 
+  [AmbientHDRScalar] real DEFAULT (1), 
+  [AmbientFarR] REAL DEFAULT (0), 
+  [AmbientFarG] REAL DEFAULT (0), 
+  [AmbientFarB] REAL DEFAULT (0), 
+  [AmbientFarHDRScalar] REAL DEFAULT (1), 
+  [RimR] REAL DEFAULT (0), 
+  [RimG] REAL DEFAULT (0), 
+  [RimB] REAL DEFAULT (0), 
+  [RimHDRScalar] REAL DEFAULT (1), 
+  [LightStage] smallint DEFAULT (2), 
+  [ShadowCastStage] smallint DEFAULT (2), 
+  [SpecularAttenuateBegin] real DEFAULT (0), 
+  [SpecularAttenuateEnd] real DEFAULT (0), 
+  [ShadowAttenuateBegin] real DEFAULT (0), 
+  [ShadowAttenuateEnd] real DEFAULT (0), 
+  [ShadowLODBegin] real DEFAULT (0), 
+  [ShadowLODEnd] real DEFAULT (0));
+
+CREATE TRIGGER IF NOT EXISTS [Objects::Base::Light_OnDelete]
+  BEFORE DELETE
+  ON [Objects::Base::Light]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ImageAtlas>
+  <Source>sys://Interface/Skins/Carbon_Default_Glyphs.dds</Source>
+  <Group>
+    <Image name="RightArrow" x="0" y="0" width="6" height="9"/>
+    <Image name="LeftArrow" x="6" y="0" width="6" height="9"/>
+    <Image name="UpArrow" x="12" y="0" width="9" height="6"/>
+    <Image name="DownArrow" x="21" y="0" width="9" height="6"/>
+    <Image name="VerticalGripper" x="30" y="0" width="7" height="8"/>
+    <Image name="HorizontalGripper" x="37" y="0" width="8" height="7"/>
+  </Group>
+</ImageAtlas>

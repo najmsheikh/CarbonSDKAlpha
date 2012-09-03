@@ -1,0 +1,821 @@
+//---------------------------------------------------------------------------//
+//          ____                   _                    _                    //
+//         / ___| _ __   ___  __ _| |_ _ __ ___  __   _/ | __  __            //
+//         \___ \| '_ \ / _ \/ _` | __| '__/ _ \ \ \ / / | \ \/ /            //
+//          ___) | |_) |  __/ (_| | |_| | |  __/  \ V /| |_ >  <             //
+//         |____/| .__/ \___|\__, |\__|_|  \___|   \_/ |_(_)_/\_\            //
+//               |_|       Game |_| Institute - Speqtre Game Engine          //
+//                                                                           //
+//---------------------------------------------------------------------------//
+//                                                                           //
+// Name : Lighting.shh                                                       //
+//                                                                           //
+// Desc : Collection of functions that provide support for                   //
+//        common features of the lighting system.                            //
+//                                                                           //
+//---------------------------------------------------------------------------//
+//        Copyright 1997 - 2010 Game Institute. All Rights Reserved.         //
+//---------------------------------------------------------------------------//
+
+#ifndef _LIGHTING_SHH_
+#define _LIGHTING_SHH_
+
+///////////////////////////////////////////////////////////////////////////////
+// Includes
+///////////////////////////////////////////////////////////////////////////////
+#include "Shadows.shh"
+
+///////////////////////////////////////////////////////////////////////////////
+// Global Functions
+///////////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------------
+// Name : LightingParameters (Class)
+// Desc : Support container class for various lighting/shadowing control parameters
+//-----------------------------------------------------------------------------
+class LightingParameters
+{
+	// General
+	int   renderFlags;
+    int   shadingQuality;
+    int   depthType;
+    bool  orthographicCamera;
+
+	// Lighting 
+	int   lightType;
+	int   lightFlags;
+	bool  diffuseEnabled;
+	bool  specularEnabled;
+	bool  ambientEnabled;
+	bool  applyReflectance;
+	bool  attenuationTexture;
+    bool  distanceAttenuationTexture;
+	bool  performClipping;
+	bool  trilighting;
+	bool  lightTransmission;
+	bool  approximateRoughness;
+	bool  normalizeSpecular;
+	bool  visibilityTerm;
+	bool  fresnelTerm;
+	bool  useSSAO;
+
+	// Shadowing
+	int   shadowMethod;
+	int   primaryTaps;
+	int   secondaryTaps;
+
+	bool  PCF;
+	bool  PCSS;
+	bool  VSM;
+	bool  ESM;
+	bool  EVSM;
+
+	bool  translucent;
+	bool  depthExtentsMask;
+	bool  edgeMask;
+	bool  compare;
+	bool  gather;
+	bool  read;
+	bool  rawz;
+	bool  linearDepth;
+	bool  jitterCenter;
+	bool  rotateSamples;
+	bool  manual2x2;
+	bool  readAttenuationBuffer;
+	bool  normalOffset;
+};
+
+//-----------------------------------------------------------------------------
+// Name : initializeLightingSystem()
+// Desc : Analyzes the shadow method bits to determine what features are needed
+//        to compute the current set of shadows
+//-----------------------------------------------------------------------------
+LightingParameters initializeLightingSystem( int lightType, int lightFlags, int shadowMethod, int primaryTaps, int secondaryTaps, int renderFlags, int shadingQuality )
+{
+	LightingParameters params;
+	
+	///////////////////////////////////////////
+	// General
+	///////////////////////////////////////////
+	params.renderFlags           = renderFlags;
+	params.shadingQuality        = shadingQuality;
+	params.orthographicCamera    = (renderFlags & uint(RenderFlags::OrthographicCamera)) > 0;
+	
+	if ( testFlagAny( renderFlags, RenderFlags::PackedDepth ) )
+	{
+		if ( testFlagAny( renderFlags, RenderFlags::NormalizedDistance ) )
+			params.depthType = DepthType::LinearDistance_Packed;
+		else if ( testFlagAny( renderFlags, RenderFlags::NonLinearZ ) )          
+			params.depthType = DepthType::NonLinearZ_Packed;
+		else
+			params.depthType = DepthType::LinearZ_Packed;
+	}
+	else
+	{
+		if ( testFlagAny( renderFlags, RenderFlags::NormalizedDistance ) )
+			params.depthType = DepthType::LinearDistance;
+		else if ( testFlagAny( renderFlags, RenderFlags::NonLinearZ ) )          
+			params.depthType = DepthType::NonLinearZ;
+		else
+			params.depthType = DepthType::LinearZ;
+	}
+
+	///////////////////////////////////////////
+	// Lighting 
+	///////////////////////////////////////////
+	params.lightType             = lightType;
+	params.lightFlags            = lightFlags;
+	params.diffuseEnabled        = testFlagAny(lightFlags, LightFlags::ComputeDiffuse);
+	params.specularEnabled       = testFlagAny(lightFlags, LightFlags::ComputeSpecular);
+	params.ambientEnabled        = testFlagAny(lightFlags, LightFlags::ComputeAmbient);
+	params.applyReflectance      = !testFlagAll(renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting));        
+	params.useSSAO               = testFlagAny(lightFlags, LightFlags::UseSSAO); 
+	params.trilighting           = testFlagAny(lightFlags, LightFlags::Trilighting);
+	params.approximateRoughness  = (shadingQuality >= ShadingQuality::HighQuality && ORENNAYER_ROUGHNESS_SCALE > 0.0f);
+    params.normalizeSpecular     = (shadingQuality >= ShadingQuality::HighQuality && SPECULAR_NORMALIZE_SCALE > 0.0);
+	params.visibilityTerm        = (shadingQuality >= ShadingQuality::HighQuality && MAX_MICROFACET_VISIBILITY > 0.0);
+	params.fresnelTerm           = (shadingQuality >= ShadingQuality::HighQuality) && !testFlagAll(renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting));
+	params.lightTransmission     = (shadingQuality >= ShadingQuality::HighQuality);
+	params.performClipping       = !testFlagAny(renderFlags, RenderFlags::DeferredRendering);
+
+    // Forcibly disable attenuation masks for IBL and projector lights (they should be built into the color texture) 
+    if ( lightType == LightType::IBL || lightType == LightType::Projector ) 
+    {
+        params.attenuationTexture         = false;
+        params.distanceAttenuationTexture = false;
+
+    } // End if IBL || Projector
+	else
+	{
+        params.attenuationTexture         = testFlagAny(lightFlags, LightFlags::AttenuationTexture);
+        params.distanceAttenuationTexture = testFlagAny(lightFlags, LightFlags::DistanceAttenuationTexture);
+	}
+
+	///////////////////////////////////////////
+	// Shadowing
+	///////////////////////////////////////////
+	params.shadowMethod          = shadowMethod;
+	params.primaryTaps           = primaryTaps;
+	params.secondaryTaps         = secondaryTaps;
+	
+	params.PCF                   = testFlagAll(shadowMethod, ShadowMethod::Depth);
+	params.PCSS                  = testFlagAll(shadowMethod, uint(ShadowMethod::Depth) | uint(ShadowMethod::SoftShadows) | uint(ShadowMethod::ContactHardening));
+	params.VSM                   = testFlagAll(shadowMethod, ShadowMethod::Variance);
+	params.ESM                   = testFlagAll(shadowMethod, ShadowMethod::Exponential);
+	params.EVSM                  = testFlagAll(shadowMethod, uint(ShadowMethod::Variance) | uint(ShadowMethod::Exponential));
+	params.rawz                  = testFlagAny(shadowMethod, ShadowMethod::RAWZ);
+	params.translucent           = testFlagAny(shadowMethod, ShadowMethod::Translucency);
+	params.depthExtentsMask      = testFlagAny(shadowMethod, ShadowMethod::DepthExtentsMask);
+	params.edgeMask              = testFlagAny(shadowMethod, ShadowMethod::EdgeMask);
+	params.compare               = testFlagAll(shadowMethod, uint(ShadowMethod::Hardware) | uint(ShadowMethod::Compare));
+	params.gather                = testFlagAll(shadowMethod, uint(ShadowMethod::Hardware) | uint(ShadowMethod::Gather));
+	params.read                  = testFlagAll(shadowMethod, uint(ShadowMethod::Hardware) | uint(ShadowMethod::DepthReads));
+	params.linearDepth           = !testFlagAny(shadowMethod, ShadowMethod::Hardware) || (lightType == LightType::Directional || lightType == LightType::Projector);
+	params.readAttenuationBuffer = testFlagAny(shadowMethod, ShadowMethod::Precomputed);
+
+	// Turn off redundant states
+	if ( params.PCSS )
+	{
+		params.PCF = false;
+	}
+	if ( params.EVSM )
+	{
+		params.VSM = false;
+		params.ESM = false;
+	}
+
+	// Compute texture coordinate factors
+	params.normalOffset          = testFlagAny(shadowMethod, ShadowMethod::NormalOffset);
+	params.jitterCenter          = testFlagAny(shadowMethod, ShadowMethod::Jitter);
+	params.rotateSamples         = testFlagAny(shadowMethod, ShadowMethod::Rotate);
+	params.manual2x2             = testFlagAny(shadowMethod, ShadowMethod::Manual2x2);
+	
+	// Turn off all coordinate biasing when using statistical methods
+	if ( params.VSM || params.ESM || params.EVSM )
+		params.normalOffset = false;
+
+	// Return the operations
+	return params;
+}
+
+//-----------------------------------------------------------------------------
+// Name  : initLightingStructures()
+// Desc  : Declares and initializes "global" surface and lighting results structures
+//-----------------------------------------------------------------------------
+void initLightingStructures( bool dynamic, bool precomputed )
+{
+	// Build the structures dynamically and add to the global
+    // section of the shader permutation.
+	<?global    
+	struct SurfaceData
+	{
+		float3 position;                // World space position 
+        float3 normal;                  // World space normal   (bump)
+		float3 tangentSpaceNormal;      // Tangent space normal (bump)
+        float3 surfaceNormal;           // World space normal   (vertex/surface)
+		float4 projectiveTexCoords;     // Projective texture coordinates (for attenuation map lookups)
+		float  lightSpaceZ;             // Light space Z coordinate
+		float2 screenCoords;            // Screen texture coordinates
+		float  specularPower;           // Specular power
+		float  gloss;                   // Surface gloss (0 rough -> 1 smooth)
+		float  roughness;               // Surface roughness (beckmann)
+		float  bumpiness;               // Bumpiness scalar
+		float  transmission;            // Diffuse transmission amount
+		float3 viewDirection;           // Pos-To-Cam Vector (Normalized)
+		float  distanceToCamera;        // Distance from point to camera 
+		float  linearZ;                 // Camera space Z coordinate for point
+		float3 diffuse;                 // Diffuse reflectance
+		float3 specular;                // Specular reflectance
+		half   ambientOcclusion;        // Ambient occlusion
+	};
+
+	struct LightingData
+	{
+		float3 lightDirection;
+		float  distanceToLight;
+		float3 diffuse;
+		float3 specular;
+		float3 ambient;
+		float3 emissive;
+		float3 reflection;
+		float3 attenuation;
+		float4 shadowColor;
+		float  shadow;
+		float2 terms; // x = N.L, y = L.H
+	};
+	?>
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Shader API Functions
+///////////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------------
+// Name : getLightColors() 
+// Desc : Returns diffuse, specular, and ambient light colors with intensity 
+//        adjusted for current HDR and AO settings
+//-----------------------------------------------------------------------------
+__shadercall void getLightColors( out half3 diffuse, out half3 specular, out half3 ambient, out half3 ambientFar, float ambientOcclusion, script LightingParameters params )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+	<?cbufferrefs
+		_cbLight;
+	?>
+
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+	if ( params.useSSAO )
+	{
+		<? 
+		float3 aoIntensity  = _lightAmbientOcclusionAmount; 
+		float3 aoMinAmbient = float3( 0.15, 0.15, 0.15 );  // ToDo: Add support for this to light source
+		float3 lightAO      = ( saturate( 1.0f - (1.0f - ambientOcclusion) * aoIntensity ) + aoMinAmbient ) / (1.0 + aoMinAmbient);
+		
+		diffuse     = _lightDiffuse.rgb  * lightAO.x;
+		specular    = _lightSpecular.rgb * lightAO.y;
+		ambient     = _lightAmbient.rgb  * lightAO.z;
+		ambientFar  = _lightAmbient2.rgb * lightAO.z;
+		?>
+	}
+	else
+	{
+		<?
+		diffuse     = _lightDiffuse.rgb;
+		specular    = _lightSpecular.rgb;
+		ambient     = _lightAmbient.rgb;
+		ambientFar  = _lightAmbient2.rgb;
+		?>
+	}
+}					  
+
+//-----------------------------------------------------------------------------
+// Name : getLightColors2ndHemisphere() 
+// Desc : Returns diffuse and specular light colors for the bottom hemisphere
+//-----------------------------------------------------------------------------
+__shadercall void getLightColors2ndHemisphere( out half3 diffuse, out half3 specular, float ambientOcclusion, script LightingParameters params )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+	<?cbufferrefs
+		_cbLight;
+	?>
+
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+	if ( params.useSSAO )
+	{
+		<?
+		float3 aoIntensity  = _lightAmbientOcclusionAmount; 
+		float3 aoMinAmbient = float3( 0.15, 0.15, 0.15 );  // ToDo: Add support for this to light source
+		float3 lightAO      = ( saturate( 1.0f - (1.0f - ambientOcclusion) * aoIntensity ) + aoMinAmbient ) / (1.0 + aoMinAmbient);
+	
+		diffuse    = _lightDiffuse2.rgb  * lightAO.x;
+		specular   = _lightSpecular2.rgb * lightAO.y;
+		?>
+	}
+	else
+	{
+		<?
+		diffuse  = _lightDiffuse2.rgb;
+		specular = _lightSpecular2.rgb;
+		?>
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Name  : hemisphereBlend()
+// Desc  : Returns the color blend based on a hemispherical computation
+//-----------------------------------------------------------------------------
+__shadercall half3 hemisphereBlend( float cosineTheta, half3 color0, half3 color1, script bool useLerp )
+{
+	if ( useLerp )
+		<?return lerp( color1.rgb, color0.rgb, saturate( cosineTheta * 0.5 + 0.5 ) );?> 
+	else
+		<?return color0.rgb * saturate( cosineTheta ) + color1.rgb * saturate( -cosineTheta );?>
+} 
+
+//-----------------------------------------------------------------------------
+// Name : computeDiffuse()
+// Desc : Computes diffuse tri-lighting with support for approximated Oren-Nayer
+//        roughness and a light transmission (translucency) term.
+//-----------------------------------------------------------------------------
+__shadercall float4 computeDiffuse( float3 diffuse, float3 ambient, float3 ambientFar, float shadow, 
+					                float3 n, float3 l, float transmission, float m, script LightingParameters params )
+{
+	<?
+	float4 result;
+	float  cosine, clampedCosine;
+
+	// Compute cosine of the angle between surface and light	
+	cosine        = dot( n, l );
+	clampedCosine = saturate( cosine );
+	?>
+
+	// For rougher surfaces, use an approximated Oren-Nayer diffuse lighting model
+	if ( params.approximateRoughness )
+	{
+		<?
+		// Convert the power to a [0,1] range value (0 = Blinn roughness, 1 = OrenNayer roughness)
+		// which then maps from a min r of ~0.05 at 0 to a max r of ~50 at 1 (with an r of 5 at about ~0.5).
+		// The final function was determined in Excel using an exponential curve fitting of a scatter plot
+		// by manually placing r values, mapping them to 0 to 1 where we wanted them (the different r curves were viewed in SpeQ).
+		float r = 0.1834f * exp( 5.8413f * (1.0f - saturate( (m - 1.0f) / 15.0f ) ) );
+		clampedCosine = ((1.0 + r) / r) * (1.0 - 1.0 / (1.0 + r * clampedCosine));
+		?>
+    
+	} // End if rough surface
+	
+	<?
+	// Compute standard diffuse term and store clamped cosine (for future use)
+	result.rgb  = diffuse * clampedCosine * shadow;
+	result.a    = clampedCosine;
+	?>
+	
+	// If we are doing trilighting
+	if ( params.trilighting )
+	{
+		<?
+		// compute cosine terms for ambient purposes
+		float3 terms = saturate( float3( cosine, 1.0 - abs( cosine ), -cosine ) );
+		
+		// Add initial ambient term
+		result.rgb += terms.y * ambient;                   
+		?>
+		
+  		// Add second ambient term with optional diffuse light transmission
+		if ( params.lightTransmission )
+			<?result.rgb += terms.z * ( ambientFar + (diffuse * ( transmission * (0.3 + 0.7 * shadow) ) ) );?>
+		else
+			<?result.rgb += terms.z * ambientFar;?>
+	}
+	else
+	{
+		// Compute diffuse light transmission
+		if ( params.lightTransmission )
+			<?result.rgb += diffuse * ( transmission * saturate( -cosine ) * (0.3 + 0.7 * shadow) );?>
+	
+		// Add standard ambient term
+		if ( params.ambientEnabled )
+			<?result.rgb += ambient;?>
+	}	
+
+	// Return final result
+	<?return result;?>
+} 
+
+//-----------------------------------------------------------------------------
+// Name : computeSpecular()
+// Desc : Computes Blinn-Phong specular lighting with support for normalization
+//        of the distribution and microfacet visibility.
+// Note : Normalizing the specular power uses the formula (m + 8) / (8 * pi)
+//        We rearrange this as follows: 
+//         x = 1/(8pi)
+//         c = (m + 8) * x
+//           = mx + 8x
+//         y = 8x = 8/(8pi) = 1/pi
+//         c = mx + y 
+//-----------------------------------------------------------------------------
+__shadercall float4 computeSpecular( float3 color, float shadow, float3 n, float3 l, float3 v, float m, script LightingParameters params )
+{
+	<?
+    // Compute Blinn's half vector
+    float3 halfVector = normalize( l + v );
+    
+    // Compute cosine of the angle with the normal and take the power  	
+    float specularFactor = pow( saturate( dot( n, halfVector ) ), m );
+
+    // Dot the light and half vectors (halfVector is considered the microfacet normal)
+    float lh = saturate( dot( l, halfVector ) );
+    ?>
+
+    // Normalize the specular cosine
+    if ( params.normalizeSpecular )
+        <?specularFactor *= (m * $SPECULAR_NORMALIZE_SCALE + $SPECULAR_NORMALIZE_BIAS);?> 
+
+    // Compute a visibility term (Kelemen et al)
+    if ( params.visibilityTerm )
+        <?specularFactor *= min( $MAX_MICROFACET_VISIBILITY, 1.0 / ( lh * lh + 1e-6 ) );?>		
+    
+    <?
+    // Return final specular color (L.H can be used for fresnel material adjustment if desired)	
+    return float4( color * specularFactor * shadow, lh );
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : computeAttenuation()
+// Desc : Computes attenuation for a variety of application settings.
+//-----------------------------------------------------------------------------
+__shadercall half3 computeAttenuation( float distanceToLight, half3 lightDirection, float4 texCoords, script LightingParameters params )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+	<?cbufferrefs
+		_cbLight;
+		_cbShadow;
+	?>
+    
+    if ( params.lightType == LightType::Spot )
+    {
+        <?cbufferrefs
+		    _cbSpotLight;
+	    ?>
+    
+    } // End if Spot
+    else if ( params.lightType == LightType::Projector )
+    {
+        <?cbufferrefs
+		    _cbProjectorLight;
+	    ?>
+
+    } // End if Projector
+
+    // Sampler buffer usage.
+	<?samplerrefs
+		_sbLight;
+	?>
+
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+    if ( params.lightType == LightType::Directional )
+    {
+        // Directional lights will blend between pssm splits, so we adjust attenuation as it affects all values (i.e., ambient, diffuse, and specular)
+        if( params.primaryTaps > 0 )
+            <?return half3(1.0,1.0,1.0) * saturate( abs( _shadowSplitBlend.x - surface.linearZ ) * _shadowSplitBlend.y + _shadowSplitBlend.z );?>				
+        else
+	        <?return half3(1.0,1.0,1.0);?>
+    
+    } // End if Directional
+    else
+    {
+        <?half3 result;?>
+
+         // Compute linear attenuation for distance
+        if ( params.lightType == LightType::Projector )
+            <?result = 1.0 - saturate( texCoords.z * _lightAttenuation.z + _lightAttenuation.w );?>
+        else
+            <?result = 1.0 - saturate( distanceToLight * _lightAttenuation.z + _lightAttenuation.w );?>
+        
+        // If a texture is set for custom distance attenuation, remap linear attenuation
+        if ( params.distanceAttenuationTexture )
+            <?result = sample1D( _sLightDistanceAttenuationTex, _sLightDistanceAttenuation, result.x ).a;?>
+        
+        // If a mask texture is being used for attenuation shape, use it
+        if ( params.attenuationTexture )
+        {
+            if ( params.lightType == LightType::Omni )
+                <?result *= sampleCubeLevel( sLightAttenuationCubeTex, sLightAttenuationCube, lightDirection, _lightTexMipLevel.x ).rgb;?>
+            else 
+                <?result *= sample2DLevel( sLightAttenuationTex, sLightAttenuation, texCoords.xy, _lightTexMipLevel.x ).rgb;?>
+
+            // Do not project attenuation onto geometry behind the spotlight (not needed if using stencil masks)
+            if ( params.performClipping ) 
+                <?result *= step( 0, texCoords.w );?> 
+        
+        } // End if image based attenuation mask
+        else 
+        {
+            // Compute spot cone and projector light attenuation if necessary
+            if ( params.lightType == LightType::Spot )
+            {
+                <?half rho = dot( _lightDirection, -lightDirection );?>
+                
+                // Note: You can choose the more expensive power based spot cone falloff function,
+                //       rather than simple linear interpolation if desired (see Config.shh).
+                if ( params.shadingQuality == ShadingQuality::LowQuality )
+                    <?result *= saturate( rho * _lightSpotTerms.x + _lightSpotTerms.y );?>
+                else
+                    <?result *= pow( saturate( rho * _lightSpotTerms.x + _lightSpotTerms.y ), _lightSpotTerms.z );?>
+
+            } // End if Spot
+            else if ( params.lightType == LightType::Projector && params.performClipping )
+            {
+              // For projector lights, avoid projecting outside of frustum
+              <?
+              if ( texCoords.x < 0 || texCoords.x > 1 || texCoords.y < 0 || texCoords.y > 1 )
+                   result = 0;
+              ?>
+            
+            } // End if clip projector
+        
+        } // End if !masked
+
+        <?return result;?>
+
+    } // End if !Directional
+}
+
+//-----------------------------------------------------------------------------
+// Name : computeLighting()
+// Desc : Computes ambient, diffuse, and specular lighting colors
+// Note : Updates the "global" lighting structure (reads "global" surface structure)
+//-----------------------------------------------------------------------------
+__shadercall void computeLighting( inout LightingData lighting, SurfaceData surface, script LightingParameters params )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+	<?cbufferrefs
+		_cbLight;
+		_cbShadow;
+        _cbLightingSystem;
+	?>
+    // ToDo: 6767 - _cbLightingSystem reference added -- Needed for _lightPosition (as opposed to _lightPositionWorld in _cbLight)
+    if ( params.lightType == LightType::Projector )
+    {
+        <?cbufferrefs
+            _cbProjectorLight;
+        ?>
+    } // End if projector light
+
+    // Sampler buffer usage.
+	<?samplerrefs
+		_sbLight;
+	?>
+
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+	<?
+	half3 lightDiffuse, lightSpecular, lightAmbient, lightAmbientFar, lightDiffuse2, lightSpecular2;
+	half4 lD, lS;
+	?>
+	
+    // Compute distance to light and the normalized light direction vector	
+    if( params.lightType == LightType::Directional )
+    {
+        <?
+        lighting.lightDirection = -_lightDirection.xyz;
+        lighting.distanceToLight = 0;
+        ?>
+
+    } // End if Directional
+    else if ( params.lightType == LightType::Projector )
+    {	
+        <?
+        lighting.lightDirection = -_lightDirection.xyz;
+        lighting.distanceToLight = length( _lightPosition.xyz - surface.position );
+        ?>
+    
+    } // End if Projector
+    else
+    {
+        <?
+        lighting.lightDirection  = _lightPosition.xyz - surface.position;
+        lighting.distanceToLight = length( lighting.lightDirection );
+        lighting.lightDirection /= lighting.distanceToLight;
+        ?>
+    
+    } // End if Other Type
+
+    <?
+    // Compute light attenuation
+    lighting.attenuation = computeAttenuation( lighting.distanceToLight, lighting.lightDirection, surface.projectiveTexCoords, $params );
+
+    // Compute shadows
+    computeShadow( lighting, surface, $params );
+
+    // Retrieve our light source colors
+    getLightColors( lightDiffuse, lightSpecular, lightAmbient, lightAmbientFar, surface.ambientOcclusion, $params );
+    ?>
+
+    // If we are computing lighting...
+    if ( params.diffuseEnabled || params.specularEnabled )
+    {
+        // Compute reflected & scattered light given the current light source type
+        if ( params.lightType == LightType::IBL )
+        {
+            if ( params.diffuseEnabled )
+            {
+                // ToDo: Diffuse light for IBL to be provided as spherical harmonics.
+                <?lighting.diffuse = 0;?>
+
+            } // End if diffuseEnabled
+
+            if ( params.specularEnabled )
+            {
+                <?
+                // Use the reflection vector as our texture coordinates
+                float3 cubeMapCoords = reflect( -surface.viewDirection, surface.normal );
+                
+           		// Retrieve the mip level actually chosen by the hardware (ToDo: Add support for generic mip cube.)
+				float mipLevelHW = 0; //sampleCube( mipCubeSampler, cubeMapCoords ).a * (255.0f / 16.0f);
+
+                // Specular lighting chooses a mip level dynamically based on material glossiness
+                float mipLevelGloss = _lightTexMipLevel.z - surface.gloss * _lightTexMipLevel.z;
+
+				// Sample the reflection texture
+                float4 reflRGBM = sampleCubeLevel( sLightColorCubeTex, sLightColorCube, cubeMapCoords, max( mipLevelGloss, mipLevelHW ) );
+                
+                // Convert from RGBM to RGB
+                float _lightRGBMMax = 10.0f; // ToDo: Move this to light source level.
+                lighting.specular  = RGBMToRGB( reflRGBM, _lightRGBMMax ); 
+                lighting.specular *= lighting.specular; // We square it because we rgbm encode the sqrt.
+
+                // Apply light intensity
+                lighting.specular *= lightSpecular;
+                
+                // Can compute optional Fresnel term for adjustment if desired
+                ?>
+
+            } // End if specularEnabled
+
+        } // End if IBL
+        else if ( params.lightType == LightType::Hemisphere )
+        {
+            <?
+            // Hemisphere lights offer a second set of colors for blending
+            getLightColors2ndHemisphere( lightDiffuse2, lightSpecular2, surface.ambientOcclusion, $params );
+            
+            // Compute N.L
+            float NDotL = dot( surface.normal, -_lightDirection.xyz );
+            ?>
+
+            // Compute diffuse
+            if ( params.diffuseEnabled )
+            {
+                // Diffuse term lerps based on cosine between normal and up direction
+                <?lighting.diffuse = hemisphereBlend( NDotL, lightDiffuse, lightDiffuse2, $true );?>
+
+                // Adjust direct lighting by shadow term
+                if ( params.primaryTaps > 0 )
+                    <?lighting.diffuse *= lighting.shadow;?>
+
+            } // End if diffuseEnabled
+			
+			// Compute ambient
+			if ( params.ambientEnabled )
+			{
+                <?
+                // Ambient term lerps based on cosine between hemisphere up direction and direction to surface
+                lighting.ambient = hemisphereBlend( dot( lighting.lightDirection, -_lightDirection.xyz ), lightAmbient, lightAmbientFar, $true );
+               
+                // Combine diffuse and ambient lighting	
+                lighting.diffuse += lighting.ambient;
+                ?>
+		
+			} // End if ambientEnabled
+                
+            // Compute specular
+            if ( params.specularEnabled )
+            {
+                <?
+                // Specular color lerps based on same cosine as diffuse
+                lighting.specular = hemisphereBlend( NDotL, lightSpecular, lightSpecular2, $true );
+
+                // Compute Blinn's half vector
+                half3 halfVector = normalize( -_lightDirection.xyz + surface.viewDirection );
+                
+                // Use absolute value of N.H so that we get contributions from both hemispheres
+                lighting.specular *= pow( abs( dot( surface.normal, halfVector ) ), surface.specularPower );
+                ?>
+
+                // Adjust direct lighting by shadow term
+                if ( params.primaryTaps > 0 )
+                    <?lighting.specular *= lighting.shadow;?>
+
+            } // End if specularEnabled
+
+        } // End if Hemisphere
+        else
+        {
+            // Projector lights use a texture to adjust light color
+            if ( params.lightType == LightType::Projector )
+            {
+                if ( testFlagAny( params.lightFlags, LightFlags::ColorTexture3D ) )
+                    <?half4 texColor = sample3DLevel( sLightColor3DTex, sLightColor3D, float3( surface.projectiveTexCoords.xy * _lightProjectorTexData.xy, _lightProjectorTexData.z ), _lightTexMipLevel.x );?>
+                else
+                    <?half4 texColor = sample2DLevel( sLightColorTex, sLightColor, surface.projectiveTexCoords.xy * _lightProjectorTexData.xy, _lightTexMipLevel.x );?>
+            
+				// Linearize 
+				<?texColor.rgb = pow( texColor.rgb, 2.2f );?>
+            
+                if ( params.diffuseEnabled )
+                    <?lightDiffuse.rgb *= texColor.rgb;?>      
+                
+                if ( params.specularEnabled )
+                    <?lightSpecular.rgb *= texColor.rgb;?>
+            
+            } // End if Projector
+			
+            // Compute diffuse lighting
+            if ( params.diffuseEnabled )
+            {
+                <?
+                lD = computeDiffuse( lightDiffuse, lightAmbient, lightAmbientFar, lighting.shadow, surface.normal, lighting.lightDirection, surface.transmission, surface.specularPower, $params );
+                lighting.diffuse = lD.rgb;
+                lighting.terms.x = lD.a;
+                ?>
+
+            } // End if diffuseEnabled
+            
+            // Compute specular lighting
+            if ( params.specularEnabled )
+            {
+                <?
+                lS = computeSpecular( lightSpecular, lighting.shadow, surface.normal, lighting.lightDirection, surface.viewDirection, surface.specularPower, $params );
+                lighting.specular = lS.rgb * lD.a;
+                lighting.terms.y  = lS.a;
+                ?>
+
+            }  // End if specularEnabled
+			
+        } // End if other light type
+        
+    } // End if computing diffuse or specular lighting
+    else
+    {
+        // Otherwise, just return the light colors
+        <?
+        lighting.diffuse  = lightDiffuse;	
+        lighting.specular = lightSpecular;	
+        lighting.ambient  = lightAmbient;	
+        ?>
+    
+    } // End if !computing
+
+    <?
+    // Apply attenuation
+    lighting.diffuse  *= lighting.attenuation;
+    lighting.specular *= lighting.attenuation;
+    lighting.ambient  *= lighting.attenuation;
+    ?>
+
+    // Apply reflectance
+    if ( params.applyReflectance )
+    {
+        // Apply diffuse reflectance
+        if ( params.diffuseEnabled )
+            <?lighting.diffuse *= surface.diffuse;?>
+
+        // Apply specular reflectance (with optional fresnel)
+        if ( params.specularEnabled )
+        {
+            if ( params.fresnelTerm )
+            {
+                <?lighting.specular *= surface.specular + (1.0 - surface.specular) * pow( saturate( 1.0 - lighting.terms.y ) + 1e-8f, 5 );?>
+				<?lighting.specular *= saturate( surface.specular * 1000.0f );?> // Disable Fresnel effect if artist specified 0 reflectance.
+            }
+            else
+            {
+                <?lighting.specular *= surface.specular;?>
+			}
+        
+        } // End if specularEnabled
+		
+    } // End if applyReflectance
+
+}
+
+#endif // !_LIGHTING_SHH_

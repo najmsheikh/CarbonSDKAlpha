@@ -1,0 +1,12 @@
+--Table: Objects::FixedAxisJoint -- {7CE576EC-177A-45F6-A952-2E2F1CD4FF33}
+
+CREATE TABLE [Objects::FixedAxisJoint] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER [Objects::FixedAxisJoint_OnDelete]
+  BEFORE DELETE
+  ON [Objects::FixedAxisJoint]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;

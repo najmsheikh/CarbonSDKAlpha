@@ -1,0 +1,26 @@
+var class_resource_handle =
+[
+    [ "_resType", "class_resource_handle.html#a4feb2d3ca3bf795195a0e0cb777ca677", null ],
+    [ "ResourceHandle", "class_resource_handle.html#a99008fc54b4d0d2c9b2f44751e4dcc28", null ],
+    [ "ResourceHandle", "class_resource_handle.html#a2066d26a19bfc977bf563ae0e5d5ab99", null ],
+    [ "ResourceHandle", "class_resource_handle.html#a100fa4227d30d187ecd2f7cd393b2261", null ],
+    [ "ResourceHandle", "class_resource_handle.html#a0a51528a9fe68e024c9452512730874f", null ],
+    [ "ResourceHandle", "class_resource_handle.html#aad6aff755c5b684c1debcff0f7741ba6", null ],
+    [ "ResourceHandle", "class_resource_handle.html#acf7b5216385844f00e1eabb3979abac8", null ],
+    [ "exchangeResource", "class_resource_handle.html#a9c3f6859334d21c6143e664585a87a10", null ],
+    [ "getResource", "class_resource_handle.html#a33816a7e10e8d89383d47b21df7666a5", null ],
+    [ "getResourceSilent", "class_resource_handle.html#a587ccff1ba26a88321e1b6b3adad6dda", null ],
+    [ "getResourceSilent", "class_resource_handle.html#a18f080464af461f0d97b6597550f016a", null ],
+    [ "operator size_t", "class_resource_handle.html#a13ee5730d13db59347b57e2bec2d0a02", null ],
+    [ "operator!=", "class_resource_handle.html#aa7856b6bb8f72b8e13387a103f4fb57a", null ],
+    [ "operator*", "class_resource_handle.html#a886f62d992010aa55e077b9608925184", null ],
+    [ "operator*", "class_resource_handle.html#aa89b9731e06117c3e587cffa2a89a04f", null ],
+    [ "operator->", "class_resource_handle.html#a7b598acca38362f4514d20b803911275", null ],
+    [ "operator->", "class_resource_handle.html#a8a516f6f535fcc483688045ad7b71107", null ],
+    [ "operator<", "class_resource_handle.html#a83d8a649d18cb63441b13c28b720c4fa", null ],
+    [ "operator=", "class_resource_handle.html#a1ce0354d9b5b7607f7949b8ea56e2116", null ],
+    [ "operator==", "class_resource_handle.html#a4c3b81f98eb235b302d197bfdeb9e4af", null ],
+    [ "operator>", "class_resource_handle.html#a7e190e0e0dd9f41627d47c2be02c540f", null ],
+    [ "cgResourceManager", "class_resource_handle.html#aaa8caa4108e4fcfe9e6f628dfd804db3", null ],
+    [ "Null", "class_resource_handle.html#a270c7da9a120fd22b5d15029a578dd4b", null ]
+];

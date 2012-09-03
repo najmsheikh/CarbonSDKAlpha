@@ -1,0 +1,13 @@
+--Table: Objects::Group
+
+CREATE TABLE [Objects::Group] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [Open] tinyint(1) DEFAULT 0,
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER [Objects::Group_OnDelete]
+  BEFORE DELETE
+  ON [Objects::Group]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;

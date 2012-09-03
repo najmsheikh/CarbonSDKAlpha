@@ -1,0 +1,25 @@
+var structcg_material_terms =
+[
+    [ "cgMaterialTerms", "structcg_material_terms.html#a365fd6fc74809d97bb081d525c796194", null ],
+    [ "ambient", "structcg_material_terms.html#aba18e974e077641404d19c075c856b26", null ],
+    [ "diffuse", "structcg_material_terms.html#a6f0087720f35d83eba195b51e1e4187e", null ],
+    [ "diffuseOpacityMapStrength", "structcg_material_terms.html#abd1a20ad3ed8284f383773c776027023", null ],
+    [ "emissive", "structcg_material_terms.html#ad47fe7c639854dfe62423adf29b842f7", null ],
+    [ "emissiveHDRScale", "structcg_material_terms.html#ab8300e45a6bbfe0fe7a7078aeaef551b", null ],
+    [ "fresnelDiffuse", "structcg_material_terms.html#ac9267486d542a51d2de7c0f9186afcce", null ],
+    [ "fresnelExponent", "structcg_material_terms.html#a43746f49124cbbfaaa5d136fe483f06e", null ],
+    [ "fresnelOpacity", "structcg_material_terms.html#a399f2f575c3c4b3f98dd6c3a7c226c2f", null ],
+    [ "fresnelReflection", "structcg_material_terms.html#ac3ee393b8f5729edf94004d042a6cd51", null ],
+    [ "fresnelSpecular", "structcg_material_terms.html#aa426d7c0bc8f75bf867b9fb4e501a16c", null ],
+    [ "gloss", "structcg_material_terms.html#a0287df9301597f3f98c1930937452c05", null ],
+    [ "metalnessAmount", "structcg_material_terms.html#aa8ff7c22d0e76125c46fdad2bad7f4be", null ],
+    [ "metalnessDiffuse", "structcg_material_terms.html#ae0027600da43f8c6b0bc782da898e935", null ],
+    [ "metalnessSpecular", "structcg_material_terms.html#afc386833fa3521badc62608867d448a9", null ],
+    [ "reflectionBumpiness", "structcg_material_terms.html#a01740da4b3d6c27f25cf92249d444a96", null ],
+    [ "reflectionIntensity", "structcg_material_terms.html#a2b8f4ad8746e665174628b444f79413f", null ],
+    [ "reflectionMipLevel", "structcg_material_terms.html#ab722611cfd06112e39056ad7d0f4a836", null ],
+    [ "rimExponent", "structcg_material_terms.html#ac1cb6e288a75f5972a000f2e3857eb8c", null ],
+    [ "rimIntensity", "structcg_material_terms.html#a8cb79ef6d3c65dc994057ef20285aec0", null ],
+    [ "specular", "structcg_material_terms.html#a7d335cecbe8cb5ffdf8f83016e7c293d", null ],
+    [ "specularOpacityMapStrength", "structcg_material_terms.html#af9c6305e97f273756cc184c3711f7a52", null ]
+];

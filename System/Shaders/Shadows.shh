@@ -1,0 +1,775 @@
+//---------------------------------------------------------------------------//
+//          ____                   _                    _                    //
+//         / ___| _ __   ___  __ _| |_ _ __ ___  __   _/ | __  __            //
+//         \___ \| '_ \ / _ \/ _` | __| '__/ _ \ \ \ / / | \ \/ /            //
+//          ___) | |_) |  __/ (_| | |_| | |  __/  \ V /| |_ >  <             //
+//         |____/| .__/ \___|\__, |\__|_|  \___|   \_/ |_(_)_/\_\            //
+//               |_|       Game |_| Institute - Speqtre Game Engine          //
+//                                                                           //
+//---------------------------------------------------------------------------//
+//                                                                           //
+// Name : Shadows.shh                                                        //
+//                                                                           //
+// Desc : Functions responsible for and relating to performing shadow map    //
+//        rendering & subsequent comparisons etc.                            //
+//                                                                           //
+//---------------------------------------------------------------------------//
+//        Copyright 1997 - 2010 Game Institute. All Rights Reserved.         //
+//---------------------------------------------------------------------------//
+
+#ifndef _SHADOWS_SHH_
+#define _SHADOWS_SHH_
+
+///////////////////////////////////////////////////////////////////////////////
+// Includes
+///////////////////////////////////////////////////////////////////////////////
+#include "Config.shh"
+#include "SystemDefs.shh"
+#include "Types.shh"
+#include "Utilities.shh"
+
+///////////////////////////////////////////////////////////////////////////////
+// Shader API Functions
+///////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------
+// Name : computeShadowMapCoords()
+// Desc : Computes initial texture coordinates for shadow mapping
+//-----------------------------------------------------------------------------
+__shadercall float4 computeShadowMapCoords( LightingData lighting, SurfaceData surface, script LightingParameters params ) 
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+	<?cbufferrefs
+		_cbLight;
+		_cbShadow;
+	?>
+    // Sampler buffer usage.
+	<?samplerrefs
+		_sbLight;
+	?>
+
+	<?float4 shadowMapCoords;?>
+
+	// If we are not offsetting, return the current texture projection coordinates
+	if ( params.normalOffset )
+	{
+		<?
+		// Compute the size of a shadow map texel in world space
+		float texelSize = abs( surface.lightSpaceZ ) * ( 2.0f * _shadowTextureSize.z );
+
+		// Get the cosine of the angle between the surface normal and the incoming light direction
+		float cosTheta = saturate( dot( lighting.lightDirection, surface.surfaceNormal ) );
+		
+		// Compute an offset from the surface
+		float3 offsetN = surface.surfaceNormal * texelSize * (1.0f - cosTheta) * _shadowBias.z;
+		
+		// Compute an offset along the light direction
+		float3 offsetL = lighting.lightDirection * texelSize * (cosTheta) * _shadowBias.w;
+								
+		// Combine our offsets
+		float3 offset = offsetN + offsetL;
+		
+		// Reproject the adjusted position
+		shadowMapCoords = mul( float4( surface.position + offset, 1.0f ), _lightTexProjMatrix );
+		?>
+
+		// If this is a projector light
+		if ( params.lightType == LightType::Projector )
+		{
+			<?
+			shadowMapCoords.xy /= lerp( _lightConeAdjust.xz, _lightConeAdjust.yw, shadowMapCoords.z );
+			shadowMapCoords.xy += 0.5;
+			shadowMapCoords.w   = 1.0;
+			?>
+
+		} // End if projector light
+		else
+		{			
+			// Make sure depth is linear if needed (Note: it is already linear for our orthographic projections)
+			if ( params.linearDepth && (params.lightType == LightType::Omni || params.lightType == LightType::Spot) )
+				<?shadowMapCoords.z = shadowMapCoords.w * _lightClipDistance.z + _lightClipDistance.w;?>
+
+			if ( params.linearDepth )
+			   <?shadowMapCoords.xyw  /= shadowMapCoords.w;?>	
+			else
+			   <?shadowMapCoords.xyzw /= shadowMapCoords.w;?>	
+	    
+		} // End if other light type
+
+	} // End surface normal bias
+	else
+	{
+		<?shadowMapCoords = surface.projectiveTexCoords;?>
+		if ( params.linearDepth && (params.lightType == LightType::Omni || params.lightType == LightType::Spot) )
+			<?shadowMapCoords.z = surface.lightSpaceZ * _lightClipDistance.z + _lightClipDistance.w;?>
+
+	} // End no surface normal bias
+
+	// Optionally compute a random offset for the starting coordinate
+	if( params.jitterCenter )
+	{
+		<? 
+		float  minRange =  1.0f;
+		float  maxRange = 30.0f;
+		float  t = saturate( (surface.distanceToCamera - minRange) / (maxRange - minRange) );
+		
+		float  tilingFactor = floor( lerp( 8.0, 4.0, t ) );  // ToDo: Move to constant buffer
+		float2 rndOffset    = sample2D( sRandomTex, sRandom, shadowMapCoords.xy * tilingFactor );
+		shadowMapCoords.xy += rndOffset.xy * _shadowTextureSize.zw;
+		?>
+	}
+
+	// Return the coordinates
+	<?return shadowMapCoords;?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : shadowMapCompare()
+// Desc : Samples the shadow map texture and runs the depth comparison. 
+// Note : Always does a 2x2 depth compare with a final linear blend.
+//-----------------------------------------------------------------------------
+__shadercall float shadowMapCompare( float2 coords, float receiverDepth, float4 weights, script LightingParameters params, script bool useWeights )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+	<?cbufferrefs
+		_cbShadow;
+	?>
+    // Sampler buffer usage.
+	<?samplerrefs
+		_sbLight;
+	?>
+	
+	<?float shadow;?>
+	
+    // Compute the shadow map comparison result (2x2 linear filtered per tap)
+    if ( params.compare )
+    {
+		<?shadow = sample2DCmpLevel0( sShadowTex, sShadowCmp, coords, receiverDepth ).x;?>
+	}
+	else if( !params.manual2x2 )
+	{
+		// A less expensive "single" tap
+		if ( params.gather )
+		{
+            <?
+            float4 casterDepth = sample2DGather( sShadowTex, sShadow, coords + float2( -0.5, -0.5 ) * _shadowTextureSize.zw );
+			float4 cmpResults  = receiverDepth.xxxx < casterDepth.xyzw;
+			shadow             = dot( cmpResults, float4( 0.25, 0.25, 0.25, 0.25 ) ); 
+			?>
+		}
+		else
+		{
+			if ( params.rawz )
+				<?float casterDepth = dot( sample2DLevel( sShadowTex, sShadow, coords, 0 ).arg, float3(0.996093809371817670572857294849, 0.0038909914428586627756752238080039, 1.5199185323666651467481343000015e-5) );?>
+			else
+				<?float casterDepth = sample2DLevel( sShadowTex, sShadow, coords, 0 ).x;?>
+
+			<?shadow = receiverDepth < casterDepth;?>
+		}
+	}	
+	else 
+	{			
+		<?
+		float2 srcCoords[4];
+		float4 subTexelDist, bilinearWeights, casterDepth, cmpResults;
+
+		// Compute the initial sampling location (assumes manual sampling) 
+		srcCoords[0] = coords + float2( -0.5, -0.5 ) * _shadowTextureSize.zw;
+		?>
+		
+		// If the 2x2 weights have been provided, use them, else compute them.
+		if ( useWeights )
+		{
+			<?bilinearWeights = weights;?>
+		}
+		else
+		{
+			<?
+			subTexelDist.xy = frac( srcCoords[0] * _shadowTextureSize.xy );
+			subTexelDist.zw = 1.0f - subTexelDist.xy;
+			bilinearWeights = subTexelDist.zxzx * subTexelDist.wwyy;
+			?>			
+		}
+		
+		if ( params.gather )
+		{
+            <?casterDepth = sample2DGather( sShadowTex, sShadow, srcCoords[0] );?>
+		}
+		else
+		{
+			<?
+			srcCoords[1]  = coords + float2(  0.5, -0.5 ) * _shadowTextureSize.zw;
+			srcCoords[2]  = coords + float2( -0.5,  0.5 ) * _shadowTextureSize.zw;
+			srcCoords[3]  = coords + float2(  0.5,  0.5 ) * _shadowTextureSize.zw;
+			?>
+
+			// If using a RAWZ depth-stencil format, we need to unpack the depths manually
+			if ( params.rawz )
+			{
+				<?
+				casterDepth.x = dot( sample2DLevel( sShadowTex, sShadow, srcCoords[0], 0 ).arg, float3(0.996093809371817670572857294849, 0.0038909914428586627756752238080039, 1.5199185323666651467481343000015e-5) );		
+				casterDepth.y = dot( sample2DLevel( sShadowTex, sShadow, srcCoords[1], 0 ).arg, float3(0.996093809371817670572857294849, 0.0038909914428586627756752238080039, 1.5199185323666651467481343000015e-5) );		
+				casterDepth.z = dot( sample2DLevel( sShadowTex, sShadow, srcCoords[2], 0 ).arg, float3(0.996093809371817670572857294849, 0.0038909914428586627756752238080039, 1.5199185323666651467481343000015e-5) );		
+				casterDepth.w = dot( sample2DLevel( sShadowTex, sShadow, srcCoords[3], 0 ).arg, float3(0.996093809371817670572857294849, 0.0038909914428586627756752238080039, 1.5199185323666651467481343000015e-5) );		
+				?>
+			}
+			else
+			{			
+				<?
+				casterDepth.x = sample2DLevel( sShadowTex, sShadow, srcCoords[0], 0 ).x;
+				casterDepth.y = sample2DLevel( sShadowTex, sShadow, srcCoords[1], 0 ).x;
+				casterDepth.z = sample2DLevel( sShadowTex, sShadow, srcCoords[2], 0 ).x;
+				casterDepth.w = sample2DLevel( sShadowTex, sShadow, srcCoords[3], 0 ).x;
+				?>
+			}	
+		}
+	
+        <?
+		// Compare depths 
+		cmpResults = receiverDepth.xxxx < casterDepth.xyzw;
+		
+		// Linearly filter the results
+		shadow = dot( cmpResults, bilinearWeights ); 
+        ?>
+	}
+
+	// Return the results
+	<?return shadow;?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : attenuateShadow()
+// Desc : "Attenuates" the shadow term (brightens it) based on distance and user falloff params
+// Note : All light source types other than directionals compute their terms offline
+//-----------------------------------------------------------------------------
+__shadercall void attenuateShadow( inout float value, float eyeDistance, script bool perPixelAttenuation ) 
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+	<?cbufferrefs
+		_cbShadow;
+	?>
+
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+    // Optionally compute attenuation on the fly... (Directional lights require this.)
+    if ( perPixelAttenuation )
+    {
+        <? 
+        float attenuationBias  = saturate( eyeDistance * _shadowAttenuation.z + _shadowAttenuation.w );
+        float attenuationScale = 1.0 - attenuationBias;
+        ?>
+    
+    } // End if perPixelAttenuation
+    else
+    {
+        // Non-directional light types are pre-faded at the light source level (based on similar math, 
+        // but simplified due to localization and fixed range)
+        <?
+        float attenuationScale = _shadowAttenuation.z;
+        float attenuationBias  = _shadowAttenuation.w;
+        ?>
+    
+    } // End if !perPixelAttenuation
+    
+    // Adjust input value
+    <?value = value * attenuationScale + attenuationBias;?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : pcfHalton()
+// Desc : PCF shadow mapping using a Halton random sequence
+//-----------------------------------------------------------------------------
+__shadercall float pcfHalton( float2 shadowMapUV, float pixelDepth, float radius, script uint numTaps, script LightingParameters params )
+{
+	// Setup the approach based on our shadow method 
+	float recipTaps = 1.0 / float( numTaps );
+
+	<?
+    float  filterSize = $radius * _shadowTextureSize.zw; 
+	float  shadow, adjustedDistance, lit = 0.0f;
+	float2 coords;
+	float4 weights = 0.25;
+	?>
+	
+	// Setup the filter kernel
+	initializeHaltonKernel( numTaps );
+	
+	// For each requested tap
+	for( uint i = 0; i < numTaps; ++i )
+    {
+        <?
+		// Compute a sampling coordinate
+	    coords = shadowMapUV + haltonSamples[$i].xy * filterSize;
+
+		// Apply a cone bias
+		adjustedDistance = pixelDepth - haltonSamples[$i].z * _shadowBias.x;
+		
+		// Run the depth comparison		
+		shadow = shadowMapCompare( coords, adjustedDistance, weights, $params, ${!params.manual2x2} );
+		
+		// Accumulate result
+		lit += shadow;
+        ?>
+				
+	} // Next sample
+	
+	// Complete the average	
+	<?return lit * $recipTaps;?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : computeAverageBlocker()
+// Desc : 
+//-----------------------------------------------------------------------------
+__shadercall void computeAverageBlocker( inout float avgDepth, inout float numBlockers, float2 shadowMapUV, float pixelDepth, script uint numSearchTaps )
+{
+	<?
+	float2 coords;
+	float  weight, casterDepth, filterSize = _shadowRadii.y * _shadowTextureSize.zw;
+	float distanceFactor = 0.5f;
+	?>
+
+	bool useWeighted = false;
+		
+	initializeHaltonKernel( numSearchTaps );
+
+	for( uint i = 0; i < numSearchTaps; ++i )
+    {
+	    <?
+	    coords = shadowMapUV + haltonSamples[$i].xy * filterSize;
+        casterDepth = sample2DLevel( sShadowTex, sShadow, coords, 0 ).r;
+   		if ( casterDepth < (pixelDepth - haltonSamples[$i].z * 0.0002f) )
+   		{
+   		?>
+   			// Give the closest blockers higher weights
+   			if ( useWeighted )
+   			{
+   				<?
+   				//weight       = 1.0f - (pixelDepth - casterDepth);
+   				
+   				weight       = (haltonSamples[$i].z * filterSize);
+   				weight       = exp( -(weight * weight) / (2.0f * distanceFactor * distanceFactor) );
+
+   				weight      *= (pixelDepth - casterDepth);
+
+   				
+				avgDepth    += casterDepth.r * weight;
+				numBlockers += weight;
+				?>
+   			}
+   			else
+   			{
+   				<?
+				avgDepth    += casterDepth.r;
+				numBlockers += 1.0f;
+				?>
+   			}
+		<?	
+		}
+		?>
+       				
+	} // Next sample
+
+}
+
+//-----------------------------------------------------------------------------
+// Name : pcss()
+// Desc : PCSS using a Halton random sequence and depth extent mask for blocker search
+//-----------------------------------------------------------------------------
+__shadercall float pcss( float2 shadowMapUV, float pixelDepth, float linearDepth, float2 screenCoords, script LightingParameters params )
+{
+	// Compute average blocker distance
+	<?
+	float avgDepth    = 0.0f;
+	float numBlockers = 0.0f;
+	?>
+	
+	bool useEdgeMask = false;
+	if ( useEdgeMask )
+	{
+		/*
+		// Edge Mask Based System	
+		<?float2 edgeMask;?>
+		sampleChannels( "edgeMask", "sShadowEdgeTex", "sShadowEdge", "shadowMapUV", params.edgeChannels );
+		
+		//void sampleBilinear2DLevel( "edgeMaskData", "sShadowEdgeTex", "sShadowEdge", "shadowMapUV", ShaderParam textureSize, ShaderParam mipLevel )
+		//<?float4 __edgeData = sample2DLevel( $edgeTexture, $edgeSampler, $texCoords, 0 );?>
+		//channelCopy( edgeMask, "__edgeData", channels, true );
+		<?
+		edgeMask.x -= 0.001f;
+		edgeMask.y += 0.001f;
+		if ( edgeMask.x < linearDepth )
+		{
+			avgDepth    += edgeMask.x;
+			numBlockers += 1.0f;
+		}
+		?>
+		*/	
+	}
+	else
+	{
+		if ( params.linearDepth )
+			<?computeAverageBlocker( avgDepth, numBlockers, shadowMapUV, linearDepth, ${params.secondaryTaps} );?>
+		else
+			<?computeAverageBlocker( avgDepth, numBlockers, shadowMapUV, pixelDepth, ${params.secondaryTaps} );?>
+	
+		float nss = params.secondaryTaps;
+		<?
+		float numSearchSamples = $nss;
+		
+		// If all samples were occluded, can also bail
+		//if( abs(numBlockers - numSearchSamples) < 0.5f )
+		//	return 0.0f;
+		?>
+	}
+	
+	<?
+	// If there are no possible blockers, early out
+	if ( numBlockers > 0.0f )
+		avgDepth /= (numBlockers + 0.0000001f);
+	else
+		return 1.0f;
+	?>
+	
+	// If we were given non-linear depths, convert to linear
+	if ( !params.linearDepth && !useEdgeMask )
+    {
+        <?
+            float A  = _lightClipDistance.y * _lightClipDistance.z; /// (_lightClipDistance.y - _lightClipDistance.x);
+            float B  = -_lightClipDistance.x * A;
+            float Z  = B / (avgDepth - A);
+            avgDepth = Z * _lightClipDistance.z + _lightClipDistance.w;	
+        ?>
+    } // End if linearize
+	
+	<?
+	// Compute penumbra radius
+	float distance = (linearDepth - avgDepth) * _lightClipDistance.y;
+	float tt       = saturate( distance * _shadowRadii.z + _shadowRadii.w );
+	float radius   = lerp( _shadowRadii.x, _shadowRadii.y, tt * tt );
+	?>
+
+	// Run PCF (we'll use a half and half approach to sampling reduction over the radius)
+	uint tapStep  = params.primaryTaps / 2;
+	uint tapIndex = 0;
+	<?
+	float4 weights = 0.25;
+	float2 coords;
+	float  adjustedDistance, shadow, lit = 0;
+	float  filterSize = radius * _shadowTextureSize.zw;
+	float  totalTaps = 0;
+	?>
+
+	initializeHaltonKernel( tapStep * 2 );
+
+	if ( params.rotateSamples )
+	{
+		//<?float2 rndOffset = sample2DLevel( sRandomTex, sRandom, shadowMapUV.xy * 30.0f, 0 ) * 2.0f - 1.0f;?>
+		<?float2 rndOffset = sample2DLevel( sRandomTex, sRandom, screenCoords * 15.0f, 0 ) * 2.0f - 1.0f;?>
+	}	
+
+	// For each requested tap
+	for( uint i = 0; i < tapStep; ++i )
+    {
+		// Compute a sampling coordinate
+		if ( params.rotateSamples )
+		{
+			<?
+			coords.x =  rndOffset.r * haltonSamples[$tapIndex].x + rndOffset.g * haltonSamples[$tapIndex].y; 
+			coords.y = -rndOffset.g * haltonSamples[$tapIndex].x + rndOffset.r * haltonSamples[$tapIndex].y;
+			coords   = coords * filterSize + shadowMapUV;
+			?>
+		}
+		else
+		{
+			<?coords = shadowMapUV + haltonSamples[$tapIndex].xy * filterSize;?>
+		}
+
+		<?
+        // Apply a cone bias
+		adjustedDistance = pixelDepth - haltonSamples[$tapIndex].z * 0.0000f; //_shadowBias.x <- Maximum bias
+		
+		// Run the depth comparison		
+		shadow = shadowMapCompare( coords, adjustedDistance, weights, $params, ${!params.manual2x2} );	
+		
+		// Accumulate result
+		lit += shadow;
+		
+		// Increment number of taps
+		totalTaps++;
+        ?>
+		
+		// Increment tap index
+		tapIndex++;
+				
+	} // Next sample
+
+	<?
+	// If the radius is larger than half the largest size, take the remaining samples
+	if ( radius > (_shadowRadii.y * 0.5f) )
+	{
+	?>
+		// For each requested tap
+		for( uint i = 0; i < tapStep; ++i )
+		{
+			// Compute a sampling coordinate
+			if ( params.rotateSamples )
+			{
+				<?
+				coords.x =  rndOffset.r * haltonSamples[$tapIndex].x + rndOffset.g * haltonSamples[$tapIndex].y; 
+				coords.y = -rndOffset.g * haltonSamples[$tapIndex].x + rndOffset.r * haltonSamples[$tapIndex].y;
+				coords   = coords * filterSize + shadowMapUV;
+				?>
+			}
+			else
+			{
+				<?coords = shadowMapUV + haltonSamples[$tapIndex].xy * filterSize;?>
+			}
+		
+			<?
+            // Apply a cone bias
+			adjustedDistance = pixelDepth - haltonSamples[$tapIndex].z * 0.0000f; //_shadowBias.x <- Maximum bias
+			
+			// Run the depth comparison		
+			shadow = shadowMapCompare( coords, adjustedDistance, weights, $params, ${!params.manual2x2} );	
+			
+			// Accumulate result
+			lit += shadow;
+			
+			// Increment number of taps
+			totalTaps++;
+            ?>
+
+			// Increment tap index
+			tapIndex++;
+					
+		} // Next sample
+	<?
+	} // End if samples remain
+	
+	// Return the final shadow average
+	return (lit / totalTaps);
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : vsm()
+// Desc : Variance shadow mapping (standard)
+//-----------------------------------------------------------------------------
+__shadercall float vsm( float2 shadowMapUV, float linearDepth, script LightingParameters params )
+{
+	// Sample the moments
+	<?float2 moments;?>
+	if ( params.manual2x2 )
+		sampleBilinear2D( "moments", "sShadowTex", "sShadow", "shadowMapUV", "_shadowTextureSize" );
+	else
+		<?moments = sample2D( sShadowTex, sShadow, shadowMapUV ).rg;?>
+
+	<?
+	// Compute Chebyshev's inequality
+	float p        = (linearDepth <= moments.x);
+	float variance = max( _minVariance, moments.y - moments.x * moments.x );
+	float delta    = linearDepth - moments.x;
+	float p_max    = variance / (variance + delta * delta);
+
+	return smoothstep( _minCutoff, 1.0f, max( p, p_max ) );
+	?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : esm()
+// Desc : Exponential shadow mapping (standard)
+//-----------------------------------------------------------------------------
+__shadercall float esm( float2 shadowMapUV, float linearDepth, script LightingParameters params )
+{
+	// Sample the moment
+	<?float moment;?>
+	if ( params.manual2x2 )
+		sampleBilinear2D( "moment", "sShadowTex", "sShadow", "shadowMapUV", "_shadowTextureSize" );
+	else
+		<?moment = sample2D( sShadowTex, sShadow, shadowMapUV ).r;?>
+	
+	<?
+	return saturate( moment * exp( -_k * linearDepth ) );
+	?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : evsm()
+// Desc : Exponential variance shadow mapping. 
+// Note : Traditional EVSM uses +/- warping whereas this method simply computes
+//        standard VSM and ESM separately and takes the min. The reason we went
+//        this way is it seems to do a better overall job visually for the same
+//        memory costs, but also, the 4th channel allows us to keep our access
+//        to the unblurred linear depth. Thus, we can more easily incorporate 
+//        other ideas (e.g., contact hardening, PCSS) if desired.
+//-----------------------------------------------------------------------------
+__shadercall float evsm( float2 shadowMapUV, float linearDepth, script LightingParameters params )
+{
+	// Sample the moments
+	<?float4 moments;?>
+	if ( params.manual2x2 )
+		sampleBilinear2D( "moments", "sShadowTex", "sShadow", "shadowMapUV", "_shadowTextureSize" );
+	else
+		<?moments = sample2D( sShadowTex, sShadow, shadowMapUV );?>
+
+	<?
+	// Compute variance result
+	float p         = (linearDepth <= moments.x);
+	float variance  = max( _minVariance, moments.y - moments.x * moments.x );
+	float delta     = linearDepth - moments.x;
+	float p_max     = variance / (variance + delta * delta);
+	float vsmResult = max( p, p_max );
+	
+	// Compute exponential result
+	float esmResult = saturate( moments.z * exp( -_k * linearDepth ) );
+	
+	// Smoothstep the minimum of the two results
+	return smoothstep( _minCutoff, 1.0f, min( vsmResult, esmResult ) );
+	?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : computeShadow()
+// Desc : Computes a shadowing term based on the information in a shadow map.
+//-----------------------------------------------------------------------------
+__shadercall void computeShadow( inout LightingData lighting, SurfaceData surface, script LightingParameters params ) 
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+	<?cbufferrefs
+		_cbLight;
+		_cbShadow;
+	?>
+    // Sampler buffer usage.
+	<?samplerrefs
+		_sbLight;
+	?>
+	
+	// Setup any global values needed for shadowing
+	setupShadowGlobals( params );
+	
+    // Compute shadow term
+	if ( params.readAttenuationBuffer )
+	{
+		<?lighting.shadow = dot( _lightAttenuationBufferMask, sample2D( sAttenuationBufferTex, sAttenuationBuffer, surface.screenCoords.xy ) );?>
+	}
+    else if ( params.shadowMethod == 0 || params.primaryTaps == 0 )
+    {
+	    <?lighting.shadow = 1.0f;?>
+    }
+    else
+    {
+		<?
+        // Compute coordinates for sampling the shadow map
+        float4 shadowMapCoords = computeShadowMapCoords( lighting, surface, $params );
+		
+		// Compute linear depth 
+		float linearDepth = surface.lightSpaceZ * _lightClipDistance.z + _lightClipDistance.w;
+        ?>
+
+		// Compute a shadow color term for translucent objects (if required)
+		if ( params.translucent )
+			<?lighting.shadowColor = sample2D( sShadowColorTex, sShadowColor, surface.projectiveTexCoords.xy );?>
+		else
+			<?lighting.shadowColor = float4( 1, 1, 1, 0 );?>
+
+		// If we are using edge masking
+		if ( params.edgeMask || params.depthExtentsMask )
+		{
+			<?bool isPenumbra = false;?>
+		
+			// Is this a penumbra pixel?
+			if ( params.edgeMask )
+			{
+				// When translucency is on, we put the edge mask in color.a (optional)
+				if ( params.translucent )
+					<?isPenumbra = lighting.shadowColor.a > 0;?>
+				else
+					<?isPenumbra = dot( sample2D( sShadowEdgeTex, sShadowEdge, shadowMapCoords.xy ), _edgeTextureChannelMask0 ) > 1e-6f;?>
+			}
+			else if ( params.depthExtentsMask )
+			{
+				<?
+				float4 edgeData = sample2D( sShadowEdgeTex, sShadowEdge, shadowMapCoords.xy );
+				float minDepth  = dot( edgeData, _edgeTextureChannelMask0 ) - 0.001f;
+				float maxDepth  = dot( edgeData, _edgeTextureChannelMask1 ) + 0.001f;
+				isPenumbra      = (linearDepth > minDepth && linearDepth < maxDepth);
+				?>
+			}
+
+			<?
+			// If this is not a penumbra pixel
+			if ( !isPenumbra )
+			{
+				// Take a single tap
+				lighting.shadow = shadowMapCompare( shadowMapCoords.xy, shadowMapCoords.z - 0.0000f, float4(0,0,0,0), $params, $false );	
+
+				// Apply attenuation 
+				attenuateShadow( lighting.shadow, surface.linearZ, ${params.lightType == LightType::Directional} );
+
+				// Exit
+				return;
+				
+			} // End if not penumbra
+			?>
+		
+		} // End edge masking	
+		
+		// Run the full algorithm
+		if ( params.PCF )
+			<?lighting.shadow = pcfHalton( shadowMapCoords.xy, shadowMapCoords.z, _shadowRadii.y, $params.primaryTaps, $params );?>
+		else if ( params.PCSS )
+			<?lighting.shadow = pcss( shadowMapCoords.xy, shadowMapCoords.z, linearDepth, surface.screenCoords, $params );?>
+		else if ( params.VSM )
+			<?lighting.shadow = vsm( shadowMapCoords.xy, linearDepth, $params );?>
+		else if ( params.ESM )
+			<?lighting.shadow = esm( shadowMapCoords.xy, linearDepth, $params );?>
+		else if ( params.EVSM )
+			<?lighting.shadow = evsm( shadowMapCoords.xy, linearDepth, $params );?>
+		
+		// Apply attenuation
+		<?attenuateShadow( lighting.shadow, surface.linearZ, ${params.lightType == LightType::Directional} );?>
+
+                
+    } // End if apply shadows
+}
+
+//-----------------------------------------------------------------------------
+// Name : setupShadowGlobals()
+// Desc : Sets up any global values needed for shadow computations
+//-----------------------------------------------------------------------------
+void setupShadowGlobals( LightingParameters params ) 
+{
+	// Define some locals for use under different conditions
+	if ( params.PCF || params.PCSS )
+	{
+		<?global    
+		#define _minRadius    _shadowRadii.x
+		#define _maxRadius    _shadowRadii.y
+		#define _radiusScale  _shadowRadii.z
+		#define _radiusBias   _shadowRadii.w
+		?>
+	}
+	if ( params.VSM || params.ESM || params.EVSM )
+	{	
+		<?global    
+		#define _minVariance  _shadowRadii.x
+		#define _k            _shadowRadii.y
+		#define _minCutoff    _shadowRadii.z
+		?>
+	}
+}
+
+#endif // !_SHADOWS_SHH_

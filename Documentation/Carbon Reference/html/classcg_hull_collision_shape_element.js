@@ -1,0 +1,26 @@
+var classcg_hull_collision_shape_element =
+[
+    [ "cgHullCollisionShapeElement", "classcg_hull_collision_shape_element.html#aff9008e61f9f48cd84a8602480d4196a", null ],
+    [ "cgHullCollisionShapeElement", "classcg_hull_collision_shape_element.html#abb0d9f59ffe4773829801be839cb3060", null ],
+    [ "~cgHullCollisionShapeElement", "classcg_hull_collision_shape_element.html#a7b77c80bb1abe716dedba19ea863a95b", null ],
+    [ "allocateClone", "classcg_hull_collision_shape_element.html#a4cf2bbd1da28032b047b9a6b1e6c46a2", null ],
+    [ "allocateNew", "classcg_hull_collision_shape_element.html#aabc9ef6abacb2a43b7af94c6361871e2", null ],
+    [ "autoFit", "classcg_hull_collision_shape_element.html#ae1b4c30aac7fc641bc8d9b08ea4ac51b", null ],
+    [ "computeShapeTransform", "classcg_hull_collision_shape_element.html#a018c0f7fa16d16fbd993719354c1bbfe", null ],
+    [ "createSandboxMesh", "classcg_hull_collision_shape_element.html#a1de3ab5c48cacc0e229cd62d477afcb5", null ],
+    [ "dispose", "classcg_hull_collision_shape_element.html#ad4a6afbbe599b1d96eac94a3dedf5c9a", null ],
+    [ "generatePhysicsShape", "classcg_hull_collision_shape_element.html#a3584597e3edcc366a130f56f93e8b25c", null ],
+    [ "getDatabaseTable", "classcg_hull_collision_shape_element.html#afbb3b43a3fd427d54d7956fc0a4d5f49", null ],
+    [ "getReferenceType", "classcg_hull_collision_shape_element.html#a7e704aaddc158c1c7bf0aa5ca7dde968", null ],
+    [ "insertComponentData", "classcg_hull_collision_shape_element.html#afa0b8f58d6f1fe380b079c713f375315", null ],
+    [ "onComponentCreated", "classcg_hull_collision_shape_element.html#af7dec20aabd8bd8ac81a6bd735705320", null ],
+    [ "onComponentLoading", "classcg_hull_collision_shape_element.html#a0126a66368dbd75fd03935288917feac", null ],
+    [ "prepareQueries", "classcg_hull_collision_shape_element.html#a8cfacd7aac3718bdc016171ba8f6e6d8", null ],
+    [ "queryReferenceType", "classcg_hull_collision_shape_element.html#a3f28d137384d7f5e3e43f74cc0d9d33f", null ],
+    [ "setTransform", "classcg_hull_collision_shape_element.html#a9bdcf27f821e047f13a681cbba553aed", null ],
+    [ "mCollapseTolerance", "classcg_hull_collision_shape_element.html#ac4ba8ff6800b4e482c918c4b8776ef68", null ],
+    [ "mInsertHullCollisionShape", "classcg_hull_collision_shape_element.html#ac0a81edcfbb58fe75bd0311c4740ded2", null ],
+    [ "mLoadHullCollisionShape", "classcg_hull_collision_shape_element.html#a60b6400bdbf8ed3ee79d16f4fb71d389", null ],
+    [ "mSerializedDataSource", "classcg_hull_collision_shape_element.html#ae9b29084ed5503112265714f64fef2c8", null ],
+    [ "mUpdateSerializedData", "classcg_hull_collision_shape_element.html#ab5f097770befb77003a180a88416c379", null ]
+];

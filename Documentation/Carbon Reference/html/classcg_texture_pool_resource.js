@@ -1,0 +1,25 @@
+var classcg_texture_pool_resource =
+[
+    [ "ChannelAssignment", "structcg_texture_pool_resource_1_1_channel_assignment.html", "structcg_texture_pool_resource_1_1_channel_assignment" ],
+    [ "cgTexturePoolResource", "classcg_texture_pool_resource.html#a6903ed6368bd172b863d7e45f3be5d33", null ],
+    [ "~cgTexturePoolResource", "classcg_texture_pool_resource.html#a2c7ae718ee5eae991506f8d26dfb957e", null ],
+    [ "assign", "classcg_texture_pool_resource.html#a035f7d678b2d7cc97126b67b678f513c", null ],
+    [ "canAccommodate", "classcg_texture_pool_resource.html#a2a671ffa09757999c56c4cab4a6ff974", null ],
+    [ "channelsAvailable", "classcg_texture_pool_resource.html#a88aa91e0c674dc29f99f83dbbf501d14", null ],
+    [ "clearAssignments", "classcg_texture_pool_resource.html#abd21ecd7d834902b50cb47db3a8e102a", null ],
+    [ "getBufferType", "classcg_texture_pool_resource.html#a5431ed22cf23db2718b132015b66434c", null ],
+    [ "getChannelAssignments", "classcg_texture_pool_resource.html#abe7460e1ad1b08415ac2ce8573927a50", null ],
+    [ "getChannelCount", "classcg_texture_pool_resource.html#a54034ec6fddeb7696fb5a182f899e8ab", null ],
+    [ "getChannelMask", "classcg_texture_pool_resource.html#a35841164273bc66acde25de3a8536ba3", null ],
+    [ "getDescription", "classcg_texture_pool_resource.html#aada3540801e42a2827f9f7af8a6be0b4", null ],
+    [ "getFormat", "classcg_texture_pool_resource.html#a412c394151e98985caafb2f0acbc112d", null ],
+    [ "getResolution", "classcg_texture_pool_resource.html#a1420f2c4f1fcaa3903b62d36c9b809cd", null ],
+    [ "getResource", "classcg_texture_pool_resource.html#a22c7fd85f6f1ba24fcbf06932e4d6abd", null ],
+    [ "getTimeLastAssigned", "classcg_texture_pool_resource.html#a0b2483b7e7bb99b04670b9cc003e421a", null ],
+    [ "getType", "classcg_texture_pool_resource.html#a8ca73d9cf587a5f80c21ea32e9ad7997", null ],
+    [ "initialize", "classcg_texture_pool_resource.html#a4721b23c8d7b3c83b63fbac66870bdaf", null ],
+    [ "isAssignedType", "classcg_texture_pool_resource.html#a3304b629a476ec591157928d3e72bdf2", null ],
+    [ "isResourceLost", "classcg_texture_pool_resource.html#a4d61b3ba1dc26e19586025568ae5b0ce", null ],
+    [ "unassign", "classcg_texture_pool_resource.html#af73205360ac6518947e69f6dac775023", null ],
+    [ "wasPreviousOwner", "classcg_texture_pool_resource.html#a0e78c1f2d658d4397e9c180b88df0e2f", null ]
+];

@@ -1,0 +1,215 @@
+//---------------------------------------------------------------------------//
+//          ____                   _                    _                    //
+//         / ___| _ __   ___  __ _| |_ _ __ ___  __   _/ | __  __            //
+//         \___ \| '_ \ / _ \/ _` | __| '__/ _ \ \ \ / / | \ \/ /            //
+//          ___) | |_) |  __/ (_| | |_| | |  __/  \ V /| |_ >  <             //
+//         |____/| .__/ \___|\__, |\__|_|  \___|   \_/ |_(_)_/\_\            //
+//               |_|       Game |_| Institute - Speqtre Game Engine          //
+//                                                                           //
+//---------------------------------------------------------------------------//
+//                                                                           //
+// Name : Types.shh                                                          //
+//                                                                           //
+// Desc : Provides common structures and defines used by the engine supplied //
+//        material shader scripts.                                           //
+//                                                                           //
+//---------------------------------------------------------------------------//
+//        Copyright 1997 - 2010 Game Institute. All Rights Reserved.         //
+//---------------------------------------------------------------------------//
+
+#ifndef _TYPES_SHH_
+#define _TYPES_SHH_
+
+///////////////////////////////////////////////////////////////////////////////
+// Global Typedefs
+///////////////////////////////////////////////////////////////////////////////
+#define ShaderParam const String&
+
+///////////////////////////////////////////////////////////////////////////////
+// Global Enumerations
+///////////////////////////////////////////////////////////////////////////////
+// ToDo: Note -- We'll probably end up using the physical application bound enum
+//       at some point. For now however we declare directly.
+enum APIMode
+{
+	DirectX9  = 0,
+	DirectX10 = 1,
+	DirectX11 = 2
+};
+
+enum ShadingQuality
+{
+	LowQuality    = 0,
+	MediumQuality = 1,
+	HighQuality   = 2,
+	UltraQuality  = 3
+};
+
+enum LightType
+{
+	NoLight     = 0,
+    Omni        = 1,    // 'Point' is a reserved keyword. Fix this later.
+    Spot        = 2,
+    Directional = 3,
+    Projector   = 4,
+    Hemisphere  = 5,
+    IBL         = 6
+};
+
+enum RenderFlags
+{
+	// Camera
+	OrthographicCamera   = 0x1,     
+    
+	// Lighting System
+	DeferredRendering    = 0x2,
+	DeferredLighting     = 0x8,
+	SpecularColorOutput  = 0x40,
+	HDRLighting          = 0x80,
+	ViewSpaceLighting    = 0x100,
+	GBufferSRGB          = 0x200,
+
+	// Depth/Normals	
+	NonLinearZ           = 0x400,
+	NormalizedDistance   = 0x800,
+	SurfaceNormals       = 0x1000,
+	PackedDepth          = 0x2000,
+	
+	// General	
+	ComputeGroupID       = 0x4000,
+};
+
+enum LightFlags
+{
+	AttenuationTexture         = 0x1,
+	DistanceAttenuationTexture = 0x2,
+	ColorTexture3D             = 0x4,
+	DiffuseIBL                 = 0x8,
+	SpecularIBL                = 0x10,
+	ComputeAmbient             = 0x20,
+	ComputeDiffuse             = 0x40,
+	ComputeSpecular            = 0x80,
+	UseSSAO                    = 0x100,
+	Trilighting                = 0x200,
+};
+
+enum MaterialFlags
+{
+	// Textures
+	SampleDiffuseTexture   = 0x1,
+	SampleSpecularColor    = 0x2,
+	SampleSpecularMask     = 0x4,
+	SampleGlossTexture     = 0x8,
+	SampleEmissiveTexture  = 0x10,
+	SampleOpacityTexture   = 0x20,
+
+	// Modifiers
+	AlphaTest              = 0x1000,
+	DecodeSRGB             = 0x2000,
+	ComputeToksvig         = 0x4000,
+	CorrectNormals         = 0x8000,
+	Translucent            = 0x10000,
+	OpacityInDiffuse       = 0x20000,
+	SurfaceFresnel         = 0x40000,
+	Metal                  = 0x80000,
+	Transmissive           = 0x100000,
+	Emissive               = 0x200000,
+};
+
+enum LightTextureType
+{
+    None        = 0,
+    Standard    = 1,
+    RNM         = 2
+};
+
+enum AttenuationTextureType
+{
+    NoTex       = 0,
+    Distance    = 1,
+    Mask        = 2,
+    Both        = 3
+};
+
+enum OutputEncodingType
+{
+    NoEncode    = 0,
+    RGBE        = 1,
+    LogLUV      = 2
+};
+
+enum NormalType
+{
+	NoNormal    = 0,
+	NormalWorld = 1,
+	NormalView  = 2
+};
+
+enum NormalSource
+{
+	Vertex         = 0,
+	NormalMap      = 1,
+	ParallaxOffset = 2
+};
+
+enum OffsetType
+{
+	NoOffset        = 0,
+    ScaleBiasOffset = 1,
+    NormalOffset    = 2
+};
+
+/*//-----------------------------------------------------------------------------
+// Name : BlurInfo (Class)
+// Desc : Support class for providing blur information to driver class
+//-----------------------------------------------------------------------------
+class BlurInfo
+{	
+	int     numPasses;
+	int     pixelRadius;
+	float   distanceFactor;
+	float   worldRadius;
+	int     inputAlpha;
+	int     outputAlpha;
+
+	BlurInfo()
+	{
+		numPasses      = 0;
+		pixelRadius    = 0;
+		distanceFactor = 0;
+		worldRadius    = 0;
+		inputAlpha     = AlphaWeightType::NoWeight;
+		outputAlpha    = AlphaWeightType::NoWeight;
+	}
+};
+
+class ShadowBlurInfo : BlurInfo
+{
+	int      mipLevel;
+	Vector2  mipRange;
+	
+	ShadowBlurInfo() 
+	{
+		super();
+		mipLevel = 0;
+		mipRange = Vector2( 0, 0 );
+	}		
+};*/
+
+
+////////////////////////////////////
+// Constants
+////////////////////////////////////
+
+//TODO: Move these all to a more permanent home
+
+const float PI                          = 3.1415926535f;
+const float RECIP_PI                    = 1.0f / PI;
+
+const float RADIANS_PER_DEGREE          = 0.0174532925f;
+const float DEGREES_PER_RADIAN          = 57.2957795f;
+
+// The maximum value permittable in our HDR computations
+const float HDR_FLOAT_MAX               = 65000.0f;
+
+#endif // !_TYPES_SHH_

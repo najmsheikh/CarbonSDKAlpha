@@ -1,0 +1,27 @@
+-- Table: Objects::ProjectorLight -- {D8C9F278-6183-43C9-B20B-0EA0BB1E274E}
+
+CREATE TABLE [Objects::ProjectorLight] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [OuterRange] real DEFAULT 20, 
+  [InnerRange] real DEFAULT 0, 
+  [SizeU] real, 
+  [SizeV] real, 
+  [FoVU] real,   
+  [FoVV] real,  
+  [TilingU] real,   
+  [TilingV] real,  
+  [DistanceAttenuationSplineId] integer DEFAULT 0, 
+  [AttenuationMaskSamplerId] integer DEFAULT 0,   
+  [LightSamplerId] integer DEFAULT 0,
+  [ShadowFrustumId] integer DEFAULT 0, 
+  [ShadowUpdateRate] real DEFAULT 0,
+  [ProjectionPlaybackRate] real DEFAULT 0, 
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER [Objects::ProjectorLight_OnDelete]
+  BEFORE DELETE
+  ON [Objects::ProjectorLight]
+  BEGIN
+    DELETE FROM [Objects::Base::Light] WHERE RefId=old.RefId;  
+    DELETE FROM [ShadowFrustums] WHERE FrustumId=old.ShadowFrustumId;
+  END;

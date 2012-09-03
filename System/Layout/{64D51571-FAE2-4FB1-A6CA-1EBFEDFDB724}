@@ -1,0 +1,14 @@
+--Table: Objects::DirectionalLight
+
+CREATE TABLE [Objects::DirectionalLight] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [SplitOverlapSize] real, 
+  [ShadowUpdateRate] real DEFAULT 0, 
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER [Objects::DirectionalLight_OnDelete]
+  BEFORE DELETE
+  ON [Objects::DirectionalLight]
+  BEGIN
+    DELETE FROM [Objects::Base::Light] WHERE RefId=old.RefId;
+  END;

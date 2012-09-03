@@ -1,0 +1,24 @@
+--Table: Objects::HemisphereLight -- {58AC6038-C67D-4EFB-8CA1-2E81600DD201}
+
+CREATE TABLE [Objects::HemisphereLight] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [DiffuseBackR] real DEFAULT (0), 
+  [DiffuseBackG] real DEFAULT (0), 
+  [DiffuseBackB] real DEFAULT (0), 
+  [DiffuseBackHDRScalar] real DEFAULT (1), 
+  [SpecularBackR] real DEFAULT (0), 
+  [SpecularBackG] real DEFAULT (0), 
+  [SpecularBackB] real DEFAULT (0), 
+  [SpecularBackHDRScalar] real DEFAULT (1), 
+  [OuterRange] real DEFAULT (20), 
+  [InnerRange] real DEFAULT (0), 
+  [DistanceAttenuationSplineId] integer DEFAULT (0), 
+  [AttenuationMaskSamplerId] integer DEFAULT (0), 
+  [RefCount] integer DEFAULT (0));
+
+CREATE TRIGGER [Objects::HemisphereLight_OnDelete]
+  BEFORE DELETE
+  ON [Objects::HemisphereLight]
+  BEGIN
+    DELETE FROM [Objects::Base::Light] WHERE RefId=old.RefId;  
+  END;

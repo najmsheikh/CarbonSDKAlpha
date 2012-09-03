@@ -1,0 +1,11 @@
+--Table: Objects::Base::SpatialTree
+
+CREATE TABLE IF NOT EXISTS [Objects::Base::SpatialTree] (
+  [RefId] integer NOT NULL PRIMARY KEY);
+
+CREATE TRIGGER IF NOT EXISTS [Objects::Base::SpatialTree_OnDelete]
+  BEFORE DELETE
+  ON [Objects::Base::SpatialTree]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;

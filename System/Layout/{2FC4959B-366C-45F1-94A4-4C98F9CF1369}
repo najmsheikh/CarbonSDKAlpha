@@ -1,0 +1,13 @@
+--Table: Objects::Target
+
+CREATE TABLE [Objects::Target] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [Alignment] smallint DEFAULT 0, 
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER [Objects::Target_OnDelete]
+  BEFORE DELETE
+  ON [Objects::Target]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;

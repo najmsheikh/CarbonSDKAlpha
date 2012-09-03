@@ -1,0 +1,16 @@
+--Table: Objects::Bone -- {D4FAA572-A4A4-4F14-8E74-75842E63D4CB}
+
+CREATE TABLE [Objects::Bone] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [Width] real DEFAULT 0.15,
+  [Height] real DEFAULT 0.15,
+  [Length] real DEFAULT 0.0,
+  [Taper] real DEFAULT 0.9,
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER [Objects::Bone_OnDelete]
+  BEFORE DELETE
+  ON [Objects::Bone]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;

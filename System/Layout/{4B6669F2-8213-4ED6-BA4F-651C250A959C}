@@ -1,0 +1,13 @@
+--Table: Objects::Dummy -- {4B6669F2-8213-4ED6-BA4F-651C250A959C}
+
+CREATE TABLE [Objects::Dummy] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [DisplaySize] real DEFAULT 3,
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER [Objects::Dummy_OnDelete]
+  BEFORE DELETE
+  ON [Objects::Dummy]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;

@@ -1,0 +1,20 @@
+--Table: Objects::SoundEmitter -- {CADD1C4E-B47B-4807-AC33-8D43E8200865}
+
+CREATE TABLE [Objects::SoundEmitter] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [SourceFile] path, 
+  [Streaming] tinyint(1) DEFAULT (0),
+  [DefaultVolume] real DEFAULT (1),
+  [AutoPlay] tinyint(1) DEFAULT (0),
+  [Looping] tinyint(1) DEFAULT (0),
+  [MuteOutsideRange] tinyint(1) DEFAULT (0),
+  [OuterRange] real,
+  [InnerRange] real DEFAULT(0),
+  [RefCount] integer DEFAULT (0));
+
+CREATE TRIGGER [Objects::SoundEmitter_OnDelete]
+  BEFORE DELETE
+  ON [Objects::SoundEmitter]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;

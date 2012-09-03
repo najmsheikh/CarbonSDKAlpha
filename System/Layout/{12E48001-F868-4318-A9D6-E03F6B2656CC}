@@ -1,0 +1,12 @@
+--Table: ObjectSubElements::CapsuleCollisionShape -- {12E48001-F868-4318-A9D6-E03F6B2656CC}
+
+CREATE TABLE [ObjectSubElements::CapsuleCollisionShape] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [RefCount] integer DEFAULT 0);  
+
+CREATE TRIGGER [ObjectSubElements::CapsuleCollisionShape_OnDelete]
+  BEFORE DELETE
+  ON [ObjectSubElements::CapsuleCollisionShape]
+  BEGIN
+    DELETE FROM [ObjectSubElements::Base::CollisionShape] WHERE RefId=old.RefId;  
+  END;

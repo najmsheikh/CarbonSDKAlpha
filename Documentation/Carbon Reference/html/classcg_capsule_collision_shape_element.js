@@ -1,0 +1,25 @@
+var classcg_capsule_collision_shape_element =
+[
+    [ "cgCapsuleCollisionShapeElement", "classcg_capsule_collision_shape_element.html#a6954ea8b9b71d6fd2aa737674f0270c0", null ],
+    [ "cgCapsuleCollisionShapeElement", "classcg_capsule_collision_shape_element.html#a9067e53485686b9170707ccbd20edbf9", null ],
+    [ "~cgCapsuleCollisionShapeElement", "classcg_capsule_collision_shape_element.html#aca7ef47263f1aa59799a6ceb1a0a9488", null ],
+    [ "allocateClone", "classcg_capsule_collision_shape_element.html#a280928d3744d14490ef1a5e42c679828", null ],
+    [ "allocateNew", "classcg_capsule_collision_shape_element.html#a7cb068b3290bfe847d55e86115afc3af", null ],
+    [ "applyElementRescale", "classcg_capsule_collision_shape_element.html#a068bb7e9ae2a377aedaa566e6bc79289", null ],
+    [ "autoFit", "classcg_capsule_collision_shape_element.html#a327955dc4b87f21c76ba6d9a8a87c2ba", null ],
+    [ "computeShapeTransform", "classcg_capsule_collision_shape_element.html#a2ca40e8e6715265fae1ef1da6258ff84", null ],
+    [ "createSandboxMesh", "classcg_capsule_collision_shape_element.html#a892c7e145f32b3ead109aa41155b0238", null ],
+    [ "dispose", "classcg_capsule_collision_shape_element.html#a35ed06218b001121356e539b66753cf0", null ],
+    [ "generatePhysicsShape", "classcg_capsule_collision_shape_element.html#a90e045d6abeb068cd32f389e6f5edad5", null ],
+    [ "getDatabaseTable", "classcg_capsule_collision_shape_element.html#a7b66e23ead0cc4487ba96262458c5387", null ],
+    [ "getReferenceType", "classcg_capsule_collision_shape_element.html#a44aa68c83702385bfc27ec324ac77650", null ],
+    [ "insertComponentData", "classcg_capsule_collision_shape_element.html#aed079b3df9790b4d4a647207851f0319", null ],
+    [ "onComponentCreated", "classcg_capsule_collision_shape_element.html#a02f34b69b2a8745ec50f896519146da3", null ],
+    [ "onComponentLoading", "classcg_capsule_collision_shape_element.html#aefc811e7419ff962aa04d19833e59eb6", null ],
+    [ "prepareQueries", "classcg_capsule_collision_shape_element.html#ad5f6962337364d6aa552ea4aa77cd9b0", null ],
+    [ "queryReferenceType", "classcg_capsule_collision_shape_element.html#ad61c97981a7ce385a4b03685cc8a75ac", null ],
+    [ "setDimensions", "classcg_capsule_collision_shape_element.html#a1f87269f76f30ad52b6e9562bb55c46d", null ],
+    [ "setTransform", "classcg_capsule_collision_shape_element.html#a5fd2448ef07410298e85b0bf04f4561d", null ],
+    [ "mInsertCapsuleCollisionShape", "classcg_capsule_collision_shape_element.html#aac2548a57a591e3d9c3513f1c8d119bf", null ],
+    [ "mLoadCapsuleCollisionShape", "classcg_capsule_collision_shape_element.html#a2c4be8c7145304cbb5eb8a04a3a4c2f7", null ]
+];

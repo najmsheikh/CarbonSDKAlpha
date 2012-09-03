@@ -1,0 +1,519 @@
+//---------------------------------------------------------------------------//
+//          ____                   _                    _                    //
+//         / ___| _ __   ___  __ _| |_ _ __ ___  __   _/ | __  __            //
+//         \___ \| '_ \ / _ \/ _` | __| '__/ _ \ \ \ / / | \ \/ /            //
+//          ___) | |_) |  __/ (_| | |_| | |  __/  \ V /| |_ >  <             //
+//         |____/| .__/ \___|\__, |\__|_|  \___|   \_/ |_(_)_/\_\            //
+//               |_|       Game |_| Institute - Speqtre Game Engine          //
+//                                                                           //
+//---------------------------------------------------------------------------//
+//                                                                           //
+// Name : SystemDefs.shh                                                     //
+//                                                                           //
+// Desc : Houses the declarations and definitions for the various system     //
+//        reserved shader material elements. These include items such as     //
+//        system required constant buffers (cbuffer), samplers, etc.         //
+//                                                                           //
+// Note : This file is for system use only. It should /not/ be directly      //
+//        included by any other material shader. Symbols declared here are   //
+//        automatically accessible to all material shaders.                  //
+//                                                                           //
+//---------------------------------------------------------------------------//
+//        Copyright 1997 - 2010 Game Institute. All Rights Reserved.         //
+//---------------------------------------------------------------------------//
+
+#ifndef _SYSTEMDEFS_SHH_
+#define _SYSTEMDEFS_SHH_
+
+///////////////////////////////////////////////////////////////////////////////
+// SystemDefs Header Includes
+///////////////////////////////////////////////////////////////////////////////
+#include "Types.shh"
+
+//-----------------------------------------------------------------------------
+// Common Constant Buffer Declarations
+//-----------------------------------------------------------------------------
+<?cbuffer _cbScene : register(b0), globaloffset(c0)
+    float4      _fogColor     = { 0.0f, 0.0f, 0.0f, 0.0f };
+    float4      _fogRange     = 0.0f;                               //x = Start, y = End, z = 1/(End-Start), w = -Start/(End-Start)
+    float       _fogDensity   = 0.0f;
+    float       _skyIntensity = 1.0f;
+    float       _currentTime;
+    float       _elapsedTime;
+?>
+
+<?cbuffer _cbCamera : register(b1), globaloffset(c4)
+    matrix      _viewMatrix;
+    matrix      _projectionMatrix;
+    matrix      _viewProjectionMatrix;
+    matrix      _inverseViewMatrix;
+    matrix      _inverseProjectionMatrix;
+    float3      _cameraPosition;
+    float3      _cameraDirection;
+    float       _cameraNear;
+    float       _cameraFar;
+    float       _cameraRecipNear;
+    float       _cameraRecipFar;
+    float       _cameraMaxDistance;
+    float       _cameraRecipMaxDistance;
+    float       _cameraRangeScale;                              
+    float       _cameraRangeBias;                               
+	float       _cameraInverseRangeScale;
+	float       _cameraInverseRangeBias;
+    float2      _cameraScreenToViewScale;                       
+    float2      _cameraScreenToViewBias;
+    float2      _cameraJitterAA;                        
+    float4      _viewportSize;
+    float2      _viewportOffset;
+    float4      _targetSize;
+    float2      _screenUVAdjustScale;
+    float2      _screenUVAdjustBias;
+?>
+
+// ToDo: Consider packing the lighting and shadow constant buffers where possible
+// in order to free up some buffer slots. (See sqLightObject::BeginLighting() vs 
+// cgLightObject::BeginShadowFill())
+<?cbuffer _cbLight : register(b2), globaloffset(c33)
+    float3      _lightPositionWorld;
+    float3      _lightDirectionWorld;
+    float4      _lightAttenuation;
+    float4      _lightDiffuse;
+    float4      _lightSpecular;
+    float4      _lightAmbient;
+    float4      _lightDiffuse2;
+    float4      _lightSpecular2;
+    float4      _lightAmbient2;
+    float4      _lightRim;
+    float4      _lightClipDistance;                             // x = near, y = far, z = 1/(far-near), w = -near/(far-near)
+    float3      _lightTexMipLevel = { 0, 0, 0 };                // x = atten/color tex, y = diffuse IBL max, z = specular IBL max 
+    float4      _lightAmbientOcclusionAmount;                   // x = Diffuse, y = Specular, z = Ambient, w = Direction
+?>
+
+<?cbuffer _cbSpotLight : register(b3), globaloffset(c48)
+    float4      _lightSpotTerms;
+?>
+
+<?cbuffer _cbProjectorLight : register(b3), globaloffset(c48)
+    float3      _lightProjectorTexData = 0.0f;                  // xy = UV tiling, z = frame 
+    float4      _lightConeAdjust;
+?>
+
+<?cbuffer _cbLightingSystem : register(b4), globaloffset(c50)
+    float3      _lightPosition;
+    float3      _lightDirection;
+	float4      _lightAttenuationBufferMask;
+    matrix      _lightTexProjMatrix;
+?>
+
+<?cbuffer _cbShadow : register(b5), globaloffset(c66)
+    float4      _shadowAttenuation = { 100000, 100001, 1, 0 };  // x = min distance, y = max distance, z = pre-computed atten scale, w = pre-computed atten bias (i.e., 1 - z)
+    float4      _shadowSplitBlend = { 0, 0, 1, 0 };
+    float4      _shadowTextureSize;                             // xy = dimensions, zw = 1/dimensions
+    float4      _edgeTextureChannelMask0;
+    float4      _edgeTextureChannelMask1;
+    float4      _shadowBias       = { 1, 0, 2, 3 };    
+	float4      _shadowRadii      = { 1, 5, 0.5, 5.0 };         // PCSS: xy = min/max radius, zw = scale/bias for distance ((1/(max-min), -min/(max-min))
+	                                                            // PCF:   x = radius, yzw = unused
+	                                                            // Stats: x = minVar, y = bleedReduction, z = esm k 
+?>
+
+<?cbuffer _cbMaterial : register(b6), globaloffset(c73)
+
+    // Material - core settings
+    float4      _materialDiffuse = {1.0, 1.0, 1.0, 1.0};
+    float4      _materialAmbient = {1.0, 1.0, 1.0, 1.0};
+    float4      _materialEmissive = {0.0, 0.0, 0.0, 1.0};
+    float4      _materialSpecular = {1.0, 1.0, 1.0, 1.0};
+    
+    float       _materialGloss;
+    float       _materialAlphaTestValue;
+
+    float       _materialReflectionIntensity;
+    float       _materialReflectionBumpiness;
+    float       _materialReflectionMipLevel;
+
+    float       _materialFresnelExponent;
+    float       _materialFresnelDiffuse;
+    float       _materialFresnelSpecular;
+    float       _materialFresnelReflection;
+    float       _materialFresnelTransparent;
+
+    float       _materialMetalnessAmount;
+    float       _materialMetalnessSpecular;
+    float       _materialMetalnessDiffuse;
+
+    float2      _materialOpacityMapStrength;                        // x = Diffuse, y = Specular
+
+    float       _parallaxHeightScale;
+    float       _parallaxHeightBias;
+
+    float       _materialRimExponent;
+    float       _materialRimIntensity;
+    float       _materialILR;
+?>
+
+<?cbuffer _cbObject : register(b7), globaloffset(c83)
+    float       _objectBlendFactor = 1.0;
+?>
+
+<?cbuffer _cbWorld : register(b8), globaloffset(c85)
+    matrix      _worldMatrix;
+    matrix      _worldITMatrix;
+?>
+
+// ToDo: Can these two be made local to the effect rather than global. 
+<?cbuffer _cbRSM : register(b9), globaloffset(c95)
+    float4      _rsmTextureSize;
+    float4      _rsmTextureScaleBias;                      
+    float4      _rsmScreenToViewScaleBias;
+    float4      _rsmDepthUnpack;
+    float3      _rsmPosition;
+    float3      _rsmDirection;
+    float3      _rsmColor;
+	float       _sampleRadius;  
+	float       _geometryBias; 
+    matrix      _rsmTexProjMatrix;
+    matrix      _rsmInvViewMatrix;
+?>
+
+<?cbuffer _cbGrid : register(b10), globaloffset(c112)
+	float3      _gridMin;
+	float3      _gridMax;
+	float3      _gridDimensions;
+	float3      _gridMinPrev;
+	float3      _gridMaxPrev;
+	float3      _gridDimensionsPrev;
+	float3      _gridShift;
+    float4      _gridColor;
+    float       _blendRegion;
+    float       _blendRegionPrev;
+?>
+
+<?cbuffer _cbVertexBlending : register(b11), globaloffset(c120), shaderconstraints(vs)
+    float3x4      _worldMatrices[ 20 ];
+?>
+
+//-----------------------------------------------------------------------------
+// Common Sampler Buffer Declarations
+//-----------------------------------------------------------------------------
+<?samplers _sbLight
+	Sampler2D     sShadowCustom              : register(s11);
+	Sampler2D     sShadowColor               : register(s12);
+	Sampler2D     sShadowEdge                : register(s12);
+	Sampler2D     sShadow                    : register(s13);
+    Sampler2DCmp  sShadowCmp                 : register(s13);
+	Sampler1D     sLightDistanceAttenuation  : register(s14);
+	Sampler2D     sLightAttenuation          : register(s15);
+	SamplerCube   sLightAttenuationCube      : register(s15);
+	Sampler2D     sLightColor                : register(s15);
+	Sampler3D     sLightColor3D              : register(s15);
+	SamplerCube   sLightColorCube            : register(s15);  
+?>
+
+//-----------------------------------------------------------------------------
+// Name : SystemExports (Class)
+// Desc : Container for all system defined variables and accessor methods.
+//-----------------------------------------------------------------------------
+class SystemExports
+{
+    SystemExports()
+    {
+		////////////////////////////////////////////
+		// Packed Flags
+		////////////////////////////////////////////
+		renderFlags                 = 0;
+		materialFlags               = 0;  
+		lightFlags                  = 0;     
+
+		////////////////////////////////////////////
+		// Geometry
+		////////////////////////////////////////////
+		maxBlendIndex               = -1; // No blending
+        useVTFBlending              = false;
+		depthType                   = DepthType::LinearZ_Packed;
+		surfaceNormalType           = NormalType::NoNormal;
+
+		////////////////////////////////////////////
+		// Renderer
+		////////////////////////////////////////////
+		outputEncodingType          = OutputEncodingType::NoEncode;
+		fogModel                    = FogModel::None;
+		shadingQuality              = ShadingQuality::HighQuality;
+		orthographicCamera          = false;
+		hdrLighting                 = false;
+		viewSpaceLighting           = false;
+        deferredRendering           = false;
+        deferredLighting            = false;
+		specularColorOutput         = false;
+		gBufferSRGB                 = false;
+		nonLinearZ                  = false;
+		normalizedDistance          = false;
+		surfaceNormals              = false;
+		packedDepth                 = false;
+		computeGroupID              = false;
+		cullMode                    = CullMode::Back;
+		colorWrites                 = ColorChannel::All;
+
+		////////////////////////////////////////////
+		// Lights
+		////////////////////////////////////////////
+		lightType                   = LightType::NoLight;
+		attenuationTexture          = false;
+		distanceAttenuationTexture  = false; 
+		colorTexture3D              = false; 
+		diffuseIBL                  = false;
+		specularIBL                 = false;
+		computeAmbient              = true;
+		computeDiffuse              = true;
+		computeSpecular             = true;
+		useSSAO                     = false;
+		trilighting                 = false;
+		shadowMethod                = 0;
+		primaryTaps                 = 0;
+		secondaryTaps               = 0;
+
+		////////////////////////////////////////////
+		// Materials
+		////////////////////////////////////////////
+		normalSource                = NormalSource::Vertex;
+		reflectionMode              = ReflectionMode::None;
+		lightTextureType            = LightTextureType::None;
+		sampleDiffuseTexture        = false;
+		sampleOpacityTexture        = false;
+		sampleSpecularColor         = false;
+		sampleSpecularMask          = false;
+		sampleGlossTexture          = false;
+		sampleEmissiveTexture       = false;
+		decodeSRGB                  = false;
+		computeToksvig              = false;
+		correctNormals              = false;
+		opacityInDiffuse            = false;
+		surfaceFresnel              = false;
+		metal                       = false;
+		transmissive                = false;
+		translucent                 = false;
+		alphaTest                   = false;
+		emissive                    = false;  
+    }
+
+    String SystemCommon( int shaderType )
+    {
+        // 0 = Vertex shader
+        // 1 = Pixel shader
+        String strCommon;
+        
+        // Reflect graphics API four character code defines to HLSL.
+        #if defined(DX9C)
+            strCommon.append( "#define DX9C\n" );
+        #elif defined(DX10)
+            strCommon.append( "#define DX10\n" );
+        #elif defined(DX11)
+            strCommon.append( "#define DX11\n" );
+        #endif
+        
+        // Vertex shader only
+        if ( shaderType == 0 )
+        {
+	        #if defined(DX9C)
+                strCommon.append(
+                    "#define SV_POSITION POSITION\n"
+                    "#define Sampler2D   sampler2D\n" // Vertex texture fetch
+				);
+
+            #endif // DX9C
+
+        } // End if vertex shader
+        
+        // Pixel shader only
+        if ( shaderType == 1 )
+        {
+	        #if defined(DX9C)
+                strCommon.append(
+                    "#define SV_POSITION VPOS\n"                   
+
+                    "#define SV_TARGET0 COLOR0\n"
+                    "#define SV_TARGET1 COLOR1\n"
+                    "#define SV_TARGET2 COLOR2\n"
+                    "#define SV_TARGET3 COLOR3\n"
+                    "#define SV_DEPTH   DEPTH\n"
+
+					"#define Texture1D   texture\n"
+                    "#define Texture2D   texture\n"
+                    "#define Texture3D   texture\n"
+                    "#define TextureCube texture\n"                    
+
+					"#define Sampler1D   sampler1D\n"
+                    "#define Sampler2D   sampler2D\n"
+                    "#define Sampler2DCmp sampler2D\n"
+                    "#define Sampler3D   sampler3D\n"
+                    "#define SamplerCube samplerCUBE\n"
+				);
+				
+            #elif defined(DX10) || defined(DX11)
+
+                strCommon.append(
+                    "#define Sampler1D   SamplerState\n"
+                    "#define Sampler2D   SamplerState\n"
+                    "#define Sampler2DCmp SamplerComparisonState\n"
+                    "#define Sampler3D   SamplerState\n"
+                    "#define SamplerCube SamplerState\n"
+				);
+
+            #endif // DX11
+
+        } // End if pixel shader
+        
+        // Vertex and pixel shaders
+        #if defined(DX10) || defined(DX11)
+
+            // Sampling methods DX10 / DX11
+            strCommon.append(
+				"#define sample1D( tex, samp, coords ) (tex).Sample( (samp), (coords) )\n"
+				"#define sample2D( tex, samp, coords ) (tex).Sample( (samp), (coords) )\n"
+				"#define sample3D( tex, samp, coords ) (tex).Sample( (samp), (coords) )\n"
+				"#define sampleCube( tex, samp, coords ) (tex).Sample( (samp), (coords) )\n"
+				"#define sample1DLevel( tex, samp, coords, lvl ) (tex).SampleLevel( (samp), (coords), (lvl) )\n"
+				"#define sample2DLevel( tex, samp, coords, lvl ) (tex).SampleLevel( (samp), (coords), (lvl) )\n"
+				"#define sample3DLevel( tex, samp, coords, lvl ) (tex).SampleLevel( (samp), (coords), (lvl) )\n"
+				"#define sampleCubeLevel( tex, samp, coords, lvl ) (tex).SampleLevel( (samp), (coords), (lvl) )\n"
+				"#define sample1DBias( tex, samp, coords, bias ) (tex).SampleBias( (samp), (coords), (bias) )\n"
+				"#define sample2DBias( tex, samp, coords, bias ) (tex).SampleBias( (samp), (coords), (bias) )\n"
+				"#define sample3DBias( tex, samp, coords, bias ) (tex).SampleBias( (samp), (coords), (bias) )\n"
+				"#define sampleCubeBias( tex, samp, coords, bias ) (tex).SampleBias( (samp), (coords), (bias) )\n"
+				"#define sample1DGrad( tex, samp, coords, dx, dy ) (tex).SampleGrad( (samp), (coords), (dx), (dy) )\n"
+				"#define sample2DGrad( tex, samp, coords, dx, dy ) (tex).SampleGrad( (samp), (coords), (dx), (dy) )\n"
+				"#define sample3DGrad( tex, samp, coords, dx, dy ) (tex).SampleGrad( (samp), (coords), (dx), (dy) )\n"
+				"#define sampleCubeGrad( tex, samp, coords, dx, dy ) (tex).SampleGrad( (samp), (coords), (dx), (dy) )\n"
+				"#define sample1DProj( tex, samp, coords ) (tex).Sample( (samp), ( (coords).x / (coords).w ) )\n"
+				"#define sample2DProj( tex, samp, coords ) (tex).Sample( (samp), ( (coords).xy / (coords).w ) )\n"
+				"#define sample3DProj( tex, samp, coords ) (tex).Sample( (samp), ( (coords).xyz / (coords).w ) )\n"
+				"#define sampleCubeProj( tex, samp, coords ) (tex).Sample( (samp), ( (coords).xyz / (coords).w ) )\n"
+				"#define sample1DCmp( tex, samp, coords, val ) (tex).SampleCmp( (samp), (coords), (val) )\n"
+				"#define sample2DCmp( tex, samp, coords, val ) (tex).SampleCmp( (samp), (coords), (val) )\n"
+				"#define sample3DCmp( tex, samp, coords, val ) (tex).SampleCmp( (samp), (coords), (val) )\n"
+				"#define sampleCubeCmp( tex, samp, coords, val ) (tex).SampleCmp( (samp), (coords), (val) )\n"
+				"#define sample1DCmpLevel0( tex, samp, coords, val ) (tex).SampleCmpLevelZero( (samp), (coords), (val) )\n"
+				"#define sample2DCmpLevel0( tex, samp, coords, val ) (tex).SampleCmpLevelZero( (samp), (coords), (val) )\n"
+				"#define sample3DCmpLevel0( tex, samp, coords, val ) (tex).SampleCmpLevelZero( (samp), (coords), (val) )\n"
+				"#define sampleCubeCmpLevel0( tex, samp, coords, val ) (tex).SampleCmpLevelZero( (samp), (coords), (val) )\n"
+				"#define sample2DGather( tex, samp, coords ) (tex).Gather( (samp), (coords) )\n"
+            );
+
+        #else
+
+            // Sampling methods DX9C
+            strCommon.append(
+				"#define sample1D( tex, samp, coords ) tex1D( (samp), (coords) )\n"
+				"#define sample2D( tex, samp, coords ) tex2D( (samp), (coords) )\n"
+				"#define sample3D( tex, samp, coords ) tex3D( (samp), (coords) )\n"
+				"#define sampleCube( tex, samp, coords ) texCUBE( (samp), (coords) )\n"
+				"#define sample1DLevel( tex, samp, coords, lvl ) tex1Dlod( (samp), float4( (coords).x, 0, 0, lvl ) )\n"
+				"#define sample2DLevel( tex, samp, coords, lvl ) tex2Dlod( (samp), float4( (coords).xy, 0, lvl ) )\n"
+				"#define sample3DLevel( tex, samp, coords, lvl ) tex3Dlod( (samp), float4( (coords).xyz, lvl ) )\n"
+				"#define sampleCubeLevel( tex, samp, coords, lvl ) texCUBElod( (samp), float4( (coords).xyz, lvl ) )\n"
+				"#define sample1DBias( tex, samp, coords, bias ) tex1Dbias( (samp), float4( (coords).x, 0, 0, bias ) )\n"
+				"#define sample2DBias( tex, samp, coords, bias ) tex2Dbias( (samp), float4( (coords).xy, 0, bias ) )\n"
+				"#define sample3DBias( tex, samp, coords, bias ) tex3Dbias( (samp), float4( (coords).xyz, bias ) )\n"
+				"#define sampleCubeBias( tex, samp, coords, bias ) texCUBEbias( (samp), float4( ( coords).xyz, bias ) )\n"
+				"#define sample1DGrad( tex, samp, coords, dx, dy ) tex1Dgrad( (samp), (coords), dx, dy ) )\n"
+				"#define sample2DGrad( tex, samp, coords, dx, dy ) tex2Dgrad( (samp), (coords), dx, dy )\n"
+				"#define sample3DGrad( tex, samp, coords, dx, dy ) tex3Dgrad( (samp), (coords), dx, dy )\n"
+				"#define sampleCubeGrad( tex, samp, coords, dx, dy ) texCUBEgrad( (samp), (coords), dx, dy )\n"
+				"#define sample1DProj( tex, samp, coords ) tex1Dproj( (samp), (coords) )\n"
+				"#define sample2DProj( tex, samp, coords ) tex2Dproj( (samp), (coords) )\n"
+				"#define sample3DProj( tex, samp, coords ) tex3Dproj( (samp), (coords) )\n"
+				"#define sampleCubeProj( tex, samp, coords ) texCUBEproj( (samp), (coords) )\n"
+
+                // Only apply when the hardware supports hardware depth comparisons (like hardware shadow mapping against depth textures)
+                "#define sample1DCmpLevel0( tex, samp, coords, val ) tex1Dlod( (samp), float4( (coords).x, (val), 0 ) )\n"
+				"#define sample2DCmpLevel0( tex, samp, coords, val ) tex2Dlod( (samp), float4( (coords).xy, (val), 0 ) )\n"
+				"#define sample3DCmpLevel0( tex, samp, coords, val ) tex3Dlod( (samp), float4( (coords).xyz, (val), 0 ) )\n"
+				"#define sampleCubeCmpLevel0( tex, samp, coords, val ) texCUBElod( (samp), float4( (coords).xyz, (val), 0 ) )\n"
+				"#define sample2DGather( tex, samp, coords ) tex2D( (samp), (coords), (coords).xy ).argb\n"
+            );
+
+        #endif
+
+        return strCommon;
+    }
+
+
+	////////////////////////////////////////////
+	// Flags
+	////////////////////////////////////////////
+	int           renderFlags;             // Flags to control shader permutations that depend on active rendering/system states.
+	int           materialFlags;           // Flags to control shader permutations that depend on active material states.
+	int           lightFlags;              // Flags to control shader permutations that depend on active light states.
+
+	////////////////////////////////////////////
+	// Renderer
+	////////////////////////////////////////////
+    int           shadingQuality;
+	int           outputEncodingType;
+    int           fogModel;
+	bool          orthographicCamera;
+	bool          hdrLighting;
+    bool          viewSpaceLighting;
+	bool          deferredRendering;        // false = forward, true = deferred shading or deferred lighting depending on the value of 'deferredLighting'
+	bool          deferredLighting;
+	bool          specularColorOutput;
+	bool          gBufferSRGB;
+	bool          nonLinearZ;
+	bool          normalizedDistance;
+	bool          surfaceNormals;
+	bool          packedDepth;
+	bool          computeGroupID;
+	int           cullMode;
+	int           colorWrites;
+
+	////////////////////////////////////////////
+    // Geometry
+	////////////////////////////////////////////
+    int           maxBlendIndex;
+    bool          useVTFBlending;
+    int           depthType;
+    int           surfaceNormalType;
+
+	////////////////////////////////////////////
+    // Lights
+	////////////////////////////////////////////
+    int           lightType;
+    int           shadowMethod;
+    int           primaryTaps;
+    int           secondaryTaps;
+	bool          attenuationTexture; 
+	bool          distanceAttenuationTexture; 
+	bool          colorTexture3D; 
+	bool          diffuseIBL;
+	bool          specularIBL;
+	bool          computeAmbient;
+	bool          computeDiffuse;
+	bool          computeSpecular;
+	bool          useSSAO;
+	bool          trilighting;
+
+	////////////////////////////////////////////
+    // Materials
+	////////////////////////////////////////////
+    int           normalSource;
+    int           reflectionMode;
+    int           lightTextureType;
+	bool          sampleDiffuseTexture;
+	bool		  sampleSpecularColor;
+	bool		  sampleSpecularMask;
+	bool		  sampleGlossTexture;
+	bool		  sampleEmissiveTexture;
+	bool          sampleOpacityTexture;
+	bool          decodeSRGB;
+	bool          computeToksvig;
+	bool          correctNormals;
+	bool          opacityInDiffuse;
+	bool          surfaceFresnel;
+	bool          metal;
+	bool          transmissive;
+	bool          translucent;
+	bool          alphaTest;
+	bool          emissive;  
+};
+
+#endif // !_SYSTEMDEFS_SHH_

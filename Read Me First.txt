@@ -1,0 +1,37 @@
+
+Welcome to the Carbon Game Development Toolkit Alpha Pre-release!
+
+Please make sure that you visit the Carbon Toolkit forums for details and updates on changes, feature additions, bug fixes and tutorials / guides to come.
+
+http://www.gameinstitute.com/forum/index.php?c=software
+
+
+---
+
+Carbon Forge Quick Start Guide
+------------------------------
+
+Guides, video tutorials and more user friendly in-editor hints are on the way, but for now the following quick start details should get you headed in the right direction.
+
+Carbon Forge adopts an approach to managing world data similar to that of Visual C++. That is to say, in order to start building your scenes you first need to create a 'Project' (or 'World' as it is called in this case) before you can start adding the more interesting components. In the case of Carbon Forge, before you can do anything, a new world must first be created through the 'File->New->Master World' menu item. On the right hand side of the main form you should see (by default) an area titled 'World Explorer'. Once the world has been successfully created, an entry in the first entry in the world explorer window will be updated to indicate that creation was successful.
+
+With the world created, you can now start creating scenes. Similarly, this can be done through the 'File->New' menu, but in this case you should select 'Scene' instead of 'Master World'. After selecting this option you will be presented with a scene creation wizard that allows you to configure a few of the more basic scene properties for the scene you want to create, and on completion your scene will be created and automatically loaded into the editor. From here, you can start placing and manipulating objects as you see fit.
+
+Opening an existing world follows a similar process. Simply select 'Open' from the 'File' menu, and select the world file you would like to load. After the world has been successfully parsed, it may appear initially as if nothing has happened. If you refer to the world explorer on the right hand side of the main form once more however, you should see a list of available scenes that were discovered in the file. To open a scene, simply double click on it in that list and you'll be ready to continue your scene editing endeavours.
+
+There are a number of ways in which you can manipulate the viewports and navigate through your scenes. The following list outlines a few of the key controls that you'll need to get around.
+
+Basic Camera Controls
+---------------------
+
+Viewport Pan = Middle Mouse Button
+Viewport Grid Orbit = Alt + Middle Mouse Button
+Viewport Selection Orbit = Ctrl + Middle Mouse Button
+
+The above controls work in both orthographic and perspective views, but the following additional controls are also available for perspective viewports:
+
+W,A,S,D = Fly through
+Right Mouse Button = Rotate Camera
+
+
+As mentioned, more detailed tutorials are coming soon, so keep an eye out on the forums for further updates and release details.

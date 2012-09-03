@@ -1,0 +1,23 @@
+--Table: Objects::Base::All::SubElements -- {FCC02596-AD72-4EDD-A7ED-32330F759CD1}
+
+CREATE TABLE IF NOT EXISTS "Objects::Base::All::SubElements" (
+  [ObjectSubElementEntryId] integer PRIMARY KEY AUTOINCREMENT, 
+  [SubElementTypeId] integer,
+  [ObjectId] integer, 
+  [SubElementId] integer);
+
+CREATE INDEX IF NOT EXISTS [Objects::Base::All::SubElements_ObjectIndex] ON "Objects::Base::All::SubElements" ([ObjectId]);
+
+--Table: Objects::Base::All -- {FCC02596-AD72-4EDD-A7ED-32330F759CD1}
+
+CREATE TABLE IF NOT EXISTS "Objects::Base::All" (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [Mass] real, 
+  [MassTransformAmount] real);  
+
+CREATE TRIGGER IF NOT EXISTS [Objects::Base::All_OnDelete]
+  BEFORE DELETE
+  ON [Objects::Base::All]
+  BEGIN
+    DELETE FROM [Objects::Base::All::SubElements] WHERE ObjectId=old.RefId;  
+  END;

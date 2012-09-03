@@ -1,0 +1,44 @@
+# AngelCode Bitmap Font Generator configuration file
+fileVersion=1
+
+# font settings
+fontName=fixed_v01
+charSet=0
+fontSize=9
+aa=1
+scaleH=100
+useSmoothing=1
+isBold=0
+isItalic=0
+useUnicode=1
+disableBoxChars=1
+outputInvalidCharGlyph=0
+
+# character alignment
+paddingDown=0
+paddingUp=0
+paddingRight=0
+paddingLeft=0
+spacingHoriz=1
+spacingVert=1
+
+# output file
+outWidth=256
+outHeight=256
+outBitDepth=32
+fontDescFormat=1
+fourChnlPacked=0
+textureFormat=png
+textureCompression=0
+alphaChnl=2
+redChnl=2
+greenChnl=2
+blueChnl=2
+
+# outline
+outlineThickness=1
+
+# selected chars
+chars=32-126,161-172,174-177,187,192-255,713,8208,8222,8230,8240
+
+# imported icon images

@@ -1,0 +1,29 @@
+--Table: Objects::HingeJoint -- {908EFCA6-73CB-48DA-862F-B230369FD9A5}
+
+CREATE TABLE [Objects::HingeJoint] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [UseLimits] tinyint(1) DEFAULT (0),
+  [MinimumAngle] real DEFAULT(-45),
+  [MaximumAngle] real DEFAULT(45),
+  [Body0Id] integer DEFAULT (0),
+  [Body1Id] integer DEFAULT (0),
+  [RefCount] integer DEFAULT (0));
+
+CREATE TRIGGER [Objects::HingeJoint_OnDelete]
+  BEFORE DELETE
+  ON [Objects::HingeJoint]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;
+
+--Table: Objects::HingeJoint::InstanceData
+
+CREATE TABLE [Objects::HingeJoint::InstanceData] (
+  [HingeJointInstanceDataId] integer PRIMARY KEY AUTOINCREMENT,
+  [ObjectRefId] integer,
+  [NodeRefId] integer,  
+  [Body0Id] integer,
+  [Body1Id] integer);
+
+CREATE INDEX [Objects::HingeJoint::InstanceData_ObjectRefIdIndex] ON [Objects::HingeJoint::InstanceData] ([ObjectRefId]);
+CREATE INDEX [Objects::HingeJoint::InstanceData_NodeRefIdIndex] ON [Objects::HingeJoint::InstanceData] ([NodeRefId]);

@@ -1,0 +1,27 @@
+var classcg_billboard =
+[
+    [ "cgBillboard", "classcg_billboard.html#a2a71996445edceb45a58f84ecfdf8bcf", null ],
+    [ "~cgBillboard", "classcg_billboard.html#aba6f5d5750ced952dca4967b747fb84d", null ],
+    [ "getColor", "classcg_billboard.html#a1285dab7a721d5c7325a5410dd2c1cd8", null ],
+    [ "getPosition", "classcg_billboard.html#a932a40865c6e057c0c2cc6c739dd96e4", null ],
+    [ "getSize", "classcg_billboard.html#aee06c9b3db1011b87609407fc7595c24", null ],
+    [ "getVisible", "classcg_billboard.html#ab9e4f11756bdb986cb95f64fb86c2b9e", null ],
+    [ "setColor", "classcg_billboard.html#ab2784cf15c6c696a31dc31475ba716d3", null ],
+    [ "setFrame", "classcg_billboard.html#aaa7e4b351dca397eb6816b1774b81d23", null ],
+    [ "setFrameGroup", "classcg_billboard.html#a2b5b9aaef0c85d2529c16b6de44ad0be", null ],
+    [ "setPosition", "classcg_billboard.html#a19617fbd181162beeeb4d97caee7aa6e", null ],
+    [ "setPosition", "classcg_billboard.html#a303cc1eba9e66b758fc13dfd872775bb", null ],
+    [ "setSize", "classcg_billboard.html#adeaeed8222ed5f6205dac5313d5c4920", null ],
+    [ "setSize", "classcg_billboard.html#a2389be71617b5b74b0c709f1736a1413", null ],
+    [ "setVisible", "classcg_billboard.html#a481225d3d5f2137d158eb04419119e1a", null ],
+    [ "update", "classcg_billboard.html#ab2c47d583aa9a8ccd4a22e3cae987f77", null ],
+    [ "cgBillboardBuffer::addBillboard", "classcg_billboard.html#a1d70069cd6402d9ccfddb29b002c9189", null ],
+    [ "mBillboardId", "classcg_billboard.html#a4badf3a7e2fe61f4a9fc95ee53ecfaf5", null ],
+    [ "mBuffer", "classcg_billboard.html#a9a6f107d4ff208acf935b43372f7dbe7", null ],
+    [ "mColor", "classcg_billboard.html#aa5055c8cd36ff2cdc6077914e0491914", null ],
+    [ "mCurrentFrame", "classcg_billboard.html#aa31280add2cb4c510c785cf5626a0cc5", null ],
+    [ "mCurrentGroup", "classcg_billboard.html#a254e727eb15bebadf053378c31b5d644", null ],
+    [ "mPosition", "classcg_billboard.html#acf6b69e9421af2c327ae532e54cf93fc", null ],
+    [ "mSize", "classcg_billboard.html#a13f61017a165f6010c16ea6a983ae6b4", null ],
+    [ "mVisible", "classcg_billboard.html#a8e13d84b9b6397bae6fb280045cd76b8", null ]
+];

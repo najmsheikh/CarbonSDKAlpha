@@ -1,0 +1,430 @@
+<?xml version="1.0"?>
+<SkinDefinition>
+    <Name>Carbon Default</Name>
+    <Texture>sys://Interface/Skins/Carbon_Default.dds</Texture>
+	<Glyphs>sys://Interface/Skins/Carbon_Default_Glyphs.xml</Glyphs>
+	<Cursor>
+		<Texture>sys://Interface/Skins/Carbon_Default_Cursor.dds</Texture>
+		<Type name="Arrow" animated="0">
+		<Hotpoint>7,1</Hotpoint>
+		<Rect>0,0,40,40</Rect>
+		</Type>
+		<Type name="Busy" animated="1">
+			<Hotpoint>7,1</Hotpoint>
+			<Frames count="10">
+				<Rect>40, 0,80, 40</Rect>
+				<Rect>80, 0,120,40</Rect>
+				<Rect>120,0,160,40</Rect>
+				<Rect>160,0,200,40</Rect>
+				<Rect>200,0,240,40</Rect>
+				<Rect>240,0,280,40</Rect>
+				<Rect>280,0,320,40</Rect>
+				<Rect>320,0,360,40</Rect>
+				<Rect>360,0,400,40</Rect>
+				<Rect>400,0,440,40</Rect>
+			</Frames>
+			<Playback>
+				<Duration>0.5</Duration>
+				<Loop>1</Loop>
+			</Playback>
+		</Type>
+		<Type name="SizeNWSE" animated="1">
+			<Hotpoint>7,1</Hotpoint>
+			<Frames count="10">
+				<Rect>0,  40,40, 80</Rect>
+				<Rect>40, 40,80, 80</Rect>
+				<Rect>80, 40,120,80</Rect>
+				<Rect>120,40,160,80</Rect>
+				<Rect>160,40,200,80</Rect>
+				<Rect>200,40,240,80</Rect>
+				<Rect>240,40,280,80</Rect>
+				<Rect>280,40,320,80</Rect>
+				<Rect>320,40,360,80</Rect>
+				<Rect>360,40,400,80</Rect>
+			</Frames>
+			<Playback>
+				<Duration>0.5</Duration>
+				<Loop>0</Loop>
+			</Playback>
+		</Type>
+		<Type name="SizeNESW" animated="1">
+			<Hotpoint>7,1</Hotpoint>
+			<Frames count="10">
+				<Rect>0,  80,40, 120</Rect>
+				<Rect>40, 80,80, 120</Rect>
+				<Rect>80, 80,120,120</Rect>
+				<Rect>120,80,160,120</Rect>
+				<Rect>160,80,200,120</Rect>
+				<Rect>200,80,240,120</Rect>
+				<Rect>240,80,280,120</Rect>
+				<Rect>280,80,320,120</Rect>
+				<Rect>320,80,360,120</Rect>
+				<Rect>360,80,400,120</Rect>
+			</Frames>
+			<Playback>
+				<Duration>0.5</Duration>
+				<Loop>0</Loop>
+			</Playback>
+		</Type>
+		<Type name="SizeWE" animated="1">
+			<Hotpoint>7,1</Hotpoint>
+			<Frames count="10">
+				<Rect>0,  120,40, 160</Rect>
+				<Rect>40, 120,80, 160</Rect>
+				<Rect>80, 120,120,160</Rect>
+				<Rect>120,120,160,160</Rect>
+				<Rect>160,120,200,160</Rect>
+				<Rect>200,120,240,160</Rect>
+				<Rect>240,120,280,160</Rect>
+				<Rect>280,120,320,160</Rect>
+				<Rect>320,120,360,160</Rect>
+				<Rect>360,120,400,160</Rect>
+			</Frames>
+			<Playback>
+				<Duration>0.5</Duration>
+				<Loop>0</Loop>
+			</Playback>
+		</Type>
+		<Type name="SizeNS" animated="1">
+			<Hotpoint>7,1</Hotpoint>
+			<Frames count="10">
+				<Rect>0,  160,40, 200</Rect>
+				<Rect>40, 160,80, 200</Rect>
+				<Rect>80, 160,120,200</Rect>
+				<Rect>120,160,160,200</Rect>
+				<Rect>160,160,200,200</Rect>
+				<Rect>200,160,240,200</Rect>
+				<Rect>240,160,280,200</Rect>
+				<Rect>280,160,320,200</Rect>
+				<Rect>320,160,360,200</Rect>
+				<Rect>360,160,400,200</Rect>
+			</Frames>
+			<Playback>
+				<Duration>0.5</Duration>
+				<Loop>0</Loop>
+			</Playback>
+		</Type>
+		<Type name="SizeAll" animated="1">
+			<Hotpoint>7,1</Hotpoint>
+			<Frames count="10">
+				<Rect>0,  200,40, 240</Rect>
+				<Rect>40, 200,80, 240</Rect>
+				<Rect>80, 200,120,240</Rect>
+				<Rect>120,200,160,240</Rect>
+				<Rect>160,200,200,240</Rect>
+				<Rect>200,200,240,240</Rect>
+				<Rect>240,200,280,240</Rect>
+				<Rect>280,200,320,240</Rect>
+				<Rect>320,200,360,240</Rect>
+				<Rect>360,200,400,240</Rect>
+			</Frames>
+			<Playback>
+				<Duration>0.5</Duration>
+				<Loop>0</Loop>
+			</Playback>
+		</Type>
+		<Type name="No" animated="1">
+			<Hotpoint>7,1</Hotpoint>
+			<Frames count="10">
+				<Rect>0,  240,40, 280</Rect>
+				<Rect>40, 240,80, 280</Rect>
+				<Rect>80, 240,120,280</Rect>
+				<Rect>120,240,160,280</Rect>
+				<Rect>160,240,200,280</Rect>
+				<Rect>200,240,240,280</Rect>
+				<Rect>240,240,280,280</Rect>
+				<Rect>280,240,320,280</Rect>
+				<Rect>320,240,360,280</Rect>
+				<Rect>360,240,400,280</Rect>
+			</Frames>
+			<Playback>
+				<Duration>0.5</Duration>
+				<Loop>0</Loop>
+			</Playback>
+		</Type>
+		<Type name="IBeam" animated="1">
+			<Hotpoint>7,13</Hotpoint>
+			<Frames count="10">
+				<Rect>0,  280,40, 330</Rect>
+				<Rect>40, 280,80, 330</Rect>
+				<Rect>80, 280,120,330</Rect>
+				<Rect>120,280,160,330</Rect>
+				<Rect>160,280,200,330</Rect>
+				<Rect>200,280,240,330</Rect>
+				<Rect>240,280,280,330</Rect>
+				<Rect>280,280,320,330</Rect>
+				<Rect>320,280,360,330</Rect>
+				<Rect>360,280,400,330</Rect>
+			</Frames>
+			<Playback>
+				<Duration>0.5</Duration>
+				<Loop>0</Loop>
+			</Playback>
+		</Type>
+	</Cursor>
+    <Form>
+        <Overlapped>
+            <Properties>
+                <MinSize>-1,-1</MinSize>
+                <MaxSize>-1,-1</MaxSize>
+                <Sizable>1</Sizable>
+                <IconArea rect="20,17,36,33" align="0,0,0,0" />
+                <CaptionArea rect="41,17,137,33" align="0,0,1,0" />
+                <ControlButtons>
+                    <Maximize rect="88,12,62,30" align="1,0,1,0" />
+                    <Minimize rect="114,12,88,30" align="1,0,1,0" />
+                    <Restore rect="88,12,62,30" align="1,0,1,0" />
+                    <Close rect="62,12,19,30" align="1,0,1,0" />
+                </ControlButtons>
+            </Properties>
+            <Elements>
+                <Element name="Form.BorderTopLeft" x="0" y="0" width="24" height="38">
+                    <ActiveRegion points="5">
+                        <Point>15,38</Point>
+                        <Point>24,38</Point>
+                        <Point>24,12</Point>
+                        <Point>19,12</Point>
+                        <Point>15,16</Point>
+                    </ActiveRegion>
+                    <HandleRegion type="West" points="4">
+                        <Point>15,21</Point>
+                        <Point>24,21</Point>
+                        <Point>24,38</Point>
+                        <Point>15,38</Point>
+                    </HandleRegion>
+                    <HandleRegion type="NorthWest" points="5">
+                        <Point>15,21</Point>
+                        <Point>24,21</Point>
+                        <Point>24,12</Point>
+                        <Point>19,12</Point>
+                        <Point>15,16</Point>
+                    </HandleRegion>
+                </Element>
+                <Element name="Form.BorderTopFiller" x="24" y="0" width="781" height="38">
+                    <ActiveRegion points="4">
+                        <Point>0,38</Point>
+                        <Point>0,12</Point>
+                        <Point>781,12</Point>
+                        <Point>781,38</Point>
+                    </ActiveRegion>
+                    <HandleRegion type="North" points="4">
+                        <Point>0,19</Point>
+                        <Point>0,12</Point>
+                        <Point>781,12</Point>
+                        <Point>781,19</Point>
+                    </HandleRegion>
+                </Element>
+                <Element name="Form.BorderTopRight" x="805" y="0" width="24" height="38">
+                    <ActiveRegion points="5">
+                        <Point>9,38</Point>
+                        <Point>0,38</Point>
+                        <Point>0,12</Point>
+                        <Point>5,12</Point>
+                        <Point>9,16</Point>
+                    </ActiveRegion>
+                    <HandleRegion type="NorthEast" points="5">
+                        <Point>9,21</Point>
+                        <Point>0,21</Point>
+                        <Point>0,12</Point>
+                        <Point>5,12</Point>
+                        <Point>9,16</Point>
+                    </HandleRegion>
+                    <HandleRegion type="East" points="4">
+                        <Point>9,21</Point>
+                        <Point>0,21</Point>
+                        <Point>0,38</Point>
+                        <Point>9,38</Point>
+                    </HandleRegion>
+                </Element>
+                <Element name="Form.BorderLeftFiller" x="0" y="38" width="24" height="565">
+                    <ActiveRegion points="4">
+                        <Point>15,0</Point>
+                        <Point>24,0</Point>
+                        <Point>24,565</Point>
+                        <Point>15,565</Point>
+                    </ActiveRegion>
+                    <HandleRegion type="West" points="4">
+                        <Point>15,0</Point>
+                        <Point>24,0</Point>
+                        <Point>24,565</Point>
+                        <Point>15,565</Point>
+                    </HandleRegion>
+                </Element>
+                <Element name="Form.BorderRightFiller" x="805" y="38" width="24" height="565">
+                    <ActiveRegion points="4">
+                        <Point>0,0</Point>
+                        <Point>9,0</Point>
+                        <Point>9,565</Point>
+                        <Point>0,565</Point>
+                    </ActiveRegion>
+                    <HandleRegion type="East" points="4">
+                        <Point>0,0</Point>
+                        <Point>9,0</Point>
+                        <Point>9,565</Point>
+                        <Point>0,565</Point>
+                    </HandleRegion>
+                </Element>
+                <Element name="Form.BorderBottomLeft" x="0" y="603" width="24" height="28">
+                    <ActiveRegion points="5">
+                        <Point>15,0</Point>
+                        <Point>24,0</Point>
+                        <Point>24,9</Point>
+                        <Point>19,9</Point>
+                        <Point>15,5</Point>
+                    </ActiveRegion>
+                    <HandleRegion type="SouthWest" points="5">
+                        <Point>15,0</Point>
+                        <Point>24,0</Point>
+                        <Point>24,9</Point>
+                        <Point>19,9</Point>
+                        <Point>15,5</Point>
+                    </HandleRegion>
+                </Element>
+                <Element name="Form.BorderBottomFiller" x="24" y="603" width="781" height="28">
+                    <ActiveRegion points="4">
+                        <Point>0,9</Point>
+                        <Point>0,0</Point>
+                        <Point>781,0</Point>
+                        <Point>781,9</Point>
+                    </ActiveRegion>
+                    <HandleRegion type="South" points="4">
+                        <Point>0,9</Point>
+                        <Point>0,0</Point>
+                        <Point>781,0</Point>
+                        <Point>781,9</Point>
+                    </HandleRegion>
+                </Element>
+                <Element name="Form.BorderBottomRight" x="805" y="603" width="24" height="28">
+                    <ActiveRegion points="5">
+                        <Point>9,0</Point>
+                        <Point>0,0</Point>
+                        <Point>0,9</Point>
+                        <Point>5,9</Point>
+                        <Point>9,5</Point>
+                    </ActiveRegion>
+                    <HandleRegion type="SouthEast" points="5">
+                        <Point>9,0</Point>
+                        <Point>0,0</Point>
+                        <Point>0,9</Point>
+                        <Point>5,9</Point>
+                        <Point>9,5</Point>
+                    </HandleRegion>
+                </Element>
+        <Element name="Form.Background" x="369" y="39" width="33" height="34" />
+                <Element name="Form.ButtonStandaloneClose" x="24" y="38" width="43" height="18" />
+                <Element name="Form.ButtonStandaloneClose.Hover" x="67" y="38" width="43" height="18" />
+                <Element name="Form.ButtonStandaloneClose.Pressed" x="110" y="38" width="43" height="18" />
+                <Element name="Form.ButtonStandaloneClose.Disabled" x="153" y="38" width="43" height="18" />
+                <Element name="Inactive::Form.ButtonStandaloneClose" x="196" y="38" width="43" height="18" />
+                <Element name="Inactive::Form.ButtonStandaloneClose.Hover" x="239" y="38" width="43" height="18" />
+                <Element name="Inactive::Form.ButtonStandaloneClose.Pressed" x="282" y="38" width="43" height="18" />
+                <Element name="Inactive::Form.ButtonStandaloneClose.Disabled" x="325" y="38" width="43" height="18" />
+                <Element name="Form.ButtonClose" x="24" y="56" width="43" height="18" />
+                <Element name="Form.ButtonClose.Hover" x="67" y="56" width="43" height="18" />
+                <Element name="Form.ButtonClose.Pressed" x="110" y="56" width="43" height="18" />
+                <Element name="Form.ButtonClose.Disabled" x="153" y="56" width="43" height="18" />
+                <Element name="Inactive::Form.ButtonClose" x="196" y="56" width="43" height="18" />
+                <Element name="Inactive::Form.ButtonClose.Hover" x="239" y="56" width="43" height="18" />
+                <Element name="Inactive::Form.ButtonClose.Pressed" x="282" y="56" width="43" height="18" />
+                <Element name="Inactive::Form.ButtonClose.Disabled" x="325" y="56" width="43" height="18" />
+                <Element name="Form.ButtonRestore" x="24" y="74" width="26" height="18" />
+                <Element name="Form.ButtonRestore.Hover" x="50" y="74" width="26" height="18" />
+                <Element name="Form.ButtonRestore.Pressed" x="76" y="74" width="26" height="18" />
+                <Element name="Form.ButtonRestore.Disabled" x="102" y="74" width="26" height="18" />
+                <Element name="Inactive::Form.ButtonRestore" x="128" y="74" width="26" height="18" />
+                <Element name="Inactive::Form.ButtonRestore.Hover" x="154" y="74" width="26" height="18" />
+                <Element name="Inactive::Form.ButtonRestore.Pressed" x="180" y="74" width="26" height="18" />
+                <Element name="Inactive::Form.ButtonRestore.Disabled" x="206" y="74" width="26" height="18" />
+                <Element name="Form.ButtonMinimize" x="24" y="92" width="26" height="18" />
+                <Element name="Form.ButtonMinimize.Hover" x="50" y="92" width="26" height="18" />
+                <Element name="Form.ButtonMinimize.Pressed" x="76" y="92" width="26" height="18" />
+                <Element name="Form.ButtonMinimize.Disabled" x="102" y="92" width="26" height="18" />
+                <Element name="Inactive::Form.ButtonMinimize" x="128" y="92" width="26" height="18" />
+                <Element name="Inactive::Form.ButtonMinimize.Hover" x="154" y="92" width="26" height="18" />
+                <Element name="Inactive::Form.ButtonMinimize.Pressed" x="180" y="92" width="26" height="18" />
+                <Element name="Inactive::Form.ButtonMinimize.Disabled" x="206" y="92" width="26" height="18" />
+                <Element name="Form.ButtonMaximize" x="24" y="110" width="26" height="18" />
+                <Element name="Form.ButtonMaximize.Hover" x="50" y="110" width="26" height="18" />
+                <Element name="Form.ButtonMaximize.Pressed" x="76" y="110" width="26" height="18" />
+                <Element name="Form.ButtonMaximize.Disabled" x="102" y="110" width="26" height="18" />
+                <Element name="Inactive::Form.ButtonMaximize" x="128" y="110" width="26" height="18" />
+                <Element name="Inactive::Form.ButtonMaximize.Hover" x="154" y="110" width="26" height="18" />
+                <Element name="Inactive::Form.ButtonMaximize.Pressed" x="180" y="110" width="26" height="18" />
+                <Element name="Inactive::Form.ButtonMaximize.Disabled" x="206" y="110" width="26" height="18" />
+            </Elements>
+        </Overlapped>
+    </Form>
+    <Controls>
+		<Configuration>
+			<TextBox>
+				<Caret>
+					<Color>0,0,0,1.0</Color>
+					<BlinkSpeed>500</BlinkSpeed>
+				</Caret>
+				<Selection>
+					<Color>0,0.2,0.75,0.2</Color> 
+				</Selection>
+			</TextBox>
+		</Configuration>
+		<Elements>
+			<Element name="Button.BorderTopLeft" x="24" y="128" width="3" height="3" />
+			<Element name="Button.BorderTopFiller" x="27" y="128" width="14" height="3" />
+			<Element name="Button.BorderTopRight" x="41" y="128" width="3" height="3" />
+			<Element name="Button.BorderLeftFiller" x="24" y="131" width="3" height="15" />
+			<Element name="Button.BorderRightFiller" x="41" y="131" width="3" height="15" />
+			<Element name="Button.BorderBottomLeft" x="24" y="146" width="3" height="3" />
+			<Element name="Button.BorderBottomFiller" x="27" y="146" width="14" height="3" />
+			<Element name="Button.BorderBottomRight" x="41" y="146" width="3" height="3" />
+			<Element name="Button.Background" x="27" y="131" width="14" height="15" />
+			<Element name="Button.BorderTopLeft.Hover" x="44" y="128" width="3" height="3" />
+			<Element name="Button.BorderTopFiller.Hover" x="47" y="128" width="14" height="3" />
+			<Element name="Button.BorderTopRight.Hover" x="61" y="128" width="3" height="3" />
+			<Element name="Button.BorderLeftFiller.Hover" x="44" y="131" width="3" height="15" />
+			<Element name="Button.BorderRightFiller.Hover" x="61" y="131" width="3" height="15" />
+			<Element name="Button.BorderBottomLeft.Hover" x="44" y="146" width="3" height="3" />
+			<Element name="Button.BorderBottomFiller.Hover" x="47" y="146" width="14" height="3" />
+			<Element name="Button.BorderBottomRight.Hover" x="61" y="146" width="3" height="3" />
+			<Element name="Button.Background.Hover" x="47" y="131" width="14" height="15" />
+			<Element name="Button.BorderTopLeft.Pressed" x="64" y="128" width="3" height="3" />
+			<Element name="Button.BorderTopFiller.Pressed" x="67" y="128" width="14" height="3" />
+			<Element name="Button.BorderTopRight.Pressed" x="81" y="128" width="3" height="3" />
+			<Element name="Button.BorderLeftFiller.Pressed" x="64" y="131" width="3" height="15" />
+			<Element name="Button.BorderRightFiller.Pressed" x="81" y="131" width="3" height="15" />
+			<Element name="Button.BorderBottomLeft.Pressed" x="64" y="146" width="3" height="3" />
+			<Element name="Button.BorderBottomFiller.Pressed" x="67" y="146" width="14" height="3" />
+			<Element name="Button.BorderBottomRight.Pressed" x="81" y="146" width="3" height="3" />
+			<Element name="Button.Background.Pressed" x="67" y="131" width="14" height="15" />
+			<Element name="Button.BorderTopLeft.Disabled" x="84" y="128" width="3" height="3" />
+			<Element name="Button.BorderTopFiller.Disabled" x="87" y="128" width="14" height="3" />
+			<Element name="Button.BorderTopRight.Disabled" x="101" y="128" width="3" height="3" />
+			<Element name="Button.BorderLeftFiller.Disabled" x="84" y="131" width="3" height="15" />
+			<Element name="Button.BorderRightFiller.Disabled" x="101" y="131" width="3" height="15" />
+			<Element name="Button.BorderBottomLeft.Disabled" x="84" y="146" width="3" height="3" />
+			<Element name="Button.BorderBottomFiller.Disabled" x="87" y="146" width="14" height="3" />
+			<Element name="Button.BorderBottomRight.Disabled" x="101" y="146" width="3" height="3" />
+			<Element name="Button.Background.Disabled" x="87" y="131" width="14" height="15" />
+			<Element name="ControlFrame.BorderTopLeft" x="403" y="38" width="3" height="3" />
+			<Element name="ControlFrame.BorderTopFiller" x="406" y="38" width="24" height="3" />
+			<Element name="ControlFrame.BorderTopRight" x="430" y="38" width="3" height="3" />
+			<Element name="ControlFrame.BorderLeftFiller" x="403" y="41" width="3" height="16" />
+			<Element name="ControlFrame.BorderRightFiller" x="430" y="41" width="3" height="16" />
+			<Element name="ControlFrame.BorderBottomLeft" x="403" y="57" width="3" height="3" />
+			<Element name="ControlFrame.BorderBottomFiller" x="406" y="57" width="24" height="3" />
+			<Element name="ControlFrame.BorderBottomRight" x="430" y="57" width="3" height="3" />
+			<Element name="ControlFrame.Background" x="406" y="41" width="24" height="16" />
+			<Element name="GroupFrame.BorderTopLeft" x="433" y="38" width="3" height="3" />
+			<Element name="GroupFrame.BorderTopBegin" x="0" y="0" width="0" height="0" /> <!-- Space for label -->
+			<Element name="GroupFrame.BorderTopFiller" x="436" y="38" width="14" height="3" />
+			<Element name="GroupFrame.BorderTopRight" x="450" y="38" width="3" height="3" />
+			<Element name="GroupFrame.BorderLeftFiller" x="433" y="41" width="3" height="13" />
+			<Element name="GroupFrame.BorderRightFiller" x="450" y="41" width="3" height="13" />
+			<Element name="GroupFrame.BorderBottomLeft" x="433" y="54" width="3" height="3" />
+			<Element name="GroupFrame.BorderBottomFiller" x="436" y="54" width="14" height="3" />
+			<Element name="GroupFrame.BorderBottomRight" x="450" y="54" width="3" height="3" />
+			<Element name="ScrollBarFrame.Vertical.BorderLeftFiller" x="416" y="60" width="1" height="17" />
+			<Element name="ScrollBarFrame.Vertical.Background" x="417" y="60" width="16" height="17" />
+			<Element name="ScrollBarFrame.Horizontal.BorderTopFiller" x="403" y="60" width="13" height="1" />
+			<Element name="ScrollBarFrame.Horizontal.Background" x="403" y="61" width="13" height="16" />
+        </Elements>
+    </Controls>
+</SkinDefinition>

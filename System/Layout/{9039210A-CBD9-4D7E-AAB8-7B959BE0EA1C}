@@ -1,0 +1,23 @@
+--Table: Objects::Actor -- {9039210A-CBD9-4D7E-AAB8-7B959BE0EA1C}
+
+CREATE TABLE [Objects::Actor] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [Open] tinyint(1) DEFAULT 0,
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER [Objects::Actor_OnDelete]
+  BEFORE DELETE
+  ON [Objects::Actor]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+    DELETE FROM [Objects::Actor::AnimationSets] WHERE ObjectId=old.RefId;  
+  END;
+
+--Table: Objects::Actor::AnimationSets
+
+CREATE TABLE "Objects::Actor::AnimationSets" (
+  [AnimationSetEntryId] integer PRIMARY KEY AUTOINCREMENT, 
+  [ObjectId] integer,
+  [DataSourceId] integer);
+
+CREATE INDEX [Objects::Actor::AnimationSets_ObjectIndex] ON "Objects::Actor::AnimationSets" ([ObjectId]);

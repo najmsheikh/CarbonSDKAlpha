@@ -1,0 +1,25 @@
+var classcg_dummy_object =
+[
+    [ "cgDummyObject", "classcg_dummy_object.html#a79b89d68e9d43ae9a53fe924f80122bb", null ],
+    [ "cgDummyObject", "classcg_dummy_object.html#a5dfefbb1e0b5978e8ef3d0ae905a5cb3", null ],
+    [ "~cgDummyObject", "classcg_dummy_object.html#aee59fe6459e1d8efdc962ddf0df5cd59", null ],
+    [ "allocateClone", "classcg_dummy_object.html#a9aa711355b0a399ef41916e8df919fb9", null ],
+    [ "allocateNew", "classcg_dummy_object.html#ae6cfbe0b915df31f669e4dc7c8d0df6e", null ],
+    [ "applyObjectRescale", "classcg_dummy_object.html#ae7aee078eaa4bb87f1fcde191c545737", null ],
+    [ "getDatabaseTable", "classcg_dummy_object.html#aa7e31be8e6acfa2a7d4f630252d5d2bc", null ],
+    [ "getLocalBoundingBox", "classcg_dummy_object.html#a581e212ffa26fa5d669bfdffad75fb02", null ],
+    [ "getReferenceType", "classcg_dummy_object.html#a03561e0b8f43629924d0d4a554c22ab7", null ],
+    [ "getSize", "classcg_dummy_object.html#ad17bad6fb718cf0eaef08553993e809e", null ],
+    [ "insertComponentData", "classcg_dummy_object.html#a2bd5a032dad15ffd2eb9cf82316fdc03", null ],
+    [ "onComponentCreated", "classcg_dummy_object.html#ab31f4610af621500d8b32dd3bd539f28", null ],
+    [ "onComponentLoading", "classcg_dummy_object.html#acada66f0db8ef4b4641bfcc4e63017b4", null ],
+    [ "pick", "classcg_dummy_object.html#a7cd30f4078a4e318db2aaf99ccfe0333", null ],
+    [ "prepareQueries", "classcg_dummy_object.html#a07d3409cb2f245aad0eb3580978ba3bf", null ],
+    [ "queryReferenceType", "classcg_dummy_object.html#a13be3e19bf77303447e8913dfe5925e8", null ],
+    [ "sandboxRender", "classcg_dummy_object.html#a5472c10129627d66eca8aa6b5cd75d53", null ],
+    [ "setSize", "classcg_dummy_object.html#a4db97df4912197929e9895836f4214aa", null ],
+    [ "mInsertDummy", "classcg_dummy_object.html#af6ca16b439ab2ec8980a904f33d304d3", null ],
+    [ "mLoadDummy", "classcg_dummy_object.html#af8581c576f2502b182a08a359223320f", null ],
+    [ "mSize", "classcg_dummy_object.html#a163989410c8c6d3764edf795ebbed96d", null ],
+    [ "mUpdateSize", "classcg_dummy_object.html#ac5854f1af75b19f6e44adc35a8895731", null ]
+];

@@ -1,0 +1,8 @@
+Carbon Forge  - Houses the editing tools and engine frontend.
+Documentation - Reference documentation for the core Carbon engine framework.
+Framework     - Source code projects for the core Carbon engine libraries.
+Samples       - Example projects demonstrating certain features of the engine.
+Shared Media  - Contains media files used by the provided sample projects.
+System        - The engine's "system" data folder. This contains required resources for 
+                both Carbon Forge, as well as any application that utilizes the Carbon
+                engine runtime. This would usually exist in your application directory.

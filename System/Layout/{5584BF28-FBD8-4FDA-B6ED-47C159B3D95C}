@@ -1,0 +1,16 @@
+--Table: Objects::Spline -- {5584BF28-FBD8-4FDA-B6ED-47C159B3D95C}
+
+CREATE TABLE [Objects::Spline] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [DisplaySteps] integer DEFAULT(6), 
+  [SplineDataSize] integer DEFAULT (0), 
+  [SplineData] BLOB, 
+  [RefCount] integer DEFAULT (0));
+
+CREATE TRIGGER [Objects::Spline_OnDelete]
+BEFORE DELETE
+ON [Objects::Spline]
+BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;
+

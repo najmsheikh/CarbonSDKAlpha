@@ -1,0 +1,23 @@
+--Table: ObjectSubElements::Base::CollisionShape -- {A7F8231B-BDCB-4954-B0D8-5FC206081B0E}
+
+CREATE TABLE IF NOT EXISTS [ObjectSubElements::Base::CollisionShape] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [OffsetPositionX] real DEFAULT (0), 
+  [OffsetPositionY] real DEFAULT (0), 
+  [OffsetPositionZ] real DEFAULT (0), 
+  [OffsetRotationX] real DEFAULT (0), 
+  [OffsetRotationY] real DEFAULT (0), 
+  [OffsetRotationZ] real DEFAULT (0), 
+  [OffsetRotationW] real DEFAULT (1), 
+  [OffsetShearXY] real DEFAULT (0), 
+  [OffsetShearXZ] real DEFAULT (0), 
+  [OffsetShearYZ] real DEFAULT (0), 
+  [OffsetScaleX] real DEFAULT (1), 
+  [OffsetScaleY] real DEFAULT (1), 
+  [OffsetScaleZ] real DEFAULT (1), 
+  [MinBoundsX] real,
+  [MinBoundsY] real,
+  [MinBoundsZ] real,
+  [MaxBoundsX] real,
+  [MaxBoundsY] real,
+  [MaxBoundsZ] real);  

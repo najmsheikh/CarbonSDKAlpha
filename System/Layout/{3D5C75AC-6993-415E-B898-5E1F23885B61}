@@ -1,0 +1,14 @@
+--Table: ObjectSubElements::HullCollisionShape -- {3D5C75AC-6993-415E-B898-5E1F23885B61}
+
+CREATE TABLE [ObjectSubElements::HullCollisionShape] (
+  [RefId] integer NOT NULL PRIMARY KEY,  
+  [HullData] BLOB,
+  [CollapseTolerance] real DEFAULT 0,
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER [ObjectSubElements::HullCollisionShape_OnDelete]
+  BEFORE DELETE
+  ON [ObjectSubElements::HullCollisionShape]
+  BEGIN
+    DELETE FROM [ObjectSubElements::Base::CollisionShape] WHERE RefId=old.RefId;  
+  END;

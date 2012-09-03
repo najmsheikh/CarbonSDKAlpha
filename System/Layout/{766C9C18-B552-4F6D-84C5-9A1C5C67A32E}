@@ -1,0 +1,30 @@
+--Table: Objects::PointLight -- {766C9C18-B552-4F6D-84C5-9A1C5C67A32E}
+
+CREATE TABLE [Objects::PointLight] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [OuterRange] real DEFAULT 20, 
+  [InnerRange] real DEFAULT 0, 
+  [DistanceAttenuationSplineId] integer DEFAULT 0, 
+  [AttenuationMaskSamplerId] integer DEFAULT 0, 
+  [ShadowFrustumsLinked] tinyint(1) DEFAULT 1, 
+  [ShadowFrustumPosX] integer DEFAULT 0, 
+  [ShadowFrustumNegX] integer DEFAULT 0, 
+  [ShadowFrustumPosY] integer DEFAULT 0, 
+  [ShadowFrustumNegY] integer DEFAULT 0, 
+  [ShadowFrustumPosZ] integer DEFAULT 0, 
+  [ShadowFrustumNegZ] integer DEFAULT 0, 
+  [ShadowUpdateRate] real DEFAULT 0, 
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER [Objects::PointLight_OnDelete]
+  BEFORE DELETE
+  ON [Objects::PointLight]
+  BEGIN
+    DELETE FROM [Objects::Base::Light] WHERE RefId=old.RefId;  
+    DELETE FROM [ShadowFrustums] WHERE FrustumId=old.ShadowFrustumPosX;    
+    DELETE FROM [ShadowFrustums] WHERE FrustumId=old.ShadowFrustumNegX;
+    DELETE FROM [ShadowFrustums] WHERE FrustumId=old.ShadowFrustumPosY;
+    DELETE FROM [ShadowFrustums] WHERE FrustumId=old.ShadowFrustumNegY;  
+    DELETE FROM [ShadowFrustums] WHERE FrustumId=old.ShadowFrustumPosZ;  
+    DELETE FROM [ShadowFrustums] WHERE FrustumId=old.ShadowFrustumNegZ;
+  END;

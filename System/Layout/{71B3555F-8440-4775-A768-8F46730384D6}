@@ -1,0 +1,12 @@
+--Table: ObjectSubElements::BoxCollisionShape -- {71B3555F-8440-4775-A768-8F46730384D6}
+
+CREATE TABLE [ObjectSubElements::BoxCollisionShape] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [RefCount] integer DEFAULT 0);  
+
+CREATE TRIGGER [ObjectSubElements::BoxCollisionShape_OnDelete]
+  BEFORE DELETE
+  ON [ObjectSubElements::BoxCollisionShape]
+  BEGIN
+    DELETE FROM [ObjectSubElements::Base::CollisionShape] WHERE RefId=old.RefId;  
+  END;

@@ -1,0 +1,2344 @@
+//---------------------------------------------------------------------------//
+//          ____                   _                    _                    //
+//         / ___| _ __   ___  __ _| |_ _ __ ___  __   _/ | __  __            //
+//         \___ \| '_ \ / _ \/ _` | __| '__/ _ \ \ \ / / | \ \/ /            //
+//          ___) | |_) |  __/ (_| | |_| | |  __/  \ V /| |_ >  <             //
+//         |____/| .__/ \___|\__, |\__|_|  \___|   \_/ |_(_)_/\_\            //
+//               |_|       Game |_| Institute - Speqtre Game Engine          //
+//                                                                           //
+//---------------------------------------------------------------------------//
+//                                                                           //
+// Name : Utilities.shh                                                      //
+//                                                                           //
+// Desc : Various shader API utility functions providing simple execution    //
+//        of often repeated common functionality.                            //
+//                                                                           //
+//---------------------------------------------------------------------------//
+//        Copyright 1997 - 2010 Game Institute. All Rights Reserved.         //
+//---------------------------------------------------------------------------//
+
+#ifndef _UTILITIES_SHH_
+#define _UTILITIES_SHH_
+
+///////////////////////////////////////////////////////////////////////////////
+// Utilities Includes
+///////////////////////////////////////////////////////////////////////////////
+#include "Config.shh"
+#include "Types.shh"
+
+///////////////////////////////////////////////////////////////////////////////
+// Shader API Functions
+///////////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------------
+// Name : compressF32()
+// Desc : Compresses a 32-bit float to three 8-bit values
+// Note : Input should be in [0, 1] range.
+//-----------------------------------------------------------------------------
+__shadercall float3 compressF32( float f )
+{
+    <?
+    float3 r;
+    r.x = floor(f * 255.0);
+    float r_u = f * 255.0 - r.x;
+    r.y = floor(r_u * 255.0);
+    float r_v = r_u * 255.0 - r.y;
+    r.z = floor(r_v * 255.0);
+    return r * (1.0/255.0);
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : decompressF32()
+// Desc : Decompresses three 8-bit values to a 32-bit float
+// Note : Output will be in [0, 1] range.
+//-----------------------------------------------------------------------------
+__shadercall float decompressF32( float3 vec )
+{
+    <?return dot( vec.xyz, float3( 1.0, 1.0 / 255.0, 1.0 / 65535.0 ) );?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : compressF16()
+// Desc : Compresses a 16-bit float to two 8-bit values (best for half 
+//        precision floats)
+// Note : Input should be in [0, 1] range.
+//-----------------------------------------------------------------------------
+__shadercall float2 compressF16( float f )
+{
+    <?
+    float3 r;
+    r.x = floor(f * 255.0);
+    float r_u = (f * 255.0 - r.x)
+    r.y = floor(r_u * 255.0);
+    return r * (1.0/255.0);
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : decompressF16()
+// Desc : Decompresses two 8-bit values to a 16-bit float (best for half 
+//        precision floats)
+// Note : Output will be in [0, 1] range.
+// Ret  : float
+//-----------------------------------------------------------------------------
+__shadercall float decompressF16( float2 vec )
+{
+    <?return vec.x + vec.y * (1.0/255.0);?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : RGBToRGBE 
+// Desc : Converts RGB to RGBE
+//-----------------------------------------------------------------------------
+__shadercall float4 RGBToRGBE( float3 c )
+{
+    <?
+    float maximumIntensity = max( c.r, c.g );
+    maximumIntensity = max( maximumIntensity, c.b );
+	float exponent = ceil( log2( maximumIntensity ) );
+    return float4( c * ( 1.0 / exp2( exponent ) ), exponent * (1.0/255.0) + (128.0/255.0) ); 
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : RGBEToRGB 
+// Desc : Converts RGBE to RGB
+//-----------------------------------------------------------------------------
+__shadercall float3 RGBEToRGB( float4 c )
+{
+    <?return c.rgb * exp2( c.a * 255.0 - 128.0 );?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : RGBToLUV 
+// Desc : Converts RGB to LogLuv
+// Note : Based on Christer Ericson and Marco Salvi's work.
+//-----------------------------------------------------------------------------
+__shadercall float4 RGBToLUV( float3 c )
+{
+	float recip255 = 1.0f / 255.0f;
+
+	<?
+	const static float3x3 M = float3x3( 0.2209, 0.3390, 0.4184,
+		                                0.1138, 0.6780, 0.7319,
+		                                0.0102, 0.1130, 0.2969 );
+
+    float4 result; 
+    
+    float3 Xp_Y_XYZp = mul( c, M );
+    
+    Xp_Y_XYZp = max( Xp_Y_XYZp, float3(1e-6, 1e-6, 1e-6) );
+    
+    result.xy = Xp_Y_XYZp.xy / Xp_Y_XYZp.z;
+    
+    float le = 2 * log2( Xp_Y_XYZp.y ) + 127;
+    result.w = frac( le );
+    result.z = ( le - ( floor( result.w * 255.0f ) ) * $recip255) * $recip255;
+    
+    return result;
+	?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : LUVToRGB
+// Desc : Converts LogLuv to RGB
+//-----------------------------------------------------------------------------
+__shadercall float3 LUVToRGB( float4 c )
+{
+	<?
+	// Inverse M matrix, for decoding
+	const static float3x3 M = float3x3( 6.0013, -2.7000, -1.7995,
+		                               -1.3320,  3.1029, -5.7720,
+		                                0.3007, -1.0880,  5.6268 );	
+	
+	float le = c.z * 255 + c.w;
+	
+	float3 Xp_Y_XYZp;
+	Xp_Y_XYZp.y = exp2( (le - 127) * 0.5 );
+	Xp_Y_XYZp.z = Xp_Y_XYZp.y / c.y;
+	Xp_Y_XYZp.x = c.x * Xp_Y_XYZp.z;
+	
+	float3 vRGB = mul( Xp_Y_XYZp, M );
+	
+	return max( vRGB, 0 );
+	?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : RGBToRGBM 
+// Desc : Converts RGB to RGBM
+//-----------------------------------------------------------------------------
+__shadercall float4 RGBToRGBM( float3 c, float maxValue ) 
+{
+	<?
+	float4 rgbm;
+	color   *= 1.0 / maxValue;
+	rgbm.a   = saturate( max( max( c.r, c.g ), max( c.b, 1e-6 ) ) );
+	rgbm.a   = ceil( rgbm.a * 255.0f ) / 255.0f;
+	rgbm.rgb = color / rgbm.a;
+	return rgbm;
+	?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : RGBToRGBM 
+// Desc : Converts RGBM to RGB
+//-----------------------------------------------------------------------------
+__shadercall float3 RGBMToRGB( float4 c, float maxValue ) 
+{
+	<?return c.rgb * c.a * maxValue;?>
+}
+
+//-----------------------------------------------------------------------------
+// Name  : compressColor() (Utility Function)
+// Desc  : Compresses an RGB to the specified format
+//-----------------------------------------------------------------------------
+__shadercall void compressColor( out float4 colorOut, float4 colorIn, script int format )
+{
+	switch( format )
+	{
+		case OutputEncodingType::RGBE:
+			<?colorOut = RGBToRGBE( colorIn );?>
+		    break;
+		case OutputEncodingType::LogLUV:
+			<?colorOut = RGBToLUV( colorIn );?>
+		    break;
+		default:
+			<?colorOut = colorIn;?>
+		    break;
+	};
+}
+
+//-----------------------------------------------------------------------------
+// Name  : decompressColor() (Utility Function)
+// Desc  : Decompresses the input back to an RGB color
+//-----------------------------------------------------------------------------
+__shadercall void decompressColor( out float4 colorOut, float4 colorIn, script int format )
+{
+	switch( format )
+	{
+		case OutputEncodingType::RGBE:
+			<?colorOut = RGBEToRGB( colorIn );?>
+		    break;
+		case OutputEncodingType::LogLUV:
+			<?colorOut = LUVToRGB( colorIn );?>
+		    break;
+		default:
+			<?colorOut = colorIn;?>
+		    break;
+	};
+}
+
+//-----------------------------------------------------------------------------
+// Name: linearStep()
+// Desc: Simple linear interpolation utility function.
+//-----------------------------------------------------------------------------
+__shadercall float linearStep( float rangeMin, float rangeMax, float value )
+{
+    <?return saturate( ( value - rangeMin ) / ( rangeMax - rangeMin ) );?>
+}
+
+//-----------------------------------------------------------------------------
+// Name  : computeMeshScreenTextureCoords()
+// Desc  : Computes texture coordinates for sampling (screen tex).
+//-----------------------------------------------------------------------------
+__shadercall void computeMeshScreenTextureCoords( float4 clipPosition, inout float4 texCoordsInOut )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+    <?cbufferrefs
+        _cbCamera;
+    ?>
+
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+    <?
+    // Generate tex coords in 0-W range.
+    texCoordsInOut.x = dot( clipPosition.xw, float2(  0.5, 0.5 ) );
+    texCoordsInOut.y = dot( clipPosition.yw, float2( -0.5, 0.5 ) );
+    texCoordsInOut.z = 0;
+    texCoordsInOut.w = clipPosition.w;
+
+    // Adjust coordinates to fit within the currently selected viewport   
+    texCoordsInOut.xy = (texCoordsInOut.xy * _screenUVAdjustScale) + (_screenUVAdjustBias * clipPosition.ww);
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : computeProjShadowClipPosition() (Utility)
+// Desc : Computes projector light shadow clip position
+//-----------------------------------------------------------------------------
+__shadercall float4 computeProjShadowClipPosition( float4 worldPosition )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+    <?cbufferrefs
+        _cbCamera;
+        _cbProjectorLight;
+    ?>
+
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+    <?
+    // Compute light space coordinates 
+    float4 lightCoords = mul( worldPosition, _viewMatrix );
+
+    // Do our projection manually using distance adjustment 
+    lightCoords.z      = lightCoords.z * _cameraRangeScale + _cameraRangeBias;
+    float2 lightOffset = lerp( _lightConeAdjust.xz, _lightConeAdjust.yw, abs( lightCoords.z ) );
+    lightCoords.xy    *= 2.0 / lightOffset.xy;
+
+    // Return clip position
+    return float4( lightCoords.xyz, 1 );
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name  : getPureDepthType() (Utility Function)
+// Desc  : Given an input depth type of any format, returns the enumeration name of the uncompressed
+//         version of the same format
+//-----------------------------------------------------------------------------
+int getPureDepthType( int format )
+{
+	int outType = format;
+	switch ( format )
+	{
+		case DepthType::LinearDistance_Packed:	
+			outType = int(DepthType::LinearDistance); 
+		break;
+		case DepthType::LinearZ_Packed:	
+			outType = int(DepthType::LinearZ); 
+		break;
+		case DepthType::NonLinearZ_Packed:	
+			outType = int(DepthType::NonLinearZ); 
+		break;
+	} 
+	return outType;
+}
+
+//-----------------------------------------------------------------------------
+// Name  : isCompressedDepthType() (Utility Function)
+// Desc  : Given an input depth type of any format, returns whether or not it is
+//         in compressed form
+//-----------------------------------------------------------------------------
+bool isCompressedDepthType( int currentFormat )
+{
+	bool bCompressed = false;
+	switch ( currentFormat )
+	{
+		case DepthType::LinearDistance_Packed:	
+		case DepthType::LinearZ_Packed:	
+		case DepthType::NonLinearZ_Packed:	
+			bCompressed = true;
+		break;
+	} 
+	return bCompressed;
+}
+
+//-----------------------------------------------------------------------------
+// Name  : setNormalizedDistance() (Utility Function)
+// Desc  : Populates our user defined distance texture. Can store either
+//         a 32-bit distance (e.g., R32F texture) or a 24-bit packed 
+//         version.
+//-----------------------------------------------------------------------------
+__shadercall float4 setNormalizedDistance( float distance, script int outputType )
+{
+    if ( isCompressedDepthType( outputType ) )
+        <?return float4( compressF32( distance ), 0 );?>
+    else
+        <?return float4( distance, 0, 0, 0 );?>
+}
+
+//-----------------------------------------------------------------------------
+// Name  : setDistance() (Utility Function)
+// Desc  : Populates our user defined distance texture. Can store either
+//         a 32-bit distance (e.g., R32F texture) or a 24-bit packed 
+//         version.
+// Note  : Distance is always normalized with respect to CameraMaxDistance 
+//         (i.e., the maximum length of a ray given FOV) prior to packing.
+//-----------------------------------------------------------------------------
+__shadercall float4 setDistance( float distance, script int depthOutputType )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+    <?cbufferrefs
+        _cbCamera;
+    ?>
+
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+    <?
+    float normalizedDistance = distance * _cameraRecipMaxDistance;
+    return setNormalizedDistance( normalizedDistance, $depthOutputType );
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name  : convertDepthType() (Utility Function)
+// Desc  : Converts one depth type to another
+//-----------------------------------------------------------------------------
+__shadercall float3 convertDepthType( float3 depthIn, float3 eyeRay, script int inputType, script int outputType, script bool normalizedInput, script bool normalizeOutput )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+	<?cbufferrefs
+	   _cbCamera;   
+	?>
+
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+    <?
+	float3 depthOut;
+	?> 
+
+    // If the input is compressed, decompress it, else just copy it locally to our working variable
+    bool inputCompressed = isCompressedDepthType( inputType );
+    if ( inputCompressed )
+        <?depthOut = decompressF32( depthIn );?>
+    else
+        <?depthOut = depthIn;?>
+
+    // Will we need to denormalize the input?
+    bool denormalizeInput = (normalizedInput || inputCompressed);
+
+    // Given the input type, convert and process to output
+    switch ( getPureDepthType( inputType ) )
+    {	
+        case DepthType::LinearZ:
+            
+            // If the input is in the [0, 1] range, undo it...
+            if ( denormalizeInput )
+                <?depthOut = depthOut * _cameraInverseRangeScale + _cameraInverseRangeBias;?>
+
+            switch( getPureDepthType( outputType ) )
+            {
+                case DepthType::LinearDistance:
+                    <?depthOut /= dot( _cameraDirection, eyeRay );?>
+                    if ( normalizeOutput )
+                        <?depthOut *= _cameraRecipMaxDistance;?>
+                    break;
+                case DepthType::NonLinearZ:
+                    <?depthOut = (1.0f / depthOut) * _projectionMatrix._43 + _projectionMatrix._33;?>
+                    break;
+                case DepthType::LinearZ:
+                    if ( normalizeOutput && !normalizedInput )
+                        <?depthOut = depthOut * _cameraRangeScale + _cameraRangeBias;?>
+                break;
+            
+            } // End switch type
+            break;
+
+        case DepthType::LinearDistance:
+            
+            // If the input is in the [0, 1] range, undo it...
+            if ( denormalizeInput )
+                <?depthOut *= _cameraMaxDistance;?>
+
+            switch( getPureDepthType( outputType ) )
+            {
+                case DepthType::LinearZ:
+                    <?depthOut = dot( _cameraDirection, eyeRay ) * depthOut;?>
+                    if ( normalizeOutput )
+                        <?depthOut = depthOut * _cameraRangeScale + _cameraRangeBias;?>
+                    break;
+                
+                case DepthType::NonLinearZ:
+                    <?depthOut = (1.0f / ( dot( _cameraDirection, eyeRay ) * depthOut ) ) * _projectionMatrix._43 + _projectionMatrix._33;?>
+                    break;
+
+                case DepthType::LinearDistance:
+                    if ( normalizeOutput && !normalizedInput )
+                        <?depthOut *= _cameraRecipMaxDistance;?>
+                    break;
+            
+            } // End switch type
+            break;
+
+        case DepthType::NonLinearZ:
+
+            switch( getPureDepthType( outputType ) )
+            {
+                case DepthType::LinearZ:
+                    <?depthOut = _projectionMatrix._43 / (depthOut - _projectionMatrix._33);?>
+                    if ( normalizeOutput )
+                        <?depthOut = depthOut * _cameraRangeScale + _cameraRangeBias;?>
+                    break;
+                
+                case DepthType::LinearDistance:
+                    <?
+                    float cosTheta = dot( _cameraDirection, eyeRay );
+                    depthOut = _projectionMatrix._43 / ( (depthOut - _projectionMatrix._33) * cosTheta);
+                    ?>
+                    if ( normalizeOutput )
+                        <?__depth *= _cameraRecipMaxDistance;?>
+                    break;
+            
+            } // End switch type
+            break;
+    
+    } // End input type switch
+
+    // Return results (optional compression as requested)
+    if ( isCompressedDepthType( outputType ) )
+        <?return compressF32( depthOut );?>
+    else
+        <?return depthOut;?>
+}
+
+//-----------------------------------------------------------------------------
+// Name  : sampleDepthBuffer() (Utility Function)
+// Desc  : Returns the distance from the camera to the pixel (in camera/world 
+//         space units) along with the value stored in the alpha channel if 
+//         available (optionally)
+//-----------------------------------------------------------------------------
+int sampleDepthBuffer( ShaderParam result /*float or float2*/, ShaderParam depthTexture /*texture*/, ShaderParam depthSampler /*sampler*/, ShaderParam texCoords /*float2*/, bool getAlpha, int depthType )
+{
+	return sampleDepthBufferEx( result, depthTexture, depthSampler, texCoords, "0", getAlpha, depthType, false );
+}
+int sampleDepthBufferLevel( ShaderParam result /*float or float2*/, ShaderParam depthTexture /*texture*/, ShaderParam depthSampler /*sampler*/, ShaderParam texCoords /*float2*/, ShaderParam mipLevel /*float*/, bool getAlpha, int depthType )
+{
+	return sampleDepthBufferEx( result, depthTexture, depthSampler, texCoords, mipLevel, getAlpha, depthType, true );
+}
+int sampleDepthBufferEx( ShaderParam result /*float or float2*/, ShaderParam depthTexture /*texture*/, ShaderParam depthSampler /*sampler*/, ShaderParam texCoords /*float2*/, ShaderParam mipLevel /*float*/, bool getAlpha, int depthType, bool useLOD )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+	<?cbufferrefs
+	   _cbCamera;   
+	?>
+
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+    
+    // Determine what the final depth type will be
+    int outputDepthType = getPureDepthType( depthType );
+    
+    <?
+    { // Begin sampleDepthBuffer()
+	
+        float  __depthOut;
+        float3 __zeroVec = 0;
+	?>
+
+		// Sample the depth texture
+		if ( useLOD )        
+			<?float4 __depthData = sample2DLevel( $depthTexture, $depthSampler, $texCoords, $mipLevel );?>
+		else
+			<?float4 __depthData = sample2D( $depthTexture, $depthSampler, $texCoords );?>
+    	
+        <?
+		// Unpack and scale according to current type
+		$result.x = convertDepthType( __depthData.xyz, __zeroVec, $depthType, $outputDepthType, $true, $false );
+        ?>
+
+        if ( getAlpha )
+            <?$result.y = __depthData.a;?>
+		
+        <?
+    } // End sampleDepthBuffer
+    ?>
+    
+    // Return the final depth type
+    return outputDepthType;
+}
+
+//-----------------------------------------------------------------------------
+// Name : sampleDepthNormalBuffer ( Utility Function )
+// Desc : Unpacks the depth and normal from a single texture
+// Note : Assumes RG = normal.xy and BA = normalized linear Z 
+//-----------------------------------------------------------------------------
+__shadercall void sampleDepthNormalBufferEx( out float outDepth, out float3 outNormal, Texture2D dnTexture, Sampler2D dnSampler, float2 texCoords, float mipLevel, script bool useLOD )
+{
+	/////////////////////////////////////////////
+	// Shader Code
+	/////////////////////////////////////////////
+	// Read the packed depth and normal
+	if ( useLOD )
+		<?float4 depthData = sample2DLevel( dnTexture, dnSampler, texCoords, mipLevel );?>
+	else
+		<?float4 depthData = sample2D( dnTexture, dnSampler, texCoords );?>
+
+	<?
+	// Reconstruct the normal
+	outNormal.xy = depthData.xy * 2.0f - 1.0f;
+	outNormal.z  = sqrt( 1.0f - (outNormal.x * outNormal.x) - (outNormal.y * outNormal.y) );
+
+    // Decompress to get the normalized linear Z value
+	outDepth = decompressF16( depthData.zw );
+
+    // Convert to full range linear Z
+	outDepth = convertDepthType( outDepth, float3(0,0,0), ${DepthType::LinearZ}, ${DepthType::LinearZ}, $true, $false );
+	?>
+}
+__shadercall void sampleDepthNormalBuffer( out float outDepth, out float3 outNormal, Texture2D dnTexture, Sampler2D dnSampler, float2 texCoords )
+{
+	<?sampleDepthNormalBufferEx( outDepth, outNormal, dnTexture, dnSampler, texCoords, 0.0, $false );?>
+}
+__shadercall void sampleDepthNormalBufferLevel( out float outDepth, out float3 outNormal, Texture2D dnTexture, Sampler2D dnSampler, float2 texCoords, float mipLevel )
+{
+	<?sampleDepthNormalBufferEx( outDepth, outNormal, dnTexture, dnSampler, texCoords, mipLevel, $true );?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : sampleDepthNormalBufferFast ( Utility Function )
+// Desc : Unpacks the depth and normal from a single texture (highly inaccurate)
+// Note : Assumes RG = view space normal.xy and BA = normalized linear Z 
+//        The normal will be totally wrong given the fixed Z coordinate, but as long as it
+//        is just being used for comparison purposes AND this function is used for both the
+//        reference sample and all neighbor samples, the end results can be reasonable enough.
+//        It breaks down with the assumption of -Z for the view space Z, but mostly it will be 
+//        true -Z and generally for cases where it is not true one hopes the gaussian weight
+//        will reduce the issue. Typically, samples with different normal Z directions but
+//        identical x's and y's are not right next to each other, so it is reasonably safe. 
+//        The depth is also wildly off. In addition to low precision from the packed 16-bit
+//        nature, the multiply by the far clip distance is not the proper way to reconstruct
+//        the depth. However, again assuming all comparison samples use this same function,
+//        they will all be broken in the same manner and thus able to be reasonably compared.
+//-----------------------------------------------------------------------------
+void sampleDepthNormalBufferFast( ShaderParam outDepth, ShaderParam outNormal, ShaderParam dnTexture, ShaderParam dnSampler, ShaderParam texCoords )
+{
+	sampleDepthNormalBufferFastEx( outDepth, outNormal, dnTexture, dnSampler, texCoords, "0.0", false );
+}
+void sampleDepthNormalBufferFastLevel( ShaderParam outDepth, ShaderParam outNormal, ShaderParam dnTexture, ShaderParam dnSampler, ShaderParam texCoords, ShaderParam mipLevel )
+{
+	sampleDepthNormalBufferFastEx( outDepth, outNormal, dnTexture, dnSampler, texCoords, mipLevel, true );
+}
+void sampleDepthNormalBufferFastEx( ShaderParam outDepth, ShaderParam outNormal, ShaderParam dnTexture, ShaderParam dnSampler, ShaderParam texCoords, ShaderParam mipLevel, bool useLOD )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+	<?cbufferrefs
+	   _cbCamera;   
+	?>
+
+	/////////////////////////////////////////////
+	// Shader Code
+	/////////////////////////////////////////////
+    <?
+    { // Begin sampleDepthNormalBufferFastEx()
+	?>
+
+		// Read the packed depth and normal
+		if ( useLOD )
+			<?float4 __depthData = sample2DLevel( $dnTexture, $dnSampler, $texCoords, $mipLevel );?>
+		else
+			<?float4 __depthData = sample2D( $dnTexture, $dnSampler, $texCoords );?>
+
+		<?
+		half3 __npp = normalize( __depthData.xyy * half3( 2, 2, 0 ) - half3( 1, 1, 0.0001 ) );
+		$outNormal  = __npp;
+		$outDepth   = dot( __depthData.zw, float2( _cameraFar, _cameraFar/255.0f ) ); //TODO: Add this float2 to the camera constant buffer
+		?>
+
+	<?
+	} // End sampleDepthNormalBufferFastEx()
+	?>
+}
+
+//-----------------------------------------------------------------------------
+// Name  : getDistance() (Utility Function)
+// Desc  : Returns the distance from the camera to the pixel (in camera/world space units)
+//-----------------------------------------------------------------------------
+int getDistance( ShaderParam result /*float*/, ShaderParam depthTexture /*Texture2D*/, ShaderParam depthSampler /*Sampler2D*/, ShaderParam texCoords /*float2*/, int depthType )
+{
+    return sampleDepthBuffer( result, depthTexture, depthSampler, texCoords, false, depthType );
+}
+
+//-----------------------------------------------------------------------------
+// Name : getNormalizedDistance ( Utility Function )
+// Desc  : Retrieves an entry from a user defined distance texture. Can process either
+//         a 32-bit distance (e.g., R32F texture) or a 24-bit packed version.
+//-----------------------------------------------------------------------------
+__shadercall float getNormalizedDistanceEx( Texture2D distanceTexture, Sampler2D distanceSampler, float2 texCoords, float mipLevel, script bool useLOD, script int depthType )
+{
+	/////////////////////////////////////////////
+	// Shader Code
+	/////////////////////////////////////////////
+	// Read the depth texture
+	if ( useLOD )
+		<?float4 depthData = sample2DLevel( distanceTexture, distanceSampler, texCoords, mipLevel );?>
+	else
+		<?float4 depthData = sample2D( distanceTexture, distanceSampler, texCoords );?>
+	
+	// If the data is compressed, decompress it, else just copy it locally to our working variable
+	if ( isCompressedDepthType( depthType ) )
+		<?return decompressF32( depthData.xyz );?>
+	else
+		<?return depthData.x;?>
+}
+__shadercall float getNormalizedDistance( Texture2D distanceTexture, Sampler2D distanceSampler, float2 texCoords, script int depthType )
+{
+	<?return getNormalizedDistanceEx( distanceTexture, distanceSampler, texCoords, 0.0, $false, $depthType );?>
+}
+__shadercall float getNormalizedDistance( Texture2D distanceTexture, Sampler2D distanceSampler, float2 texCoords, float mipLevel, script int depthType )
+{
+	<?return getNormalizedDistanceEx( distanceTexture, distanceSampler, texCoords, mipLevel, $true, $depthType );?>
+}
+
+//-----------------------------------------------------------------------------
+// Name  : getViewPosition() (Utility Function)
+// Desc  : Converts screen texture coordinates and camera space Z into a view 
+//         space position
+//-----------------------------------------------------------------------------
+__shadercall float3 getViewPosition( float2 uv, float eyeZ, script bool orthographicCamera )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+	<?cbufferrefs
+	   _cbCamera;   
+	?>
+
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+	<?
+    float3 result = float3( uv * _cameraScreenToViewScale + _cameraScreenToViewBias, eyeZ );
+	?>
+	
+    // Scale by distance if using orthographic projection
+    if ( !orthographicCamera )
+	    <?result.xy *= eyeZ;?>
+
+    // Return the result
+    <?return result;?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : invert3x3 ( Function )
+// Desc : Compute the inverse of a 3x3 matrix.
+//-----------------------------------------------------------------------------
+__shadercall float3x3 invert3x3( float3x3 M )
+{
+    <?
+    float det = dot( cross( M[0], M[1] ), M[2] );
+    float3x3 T = transpose( M );
+    return float3x3( cross( T[1], T[2] ), 
+           cross( T[2], T[0] ), 
+           cross( T[0], T[1] ) ) / det;
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : invertTranspose3x3 ( Function )
+// Desc : Compute the inverse transpose of a 3x3 matrix.
+//-----------------------------------------------------------------------------
+__shadercall float3x3 invertTranspose3x3( float3x3 M )
+{
+    <?
+    float3 v0x1 = cross( M[0], M[1] );
+    float recipDet = 1.0f / dot( v0x1, M[2] );
+    return float3x3( cross( M[1], M[2] ), cross( M[2], M[0] ), v0x1 ) * recipDet;
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : sampleBoneMatrix ( Function )
+// Desc : Sample a packed matrix from a texture.
+//-----------------------------------------------------------------------------
+__shadercall matrix sampleBoneMatrix( int index, int instanceID )
+{
+    // ToDo: Make more generic
+    <?
+    float2 texelSize = float2( 1.0f / 512.0f, 1.0f );
+    float offsetU = (((float)index * 4.0f) + 0.5f) * texelSize.x;
+    float offsetV = ((float)instanceID + 0.5f) * texelSize.y;
+
+    // Sample the three matrix rows
+    float4 row0 = tex2Dlod( sVertexBlendingMatrices, float4( offsetU, offsetV, 0, 0 ) );
+    float4 row1 = tex2Dlod( sVertexBlendingMatrices, float4( offsetU + texelSize.x, offsetV, 0, 0 ) );
+    float4 row2 = tex2Dlod( sVertexBlendingMatrices, float4( offsetU + texelSize.x * 2, offsetV, 0, 0 ) );
+
+    // Build the output matrix
+    matrix m;
+    m[0] = float4( row0.xyz, 0);
+    m[1] = float4( row1.xyz, 0);
+    m[2] = float4( row2.xyz, 0);
+    m[3] = float4(row0.w,row1.w,row2.w,1);
+    return m;
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : sampleBoneMatrices ( Function )
+// Desc : Sample a packed matrix, and its inverse transpose counterpart, from a
+//        texture.
+//-----------------------------------------------------------------------------
+__shadercall void sampleBoneMatrices( int index, int instanceID, out matrix m, out float3x3 mit )
+{
+    // ToDo: Make more generic
+    <?
+    float2 texelSize = float2( 1.0f / 512.0f, 1.0f );
+    float offsetU = (((float)index * 4.0f) + 0.5f) * texelSize.x;
+    float offsetV = ((float)instanceID + 0.5f) * texelSize.y;
+
+    // Sample the three matrix rows
+    float4 row0 = tex2Dlod( sVertexBlendingMatrices, float4( offsetU, offsetV, 0, 0 ) );
+    float4 row1 = tex2Dlod( sVertexBlendingMatrices, float4( offsetU + texelSize.x, offsetV, 0, 0 ) );
+    float4 row2 = tex2Dlod( sVertexBlendingMatrices, float4( offsetU + texelSize.x * 2, offsetV, 0, 0 ) );
+
+    // Build the output matrix
+    m[0] = float4( row0.xyz, 0);
+    m[1] = float4( row1.xyz, 0);
+    m[2] = float4( row2.xyz, 0);
+    m[3] = float4(row0.w,row1.w,row2.w,1);
+
+    // Sample inverse transpose
+    offsetU += 256.0f * texelSize.x;
+    mit[0] = tex2Dlod( sVertexBlendingMatrices, float4( offsetU, offsetV, 0, 0 ) ).xyz;
+    mit[1] = tex2Dlod( sVertexBlendingMatrices, float4( offsetU + texelSize.x, offsetV, 0, 0 ) ).xyz;
+    mit[2] = tex2Dlod( sVertexBlendingMatrices, float4( offsetU + texelSize.x * 2, offsetV, 0, 0 ) ).xyz;
+    ?>
+}
+
+
+//-----------------------------------------------------------------------------
+// Name : getWorldMatrix ( Function )
+// Desc : Returns world matrix (no blending)
+//-----------------------------------------------------------------------------
+__shadercall void getWorldMatrix( out matrix outWorldMatrix )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+    <?cbufferrefs
+       _cbWorld;   
+    ?>
+
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+    // Build to local to world space transform matrix
+    <?outWorldMatrix = _worldMatrix; ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : getWorldMatrixEx ( Function )
+// Desc : Returns world and world inverse transpose matrices (no blending)
+//-----------------------------------------------------------------------------
+__shadercall void getWorldMatrixEx( out matrix outWorldMatrix, out float3x3 outWorldMatrixIT )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+    <?cbufferrefs
+       _cbWorld;
+    ?>
+	
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+    // Build to local to world space transform matrix
+    <?
+    outWorldMatrix   = _worldMatrix;
+    outWorldMatrixIT = _worldITMatrix;
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : getWorldMatrix ( Function )
+// Desc : Returns world matrix (supports blending)
+//-----------------------------------------------------------------------------
+__shadercall void getWorldMatrix( out matrix outWorldMatrix, float4 blendWeights, float4 indices, script int maxBlendIndex, script bool useVTFBlending )
+{
+    if ( maxBlendIndex < 0 )
+    {
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Constant buffer usage.
+        <?cbufferrefs
+           _cbWorld;
+        ?>
+
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+        <?
+        outWorldMatrix   = _worldMatrix;
+        ?>
+    
+    } // End if !blending
+    else
+    {
+        // Use vertex texture fetch, or constant buffer?
+        if ( useVTFBlending )
+        {
+            /////////////////////////////////////////////
+            // Definitions
+            /////////////////////////////////////////////
+            // VTF samplers
+            <?global
+            Sampler2D sVertexBlendingMatrices : register(s0);
+            ?>
+        
+            /////////////////////////////////////////////
+            // Shader Code
+            /////////////////////////////////////////////
+            <?
+            // Convert indices to integer representation.
+            int blendIndices[4] = (int[4])D3DCOLORtoUBYTE4( indices );
+            ?>
+
+            ///////////////////////////////////////////////////////////////////////
+            // Vertex texture fetch for bone matrices with inverse transpose
+            // calculated on the fly (12 VTF samples in total)
+            ///////////////////////////////////////////////////////////////////////
+            for ( int i = 0; i <= maxBlendIndex; ++i )
+            {
+                if ( i == 0 )
+                {
+                    <?
+                    // Sample the matrix
+                    outWorldMatrix = sampleBoneMatrix( blendIndices[$i], 0 ) * blendWeights[$i];
+                    ?>
+                
+                } // End if first
+                else
+                {
+                    <?
+                    // Blend
+                    if ( blendWeights[$i] > 0 )
+                        outWorldMatrix = (blendWeights[$i] * sampleBoneMatrix( blendIndices[$i], 0 )) + outWorldMatrix;
+                    ?>
+                
+                } // End if not first
+
+            } // Next bone
+
+        } // End if VTF
+        else
+        {
+            /////////////////////////////////////////////
+            // Definitions
+            /////////////////////////////////////////////
+            // Constant buffer usage.
+            <?cbufferrefs
+               _cbVertexBlending;
+            ?>
+
+            /////////////////////////////////////////////
+            // Shader Code
+            /////////////////////////////////////////////
+            <?
+            // Convert indices to integer representation.
+            int blendIndices[4] = (int[4])D3DCOLORtoUBYTE4( indices );
+            ?>
+
+            ///////////////////////////////////////////////////////////////////////
+            // Blend together referenced matrix constants.
+            ///////////////////////////////////////////////////////////////////////
+            <?float4x3 m;?>
+                
+            if ( maxBlendIndex == 0 )
+            {
+                <?
+                m = _worldMatrices[ blendIndices[ 0 ] ];
+                ?>
+            
+            } // End if 1 matrix
+            else if ( maxBlendIndex == 1 )
+            {
+                <?
+                m =     blendWeights.x * _worldMatrices[ blendIndices[ 0 ] ];
+                m = m + blendWeights.y * _worldMatrices[ blendIndices[ 1 ] ];
+                ?>
+            
+            } // End if 2 matrices
+            else if ( maxBlendIndex == 2 )
+            {
+                <?
+                m =     blendWeights.x * _worldMatrices[ blendIndices[ 0 ] ];
+                m = m + blendWeights.y * _worldMatrices[ blendIndices[ 1 ] ];
+                m = m + blendWeights.z * _worldMatrices[ blendIndices[ 2 ] ];
+                ?>
+            
+            } // End if 3 matrices
+            else if ( maxBlendIndex == 3 )
+            {
+                <?
+                m =     blendWeights.x * _worldMatrices[ blendIndices[ 0 ] ];
+                m = m + blendWeights.y * _worldMatrices[ blendIndices[ 1 ] ];
+                m = m + blendWeights.z * _worldMatrices[ blendIndices[ 2 ] ];
+                m = m + blendWeights.w * _worldMatrices[ blendIndices[ 3 ] ];
+                ?>
+            
+            } // End if 4 matrices
+
+            // Generate the final 4x4 matrix
+            <?
+            outWorldMatrix[0] = float4(m[0],0);
+            outWorldMatrix[1] = float4(m[1],0);
+            outWorldMatrix[2] = float4(m[2],0);
+            outWorldMatrix[3] = float4(m[3],1);
+            ?>
+            
+        } // End if !VTF
+
+    } // End if blending
+}
+
+//-----------------------------------------------------------------------------
+// Name : getWorldMatrixEx ( Function )
+// Desc : Returns blended world and world inverse transpose matrices
+//-----------------------------------------------------------------------------
+__shadercall void getWorldMatrixEx( out matrix outWorldMatrix, out float3x3 outWorldMatrixIT, float4 blendWeights, float4 indices, script int maxBlendIndex, script bool useVTFBlending )
+{
+    if ( maxBlendIndex < 0 )
+    {
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Constant buffer usage.
+        <?cbufferrefs
+           _cbWorld;
+        ?>
+
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+        <?
+        outWorldMatrix   = _worldMatrix;
+        outWorldMatrixIT = _worldITMatrix;
+        ?>
+    
+    } // End if !blending
+    else
+    {
+        // Use vertex texture fetch, or constant buffer?
+        if ( useVTFBlending )
+        {
+            /////////////////////////////////////////////
+            // Definitions
+            /////////////////////////////////////////////
+            // VTF samplers
+            <?global
+            Sampler2D sVertexBlendingMatrices : register(s0);
+            ?>
+        
+            /////////////////////////////////////////////
+            // Shader Code
+            /////////////////////////////////////////////
+            <?
+            // Convert indices to integer representation.
+            int blendIndices[4] = (int[4])D3DCOLORtoUBYTE4( indices );
+            ?>
+
+            ///////////////////////////////////////////////////////////////////////
+            // Vertex texture fetch for bone matrices with inverse transpose
+            // calculated on the fly (12 VTF samples in total)
+            ///////////////////////////////////////////////////////////////////////
+            for ( int i = 0; i <= maxBlendIndex; ++i )
+            {
+                if ( i == 0 )
+                {
+                    // Sample the matrix
+                    <?outWorldMatrix = sampleBoneMatrix( blendIndices[$i], 0 ) * blendWeights[$i];?>
+                
+                } // End if first
+                else
+                {
+                    <?
+                    // Blend
+                    if ( blendWeights[$i] > 0 )
+                        outWorldMatrix = (blendWeights[$i] * sampleBoneMatrix( blendIndices[$i], 0 )) + outWorldMatrix;
+                    ?>
+                
+                } // End if not first
+
+            } // Next bone
+
+            // Generate the inverse transpose of the computed matrix.
+            <?outWorldMatrixIT = invertTranspose3x3( (float3x3)outWorldMatrix );?>
+
+            ///////////////////////////////////////////////////////////////////////
+            // Vertex texture fetch for bone matrices with inverse transpose also 
+            // sampled using VTF and blended separately (24 VTF samples in total)
+            ///////////////////////////////////////////////////////////////////////
+            /*<?
+            matrix m;
+            float3x3 mit;
+            ?>
+
+            for ( int i = 0; i <= maxBlendIndex; ++i )
+            {
+                if ( i == 0)
+                {
+                    // Sample the matrices
+                    sampleBoneMatrices( "blendIndices[$i]", "0", "m", "mit" );
+                    <?
+                    outWorldMatrix   = m;
+                    outWorldMatrixIT = mit;
+                    ?>
+                
+                } // End if first
+                else
+                {
+                    <?
+                    if ( blendWeights[$i] > 0 )
+                    {
+                    ?>
+                        // Sample the matrices
+                        sampleBoneMatrices( "blendIndices[$i]", "0", "m", "mit" );
+                        
+                        <?
+                        outWorldMatrix   = outWorldMatrix + blendWeights[$i] * m;
+                        outWorldMatrixIT = outWorldMatrixIT + blendWeights[$i] * mit;
+
+                    } // End dynamic branch
+                    ?>
+                
+                } // End if not first
+
+            } // Next bone*/
+
+        } // End if VTF
+        else
+        {
+            /////////////////////////////////////////////
+            // Definitions
+            /////////////////////////////////////////////
+            // Constant buffer usage.
+            <?cbufferrefs
+               _cbVertexBlending;
+            ?>
+
+            /////////////////////////////////////////////
+            // Shader Code
+            /////////////////////////////////////////////
+            <?
+            // Convert indices to integer representation.
+            int blendIndices[4] = (int[4])D3DCOLORtoUBYTE4( indices );
+            ?>
+
+            ///////////////////////////////////////////////////////////////////////
+            // Blend together referenced matrix constants.
+            ///////////////////////////////////////////////////////////////////////
+            <?float4x3 m;?>
+                
+            if ( maxBlendIndex == 0 )
+            {
+                <?
+                m = _worldMatrices[ blendIndices[ 0 ] ];
+                ?>
+            
+            } // End if 1 matrix
+            else if ( maxBlendIndex == 1 )
+            {
+                <?
+                m =     blendWeights.x * _worldMatrices[ blendIndices[ 0 ] ];
+                m = m + blendWeights.y * _worldMatrices[ blendIndices[ 1 ] ];
+                ?>
+            
+            } // End if 2 matrices
+            else if ( maxBlendIndex == 2 )
+            {
+                <?
+                m =     blendWeights.x * _worldMatrices[ blendIndices[ 0 ] ];
+                m = m + blendWeights.y * _worldMatrices[ blendIndices[ 1 ] ];
+                m = m + blendWeights.z * _worldMatrices[ blendIndices[ 2 ] ];
+                ?>
+            
+            } // End if 3 matrices
+            else if ( maxBlendIndex == 3 )
+            {
+                <?
+                m =     blendWeights.x * _worldMatrices[ blendIndices[ 0 ] ];
+                m = m + blendWeights.y * _worldMatrices[ blendIndices[ 1 ] ];
+                m = m + blendWeights.z * _worldMatrices[ blendIndices[ 2 ] ];
+                m = m + blendWeights.w * _worldMatrices[ blendIndices[ 3 ] ];
+                ?>
+            
+            } // End if 4 matrices
+
+            <?
+
+            // Generate the inverse transpose of the computed matrix.
+            outWorldMatrixIT = invertTranspose3x3( (float3x3)m );
+
+            // Generate the final 4x4 matrix
+            outWorldMatrix[0] = float4(m[0],0);
+            outWorldMatrix[1] = float4(m[1],0);
+            outWorldMatrix[2] = float4(m[2],0);
+            outWorldMatrix[3] = float4(m[3],1);
+            ?>
+            
+        } // End if !VTF
+
+    } // End if blending
+}
+
+//-----------------------------------------------------------------------------
+// Name : GetTangentSpaceNormal()
+// Desc : Returns the tangent space normal ([-1, 1] range)
+//-----------------------------------------------------------------------------
+__shadercall half3 getTangentSpaceNormal( Texture2D bumpTexture, Sampler2D bumpSampler, float2 texCoords, float bumpiness )
+{
+    <?
+    float3 normal     = sample2D( bumpTexture, bumpSampler, texCoords ) * 2.0f - 1.0f;
+           normal.xy *= bumpiness;
+    return normal;
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : computeParallaxVector()
+// Desc : Computes the parallax offset vector for texture lookup adjustment
+//-----------------------------------------------------------------------------
+__shadercall float2 computeParallaxOffset( Texture2D heightTexture, Sampler2D heightSampler, float2 texCoords, float2 parallaxDirection )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+    <?cbufferrefs
+	_cbMaterial;
+    ?>
+
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+    <?
+    // Sample main bumpmap color
+    float height = sample2D( heightTexture, heightSampler, texCoords ).a * 2.0 - 1.0;
+
+    // Compute offset distance
+    float distance = height * _parallaxHeightScale + _parallaxHeightBias; 
+
+    // Compute parallax offset vector and adjust texture coordinates for diffuse and normal lookups
+    return parallaxDirection * distance;
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : compressUnsignedNormal()
+// Desc : Returns the best-fit normal in the cube to improve resolution (Crytek SIGGRAPH)
+//-----------------------------------------------------------------------------
+__shadercall void compressUnsignedNormal( inout half3 normal, Texture2D fitTexture, Sampler2D fitSampler )
+{
+    <?
+    // Get unsigned normal for cubemap lookup (note the full float precision is required)
+    half3 unsignedNormal = abs( normal.rgb );
+
+    // Get the main axis for cubemap lookup
+    half maxNormalAbsolute = max( unsignedNormal.z, max( unsignedNormal.x, unsignedNormal.y ) );
+
+    // Get texture coordinates in a collapsed cubemap
+    float2 texCoord = (unsignedNormal.z < maxNormalAbsolute) ? ( (unsignedNormal.y < maxNormalAbsolute) ? unsignedNormal.yz : unsignedNormal.xz ) : unsignedNormal.xy;
+    texCoord = (texCoord.x < texCoord.y) ? texCoord.yx : texCoord.xy;
+    texCoord.y /= texCoord.x;
+
+    // Fit normal into the edge of unit cube
+    normal /= maxNormalAbsolute;
+
+    // Look-up fitting length and scale the normal to get the best fit
+    float fittingScale = sample2D( fitTexture, fitSampler, texCoord ).a;
+
+    // Scale the normal to get the best fit
+    normal *= fittingScale;
+
+    // Squeeze back to unsigned
+    normal = normal * 0.5 + 0.5;
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : computeFogFactor()
+// Desc : Computes fog factor.
+//-----------------------------------------------------------------------------
+__shadercall float computeFogFactor( float distance, script int fogModel )
+{
+    /////////////////////////////////////////////
+    // Definitions
+    /////////////////////////////////////////////
+    // Constant buffer usage.
+    <?cbufferrefs
+        _cbScene;
+    ?>
+
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+    if ( fogModel == FogModel::Exponential )
+    {
+        <?
+        float _d = distance * _fogDensity;
+        return saturate( 1.0 - ( 1.0 / exp( _d ) ) );
+        ?>
+    }
+    else if ( fogModel == FogModel::ExponentialSquared )
+    {
+        <?
+        float _d = distance * _fogDensity;
+        return saturate( 1.0 - ( 1.0 / exp( _d * _d ) ) );
+        ?>
+    }
+    else if ( fogModel == FogModel::Linear )
+    {
+        <?
+        return saturate( distance * _fogRange.z + _fogRange.w );
+        ?>
+    }
+    else
+    {
+        <?return 0;?>
+    }
+}
+
+//-----------------------------------------------------------------------------
+// Name : computeIntensity()
+// Desc : Computes the "intensity" of the color. It uses a weighted average 
+//        based on all channels.
+//-----------------------------------------------------------------------------
+__shadercall float computeIntensity( float3 color )
+{
+    <?
+    float3 weights = color * ( 1.0 / (color.r + color.g + color.b) );
+    return dot( color, weights );
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : computeLuminance()
+// Desc : Returns the luminance of the input color.
+//-----------------------------------------------------------------------------
+__shadercall float computeLuminance( float3 color )
+{
+    <?
+	return dot( color, float3( 0.2125, 0.7154, 0.0721 ) );
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : getMaxIntensity()
+// Desc : Returns the maximum of either the luminance or the "intensity" of the
+//        color.
+//-----------------------------------------------------------------------------
+__shadercall float getMaxIntensity( float3 color )
+{
+    <?
+	float luminance = dot( color, float3( 0.2125, 0.7154, 0.0721 ) );
+	return max( computeIntensity( color ), luminance );
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : initializePoissonKernel ()
+// Desc : Loads the 'poissonKernel' constant array with pre-computed Poisson
+//        disk sample offsets for randomized texture lookups. We also include 
+//        (in zw) (half) unit sphere height information (i.e., the distance 
+//        from sample on the base unit circle to the matching location on unit 
+//        sphere) and a volumetric weight. The weight describes how much volume
+//        of the hemisphere is occupied by that sample.   
+//
+// Note:  The latter two members are used by volumetric ssao techniques but can
+//        potentially prove useful as general weighting parameters in other 
+//        cases where a poisson disk distribution is utilized.
+//-----------------------------------------------------------------------------
+void initializePoissonKernel( int numSamples, bool fullSphere )
+{
+	Vector4[] tmpSamples;
+	tmpSamples.resize( numSamples );
+
+    if( numSamples == 1 )
+    {
+        tmpSamples[0] = Vector4(0.00000000f, 0.00000000f, 1.00000000f, 1.00000000f);
+    }
+    else if( numSamples == 2 )
+    {
+        tmpSamples[0] = Vector4(-0.38609501f, 0.34804167f, 0.85428194f, 0.37085744f);
+        tmpSamples[1] = Vector4(0.24666225f, -0.22235134f, 0.94324844f, 0.62914256f);
+    }
+    else if( numSamples == 3 )
+    {
+        tmpSamples[0] = Vector4(-0.37548328f, 0.32455059f, 0.86814701f, 0.40768254f);
+        tmpSamples[1] = Vector4(-0.02592084f, -0.55566221f, 0.83100398f, 0.32676649f);
+        tmpSamples[2] = Vector4(0.57291050f, 0.19378282f, 0.79638042f, 0.26555097f);
+    }
+    else if( numSamples == 4 )
+    {
+        tmpSamples[0] = Vector4(-0.58336949f, 0.24313564f, 0.77496135f, 0.22671994f);
+        tmpSamples[1] = Vector4(-0.25215201f, -0.56202600f, 0.78774751f, 0.23182562f);
+        tmpSamples[2] = Vector4(0.23548560f, 0.46151110f, 0.85530932f, 0.32919681f);
+        tmpSamples[3] = Vector4(0.56264153f, -0.30643445f, 0.76781016f, 0.21225763f);
+    }
+    else if( numSamples == 5 )
+    {
+        tmpSamples[0] = Vector4(-0.60000891f, -0.35746526f, 0.71568701f, 0.14399749f);
+        tmpSamples[1] = Vector4(-0.47690231f, 0.37896886f, 0.79306165f, 0.21501077f);
+        tmpSamples[2] = Vector4(0.14229968f, -0.57099373f, 0.80852765f, 0.24678346f);
+        tmpSamples[3] = Vector4(0.52383115f, 0.05869585f, 0.84979746f, 0.26833743f);
+        tmpSamples[4] = Vector4(0.22170697f, 0.69182343f, 0.68718728f, 0.12587086f);
+    }
+    else if( numSamples == 6 )
+    {
+        tmpSamples[0] = Vector4(-0.68700986f, -0.12435726f, 0.71592788f, 0.14298652f);
+        tmpSamples[1] = Vector4(-0.46581738f, 0.53839026f, 0.70224647f, 0.11788725f);
+        tmpSamples[2] = Vector4(-0.14431563f, -0.44743267f, 0.88259674f, 0.26713071f);
+        tmpSamples[3] = Vector4(0.12297860f, 0.57372893f, 0.80976007f, 0.17717372f);
+        tmpSamples[4] = Vector4(0.50633369f, -0.45282768f, 0.73387552f, 0.16326704f);
+        tmpSamples[5] = Vector4(0.64620637f, 0.26732958f, 0.71480922f, 0.13155474f);
+    }
+    else if( numSamples == 7 )
+    {
+        tmpSamples[0] = Vector4(-0.52684855f, -0.54673477f, 0.65077777f, 0.10777817f);
+        tmpSamples[1] = Vector4(-0.61521109f, 0.34981457f, 0.70650201f, 0.13952048f);
+        tmpSamples[2] = Vector4(-0.22707955f, -0.09656191f, 0.96907723f, 0.19380993f);
+        tmpSamples[3] = Vector4(0.01161018f, 0.66416713f, 0.74749396f, 0.14599681f);
+        tmpSamples[4] = Vector4(0.25829611f, -0.57057951f, 0.77956535f, 0.18232117f);
+        tmpSamples[5] = Vector4(0.52579083f, 0.37599129f, 0.76300364f, 0.13903064f);
+        tmpSamples[6] = Vector4(0.73066069f, -0.15355587f, 0.66524849f, 0.09154282f);
+    }
+    else if( numSamples == 8 )
+    {
+        tmpSamples[0] = Vector4(-0.70573267f, 0.23397187f, 0.66872907f, 0.09677163f);
+        tmpSamples[1] = Vector4(-0.63909212f, -0.38272799f, 0.66714357f, 0.09322700f);
+        tmpSamples[2] = Vector4(-0.26129550f, 0.75061956f, 0.60687309f, 0.06921807f);
+        tmpSamples[3] = Vector4(-0.10119124f, -0.57054812f, 0.81500624f, 0.18493855f);
+        tmpSamples[4] = Vector4(-0.12358304f, 0.23279949f, 0.96464067f, 0.18017651f);
+        tmpSamples[5] = Vector4(0.51761347f, -0.43479008f, 0.73690832f, 0.15390635f);
+        tmpSamples[6] = Vector4(0.60156394f, 0.19172054f, 0.77547667f, 0.14954088f);
+        tmpSamples[7] = Vector4(0.35640086f, 0.69021398f, 0.62974843f, 0.07222102f);
+    }
+    else if( numSamples == 9 )
+    {
+        tmpSamples[0] = Vector4(-0.74771337f, -0.13842461f, 0.64943309f, 0.08521885f);
+        tmpSamples[1] = Vector4(-0.54983636f, 0.51639315f, 0.65651968f, 0.09808227f);
+        tmpSamples[2] = Vector4(-0.44962117f, -0.64502960f, 0.61788156f, 0.06523779f);
+        tmpSamples[3] = Vector4(-0.19646711f, 0.01762430f, 0.98035201f, 0.17381789f);
+        tmpSamples[4] = Vector4(0.00755485f, -0.56570441f, 0.82457349f, 0.12457433f);
+        tmpSamples[5] = Vector4(0.07524363f, 0.62338452f, 0.77828666f, 0.15173802f);
+        tmpSamples[6] = Vector4(0.45105684f, -0.65417368f, 0.60712810f, 0.06609943f);
+        tmpSamples[7] = Vector4(0.60695670f, -0.09893494f, 0.78855275f, 0.15713592f);
+        tmpSamples[8] = Vector4(0.61378970f, 0.46706613f, 0.63648365f, 0.07809550f);
+    }
+    else if( numSamples == 10 )
+    {
+        tmpSamples[0] = Vector4(-0.69185781f, -0.18303044f, 0.69845016f, 0.08528543f);
+        tmpSamples[1] = Vector4(-0.65372227f, 0.28665366f, 0.70034054f, 0.08860753f);
+        tmpSamples[2] = Vector4(-0.50368087f, -0.63633862f, 0.58427625f, 0.05177361f);
+        tmpSamples[3] = Vector4(-0.32971883f, 0.68165007f, 0.65317583f, 0.07758910f);
+        tmpSamples[4] = Vector4(-0.06381099f, -0.56499438f, 0.82262355f, 0.14465947f);
+        tmpSamples[5] = Vector4(-0.02831670f, 0.12450063f, 0.99181538f, 0.17373251f);
+        tmpSamples[6] = Vector4(0.22024128f, 0.69536372f, 0.68407827f, 0.09235269f);
+        tmpSamples[7] = Vector4(0.58262824f, -0.14194528f, 0.80024738f, 0.13192968f);
+        tmpSamples[8] = Vector4(0.46673626f, -0.63270660f, 0.61793173f, 0.07325196f);
+        tmpSamples[9] = Vector4(0.67341207f, 0.35697433f, 0.64736815f, 0.08081802f);
+    }
+    else if( numSamples == 11 )
+    {
+        tmpSamples[0] = Vector4(-0.75809793f, -0.19741331f, 0.62154285f, 0.07335966f);
+        tmpSamples[1] = Vector4(-0.59298804f, 0.44810748f, 0.66900290f, 0.09934329f);
+        tmpSamples[2] = Vector4(-0.41320510f, -0.65523753f, 0.63239649f, 0.06448213f);
+        tmpSamples[3] = Vector4(-0.28811663f, -0.06685099f, 0.95525900f, 0.14468734f);
+        tmpSamples[4] = Vector4(0.07204511f, -0.74668765f, 0.66126171f, 0.07563922f);
+        tmpSamples[5] = Vector4(-0.03762825f, 0.71097024f, 0.70221466f, 0.10807544f);
+        tmpSamples[6] = Vector4(0.20028407f, 0.20934297f, 0.95711118f, 0.12670634f);
+        tmpSamples[7] = Vector4(0.24992351f, -0.28635246f, 0.92495433f, 0.11205259f);
+        tmpSamples[8] = Vector4(0.61889941f, -0.52720032f, 0.58225711f, 0.05676225f);
+        tmpSamples[9] = Vector4(0.54660771f, 0.58154143f, 0.60251935f, 0.06145959f);
+        tmpSamples[10] = Vector4(0.75997358f, 0.04739811f, 0.64822341f, 0.07743214f);
+    }
+    else if( numSamples == 12 )
+    {
+        tmpSamples[0] = Vector4(-0.73259111f, 0.00465381f, 0.68065307f, 0.08766999f);
+        tmpSamples[1] = Vector4(-0.65179423f, -0.54599061f, 0.52636351f, 0.03759544f);
+        tmpSamples[2] = Vector4(-0.59283816f, 0.58512707f, 0.55332560f, 0.04959427f);
+        tmpSamples[3] = Vector4(-0.32736593f, -0.36295618f, 0.87240722f, 0.09701888f);
+        tmpSamples[4] = Vector4(-0.26733497f, 0.43608791f, 0.85927839f, 0.12103441f);
+        tmpSamples[5] = Vector4(-0.10071163f, -0.79468955f, 0.59860311f, 0.05536084f);
+        tmpSamples[6] = Vector4(0.11330947f, -0.16154405f, 0.98033896f, 0.14684605f);
+        tmpSamples[7] = Vector4(0.13468321f, 0.40402686f, 0.90477773f, 0.10811730f);
+        tmpSamples[8] = Vector4(0.37870197f, -0.64259324f, 0.66607713f, 0.07510099f);
+        tmpSamples[9] = Vector4(0.34087430f, 0.73790784f, 0.58249183f, 0.06445140f);
+        tmpSamples[10] = Vector4(0.67760403f, 0.19885066f, 0.70803332f, 0.09912946f);
+        tmpSamples[11] = Vector4(0.73035307f, -0.29774009f, 0.61476438f, 0.05808097f);
+    }
+    else if( numSamples == 13 )
+    {
+        tmpSamples[0] = Vector4(-0.81097975f, -0.20575761f, 0.54770033f, 0.04228143f);
+        tmpSamples[1] = Vector4(-0.68257120f, 0.35796691f, 0.63714697f, 0.06703744f);
+        tmpSamples[2] = Vector4(-0.43802464f, -0.00259295f, 0.89895923f, 0.09538501f);
+        tmpSamples[3] = Vector4(-0.46770553f, -0.58154651f, 0.66562391f, 0.07355631f);
+        tmpSamples[4] = Vector4(-0.31839108f, 0.74079765f, 0.59147778f, 0.05676230f);
+        tmpSamples[5] = Vector4(-0.03091291f, -0.22820494f, 0.97312224f, 0.12127404f);
+        tmpSamples[6] = Vector4(-0.01138893f, 0.39790563f, 0.91735566f, 0.12050615f);
+        tmpSamples[7] = Vector4(-0.03165446f, -0.79408088f, 0.60698727f, 0.05466359f);
+        tmpSamples[8] = Vector4(0.41227454f, 0.01592211f, 0.91092052f, 0.11334816f);
+        tmpSamples[9] = Vector4(0.36211560f, -0.61117985f, 0.70379790f, 0.07112780f);
+        tmpSamples[10] = Vector4(0.32271233f, 0.72553562f, 0.60782795f, 0.06428367f);
+        tmpSamples[11] = Vector4(0.73629637f, 0.29717956f, 0.60790786f, 0.06642579f);
+        tmpSamples[12] = Vector4(0.73172689f, -0.35425946f, 0.58230232f, 0.05334832f);
+    }
+    else if( numSamples == 14 )
+    {
+        tmpSamples[0] = Vector4(-0.46580117f, -0.70624041f, 0.53315453f, 0.03197778f);
+        tmpSamples[1] = Vector4(-0.72476166f, 0.40180445f, 0.55970860f, 0.04666331f);
+        tmpSamples[2] = Vector4(-0.66605585f, -0.31990531f, 0.67381763f, 0.07638675f);
+        tmpSamples[3] = Vector4(-0.53304566f, 0.11352992f, 0.83843502f, 0.10214323f);
+        tmpSamples[4] = Vector4(-0.31185074f, 0.73945296f, 0.59662253f, 0.05312626f);
+        tmpSamples[5] = Vector4(-0.07741820f, -0.06488932f, 0.99488482f, 0.13178204f);
+        tmpSamples[6] = Vector4(-0.10066410f, -0.64582740f, 0.75681815f, 0.08103756f);
+        tmpSamples[7] = Vector4(0.07507198f, 0.61805449f, 0.78254255f, 0.10824085f);
+        tmpSamples[8] = Vector4(0.27699232f, -0.79604616f, 0.53813174f, 0.03593588f);
+        tmpSamples[9] = Vector4(0.33819427f, -0.35182812f, 0.87283538f, 0.08460197f);
+        tmpSamples[10] = Vector4(0.36679688f, 0.18605747f, 0.91150572f, 0.09712947f);
+        tmpSamples[11] = Vector4(0.59870100f, 0.55726934f, 0.57533294f, 0.05567597f);
+        tmpSamples[12] = Vector4(0.78031629f, -0.01996644f, 0.62506625f, 0.06255943f);
+        tmpSamples[13] = Vector4(0.68825505f, -0.50049550f, 0.52517543f, 0.03273951f);
+    }
+    else if( numSamples == 15 )
+    {
+        tmpSamples[0] = Vector4(-0.83041638f, -0.00824890f, 0.55708221f, 0.03725826f);
+        tmpSamples[1] = Vector4(-0.64203322f, -0.58556855f, 0.49487656f, 0.02139846f);
+        tmpSamples[2] = Vector4(-0.68931559f, 0.43438025f, 0.57979118f, 0.04510740f);
+        tmpSamples[3] = Vector4(-0.61845921f, -0.30260013f, 0.72521815f, 0.05164401f);
+        tmpSamples[4] = Vector4(-0.36370699f, 0.12463148f, 0.92313825f, 0.10161521f);
+        tmpSamples[5] = Vector4(-0.28966399f, 0.70501731f, 0.64733713f, 0.06940940f);
+        tmpSamples[6] = Vector4(-0.28572400f, -0.75098387f, 0.59530246f, 0.04500896f);
+        tmpSamples[7] = Vector4(-0.14754141f, -0.30619672f, 0.94046536f, 0.09480258f);
+        tmpSamples[8] = Vector4(0.20191207f, -0.73630753f, 0.64581943f, 0.07331518f);
+        tmpSamples[9] = Vector4(0.10744671f, 0.34074360f, 0.93399625f, 0.11760214f);
+        tmpSamples[10] = Vector4(0.26966437f, -0.18011782f, 0.94595914f, 0.10693056f);
+        tmpSamples[11] = Vector4(0.22480919f, 0.78566049f, 0.57636657f, 0.04752995f);
+        tmpSamples[12] = Vector4(0.70013301f, 0.10448067f, 0.70632681f, 0.08090725f);
+        tmpSamples[13] = Vector4(0.62478130f, 0.51705988f, 0.58506188f, 0.04462814f);
+        tmpSamples[14] = Vector4(0.68183637f, -0.41623841f, 0.60153533f, 0.06284248f);
+    }
+    else if( numSamples == 16 )
+    {
+        tmpSamples[0] = Vector4(-0.82049254f, -0.24169320f, 0.51805056f, 0.02834240f);
+        tmpSamples[1] = Vector4(-0.74320925f, 0.18381783f, 0.64331254f, 0.05809944f);
+        tmpSamples[2] = Vector4(-0.59437597f, -0.60607674f, 0.52857185f, 0.02860283f);
+        tmpSamples[3] = Vector4(-0.56879453f, 0.58025691f, 0.58290197f, 0.04421658f);
+        tmpSamples[4] = Vector4(-0.45275074f, -0.22409270f, 0.86301751f, 0.07395373f);
+        tmpSamples[5] = Vector4(-0.24542267f, -0.68277502f, 0.68817584f, 0.05841421f);
+        tmpSamples[6] = Vector4(-0.18440951f, 0.40410086f, 0.89593283f, 0.08160955f);
+        tmpSamples[7] = Vector4(-0.16353586f, 0.82277311f, 0.54433485f, 0.03576254f);
+        tmpSamples[8] = Vector4(-0.10396029f, 0.04206924f, 0.99369132f, 0.11120344f);
+        tmpSamples[9] = Vector4(0.12694029f, -0.79806235f, 0.58905234f, 0.04464236f);
+        tmpSamples[10] = Vector4(0.14911300f, -0.31507223f, 0.93728053f, 0.10561097f);
+        tmpSamples[11] = Vector4(0.22431048f, 0.66269172f, 0.71450996f, 0.07297157f);
+        tmpSamples[12] = Vector4(0.54967317f, -0.60327738f, 0.57785448f, 0.04606240f);
+        tmpSamples[13] = Vector4(0.69478876f, -0.16526381f, 0.69996890f, 0.08365993f);
+        tmpSamples[14] = Vector4(0.56484322f, 0.22189527f, 0.79480477f, 0.09454630f);
+        tmpSamples[15] = Vector4(0.62640688f, 0.57873072f, 0.52219265f, 0.03230173f);
+    }
+    
+    // Fill const array and compute volume sum at the same time
+    float tmpSum = 0.0f;  
+    float tx, ty, tz, tw;
+
+    // Open constant array definition
+    <?
+    const float4 poissonSamples[ $numSamples ] = {
+    ?>
+
+    // Generate elements
+    for ( int i = 0; i < numSamples; i++ )
+    {
+		tx = tmpSamples[ i ].x;
+		ty = tmpSamples[ i ].y;
+		tz = tmpSamples[ i ].z;
+		tw = tmpSamples[ i ].w;
+    
+		// z represents a half (i.e., hemispherical) height, not the full spherical height. we can optionally double
+		// it to obtain the the full volume through the whole sphere.
+		if ( fullSphere )
+			tz *= 2.0;
+    
+        tmpSum += tz; 
+
+        // Comma separate constant array values
+        if ( i != 0 )
+            <?,?>
+
+        // Output computed sample
+        <?float4( $tx, $ty, $tz, $tw )?>
+    }
+
+    // Close constant array definition
+    <?
+    };
+    ?>
+
+    // Output final sum
+    <?float volumeSum = $tmpSum;?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : initializePairedPoissonKernel ()
+// Desc : Loads the PoissonKernel constant array with pre-computed Poisson disk 
+//        sample offsets for randomized texture lookups that will take place in 
+//        opposite pairs (i.e., sample[n] and -sample[n]). We also include 
+//        (in zw) (half) unit sphere height information (i.e., the distance 
+//        from sample on the base unit circle to the matching location on unit 
+//        sphere) and a volumetric weight. The weight describes how much volume 
+//        of the hemisphere is occupied by that sample. Note that the idea is 
+//        that both members of the pair will occupy precisely the same amount 
+//        of volume and thus have exactly the same weight. 
+//
+// Note : We always include a single starting entry for the "center" sample on
+//        the disk along with its height/volume and weight info. Also note that
+//        we do not actually place both members of the pair in the array (it is
+//        implied by the use of this function). The caller should simply treat
+//        each entry (other than the first) as values for two lookups, where 
+//        the second negates the xy components of the offet prior to doing a 
+//        texture lookup.
+//-----------------------------------------------------------------------------
+void initializePairedPoissonKernel( int numPairedSamples, bool fullSphere )
+{
+    Vector4[] tmpSamples;
+    tmpSamples.resize( 1 + numPairedSamples );
+
+    if( numPairedSamples == 0 )
+    {
+        tmpSamples[0] = Vector4(0.00000000f, 0.00000000f, 1.00000000f, 1.00000000f);
+    }
+    else if( numPairedSamples == 1 )
+    {
+        tmpSamples[0] = Vector4(0.00000000f, 0.00000000f, 1.00000000f, 0.41963256f);
+        tmpSamples[1] = Vector4(0.21582040f, 0.54223533f, 0.81203596f, 0.29018372f);
+    }
+    else if( numPairedSamples == 2 )
+    {
+        tmpSamples[0] = Vector4(0.00000000f, 0.00000000f, 1.00000000f, 0.20011862f);
+        tmpSamples[1] = Vector4(-0.25438537f, 0.61647493f, 0.74514881f, 0.19452006f);
+        tmpSamples[2] = Vector4(0.60629063f, 0.25007863f, 0.75489890f, 0.20542063f);
+    }
+    else if( numPairedSamples == 3 )
+    {
+        tmpSamples[0] = Vector4(0.00000000f, 0.00000000f, 1.00000000f, 0.07358789f);
+        tmpSamples[1] = Vector4(0.20000000f, 0.15000000f, 0.96824584f, 0.16023489f);
+        tmpSamples[2] = Vector4(0.00000000f, -0.50000000f, 0.86602540f, 0.17640304f);
+        tmpSamples[3] = Vector4(0.70000000f, -0.40000000f, 0.59160798f, 0.12656813f);
+    }
+    else if( numPairedSamples == 4 )
+    {
+        tmpSamples[0] = Vector4(0.00000000f, 0.00000000f, 1.00000000f, 0.17723659f);
+        tmpSamples[1] = Vector4(-0.79294520f, 0.09686633f, 0.60154370f, 0.05973704f);
+        tmpSamples[2] = Vector4(-0.03491804f, -0.73240933f, 0.67996861f, 0.10341473f);
+        tmpSamples[3] = Vector4(0.53695873f, 0.39644951f, 0.74464965f, 0.13056469f);
+        tmpSamples[4] = Vector4(0.46233326f, -0.46412325f, 0.75553793f, 0.11766525f);
+    }
+    else if( numPairedSamples == 5 )
+    {
+        tmpSamples[0] = Vector4(0.00000000f, 0.00000000f, 1.00000000f, 0.12037391f);
+        tmpSamples[1] = Vector4(-0.74671364f, -0.29555531f, 0.59587398f, 0.06663923f);
+        tmpSamples[2] = Vector4(-0.62381790f, 0.39093926f, 0.67677007f, 0.10323883f);
+        tmpSamples[3] = Vector4(0.14172117f, -0.63359313f, 0.76057535f, 0.10753657f);
+        tmpSamples[4] = Vector4(0.38307652f, 0.14775414f, 0.91182295f, 0.10317931f);
+        tmpSamples[5] = Vector4(0.30709003f, 0.73604608f, 0.60326767f, 0.05921911f);
+    }
+    else if( numPairedSamples == 6 )
+    {
+        tmpSamples[0] = Vector4(0.00000000f, 0.00000000f, 1.00000000f, 0.10258790f);
+        tmpSamples[1] = Vector4(-0.73006982f, -0.02370969f, 0.68296114f, 0.07810931f);
+        tmpSamples[2] = Vector4(-0.31913096f, 0.71354019f, 0.62371133f, 0.05718848f);
+        tmpSamples[3] = Vector4(-0.15534332f, -0.29871807f, 0.94161349f, 0.09850460f);
+        tmpSamples[4] = Vector4(0.15596796f, 0.75151347f, 0.64101599f, 0.06698854f);
+        tmpSamples[5] = Vector4(0.56969661f, -0.37713517f, 0.73021561f, 0.08644020f);
+        tmpSamples[6] = Vector4(0.61080947f, 0.49478446f, 0.61814248f, 0.06147492f);
+    }
+    else if( numPairedSamples == 7 )
+    {
+        tmpSamples[0] = Vector4(0.00000000f, 0.00000000f, 1.00000000f, 0.09769341f);
+        tmpSamples[1] = Vector4(-0.44461333f, -0.66998476f, 0.59450771f, 0.04361743f);
+        tmpSamples[2] = Vector4(-0.61684032f, 0.47925976f, 0.62435415f, 0.05771203f);
+        tmpSamples[3] = Vector4(-0.31948945f, -0.16954694f, 0.93229841f, 0.09786899f);
+        tmpSamples[4] = Vector4(0.02775902f, 0.76815718f, 0.63965927f, 0.06222172f);
+        tmpSamples[5] = Vector4(0.25350679f, -0.51759531f, 0.81720830f, 0.08875502f);
+        tmpSamples[6] = Vector4(0.70629482f, 0.35631993f, 0.61170559f, 0.04682515f);
+        tmpSamples[7] = Vector4(0.77917300f, -0.06545764f, 0.62338169f, 0.05415295f);
+    }
+
+    // Fill const array and compute volume sum at the same time
+    int   numSamples = (numPairedSamples + 1);
+    float tmpSum = 0.0f;  
+    float tx, ty, tz, tw;
+
+    // Open constant array definition
+    <?
+    const float4 poissonSamples[ $numSamples ] = {
+    ?>
+
+    // Generate elements
+    for ( int i = 0; i < numSamples; i++ )
+    {
+		tx = tmpSamples[ i ].x;
+		ty = tmpSamples[ i ].y;
+		tz = tmpSamples[ i ].z;
+		tw = tmpSamples[ i ].w;
+    
+		// z represents a half (i.e., hemispherical) height, not the full spherical height. we can optionally double
+		// it to obtain the the full volume through the whole sphere.
+		if ( fullSphere )
+			tz *= 2.0;
+    
+        tmpSum += tz; 
+
+        // Comma separate constant array values
+        if ( i != 0 )
+            <?,?>
+
+        // Output computed sample
+        <?float4( $tx, $ty, $tz, $tw )?>
+    }
+
+    // Close constant array definition
+    <?
+    };
+    ?>
+
+    // Output final sum
+    <?float volumeSum = $tmpSum;?>
+}
+
+
+
+// Halton sequence generated using: WONG, T.-T., LUK, W.-S., AND HENG, P.-A. 1997. Sampling with hammersley and Halton points
+// http://www.cse.cuhk.edu.hk/~ttwong/papers/udpoint/udpoint.pdf
+Vector3 getHalton( int index )
+{
+	array<Vector2> haltonOffsets( 225 );		
+	haltonOffsets[0]  = Vector2(0.00000000f,0.00000000f);
+	haltonOffsets[1]  = Vector2(-0.35355300f,0.61237198f);
+	haltonOffsets[2]  = Vector2(-0.25000000f,-0.43301299f);
+	haltonOffsets[3]  = Vector2(0.66341400f,0.55667001f);
+	haltonOffsets[4]  = Vector2(-0.33223200f,0.12092200f);
+	haltonOffsets[5]  = Vector2(0.13728100f,-0.77855903f);
+	haltonOffsets[6]  = Vector2(0.10633700f,0.60306901f);
+	haltonOffsets[7]  = Vector2(-0.87900198f,-0.31993100f);
+	haltonOffsets[8]  = Vector2(0.19151101f,-0.16069700f);
+	haltonOffsets[9]  = Vector2(0.72978401f,0.17296200f);
+	haltonOffsets[10] = Vector2(-0.38362101f,0.40661401f);
+	haltonOffsets[11] = Vector2(-0.25852099f,-0.86352003f);
+	haltonOffsets[12] = Vector2(0.25857699f,0.34733000f);
+	haltonOffsets[13] = Vector2(-0.82354999f,0.09625880f);
+	haltonOffsets[14] = Vector2(0.26198199f,-0.60734302f);
+	haltonOffsets[15] = Vector2(-0.05629870f,0.96660799f);
+	haltonOffsets[16] = Vector2(-0.14769500f,-0.09714040f);
+	haltonOffsets[17] = Vector2(0.65134102f,-0.32711500f);
+	haltonOffsets[18] = Vector2(0.47391999f,0.23801200f);
+	haltonOffsets[19] = Vector2(-0.73847401f,0.48570201f);
+	haltonOffsets[20] = Vector2(-0.02298370f,-0.39461601f);
+	haltonOffsets[21] = Vector2(0.32086101f,0.74383998f);
+	haltonOffsets[22] = Vector2(-0.63306803f,-0.07399530f);
+	haltonOffsets[23] = Vector2(0.56847799f,-0.76359802f);
+	haltonOffsets[24] = Vector2(-0.08781530f,0.29332301f);
+	haltonOffsets[25] = Vector2(-0.52878499f,-0.56047899f);
+	haltonOffsets[26] = Vector2(0.57049799f,-0.13521001f);
+	haltonOffsets[27] = Vector2(0.91579700f,0.07118130f);
+	haltonOffsets[28] = Vector2(-0.26453799f,0.38570601f);
+	haltonOffsets[29] = Vector2(-0.36572501f,-0.76485002f);
+	haltonOffsets[30] = Vector2(0.48879400f,0.47940600f);
+	haltonOffsets[31] = Vector2(-0.94819897f,0.26394901f);
+	haltonOffsets[32] = Vector2(0.03118020f,-0.12104900f);
+	haltonOffsets[33] = Vector2(0.06951690f,0.71469700f);
+	haltonOffsets[34] = Vector2(-0.46919000f,-0.21327300f);
+	haltonOffsets[35] = Vector2(0.71185797f,-0.50880498f);
+	haltonOffsets[36] = Vector2(0.35709301f,0.11449700f);
+	haltonOffsets[37] = Vector2(-0.59272498f,0.53786898f);
+	haltonOffsets[38] = Vector2(-0.13231499f,-0.61083400f);
+	haltonOffsets[39] = Vector2(0.50320101f,0.79838198f);
+	haltonOffsets[40] = Vector2(-0.27929801f,0.01083800f);
+	haltonOffsets[41] = Vector2(0.35435399f,-0.67272502f);
+	haltonOffsets[42] = Vector2(-0.07752080f,0.56755197f);
+	haltonOffsets[43] = Vector2(-0.71926802f,-0.55747497f);
+	haltonOffsets[44] = Vector2(0.41721800f,-0.17045200f);
+	haltonOffsets[45] = Vector2(0.71791798f,0.43326601f);
+	haltonOffsets[46] = Vector2(-0.58937800f,0.32520500f);
+	haltonOffsets[47] = Vector2(0.01893180f,-0.97609800f);
+	haltonOffsets[48] = Vector2(0.07009040f,0.20484699f);
+	haltonOffsets[49] = Vector2(-0.72564799f,-0.14251301f);
+	haltonOffsets[50] = Vector2(0.35825899f,-0.41051900f);
+	haltonOffsets[51] = Vector2(-0.32152301f,0.83276498f);
+	haltonOffsets[52] = Vector2(-0.26027700f,-0.32269299f);
+	haltonOffsets[53] = Vector2(0.80983502f,-0.12665500f);
+	haltonOffsets[54] = Vector2(0.64171797f,0.10036300f);
+	haltonOffsets[55] = Vector2(-0.60279000f,0.74734199f);
+	haltonOffsets[56] = Vector2(-0.11911800f,-0.30852199f);
+	haltonOffsets[57] = Vector2(0.51327699f,0.58815098f);
+	haltonOffsets[58] = Vector2(-0.58824199f,0.11552700f);
+	haltonOffsets[59] = Vector2(0.30010900f,-0.87710297f);
+	haltonOffsets[60] = Vector2(0.00938774f,0.48403201f);
+	haltonOffsets[61] = Vector2(-0.75031501f,-0.41400701f);
+	haltonOffsets[62] = Vector2(0.59586698f,-0.35960701f);
+	haltonOffsets[63] = Vector2(0.91846299f,0.37523401f);
+	haltonOffsets[64] = Vector2(-0.06986150f,0.05414670f);
+	haltonOffsets[65] = Vector2(-0.09643840f,-0.70605397f);
+	haltonOffsets[66] = Vector2(0.23663500f,0.44924000f);
+	haltonOffsets[67] = Vector2(-0.86987001f,-0.03375530f);
+	haltonOffsets[68] = Vector2(0.19431800f,-0.30830699f);
+	haltonOffsets[69] = Vector2(-0.16841000f,0.77746397f);
+	haltonOffsets[70] = Vector2(-0.45818800f,-0.41578400f);
+	haltonOffsets[71] = Vector2(0.89471400f,-0.28687799f);
+	haltonOffsets[72] = Vector2(0.21572600f,0.15419100f);
+	haltonOffsets[73] = Vector2(-0.68749702f,0.31250599f);
+	haltonOffsets[74] = Vector2(0.05479130f,-0.56330299f);
+	haltonOffsets[75] = Vector2(0.22592200f,0.87708199f);
+	haltonOffsets[76] = Vector2(-0.42575401f,-0.11851700f);
+	haltonOffsets[77] = Vector2(0.59531301f,-0.58387899f);
+	haltonOffsets[78] = Vector2(-0.28787199f,0.60203201f);
+	haltonOffsets[79] = Vector2(-0.54992300f,-0.80180800f);
+	haltonOffsets[80] = Vector2(0.19704799f,-0.01531570f);
+	haltonOffsets[81] = Vector2(0.73396301f,0.01898210f);
+	haltonOffsets[82] = Vector2(-0.28077099f,0.45850900f);
+	haltonOffsets[83] = Vector2(-0.42410800f,-0.78050900f);
+	haltonOffsets[84] = Vector2(0.30344799f,0.26829401f);
+	haltonOffsets[85] = Vector2(-0.77270597f,0.25882101f);
+	haltonOffsets[86] = Vector2(0.12808500f,-0.63059998f);
+	haltonOffsets[87] = Vector2(0.14162099f,0.94551897f);
+	haltonOffsets[88] = Vector2(-0.29655099f,-0.11670400f);
+	haltonOffsets[89] = Vector2(0.60683900f,-0.48302099f);
+	haltonOffsets[90] = Vector2(0.57321697f,0.15160900f);
+	haltonOffsets[91] = Vector2(-0.65040702f,0.65462500f);
+	haltonOffsets[92] = Vector2(-0.12467900f,-0.45936599f);
+	haltonOffsets[93] = Vector2(0.49116299f,0.69665003f);
+	haltonOffsets[94] = Vector2(-0.68751001f,0.06238880f);
+	haltonOffsets[95] = Vector2(0.41473901f,-0.89696902f);
+	haltonOffsets[96] = Vector2(-0.01285000f,0.15255301f);
+	haltonOffsets[97] = Vector2(-0.59398597f,-0.41305900f);
+	haltonOffsets[98] = Vector2(0.47320300f,-0.22252300f);
+	haltonOffsets[99] = Vector2(0.77544099f,0.41488501f);
+	haltonOffsets[100] = Vector2(-0.32725900f,0.20332000f);
+	haltonOffsets[101] = Vector2(-0.02602170f,-0.80483598f);
+	haltonOffsets[102] = Vector2(0.23494500f,0.58586597f);
+	haltonOffsets[103] = Vector2(-0.93829101f,-0.13434400f);
+	haltonOffsets[104] = Vector2(0.18107900f,-0.23053899f);
+	haltonOffsets[105] = Vector2(-0.23842400f,0.72738701f);
+	haltonOffsets[106] = Vector2(-0.38671401f,-0.43172899f);
+	haltonOffsets[107] = Vector2(0.89480501f,-0.18777899f);
+	haltonOffsets[108] = Vector2(0.45682499f,0.04741720f);
+	haltonOffsets[109] = Vector2(-0.49472100f,0.68278003f);
+	haltonOffsets[110] = Vector2(-0.27694499f,-0.61987001f);
+	haltonOffsets[111] = Vector2(0.68186700f,0.70426899f);
+	haltonOffsets[112] = Vector2(-0.22683400f,0.05686760f);
+	haltonOffsets[113] = Vector2(0.20436200f,-0.71618700f);
+	haltonOffsets[114] = Vector2(0.03921630f,0.55058998f);
+	haltonOffsets[115] = Vector2(-0.80676502f,-0.39219600f);
+	haltonOffsets[116] = Vector2(0.35111901f,-0.23749299f);
+	haltonOffsets[117] = Vector2(0.77829301f,0.27193299f);
+	haltonOffsets[118] = Vector2(-0.49665701f,0.42780700f);
+	haltonOffsets[119] = Vector2(-0.17969400f,-0.94731098f);
+	haltonOffsets[120] = Vector2(0.17498200f,0.29422599f);
+	haltonOffsets[121] = Vector2(-0.78554702f,0.01015620f);
+	haltonOffsets[122] = Vector2(0.29617101f,-0.52864999f);
+	haltonOffsets[123] = Vector2(-0.14983700f,0.91909498f);
+	haltonOffsets[124] = Vector2(-0.38104799f,-0.31143200f);
+	haltonOffsets[125] = Vector2(0.80567098f,-0.30509201f);
+	haltonOffsets[126] = Vector2(0.59108001f,0.37790400f);
+	haltonOffsets[127] = Vector2(-0.88428098f,0.45851299f);
+	haltonOffsets[128] = Vector2(0.00282713f,-0.06243600f);
+	haltonOffsets[129] = Vector2(0.21236600f,0.67735302f);
+	haltonOffsets[130] = Vector2(-0.49177000f,-0.10985700f);
+	haltonOffsets[131] = Vector2(0.58763403f,-0.63921303f);
+	haltonOffsets[132] = Vector2(-0.13793300f,0.33148301f);
+	haltonOffsets[133] = Vector2(-0.48175201f,-0.62993699f);
+	haltonOffsets[134] = Vector2(0.61041701f,-0.07935930f);
+	haltonOffsets[135] = Vector2(0.92218602f,0.16876000f);
+	haltonOffsets[136] = Vector2(-0.16691500f,0.19633000f);
+	haltonOffsets[137] = Vector2(-0.25282699f,-0.70886099f);
+	haltonOffsets[138] = Vector2(0.35877499f,0.43322799f);
+	haltonOffsets[139] = Vector2(-0.89082098f,0.15114500f);
+	haltonOffsets[140] = Vector2(0.15228800f,-0.41014001f);
+	haltonOffsets[141] = Vector2(-0.00537517f,0.83149099f);
+	haltonOffsets[142] = Vector2(-0.57321399f,-0.33590400f);
+	haltonOffsets[143] = Vector2(0.84338897f,-0.47968799f);
+	haltonOffsets[144] = Vector2(0.17168200f,0.07537630f);
+	haltonOffsets[145] = Vector2(-0.58960003f,0.43304500f);
+	haltonOffsets[146] = Vector2(-0.05856370f,-0.53077900f);
+	haltonOffsets[147] = Vector2(0.39254999f,0.79439300f);
+	haltonOffsets[148] = Vector2(-0.39935899f,-0.02585150f);
+	haltonOffsets[149] = Vector2(0.45085499f,-0.67593402f);
+	haltonOffsets[150] = Vector2(-0.15172000f,0.62220401f);
+	haltonOffsets[151] = Vector2(-0.68968302f,-0.65916097f);
+	haltonOffsets[152] = Vector2(0.29994500f,-0.08768880f);
+	haltonOffsets[153] = Vector2(0.61711001f,0.46565199f);
+	haltonOffsets[154] = Vector2(-0.54290098f,0.23003300f);
+	haltonOffsets[155] = Vector2(0.11279400f,-0.91374701f);
+	haltonOffsets[156] = Vector2(0.10584900f,0.45983899f);
+	haltonOffsets[157] = Vector2(-0.81278598f,-0.24906801f);
+	haltonOffsets[158] = Vector2(0.50310898f,-0.46854901f);
+	haltonOffsets[159] = Vector2(-0.44830900f,0.87845099f);
+	haltonOffsets[160] = Vector2(-0.07603980f,-0.11725700f);
+	haltonOffsets[161] = Vector2(0.71982199f,-0.03725720f);
+	haltonOffsets[162] = Vector2(0.51846999f,0.02683580f);
+	haltonOffsets[163] = Vector2(-0.47729799f,0.73601502f);
+	haltonOffsets[164] = Vector2(-0.17281400f,-0.33862501f);
+	haltonOffsets[165] = Vector2(0.58750403f,0.54714698f);
+	haltonOffsets[166] = Vector2(-0.60055298f,0.18403199f);
+	haltonOffsets[167] = Vector2(0.21216200f,-0.92169303f);
+	haltonOffsets[168] = Vector2(0.03508840f,0.28425401f);
+	haltonOffsets[169] = Vector2(-0.70245498f,-0.29763901f);
+	haltonOffsets[170] = Vector2(0.45996699f,-0.34707600f);
+	haltonOffsets[171] = Vector2(0.87550998f,0.25595599f);
+	haltonOffsets[172] = Vector2(-0.32893500f,0.31437701f);
+	haltonOffsets[173] = Vector2(-0.19919901f,-0.81691599f);
+	haltonOffsets[174] = Vector2(0.37513399f,0.56241101f);
+	haltonOffsets[175] = Vector2(-0.97623700f,0.06319360f);
+	haltonOffsets[176] = Vector2(0.09983170f,-0.20202699f);
+	haltonOffsets[177] = Vector2(-0.08139130f,0.73767000f);
+	haltonOffsets[178] = Vector2(-0.44202000f,-0.32465199f);
+	haltonOffsets[179] = Vector2(0.81936997f,-0.35974100f);
+	haltonOffsets[180] = Vector2(0.36443999f,0.20728000f);
+	haltonOffsets[181] = Vector2(-0.70925200f,0.41562301f);
+	haltonOffsets[182] = Vector2(-0.00421785f,-0.65250599f);
+	haltonOffsets[183] = Vector2(0.33492100f,0.90200299f);
+	haltonOffsets[184] = Vector2(-0.33182999f,-0.05630160f);
+	haltonOffsets[185] = Vector2(0.49949399f,-0.60314798f);
+	haltonOffsets[186] = Vector2(-0.20248000f,0.56770003f);
+	haltonOffsets[187] = Vector2(-0.60182101f,-0.70787901f);
+	haltonOffsets[188] = Vector2(0.48016700f,-0.08787000f);
+	haltonOffsets[189] = Vector2(0.85206199f,0.11077600f);
+	haltonOffsets[190] = Vector2(-0.42448899f,0.55505902f);
+	haltonOffsets[191] = Vector2(-0.38191801f,-0.91783398f);
+	haltonOffsets[192] = Vector2(0.07326370f,0.07969430f);
+	haltonOffsets[193] = Vector2(-0.69813800f,0.15595700f);
+	haltonOffsets[194] = Vector2(0.15304799f,-0.48815501f);
+	haltonOffsets[195] = Vector2(0.03947830f,0.87187201f);
+	haltonOffsets[196] = Vector2(-0.32825199f,-0.17020400f);
+	haltonOffsets[197] = Vector2(0.67228800f,-0.42982301f);
+	haltonOffsets[198] = Vector2(0.58156502f,0.22022800f);
+	haltonOffsets[199] = Vector2(-0.72911602f,0.59590900f);
+	haltonOffsets[200] = Vector2(-0.04383470f,-0.26888201f);
+	haltonOffsets[201] = Vector2(0.37037000f,0.66109300f);
+	haltonOffsets[202] = Vector2(-0.56935501f,-0.00736149f);
+	haltonOffsets[203] = Vector2(0.46405900f,-0.78030002f);
+	haltonOffsets[204] = Vector2(-0.08318220f,0.43852001f);
+	haltonOffsets[205] = Vector2(-0.63355899f,-0.54573101f);
+	haltonOffsets[206] = Vector2(0.63272899f,-0.22107300f);
+	haltonOffsets[207] = Vector2(0.80700803f,0.54585302f);
+	haltonOffsets[208] = Vector2(-0.18642800f,0.09062860f);
+	haltonOffsets[209] = Vector2(0.05235160f,-0.73500198f);
+	haltonOffsets[210] = Vector2(0.14851999f,0.52049100f);
+	haltonOffsets[211] = Vector2(-0.86375701f,-0.21654600f);
+	haltonOffsets[212] = Vector2(0.28507999f,-0.29444599f);
+	haltonOffsets[213] = Vector2(-0.33338800f,0.74620402f);
+	haltonOffsets[214] = Vector2(-0.37933001f,-0.52352399f);
+	haltonOffsets[215] = Vector2(0.95298702f,-0.09891690f);
+	haltonOffsets[216] = Vector2(0.31783599f,0.06669970f);
+	haltonOffsets[217] = Vector2(-0.51916599f,0.57959902f);
+	haltonOffsets[218] = Vector2(-0.18570501f,-0.56655300f);
+	haltonOffsets[219] = Vector2(0.57131702f,0.72736901f);
+	haltonOffsets[220] = Vector2(-0.47522500f,0.06804190f);
+	haltonOffsets[221] = Vector2(0.31811699f,-0.79326600f);
+	haltonOffsets[222] = Vector2(-0.02239980f,0.69279701f);
+	haltonOffsets[223] = Vector2(-0.84107900f,-0.52254599f);
+	haltonOffsets[224] = Vector2(0.14580300f,-0.07800880f);
+
+	Vector3 output;
+	output.x = haltonOffsets[ index ].x;
+	output.y = haltonOffsets[ index ].y;
+	output.z = vec2Length( haltonOffsets[ index ] );
+
+	return output;
+}
+
+// Halton sequence generated using: WONG, T.-T., LUK, W.-S., AND HENG, P.-A. 1997. Sampling with hammersley and Halton points
+// http://www.cse.cuhk.edu.hk/~ttwong/papers/udpoint/udpoint.pdf
+void initializeHaltonKernel( int numSamples )
+{
+    // Open constant array definition
+    <?
+    const float3 haltonSamples[ $numSamples ] = {
+    ?>
+
+    // Generate elements
+    float tx, ty, tz;
+    for ( int i = 0; i < numSamples; i++ )
+    {
+		Vector3 halton = getHalton( i );
+		tx = halton.x;
+		ty = halton.y;
+		tz = halton.z;
+        
+        // Comma separate constant array values
+        if ( i != 0 )
+            <?,?>
+
+        // Output computed sample
+        <?float3( $tx, $ty, $tz )?>
+    }
+
+    // Close constant array definition
+    <?
+    };
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : getHaltonEntry ( Function )
+// Desc : Returns the i'th halton entry in the random sequence
+//-----------------------------------------------------------------------------
+__shadercall float3 getHaltonEntry( script int index )
+{
+    /////////////////////////////////////////////
+    // Shader Code
+    /////////////////////////////////////////////
+	Vector3 h = getHalton( index );
+    float tx, ty, tz;
+	tx = h.x;
+	ty = h.y;
+	tz = h.z;
+    <?
+    { 
+        return float3( $tx, $ty, $tz );
+    } 
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : initializeKernel ()
+// Desc : Loads the PoissonKernel constant array with pre-computed Poisson disk 
+//-----------------------------------------------------------------------------
+int initializeKernel( int pixelRadius, float distanceFactor, bool linearSampling, bool vertical )
+{
+    int i, index, numPairs, totalSamples, totalLinearSamples, centerIndex, centerIndexLinear;
+    float x, w0, w1, weight, weightSum = 0;
+
+    Vector2[] kernel;
+    Vector2[] kernelLinear;
+
+    // Allocate memory for our sampling data
+    totalSamples = 1 + (pixelRadius * 2);
+    kernel.resize( totalSamples );
+
+    // Generate the weights and offsets for point sampling
+    index = 0;
+    for ( i = -pixelRadius; i <= pixelRadius; i++ )
+    {
+        x = float(i);
+        kernel[ index ].x = x;
+
+        if ( distanceFactor < 0.0f )
+            kernel[ index ].y = 1.0f / pow( ( abs(x) + 1.0f ), abs( distanceFactor ) );
+        else if ( distanceFactor == 0.0f )
+            kernel[ index ].y = 1.0f / float(totalSamples);
+        else
+            kernel[ index ].y = exp( -(x * x) / (2.0f * distanceFactor * distanceFactor) );
+            
+        weightSum += kernel[ index ].y;
+        index++;
+    }
+
+    // Normalize the weights
+    for ( i = 0; i < totalSamples; i++ )
+    {
+        kernel[ i ].y /= weightSum;
+    }
+
+    ///////////////////////////////////////
+    // Linear Sampling 
+    ///////////////////////////////////////
+	if ( linearSampling )
+	{
+		// How many samples can we take in a given direction?
+		numPairs = pixelRadius / 2;
+
+		// Allocate memory for linear sampling
+		totalLinearSamples = 1 + (2 * numPairs) + (2 * (pixelRadius % 2));
+		kernelLinear.resize( totalLinearSamples );
+
+		// Compute the center pixel indices for our arrays
+		centerIndex = totalSamples / 2;
+		centerIndexLinear = totalLinearSamples / 2;
+
+		// Copy the center pixel data
+		kernelLinear[ centerIndexLinear ] = kernel[ centerIndex ]; 
+
+		// Copy left side
+		index = centerIndexLinear + 1;
+		for ( i = centerIndex + 1; i < totalSamples; i += 2 )
+		{
+			// Get the samples we wish to combine
+			if ( (i + 1) < totalSamples )
+			{
+				//The sum of the two weights is the final weight for the single linear pair.
+				w0 = kernel[ i ].y;
+				w1 = kernel[ i + 1 ].y;
+				weight = w0 + w1;
+
+				//Compute a new texture coordinate that maintains the the original weights (relatively)
+				kernelLinear[ index ].x = kernel[ i ].x + (1.0f - (w0 / weight));
+				kernelLinear[ index ].y = weight;
+			}
+			else
+			{
+				kernelLinear[ index ] = kernel[ i ];
+			}
+			index++;
+		}
+
+		// Duplicate positive values over to the negative side
+		for ( i = 0; i < centerIndexLinear; i++ )
+		{
+			kernelLinear[ i ]   =  kernelLinear[ (totalLinearSamples - 1) - i ];
+			kernelLinear[ i ].x = -kernelLinear[ i ].x;
+		}
+
+		// Copy linear kernel data over for hlsl array generation
+		totalSamples = totalLinearSamples;
+		for ( i = 0; i < totalSamples; i++ )
+		{
+			kernel[ i ] = kernelLinear[ i ];
+		}		
+	
+	} // End if linear sampling
+
+	// Copy the center sample to the first slot in the array
+	centerIndex    = totalSamples / 2;
+	Vector2 center = kernel[ centerIndex ];
+	kernel[ centerIndex ] = kernel[ 0 ];
+	kernel[ 0 ] = center;
+
+	// Open constant array definition
+	<?
+	float3 filterKernel[ $totalSamples ] = {
+	?>
+
+	// Fill the float3 array
+	for ( i = 0; i < totalSamples; i++ )
+	{
+		x      = kernel[ i ].x;
+		weight = kernel[ i ].y;
+
+        // Comma separate constant array values
+        if ( i != 0 )
+            <?,?>
+
+        // Output element
+		if ( vertical )
+			<?float3( 0, $x, $weight )?>
+		else
+			<?float3( $x, 0, $weight )?>
+	
+    } // Next element
+
+	// Close constant array definition
+	<?
+	};
+	?>
+	
+	// Return number of samples to take
+	return totalSamples;	
+}
+
+//-----------------------------------------------------------------------------
+// Name : channelCopy()
+// Desc : Copies values, swizzling either the input or output based on channel request
+//-----------------------------------------------------------------------------
+void channelCopy( ShaderParam outVar, ShaderParam inVar, int channels, bool swizzledIn )
+{
+	// Extract the mask (swizzle)
+	switch( channels )
+	{
+		case ColorChannel::Red:
+			<?$outVar.r = $inVar.r;?>
+		break;
+		case ColorChannel::Green:
+			if ( swizzledIn )
+				<?$outVar.r = $inVar.g;?>
+			else
+				<?$outVar.g = $inVar.r;?>
+		break;
+		case ColorChannel::Blue:
+			if ( swizzledIn )
+				<?$outVar.r = $inVar.b;?>
+			else
+				<?$outVar.b = $inVar.r;?>
+		break;
+		case ColorChannel::Alpha:
+			if ( swizzledIn )
+				<?$outVar.r = $inVar.a;?>
+			else
+				<?$outVar.a = $inVar.r;?>
+		break;
+		case ColorChannel::RedGreen:
+			<?$outVar.rg = $inVar.rg;?>
+		break;
+		case ColorChannel::RedBlue:
+			if ( swizzledIn )
+				<?$outVar.rg = $inVar.rb;?>
+			else
+				<?$outVar.rb = $inVar.rg;?>
+		break;
+		case ColorChannel::RedAlpha:
+			if ( swizzledIn )
+				<?$outVar.rg = $inVar.ra;?>
+			else
+				<?$outVar.ra = $inVar.rg;?>
+		break;
+		case ColorChannel::GreenBlue:
+			if ( swizzledIn )
+				<?$outVar.rg = $inVar.gb;?>
+			else
+				<?$outVar.gb = $inVar.rg;?>
+		break;
+		case ColorChannel::GreenAlpha:
+			if ( swizzledIn )
+				<?$outVar.rg = $inVar.ga;?>
+			else
+				<?$outVar.ga = $inVar.rg;?>
+		break;
+		case ColorChannel::BlueAlpha:
+			if ( swizzledIn )
+				<?$outVar.rg = $inVar.ba;?>
+			else
+				<?$outVar.ba = $inVar.rg;?>
+		break;
+		case ColorChannel::RedGreenBlue:
+			<?$outVar.rgb = $inVar.rgb;?>
+		break;
+		case ColorChannel::RedGreenAlpha:
+			if ( swizzledIn )
+				<?$outVar.rgb = $inVar.rga;?>
+			else
+				<?$outVar.rga = $inVar.rgb;?>
+		break;
+		case ColorChannel::GreenBlueAlpha:
+			if ( swizzledIn )
+				<?$outVar.rgb = $inVar.gba;?>
+			else
+				<?$outVar.gba = $inVar.rgb;?>
+		break;
+		case ColorChannel::All:
+			<?$outVar.rgba = $inVar.rgba;?>
+		break;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Name : sampleChannels()
+// Desc : Samples the requested channels from a texture
+//-----------------------------------------------------------------------------
+void sampleChannels( ShaderParam edgeMask, ShaderParam edgeTexture, ShaderParam edgeSampler, ShaderParam texCoords, int channels )
+{
+	/////////////////////////////////////////////
+	// Shader Code
+	/////////////////////////////////////////////
+	<?
+	{ // Begin sampleEdgeMask()
+	?>
+
+		// Read the edge mask texture
+		<?float4 __edgeData = sample2DLevel( $edgeTexture, $edgeSampler, $texCoords, 0 );?>
+		
+		// Extract the channels
+		channelCopy( edgeMask, "__edgeData", channels, true );
+
+	<?
+	} // End sampleEdgeMask()
+	?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : sampleBilinear2D()
+// Desc : Manual 2x2 bilinear sampling 
+// Note : textureSize must contain (xy = width,height zw = reciprocal width,height
+//-----------------------------------------------------------------------------
+void sampleBilinear2D( ShaderParam outColor, ShaderParam tTexture, ShaderParam tSampler, ShaderParam texCoords, ShaderParam textureSize )
+{
+	sampleBilinear2DEx( outColor, tTexture, tSampler, texCoords, textureSize, "0.0", false );
+}
+void sampleBilinear2DLevel( ShaderParam outColor, ShaderParam tTexture, ShaderParam tSampler, ShaderParam texCoords, ShaderParam textureSize, ShaderParam mipLevel )
+{
+	sampleBilinear2DEx( outColor, tTexture, tSampler, texCoords, textureSize, mipLevel, true );
+}
+void sampleBilinear2DEx( ShaderParam outColor, ShaderParam tTexture, ShaderParam tSampler, ShaderParam texCoords, ShaderParam textureSize, ShaderParam mipLevel, bool useLOD )
+{
+	/////////////////////////////////////////////
+	// Shader Code
+	/////////////////////////////////////////////
+    <?
+    { // Begin sampleBilinear()
+	?>
+		<?
+		// Compute the four sampling locations
+		float2 __srcCoords[4];
+		__srcCoords[0] = $texCoords + float2( -0.5, -0.5 ) * $textureSize.zw;
+		__srcCoords[1] = $texCoords + float2(  0.5, -0.5 ) * $textureSize.zw;
+		__srcCoords[2] = $texCoords + float2( -0.5,  0.5 ) * $textureSize.zw;
+		__srcCoords[3] = $texCoords + float2(  0.5,  0.5 ) * $textureSize.zw;
+
+		// Compute the bilinear weights
+		float4 __bilinearWeights, __subTexelDist, __sampleColor;
+		__subTexelDist.xy = frac( __srcCoords[0] * $textureSize.xy );
+		__subTexelDist.zw = 1.0f - __subTexelDist.xy;
+		__bilinearWeights = __subTexelDist.zxzx * __subTexelDist.wwyy;
+
+		// Clear output
+		$outColor = 0;
+		?>
+
+		// Sample and add
+		for ( uint i = 0; i < 4; i++ )
+		{
+			if ( useLOD )
+				<?__sampleColor = sample2DLevel( $tTexture, $tSampler, __srcCoords[ $i ], $mipLevel );?>
+			else	
+				<?__sampleColor = sample2D( $tTexture, $tSampler, __srcCoords[ $i ] );?>
+		
+			<?$outColor += __sampleColor * __bilinearWeights[ $i ];?>
+		}
+	<?
+	} // End sampleBilinear()
+	?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : testFlagAny()
+// Desc : Simple utility for testing flag bits. Returns true if any bits match.
+//-----------------------------------------------------------------------------
+bool testFlagAny( uint value, uint flag )
+{
+	return (value & flag) > 0;
+}
+
+//-----------------------------------------------------------------------------
+// Name : testFlagAll()
+// Desc : Simple utility for testing flag bits. Returns true if all bits match.
+//-----------------------------------------------------------------------------
+bool testFlagAll( uint value, uint flag )
+{
+	return (value & flag) == flag;
+}
+
+//----------------------------------------------------------------------------
+// Name : isPointInAABB()
+// Desc : Determines whether or not a point is within an AABB
+//----------------------------------------------------------------------------
+__shadercall float isPointInAABB( float3 position, float3 boxMin, float3 boxMax )
+{
+	<?
+	if ( position.x < boxMin.x || position.x > boxMax.x || 
+		 position.y < boxMin.y || position.y > boxMax.y ||
+		 position.z < boxMin.z || position.z > boxMax.z )
+		return 0.0f;
+	else
+		return 1.0f;
+	?>
+}
+
+#endif // !_UTILITIES_SHH_

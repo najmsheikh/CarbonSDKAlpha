@@ -1,0 +1,22 @@
+--Table: Objects::SpotLight -- {9F4B0288-D70E-49CA-853E-6D1148397A58}
+
+CREATE TABLE [Objects::SpotLight] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [OuterRange] real DEFAULT 20,
+  [InnerRange] real DEFAULT 0, 
+  [OuterCone] real, 
+  [InnerCone] real, 
+  [Falloff] real, 
+  [DistanceAttenuationSplineId] integer DEFAULT 0, 
+  [AttenuationMaskSamplerId] integer DEFAULT 0, 
+  [ShadowFrustumId] integer DEFAULT 0, 
+  [ShadowUpdateRate] real DEFAULT 0, 
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER [Objects::SpotLight_OnDelete]
+  BEFORE DELETE
+  ON [Objects::SpotLight]
+  BEGIN
+    DELETE FROM [Objects::Base::Light] WHERE RefId=old.RefId;  
+    DELETE FROM [ShadowFrustums] WHERE FrustumId=old.ShadowFrustumId;
+  END;

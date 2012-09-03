@@ -1,0 +1,64 @@
+--Table: DataSources::AnimationSet -- {FE5A5527-F03B-4924-85A1-B5657D798E1F}
+
+CREATE TABLE IF NOT EXISTS [DataSources::AnimationSet] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [Flags] smallint,
+  [Name] text,
+  [FrameRate] real DEFAULT(30),
+  [RefCount] integer);
+
+CREATE TRIGGER IF NOT EXISTS [DataSources::AnimationSet_OnDelete]
+BEFORE DELETE
+ON [DataSources::AnimationSet]
+BEGIN
+  DELETE FROM [DataSources::AnimationSet::Targets] WHERE DataSourceId=old.RefId;
+END;
+
+--Table: DataSources::AnimationSet::Targets
+
+CREATE TABLE IF NOT EXISTS [DataSources::AnimationSet::Targets] (
+  [TargetDataId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [DataSourceId] integer, 
+  [TargetIdentifier] varchar(255));
+
+CREATE INDEX IF NOT EXISTS [DataSources::AnimationSet::Targets_DataSourceIdIndex] ON [DataSources::AnimationSet::Targets] ([DataSourceId]);
+CREATE INDEX IF NOT EXISTS [DataSources::AnimationSet::Targets_TargetIdentifierMatch] ON [DataSources::AnimationSet::Targets] ([DataSourceId], [TargetIdentifier]);
+
+CREATE TRIGGER IF NOT EXISTS [DataSources::AnimationSet::Targets_OnDelete]
+BEFORE DELETE
+ON [DataSources::AnimationSet::Targets]
+BEGIN
+  DELETE FROM [DataSources::AnimationSet::TargetControllers] WHERE TargetDataId=old.TargetDataId;
+END;
+
+--Table: DataSources::AnimationSet::TargetControllers
+
+CREATE TABLE IF NOT EXISTS [DataSources::AnimationSet::TargetControllers] (
+  [TargetControllerId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [TargetDataId] integer,
+  [ControllerIdentifier] varchar(255),
+  [ControllerType] smallint DEFAULT(0));
+
+CREATE INDEX IF NOT EXISTS [DataSources::AnimationSet::TargetControllers_TargetDataIdIndex] ON [DataSources::AnimationSet::TargetControllers] ([TargetDataId]);
+CREATE INDEX IF NOT EXISTS [DataSources::AnimationSet::TargetControllers_ControllerIdentifierMatch] ON [DataSources::AnimationSet::TargetControllers] ([TargetDataId], [ControllerIdentifier]);
+
+CREATE TRIGGER IF NOT EXISTS [DataSources::AnimationSet::TargetControllers_OnDelete]
+BEFORE DELETE
+ON [DataSources::AnimationSet::TargetControllers]
+BEGIN
+  DELETE FROM [DataSources::AnimationSet::ControllerChannels] WHERE TargetControllerId=old.TargetControllerId;
+END;
+
+--Table: DataSources::AnimationSet::ControllerChannels
+
+CREATE TABLE IF NOT EXISTS [DataSources::AnimationSet::ControllerChannels] (
+  [ControllerChannelId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [TargetControllerId] integer, 
+  [ChannelIdentifier] varchar(255),
+  [DataType] integer, 
+  [DataContext] integer, 
+  [EntryCount] integer, 
+  [Data] BLOB);
+
+CREATE INDEX IF NOT EXISTS [DataSources::AnimationSet::ControllerChannels_TargetControllerIdIndex] ON [DataSources::AnimationSet::ControllerChannels] ([TargetControllerId]);
+CREATE INDEX IF NOT EXISTS [DataSources::AnimationSet::ControllerChannels_ChannelIdentifierMatch] ON [DataSources::AnimationSet::ControllerChannels] ([TargetControllerId], [ChannelIdentifier]);

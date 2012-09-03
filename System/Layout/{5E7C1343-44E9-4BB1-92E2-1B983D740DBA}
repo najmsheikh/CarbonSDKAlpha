@@ -1,0 +1,12 @@
+--Table: ObjectSubElements::SphereCollisionShape -- {5E7C1343-44E9-4BB1-92E2-1B983D740DBA}
+
+CREATE TABLE [ObjectSubElements::SphereCollisionShape] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [RefCount] integer DEFAULT 0);  
+
+CREATE TRIGGER [ObjectSubElements::SphereCollisionShape_OnDelete]
+  BEFORE DELETE
+  ON [ObjectSubElements::SphereCollisionShape]
+  BEGIN
+    DELETE FROM [ObjectSubElements::Base::CollisionShape] WHERE RefId=old.RefId;  
+  END;

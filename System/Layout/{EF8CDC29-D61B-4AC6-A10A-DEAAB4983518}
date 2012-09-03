@@ -1,0 +1,26 @@
+-- Table: Objects::Skin -- {EF8CDC29-D61B-4AC6-A10A-DEAAB4983518}
+
+CREATE TABLE [Objects::Skin] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [DataSourceId] integer,
+  [LightStage] smallint DEFAULT 2,
+  [ShadowCastStage] smallint DEFAULT 2,
+  [ShadowReceiveStage] smallint DEFAULT 2,
+  [RefCount] integer DEFAULT 0);
+
+CREATE TABLE [Objects::Skin::InstanceData::Bones] (
+  [SkinInstanceBoneRefId] integer PRIMARY KEY AUTOINCREMENT,
+  [ObjectRefId] integer,
+  [NodeRefId] integer,  
+  [BoneRefId] integer);
+
+CREATE INDEX [Objects::Skin::InstanceData::Bones_ObjectRefIdIndex] ON [Objects::Skin::InstanceData::Bones] ([ObjectRefId]);
+CREATE INDEX [Objects::Skin::InstanceData::Bones_NodeRefIdIndex] ON [Objects::Skin::InstanceData::Bones] ([NodeRefId]);
+
+CREATE TRIGGER [Objects::Skin_OnDelete]
+  BEFORE DELETE
+  ON [Objects::Skin]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;
+    DELETE FROM [Objects::Skin::InstanceData::Bones] WHERE ObjectRefId=old.RefId;  
+  END;

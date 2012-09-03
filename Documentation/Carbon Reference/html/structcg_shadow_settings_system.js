@@ -1,0 +1,25 @@
+var structcg_shadow_settings_system =
+[
+    [ "cgShadowSettingsSystem", "structcg_shadow_settings_system.html#af86491feb72346c696cb188dcf338bae", null ],
+    [ "anisotropy", "structcg_shadow_settings_system.html#a2f9c8168192af08cbb52c597bf5eb135", null ],
+    [ "autoGenerateMipmaps", "structcg_shadow_settings_system.html#a8c126c9dada14c2776f6032691e07a05", null ],
+    [ "bilinearFiltering", "structcg_shadow_settings_system.html#ae79087691652421300611fafa4ac86dc", null ],
+    [ "boxFilter", "structcg_shadow_settings_system.html#a3b8a93c67ae23b2b3d06bb031485633a", null ],
+    [ "filterPasses", "structcg_shadow_settings_system.html#aa65d388c4d5fa00da972615a25f2583d", null ],
+    [ "filterRadius", "structcg_shadow_settings_system.html#a48d95fc12abc1bc7d509b6e1c1fc7587", null ],
+    [ "filterRadiusFar", "structcg_shadow_settings_system.html#a43dfd2503c386593e2eb22220a9b65c5", null ],
+    [ "filterRadiusNear", "structcg_shadow_settings_system.html#a766835afbc1e4f1c4b1ae4aa000b464d", null ],
+    [ "jitter", "structcg_shadow_settings_system.html#ae429e8bb8e50f3d510464a62b612c987", null ],
+    [ "maskPrecision", "structcg_shadow_settings_system.html#aec4ae83a09a1e4ce879e0bf472b5e13a", null ],
+    [ "maskType", "structcg_shadow_settings_system.html#a55a13ec09499b3ee9d73dd73abf19850", null ],
+    [ "method", "structcg_shadow_settings_system.html#add5fc30b74928b76c0d9ae42a98d3c19", null ],
+    [ "MSAASamples", "structcg_shadow_settings_system.html#a90a152222254b18969a5af735c29677e", null ],
+    [ "normalOffset", "structcg_shadow_settings_system.html#ab35454dc0c70e498e25402e2518e7610", null ],
+    [ "precision", "structcg_shadow_settings_system.html#a78ac580e199bea2103d41860bf30bd14", null ],
+    [ "primarySamples", "structcg_shadow_settings_system.html#adf94d0e6f97306b109ce506e2656bc33", null ],
+    [ "resolutionAdjust", "structcg_shadow_settings_system.html#a980a5262500a64919c0a30bb0fb2fe7c", null ],
+    [ "rotate", "structcg_shadow_settings_system.html#a48634d460739c2e8723980d96fdf62ba", null ],
+    [ "secondarySamples", "structcg_shadow_settings_system.html#ab0957dc59201d49484b4bb098070d9dc", null ],
+    [ "translucency", "structcg_shadow_settings_system.html#aa763dfc693e7204e50886218bc10a756", null ],
+    [ "trilinearFiltering", "structcg_shadow_settings_system.html#a338e0b91f87a730afa6b5cbe54c7aa3a", null ]
+];

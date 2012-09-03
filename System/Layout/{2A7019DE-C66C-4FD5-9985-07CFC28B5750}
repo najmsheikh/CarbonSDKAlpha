@@ -1,0 +1,15 @@
+--Table: Objects::KinematicControllerJoint -- {2A7019DE-C66C-4FD5-9985-07CFC28B5750}
+
+CREATE TABLE [Objects::KinematicControllerJoint] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [ConstraintMode] tinyint(1) DEFAULT 1,  
+  [MaxLinearFriction] real DEFAULT(1),  
+  [MaxAngularFriction] real DEFAULT(1),
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER [Objects::KinematicControllerJoint_OnDelete]
+  BEFORE DELETE
+  ON [Objects::KinematicControllerJoint]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;

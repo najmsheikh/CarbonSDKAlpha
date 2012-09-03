@@ -1,0 +1,388 @@
+--Table:: Materials::LandscapeLayer
+
+CREATE TABLE [Materials::LandscapeLayer] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [Name] varchar(128), 
+  [ColorSamplerId] integer,
+  [NormalSamplerId] integer,
+  [ScaleU] real,
+  [ScaleV] real,
+  [BaseScaleU] real,
+  [BaseScaleV] real,
+  [OffsetU] real,
+  [OffsetV] real,
+  [Rotation] real,
+  [TilingReduction] tinyint(1),
+  [PreviewImage] blob, 
+  [RefCount] integer DEFAULT 0);
+CREATE TRIGGER [Materials::LandscapeLayer_OnDelete]
+BEFORE DELETE
+ON [Materials::LandscapeLayer]
+BEGIN
+  DELETE FROM [Scenes::MaterialUsage] WHERE MaterialId=old.RefId;
+END;
+
+--Table: Materials::Standard::Parameters
+
+CREATE TABLE [Materials::Standard::Parameters] (
+  [MaterialParameterId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [MaterialId] integer, 
+  [Name] varchar(128), 
+  [Type] smallint DEFAULT 0, 
+  [ElementCount] smallint, 
+  [Data] blob);
+CREATE INDEX [Materials::Standard::Parameters_MaterialIdIndex] ON [Materials::Standard::Parameters] ([MaterialId]);
+
+--Table: Materials::Standard::Samplers
+
+CREATE TABLE [Materials::Standard::Samplers] (
+  [MaterialSamplerId] integer PRIMARY KEY AUTOINCREMENT, 
+  [MaterialId] integer, 
+  [SamplerId] integer);
+CREATE INDEX [Materials::Standard::Samplers_MaterialIndex] ON "Materials::Standard::Samplers" ([MaterialId]);
+
+--Table: Materials::Standard
+
+CREATE TABLE [Materials::Standard] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [Name] varchar(128), 
+  [PropertiesHighPart] integer DEFAULT(0),
+  [PropertiesLowPart]  integer DEFAULT(0),
+  [DiffuseReflectanceR] real DEFAULT (1), 
+  [DiffuseReflectanceG] real DEFAULT (1), 
+  [DiffuseReflectanceB] real DEFAULT (1), 
+  [AmbientReflectanceR] real DEFAULT (0), 
+  [AmbientReflectanceG] real DEFAULT (0), 
+  [AmbientReflectanceB] real DEFAULT (0), 
+  [SpecularReflectanceR] real DEFAULT (0), 
+  [SpecularReflectanceG] real DEFAULT (0), 
+  [SpecularReflectanceB] real DEFAULT (0), 
+  [Gloss] real DEFAULT (5), 
+  [EmissiveColorR] real DEFAULT (0), 
+  [EmissiveColorG] real DEFAULT (0), 
+  [EmissiveColorB] real DEFAULT (0), 
+  [EmissiveHDRScalar] real DEFAULT (1), 
+  [MetalnessAmount] REAL DEFAULT (0), 
+  [MetalnessDiffuse] REAL DEFAULT (1), 
+  [MetalnessSpecular] REAL DEFAULT (1), 
+  [RimIntensity] REAL DEFAULT (0), 
+  [RimExponent] REAL DEFAULT (1), 
+  [ReflectionMode] SMALLINT DEFAULT (0), 
+  [ReflectionIntensity] REAL DEFAULT (1), 
+  [ReflectionBumpiness] REAL DEFAULT (1), 
+  [ReflectionMipLevel] REAL DEFAULT (0), 
+  [FresnelExponent] REAL DEFAULT (5), 
+  [FresnelDiffuse] REAL DEFAULT (0), 
+  [FresnelSpecular] REAL DEFAULT (0), 
+  [FresnelReflection] REAL DEFAULT (0), 
+  [FresnelOpacity] REAL DEFAULT (0), 
+  [BlendingMode] smallint DEFAULT (0), 
+  [Opacity] real DEFAULT (1), 
+  [SpecularOpacity] REAL DEFAULT (1), 
+  [SpecularOpacityLinked] TINYINT(1) DEFAULT (1), 
+  [DiffuseOpacityMapStrength] REAL DEFAULT (1), 
+  [SpecularOpacityMapStrength] REAL DEFAULT (1), 
+  [TransmissionType] SMALLINT DEFAULT (1), 
+  [TransmissionCurveSize] SMALLINT DEFAULT (0), 
+  [TransmissionCurve] BLOB, 
+  [ShaderFlags] smallint DEFAULT (0), 
+  [ShaderSource] path, 
+  [PreviewImage] blob, 
+  [RefCount] integer DEFAULT (0));
+CREATE TRIGGER [Materials::Standard_OnDelete]
+BEFORE DELETE
+ON [Materials::Standard]
+BEGIN
+  DELETE FROM [Materials::Standard::Parameters] WHERE MaterialId=old.RefId;
+  DELETE FROM [Materials::Standard::Samplers] WHERE MaterialId=old.RefId;  
+  DELETE FROM [Scenes::MaterialUsage] WHERE MaterialId=old.RefId;
+END;
+
+--Table: Scenes::MaterialUsage
+
+CREATE TABLE [Scenes::MaterialUsage] (
+  [MaterialUsageId] integer PRIMARY KEY AUTOINCREMENT, 
+  [MaterialType] TINYINT(1), 
+  [MaterialId] integer, 
+  [SceneId] integer);
+CREATE INDEX [Scenes::MaterialUsage_MaterialIndex] ON [Scenes::MaterialUsage] ([MaterialId]);
+CREATE INDEX [Scenes::MaterialUsage_SceneIndex] ON [Scenes::MaterialUsage] ([SceneId]);
+CREATE INDEX [Scenes::MaterialUsage_UsageMatch] ON [Scenes::MaterialUsage] ([MaterialId], [SceneId]);
+
+
+--Table: Cells
+
+CREATE TABLE [Cells] (
+  [CellId] integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  [SceneId] integer,
+  [GlobalCell] tinyint(1) DEFAULT 0,
+  [EditorName] varchar(255),
+  [FriendlyName] varchar(255),
+  [Flags] integer DEFAULT 0,
+  [LocationX] integer DEFAULT 0,
+  [LocationY] integer DEFAULT 0,
+  [LocationZ] integer DEFAULT 0);
+
+--Table: Configuration
+
+CREATE TABLE [Configuration] (
+  [Type] varchar(255) NOT NULL PRIMARY KEY UNIQUE DEFAULT 'Primary',
+  [FileType] smallint DEFAULT 0,
+  [Version] smallint DEFAULT 1,
+  [Subversion] smallint DEFAULT 0,
+  [Revision] integer DEFAULT 0,
+  [NextRefId] integer DEFAULT 1);
+
+--Table: Configuration::MaterialProperties
+
+CREATE TABLE [Configuration::MaterialProperties] (
+  [PropertyId] integer NOT NULL PRIMARY KEY AUTOINCREMENT,  
+  [Name] varchar(255),
+  [Identifier] varchar(255),
+  [Description] TEXT,
+  [BitOffset] smallint DEFAULT(0));
+
+--Table: Configuration::RenderClasses
+
+CREATE TABLE [Configuration::RenderClasses] (
+  [ClassId] integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  [Identifier] varchar(128) UNIQUE,
+  [Description] text);
+
+--Table: Nodes
+
+CREATE TABLE [Nodes] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [RefType] smallint DEFAULT (0), 
+  [Level] integer, 
+  [CellId] integer, 
+  [Flags] smallint, 
+  [ObjectTypeId] integer, 
+  [ObjectClassId] integer, 
+  [RenderClassId] integer,
+  [ObjectId] integer, 
+  [ParentRefId] integer, 
+  [OwnerGroup] integer, 
+  [TargetId] integer DEFAULT(0), 
+  [EditorName] varchar(255),
+  [FriendlyName] varchar(255),
+  [InstanceIdentifier] varchar(255),
+  [PositionX] real DEFAULT (0), 
+  [PositionY] real DEFAULT (0), 
+  [PositionZ] real DEFAULT (0), 
+  [RotationX] real DEFAULT (0), 
+  [RotationY] real DEFAULT (0), 
+  [RotationZ] real DEFAULT (0), 
+  [RotationW] real DEFAULT (1), 
+  [ShearXY] real DEFAULT (0), 
+  [ShearXZ] real DEFAULT (0), 
+  [ShearYZ] real DEFAULT (0), 
+  [ScaleX] real DEFAULT (1), 
+  [ScaleY] real DEFAULT (1), 
+  [ScaleZ] real DEFAULT (1),
+  [OffsetPositionX] real DEFAULT (0), 
+  [OffsetPositionY] real DEFAULT (0), 
+  [OffsetPositionZ] real DEFAULT (0), 
+  [OffsetRotationX] real DEFAULT (0), 
+  [OffsetRotationY] real DEFAULT (0), 
+  [OffsetRotationZ] real DEFAULT (0), 
+  [OffsetRotationW] real DEFAULT (1), 
+  [OffsetShearXY] real DEFAULT (0), 
+  [OffsetShearXZ] real DEFAULT (0), 
+  [OffsetShearYZ] real DEFAULT (0), 
+  [OffsetScaleX] real DEFAULT (1), 
+  [OffsetScaleY] real DEFAULT (1), 
+  [OffsetScaleZ] real DEFAULT (1), 
+  [EditorColor] integer, 
+  [PhysicsModel] smallint DEFAULT (0),
+  [SimulationQuality] smallint DEFAULT (0),
+  [UpdateRate] smallint DEFAULT (0));
+CREATE INDEX [Nodes_CellIdIndex] ON [Nodes] ([CellId]);
+CREATE INDEX [Nodes_LevelIndex] ON [Nodes] ([Level]);
+
+--Table: ObjectClasses
+
+CREATE TABLE [ObjectClasses] (
+  [ClassId] integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  [Name] varchar(64) UNIQUE,
+  [Description] text);
+
+--Table: ObjectSubElementTypes
+
+CREATE TABLE [ObjectSubElementTypes] (
+  [ObjectSubElementTypeId] integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  [Identifier] varchar(64),
+  [Name] varchar(64),
+  [DataTable] varchar(128));
+
+--Table: ObjectTypes
+
+CREATE TABLE [ObjectTypes] (
+  [ObjectTypeId] integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  [Identifier] varchar(64),
+  [Name] varchar(64),
+  [DataTable] varchar(128));
+
+--Table: Samplers
+
+CREATE TABLE [Samplers] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [Name] varchar(64), 
+  [Filename] path, 
+  [AddressU] smallint, 
+  [AddressV] smallint, 
+  [AddressW] smallint, 
+  [MinFilter] smallint, 
+  [MagFilter] smallint, 
+  [MipFilter] smallint, 
+  [BorderColorR] real, 
+  [BorderColorG] real, 
+  [BorderColorB] real, 
+  [BorderColorA] real, 
+  [MaxAnisotropy] smallint, 
+  [MipLODBias] real, 
+  [MinLOD] REAL, 
+  [MaxLOD] REAL, 
+  [ComparisonFunc] SMALLINT,
+  [Strength] REAL DEFAULT(1),
+  [RefCount] integer DEFAULT (0));
+
+--Table: Scenes
+
+CREATE TABLE [Scenes] (
+  [SceneId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [Type] smallint DEFAULT (0), 
+  [FriendlyName] varchar(255) DEFAULT (NULL), 
+  [EditorName] varchar(255) DEFAULT (NULL), 
+  [Description] TEXT, 
+  [Flags] integer, 
+  [RenderControlScript] varchar(255), 
+  [DistanceDisplayUnits] smallint DEFAULT (0), 
+  [BoundsMinX] real,
+  [BoundsMinY] real,
+  [BoundsMinZ] real,
+  [BoundsMaxX] real,
+  [BoundsMaxY] real,
+  [BoundsMaxZ] real,
+  [CellDimensionsX] real, 
+  [CellDimensionsY] real, 
+  [CellDimensionsZ] real, 
+  [LandscapeId] INTEGER DEFAULT (0));
+CREATE TRIGGER [Scenes_OnDelete]
+BEFORE DELETE
+ON [Scenes]
+BEGIN
+  DELETE FROM [Scenes::MaterialUsage] WHERE SceneId=old.SceneId;  
+  DELETE FROM [Landscapes] WHERE LandscapeId=old.LandscapeId;
+END;
+
+
+--Table: ShadowFrustums
+
+CREATE TABLE [ShadowFrustums] (
+  [FrustumId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [Enabled] tinyint(1) DEFAULT (1), 
+  [MinResolutionScale] real DEFAULT (0), 
+  [MaxResolutionScale] real DEFAULT (1), 
+  [Size] REAL DEFAULT (0));
+CREATE TRIGGER [ShadowFrustums_OnDelete]
+BEFORE DELETE
+ON [ShadowFrustums]
+BEGIN
+  DELETE FROM [ShadowFrustums::LOD] WHERE FrustumId=old.FrustumId;
+END;
+
+--Table: ShadowFrustums::LOD
+
+CREATE TABLE [ShadowFrustums::LOD] (
+  [LevelId] integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  [FrustumId] integer,  
+  [Resolution] smallint DEFAULT 0,
+  [ShadowMapType] varchar(128), 
+  [CullMode] smallint DEFAULT 3,
+  [FilterMaps] tinyint(1) DEFAULT 1,
+  [ZBias] real DEFAULT 0,
+  [SlopeScaleBias] real DEFAULT 0,
+  [FilterPasses] smallint DEFAULT 1,
+  [FilterKernelSize] smallint DEFAULT 3,  
+  [MinVariance] real DEFAULT 0.001,  
+  [BleedReduction] real DEFAULT 0.4 );
+CREATE INDEX [ShadowFrustums::LOD_FrustumIdIndex] ON [ShadowFrustums::LOD] ([FrustumId]);
+
+--Table: Landscapes::BlockLOD
+
+CREATE TABLE "Landscapes::BlockLOD" (
+  [LevelId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [BlockId] integer, 
+  [LevelIndex] integer, 
+  [Variance] real);
+
+--Table: Landscapes::Blocks
+
+CREATE TABLE "Landscapes::Blocks" (
+  [BlockId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [LandscapeId] integer, 
+  [BlockIndex] integer, 
+  [HeightData] BLOB, 
+  [ColorData] BLOB);
+CREATE TRIGGER [Landscapes::Blocks_OnDelete]
+DELETE
+ON [Landscapes::Blocks]
+BEGIN
+  DELETE FROM [Landscapes::BlockLOD] WHERE BlockId=old.BlockId;  
+  DELETE FROM [Landscapes::BlockLayers] WHERE BlockId=old.BlockLayers;
+END;
+
+--Table: Landscapes::BlockLayers
+
+CREATE TABLE "Landscapes::BlockLayers" (
+  [LayerId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [BlockId] integer, 
+  [MaterialId] integer, 
+  [BlendMapData] blob, 
+  [PixelRefCount] integer DEFAULT 0);
+
+--Table: Landscapes::ProceduralLayers
+
+CREATE TABLE "Landscapes::ProceduralLayers" (
+  [LayerId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [LandscapeId] integer, 
+  [LayerIndex] smallint, 
+  [Name] varchar(255), 
+  [MaterialId] integer, 
+  [EnableHeight] smallint DEFAULT 0, 
+  [MinHeight] real, 
+  [MaxHeight] real, 
+  [HeightAttenBand] real, 
+  [SlopeAxisX] real DEFAULT 0, 
+  [SlopeAxisY] real DEFAULT 1, 
+  [SlopeAxisZ] real DEFAULT 0, 
+  [SlopeScale] real DEFAULT 0, 
+  [SlopeBias] real DEFAULT 1, 
+  [InvertSlope] smalling DEFAULT 0, 
+  [Weight] real DEFAULT 0);
+
+--Table: Landscapes
+
+CREATE TABLE [Landscapes] (
+  [LandscapeId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [LayoutU] integer, 
+  [LayoutV] integer, 
+  [BlockSizeU] integer, 
+  [BlockSizeV] integer, 
+  [BlendMapSizeU] integer, 
+  [BlendMapSizeV] integer, 
+  [DimensionsX] real, 
+  [DimensionsY] real, 
+  [DimensionsZ] real, 
+  [OffsetX] real DEFAULT (0), 
+  [OffsetY] real DEFAULT (0), 
+  [OffsetZ] real DEFAULT (0), 
+  [Flags] integer DEFAULT (0));
+CREATE TRIGGER [Landscapes_OnDelete]
+BEFORE DELETE
+ON [Landscapes]
+BEGIN  
+  DELETE FROM [Landscapes::Blocks] WHERE LandscapeId=old.LandscapeId;
+  DELETE FROM [Landscapes::ProceduralLayers] WHERE LandscapeId=old.LandscapeId;
+END;

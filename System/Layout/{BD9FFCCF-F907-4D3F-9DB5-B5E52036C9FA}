@@ -1,0 +1,80 @@
+--Table: DataSources::Mesh -- {BD9FFCCF-F907-4D3F-9DB5-B5E52036C9FA}
+
+CREATE TABLE IF NOT EXISTS [DataSources::Mesh] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [Flags] smallint,
+  [Declaration] blob,
+  [IndexCount] integer,
+  [Indices] blob,
+  [RefCount] integer);
+CREATE TRIGGER IF NOT EXISTS [DataSources::Mesh_OnDelete]
+BEFORE DELETE
+ON [DataSources::Mesh]
+BEGIN
+  DELETE FROM [DataSources::Mesh::Streams] WHERE DataSourceId=old.RefId;
+  DELETE FROM [DataSources::Mesh::Subsets] WHERE DataSourceId=old.RefId;
+  DELETE FROM [DataSources::Mesh::SkinBindData] WHERE DataSourceId=old.RefId;
+  DELETE FROM [DataSources::Mesh::BonePalettes] WHERE DataSourceId=old.RefId;
+END;
+
+--Table: DataSources::Mesh::Streams
+
+CREATE TABLE IF NOT EXISTS [DataSources::Mesh::Streams] (
+  [StreamId] integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  [DataSourceId] integer,
+  [StreamIndex] smallint,
+  [EntryCount] integer,
+  [EntryStride] smallint,
+  [StreamData] blob);
+CREATE INDEX IF NOT EXISTS [DataSources::Mesh::Streams_DataSourceIdIndex] ON [DataSources::Mesh::Streams] ([DataSourceId]);
+CREATE UNIQUE INDEX IF NOT EXISTS [DataSources::Mesh::Streams_StreamMatch] ON [DataSources::Mesh::Streams] ([DataSourceId], [StreamIndex]);
+
+--Table: DataSources::Mesh::Subsets
+
+CREATE TABLE IF NOT EXISTS [DataSources::Mesh::Subsets] (
+  [SubsetId] integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  [DataSourceId] integer,
+  [MaterialId] integer,
+  [DataGroup] integer,
+  [FaceStart] integer,
+  [FaceCount] integer,
+  [VertexStart] integer,
+  [VertexCount] integer);
+CREATE INDEX IF NOT EXISTS [DataSources::Mesh::Subsets_MaterialIdMatch] ON [DataSources::Mesh::Subsets] ([DataSourceId], [MaterialId]);
+CREATE INDEX IF NOT EXISTS [DataSources::Mesh::Subsets_DataGroupIdMatch] ON [DataSources::Mesh::Subsets] ([DataSourceId], [DataGroup]);
+CREATE INDEX IF NOT EXISTS [DataSources::Mesh::Subsets_DataSourceIdIndex] ON [DataSources::Mesh::Subsets] ([DataSourceId]);
+CREATE INDEX IF NOT EXISTS [DataSources::Mesh::Subsets_SubsetMatch] ON [DataSources::Mesh::Subsets] ([DataSourceId], [MaterialId], [DataGroup]);
+
+--Table: DataSources::Mesh::SkinBindData
+
+CREATE TABLE IF NOT EXISTS [DataSources::Mesh::SkinBindData] (
+  [BoneInfluenceId] integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  [DataSourceId] integer,
+  [BoneIdentifier] varchar(255),  
+  [BindPosePositionX] real DEFAULT (0), 
+  [BindPosePositionY] real DEFAULT (0), 
+  [BindPosePositionZ] real DEFAULT (0), 
+  [BindPoseRotationX] real DEFAULT (0), 
+  [BindPoseRotationY] real DEFAULT (0), 
+  [BindPoseRotationZ] real DEFAULT (0), 
+  [BindPoseRotationW] real DEFAULT (1), 
+  [BindPoseShearXY] real DEFAULT (0), 
+  [BindPoseShearXZ] real DEFAULT (0), 
+  [BindPoseShearYZ] real DEFAULT (0), 
+  [BindPoseScaleX] real DEFAULT (1), 
+  [BindPoseScaleY] real DEFAULT (1), 
+  [BindPoseScaleZ] real DEFAULT (1));
+CREATE INDEX IF NOT EXISTS [DataSources::Mesh::SkinBindData_DataSourceIdIndex] ON [DataSources::Mesh::SkinBindData] ([DataSourceId]);
+
+--Table: DataSources::Mesh::BonePalettes
+
+CREATE TABLE IF NOT EXISTS [DataSources::Mesh::BonePalettes] (
+  [BonePaletteId] integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  [DataSourceId] integer,
+  [MaterialId] integer,
+  [DataGroup] integer,  
+  [MaximumSize] integer, 
+  [MaxBlendIndex] integer, 
+  [BoneCount] integer, 
+  [BoneIndices] blob);
+CREATE INDEX IF NOT EXISTS [DataSources::Mesh::BonePalettes_DataSourceIdIndex] ON [DataSources::Mesh::BonePalettes] ([DataSourceId]);

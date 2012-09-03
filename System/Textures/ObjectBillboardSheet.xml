@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<ImageAtlas>
+  <Source>sys://Textures/ObjectBillboardSheet.dds</Source>
+  <Group>
+    <Image name="Light" x="0" y="0" width="64" height="64"/>
+	<Image name="Joint" x="64" y="0" width="64" height="64"/>
+	<Image name="Audio" x="128" y="0" width="64" height="64"/>
+  </Group>
+</ImageAtlas>
