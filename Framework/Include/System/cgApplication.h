@@ -27,6 +27,13 @@
 // cgApplication Header Includes
 //-----------------------------------------------------------------------------
 #include <cgBase.h>
+#include <System/cgReference.h>
+
+//-----------------------------------------------------------------------------
+// Globally Unique Type Id(s)
+//-----------------------------------------------------------------------------
+// {EDEB8A5D-72CC-4879-9F98-75954DA412DF}
+const cgUID RTID_Application = {0xEDEB8A5D, 0x72CC, 0x4879, {0x9F, 0x98, 0x75, 0x95, 0x4D, 0xA4, 0x12, 0xDF}};
 
 //-----------------------------------------------------------------------------
 // Forward Declarations
@@ -44,7 +51,7 @@ class cgAppWindow;
 /// all core processes.
 /// </summary>
 //-----------------------------------------------------------------------------
-class CGE_API cgApplication
+class CGE_API cgApplication : public cgReference
 {
 public:
     //-------------------------------------------------------------------------
@@ -56,19 +63,26 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    bool                frameAdvance            ( bool runSimulation = true );
-    void                setWindowIcon           ( cgUInt32 iconHandle );
-    void                setRootDataPath         ( const cgString & path );
-    void                setWindowTitle          ( const cgString & title );
-    void                setCopyrightData        ( const cgString & copyright );
-    void                setVersionData          ( const cgString & version );
+    bool                    frameAdvance            ( bool runSimulation = true );
+    void                    setWindowIcon           ( cgUInt32 iconHandle );
+    void                    setRootDataPath         ( const cgString & path );
+    void                    setWindowTitle          ( const cgString & title );
+    void                    setCopyrightData        ( const cgString & copyright );
+    void                    setVersionData          ( const cgString & version );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
-    virtual bool        initInstance            ( const cgString & commandLine );
-    virtual int         begin                   ( cgThread * applicationThread );
-    virtual bool        shutDown                ( );
+    virtual bool            initInstance            ( const cgString & commandLine );
+    virtual int             begin                   ( cgThread * applicationThread );
+    virtual bool            shutDown                ( );
+
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods (Overrides cgReference)
+    //-------------------------------------------------------------------------
+    virtual const cgUID   & getReferenceType        ( ) const { return RTID_Application; }
+    virtual bool            queryReferenceType      ( const cgUID & type ) const;
+    virtual bool            processMessage          ( cgMessage * message );
 
 protected:
     //-------------------------------------------------------------------------
@@ -92,6 +106,7 @@ protected:
     cgString            mVersion;               // Cached version string retrieved from resource string table.
     cgString            mCopyright;             // Cached copyright string retrieved from resource string table.
     cgUInt32            mWindowIcon;            // The icon to be displayed on the device window
+    cgAppWindow       * mFocusWindow;           // The main focus window created if no override was supplied.
     cgAppWindow       * mFocusWindowOverride;   // Window to use for device initialization. If NULL, a new window will be opened.
     cgAppWindow       * mOutputWindowOverride;  // Window to output to during scene presentation.
     

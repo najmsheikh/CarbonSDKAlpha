@@ -207,15 +207,10 @@ LRESULT cgWinAppWindow::WndProc( HWND hWnd, cgUInt Message, WPARAM wParam, LPARA
             onCreate();
             break;
 
-        case WM_SETCURSOR:
+        case WM_CLOSE:
 
-            // ToDo: Remove?
-            /*// Hide the cursor inside the client area
-            if ( LOWORD(lParam) == 1 )
-            {
-                SetCursor( CG_NULL );
-                return TRUE;
-            } // End if in client area*/
+            // Trigger close message
+            onClose();
             break;
 
         case WM_SIZE:

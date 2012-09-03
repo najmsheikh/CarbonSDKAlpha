@@ -1,10 +1,10 @@
 //---------------------------------------------------------------------------//
-//          ____                   _                    _                    //
-//         / ___| _ __   ___  __ _| |_ _ __ ___  __   _/ | __  __            //
-//         \___ \| '_ \ / _ \/ _` | __| '__/ _ \ \ \ / / | \ \/ /            //
-//          ___) | |_) |  __/ (_| | |_| | |  __/  \ V /| |_ >  <             //
-//         |____/| .__/ \___|\__, |\__|_|  \___|   \_/ |_(_)_/\_\            //
-//               |_|       Game |_| Institute - Speqtre Game Engine          //
+//              ____           _                         _                   //
+//             / ___|__ _ _ __| |__   ___  _ __   __   _/ | __  __           //
+//            | |   / _` | '__| '_ \ / _ \| '_ \  \ \ / / | \ \/ /           //
+//            | |__| (_| | |  | |_) | (_) | | | |  \ V /| |_ >  <            //
+//             \____\__,_|_|  |_.__/ \___/|_| |_|   \_/ |_(_)_/\_\           //
+//                    Game Institute - Carbon Game Development Toolkit       //
 //                                                                           //
 //---------------------------------------------------------------------------//
 //                                                                           //
@@ -19,7 +19,7 @@
 //        automatically accessible to all material shaders.                  //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2010 Game Institute. All Rights Reserved.         //
+//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
 //---------------------------------------------------------------------------//
 
 #ifndef _SYSTEMDEFS_SHH_
@@ -429,7 +429,7 @@ class SystemExports
 				"#define sample2DCmpLevel0( tex, samp, coords, val ) tex2Dlod( (samp), float4( (coords).xy, (val), 0 ) )\n"
 				"#define sample3DCmpLevel0( tex, samp, coords, val ) tex3Dlod( (samp), float4( (coords).xyz, (val), 0 ) )\n"
 				"#define sampleCubeCmpLevel0( tex, samp, coords, val ) texCUBElod( (samp), float4( (coords).xyz, (val), 0 ) )\n"
-				"#define sample2DGather( tex, samp, coords ) tex2D( (samp), (coords), (coords).xy ).argb\n"
+				"#define sample2DGather( tex, samp, coords ) tex2D( (samp), (coords).xy ).argb\n"
             );
 
         #endif

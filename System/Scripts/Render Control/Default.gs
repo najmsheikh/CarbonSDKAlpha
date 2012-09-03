@@ -17,7 +17,7 @@
 //        deferred shading.                                                  // 
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2010 Game Institute. All Rights Reserved.         //
+//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -813,7 +813,12 @@ class StandardRenderControl : IScriptedRenderControl
 
             // Antialiasing should currently be disabled whilst rendering in editor.
             if ( mContext == SceneRenderContext::SandboxRender )
-                mAntialiasing = AntialiasingMethod::None;
+            {
+                mAntialiasing     = AntialiasingMethod::None;
+                mDrawDepthOfField = false;
+				mDrawMotionBlur   = false;
+            
+            } // End if editor
 
 		} // End if editor / runtime
 		

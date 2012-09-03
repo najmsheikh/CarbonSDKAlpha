@@ -32,6 +32,7 @@
 #include <System/cgThreading.h>
 #include <System/cgStringUtility.h>
 #include <System/cgProfiler.h>
+#include <System/cgMessageTypes.h>
 #include <Rendering/cgRenderDriver.h>
 #include <Resources/cgResourceManager.h>
 #include <Physics/cgPhysicsEngine.h>
@@ -51,12 +52,13 @@
 /// cgApplication Class Constructor
 /// </summary>
 //-----------------------------------------------------------------------------
-cgApplication::cgApplication()
+cgApplication::cgApplication() : cgReference( cgReferenceManager::generateInternalRefId() )
 {
     // Set members to sensible defaults
     mRootDataDir            = cgString::Empty;
     mWindowIcon             = 0;
     mAutoAddPackages        = true;
+    mFocusWindow            = CG_NULL;
     mFocusWindowOverride    = CG_NULL;
     mOutputWindowOverride   = CG_NULL;
 }
@@ -269,6 +271,14 @@ bool cgApplication::initDisplay()
         return false;
     
     } // End if failed to initialize
+
+    // If a window was created, retrieve it so that we can listen in to messages.
+    if ( !mFocusWindowOverride )
+    {
+        mFocusWindow = pDriver->getFocusWindow();
+        cgReferenceManager::subscribeToGroup( getReferenceId(), cgSystemMessageGroups::MGID_AppWindow );
+    
+    } // End if new window
 
     // Success!!
     return true;
@@ -756,4 +766,55 @@ void cgApplication::frameEnd()
     // Finished rendering, cleanup and present the buffer.
     cgRenderDriver * pDriver = cgRenderDriver::getInstance();
     pDriver->endFrame( );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : queryReferenceType ()
+/// <summary>
+/// Allows the application to determine if the inheritance hierarchy 
+/// supports a particular interface.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgApplication::queryReferenceType( const cgUID & type ) const
+{
+    // Supports this interface?
+    if ( type == RTID_Application )
+        return true;
+
+    // Unsupported.
+    return false;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : processMessage ()
+/// <summary>
+/// Process any messages sent to us from other objects, or other parts
+/// of the system via the reference messaging system (cgReference).
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgApplication::processMessage( cgMessage * pMessage )
+{
+    // Bail if the message source has been unregistered since it
+    // was sent. It will no longer be of interest to us.
+    if ( pMessage->sourceUnregistered == true )
+        return cgReference::processMessage( pMessage );
+
+    // Who is the source of the message?
+    if ( mFocusWindow && pMessage->fromId == mFocusWindow->getReferenceId() )
+    {
+        // This is from our created window. What is the message?
+        if ( pMessage->messageId == cgSystemMessages::AppWindow_OnClose )
+        {
+            // Application needs to shut down.
+            PostQuitMessage( 0 );
+            
+            // We processed this message.
+            return true;
+
+        } // End if AppWindow_OnClose
+
+    } // End if window message
+
+    // Message was not processed, pass to base.
+    return cgReference::processMessage( pMessage );
 }
