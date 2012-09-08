@@ -2032,10 +2032,8 @@ int initializeKernel( int pixelRadius, float distanceFactor, bool linearSampling
         x = float(i);
         kernel[ index ].x = x;
 
-        if ( distanceFactor < 0.0f )
-            kernel[ index ].y = 1.0f / pow( ( abs(x) + 1.0f ), abs( distanceFactor ) );
-        else if ( distanceFactor == 0.0f )
-            kernel[ index ].y = 1.0f / float(totalSamples);
+        if ( distanceFactor == 0.0f )
+            kernel[ index ].y = 1.0f / float(pixelRadius + 1);
         else
             kernel[ index ].y = exp( -(x * x) / (2.0f * distanceFactor * distanceFactor) );
             
@@ -2340,5 +2338,111 @@ __shadercall float isPointInAABB( float3 position, float3 boxMin, float3 boxMax 
 		return 1.0f;
 	?>
 }
+
+//----------------------------------------------------------------------------
+// Name : tonemapFilmicHable()
+// Desc : Tonemaps HDR to LDR via John Hable's algorithm used in Uncharted 2
+//----------------------------------------------------------------------------
+__shadercall float3 tonemapFilmicHable( float3 x )
+{
+	<?
+	float A = 0.15;   // Shoulder strength
+	float B = 0.15;   // Linear strength
+	float C = 0.10;   // Linear angle 
+	float D = 0.20;   // Toe strength
+	float E = 0.02;   // Toe numerator
+	float F = 0.30;   // Toe denomintor
+	float W = 11.2;   // Linear white point
+	return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
+	?>
+}
+
+//----------------------------------------------------------------------------
+// Name : toneMapping()
+// Desc : Tonemaps HDR to LDR
+//----------------------------------------------------------------------------
+__shadercall float4 toneMapping( float3 hdrColor, float exposure, float white, script int toneMapper )
+{
+		<?
+		float4 ldrColor = 0;
+
+		// Compute the world luminance
+		float lw = computeLuminance( hdrColor );
+        ?>
+
+		// Select tonemapper
+		if ( toneMapper == ToneMapMethod::Photographic )
+		{
+			<?
+			// Apply auto-exposure 
+			float lm = lw * exposure;
+			
+			// Compute display luminance
+			float ld = lm / (lm + 1.0);
+		
+			// Convert HDR color to LDR color
+			ldrColor.rgb = hdrColor.rgb * (ld / lw);
+			?>
+		}
+		else if ( toneMapper == ToneMapMethod::PhotographicWhitePoint )
+		{
+			<?
+			// Apply auto-exposure 
+			float lm = lw * exposure;
+			
+			// Compute white point luminance
+			float lmax        = white;
+			float recipLmaxSq = 1.0 / (lmax * lmax);
+			float lb = saturate( lm * lm * recipLmaxSq );
+
+			// Compute display luminance
+			float ld = (lm + lb) / (lm + 1.0);
+		
+			// Convert HDR color to LDR color
+			ldrColor.rgb = hdrColor.rgb * (ld / lw);
+			?>
+		}
+		else if ( toneMapper == ToneMapMethod::Filmic )
+		{
+			<?
+			// Apply automatic exposure
+			hdrColor.rgb *= exposure; 
+		
+			// Run the tonemap operation
+			hdrColor.rgb = max( 0, hdrColor - 0.004 );
+			ldrColor.rgb = (hdrColor.rgb * (6.2 * hdrColor.rgb + 0.5)) / (hdrColor.rgb * (6.2 * hdrColor.rgb + 1.7) + 0.06);
+			?>
+		}
+		else if ( toneMapper == ToneMapMethod::FilmicHable )
+		{
+			<?
+			// Apply automatic exposure
+			hdrColor *= exposure; 
+
+			float exposureBias = 2.0f;
+			float3 curr = tonemapFilmicHable( exposureBias * hdrColor );
+			ldrColor.rgb = curr;
+
+			/*float W = 11.2f;
+			float3 currWhite = tonemapFilmicHable( W );
+			ldrColor.rgb *= 1.0f / currWhite;*/
+			?>
+		}
+		else if ( toneMapper == ToneMapMethod::Exponential )
+		{
+			<?
+			// Apply exposure and compute display luminance 
+			float ld = 1.0f - exp( -lw * exposure );
+			
+			// Convert HDR color to LDR color
+			ldrColor.rgb = hdrColor.rgb * ( ld / max( lw, 0.0001f ) );
+			?>
+		}
+		
+		// Return final result
+		<?return ldrColor;?>
+}
+
+
 
 #endif // !_UTILITIES_SHH_

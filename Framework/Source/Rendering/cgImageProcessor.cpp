@@ -823,8 +823,10 @@ void cgImageProcessor::blur( const cgRenderTargetHandle & hSrc, const cgRenderTa
 void cgImageProcessor::blur( const cgRenderTargetHandle & hSrc, const cgRenderTargetHandle & hScratch, const cgTextureHandle & hDepth, cgInt32 nPixelRadius, cgFloat fDistanceFactor, cgFloat fWorldRadius, cgInt32 nNumPasses, cgAlphaWeightMethod::Base InputAlpha, cgAlphaWeightMethod::Base OutputAlpha )
 {
     cgBlurOpDesc::Array aData(1);
-    aData[0].pixelRadius     = nPixelRadius;
-    aData[0].distanceFactor  = fDistanceFactor;
+    aData[0].pixelRadiusV    = nPixelRadius;
+	aData[0].pixelRadiusH    = nPixelRadius;
+    aData[0].distanceFactorV = fDistanceFactor;
+	aData[0].distanceFactorH = fDistanceFactor;
     aData[0].worldRadius     = fWorldRadius;
     aData[0].passCount       = nNumPasses;
     aData[0].inputAlpha      = InputAlpha;
@@ -892,8 +894,8 @@ void cgImageProcessor::blur( const cgRenderTargetHandle & hSrc, const cgRenderTa
         } // End if point
 
         // Retrieve the two pixel shaders we will use (avoids permutation search per pass)
-        cgPixelShaderHandle hVerticalShader   = mProcessShader->getPixelShader( _T("blur"), Info.pixelRadius, Info.distanceFactor, true,  bPassBilinear, Info.inputAlpha, Info.outputAlpha );
-        cgPixelShaderHandle hHorizontalShader = mProcessShader->getPixelShader( _T("blur"), Info.pixelRadius, Info.distanceFactor, false, bPassBilinear, Info.inputAlpha, Info.outputAlpha );
+        cgPixelShaderHandle hVerticalShader   = mProcessShader->getPixelShader( _T("blur"), Info.pixelRadiusV, Info.distanceFactorV, true,  bPassBilinear, Info.inputAlpha, Info.outputAlpha );
+        cgPixelShaderHandle hHorizontalShader = mProcessShader->getPixelShader( _T("blur"), Info.pixelRadiusH, Info.distanceFactorH, false, bPassBilinear, Info.inputAlpha, Info.outputAlpha );
         if ( !hVerticalShader.isValid() || !hHorizontalShader.isValid() )
             return;
 
@@ -1520,12 +1522,15 @@ void cgImageProcessor::setBlendState( cgImageOperation::Base operation )
         case cgImageOperation::ColorScaleAddRGBSetAlpha:
             mDriver->setBlendState( mAddRGBSetAlphaBlendState );
             break;
-        case cgImageOperation::TextureScaleRGBA:
+		case cgImageOperation::ScaleUserColorRGBA:
+		case cgImageOperation::TextureScaleRGBA:
             mDriver->setBlendState( mModulativeRGBABlendState );
             break;
+		case cgImageOperation::ScaleUserColorRGB:
         case cgImageOperation::TextureScaleRGB:
             mDriver->setBlendState( mModulativeRGBBlendState );
             break;
+		case cgImageOperation::ScaleUserColorA:
         case cgImageOperation::TextureScaleA:
             mDriver->setBlendState( mModulativeAlphaBlendState );
             break;
@@ -1650,12 +1655,8 @@ bool cgImageProcessor::useBilinearSampling( const cgTextureHandle & source, cons
     if ( !mForceLinearSampling && sourceTexture->getSize().width == destinationTexture->getSize().width )
         return false;
     
-    // ToDo: If the source texture does not support linear sampling...
-    //if ( !srcTexture.linearSamplingSupported() )
-    //	return false;
-    
-    // Assume we can use linear sampling
-    return true;
+    // Check for support.
+    return sourceTexture->supportsLinearSampling();
 }
 
 void cgImageProcessor::setDepthStencilTarget( const cgDepthStencilTargetHandle & target )

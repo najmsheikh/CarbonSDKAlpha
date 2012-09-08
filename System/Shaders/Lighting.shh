@@ -131,7 +131,7 @@ LightingParameters initializeLightingSystem( int lightType, int lightFlags, int 
 	params.applyReflectance      = !testFlagAll(renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting));        
 	params.useSSAO               = testFlagAny(lightFlags, LightFlags::UseSSAO); 
 	params.trilighting           = testFlagAny(lightFlags, LightFlags::Trilighting);
-	params.approximateRoughness  = (shadingQuality >= ShadingQuality::HighQuality && ORENNAYER_ROUGHNESS_SCALE > 0.0f);
+	params.approximateRoughness  = (shadingQuality >= ShadingQuality::HighQuality);
     params.normalizeSpecular     = (shadingQuality >= ShadingQuality::HighQuality && SPECULAR_NORMALIZE_SCALE > 0.0);
 	params.visibilityTerm        = (shadingQuality >= ShadingQuality::HighQuality && MAX_MICROFACET_VISIBILITY > 0.0);
 	params.fresnelTerm           = (shadingQuality >= ShadingQuality::HighQuality) && !testFlagAll(renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting));
@@ -445,7 +445,7 @@ __shadercall float4 computeSpecular( float3 color, float shadow, float3 n, float
     
     <?
     // Return final specular color (L.H can be used for fresnel material adjustment if desired)	
-    return float4( color * specularFactor * shadow, lh );
+    return float4( color * specularFactor * (shadow * shadow), lh );
     ?>
 }
 

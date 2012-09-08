@@ -156,7 +156,7 @@ bool cgAntialiasProcessor::initialize( cgRenderDriver * driver )
 /// aliasing that may be present in the image.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgAntialiasProcessor::executeFXAA( const cgTextureHandle & source, const cgTextureHandle & velocity, const cgRenderTargetHandle & destination )
+bool cgAntialiasProcessor::executeFXAA( const cgTextureHandle & source, const cgTextureHandle & velocity, const cgRenderTargetHandle & destination, bool reverseToneMap )
 {
 	// Shader must be valid and loaded at this point.
 	if ( !mAntialiasShader.getResource(true) || !mAntialiasShader.isLoaded() )
@@ -194,7 +194,7 @@ bool cgAntialiasProcessor::executeFXAA( const cgTextureHandle & source, const cg
 
 	// Select shaders
 	if ( !mAntialiasShader->selectVertexShader( _T("transform"), false ) ||
-		 !mAntialiasShader->selectPixelShader( _T("fxaa") ) )
+		 !mAntialiasShader->selectPixelShader( _T("fxaa"), reverseToneMap ) )
 		return false;
 
 	// Composite the low res blurred results with the original source texture

@@ -55,7 +55,7 @@ DWORD g_4CC_Fetch4Disable = ((DWORD)MAKEFOURCC( 'G', 'E', 'T', '1' ));
 //-----------------------------------------------------------------------------
 cgTexturePoolResource::cgTexturePoolResource( cgTexturePoolResourceType::Base ResourceType )
 {
-	mDescription.type   = ResourceType;
+	mDescription.type  = ResourceType;
 	mAvailableChannels = 0;
 	mLastAssigned      = 0.0;
 }
@@ -86,6 +86,10 @@ cgTexturePoolResource::~cgTexturePoolResource( )
 //-----------------------------------------------------------------------------
 cgUInt32 cgTexturePoolResource::assign( void * pOwner, cgUInt32 nDataTypeId, cgUInt32 nChannelCount, cgUInt32 nPreviousChannelMask /* = 0 */ )
 {
+	// Nobody can own a shared resource
+	if ( mDescription.type == cgTexturePoolResourceType::Shared )
+		return cgColorChannel::All;
+
 	// If caller specified 0, this means ALL channels are to be used
 	if ( nChannelCount == 0 )
 		nChannelCount = mDescription.channelCount;
@@ -118,6 +122,9 @@ cgUInt32 cgTexturePoolResource::assign( void * pOwner, cgUInt32 nDataTypeId, cgU
 			// Update the assignment time stamp
 			mLastAssigned = cgTimer::getInstance()->getTime();
 
+			// Set the owner as a filler of this resource
+			setFiller( pOwner );
+
 			// Return the assigned channel mask
 			return nPreviousChannelMask; 
 
@@ -133,7 +140,7 @@ cgUInt32 cgTexturePoolResource::assign( void * pOwner, cgUInt32 nDataTypeId, cgU
 		if ( !mChannelAssignments[i].currOwner )
 		{
 			// Assign the data
-            mChannelAssignments[i].currOwner = pOwner;
+			mChannelAssignments[i].currOwner  = pOwner;
             mChannelAssignments[i].dataTypeId = nDataTypeId;
 
 			// Update the channel mask we will return to the caller
@@ -152,6 +159,9 @@ cgUInt32 cgTexturePoolResource::assign( void * pOwner, cgUInt32 nDataTypeId, cgU
 	// Update the assignment time stamp
 	mLastAssigned = cgTimer::getInstance()->getTime();
 
+	// Set the owner as a filler of this resource
+	setFiller( pOwner );
+
 	// Return the final mask
 	return nChannelMask;
 }
@@ -159,12 +169,16 @@ cgUInt32 cgTexturePoolResource::assign( void * pOwner, cgUInt32 nDataTypeId, cgU
 //-----------------------------------------------------------------------------
 //  Name : unassign ()
 /// <summary>
-/// Removes any references to the specified currOwner held by this resource and 
+/// Removes any references to the specified owner held by this resource and 
 /// updates the number of available channels accordingly. 
 /// </summary>
 //-----------------------------------------------------------------------------
 void cgTexturePoolResource::unassign( void * pOwner, bool bForceTimeReset /* = false */ )
 {
+	// Nobody 'owns' a shared resource
+	if ( mDescription.type == cgTexturePoolResourceType::Shared )
+		return;
+
 	// Determine which channels are available for assignment
 	for ( cgUInt32 i = 0; i < mDescription.channelCount; ++i )
 	{
@@ -175,9 +189,6 @@ void cgTexturePoolResource::unassign( void * pOwner, bool bForceTimeReset /* = f
 			mChannelAssignments[i].currOwner  = CG_NULL;
 			mChannelAssignments[i].dataTypeId = 0xFFFFFFFF;
 			
-			// Set this pointer as the previous owner
-			mChannelAssignments[i].prevOwner = pOwner;
-			
 			// This channel is available for use once more.
 			++mAvailableChannels;
 
@@ -185,6 +196,7 @@ void cgTexturePoolResource::unassign( void * pOwner, bool bForceTimeReset /* = f
 
 	} // Next channel
 
+	/*
 	// Do we want the last-assigned time stamp reset to 0?
 	if ( bForceTimeReset )
 	{
@@ -193,6 +205,7 @@ void cgTexturePoolResource::unassign( void * pOwner, bool bForceTimeReset /* = f
 			mLastAssigned = 0;
 
 	} // End forced reset
+	*/
 }
 
 //-----------------------------------------------------------------------------
@@ -264,10 +277,13 @@ bool cgTexturePoolResource::initialize( cgResourceManager * pResources, const cg
 //-----------------------------------------------------------------------------
 void cgTexturePoolResource::clearAssignments( )
 {
-	// Clear any assigned data
-    mChannelAssignments.clear();
-    mChannelAssignments.resize( mDescription.channelCount );
-	
+	// Keep track of prior owner and free the slots
+	for ( UINT i = 0; i < mChannelAssignments.size(); i++ )
+	{
+		mChannelAssignments[i].currOwner  = CG_NULL;
+		mChannelAssignments[i].dataTypeId = 0xFFFFFFFF;
+	}
+
 	// Reset the available channel count
 	mAvailableChannels = mDescription.channelCount;
 
@@ -295,7 +311,7 @@ bool cgTexturePoolResource::isAssignedType( cgUInt32 nDataTypeId ) const
 //-----------------------------------------------------------------------------
 //  Name : getChannelMask ()
 /// <summary>
-/// Builds a mask based on which channels the specified currOwner occupies.
+/// Builds a mask based on which channels the specified owner occupies.
 /// </summary>
 //-----------------------------------------------------------------------------
 cgUInt32 cgTexturePoolResource::getChannelMask( void * pOwner ) const
@@ -304,8 +320,8 @@ cgUInt32 cgTexturePoolResource::getChannelMask( void * pOwner ) const
 	cgUInt32 nChannelMask = 0;
 	for ( size_t i = 0; i < mChannelAssignments.size(); ++i )
 	{
-		// If we found a match, update the channel mask
-		if ( mChannelAssignments[i].currOwner == pOwner )
+		// If we own the data in this channel, update the channel mask
+		if ( mChannelAssignments[i].currOwner == pOwner || ( mChannelAssignments[i].currOwner == CG_NULL && mChannelAssignments[i].lastFiller == pOwner ) )
 			nChannelMask |= (1L << i);
 
 	} // Next channel
@@ -317,7 +333,7 @@ cgUInt32 cgTexturePoolResource::getChannelMask( void * pOwner ) const
 //-----------------------------------------------------------------------------
 //  Name : wasPreviousOwner ()
 /// <summary>
-/// Returns whether the input owner pointer was a prior owner of this resource
+/// Returns whether the input owner pointer was the prior owner/filler of this resource
 /// (i.e., was it the last one to fill/use it?).
 /// </summary>
 //-----------------------------------------------------------------------------
@@ -328,7 +344,7 @@ bool cgTexturePoolResource::wasPreviousOwner( void * pOwner, cgUInt32 nPreviousC
 	for ( size_t i = 0; i < mChannelAssignments.size(); ++i )
 	{
 		// If we found a match, update the channel mask
-		if ( mChannelAssignments[i].prevOwner == pOwner )
+		if ( mChannelAssignments[i].lastFiller == pOwner )
 			nChannelMask |= (1L << i);
 
 	} // Next channel
@@ -344,6 +360,32 @@ bool cgTexturePoolResource::wasPreviousOwner( void * pOwner, cgUInt32 nPreviousC
 	}
 }
 
+//-----------------------------------------------------------------------------
+//  Name : setFiller ()
+/// <summary>
+/// Flags the owner as the filler of this resource
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgTexturePoolResource::setFiller( void * pOwner )
+{
+	// Do not track fillers of shared resources
+	if ( mDescription.type == cgTexturePoolResourceType::Shared )
+		return;
+
+	// Determine which channels are available for assignment
+	for ( cgUInt32 i = 0; i < mDescription.channelCount; ++i )
+	{
+		// If we stored the data in this channel
+		if ( mChannelAssignments[i].currOwner == pOwner )
+		{
+			mChannelAssignments[i].lastFiller    = pOwner;
+			mChannelAssignments[i].lastFillFrame = cgTimer::getInstance()->getFrameCounter();
+
+		} // End if found data
+
+	} // Next channel
+
+}
 
 //-----------------------------------------------------------------------------
 //  Name : channelsAvailable ()
@@ -392,7 +434,7 @@ bool cgTexturePoolResource::canAccommodate( cgBufferType::Base BufferType, cgBuf
 		return false;
 
 	// If # channels not specified, assume caller wants all channels 
-	if ( !nChannelCount )
+	if ( nChannelCount == 0 )
 		nChannelCount = mDescription.channelCount;
 	
 	// Must have at least required number of channels available 
@@ -1485,49 +1527,97 @@ bool cgTexturePool::assignResources( const cgTexturePoolResourceDesc::Array & aD
 bool cgTexturePool::reassignResources( const cgTexturePoolResourceDesc::Array & aDescriptions, void * pOwner, cgUInt32 nDataTypeId, cgTexturePoolResourceArray & aResources )
 {	
 	ResourceSet ExclusionList;
-	
+	cgUInt32 numMatches = 0;
+
 	// If either buffer is empty, fail
 	if ( aDescriptions.empty() || aResources.empty() )
 		return false;
 
 	// If the number of resources currently assigned differs from the
-	// number of resources needed, no reassignment is possible
+	// number of resources needed, no reassignment is possible and the
+	// resource array needs to be cleared
 	if ( aDescriptions.size() != aResources.size() )
-		return false;
+	{
+		for ( size_t i = 0; i < aResources.size(); ++i )
+			aResources[ i ]->unassign( pOwner, true );
 
-	// Check to see if the required descriptions match current resources
-	cgUInt32 nNumMatches = 0;
+		aResources.clear();
+		return false;
+	}
+
+	// Keep track of previous channel assignments
+	std::vector< cgUInt32 > previousChannels;
+
+	// Do an initial pass to ensure everything will work out. Also, unassign
+	// the resource during this process. We'll get it back if 
 	for ( size_t i = 0; i < aResources.size(); ++i )
 	{
 		// Get a reference to the resource description
 		const cgTexturePoolResourceDesc & Desc = aDescriptions[ i ];
 
-		// If the pool types don't match, fail immediately
-		if ( aResources[ i ]->getType() != Desc.type )
-			return false;
-
 		// Ideally we'll want the same channels as before
-		cgUInt32 nChannelCount = Desc.channelCount;
+		cgUInt32 channelCount = Desc.channelCount;
 
 		// Collect the channels that were previously assigned to this owner (if any)
-		cgUInt32 nPrevChannels = nChannelCount ? aResources[ i ]->getChannelMask( pOwner ) : 0;
-		
-		// Unassign
-		aResources[ i ]->unassign( pOwner, true );
+		cgUInt32 prevChannels = channelCount ? aResources[ i ]->getChannelMask( pOwner ) : 0;
 
+		// Add to prev channel list
+		previousChannels.push_back( prevChannels );
+
+		// If a cached resource is needed... (Note: we assume shared resources can always be found)
+		if ( Desc.type == cgTexturePoolResourceType::Cached )
+		{
+			// If the pool types don't match, fail
+			if ( aResources[ i ]->getType() != Desc.type )
+				continue;
+			
+			// If the resource was lost, fail
+			if ( aResources[i]->isResourceLost() )
+				continue;
+
+			// If this owner was not the prior filler of this resource, fail
+			if ( !aResources[i]->wasPreviousOwner( pOwner, prevChannels ) )
+				continue;
+
+			// If our prior resource cannot accommodate us, fail
+			if( !aResources[ i ]->canAccommodate( Desc.bufferDesc.type, Desc.bufferDesc.format, Desc.bufferDesc.width, channelCount, nDataTypeId ) )
+				continue;
+
+			// If we have specific channels we want to reuse and they are not available, fail
+			if ( prevChannels != 0 && !aResources[ i ]->channelsAvailable( prevChannels ) )
+				continue;
+
+		} // End !shared
+
+		// Unassign
+		aResources[ i ]->unassign( pOwner );
+
+		// Increment match count
+		numMatches++;
+
+	} // Next resource
+
+	// If we didn't get a match on everything, clear and exit
+	if ( numMatches != aResources.size() )
+	{
+		aResources.clear();
+		return false;
+	}
+
+	// Everything matched, so let's do the reassignment
+	for ( size_t i = 0; i < aResources.size(); ++i )
+	{
+		// Get a reference to the resource description
+		const cgTexturePoolResourceDesc & Desc = aDescriptions[ i ];
+	
 		// If a shared resource is needed...
 		if ( Desc.type == cgTexturePoolResourceType::Shared )
 		{
 			// Get the resource
 			aResources[ i ] = getResource( Desc, ExclusionList );
 
-            // If we could not get any resource at all, something is wrong and we can't proceed
-            if ( !aResources[ i ] )
-            {
-                cgAppLog::write( cgAppLog::Error, _T("Failed to find a valid resource during resource slot '%i' re-assignment.\n"), i );
-                return false;
-
-            } // End if failed
+            // If we could not get a resource at all, something is very wrong and we can't proceed
+            cgAssert( aResources[ i ] != CG_NULL );
 
 			// Add this resource to the exclusion list to prevent getting it again
 			ExclusionList.insert( aResources[ i ] );
@@ -1535,16 +1625,8 @@ bool cgTexturePool::reassignResources( const cgTexturePoolResourceDesc::Array & 
 		} // End if shared
 		else
 		{
-			// If our prior resource cannot accommodate us, fail
-			if( !aResources[ i ]->canAccommodate( Desc.bufferDesc.type, Desc.bufferDesc.format, Desc.bufferDesc.width, nChannelCount, nDataTypeId ) )
-				return false;
-
-			// If we have specific channels we want to reuse and they are not available, fail
-			if ( nPrevChannels != 0 && !aResources[ i ]->channelsAvailable( nPrevChannels ) )
-				return false;
-
 			// Reassign 
-			aResources[ i ]->assign( pOwner, nDataTypeId, nChannelCount, nPrevChannels );
+			aResources[ i ]->assign( pOwner, nDataTypeId, Desc.channelCount, previousChannels[ i ] );
 
 		} // End !shared
 
@@ -1552,67 +1634,4 @@ bool cgTexturePool::reassignResources( const cgTexturePoolResourceDesc::Array & 
 
 	// Return status
 	return true;
-}
-
-
-
-
-
-
-void cgTexturePool::debugPool( cgUInt32 nDataTypeId )
-{
-	size_t i, j;
-	PoolResourceTable::iterator itTable;
-
-	struct tmpData
-	{
-		std::map< void *, void * > Owners;
-	};
-
-	typedef std::map< cgTexturePoolResource *, tmpData * > ResMap;
-	ResMap OwnerMap;
-
-	// For each mip level
-	for ( i = 0; i < mCachedResources.size(); ++i )
-	{
-		// For each format in the table
-		for( itTable = mCachedResources[ i ].begin(); itTable != mCachedResources[ i ].end(); ++itTable )
-		{
-			// For each pool resource
-			const cgTexturePoolResourceArray & aResources = itTable->second;
-			for ( j = 0; j < aResources.size(); ++j )
-			{
-				if ( (nDataTypeId == 0xFFFFFFFF) || (aResources[ j ]->isAssignedType( nDataTypeId )) )
-				{
-					// Find a match on format and mip level
-					ResMap::iterator it = OwnerMap.find( aResources[j] );
-					if ( it == OwnerMap.end() )
-					{
-						cgTexturePoolResource * pTPR = aResources[ j ];
-
-						tmpData * td = new tmpData();
-						cgTexturePoolResource::ChannelAssignmentArray & ca = pTPR->getChannelAssignments();
-						for ( UINT k = 0; k < ca.size(); k++ )
-						{
-							cgTexturePoolResource::ChannelAssignment channel = ca[k];
-							if ( channel.currOwner != CG_NULL )
-								td->Owners[ channel.currOwner ] = channel.currOwner;
-						}
-						OwnerMap[aResources[ j ]] = td;
-
-						if ( td->Owners.size() > 1 )
-							cgAppLog::write( cgAppLog::Error, _T("More than 1 owner of a resource.\n") );
-					}
-					else
-					{
-						cgAppLog::write( cgAppLog::Error, _T("Duplicate resources in pool.\n") );
-					}
-				}
-
-			} // Next resource
-
-		} // Next format
-
-	} // Next mip level	
-
 }

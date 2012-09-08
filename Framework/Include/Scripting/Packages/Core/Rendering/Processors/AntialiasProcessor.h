@@ -37,7 +37,7 @@ namespace AntialiasProcessor
             Core::Rendering::ImageProcessor::registerProcessorMethods<cgAntialiasProcessor>( engine, "AntialiasProcessor" );
 
 			// Register the object methods
-			BINDSUCCESS( engine->registerObjectMethod( "AntialiasProcessor", "bool executeFXAA( const TextureHandle &in, const TextureHandle &in, const RenderTargetHandle &in )", asMETHODPR(cgAntialiasProcessor, executeFXAA, (const cgTextureHandle&, const cgTextureHandle&, const cgRenderTargetHandle& ), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "AntialiasProcessor", "bool executeFXAA( const TextureHandle &in, const TextureHandle &in, const RenderTargetHandle &in, bool )", asMETHODPR(cgAntialiasProcessor, executeFXAA, (const cgTextureHandle&, const cgTextureHandle&, const cgRenderTargetHandle& , bool), bool), asCALL_THISCALL) );
 			BINDSUCCESS( engine->registerObjectMethod( "AntialiasProcessor", "bool computePixelVelocity( CameraNode@+, const TextureHandle &in, DepthType, const RenderTargetHandle & in )", asMETHODPR(cgAntialiasProcessor, computePixelVelocity, (cgCameraNode*, const cgTextureHandle&, cgDepthType::Base, const cgRenderTargetHandle& ), bool), asCALL_THISCALL) );
 			BINDSUCCESS( engine->registerObjectMethod( "AntialiasProcessor", "bool temporalResolve( const TextureHandle &in, const TextureHandle &in, const TextureHandle &in, const RenderTargetHandle &in )", asMETHODPR(cgAntialiasProcessor, temporalResolve, (const cgTextureHandle&, const cgTextureHandle&, const cgTextureHandle&, const cgRenderTargetHandle& ), bool), asCALL_THISCALL) );
 		}

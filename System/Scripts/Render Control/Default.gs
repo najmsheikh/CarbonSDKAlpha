@@ -131,7 +131,7 @@ class StandardRenderControl : IScriptedRenderControl
 	// Reprojection buffers
 	private RenderTargetHandle  mLightingPrev;
 	private RenderTargetHandle  mDepthPrev;
-	
+
 	private RenderTargetHandle  mFrameBuffer;
 	private RenderTargetHandle  mLDRScratch0;
 	private RenderTargetHandle  mLDRScratch1;
@@ -268,15 +268,15 @@ class StandardRenderControl : IScriptedRenderControl
 		if ( mContext == SceneRenderContext::Runtime || mContext == SceneRenderContext::SandboxRender )
 		{			
 			// Configure the shadow map pool responsible for managing shadow maps for this scene.
-			mLightingManager.beginShadowConfigure( 0, 4, 512 );
+			mLightingManager.beginShadowConfigure( 50, 4, 512 );
 
 			// Create the list of shadow methods we wish to support
-			array< uint > ShadowMethods( 5 );		
+			array< uint > ShadowMethods( 1 );		
 			ShadowMethods[ 0 ] = (ShadowMethod::Depth);
-			ShadowMethods[ 1 ] = (ShadowMethod::Variance);
-			ShadowMethods[ 2 ] = (ShadowMethod::Exponential);
-			ShadowMethods[ 3 ] = (uint(ShadowMethod::Depth) | uint(ShadowMethod::SoftShadows) | uint(ShadowMethod::ContactHardening));
-			ShadowMethods[ 4 ] = (ShadowMethod::Reflective);
+			//ShadowMethods[ 1 ] = (ShadowMethod::Variance);
+			//ShadowMethods[ 2 ] = (ShadowMethod::Exponential);
+			//ShadowMethods[ 3 ] = (uint(ShadowMethod::Depth) | uint(ShadowMethod::SoftShadows) | uint(ShadowMethod::ContactHardening));
+			//ShadowMethods[ 4 ] = (ShadowMethod::Reflective);
 
 			// Add default resources to support all possible shadow methods
 			for ( uint i = 0; i < ShadowMethods.length(); i++ )
@@ -285,7 +285,7 @@ class StandardRenderControl : IScriptedRenderControl
                 break;
             }
 			
-			/*// Add some pool resources to optimize our shadow methods
+			// Add some pool resources to optimize our shadow methods
 			for ( uint i = 0; i < ShadowMethods.length(); i++ )
 			{
 				mLightingManager.addCacheMaps( ShadowMethods[ i ], 1024,  0 );
@@ -308,14 +308,14 @@ class StandardRenderControl : IScriptedRenderControl
 			mLightingManager.addCacheMaps( bufferFormat,   8, 10 );
 			mLightingManager.addCacheMaps( bufferFormat,   4, 10 );
 			mLightingManager.addCacheMaps( bufferFormat,   2, 10 );
-			mLightingManager.addCacheMaps( bufferFormat,   1, 10 );*/
+			mLightingManager.addCacheMaps( bufferFormat,   1, 10 );
 
 			// Finish up and initialize the shadow map pool
 			mLightingManager.endShadowConfigure();
 			
 			// Add some radiance grids for dynamic ambient lighting
 			//mLightingManager.addRadianceGrid( 2.0, Vector3( 32, 32, 32 ), 1, 4, 14.0f, 0.4f );
-			//mLightingManager.addRadianceGrid( 4.0, Vector3( 32, 32, 32 ), 1, 4, 15.0f, 0.0f );*/
+			//mLightingManager.addRadianceGrid( 4.0, Vector3( 32, 32, 32 ), 1, 4, 15.0f, 0.0f );
 
         } // End if runtime / sandbox
 
@@ -724,7 +724,7 @@ class StandardRenderControl : IScriptedRenderControl
 		mLDRScratch1.close();
 		mLDRChain0.setSource( null );
 		mLDRChain1.setSource( null );
-				
+	
 		// Close the current scene target
         mCurrentSceneTarget.close();
 	
@@ -798,13 +798,13 @@ class StandardRenderControl : IScriptedRenderControl
 			}
 			else
 			{
-				mHDRGlare              = false;
-				mHDRDepthOfField       = false;
-				mHDRMotionBlur         = false;
+				mHDRGlare              = true;
+				mHDRDepthOfField       = true;
+				mHDRMotionBlur         = true;
 				
-				mDrawHDR               = false; 
+				mDrawHDR               = true; 
 				mDrawGlare             = true;
-				mDrawDepthOfField      = true;
+				mDrawDepthOfField      = false;
 				mDrawMotionBlur        = true;
 				mDrawSSAO			   = false;
 				
@@ -1363,20 +1363,24 @@ class StandardRenderControl : IScriptedRenderControl
 	void glare( RenderDriver @ renderDriver )
 	{
 		// Set the glare paramaters
-		if ( mHDRGlare )
-			mGlare.setBrightThreshold( 0.90f, 1.0f );
-		else
-			mGlare.setBrightThreshold( 0.90f, 1.0f );
+		mGlare.setBrightThreshold( 0.8f, 1.0f );
+		mGlare.setGlareAmount( 0.045f );
 
         // Set the downsampling/blurring steps
         array<GlareStepDesc> steps;
-        steps.resize( 2 );		
-		steps[ 0 ] = GlareStepDesc( 2, 0.08, 2, 4, 5.0 );			
-		steps[ 1 ] = GlareStepDesc( 3, 0.03, 2, 3, 5.0 );			
+        steps.resize( 4 );		
+		steps[ 0 ] = GlareStepDesc( 2, 0.40, 1, 2, 2.0, 0.0, 30 );			
+		steps[ 1 ] = GlareStepDesc( 3, 0.50, 1, 2, 2.0, 0.0, 30 );			
+		steps[ 2 ] = GlareStepDesc( 4, 0.10, 2, 2, 2.0, 0.0, 30 );			
+		steps[ 3 ] = GlareStepDesc( 5, 0.10, 2, 3, 2.0, 0.9, 0.001 );			
         mGlare.setGlareSteps( steps );
 
+		// Give the glare access to the tonemapper if needed
+		if ( mHDRGlare )
+			mGlare.setToneMapper( mToneMapper );
+
         // Run the glare
-	    mGlare.execute( mCurrentSceneTarget, mLightingChain0, mLightingChain1, true );
+	    mGlare.execute( mCurrentSceneTarget, mLightingChain0, mLightingChain1, 0.0f );
 	}
 
 	//-----------------------------------------------------------------------------
@@ -1386,15 +1390,16 @@ class StandardRenderControl : IScriptedRenderControl
 	void toneMapping( RenderView @ activeView, float frameTime )
 	{
 		// Set luminance range
-        mToneMapper.setLuminanceRange( 0.000001f, 1.0f );
+        mToneMapper.setLuminanceRange( 0.005f, 50000.0f );
 		
 		// Set the tone mapping controls
-        mToneMapper.setToneMapMethod( ToneMapMethod::Photographic ); // ToneMapMethod::Filmic, ToneMapMethod::ExponentialTM
-        mToneMapper.setKeyAdjust( 1.0f, 0.0f );
-        mToneMapper.setWhitePointAdjust( 1.0f, 0.0f );
+        mToneMapper.setToneMapMethod( ToneMapMethod::Exponential ); //Photographic PhotographicWhitePoint Filmic FilmicHable Exponential
+        mToneMapper.setKeyAdjust( 1.0f, 0.0f );       
+        mToneMapper.setWhitePointAdjust( 1.0f, 0.0f ); 
+		mToneMapper.setLuminanceAdaptation( 0.75, 1.25, 1 ); // cones, rods, rod sensitivity
 
-		// Set the luminance computation update rate (samples per second)
-        mToneMapper.setLuminanceSampleRate( 30.0f );
+		// Set the luminance computation update rate (times per second) 
+        mToneMapper.setLuminanceSampleRate( 10.0f );
 
 		// Set optional image processing to be done after tonemapping finishes (but before shader exits)
 		//toneMappingPostProcesses();
@@ -1489,8 +1494,8 @@ class StandardRenderControl : IScriptedRenderControl
 	void motionBlur( CameraNode @ activeCamera, float frameTime )
 	{
 		// Set the motion blur parameters
-		mMotionBlur.setBlurAmount( 0.1 );
-		mMotionBlur.setRotationBlurAmount( 0.01 );
+		mMotionBlur.setBlurAmount( 0.30 );
+		mMotionBlur.setRotationBlurAmount( 0.50 );
 		mMotionBlur.setTranslationBlurAmount( 0.01 );
         mMotionBlur.setTargetRate( 50 );
         mMotionBlur.setAttenuationRates( 30, 50 );
@@ -1521,11 +1526,11 @@ class StandardRenderControl : IScriptedRenderControl
 			mImageProcessor.downSample( sourceColor, sourceColorLow );
 			
 			// Run the filter
-			if ( mMotionBlur.execute( 3,
-									  sourceColor,      // High res color
-									  mVelocityBuffer,  // Low res velocity
-									  sourceColorLow,   // Low res color
-									  scratchLow,       // Low res color (scratch)
+			if ( mMotionBlur.execute( 2,
+									  sourceColor,       // High res color
+									  mVelocityBufferMB, // Low res velocity
+									  sourceColorLow,    // Low res color
+									  scratchLow,        // Low res color (scratch)
 									  destination ) )
 				mCurrentSceneTarget = destination;
 		}
@@ -1556,12 +1561,12 @@ class StandardRenderControl : IScriptedRenderControl
 			if ( method == AntialiasingMethod::FXAA_T2x )
 			{
 				mAntialiasProcessor.computePixelVelocity( activeCamera, mDepthBuffer, mDepthType, mVelocityBuffer );
-				mAntialiasProcessor.executeFXAA( src, mVelocityBuffer, mAABuffer[ mCurrentSubpixelIndex ] );
+				mAntialiasProcessor.executeFXAA( src, mVelocityBuffer, mAABuffer[ mCurrentSubpixelIndex ], false );
 				mAntialiasProcessor.temporalResolve( mAABuffer[ mCurrentSubpixelIndex ], mAABuffer[ mPreviousSubpixelIndex ], mVelocityBuffer, dst );
 			}
 			else if ( method == AntialiasingMethod::FXAA )
 			{
-				mAntialiasProcessor.executeFXAA( src, mVelocityBuffer, dst );
+				mAntialiasProcessor.executeFXAA( src, mVelocityBuffer, dst, false );
 			}
 			
 			// Update the scene target

@@ -1488,13 +1488,20 @@ bool cgDX11RenderDriver::setMaterialTerms( const cgMaterialTerms & Terms )
     pMaterialData->ambient              = Terms.ambient;
     pMaterialData->specular             = Terms.specular;
 
-    // ToDo: 6767 - Add support for emissive HDR scalar in Carbon Forge and
-    // pass to the effect here so that it can pre-shader multiply.
-    // Note: This is stored in cgMaterialTerms::EmissiveHDRScalar.
-	if ( getSystemState( cgSystemState::HDRLighting ) > 0 )
-		pMaterialData->emissive         = Terms.emissive * 2.0f; //Terms.EmissiveHDRScale;
-	else
-		pMaterialData->emissive         = Terms.emissive;
+    // Linearize and scale emissive input if HDR lighting is enabled.
+    if ( getSystemState( cgSystemState::HDRLighting ) > 0 )
+    {
+        pMaterialData->emissive.r       = powf( Terms.emissive.r, 2.2f ) * Terms.emissiveHDRScale;
+        pMaterialData->emissive.g       = powf( Terms.emissive.g, 2.2f ) * Terms.emissiveHDRScale;
+        pMaterialData->emissive.b       = powf( Terms.emissive.b, 2.2f ) * Terms.emissiveHDRScale;
+        pMaterialData->emissive.a       = Terms.emissiveHDRScale;
+        pMaterialData->emissiveTint     = cgColorValue( Terms.emissiveHDRScale, Terms.emissiveHDRScale, Terms.emissiveHDRScale, 1 );
+    }
+    else
+    {
+        pMaterialData->emissive         = Terms.emissive;
+        pMaterialData->emissiveTint     = cgColorValue( 1, 1, 1, 1 );
+    }
 
     // ToDo: 6767 - Convert SG Power to gloss. Can remove the following conversion afterwards. This is for backwards compatibility.
 	if ( Terms.gloss > 1.0f )

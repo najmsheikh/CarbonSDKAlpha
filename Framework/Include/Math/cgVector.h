@@ -36,6 +36,8 @@
 // Forward Declarations
 //-----------------------------------------------------------------------------
 class cgMatrix;
+class cgVector3;
+class cgVector2;
 
 //-----------------------------------------------------------------------------
 // Main class declarations
@@ -217,6 +219,10 @@ public:
         return &x;
     }
 
+    // Component Access
+    inline const cgVector3    & xyz () const { return (const cgVector3&)x; }
+    inline const cgVector2    & xy  () const { return (const cgVector2&)x; }
+    
     //-------------------------------------------------------------------------
     // Public Members
     //-------------------------------------------------------------------------
@@ -403,6 +409,9 @@ public:
     {
         return &x;
     }
+
+    // Component Access
+    inline const cgVector2    & xy  () const { return (const cgVector2&)x; }
 
     //-------------------------------------------------------------------------
     // Public Members

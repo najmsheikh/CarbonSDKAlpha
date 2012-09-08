@@ -426,7 +426,11 @@ namespace cgImageOperation
 	    BilateralResample           = 32,
 	    BilateralBlur               = 33,
 	    Blur                        = 34,
-    	
+
+		ScaleUserColorRGBA          = 40,
+		ScaleUserColorRGB           = 41,
+		ScaleUserColorA             = 42,
+
 	    // Color controls
 	    Exposure                    = 100,
 	    Saturation                  = 101,
@@ -818,18 +822,20 @@ struct cgBlurOpDesc
 
     // Members
     cgInt32                     passCount;
-    cgInt32                     pixelRadius;
-    cgFloat                     distanceFactor;
+    cgInt32                     pixelRadiusV;
+	cgInt32                     pixelRadiusH;
+    cgFloat                     distanceFactorV;
+	cgFloat                     distanceFactorH;
     cgFloat                     worldRadius;
     cgAlphaWeightMethod::Base   inputAlpha;
     cgAlphaWeightMethod::Base   outputAlpha;
 
     // Constructors
     cgBlurOpDesc() :
-        passCount(0), pixelRadius(0), distanceFactor(0), worldRadius(0),
+        passCount(0), pixelRadiusV(0), pixelRadiusH(0), distanceFactorV(0), distanceFactorH(0), worldRadius(0),
         inputAlpha(cgAlphaWeightMethod::None), outputAlpha(cgAlphaWeightMethod::None) {}
     cgBlurOpDesc( cgInt32 _passCount, cgInt32 _pixelRadius, cgFloat _distanceFactor ) :
-        passCount(_passCount), pixelRadius(_pixelRadius), distanceFactor(_distanceFactor), worldRadius(0),
+        passCount(_passCount), pixelRadiusV(_pixelRadius), pixelRadiusH(_pixelRadius), distanceFactorV(_distanceFactor), distanceFactorH(_distanceFactor), worldRadius(0),
         inputAlpha(cgAlphaWeightMethod::None), outputAlpha(cgAlphaWeightMethod::None) {}
 };
 

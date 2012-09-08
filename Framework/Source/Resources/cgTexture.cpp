@@ -387,3 +387,26 @@ void cgTexture::setCurrentCubeFace( CubeFace Face )
 {
     mCurrentCubeFace = Face;
 }
+
+//-----------------------------------------------------------------------------
+// Name : supportsLinearSampling ( )
+/// <summary>
+/// Determine if the underlying texture resource supports regular sampling in
+/// combination with bilinear filtering.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgTexture::supportsLinearSampling( ) const
+{
+    // Must be initialized.
+    if ( !mManager || mInfo.format == cgBufferFormat::Unknown )
+        return false;
+
+    // Query the buffer format enumerator for support.
+    const cgBufferFormatEnum & Formats = mManager->getBufferFormats();
+    cgUInt32 nCaps = Formats.getFormatCaps( mInfo.type, mInfo.format );
+    if ( (nCaps & cgBufferFormatCaps::CanSample) && (nCaps & cgBufferFormatCaps::CanLinearFilter) )
+        return true;
+
+    // Unsupported.
+    return false;
+}

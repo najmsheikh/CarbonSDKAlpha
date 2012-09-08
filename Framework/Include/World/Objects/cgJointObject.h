@@ -63,10 +63,23 @@ public:
     virtual ~cgJointObject( );
 
     //-------------------------------------------------------------------------
+    // Public Methods
+    //-------------------------------------------------------------------------
+    bool                        isBodyCollisionEnabled      ( ) const;
+    void                        enableBodyCollision         ( bool enable );
+
+    //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldObject)
     //-------------------------------------------------------------------------
     virtual bool                getSubElementCategories     ( cgObjectSubElementCategory::Map & categories ) const;
     virtual void                applyObjectRescale          ( cgFloat scale );
+
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods (Overrides cgWorldComponent)
+    //-------------------------------------------------------------------------
+    virtual bool                onComponentCreated          ( cgComponentCreatedEventArgs * e );
+    virtual bool                onComponentLoading          ( cgComponentLoadingEventArgs * e );
+    virtual bool                createTypeTables            ( const cgUID & typeIdentifier );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
@@ -78,6 +91,26 @@ public:
     // Public Virtual Methods (Overrides DisposableScriptObject)
     //-------------------------------------------------------------------------
     virtual void                dispose                     ( bool disposeBase );
+
+protected:
+    //-------------------------------------------------------------------------
+    // Protected Methods
+    //-------------------------------------------------------------------------
+    void                        prepareQueries              ( );
+    bool                        insertComponentData         ( );
+
+    //-------------------------------------------------------------------------
+    // Protected Members
+    //-------------------------------------------------------------------------
+    bool    mBodyCollision;
+
+    //-------------------------------------------------------------------------
+    // Protected Static Variables
+    //-------------------------------------------------------------------------
+    // Cached database queries.
+    static cgWorldQuery     mInsertBaseJoint;
+    static cgWorldQuery     mUpdateBaseJointProperties;
+    static cgWorldQuery     mLoadBaseJoint;
 };
 
 //-----------------------------------------------------------------------------
@@ -110,6 +143,23 @@ public:
     //-------------------------------------------------------------------------
     virtual const cgUID           & getReferenceType            ( ) const { return RTID_JointNode; }
     virtual bool                    queryReferenceType          ( const cgUID & type ) const;
+
+    //-------------------------------------------------------------------------
+    // Public Inline Methods
+    //-------------------------------------------------------------------------
+    // Object Property 'Get' Routing
+    inline bool isBodyCollisionEnabled( ) const
+    {
+        cgAssert(mReferencedObject);
+        return ((cgJointObject*)mReferencedObject)->isBodyCollisionEnabled( );
+    }
+
+    // Object Property 'Set' Routing
+    inline void enableBodyCollision( bool enable )
+    {
+        cgAssert(mReferencedObject);
+        ((cgJointObject*)mReferencedObject)->enableBodyCollision( enable );
+    }
 };
 
 #endif // !_CGE_CGJOINTOBJECT_H_

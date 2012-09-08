@@ -497,7 +497,6 @@ protected:
     //-------------------------------------------------------------------------
     static cgWorldQuery     mInsertMaterialUsage;
     static cgWorldQuery     mDeleteMaterialUsage;
-    static cgWorldQuery     mUpdateLandscapeRef;
     static cgWorldQuery     mLoadObjectNodes;
     static cgWorldQuery     mLoadChildObjectNodes;
 };

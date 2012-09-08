@@ -1700,7 +1700,7 @@ void cgHemisphereLightNode::onComponentModified( cgComponentModifiedEventArgs * 
     } // End if Range | RangeAdjust | ApplyRescale
 
     // Call base class implementation last
-    cgObjectNode::onComponentModified( e );
+    cgLightNode::onComponentModified( e );
 }
 
 //-----------------------------------------------------------------------------

@@ -29,6 +29,8 @@
 //-----------------------------------------------------------------------------
 // Forward Declarations
 //-----------------------------------------------------------------------------
+class cgToneMapProcessor;
+class cgAntialiasProcessor;
 
 //-----------------------------------------------------------------------------
 // Main Class Definitions
@@ -53,11 +55,13 @@ public:
         cgInt32         levelIndex;
         cgFloat         intensity;
         cgBlurOpDesc    blurOp;
+		cgFloat         cacheBlendAmount;
+		cgFloat         cacheBlendRate;
 
         // Constructors
         GlareStepDesc() {}
-        GlareStepDesc( cgInt32 _levelIndex, cgFloat _levelIntensity, cgInt32 _blurPassCount, cgInt32 _blurPixelRadius, cgFloat _blurDistanceFactor ) :
-            levelIndex( _levelIndex ), intensity( _levelIntensity ), blurOp( _blurPassCount, _blurPixelRadius, _blurDistanceFactor ) {}
+        GlareStepDesc( cgInt32 _levelIndex, cgFloat _levelIntensity, cgInt32 _blurPassCount, cgInt32 _blurPixelRadius, cgFloat _blurDistanceFactor, cgFloat _cacheBlendAmount, cgFloat _cacheBlendRate ) :
+            levelIndex( _levelIndex ), intensity( _levelIntensity ), blurOp( _blurPassCount, _blurPixelRadius, _blurDistanceFactor ), cacheBlendAmount(_cacheBlendAmount), cacheBlendRate(_cacheBlendRate) {}
     };
     CGE_VECTOR_DECLARE( GlareStepDesc, GlareStepArray )
 
@@ -72,8 +76,11 @@ public:
     //-------------------------------------------------------------------------
     void            setBrightThreshold      ( cgFloat minimum, cgFloat maximum );
     void            setBrightThreshold      ( const cgRangeF & range );
+	void            setGlareAmount          ( cgFloat amount );
+	void            setCacheValues          ( cgFloat amount, cgFloat rate );
     void            setGlareSteps           ( const GlareStepArray & steps );
-    bool            execute                 ( const cgRenderTargetHandle & target, cgResampleChain * chain0, cgResampleChain * chain1, bool useCache );
+    bool            execute                 ( const cgRenderTargetHandle & target, cgResampleChain * chain0, cgResampleChain * chain1, float alphaMaskAmt );
+	void            setToneMapper           ( cgToneMapProcessor * toneMapper );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgImageProcessor)
@@ -90,16 +97,22 @@ protected:
     // Protected Structures
     //-------------------------------------------------------------------------
     // Constant buffers
-    struct _cbUpSample
+    struct _cbUpdateCache
     {
-        float  sourceIntensity;
-        float  destinationIntensity;
+        float blendAmount;
+        float blendRate;
     };
+
+	struct _cbAddLayer
+	{
+		float layerWeight;
+	};
 
     struct _cbBrightPass
     {
         float     brightRangeScale;
         float     brightRangeBias;
+		float     alphaMaskAmount;
         cgVector2 textureSizeRecip;
     };
 
@@ -108,33 +121,36 @@ protected:
     //-------------------------------------------------------------------------
     void            brightPass              ( );
     void            downsampleAndBlur       ( );
-    void            updateCache             ( );
-    void            composite               ( );
+	void			updateCache				( size_t levelIndex );
     size_t          getGlareStepIndex       ( size_t levelIndex );
+	void			computeAnamorphicFlares ( size_t levelIndex );
 
-    //-------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
     cgSurfaceShaderHandle   mGlareShader;
     cgConstantBufferHandle  mBrightPassConstants;
-    cgConstantBufferHandle  mUpSampleConstants;
-    cgRenderTargetHandle    mGlarePrevious;         // Glare (previous frame)
-    cgRenderTargetHandle    mGlareCurrent;          // Glare (current frame)
+    cgConstantBufferHandle  mUpdateCacheConstants;
+	cgConstantBufferHandle  mAddLayerConstants;
+	cgBlendStateHandle      mLayerBlendState;
+
     cgSampler             * mPointSampler;
     cgSampler             * mLinearSampler;
-    cgSampler             * mPreviousCacheSampler;
-    
+	cgSampler             * mLuminanceSampler;
+	cgToneMapProcessor    * mToneMapper;
+
     // Configuration
-    cgRangeF                mBrightThreshold;
-    bool                    mHDREnabled;
+	cgFloat                 mGlareAmount;
+	cgRangeF                mBrightThreshold;
     _cbBrightPass           mBrightPassConfig;
+	_cbUpdateCache          mUpdateCacheConfig;
     GlareStepArray          mSteps;
+	bool					mAnamorphicFlares;
 
     // Data retained during execution.
     cgRenderTargetHandle    mOperationTarget;
     cgResampleChain       * mResampleChain0;
     cgResampleChain       * mResampleChain1;
-    bool                    mUseCache;
 };
 
 #endif // !_CGE_CGGLAREPROCESSOR_H_

@@ -91,49 +91,50 @@ public:
     //-------------------------------------------------------------------------
     // Public Static Functions
     //-------------------------------------------------------------------------
-    static cgTexture      * createInstance      ( cgUInt32 referenceId, const cgInputStream & stream, cgRenderDriver * driver, cgInt32 mipLevels = -1 );
-    static cgTexture      * createInstance      ( cgUInt32 referenceId, const cgImageInfo & description );
+    static cgTexture      * createInstance          ( cgUInt32 referenceId, const cgInputStream & stream, cgRenderDriver * driver, cgInt32 mipLevels = -1 );
+    static cgTexture      * createInstance          ( cgUInt32 referenceId, const cgImageInfo & description );
 
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    const cgImageInfo     & getInfo             ( ) const;
-    cgSize                  getSize             ( ) const;
-    void                    configureMedia      ( const MediaConfig & config );
-    CubeFace                getCurrentCubeFace  ( ) const;
-    void                    setCurrentCubeFace  ( CubeFace face );
+    const cgImageInfo     & getInfo                 ( ) const;
+    cgSize                  getSize                 ( ) const;
+    void                    configureMedia          ( const MediaConfig & config );
+    CubeFace                getCurrentCubeFace      ( ) const;
+    void                    setCurrentCubeFace      ( CubeFace face );
+    bool                    supportsLinearSampling  ( ) const;
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
-    virtual void            update              ( );
-    virtual void          * lock                ( cgUInt32 & pitch, cgUInt32 flags ) = 0;
-    virtual void          * lock                ( const cgRect & bounds, cgUInt32 & pitch, cgUInt32 flags ) = 0;
-    virtual void            unlock              ( bool updateMips = false ) = 0;
-    virtual bool            getImageData        ( cgImage & imageOut ) = 0;
-    virtual bool            updateMipLevels     ( ) = 0;
+    virtual void            update                  ( );
+    virtual void          * lock                    ( cgUInt32 & pitch, cgUInt32 flags ) = 0;
+    virtual void          * lock                    ( const cgRect & bounds, cgUInt32 & pitch, cgUInt32 flags ) = 0;
+    virtual void            unlock                  ( bool updateMips = false ) = 0;
+    virtual bool            getImageData            ( cgImage & imageOut ) = 0;
+    virtual bool            updateMipLevels         ( ) = 0;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (cgResource)
     //-------------------------------------------------------------------------
-    virtual bool            loadResource        ( );
-    virtual bool            unloadResource      ( );
+    virtual bool            loadResource            ( );
+    virtual bool            unloadResource          ( );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (giMediaListener)
     //-------------------------------------------------------------------------
-    virtual giEXResult      onNewVideoFrame     ( void * data, cgUInt32 size );
+    virtual giEXResult      onNewVideoFrame         ( void * data, cgUInt32 size );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
     //-------------------------------------------------------------------------
-    virtual const cgUID   & getReferenceType    ( ) const { return RTID_TextureResource; }
-    virtual bool            queryReferenceType  ( const cgUID & type ) const;
+    virtual const cgUID   & getReferenceType        ( ) const { return RTID_TextureResource; }
+    virtual bool            queryReferenceType      ( const cgUID & type ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
     //-------------------------------------------------------------------------
-    virtual void            dispose             ( bool disposeBase );
+    virtual void            dispose                 ( bool disposeBase );
     
 protected:
     //-------------------------------------------------------------------------

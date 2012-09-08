@@ -33,6 +33,7 @@
 #include <Resources/cgConstantBuffer.h>
 #include <Resources/cgRenderTarget.h>
 #include <Resources/cgBufferFormatEnum.h>
+#include <Math/cgMathUtility.h>
 
 // ToDo: 6767 -- Cache all shaders.
 
@@ -68,15 +69,11 @@ cgToneMapProcessor::cgToneMapProcessor(  )
     mToneMapConfig.keyBias      = 0.0f;
     mToneMapConfig.whiteScale   = 1.0f;
     mToneMapConfig.whiteBias    = 0.0f;
-    mToneMapConfig.prF          = 1.0f;
-    mToneMapConfig.prM          = 1.0f;
-    mToneMapConfig.prC          = 1.0f;
-    mToneMapConfig.prA          = 1.0f;
     mLuminanceConfig.minimumLuminance   = 0.0f;
     mLuminanceConfig.maximumLuminance   = 1.0f;
-    mLuminanceConfig.coneTime		    = 0.5f;
-    mLuminanceConfig.rodTime			= 0.5f;
-    mLuminanceConfig.rodSensitivity     = 1;
+    mLuminanceConfig.coneTime		    = 0.000001f;
+    mLuminanceConfig.rodTime			= 0.000001f;
+    mLuminanceConfig.rodSensitivity     = 100.0f;
 }
 
 //-----------------------------------------------------------------------------
@@ -108,7 +105,8 @@ void cgToneMapProcessor::dispose( bool disposeBase )
     mLuminanceAvgTarget.close( true );
     mLuminanceCurrTarget.close( true );
     mLuminancePrevTarget.close( true );
-    
+	mLuminanceBuffer.close( true );
+
     // Release memory
     if ( mLightingSampler )
         mLightingSampler->scriptSafeDispose();
@@ -148,15 +146,11 @@ void cgToneMapProcessor::dispose( bool disposeBase )
     mToneMapConfig.keyBias      = 0.0f;
     mToneMapConfig.whiteScale   = 1.0f;
     mToneMapConfig.whiteBias    = 0.0f;
-    mToneMapConfig.prF          = 1.0f;
-    mToneMapConfig.prM          = 1.0f;
-    mToneMapConfig.prC          = 1.0f;
-    mToneMapConfig.prA          = 1.0f;
     mLuminanceConfig.minimumLuminance   = 0.0f;
     mLuminanceConfig.maximumLuminance   = 1.0f;
-    mLuminanceConfig.coneTime		    = 1.10f;
-    mLuminanceConfig.rodTime			= 1.10f;
-    mLuminanceConfig.rodSensitivity     = 0.04f;
+	mLuminanceConfig.coneTime		    = 0.000001f;
+	mLuminanceConfig.rodTime			= 0.000001f;
+	mLuminanceConfig.rodSensitivity     = 100.0f;
     
     // Dispose base if requested.
     if ( disposeBase )
@@ -187,13 +181,28 @@ bool cgToneMapProcessor::initialize( cgRenderDriver * driver )
         return false;
     if ( !resources->createConstantBuffer( &mLuminanceConstants, mToneMapShader, _T("cbLuminance"), cgDebugSource() ) )
         return false;
-    cgAssert( mToneMapConstants->getDesc().length == sizeof(_cbToneMapping) );
+	if ( !resources->createConstantBuffer( &mDownsampleConstants, mToneMapShader, _T("cbDownsample"), cgDebugSource() ) )
+		return false;
+
+	cgAssert( mToneMapConstants->getDesc().length == sizeof(_cbToneMapping) );
     cgAssert( mLuminanceConstants->getDesc().length == sizeof(_cbLuminance) );
+	cgAssert( mDownsampleConstants->getDesc().length == sizeof(_cbDownsample) );
+
+	// Select an appropriate floating point format.
+	cgImageInfo description;
+	description.width       = 512;
+	description.height      = 512;
+	description.mipLevels   = 1;
+	const cgBufferFormatEnum & formats = resources->getBufferFormats();
+	description.format = formats.getBestFormat( cgBufferType::RenderTarget, cgFormatSearchFlags::HalfPrecisionFloat | cgFormatSearchFlags::FourChannels );
+
+	// Create the target.
+	if ( !resources->createRenderTarget( &mLuminanceBuffer, description, 0, _T("Core::Tonemapper::LuminanceBuffer"), cgDebugSource() ) )
+		return false;
 
     // Create the render targets we will need for luminance caching. Start
     // by selecting a good four channel floating point format.
     cgImageInfo targetDesc;
-    const cgBufferFormatEnum & formats = resources->getBufferFormats();
     targetDesc.format = formats.getBestFourChannelFormat( cgBufferType::RenderTarget, true, true, false );
     if ( targetDesc.format == cgBufferFormat::Unknown )
     {
@@ -203,8 +212,8 @@ bool cgToneMapProcessor::initialize( cgRenderDriver * driver )
     } // End if no format
 
     // Create LuminanceCache
-    targetDesc.width  = 2;
-    targetDesc.height = 2;
+    targetDesc.width  = 1;
+    targetDesc.height = 1;
     targetDesc.mipLevels = 1;
     if ( !resources->createRenderTarget( &mLuminanceCacheTarget, targetDesc, cgResourceFlags::ForceNew, _T("Core::ToneMapping::LuminanceCache"), cgDebugSource() ) )
         return false;
@@ -247,6 +256,63 @@ bool cgToneMapProcessor::initialize( cgRenderDriver * driver )
 }
 
 //-----------------------------------------------------------------------------
+// Name : openLuminanceBuffers()
+/// <summary>
+/// Gets access to the render view relative luminance buffers needed for tonemapping
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgToneMapProcessor::openLuminanceBuffers( cgRenderView * activeView )
+{
+	// Choose the buffer format we want for luminance processing (16-bit float preferable)
+	cgResourceManager * resources = mDriver->getResourceManager();
+	const cgBufferFormatEnum & formats = resources->getBufferFormats();
+	cgBufferFormat::Base format = formats.getBestFormat( cgBufferType::RenderTarget, cgFormatSearchFlags::HalfPrecisionFloat | cgFormatSearchFlags::FourChannels );
+	if ( format == cgBufferFormat::Unknown )
+		format = formats.getBestFormat( cgBufferType::RenderTarget, cgFormatSearchFlags::FloatingPoint | cgFormatSearchFlags::FourChannels );
+	if ( format == cgBufferFormat::Unknown )
+		return false;
+
+	// Choose the buffer size we want to use (basically one size smaller than the floored power of 2 of the current view)
+	cgSize  viewSize   = activeView->getSize();
+	cgInt32 bufferSize = (int)powf( 2.0f, (cgFloat)cgMathUtility::log2( max( viewSize.width, viewSize.height ) ) - 1 );
+
+	// Get the main luminance sampling buffer (scratch)
+	cgString bufferName = cgString::format( _T("System::Core::Scratch_%ix%i"), bufferSize, bufferSize );
+	//mLuminanceBuffer = activeView->getRenderSurface( format, viewSize, viewSize, FIXED, ..., bufferName );
+
+	// Get view relative cached luminance buffers
+	bufferName = cgString::format( _T("Tonemapper::LuminanceCache2x2_%i"), activeView->getReferenceId() );
+	//mLuminanceCacheTarget = activeView->getRenderSurface( format, 2, 2, FIXED, ..., bufferName );
+
+	bufferName = cgString::format( _T("Tonemapper::LuminanceAvg1x1_%i"), activeView->getReferenceId() );
+	//mLuminanceAvgTarget = activeView->getRenderSurface( format, 1, 1, FIXED, ..., bufferName );
+
+	bufferName = cgString::format( _T("Tonemapper::LuminanceCurr1x1_%i"), activeView->getReferenceId() );
+	//mLuminanceCurrTarget = activeView->getRenderSurface( format, 1, 1, FIXED, ..., bufferName );
+
+	bufferName = cgString::format( _T("Tonemapper::LuminancePrev1x1_%i"), activeView->getReferenceId() );
+	//mLuminancePrevTarget = activeView->getRenderSurface( format, 1, 1, FIXED, ..., bufferName );
+
+	// Success
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// Name : closeLuminanceBuffers()
+/// <summary>
+/// Releases access to the buffers retrieved during the openLuminanceBuffers call.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgToneMapProcessor::closeLuminanceBuffers( )
+{
+	//mLuminanceBuffer.close();
+	//mLuminanceCacheTarget.close();
+	//mLuminanceAvgTarget.close();
+	//mLuminanceCurrTarget.close();
+	//mLuminancePrevTarget.close();
+}
+
+//-----------------------------------------------------------------------------
 // Name : execute()
 /// <summary>
 /// Post-processes the rendered scene data in order to compute adaptive
@@ -260,11 +326,15 @@ bool cgToneMapProcessor::execute( cgRenderView * activeView, cgFloat timeDelta, 
     if ( !mToneMapShader.getResource(true) || !mToneMapShader.isLoaded() )
         return false;
 
-    // Set shader constants
-    mToneMapConstants->updateBuffer( 0, 0, &mToneMapConfig );
-    mLuminanceConstants->updateBuffer( 0, 0, &mLuminanceConfig );
-    mDriver->setConstantBufferAuto( mToneMapConstants );
-    mDriver->setConstantBufferAuto( mLuminanceConstants );
+	// Get access to the luminance buffers we'll need 
+	if ( !openLuminanceBuffers( activeView ) )
+		return false;
+
+	// Set shader constants
+	mToneMapConstants->updateBuffer( 0, 0, &mToneMapConfig );
+	mLuminanceConstants->updateBuffer( 0, 0, &mLuminanceConfig );
+	mDriver->setConstantBufferAuto( mToneMapConstants );
+	mDriver->setConstantBufferAuto( mLuminanceConstants );
 
     // If current elapsed time exceeds our sampling rate then we need
     // to recompute our average scene luminance.
@@ -272,16 +342,11 @@ bool cgToneMapProcessor::execute( cgRenderView * activeView, cgFloat timeDelta, 
     const bool useRateLimiting = (mLuminanceSamplingRate >= CGE_EPSILON);
     if ( !useRateLimiting || mAccumulatedTime >= (1.0f / mLuminanceSamplingRate) )
     {
-        // Create and / or retrieve an initial luminance texture that is 
-        // half the size of the source lighting buffer.
-        cgImageInfo sourceInfo = source->getInfo();
-        cgRenderTargetHandle luminanceTarget = activeView->getRenderSurface( sourceInfo.format, 0.5f, 0.5f, _T("Core::ToneMapping::Luminance") );
-
         // Build a down-sample chain for the luminance buffer
-        mLuminanceChain->setSource( activeView, luminanceTarget, 0, _T("Core::ToneMapping::LuminanceChain") );
+        mLuminanceChain->setSource( mLuminanceBuffer, _T("Core::ToneMapping::LuminanceChain") );
 
         // Compute and down sample the luminance collected from the rendered scene.
-        if ( computeLuminance( source, luminanceTarget ) && downSampleLuminance() )
+        if ( computeLuminance( source, mLuminanceBuffer ) && downSampleLuminance() )
         {
             // Update the cache with the final luminance data
             updateLuminanceCache();
@@ -302,6 +367,9 @@ bool cgToneMapProcessor::execute( cgRenderView * activeView, cgFloat timeDelta, 
     // Run the tone mapping operation
     toneMap( source, destination );
     
+	// Close the buffers
+	closeLuminanceBuffers();
+
     // Success!
     return true;
 }
@@ -318,7 +386,7 @@ bool cgToneMapProcessor::computeLuminance( const cgTextureHandle & source, const
     mDriver->setDepthStencilState( mDisabledDepthState );
     mDriver->setBlendState( mDefaultRGBABlendState );
     mDriver->setRasterizerState( cgRasterizerStateHandle::Null );
-
+	
     // Bind textures and set sampler states
     mLightingSampler->apply( source );
 
@@ -342,8 +410,54 @@ bool cgToneMapProcessor::computeLuminance( const cgTextureHandle & source, const
 //-----------------------------------------------------------------------------
 bool cgToneMapProcessor::downSampleLuminance( )
 {
-    // Downsample the results
-    downSample( mLuminanceChain, cgImageOperation::DownSampleAverage );
+	_cbDownsample dowsampleConfig;
+	
+	// Downsample the results
+	bool bAverageOnly = false;
+	if ( bAverageOnly )
+	{
+	    downSample( mLuminanceChain, cgImageOperation::DownSampleAverage );
+	}
+	else
+	{
+		// Set necessary states
+		mDriver->setDepthStencilState( mDisabledDepthState );
+		mDriver->setBlendState( mDefaultRGBABlendState );
+		mDriver->setRasterizerState( cgRasterizerStateHandle::Null );
+
+		// Use a null vertex shader for all screen quad draws
+		mToneMapShader->selectVertexShader( cgVertexShaderHandle::Null );
+
+		// Select shaders
+		if ( !mToneMapShader->selectPixelShader( _T("luminanceDownsample") ) )
+			return false;
+
+		cgInt numLevels = (cgInt)mLuminanceChain->getLevelCount();
+		for ( cgInt i = 0; i < (numLevels - 1); ++i )
+		{
+			const cgRenderTargetHandle & hSrc  = mLuminanceChain->getLevel( i );
+			const cgRenderTargetHandle & hDest = mLuminanceChain->getLevel( i + 1 );
+
+			// Compute the texture size
+			const cgTexture * pSrcTexture = hSrc.getResourceSilent();
+			cgFloat srcSize = (cgFloat)pSrcTexture->getSize().width;
+
+			// Set core shader constants
+			dowsampleConfig.luminanceTextureSize = cgVector4( srcSize, srcSize, 1.0f / srcSize, 1.0f / srcSize );
+			mDownsampleConstants->updateBuffer( 0, 0, &dowsampleConfig );
+			mDriver->setConstantBufferAuto( mDownsampleConstants );
+
+			// Bind textures and set sampler state
+			mLightingPointSampler->apply( hSrc );
+
+			// Draw
+			if ( mDriver->beginTargetRender( hDest ) )
+			{
+				mDriver->drawScreenQuad( );
+				mDriver->endTargetRender( );
+			}
+		}
+	}
 
     // Copy into the "average texture"
     cgInt32 bottomLevel = mLuminanceChain->getLevelCount() - 1;
@@ -377,32 +491,32 @@ bool cgToneMapProcessor::updateLuminanceCache( )
     // Render to luminance cache
     if ( mDriver->beginTargetRender( mLuminanceCacheTarget, cgDepthStencilTargetHandle::Null ) )
     {
-        // Create a viewport for updating the luminance cache
-        cgViewport viewport;
-        viewport.x        = 0; 
-        viewport.y        = 0;
-        viewport.width    = 1;
-        viewport.height   = 1;
-        viewport.minimumZ = 0.0f;
-        viewport.maximumZ = 1.0f;
+        //// Create a viewport for updating the luminance cache
+        //cgViewport viewport;
+        //viewport.x        = 0; 
+        //viewport.y        = 0;
+        //viewport.width    = 1;
+        //viewport.height   = 1;
+        //viewport.minimumZ = 0.0f;
+        //viewport.maximumZ = 1.0f;
 
-        // Select correct pixel location that contains the information for 
-        // this frame. If cache is turned off, then always use the upper 
-        // left texel for storage. Otherwise, there are four possible 
-        // locations (2x2 texels) to target. 
-        if ( mUseLuminanceCache )
-        {
-            viewport.x = mCurrentCacheFrame % 2;
-            viewport.y = mCurrentCacheFrame / 2;
-            
-            // Increment frame and wrap where appropriate.
-            if ( ++mCurrentCacheFrame > 3 )
-                mCurrentCacheFrame = 0;
-        
-        } // End if use caching
+        //// Select correct pixel location that contains the information for 
+        //// this frame. If cache is turned off, then always use the upper 
+        //// left texel for storage. Otherwise, there are four possible 
+        //// locations (2x2 texels) to target. 
+        //if ( mUseLuminanceCache )
+        //{
+        //    viewport.x = mCurrentCacheFrame % 2;
+        //    viewport.y = mCurrentCacheFrame / 2;
+        //    
+        //    // Increment frame and wrap where appropriate.
+        //    if ( ++mCurrentCacheFrame > 3 )
+        //        mCurrentCacheFrame = 0;
+        //
+        //} // End if use caching
 
         // Override viewport set by target and run the copy operation.
-        mDriver->setViewport( &viewport );
+        //mDriver->setViewport( &viewport );
         mDriver->drawClipQuad( );
         mDriver->endTargetRender( );
 
@@ -432,6 +546,10 @@ bool cgToneMapProcessor::adaptLuminance()
     // Preload time-smoothed luminance data for tone-mapping
     mLuminanceCacheSampler->apply( mLuminanceCacheTarget );
     mLuminancePrevSampler->apply( mLuminancePrevTarget );
+
+	// Set shader constants
+	mLuminanceConstants->updateBuffer( 0, 0, &mLuminanceConfig );
+	mDriver->setConstantBufferAuto( mLuminanceConstants );
 
     // Set shaders
     if ( !selectClipQuadVertexShader() ||
@@ -588,7 +706,7 @@ void cgToneMapProcessor::setKeyAdjust( cgFloat scale, cgFloat bias )
 //-----------------------------------------------------------------------------
 void cgToneMapProcessor::setLuminanceAdaptation( cgFloat coneTime, cgFloat rodTime, cgFloat rodSensitivity )
 {
-    mLuminanceConfig.coneTime = coneTime;
-    mLuminanceConfig.rodTime = rodTime;
+	mLuminanceConfig.coneTime       = coneTime > 0.0f ? 1.0f / coneTime : 1.0f;
+    mLuminanceConfig.rodTime        = rodTime  > 0.0f ? 1.0f / rodTime  : 1.0f;
     mLuminanceConfig.rodSensitivity = rodSensitivity;
 }

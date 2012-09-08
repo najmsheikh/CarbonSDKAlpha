@@ -355,7 +355,7 @@ void cgWorld::rollbackTransaction( )
 // Name : rollbackTransaction ()
 /// <summary>
 /// Rollback the prior transaction queries to the specified SAVEPOINT without 
-/// commiting.
+/// committing.
 /// </summary>
 //-----------------------------------------------------------------------------
 void cgWorld::rollbackTransaction( const cgString & savepoint )
@@ -368,7 +368,7 @@ void cgWorld::rollbackTransaction( const cgString & savepoint )
 // Name : rollbackTransaction ()
 /// <summary>
 /// Rollback the prior transaction queries to the specified SAVEPOINT without 
-/// commiting. Optionally the caller can choose to restart the transaction
+/// committing. Optionally the caller can choose to restart the transaction
 /// by specifying 'true' the final parameter (default false).
 /// </summary>
 //-----------------------------------------------------------------------------

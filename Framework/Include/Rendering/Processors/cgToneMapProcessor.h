@@ -51,9 +51,11 @@ public:
     //-------------------------------------------------------------------------
     enum ToneMapMethod
     {
-        Photographic  = 0,
-        Filmic        = 1,
-        ExponentialTM = 2,
+        Photographic           = 0,
+		PhotographicWhitePoint = 1,
+        Filmic                 = 2,
+		FilmicHable            = 3,
+        Exponential            = 4,
     };
 
     //-------------------------------------------------------------------------
@@ -65,17 +67,19 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    void            enableLuminanceCache    ( bool enable );
-    void            setToneMapMethod        ( ToneMapMethod method );
-    void            setLuminanceSampleRate  ( cgFloat rate );
-    void            setLuminanceRange       ( cgFloat minimum, cgFloat maximum );
-    void            setLuminanceRange       ( const cgRangeF & range );
-    void            setWhitePointAdjust     ( cgFloat scale, cgFloat bias );
-    void            setKeyAdjust            ( cgFloat scale, cgFloat bias );
-    void            setLuminanceAdaptation  ( cgFloat coneTime, cgFloat rodTime, cgFloat rodSensitivity );
-    bool            execute                 ( cgRenderView * activeView, cgFloat timeDelta, const cgTextureHandle & source, const cgRenderTargetHandle & destination );
+    void					enableLuminanceCache    ( bool enable );
+    void					setToneMapMethod        ( ToneMapMethod method );
+    void					setLuminanceSampleRate  ( cgFloat rate );
+    void					setLuminanceRange       ( cgFloat minimum, cgFloat maximum );
+    void					setLuminanceRange       ( const cgRangeF & range );
+    void					setWhitePointAdjust     ( cgFloat scale, cgFloat bias );
+    void					setKeyAdjust            ( cgFloat scale, cgFloat bias );
+    void					setLuminanceAdaptation  ( cgFloat coneTime, cgFloat rodTime, cgFloat rodSensitivity );
+    bool					execute                 ( cgRenderView * activeView, cgFloat timeDelta, const cgTextureHandle & source, const cgRenderTargetHandle & destination );
+	cgInt32					getMethod               ( ){ return mMethod; }
+	cgRenderTargetHandle &  getLuminanceData		( ){ return mLuminanceCurrTarget; } // ToDo: 6767 - Remove this AFTER we fix the render view target retrieval
 
-    //-------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgImageProcessor)
     //-------------------------------------------------------------------------
     virtual bool    initialize              ( cgRenderDriver * driver );
@@ -96,10 +100,6 @@ protected:
         cgFloat keyBias;
         cgFloat whiteScale;
         cgFloat whiteBias;
-        cgFloat prF;
-        cgFloat prM;
-        cgFloat prC;
-        cgFloat prA;
     };
     struct _cbLuminance
     {
@@ -111,6 +111,11 @@ protected:
         cgVector4 luminanceTextureSize;
         cgVector4 cacheTextureSize;
     };
+
+	struct _cbDownsample
+	{
+		cgVector4 luminanceTextureSize;
+	};
     
     //-------------------------------------------------------------------------
     // Protected Methods
@@ -120,6 +125,8 @@ protected:
     bool            updateLuminanceCache    ( );
     bool            adaptLuminance          ( );
     bool            toneMap                 ( const cgTextureHandle & source, const cgRenderTargetHandle & destination );
+	bool			openLuminanceBuffers    ( cgRenderView * activeView );
+	void			closeLuminanceBuffers   ( );
 
     //-------------------------------------------------------------------------
     // Protected Variables
@@ -127,10 +134,14 @@ protected:
     cgSurfaceShaderHandle   mToneMapShader;
     cgConstantBufferHandle  mToneMapConstants;
     cgConstantBufferHandle  mLuminanceConstants;
+	cgConstantBufferHandle  mDownsampleConstants;
+
     cgRenderTargetHandle    mLuminanceCacheTarget;
     cgRenderTargetHandle    mLuminanceAvgTarget;
     cgRenderTargetHandle    mLuminanceCurrTarget;
     cgRenderTargetHandle    mLuminancePrevTarget;
+	cgRenderTargetHandle    mLuminanceBuffer;
+
     cgSampler             * mLightingSampler;
     cgSampler             * mLightingPointSampler;
     cgSampler             * mLuminanceSampler;

@@ -196,10 +196,10 @@ class AtmosphericShader : ISurfaceShader
 		<?skyColor = sampleCube( sSkyBoxTex, sSkyBox, eyeDir );?>	
 
 		if ( decodeSRGB )
-			<?skyColor.rgb = pow( skyColor.rgb, 2.2 );?>
+			<?skyColor.rgb = pow( skyColor.rgb, 2.2 );?>  // ToDo: 6767 - Get intensity from CF!
 
 		<?	
-			skyColor  *= _skyIntensity; 
+			//skyColor  *= _skyIntensity; ToDo: 6767 - Get intensity from CF
 			skyColor.a = dot( skyColor.rgb, float3( 0.2125, 0.7154, 0.0721 ) );
 		?>
 

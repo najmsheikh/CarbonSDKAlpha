@@ -231,7 +231,8 @@ class ImageProcessingShader : ISurfaceShader
         // Initialize to 0
         color = 0;
         ?>
-        if ( imageOperation == ImageOperation::SetColorRGB || imageOperation == ImageOperation::SetColorRGBA || imageOperation == ImageOperation::SetColorA )
+        if ( imageOperation == ImageOperation::SetColorRGB || imageOperation == ImageOperation::SetColorRGBA || imageOperation == ImageOperation::SetColorA ||
+             imageOperation == ImageOperation::ScaleUserColorRGBA || imageOperation == ImageOperation::ScaleUserColorRGB || imageOperation == ImageOperation::ScaleUserColorA )
         {
 			<?color = userColor;?>        
         }
@@ -548,7 +549,7 @@ class ImageProcessingShader : ISurfaceShader
 		// Define shader inputs.
         <?in
 			float4  screenPosition : SV_POSITION;
-            float2  texCoords      : TEXCOORD0;
+            float2  texCoords2      : TEXCOORD0;
         ?>
 
 		// Define shader outputs.
@@ -559,6 +560,7 @@ class ImageProcessingShader : ISurfaceShader
 		// Constant buffer usage.
 		<?cbufferrefs
 			cbImageProcessing;
+			_cbCamera;
 		?>
 
 		/////////////////////////////////////////////
@@ -570,6 +572,9 @@ class ImageProcessingShader : ISurfaceShader
 		<?
 		float4 sample, currentColor;
 		float  weight, totalWeight = 0;
+		
+		float2 texCoords = (screenPosition.xy + float2(0.5,0.5)) * _targetSize.zw; 
+		
 		?>
 				
 		// Fast option for bilinear 2x2 average downsampling with no alpha weighting
@@ -2036,6 +2041,9 @@ class ImageProcessingShader : ISurfaceShader
 			case ImageOperation::SetColorRGBA:
 			case ImageOperation::SetColorRGB:
 			case ImageOperation::SetColorA:
+			case ImageOperation::ScaleUserColorRGBA:
+			case ImageOperation::ScaleUserColorRGB:
+			case ImageOperation::ScaleUserColorA:
 				<?$outputVariable = userColor;?>
 			    break;
 			case ImageOperation::CopyAlpha:

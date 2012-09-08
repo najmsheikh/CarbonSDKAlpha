@@ -3,6 +3,7 @@
 // Required headers
 #include <Scripting/cgScriptPackage.h>
 #include <Rendering/Processors/cgGlareProcessor.h>
+#include <Rendering/Processors/cgTonemapProcessor.h>
 
 // Parent hierarchy
 namespace cgScriptPackages { namespace Core { namespace Rendering { namespace Processors {
@@ -36,12 +37,14 @@ namespace GlareProcessor
             registerDefaultCDA<cgGlareProcessor::GlareStepDesc>( engine, "GlareStepDesc" );
 
             // Register custom behaviors
-            BINDSUCCESS( engine->registerObjectBehavior( "GlareStepDesc", asBEHAVE_CONSTRUCT,  "void f(int, float, int, int, float)", asFUNCTIONPR(constructGlareStepDesc,(cgInt32, cgFloat, cgInt32, cgInt32, cgFloat, cgGlareProcessor::GlareStepDesc*),void), asCALL_CDECL_OBJLAST) );
+            BINDSUCCESS( engine->registerObjectBehavior( "GlareStepDesc", asBEHAVE_CONSTRUCT,  "void f(int, float, int, int, float, float, float)", asFUNCTIONPR(constructGlareStepDesc,(cgInt32, cgFloat, cgInt32, cgInt32, cgFloat, cgFloat, cgFloat, cgGlareProcessor::GlareStepDesc*),void), asCALL_CDECL_OBJLAST) );
 
             // Register properties
             BINDSUCCESS( engine->registerObjectProperty( "GlareStepDesc", "int levelIndex"   , offsetof(cgGlareProcessor::GlareStepDesc,levelIndex) ) );
             BINDSUCCESS( engine->registerObjectProperty( "GlareStepDesc", "float intensity"  , offsetof(cgGlareProcessor::GlareStepDesc,intensity) ) );
             BINDSUCCESS( engine->registerObjectProperty( "GlareStepDesc", "BlurOpDesc blurOp", offsetof(cgGlareProcessor::GlareStepDesc,blurOp) ) );
+			BINDSUCCESS( engine->registerObjectProperty( "GlareStepDesc", "float blendAmount", offsetof(cgGlareProcessor::GlareStepDesc,cacheBlendAmount) ) );
+			BINDSUCCESS( engine->registerObjectProperty( "GlareStepDesc", "float blendRate",   offsetof(cgGlareProcessor::GlareStepDesc,cacheBlendRate) ) );
 
             // Requires array type for several methods in the image processing interface.
             BINDSUCCESS( engine->registerObjectType( "GlareStepDesc[]", sizeof(std::vector<cgGlareProcessor::GlareStepDesc>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
@@ -63,9 +66,12 @@ namespace GlareProcessor
             // Register the object methods
             BINDSUCCESS( engine->registerObjectMethod( "GlareProcessor", "void setBrightThreshold( float, float )", asMETHODPR(cgGlareProcessor, setBrightThreshold, (cgFloat,cgFloat), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "GlareProcessor", "void setBrightThreshold( const RangeF &in )", asMETHODPR(cgGlareProcessor, setBrightThreshold, (const cgRangeF&), void), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "GlareProcessor", "void setGlareSteps( const array<GlareStepDesc> &in )", asMETHODPR(cgGlareProcessor, setGlareSteps, (const cgGlareProcessor::GlareStepArray&), void), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "GlareProcessor", "bool execute( const RenderTargetHandle &in, ResampleChain@+, ResampleChain@+, bool)", asMETHODPR(cgGlareProcessor, execute, (const cgRenderTargetHandle&, cgResampleChain*, cgResampleChain*, bool), bool), asCALL_THISCALL) );
-        }
+			BINDSUCCESS( engine->registerObjectMethod( "GlareProcessor", "void setCacheValues( float, float )", asMETHODPR(cgGlareProcessor, setCacheValues, (cgFloat,cgFloat), void), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "GlareProcessor", "void setGlareAmount( float )", asMETHODPR(cgGlareProcessor, setGlareAmount, (cgFloat), void), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "GlareProcessor", "void setGlareSteps( const array<GlareStepDesc> &in )", asMETHODPR(cgGlareProcessor, setGlareSteps, (const cgGlareProcessor::GlareStepArray&), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "GlareProcessor", "bool execute( const RenderTargetHandle &in, ResampleChain@+, ResampleChain@+, float)", asMETHODPR(cgGlareProcessor, execute, (const cgRenderTargetHandle&, cgResampleChain*, cgResampleChain*, cgFloat), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "GlareProcessor", "void setToneMapper( ToneMapProcessor@+ )", asMETHODPR(cgGlareProcessor, setToneMapper, (cgToneMapProcessor*), void), asCALL_THISCALL) );
+		}
 
         //---------------------------------------------------------------------
         //  Name : glareProcessorFactory () (Static)
@@ -86,10 +92,10 @@ namespace GlareProcessor
         /// constructor directly.
         /// </summary>
         //---------------------------------------------------------------------
-        static void constructGlareStepDesc( cgInt32 levelIndex, cgFloat levelIntensity, cgInt32 blurPassCount, cgInt32 blurPixelRadius, cgFloat blurDistanceFactor, cgGlareProcessor::GlareStepDesc *thisPointer )
+        static void constructGlareStepDesc( cgInt32 levelIndex, cgFloat levelIntensity, cgInt32 blurPassCount, cgInt32 blurPixelRadius, cgFloat blurDistanceFactor, cgFloat blendAmount, cgFloat blendRate, cgGlareProcessor::GlareStepDesc *thisPointer )
         {
             // Use placement new to allocate which will in turn call the constructor
-            new(thisPointer) cgGlareProcessor::GlareStepDesc( levelIndex, levelIntensity, blurPassCount, blurPixelRadius, blurDistanceFactor );
+            new(thisPointer) cgGlareProcessor::GlareStepDesc( levelIndex, levelIntensity, blurPassCount, blurPixelRadius, blurDistanceFactor, blendAmount, blendRate );
         }
 
     }; // End Class : Package

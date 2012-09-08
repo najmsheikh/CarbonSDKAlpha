@@ -25,21 +25,17 @@
 // Global Variables
 ///////////////////////////////////////////////////////////////////////////////
 // The maximum value permittable in our HDR computations
-const float MAX_HDR_FLOAT               = 65000.0f;
+const float MAX_HDR_FLOAT               = 60000.0f;
 
 // Conversion constants to/from linear and gamma space
 const float GAMMA_TO_LINEAR             = 2.2f;
 const float LINEAR_TO_GAMMA             = 1.0f / GAMMA_TO_LINEAR;
 
-// Roughness scaling value used in Oren-Nayer approximation
-const float ORENNAYER_ROUGHNESS_SCALE   = 0.0f;
-const float ORENNAYER_ROUGHNESS_BIAS    = 0.001f;
-
 // Specular gloss to power controls
 const float MAX_GLOSS_LEVELS            = 13; // Power of 2, thus maximum power = 8192
 
 // Maximum microfacet visibility term for specular lighting
-const float MAX_MICROFACET_VISIBILITY   = 0.0f;
+const float MAX_MICROFACET_VISIBILITY   = 2.0f;
 
 // Specular normalization term ((m+8)/(8pi)) Note: Set scale to 0 to disable.
 const float SPECULAR_NORMALIZE_SCALE    = 0.039788736f;    //0.125 (((m+2)/8) for Phong)

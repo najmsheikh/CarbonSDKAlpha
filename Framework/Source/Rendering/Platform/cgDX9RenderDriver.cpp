@@ -1335,10 +1335,6 @@ bool cgDX9RenderDriver::setMaterialTerms( const cgMaterialTerms & Terms )
     // structure concept so that we don't have to copy the variables one at a time
     // below -- memcpy instead.
 
-    // ToDo: Add support for emissive HDR scalar in Carbon Forge and
-    // pass to the effect here so that it can pre-shader multiply.
-    // Note: This is stored in cgMaterialTerms::EmissiveHDRScalar.
-
     // Update 'Material' constant buffer.
     cgConstantBuffer * pMaterialBuffer = mMaterialConstants.getResource( true );
     cgAssert( pMaterialBuffer != CG_NULL );
@@ -1352,22 +1348,25 @@ bool cgDX9RenderDriver::setMaterialTerms( const cgMaterialTerms & Terms )
 
     } // End if failed
 
-    // Update buffer.
-    pMaterialData->diffuse              = Terms.diffuse;
-    pMaterialData->ambient              = Terms.ambient;
-    pMaterialData->specular             = Terms.specular;
+	// Copy reflectance into the buffer
+	pMaterialData->diffuse          = Terms.diffuse;
+	pMaterialData->ambient          = Terms.ambient;
+	pMaterialData->specular         = Terms.specular;
 
-    // ToDo: 6767 - Add support for emissive HDR scalar in Carbon Forge and
-    // pass to the effect here so that it can pre-shader multiply.
-	if ( getSystemState( cgSystemState::HDRLighting ) > 0 )
-	{
-		pMaterialData->emissive.r       = powf( Terms.emissive.r, 2.2f ) * Terms.emissiveHDRScale;
-		pMaterialData->emissive.g       = powf( Terms.emissive.g, 2.2f ) * Terms.emissiveHDRScale;
-		pMaterialData->emissive.b       = powf( Terms.emissive.b, 2.2f ) * Terms.emissiveHDRScale;
-		pMaterialData->emissive.a       = Terms.emissiveHDRScale;
-	}
-	else
-		pMaterialData->emissive         = Terms.emissive;
+    // Linearize and scale emissive input if HDR lighting is enabled.
+    if ( getSystemState( cgSystemState::HDRLighting ) > 0 )
+    {
+        pMaterialData->emissive.r       = powf( Terms.emissive.r, 2.2f ) * Terms.emissiveHDRScale;
+        pMaterialData->emissive.g       = powf( Terms.emissive.g, 2.2f ) * Terms.emissiveHDRScale;
+        pMaterialData->emissive.b       = powf( Terms.emissive.b, 2.2f ) * Terms.emissiveHDRScale;
+        pMaterialData->emissive.a       = Terms.emissiveHDRScale;
+		pMaterialData->emissiveTint     = cgColorValue( Terms.emissiveHDRScale, Terms.emissiveHDRScale, Terms.emissiveHDRScale, 1 );
+    }
+    else
+    {
+        pMaterialData->emissive         = Terms.emissive;
+        pMaterialData->emissiveTint     = cgColorValue( 1, 1, 1, 1 );
+    }
 
     // ToDo: 6767 - Convert SG Power to gloss. Can remove the following conversion afterwards. This is for backwards compatibility.
 	if ( Terms.gloss > 1.0f )
@@ -1403,6 +1402,10 @@ bool cgDX9RenderDriver::setMaterialTerms( const cgMaterialTerms & Terms )
     // then the appropriate constants will be automatically updated
     // next time 'drawPrimitive*' is called.
     pMaterialBuffer->unlock();
+
+	// Set manual sRGB decoding flag (Only true if not using a sampling state.)
+	bool bDecodeSRGB = getSystemState( cgSystemState::HDRLighting ) > 0; 
+	setSystemState( cgSystemState::DecodeSRGB, bDecodeSRGB ? 1 : 0 ); 
 
     // ToDo: 6767 - Add proper support for new material flags. (Can create local bools to cache conditional results if desired.)
     // ToDo: 6767 - These system states should be set by the material, not the driver itself.

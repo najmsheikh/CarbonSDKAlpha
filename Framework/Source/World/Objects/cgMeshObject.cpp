@@ -362,7 +362,7 @@ bool cgMeshObject::createCapsule( cgFloat fRadius, cgFloat fHeight, cgUInt32 nSt
         cgResourceManager * pResources = cgResourceManager::getInstance();
         cgVertexFormat * pFormat = cgVertexFormat::formatFromDeclarator( cgVertex::Declarator );
         if ( pMesh->createCapsule( pFormat, fRadius, fHeight, nStacks, nSlices, bInverted, Origin, true, pResources ) == true )
-            pResources->addMesh( &mMesh, pMesh, cgResourceFlags::ForceNew, _T("Core::Mesh::Cylinder"), cgDebugSource() );
+            pResources->addMesh( &mMesh, pMesh, cgResourceFlags::ForceNew, _T("Core::Mesh::Capsule"), cgDebugSource() );
         
         // Did the box creation succeed?
         if ( mMesh.isValid() == false )

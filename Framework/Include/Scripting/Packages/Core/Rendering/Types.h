@@ -351,7 +351,10 @@ namespace Types
             BINDSUCCESS( engine->registerEnumValue( typeName, "SetColorRGB"             , cgImageOperation::SetColorRGB ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "SetColorRGBA"            , cgImageOperation::SetColorRGBA ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "SetColorA"               , cgImageOperation::SetColorA ) );
-            BINDSUCCESS( engine->registerEnumValue( typeName, "CopyAlpha"               , cgImageOperation::CopyAlpha ) );
+			BINDSUCCESS( engine->registerEnumValue( typeName, "ScaleUserColorRGBA"      , cgImageOperation::ScaleUserColorRGBA ) );
+			BINDSUCCESS( engine->registerEnumValue( typeName, "ScaleUserColorRGB"       , cgImageOperation::ScaleUserColorRGB ) );
+			BINDSUCCESS( engine->registerEnumValue( typeName, "ScaleUserColorA"         , cgImageOperation::ScaleUserColorA ) );
+			BINDSUCCESS( engine->registerEnumValue( typeName, "CopyAlpha"               , cgImageOperation::CopyAlpha ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "CopyRGBA"                , cgImageOperation::CopyRGBA ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "CopyRGB"                 , cgImageOperation::CopyRGB ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "CopyRGBSetAlpha"         , cgImageOperation::CopyRGBSetAlpha ) );
@@ -696,8 +699,10 @@ namespace Types
 
             // Register properties
             BINDSUCCESS( engine->registerObjectProperty( typeName, "int passCount"                , offsetof(cgBlurOpDesc,passCount) ) );
-            BINDSUCCESS( engine->registerObjectProperty( typeName, "int pixelRadius"              , offsetof(cgBlurOpDesc,pixelRadius) ) );
-            BINDSUCCESS( engine->registerObjectProperty( typeName, "float distanceFactor"         , offsetof(cgBlurOpDesc,distanceFactor) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "int pixelRadiusV"             , offsetof(cgBlurOpDesc,pixelRadiusV) ) );
+			BINDSUCCESS( engine->registerObjectProperty( typeName, "int pixelRadiusH"             , offsetof(cgBlurOpDesc,pixelRadiusH) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "float distanceFactorV"        , offsetof(cgBlurOpDesc,distanceFactorV) ) );
+			BINDSUCCESS( engine->registerObjectProperty( typeName, "float distanceFactorH"        , offsetof(cgBlurOpDesc,distanceFactorH) ) );
             BINDSUCCESS( engine->registerObjectProperty( typeName, "float worldRadius"            , offsetof(cgBlurOpDesc,worldRadius) ) );
             BINDSUCCESS( engine->registerObjectProperty( typeName, "AlphaWeightMethod inputAlpha" , offsetof(cgBlurOpDesc,inputAlpha) ) );
             BINDSUCCESS( engine->registerObjectProperty( typeName, "AlphaWeightMethod outputAlpha", offsetof(cgBlurOpDesc,outputAlpha) ) );

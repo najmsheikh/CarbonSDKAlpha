@@ -1068,7 +1068,7 @@ class AntialiasingShader : ISurfaceShader
 	// Name : psFXAA (Pixel Shader)
 	// Desc : Runs the FXAA pixel shader by Timothy Lotte (version 3.11)
 	//-----------------------------------------------------------------------------
-    bool fxaa()
+    bool fxaa( bool ReverseToneMap )
     {
         /////////////////////////////////////////////
         // Definitions
@@ -1112,6 +1112,12 @@ class AntialiasingShader : ISurfaceShader
 		// Return final result
 		color = fxaaResult;
 		?>
+		
+		// If requested, call a reverse tonemapping operation (exponential). We use this to undo a 
+		// prior temporary tonemapping that allows the fxaa to better process color data. That tonemapper
+		// is always expontial with an exposure of 0.0001, and squared to approximate sRGB (i.e., y = ( 1.0f - exp( -color * 0.0001 ) ) ^ 2)
+		if ( ReverseToneMap )
+			<?color.rgb = -log( 1.0f - sqrt( color.rgb ) ) / 0.01;?> 
 		
 		// Success
 		return true;

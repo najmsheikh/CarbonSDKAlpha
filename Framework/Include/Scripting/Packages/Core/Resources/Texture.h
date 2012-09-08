@@ -26,6 +26,7 @@ namespace Texture
         BINDSUCCESS( engine->registerObjectMethod( typeName, "Size getSize( ) const", asMETHODPR(type, getSize, ( ) const, cgSize ), asCALL_THISCALL) );
         // ToDo: Note: lock / unlock not currently supported in script (pointer access).
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void update( )", asMETHODPR(type,update, (), void), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool supportsLinearSampling( ) const", asMETHODPR(type, supportsLinearSampling, () const, bool), asCALL_THISCALL) );
         //ToDo: BINDSUCCESS( engine->registerObjectMethod( lpszType, "void ConfigureMedia( const MediaConfig &in )", asMETHODPR(cgTexture, configureMedia, ( const cgTexture::MediaConfig& ), void), asCALL_THISCALL) );
     
     } // End Method registerTextureMethods<>

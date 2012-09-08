@@ -48,11 +48,7 @@ class ToneMappingShader : ImageProcessingShader
 		float keyScale           = 1.0;
 		float keyBias            = 0.0;
 		float whiteScale         = 1.0;
-		float whiteBias          = 1.0;
-		float prF                = 1.0;
-		float prM                = 1.0;
-		float prC                = 1.0;
-		float prA                = 1.0;
+		float whiteBias          = 0.0;
 	?>    
     
 	<?cbuffer cbLuminance  : register(b10), globaloffset(c210)
@@ -63,6 +59,10 @@ class ToneMappingShader : ImageProcessingShader
 		float  maxLuminance      = 0.0;
 		float4 lumTextureSize    = { 0.0, 0.0, 0.0, 0.0 };
 		float4 cacheTextureSize  = { 0.0, 0.0, 0.0, 0.0 };
+	?>
+
+	<?cbuffer cbDownsample : register(b11), globaloffset(c210)
+		float4 lumTextureSize  = { 0.0, 0.0, 0.0, 0.0 };
 	?>
     
     ///////////////////////////////////////////////////////////////////////////
@@ -127,14 +127,58 @@ class ToneMappingShader : ImageProcessingShader
 		float4 lumData = 0;
 		float3 sample = sample2D( sLightingTex, sLighting, texCoords ).rgb;
 		
-		// Clamp to maximum allowed HDR values
-		sample = min( sample, $HDR_FLOAT_MAX );
-
         // Compute luminance and log of luminance
-		lumData.x = computeLuminance( sample );
-		lumData.y = log( lumData.x + 1e-6f );
-
+		lumData.x = max( minLuminance, computeLuminance( sample ) );
+		lumData.y = log( lumData.x + 1e-7f );
+		lumData.z = lumData.x;
+		lumData.w = lumData.x;
 		color = lumData;
+		?>
+
+        // Valid shader
+        return true;
+	}
+
+    bool luminanceDownsample( )
+    {
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Define shader inputs.
+        <?in
+            float4  screenPosition : SV_POSITION;
+            float2  texCoords2      : TEXCOORD0;
+        ?>
+
+        // Define shader outputs.
+        <?out
+            float4  color       : SV_TARGET0;
+        ?>
+
+        // Constant buffer usage.
+        <?cbufferrefs
+            cbDownsample;
+			_cbCamera;
+        ?>
+
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+		<?
+		float2 texCoords = (screenPosition.xy + float2(0.5, 0.5)) * _targetSize.zw; 
+		
+		// Sample the 4 texels
+		float4 s0 = sample2D( sLightingPointTex, sLightingPoint, texCoords + float2( -0.5, -0.5 ) * lumTextureSize.zw );
+		float4 s1 = sample2D( sLightingPointTex, sLightingPoint, texCoords + float2(  0.5, -0.5 ) * lumTextureSize.zw );
+		float4 s2 = sample2D( sLightingPointTex, sLightingPoint, texCoords + float2( -0.5,  0.5 ) * lumTextureSize.zw );
+		float4 s3 = sample2D( sLightingPointTex, sLightingPoint, texCoords + float2(  0.5,  0.5 ) * lumTextureSize.zw );
+
+		// xy are averages
+		color.xy = (s0.xy + s1.xy + s2.xy + s3.xy) * 0.25f;
+		
+		// zw are min & max
+		color.z  = min( s0.z, min( s1.z, min( s2.z, s3.z ) ) );
+		color.w  = max( s0.w, max( s1.w, max( s2.w, s3.w ) ) );
 		?>
 
         // Valid shader
@@ -174,22 +218,39 @@ class ToneMappingShader : ImageProcessingShader
 		<?
  		// Read the downsampled data
 		float4 cacheEntry = sample2D( sLuminanceAverageTex, sLuminanceAverage, texCoords );
-
-		// Make sure that we have legitimate values to work with
-		float2 maxLuminanceVals = float2( $HDR_FLOAT_MAX, log( $HDR_FLOAT_MAX ) );
-		cacheEntry.xy = clamp( cacheEntry.xy, 0.0, maxLuminanceVals );
-	    
+    
 		// Complete the log average for luminance
 		cacheEntry.y = exp( cacheEntry.y );
-	
-		// Compute key and whitepoint 
-		cacheEntry.z = 1.03 - ( 2.0 / ( 2.0 + log10( cacheEntry.y + 1.0 ) ) );
-		cacheEntry.w = maxLuminance;  
-		
+		?>
+			
+		// Reinhard automatic parameter generation 
+		if ( toneMapper == ToneMapMethod::PhotographicWhitePoint )
+		{
+			<?
+			float eps  = 1e-6f;
+			float La   = cacheEntry.y + eps;
+			float Lmin = cacheEntry.z + eps;	
+			float Lmax = cacheEntry.w + eps;
+			cacheEntry.z = 0.18f * pow( 4.0f, max( 0.00001f, (2.0 * log2( La ) - log2( Lmin ) - log2( Lmax ) ) / (log2( Lmax ) - log2( Lmin ) + 1e-6f) ) );
+			cacheEntry.w = max( 0.95f, 1.50f * exp2( log2(Lmax) - log2(Lmin) - 5.0f ) );
+			?>
+		}
+		else
+		{
+			<?
+			cacheEntry.z = 1.03f - ( 2.0f / ( 2.0f + log10( cacheEntry.y + 1.0f ) ) );
+			cacheEntry.w = maxLuminance;  
+			?>		
+		}
+		<?		
 		// Apply user scale and bias to adjust/override values    
 		cacheEntry.z = cacheEntry.z * keyScale + keyBias;
 		cacheEntry.w = cacheEntry.w * whiteScale + whiteBias;
 
+		// Final exposure			
+		cacheEntry.z /= (cacheEntry.y + 1e-7f);
+		
+		// Return results
 		color = cacheEntry;
 		?>
 
@@ -230,7 +291,7 @@ class ToneMappingShader : ImageProcessingShader
 		// If we are not using adaptation (e.g., on first frame or for testing), sample the luminance cache for current data and return immediately.
 		if ( !adaptation )
 		{
-			<?color = sample2D( sLuminanceCacheTex, sLuminanceCache, texCoords + float2( -0.5, -0.5 ) * cacheTextureSize.zw );?>
+			<?color = sample2D( sLuminanceCacheTex, sLuminanceCache, texCoords + float2( 0.5, 0.5 ) * cacheTextureSize.zw );?>
 		}
 		else
 		{
@@ -239,11 +300,11 @@ class ToneMappingShader : ImageProcessingShader
 			float4 previousValues = sample2D( sLuminancePrevTex, sLuminancePrev, float2( 0.5, 0.5 ) ); 
 
 			// Get current frame's data
-			float4 currentValues = sample2D( sLuminanceCacheTex, sLuminanceCache, texCoords + float2( -0.5, -0.5 ) * cacheTextureSize.zw );
+			float4 currentValues = sample2D( sLuminanceCacheTex, sLuminanceCache, texCoords + float2( 0.5, 0.5 ) * cacheTextureSize.zw );
 			
 			// Simulate eye adaptation by interpolating based on elapsed time and current lighting conditions
-			float adaptationRate = lerp( coneTime, rodTime, rodSensitivity / (rodSensitivity + currentValues.y ) );
-			color = lerp( previousValues, currentValues, 1.0 - exp( -_elapsedTime / adaptationRate ) );
+			float adaptationRate = lerp( coneTime, rodTime, saturate( rodSensitivity / (rodSensitivity + currentValues.x) ) );
+			color = lerp( previousValues, currentValues, 1.0 - exp( -adaptationRate * _elapsedTime ) );
 			?>
 		}
 
@@ -297,74 +358,25 @@ class ToneMappingShader : ImageProcessingShader
 		// Get our scene luminance data
 		float4 lumData = sample2D( sLuminanceCurrTex, sLuminanceCurr, float2( 0.5, 0.5 ) );
 		float la       = lumData.y;
-		float key      = lumData.z;
+		float exposure = lumData.z; 
 		float white    = lumData.w;
-
-		// Compute auto-exposure scalar
-		float exposure = key / la;
 
 		// Get our current pixel's HDR color
 		float4 hdrColor = sample2D( sLightingPointTex, sLightingPoint, texCoords ); 
 		
-		// Ensure hdr color is within acceptable range
-		hdrColor.rgb = min( hdrColor.rgb, $HDR_FLOAT_MAX );
-	
-		// Compute the world luminance
-		float lw = computeLuminance( hdrColor );
+		// Tonemap
+		ldrColor = toneMapping( hdrColor.rgb, exposure, white, $toneMapper );	
         ?>
-
-		// Select tonemapper
-		if ( toneMapper == ToneMapMethod::Photographic )
-		{
-			<?
-			// Apply auto-exposure 
-			float lm = lw * exposure;
-			
-			// Compute white point luminance
-			float lmax        = white * exposure;
-			float recipLmaxSq = 1.0 / (lmax * lmax);
-			float lb = saturate( lm * lm * recipLmaxSq );
-
-			// Compute display luminance
-			float ld = (lm + lb) / (lm + 1.0);
-		
-			// Convert HDR color to LDR color
-			ldrColor.rgb = hdrColor.rgb * (ld / lw);
-			?>
-		}
-		else if ( toneMapper == ToneMapMethod::Filmic )
-		{
-			<?
-			// Place the white point in alpha
-			hdrColor.a = (white + 1e-7f);
-
-			// Apply automatic exposure
-			hdrColor *= exposure; 
-			
-			// Run the tonemap operation
-			hdrColor = (hdrColor * (6.2 * hdrColor + 0.5)) / (hdrColor * (6.2 * hdrColor + 1.7) + 0.06);
-
-			// Apply a white point (not originally a part of the algorithm, but seems to work ok)
-			//ldrColor.rgb = hdrColor.rgb / hdrColor.a;
-			ldrColor.rgb = hdrColor.rgb;
-			?>
-		}
-		else if ( toneMapper == ToneMapMethod::ExponentialTM )
-		{
-			<?
-			// Apply exposure and compute display luminance 
-			float ld = 1.0f - exp( -lw * exposure );
-			
-			// Convert HDR color to LDR color
-			ldrColor.rgb = hdrColor.rgb * ( ld / max( lw, 0.0001f ) );
-			?>
-		}
 		
 		// Non-filmic tonemappers require gamma correction. Note: This is temporary and will be removed once tonemapping becomes a color op.
 		if ( toneMapper != ToneMapMethod::Filmic )		
 		{
 			<?
 			ldrColor.rgb = pow( ldrColor.rgb, 1.0f / 2.2f );
+			
+			float luminance    = dot( ldrColor.rgb, float3( 0.2125, 0.7154, 0.0721 ) ); 
+			float luminanceAdj = saturate( (luminance - 0.5) * 1.1 + 0.5 );
+			ldrColor.rgb       = ldrColor.rgb * (luminanceAdj / (luminance + 1e-7));			
 			?>		
 		}
 	

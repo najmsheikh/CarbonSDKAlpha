@@ -974,11 +974,13 @@ bool cgLandscape::import( const cgLandscapeImportParams & Params )
     // in sandbox mode then insert a new entry into the database
     // prior to performing the import (so that we correctly serialize
     // other aspects of the landscape such as the blocks).
+    bool bTransactionStarted = false;
     cgWorld * pWorld = mParentScene->getParentWorld();
     if ( (cgGetSandboxMode() == cgSandboxMode::Enabled) && mParentScene->getSceneId() != 0 )
     {
         // Begin a transaction.
         pWorld->beginTransaction( _T("landscapeImport") );
+        bTransactionStarted = true;
 
         // Insert main landscape
         prepareQueries();
@@ -1033,7 +1035,9 @@ bool cgLandscape::import( const cgLandscapeImportParams & Params )
     {
         if ( !buildLODLevel( i ) )
         {
-            pWorld->rollbackTransaction( _T("landscapeImport") );
+            if ( bTransactionStarted )
+                pWorld->rollbackTransaction( _T("landscapeImport") );
+            mLandscapeId = 0;
             return false;
         
         } // End if failed
@@ -1111,7 +1115,9 @@ bool cgLandscape::import( const cgLandscapeImportParams & Params )
     // Perform post initialization tasks
     if ( !postInit() )
     {
-        pWorld->rollbackTransaction( _T("landscapeImport") );
+        if ( bTransactionStarted )
+            pWorld->rollbackTransaction( _T("landscapeImport") );
+        mLandscapeId = 0;
         return false;
     
     } // End if failed
@@ -1144,6 +1150,7 @@ bool cgLandscape::import( const cgLandscapeImportParams & Params )
             mUpdateLandscapeLayout.getLastError( strError );
             cgAppLog::write( cgAppLog::Error, _T("Failed to update layout data for landscape '0x%x'. Error: %s\n"), mLandscapeId, strError.c_str() );
             pWorld->rollbackTransaction( _T("landscapeImport") );
+            mLandscapeId = 0;
             return false;
         
         } // End if failed
@@ -1160,27 +1167,20 @@ bool cgLandscape::import( const cgLandscapeImportParams & Params )
             mUpdateTextureConfig.getLastError( strError );
             cgAppLog::write( cgAppLog::Error, _T("Failed to update texture configuration data for landscape '0x%x'. Error: %s\n"), mLandscapeId, strError.c_str() );
             pWorld->rollbackTransaction( _T("landscapeImport") );
+            mLandscapeId = 0;
             return false;
         
         } // End if failed
 
     } // End if serialize
 
-    // Initialize clutter system
-    // ToDo: Allow user defined clutter grid size
-    //m_oClutterManager->Initialize( Vector2( 500, 500 ) );
-
-    // ToDo: Temp Remove
-    //sqClutterType ^ oType = gcnew sqClutterType( m_oClutterManager, sqClutterType::DataTypes::Mesh );
-    //if ( oType->Initialize( L"" ) == true )
-        //m_oClutterManager->AddClutterType( oType );
-
     // If a layer initialization map was provided, build initial block texture data.
     if ( !Params.layerInit.empty() )
         initializeTextureData( Params.layerInit );
 
     // Commit database changed.
-    pWorld->commitTransaction( _T("landscapeImport") );
+    if ( bTransactionStarted )
+        pWorld->commitTransaction( _T("landscapeImport") );
 
     // Success!
     return true;
@@ -5549,7 +5549,7 @@ bool cgTerrainBlock::dataUpdated( )
         cgWorld * pWorld = mParent->getScene()->getParentWorld();
         pWorld->beginTransaction( _T("blockDataUpdated") );
 
-        // Update the data pertinant to this block's managed rectangle.
+        // Update the data pertinent to this block's managed rectangle.
         // This potentially includes the 1 pixel border necessary for
         // maintaining neighboring pixels used during blending of
         // normal / interpolated height data.

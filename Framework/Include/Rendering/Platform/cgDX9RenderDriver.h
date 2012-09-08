@@ -205,6 +205,7 @@ protected:
         cgColorValue    ambient;
         cgColorValue    emissive;
         cgColorValue    specular;
+        cgColorValue    emissiveTint;
         float           gloss;
         float           alphaTestValue;
         float           reflectionIntensity;

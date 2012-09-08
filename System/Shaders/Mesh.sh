@@ -362,7 +362,7 @@ class MeshShader : ISurfaceShader
 		bool manualSRGBLinearize = testFlagAny( materialFlags, MaterialFlags::DecodeSRGB );
 		bool surfaceFresnel      = testFlagAny( materialFlags, MaterialFlags::SurfaceFresnel );
 		bool isMetal             = testFlagAny( materialFlags, MaterialFlags::Metal );
-		bool computeRoughness    = (shadingQuality >= ShadingQuality::HighQuality && ORENNAYER_ROUGHNESS_SCALE > 0.0f);
+		bool computeRoughness    = (shadingQuality >= ShadingQuality::HighQuality);
 		
 		<?float rlen;?>
 
@@ -406,7 +406,7 @@ class MeshShader : ISurfaceShader
 		{
 			// Store the surface bumpiness
 			// <?surface.bumpiness = _materialBumpiness;?>
-			<?surface.bumpiness = 1.0f;?>
+			<?surface.bumpiness = 1.0f;?> // ToDo: 6767 -- Reset for now. Will come in as strength for the normal sampler, _materialBumpiness can be removed from the CB
 		
 			// Compute texture coord adjustments for parallax mapping (if needed)
 			if ( normalType == NormalSource::ParallaxOffset ) 
@@ -437,16 +437,16 @@ class MeshShader : ISurfaceShader
 			?>
 		}
 
-		// Compute diffuse reflectance (linearize manually if needed)
-		<?float4 kD = sample2D( sDiffuseTex, sDiffuse, texCoords.xy );?>
-		if ( manualSRGBLinearize )
-			<?kD.rgb = pow( kD.rgb, $GAMMA_TO_LINEAR );?>
-		<?kD.rgb *= _materialDiffuse.rgb;?>
+		// Compute diffuse reflectance
+		<?
+		float4 kD = sample2D( sDiffuseTex, sDiffuse, texCoords.xy );
+		       kD.rgb *= _materialDiffuse.rgb;
+		?>
 
-		// Process specular reflectance and gloss
+		// Compute specular reflectance and gloss
 		<?float4 kS = float4( _materialSpecular.rgb, _materialGloss );?>
 
-		// Apply metallic shading before masking
+		// Apply metallic shading before specular masking
 		if ( isMetal )
 		{
 			<?
@@ -458,18 +458,13 @@ class MeshShader : ISurfaceShader
 		// Do we have a full specular color texture?
 		if ( testFlagAny( materialFlags, MaterialFlags::SampleSpecularColor ) )
 		{
-			// Sample the specular texture and linearize as needed
-			<?float4 specularTexture = sample2D( sSpecularTex, sSpecular, texCoords.xy );?>
-			if ( manualSRGBLinearize )
-				<?specularTexture.rgb = pow( specularTexture.rgb, $GAMMA_TO_LINEAR );?>
-
 			// Do we have a gloss map?
 			if ( testFlagAny( materialFlags, MaterialFlags::SampleGlossTexture ) )
-				<?kS.rgba *= specularTexture.rgba;?>
+				<?kS.rgba *= sample2D( sSpecularTex, sSpecular, texCoords.xy );?>
 			else
-				<?kS.rgb  *= specularTexture.rgb;?>
+				<?kS.rgb  *= sample2D( sSpecularTex, sSpecular, texCoords.xy ).rgb;?>
 		}
-		// Do we have a mask?
+		// Do we have a specular mask?
 		else if ( testFlagAny( materialFlags, MaterialFlags::SampleSpecularMask ) )
 		{
 			// Do we have a gloss map?
@@ -509,7 +504,7 @@ class MeshShader : ISurfaceShader
         // If the opacity value was not in the diffuse texture, sample it separately.
         if ( hasOpacityTexture && !opacityInDiffuse )
             <?kD.a = sample2D( sOpacityTex, sOpacity, texCoords.xy ).a;?>
-        else
+        else if ( !opacityInDiffuse )
             <?kD.a = 1.0;?>
 		
 		// Compute opacity for diffuse and specular reflectance
@@ -536,7 +531,7 @@ class MeshShader : ISurfaceShader
 		
         } // End if high quality shading
 
-		// Premultiply translucency for diffuse and specular (specular separately describes how much translucency it allows)
+		// Premultiply translucency for diffuse and specular (Note: specular separately describes how much translucency it allows)
 		if ( isTranslucent )
 		{
 			<?
@@ -561,11 +556,21 @@ class MeshShader : ISurfaceShader
 		// Get ambient occlusion (not supported in forward mode -- yet)
 		surface.ambientOcclusion = 1; 
 		?>
+
+		// If we need to convert from sRGB to linear, do so now
+		if ( manualSRGBLinearize )
+		{
+			<?
+			surface.diffuse.rgb  = pow( surface.diffuse.rgb,  $GAMMA_TO_LINEAR );
+			surface.specular.rgb = pow( surface.specular.rgb, $GAMMA_TO_LINEAR );
+			?>
+		}
+	
 	}
 
 	//-----------------------------------------------------------------------------
 	// Name  : getPrecomputedLighting()
-	// Desc  : Reconstructs precomputed lighting from lightmaps
+	// Desc  : Retrieves precomputed lighting from lightmaps, reflections, emissives, etc.
 	//-----------------------------------------------------------------------------
 	__shadercall void getPrecomputedLighting( inout LightingData lighting, SurfaceData surface, float4 reflectionCoords, float4 texCoords, float2 texCoordsLight,
                                               script int reflectionType, script int lightmapType, script int materialFlags, script int renderFlags )
@@ -617,10 +622,14 @@ class MeshShader : ISurfaceShader
 			<?lighting.reflection = reflectionColor.rgb;?>
 			
 			// Linearize reflection color
-			if ( testFlagAny( materialFlags, MaterialFlags::DecodeSRGB ) )
+			//if ( testFlagAny( materialFlags, MaterialFlags::DecodeSRGB ) ) // ToDo: 6767 - Fix this flag.
+			if ( testFlagAny( renderFlags, RenderFlags::HDRLighting ) )
 				<?lighting.reflection = pow( lighting.reflection, 2.2 );?>
 				
-			<?lighting.specular += lighting.reflection * _materialReflectionIntensity;?>
+            if ( testFlagAny( renderFlags, RenderFlags::HDRLighting ) )
+    			<?lighting.specular += lighting.reflection * _materialReflectionIntensity;?> // ToDo: 6767 - Get intensity from CF!
+            else
+                <?lighting.specular += lighting.reflection * _materialReflectionIntensity;?>
 		
         } // End if reflections
 
@@ -629,9 +638,11 @@ class MeshShader : ISurfaceShader
 		if ( testFlagAny( materialFlags, MaterialFlags::SampleEmissiveTexture ) )
 		{
 			<?float3 emissiveTex = sample2D( sEmissiveTex, sEmissive, texCoords.xy ).rgb;?>
-			if ( testFlagAny( materialFlags, MaterialFlags::DecodeSRGB ) )
+			//if ( testFlagAny( materialFlags, MaterialFlags::DecodeSRGB ) ) // ToDo: 6767 - Fix this flag.
+			if ( testFlagAny( renderFlags, RenderFlags::HDRLighting ) )
 				<?emissiveTex = pow( emissiveTex, 2.2 );?>
-			<?lighting.emissive *= emissiveTex;?>
+				
+			<?lighting.emissive += emissiveTex * _materialEmissiveTint.rgb;?>
 		}
 	}
 
@@ -1279,7 +1290,7 @@ class MeshShader : ISurfaceShader
 		bool encodeSRGB = false;
 		if ( (reflectionType == ReflectionMode::None) && (lightmapType == LightTextureType::None) )
 		{
-			// There is no need to decode SRGB (Note: No need to encode output either as it is already sRGB.)
+			// There is no need to decode sRGB (Note: No need to encode output either as it is already sRGB.)
 			materialFlags &= ~uint(MaterialFlags::DecodeSRGB);
 			
 		} // End no precomputed diffuse/specular
@@ -1378,7 +1389,7 @@ class MeshShader : ISurfaceShader
 		if ( encodeSRGB )
 		{
 			<?data1 = pow( data1, $LINEAR_TO_GAMMA );?>
-			if ( shadingQuality > ShadingQuality::LowQuality )
+			if ( testFlagAny( renderFlags, RenderFlags::SpecularColorOutput ) )
 				<?data2.rgb = pow( data2.rgb, $LINEAR_TO_GAMMA );?>
 		}
 

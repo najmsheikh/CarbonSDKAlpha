@@ -4,16 +4,15 @@ CREATE TABLE [Objects::HingeJoint] (
   [RefId] integer NOT NULL PRIMARY KEY, 
   [UseLimits] tinyint(1) DEFAULT (0),
   [MinimumAngle] real DEFAULT(-45),
-  [MaximumAngle] real DEFAULT(45),
-  [Body0Id] integer DEFAULT (0),
-  [Body1Id] integer DEFAULT (0),
+  [MaximumAngle] real DEFAULT(45), 
+  [InitialAngle] real DEFAULT(0),
   [RefCount] integer DEFAULT (0));
 
 CREATE TRIGGER [Objects::HingeJoint_OnDelete]
   BEFORE DELETE
   ON [Objects::HingeJoint]
   BEGIN
-    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+    DELETE FROM [Objects::Base::Joint] WHERE RefId=old.RefId;  
   END;
 
 --Table: Objects::HingeJoint::InstanceData

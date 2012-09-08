@@ -34,10 +34,10 @@
 #include <Rendering/cgVertexFormats.h>
 #include <Resources/cgResourceManager.h>
 #include <Resources/cgSurfaceShader.h>
-#include <Math/cgCollision.h>
-#include <Math/cgMathUtility.h>
+#include <Resources/cgConstantBuffer.h>
+#include <Resources/cgMesh.h>
 
-// ToDo: 6767 -- needs database updates and onComponentModified() so that joint in the node can be updated when properties change.
+// ToDo: 6767 -- needs database updates.
 
 //-----------------------------------------------------------------------------
 // Static Member Definitions
@@ -59,9 +59,10 @@ cgWorldQuery cgHingeJointNode::mLoadInstanceData;
 //-----------------------------------------------------------------------------
 cgHingeJointObject::cgHingeJointObject( cgUInt32 nReferenceId, cgWorld * pWorld ) : cgJointObject( nReferenceId, pWorld )
 {
-    mUseLimits    = true;
-    mMinimumAngle = -45.0f;
-    mMaximumAngle = 45.0f;
+    mUseLimits      = true;
+    mMinimumAngle   = -45.0f;
+    mMaximumAngle   = 45.0f;
+    mInitialAngle   = 0.0f;
 }
 
 //-----------------------------------------------------------------------------
@@ -77,6 +78,7 @@ cgHingeJointObject::cgHingeJointObject( cgUInt32 nReferenceId, cgWorld * pWorld,
     mUseLimits      = pObject->mUseLimits;
     mMinimumAngle   = pObject->mMinimumAngle;
     mMaximumAngle   = pObject->mMaximumAngle;
+    mInitialAngle   = pObject->mInitialAngle;
 }
 
 //-----------------------------------------------------------------------------
@@ -193,186 +195,51 @@ cgRangeF cgHingeJointObject::getLimits( ) const
 /// intersected and also compute the object space intersection distance. 
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgHingeJointObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance )
+bool cgHingeJointObject::pick( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, const cgVector3 & wireTolerance, cgFloat & distance )
 {
     // Only valid in sandbox mode.
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
         return false;
 
-    // Compute the distance from the origin of the joint to the edge of
-    // the parent object oriented box.
-    cgVector3 vJointPos(0, 0, 0);
-    cgFloat fZoomFactor = 0.0f;
-    cgFloat fArrowStalkLength = 0.0f;
-    cgFloat fCircleRadius = 0.0f;
-    if ( false && pIssuer->getParent() )
+    // Generate the sandbox mesh as necessary.
+    if ( !mSandboxMesh.isValid() )
     {
-        // Joint will be rendered at the center of the parent' bounds.
-        cgTransform ParentTransform = pIssuer->getParent()->getWorldTransform( false );
-        cgBoundingBox LocalBounds = pIssuer->getParent()->getLocalBoundingBox( );
-        cgBoundingBox WorldBounds = LocalBounds;
-        WorldBounds.transform( ParentTransform );
-        vJointPos = WorldBounds.getCenter();
+        if ( !createSandboxMesh() )
+            return false;
 
-        // Compute zoom factor for the selected joint location.
-        fZoomFactor = pCamera->estimateZoomFactor( ViewportSize, vJointPos, 2.5f );
+    } // End if no mesh
 
-        // We want to find out the distance to the edge of the parent's
-        // OOBB from the joint along the joint's fixed axis direction.
-        // This will allow us to draw an arrow that is long enough such
-        // that is always visible out of the 'top' of the object. We
-        // achieve this using ray-casting, so first transform the relevant
-        // position and direction into the space of the parent's OOBB.
-        cgTransform InverseParentTransform;
-        cgTransform::inverse( InverseParentTransform, ParentTransform );
-        cgVector3 vEdgeSearchOrigin = vJointPos;
-        cgVector3 vEdgeSearchDir    = pIssuer->getYAxis( false );
-        InverseParentTransform.transformCoord( vEdgeSearchOrigin, vEdgeSearchOrigin );
-        InverseParentTransform.transformNormal( vEdgeSearchDir, vEdgeSearchDir );
-        cgVector3::normalize( vEdgeSearchDir, vEdgeSearchDir );
-        
-        // Cast ray from a point known to be *outside* of the OOBB
-        // toward the *interior* in order to find the edge intersection point
-        cgFloat t;
-        vEdgeSearchOrigin = vEdgeSearchOrigin + vEdgeSearchDir * 1000.0f;
-        vEdgeSearchDir    = -vEdgeSearchDir;
-        if ( LocalBounds.intersect( vEdgeSearchOrigin, vEdgeSearchDir, t, false ) )
-        {
-            cgVector3 vIntersect = vEdgeSearchOrigin + vEdgeSearchDir * t;
-            ParentTransform.transformCoord( vIntersect, vIntersect );
-            fArrowStalkLength = cgVector3::length( vIntersect - vJointPos );
-        
-        } // End if intersecting
+    // Retrieve the underlying mesh resource and pick if available
+    cgMesh * mesh = mSandboxMesh.getResource(true);
+    if ( !mesh || !mesh->isLoaded() )
+        return false;
 
-        // Compute the radius necessary to draw a circle around the parent node
-        // designed to represent the axis about which it can yaw.
-        cgTransform InverseObjectTransform;
-        cgTransform ObjectTransform = pIssuer->getWorldTransform( false );
-        ObjectTransform.setPosition( vJointPos );
-        cgTransform::inverse( InverseObjectTransform, ObjectTransform );
-        LocalBounds.transform( ParentTransform * InverseObjectTransform );
-        cgVector3 vExtents = LocalBounds.getExtents();
-        fCircleRadius = ((vExtents.x > vExtents.z) ? vExtents.x : vExtents.z);
+    // Transform ray based on the scaling of the mesh itself.
+    cgVector3 meshRayOrigin, meshRayDirection;
+    cgRenderDriver * driver = mWorld->getRenderDriver();
+    cgFloat zoomFactor = camera->estimateZoomFactor( viewportSize, issuer->getPosition( false ), 2.5f );
+    cgTransform t, inverseT = issuer->getWorldTransform(false);
+    t.rotateLocal( CGEToRadian(90.0f), CGEToRadian(90.0f), 0 );
+    t.scaleLocal( zoomFactor, zoomFactor, zoomFactor );
+    cgTransform::inverse( inverseT, t );
+    inverseT.transformCoord( meshRayOrigin, rayOrigin );
+    inverseT.transformNormal( meshRayDirection, rayDirection );
+    cgVector3::normalize( meshRayDirection, meshRayDirection );
 
-        // Transform the final center position into a local space offset
-        // so that we can pick appropriately.
-        pIssuer->getWorldTransform( false ).inverseTransformCoord( vJointPos, vJointPos );
-    
-    } // End if has parent
-    else
+    // Pass through
+    bool result = mesh->pick( meshRayOrigin, meshRayDirection, wireframe, wireTolerance, distance );
+
+    // Scale distance back out
+    if ( result )
     {
-        // Compute zoom factor for the selected joint location.
-        fZoomFactor = pCamera->estimateZoomFactor( ViewportSize, pIssuer->getPosition(false), 2.5f );
-    
-    } // End if no parent
-    
-    // Add the arrow and radius padding (this is also the default
-    // length and radius in cases where there is no parent).
-    fArrowStalkLength += 20.0f * fZoomFactor;
-    fCircleRadius += 10.0f * fZoomFactor;
+        cgVector3 intersection = meshRayOrigin + meshRayDirection * distance;
+        t.transformCoord( intersection, intersection );
+        distance = cgVector3::length( intersection - rayOrigin );
 
-    // Compute vertices for the tip of the directional light source arrow
-    cgVector3 Points[5];
-    cgFloat fSize = fZoomFactor * 7.5f;
-    Points[0] = cgVector3( 0, fArrowStalkLength + fZoomFactor * 10.0f, 0 ) + vJointPos;
-    Points[1] = cgVector3( -fSize, fArrowStalkLength,  fSize ) + vJointPos;
-    Points[2] = cgVector3( -fSize, fArrowStalkLength, -fSize ) + vJointPos;
-    Points[3] = cgVector3(  fSize, fArrowStalkLength, -fSize ) + vJointPos;
-    Points[4] = cgVector3(  fSize, fArrowStalkLength,  fSize ) + vJointPos;
-
-    // ...and indices.
-    cgUInt32  Indices[12];
-    Indices[0]  = 0; Indices[1]  = 1; Indices[2]  = 2;
-    Indices[3]  = 0; Indices[4]  = 2; Indices[5]  = 3;
-    Indices[6]  = 0; Indices[7]  = 3; Indices[8]  = 4;
-    Indices[9]  = 0; Indices[10] = 4; Indices[11] = 1;
-
-    // First check to see if the ray intersects the arrow tip pyramid
-    cgFloat   t, tMin = FLT_MAX;
-    bool      bIntersect = false;
-    cgFloat fTolerance = 2.0f * fZoomFactor;
-    for ( size_t i = 0; i < 4; ++i )
-    {
-        // Compute plane for the current triangle
-        cgPlane Plane;
-        const cgVector3 & v1 = Points[Indices[(i*3)+0]];
-        const cgVector3 & v2 = Points[Indices[(i*3)+1]];
-        const cgVector3 & v3 = Points[Indices[(i*3)+2]];
-        cgPlane::fromPoints( Plane, v1, v2, v3 );
-
-        // Determine if (and where) the ray intersects the triangle's plane
-        if ( cgCollision::rayIntersectPlane( vOrigin, vDir, Plane, t, false, false ) == false )
-            continue;
-        
-        // Check if it intersects the actual triangle (within a tolerance)
-        cgVector3 vIntersect = vOrigin + (vDir * t);
-        if ( cgCollision::pointInTriangle( vIntersect, v1, v2, v3, (cgVector3&)Plane, fTolerance ) == false )
-            continue;
-
-        // We intersected! Record the intersection distance.
-        bIntersect = true;
-        if ( t < tMin ) tMin = t;
-
-    } // Next Triangle
-
-    // Also check to see if the ray intersects the outward facing base of the pyramid
-    cgPlane Plane;
-    cgPlane::fromPointNormal( Plane,
-                              cgVector3( 0, fArrowStalkLength, 0 ) + vJointPos, 
-                              cgVector3( 0, -1, 0 ) );
-    if ( cgCollision::rayIntersectPlane( vOrigin, vDir, Plane, t, false, false ) == true )
-    {
-        // Check to see if it falls within the quad at the base of the pyramid
-        // (Simple to do when working in object space as we are here).
-        cgVector3 vIntersect = vOrigin + (vDir * t);
-        if ( fabsf( vIntersect.x ) < fSize + fTolerance && fabsf( vIntersect.z ) < fSize + fTolerance )
-        {
-            bIntersect = true;
-            if ( t < tMin ) tMin = t;
-        
-        } // End if intersects quad
-
-    } // End if intersects plane
-
-    // Now check to see if the ray intersects the arrow "stalk" (simple AABB test when in object space)
-    fSize = (fZoomFactor * 4.0f) + fTolerance;
-    cgBoundingBox StalkAABB( cgVector3( -fSize, -fTolerance, -fSize ) + vJointPos,
-                             cgVector3( fSize, fArrowStalkLength + fTolerance, fSize ) + vJointPos ); 
-    if ( StalkAABB.intersect( vOrigin, vDir, t, false ) == true )
-    {
-        bIntersect = true;
-        if ( t < tMin ) tMin = t;
-
-    } // End if intersects stalk aabb
-
-    // Finally, check the rotation axis circle. For this, we will first 
-    // determine if the ray intersects a sphere with the same radius. 
-    if ( cgCollision::rayIntersectSphere( vOrigin, vDir, vJointPos, fCircleRadius, t ) )
-    {
-        cgVector3 vSphereIntersect = vOrigin + (vDir * t);
-
-        // It intersected the sphere. Now we check to see if the 
-        // intersection normal is close to this axis' circle.
-        if ( fabsf( cgVector3::dot( (vSphereIntersect-vJointPos), cgVector3(0,1,0) ) ) < (5.0f * fZoomFactor) )
-        {
-            // Intersection found
-            bIntersect = true;
-            if ( t < tMin ) tMin = t;
-        
-        } // End if close to circle
-    
-    } // End if intersected sphere
-
-    // Return final intersection distance (if we hit anything)
-    if ( bIntersect )
-    {
-        fDistance = tMin;
-        return true;
-    
     } // End if intersected
 
-    // No intersection.
-    return false;
+    // Return result
+    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -382,286 +249,101 @@ bool cgHingeJointObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, c
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgHingeJointObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgHingeJointObject::sandboxRender( cgCameraNode * camera, cgVisibilitySet * visibilityData, bool wireframe, const cgPlane & gridPlane, cgObjectNode * issuer )
 {
-    cgShadedVertex  Points[30];
-    cgUInt32        Indices[35];
-    bool            bCull;
-    cgUInt32        i;
-
     // Get access to required systems.
-    cgRenderDriver  * pDriver = cgRenderDriver::getInstance();
-    cgSurfaceShader * pShader = pDriver->getSandboxSurfaceShader().getResource(true);
+    cgRenderDriver * driver = mWorld->getRenderDriver();
 
-    // Retrieve useful values
-    const cgViewport & Viewport = pDriver->getViewport();
-    cgUInt32 nColor      = (pIssuer->isSelected() == true) ? 0xFFFFFFFF : 0xFF22AAFF;
-    bool     bOrtho      = (pCamera->getProjectionMode() == cgProjectionMode::Orthographic);
-
-    // Compute the distance from the origin of the joint to the edge of
-    // the parent object oriented box.
-    cgVector3 vJointPos(0, 0, 0);
-    cgFloat fZoomFactor = 0.0f;
-    cgFloat fArrowStalkLength = 0.0f;
-    cgFloat fCircleRadius = 0.0f;
-    cgTransform ObjectTransform = pIssuer->getWorldTransform( false );
-    if ( false && pIssuer->getParent() )
+    // Generate the sandbox mesh as necessary.
+    if ( !mSandboxMesh.isValid() )
     {
-        // Joint will be rendered at the center of the parent' bounds.
-        cgTransform ParentTransform = pIssuer->getParent()->getWorldTransform( false );
-        cgBoundingBox LocalBounds = pIssuer->getParent()->getLocalBoundingBox( );
-        cgBoundingBox WorldBounds = LocalBounds;
-        WorldBounds.transform( ParentTransform );
-        vJointPos = WorldBounds.getCenter();
+        if ( !createSandboxMesh() )
+            return;
 
-        // Compute zoom factor for the selected joint location.
-        fZoomFactor = pCamera->estimateZoomFactor( Viewport.size, vJointPos, 2.5f );
+    } // End if no mesh
 
-        // We want to find out the distance to the edge of the parent's
-        // OOBB from the joint along the joint's fixed axis direction.
-        // This will allow us to draw an arrow that is long enough such
-        // that is always visible out of the 'top' of the object. We
-        // achieve this using ray-casting, so first transform the relevant
-        // position and direction into the space of the parent's OOBB.
-        cgTransform InverseParentTransform;
-        cgTransform::inverse( InverseParentTransform, ParentTransform );
-        cgVector3 vEdgeSearchOrigin = vJointPos;
-        cgVector3 vEdgeSearchDir    = pIssuer->getYAxis( false );
-        InverseParentTransform.transformCoord( vEdgeSearchOrigin, vEdgeSearchOrigin );
-        InverseParentTransform.transformNormal( vEdgeSearchDir, vEdgeSearchDir );
-        cgVector3::normalize( vEdgeSearchDir, vEdgeSearchDir );
-        
-        // Cast ray from a point known to be *outside* of the OOBB
-        // toward the *interior* in order to find the edge intersection point
-        cgFloat t;
-        vEdgeSearchOrigin = vEdgeSearchOrigin + vEdgeSearchDir * 1000.0f;
-        vEdgeSearchDir    = -vEdgeSearchDir;
-        if ( LocalBounds.intersect( vEdgeSearchOrigin, vEdgeSearchDir, t, false ) )
-        {
-            cgVector3 vIntersect = vEdgeSearchOrigin + vEdgeSearchDir * t;
-            ParentTransform.transformCoord( vIntersect, vIntersect );
-            fArrowStalkLength = cgVector3::length( vIntersect - vJointPos );
-        
-        } // End if intersecting
-
-        // Render the joint at the center of the parent's bounds
-        ObjectTransform.setPosition( vJointPos );
-
-        // Compute the radius necessary to draw a circle around the parent node
-        // designed to represent the axis about which it can yaw.
-        cgTransform InverseObjectTransform;
-        cgTransform::inverse( InverseObjectTransform, ObjectTransform );
-        LocalBounds.transform( ParentTransform * InverseObjectTransform );
-        cgVector3 vExtents = LocalBounds.getExtents();
-        fCircleRadius = ((vExtents.x > vExtents.z) ? vExtents.x : vExtents.z);
-
-        //pDriver->DrawOOBB( LocalBounds, 0.0f, ObjectTransform, 0xFFFF00FF, true );
-    
-    } // End if has parent
-    else
+    // Retrieve the underlying rendering resources if available
+    cgMesh * mesh = mSandboxMesh.getResource(true);
+    if ( !mesh || !mesh->isLoaded() )
     {
-        // Compute zoom factor for the selected joint location.
-        fZoomFactor = pCamera->estimateZoomFactor( Viewport.size, pIssuer->getPosition(false), 2.5f );
-    
-    } // End if no parent
+        cgJointObject::sandboxRender( camera, visibilityData, wireframe, gridPlane, issuer );
+        return;
 
-    // Add the arrow and radius padding (this is also the default
-    // length and radius in cases where there is no parent).
-    fArrowStalkLength += 20.0f * fZoomFactor;
-    fCircleRadius += 10.0f * fZoomFactor;
+    } // End if no mesh
 
-    // Set the object's transformation matrix to the driver (joint
-    // representation will be constructed in object space along +Y)
-    cgTransform InverseObjectTransform;
-    cgTransform::inverse( InverseObjectTransform, ObjectTransform );
-    pDriver->setWorldTransform( ObjectTransform );
+    // Setup constants.
+    cgColorValue interiorColor = (!issuer->isSelected()) ? issuer->getNodeColor() : cgColorValue( 0.7f, 0.2f, 0.1f, 0.4f );
+    interiorColor.a = 0.4f;
+    cgColorValue wireColor = (!issuer->isSelected()) ? issuer->getNodeColor() : cgColorValue( 0xFFFFFFFF );
+    cgConstantBuffer * constants = driver->getSandboxConstantBuffer().getResource( true );
+    constants->setVector( _T("shapeInteriorColor"), (cgVector4&)interiorColor );
+    constants->setVector( _T("shapeWireColor"), (cgVector4&)wireColor );
+    driver->setConstantBufferAuto( driver->getSandboxConstantBuffer() );
 
-    // Set the color of each of the points first of all. This saves
-    // us from having to set them during object construction.
-    for ( i = 0; i < 30; ++i )
-        Points[i].color = nColor;
+    // Setup world transform
+    const cgViewport & viewport = driver->getViewport();
+    cgFloat zoomFactor = camera->estimateZoomFactor( viewport.size, issuer->getPosition( false ), 0.05f );
+    cgTransform t = issuer->getWorldTransform(false);
+    t.rotateLocal( CGEToRadian(90.0f), CGEToRadian(90.0f), 0 );
+    t.scaleLocal( zoomFactor, zoomFactor, zoomFactor );
+    driver->setWorldTransform( t );
 
-    // Compute vertices for the tip of the axis arrow
-    cgFloat fSize = fZoomFactor * 7.5f;
-    Points[0].position = cgVector3( 0, fArrowStalkLength + fZoomFactor * 10.0f, 0 );
-    Points[1].position = cgVector3( -fSize, fArrowStalkLength,  fSize );
-    Points[2].position = cgVector3( -fSize, fArrowStalkLength, -fSize );
-    Points[3].position = cgVector3(  fSize, fArrowStalkLength, -fSize );
-    Points[4].position = cgVector3(  fSize, fArrowStalkLength,  fSize );
-    
-    // Compute indices that will allow us to draw the arrow tip using a 
-    // tri-list (wireframe) so that we can easily take advantage of back-face culling.
-    Indices[0]  = 0; Indices[1]  = 1; Indices[2]  = 2;
-    Indices[3]  = 0; Indices[4]  = 2; Indices[5]  = 3;
-    Indices[6]  = 0; Indices[7]  = 3; Indices[8]  = 4;
-    Indices[9]  = 0; Indices[10] = 4; Indices[11] = 1;
-
-    pDriver->setVertexFormat( cgVertexFormat::formatFromDeclarator( cgShadedVertex::Declarator ) );
-    pShader->setBool( _T("wireViewport"), bWireframe );
-    pDriver->setWorldTransform( ObjectTransform );
-    if ( pShader->beginTechnique( _T("drawWireframeNode") ) )
+    // Execute technique.
+    cgSurfaceShader * shader = driver->getSandboxSurfaceShader().getResource(true);
+    if ( shader->beginTechnique( _T("drawGhostedShapeMesh") ) )
     {
-        if ( pShader->executeTechniquePass() != cgTechniqueResult::Abort )
-        {
-            // Draw the arrow tip
-            pDriver->drawIndexedPrimitiveUP( cgPrimitiveType::TriangleList, 0, 5, 4, Indices, cgBufferFormat::Index32, Points );
+        while ( shader->executeTechniquePass( ) == cgTechniqueResult::Continue )
+            mesh->draw( cgMeshDrawMode::Simple );
+        shader->endTechnique();
 
-            // Now we'll render the base of the arrow and the "stalk".
-            // So that we can construct in object space, transform camera culling details
-            // into object space too.
-            cgVector3 vCameraLook, vCameraPos;
-            InverseObjectTransform.transformNormal( vCameraLook, pCamera->getZAxis(false) );
-            InverseObjectTransform.transformCoord( vCameraPos, pCamera->getPosition(false) );
-            cgVector3::normalize( vCameraLook, vCameraLook );
-            
-            // Construct the vertices. First the "stalk" / cube vertices.
-            // Render each of the cube faces as line lists (manual back face culling)
-            fSize              = fZoomFactor * 4.0f;
-            Points[0].position = cgVector3( -fSize, 0.0f,               fSize );
-            Points[1].position = cgVector3( -fSize, fArrowStalkLength,  fSize );
-            Points[2].position = cgVector3(  fSize, fArrowStalkLength,  fSize );
-            Points[3].position = cgVector3(  fSize, 0.0f,               fSize );
-            Points[4].position = cgVector3( -fSize, 0.0f,              -fSize );
-            Points[5].position = cgVector3( -fSize, fArrowStalkLength, -fSize );
-            Points[6].position = cgVector3(  fSize, fArrowStalkLength, -fSize );
-            Points[7].position = cgVector3(  fSize, 0.0f,              -fSize );
-
-            // Stalk +X Face
-            if ( bOrtho )
-                bCull = (cgVector3::dot( cgVector3( 1,0,0 ), vCameraLook ) >= 0.0f );
-            else
-                bCull = (cgCollision::pointClassifyPlane( vCameraPos, cgVector3( 1,0,0 ), -fSize ) != cgPlaneQuery::Front);
-            
-            // Build indices
-            cgUInt32 nCount = 0;
-            if ( !bCull )
-            {
-                Indices[nCount++] = 3; Indices[nCount++] = 2;
-                Indices[nCount++] = 2; Indices[nCount++] = 6;
-                Indices[nCount++] = 6; Indices[nCount++] = 7;
-                Indices[nCount++] = 7; Indices[nCount++] = 3;
-
-            } // End if !cull
-
-            // -X Face
-            if ( bOrtho )
-                bCull = (cgVector3::dot( cgVector3( -1,0,0 ), vCameraLook ) >= 0.0f );
-            else
-                bCull = (cgCollision::pointClassifyPlane( vCameraPos, cgVector3( -1,0,0 ), fSize ) != cgPlaneQuery::Front);
-            
-            // Build indices
-            if ( !bCull )
-            {
-                Indices[nCount++] = 1; Indices[nCount++] = 0;
-                Indices[nCount++] = 0; Indices[nCount++] = 4;
-                Indices[nCount++] = 4; Indices[nCount++] = 5;
-                Indices[nCount++] = 5; Indices[nCount++] = 1;
-
-            } // End if !cull
-
-            // -Y Face
-            if ( bOrtho )
-                bCull = (cgVector3::dot( cgVector3( 0,-1,0 ), vCameraLook ) >= 0.0f );
-            else
-                bCull = (cgCollision::pointClassifyPlane( vCameraPos, cgVector3( 0,-1,0 ), 0.0f ) != cgPlaneQuery::Front);
-            
-            // Build indices
-            if ( !bCull )
-            {
-                Indices[nCount++] = 0; Indices[nCount++] = 3;
-                Indices[nCount++] = 3; Indices[nCount++] = 7;
-                Indices[nCount++] = 7; Indices[nCount++] = 4;
-                Indices[nCount++] = 4; Indices[nCount++] = 0;
-
-            } // End if !cull
-
-            // +Z Face
-            if ( bOrtho )
-                bCull = (cgVector3::dot( cgVector3( 0,0,1 ), vCameraLook ) >= 0.0f );
-            else
-                bCull = (cgCollision::pointClassifyPlane( vCameraPos, cgVector3( 0,0,1 ), -fSize ) != cgPlaneQuery::Front);
-            
-            // Build indices
-            if ( !bCull )
-            {
-                Indices[nCount++] = 0; Indices[nCount++] = 1;
-                Indices[nCount++] = 1; Indices[nCount++] = 2;
-                Indices[nCount++] = 2; Indices[nCount++] = 3;
-                Indices[nCount++] = 3; Indices[nCount++] = 0;
-
-            } // End if !cull
-
-            // -Z Face
-            if ( bOrtho )
-                bCull = (cgVector3::dot( cgVector3( 0,0,-1 ), vCameraLook ) >= 0.0f );
-            else
-                bCull = (cgCollision::pointClassifyPlane( vCameraPos, cgVector3( 0,0,-1 ), fSize ) != cgPlaneQuery::Front);
-            
-            // Build indices
-            if ( !bCull )
-            {
-                Indices[nCount++] = 7; Indices[nCount++] = 6;
-                Indices[nCount++] = 6; Indices[nCount++] = 5;
-                Indices[nCount++] = 5; Indices[nCount++] = 4;
-                Indices[nCount++] = 4; Indices[nCount++] = 7;
-
-            } // End if !cull
-
-            // Now construct the "base" of the arrow tip pyramid.
-            if ( bOrtho )
-                bCull = (cgVector3::dot( cgVector3( 0,-1,0 ), vCameraLook ) >= 0.0f );
-            else
-                bCull = (cgCollision::pointClassifyPlane( vCameraPos, cgVector3( 0,-1, 0 ), fZoomFactor * 20.0f ) != cgPlaneQuery::Front);
-            
-            // Build base vertices / indices
-            if ( !bCull )
-            {
-                fSize               = fZoomFactor * 7.5f;
-                Points[8].position  = cgVector3( -fSize, fArrowStalkLength, -fSize );
-                Points[9].position  = cgVector3( -fSize, fArrowStalkLength,  fSize );
-                Points[10].position = cgVector3(  fSize, fArrowStalkLength,  fSize );
-                Points[11].position = cgVector3(  fSize, fArrowStalkLength, -fSize );
-
-                Indices[nCount++] = 8 ; Indices[nCount++] = 9;
-                Indices[nCount++] = 9 ; Indices[nCount++] = 10;
-                Indices[nCount++] = 10; Indices[nCount++] = 11;
-                Indices[nCount++] = 11; Indices[nCount++] = 8;
-
-            } // End if !cull
-
-            // Draw the rest of the light source representation
-            pDriver->drawIndexedPrimitiveUP( cgPrimitiveType::LineList, 0, 16, nCount / 2, Indices, cgBufferFormat::Index32, Points );
-
-            // Generate line strip circle to show the axis of rotation.
-            for ( i = 0; i < 30; ++i )
-            {
-                // Build vertex
-                cgVector3 vPoint;
-                vPoint.x = (sinf( (CGE_TWO_PI / 30.0f) * (cgFloat)i ) * fCircleRadius);
-                vPoint.y = 0.0f;
-                vPoint.z = (cosf( (CGE_TWO_PI / 30.0f) * (cgFloat)i ) * fCircleRadius);
-                Points[i] = cgShadedVertex( vPoint, nColor );
-
-                // Build index
-                Indices[i] = i;
-                
-            } // Next Segment
-
-            // Add last index to connect back to the start of the circle
-            Indices[30] = 0;
-
-            // Render the lines.
-            pDriver->drawIndexedPrimitiveUP( cgPrimitiveType::LineStrip, 0, 30, 30, Indices, cgBufferFormat::Index32, Points );
-
-        } // End if begun pass
-
-        // We have finished rendering
-        pShader->endTechnique();
-    
-    } // End if begun technique
+    } // End if success
 
     // Call base class implementation last.
-    cgJointObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+    cgJointObject::sandboxRender( camera, visibilityData, wireframe, gridPlane, issuer );
+}
+
+//-----------------------------------------------------------------------------
+// Name : createSandboxMesh() (Protected)
+/// <summary>
+/// Generate the physical representation of this joint for rendering.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgHingeJointObject::createSandboxMesh( )
+{
+    // Compute a shape identifier that can be used to find duplicate meshes.
+    cgString referenceName = cgString::format( _T("Core::SandboxShapes::HingeJoint") );
+
+    // Does a mesh with this identifier already exist?
+    cgResourceManager * resources = mWorld->getResourceManager();
+    if ( !resources->getMesh( &mSandboxMesh, referenceName ) )
+    {
+        // Dispose of any previous mesh generated and
+        // allocate a new one.
+        mSandboxMesh.close( true );
+        cgMesh * newMesh = new cgMesh( 0, CG_NULL );
+
+        // Set the mesh data format and populate it.
+        cgResourceManager * resources = mWorld->getResourceManager();
+        cgVertexFormat * vertexFormat = cgVertexFormat::formatFromDeclarator( cgVertex::Declarator );
+        if ( !newMesh->createCapsule( vertexFormat, 5.0f, 50.0f, 1, 10, false, cgMeshCreateOrigin::Center, true, resources ) )
+        {
+            delete newMesh;
+            return false;
+
+        } // End if failed
+            
+        // Add to the resource manager
+        if ( !resources->addMesh( &mSandboxMesh, newMesh, 0, referenceName, cgDebugSource() ) )
+        {
+            delete newMesh;
+            return false;
+
+        } // End if failed
+
+    } // End if no existing mesh
+
+    // Success?
+    return mSandboxMesh.isValid();
 }
 
 //-----------------------------------------------------------------------------
@@ -744,7 +426,8 @@ bool cgHingeJointObject::insertComponentData( )
         mInsertJoint.bindParameter( 2, mUseLimits );
         mInsertJoint.bindParameter( 3, mMinimumAngle );
         mInsertJoint.bindParameter( 4, mMaximumAngle );
-        mInsertJoint.bindParameter( 5, mSoftRefCount );
+        mInsertJoint.bindParameter( 5, mInitialAngle );
+        mInsertJoint.bindParameter( 6, mSoftRefCount );
 
         // Execute
         if ( mInsertJoint.step( true ) == false )
@@ -800,6 +483,7 @@ bool cgHingeJointObject::onComponentLoading( cgComponentLoadingEventArgs * e )
     mLoadJoint.getColumn( _T("UseLimits"), mUseLimits );
     mLoadJoint.getColumn( _T("MinimumAngle"), mMinimumAngle );
     mLoadJoint.getColumn( _T("MaximumAngle"), mMaximumAngle );
+    mLoadJoint.getColumn( _T("InitialAngle"), mInitialAngle );
 
     // Call base class implementation to read remaining data.
     if ( !cgJointObject::onComponentLoading( e ) )
@@ -830,7 +514,7 @@ void cgHingeJointObject::prepareQueries()
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         if ( mInsertJoint.isPrepared() == false )
-            mInsertJoint.prepare( mWorld, _T("INSERT INTO 'Objects::HingeJoint' VALUES(?1,?2,?3,?4,?5)"), true );
+            mInsertJoint.prepare( mWorld, _T("INSERT INTO 'Objects::HingeJoint' VALUES(?1,?2,?3,?4,?5,?6)"), true );
     
     } // End if sandbox
 
@@ -854,6 +538,7 @@ cgHingeJointNode::cgHingeJointNode( cgUInt32 nReferenceId, cgScene * pScene ) : 
     mJoint      = CG_NULL;
     mBody0RefId = 0;
     mBody1RefId = 0;
+    mColor      = 0xFF22AAFF;
 }
 
 //-----------------------------------------------------------------------------
@@ -1097,6 +782,7 @@ void cgHingeJointNode::rebuildJoint( )
             mJoint->addReference( this );
             mJoint->enableLimits( isLimited() );
             mJoint->setLimits( getLimits().min, getLimits().max );
+            mJoint->enableBodyCollision( isBodyCollisionEnabled() );
         
         } // End if has physics bodies
     
@@ -1224,6 +910,74 @@ bool cgHingeJointNode::onNodeInit( const cgUInt32IndexMap & NodeReferenceRemap )
 }
 
 //-----------------------------------------------------------------------------
+// Name : setBody0 () (Virtual)
+/// <summary>
+/// Set the reference identifier of the first of two nodes to which this hinge
+/// joint will be anchored. In order for the joint to function, both attached
+/// nodes must have valid physics bodies.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgHingeJointNode::setBody0( cgUInt32 nodeReferenceId )
+{
+    // Do nothing if this is a no-op.
+    if ( mBody0RefId == nodeReferenceId )
+        return;
+
+
+    // Update local member
+    mBody0RefId = nodeReferenceId;
+
+    // Rebuild the underlying physics joint based on the new node.
+    rebuildJoint();
+}
+
+//-----------------------------------------------------------------------------
+// Name : getBody0 () (Virtual)
+/// <summary>
+/// Get the reference identifier of the first of two nodes to which this hinge
+/// joint will be anchored.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgUInt32 cgHingeJointNode::getBody0( ) const
+{
+    return mBody0RefId;
+}
+
+//-----------------------------------------------------------------------------
+// Name : setBody1 () (Virtual)
+/// <summary>
+/// Set the reference identifier of the second of two nodes to which this hinge
+/// joint will be anchored. In order for the joint to function, both attached
+/// nodes must have valid physics bodies.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgHingeJointNode::setBody1( cgUInt32 nodeReferenceId )
+{
+    // Do nothing if this is a no-op.
+    if ( mBody1RefId == nodeReferenceId )
+        return;
+
+
+    // Update local member
+    mBody1RefId = nodeReferenceId;
+
+    // Rebuild the underlying physics joint based on the new node.
+    rebuildJoint();
+}
+
+//-----------------------------------------------------------------------------
+// Name : getBody1 () (Virtual)
+/// <summary>
+/// Get the reference identifier of the second of two nodes to which this hinge
+/// joint will be anchored.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgUInt32 cgHingeJointNode::getBody1( ) const
+{
+    return mBody1RefId;
+}
+
+//-----------------------------------------------------------------------------
 // Name : onNodeDeleted () (Virtual)
 /// <summary>
 /// Can be overriden or called by derived class when the object is being 
@@ -1253,6 +1007,22 @@ bool cgHingeJointNode::onNodeDeleted( )
 
     // Call base class implementation last.
     return cgJointNode::onNodeDeleted( );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onComponentModified() (Virtual)
+/// <summary>
+/// When the component is modified, derived objects can call this method in 
+/// order to notify any listeners of this fact.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgHingeJointNode::onComponentModified( cgComponentModifiedEventArgs * e )
+{
+    // Rebuild the joint whenever a property is modified (whatever it is)
+    rebuildJoint();
+
+    // Call base class implementation last
+    cgJointNode::onComponentModified( e );
 }
 
 //-----------------------------------------------------------------------------

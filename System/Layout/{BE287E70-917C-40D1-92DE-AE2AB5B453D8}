@@ -1,0 +1,12 @@
+--Table: Objects::Base::Joint -- {BE287E70-917C-40D1-92DE-AE2AB5B453D8}
+
+CREATE TABLE IF NOT EXISTS [Objects::Base::Joint] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [BodyCollision] tinyint(1) DEFAULT(0));
+
+CREATE TRIGGER IF NOT EXISTS [Objects::Base::Joint_OnDelete]
+  BEFORE DELETE
+  ON [Objects::Base::Joint]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;

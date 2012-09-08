@@ -107,6 +107,7 @@ protected:
     //-------------------------------------------------------------------------
     void                        prepareQueries          ( );
     bool                        insertComponentData     ( );
+    bool                        createSandboxMesh       ( );
 
     //-------------------------------------------------------------------------
     // Protected Variables
@@ -114,6 +115,8 @@ protected:
     bool            mUseLimits;
     cgFloat         mMinimumAngle;      // Degrees
     cgFloat         mMaximumAngle;      // Degrees
+    cgFloat         mInitialAngle;      // Degrees
+    cgMeshHandle    mSandboxMesh;       // Representation of this joint for sandbox rendering.
 
     //-------------------------------------------------------------------------
     // Protected Static Variables
@@ -147,6 +150,14 @@ public:
     //-------------------------------------------------------------------------
     static cgObjectNode       * allocateNew             ( const cgUID & type, cgUInt32 referenceId, cgScene * scene );
     static cgObjectNode       * allocateClone           ( const cgUID & type, cgUInt32 referenceId, cgScene * scene, cgObjectNode * init, cgCloneMethod::Base initMethod, const cgTransform & initTransform );
+
+    //-------------------------------------------------------------------------
+    // Public Methods
+    //-------------------------------------------------------------------------
+    void                        setBody0                ( cgUInt32 nodeReferenceId );
+    void                        setBody1                ( cgUInt32 nodeReferenceId );
+    cgUInt32                    getBody0                ( ) const;
+    cgUInt32                    getBody1                ( ) const;
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
@@ -164,6 +175,11 @@ public:
     virtual bool                onNodeLoading           ( const cgUID & objectType, cgWorldQuery * nodeData, cgSceneCell * parentCell, cgCloneMethod::Base cloneMethod );
     virtual bool                onNodeInit              ( const cgUInt32IndexMap & nodeReferenceRemap );
     virtual bool                onNodeDeleted           ( );
+
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods (Overrides cgWorldComponentEventListener)
+    //-------------------------------------------------------------------------
+    virtual void                onComponentModified     ( cgComponentModifiedEventArgs * e );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)

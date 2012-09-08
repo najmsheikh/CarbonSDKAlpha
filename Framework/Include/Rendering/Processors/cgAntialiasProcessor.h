@@ -54,7 +54,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-	bool			executeFXAA             ( const cgTextureHandle & source, const cgTextureHandle & velocity, const cgRenderTargetHandle & destination );
+	bool			executeFXAA             ( const cgTextureHandle & source, const cgTextureHandle & velocity, const cgRenderTargetHandle & destination, bool reverseTonemap );
 	bool			computePixelVelocity    ( cgCameraNode * activeCamera, const cgTextureHandle & depth, cgDepthType::Base depthType, const cgRenderTargetHandle & velocity );
 	bool			temporalResolve		    ( const cgTextureHandle & curr, const cgTextureHandle & prev, const cgTextureHandle & velocity, const cgRenderTargetHandle & destination );
 

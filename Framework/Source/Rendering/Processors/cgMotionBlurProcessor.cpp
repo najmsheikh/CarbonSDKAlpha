@@ -67,6 +67,8 @@ cgMotionBlurProcessor::cgMotionBlurProcessor(  )
 	mOperationData.compositeSpeedScale = 100.0f;
 
     // Setup configuration defaults.
+	mBlurAmt                = 0.5f;
+	mCompositeSpeedScale    = 100.0f;
 	mRotationalBlurAmt      = 1.0f;   
 	mTranslationBlurAmt     = 0.0f;  
 
@@ -129,6 +131,8 @@ void cgMotionBlurProcessor::dispose( bool disposeBase )
 	mOperationData.compositeSpeedScale = 100.0f;
     
     // Setup configuration defaults.
+    mBlurAmt                = 0.5f;
+	mCompositeSpeedScale    = 100.0f;
     mRotationalBlurAmt      = 1.0f;   
     mTranslationBlurAmt     = 0.0f;  
     mTargetRate             = 50;
@@ -343,27 +347,16 @@ bool cgMotionBlurProcessor::update( cgCameraNode * activeCamera, cgFloat timeDel
 
     // Compute the required blur attenuation based on current rate.
     mBlurAttenuation = max( 0.0f, min( 1.0f, (mCurrentRenderRate - mAttenuationRates.min) / (mAttenuationRates.max - mAttenuationRates.min) ) );
+	mBlurAttenuation *= mBlurAttenuation;	
+
+	// Attenuate blurriness factor(s)
+	mOperationData.blurAmount          = mBlurAmt * mBlurAttenuation;
+	mOperationData.compositeSpeedScale = mCompositeSpeedScale * mBlurAttenuation * mBlurAttenuation;
 
     // If there is blurring to do
     if ( mBlurAttenuation > 0.0f )
 	{
 		// Compute current rotation for resulting blur matrix.
-		//cgQuaternion rotation;
-		//cgFloat frameDelta = min( 1.0f, mAccumulatedTime * mTargetRate );
-		//if ( mUseRotation )
-		//{
-		//	cgQuaternion key1, key2;
-		//	cgQuaternion::rotationMatrix( key1, mViewKeyMatrix1 );
-		//	cgQuaternion::rotationMatrix( key2, mViewKeyMatrix2 );
-		//	cgQuaternion::slerp( rotation, key1, key2, frameDelta );
-
-		//} // End if blur rotation
-		//else
-		//{
-		//	cgQuaternion::rotationMatrix( rotation, cameraWorld );
-
-		//} // End if no rotation blur
-
 		cgQuaternion rotation, tmpQuat;
 		cgFloat frameDelta = min( 1.0f, mAccumulatedTime * mTargetRate );
 		cgQuaternion qkey1, qkey2;
@@ -371,14 +364,14 @@ bool cgMotionBlurProcessor::update( cgCameraNode * activeCamera, cgFloat timeDel
 		cgQuaternion::rotationMatrix( qkey2, mViewKeyMatrix2 );
 		cgQuaternion::slerp( rotation, qkey1, qkey2, frameDelta );
 		cgQuaternion::rotationMatrix( tmpQuat, cameraWorld );
-		cgQuaternion::slerp( rotation, tmpQuat, rotation, mRotationalBlurAmt );
+		cgQuaternion::slerp( rotation, tmpQuat, rotation, mRotationalBlurAmt * mBlurAttenuation );
 
 		// Compute current translation for resulting blur matrix
 		cgVector3 translation;
 		const cgVector3 & key1 = (cgVector3&)mViewKeyMatrix1._41;
 		const cgVector3 & key2 = (cgVector3&)mViewKeyMatrix2._41;
 		cgVector3::lerp( translation, key1, key2, frameDelta );
-		cgVector3::lerp( translation, (cgVector3&)cameraWorld._41, translation, mTranslationBlurAmt );
+		cgVector3::lerp( translation, (cgVector3&)cameraWorld._41, translation, mTranslationBlurAmt * mBlurAttenuation );
 
 		// Generate scene blur matrix. (Rotation + Translation)
 		cgMatrix m;
@@ -466,7 +459,7 @@ void cgMotionBlurProcessor::setTranslationBlurAmount( cgFloat amt )
 //-----------------------------------------------------------------------------
 void cgMotionBlurProcessor::setBlurAmount( cgFloat amt )
 {
-	mOperationData.blurAmount = amt;
+	mBlurAmt = amt;
 }
 
 //-----------------------------------------------------------------------------
@@ -488,6 +481,6 @@ void cgMotionBlurProcessor::setMaxSpeed( cgFloat speed )
 //-----------------------------------------------------------------------------
 void cgMotionBlurProcessor::setCompositeSpeedScale( cgFloat scale )
 {
-	mOperationData.compositeSpeedScale = scale;
+	mCompositeSpeedScale = scale;
 }
 

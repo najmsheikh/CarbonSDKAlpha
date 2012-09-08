@@ -197,7 +197,7 @@ bool cgEngineInit( const CGEConfig & Config, cgLogOutput * pOutput /* = CG_NULL 
     
     // Force the thread on which timing processes are run
     // onto a single processor / core.
-    DWORD_PTR dwProcessAffinityMask = 0;
+    /*DWORD_PTR dwProcessAffinityMask = 0;
     DWORD_PTR dwSystemAffinityMask = 0;
     HANDLE hCurrentProcess = GetCurrentProcess();
     if( GetProcessAffinityMask( hCurrentProcess, &dwProcessAffinityMask, &dwSystemAffinityMask ) != 0 && dwProcessAffinityMask )
@@ -216,7 +216,7 @@ bool cgEngineInit( const CGEConfig & Config, cgLogOutput * pOutput /* = CG_NULL 
         } // End if thread valid
     
     } // End if process valid
-    CloseHandle( hCurrentProcess );
+    CloseHandle( hCurrentProcess );*/
 
     // Initialize GDI+.
     GdiplusStartupInput gdiplusStartupInput;

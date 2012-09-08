@@ -58,12 +58,13 @@ public:
 	struct ChannelAssignment
 	{
 		void      * currOwner;
-		void      * prevOwner;
 		cgUInt32    dataTypeId;
+		void      * lastFiller;
+		int         lastFillFrame;
 
 		// Constructor
 		ChannelAssignment() : 
-		currOwner(CG_NULL), prevOwner(CG_NULL), dataTypeId(0xFFFFFFFF){}
+		currOwner(CG_NULL), dataTypeId(0xFFFFFFFF),lastFillFrame(-1),lastFiller(CG_NULL){}
 	};
 	CGE_VECTOR_DECLARE( ChannelAssignment, ChannelAssignmentArray )
 
@@ -85,6 +86,7 @@ public:
     cgUInt32					getChannelMask		    ( void * owner ) const;
 	bool						wasPreviousOwner        ( void * owner, cgUInt32 previousChannelMask = 0 ) const;
 	bool						isAssignedType          ( cgUInt32 dataTypeId ) const;
+	void                        setFiller               ( void * pFiller );
 
     //-------------------------------------------------------------------------
     // Public Inline Methods
@@ -98,7 +100,6 @@ public:
     inline cgTextureHandle      getResource             ( ) const { return mResource; }
     inline bool					isResourceLost			( ) const { return mResource.isResourceLost(); }
 	inline cgDouble             getTimeLastAssigned     ( ) const { return mLastAssigned; }
-
 	ChannelAssignmentArray  &   getChannelAssignments   ( ){ return mChannelAssignments; }
 
 private:
@@ -106,11 +107,11 @@ private:
     //-------------------------------------------------------------------------
     // Private Variables
     //-------------------------------------------------------------------------
-	cgTexturePoolResourceDesc   mDescription;           // A description of this resource
-    cgTextureHandle             mResource;              // The handle to the underlying resource.
-	cgUInt32                    mAvailableChannels;     // Number of channels available for assignment
-	cgDouble                    mLastAssigned;          // The last time at which this resource was assigned
-    ChannelAssignmentArray      mChannelAssignments;    // Describes the owner and type of the data assigned to a given resource channel.
+	cgTexturePoolResourceDesc   mDescription;            // A description of this resource
+    cgTextureHandle             mResource;               // The handle to the underlying resource.
+	cgUInt32                    mAvailableChannels;      // Number of channels available for assignment
+	cgDouble                    mLastAssigned;           // The last time at which this resource was assigned
+    ChannelAssignmentArray      mChannelAssignments;     // Describes the owner and type of the data assigned to a given resource channel.
 };
 
 //-----------------------------------------------------------------------------
@@ -180,8 +181,6 @@ public:
 	const cgTexturePoolDepthFormatDesc* getBestDepthFormat          ( cgUInt32 precision, bool sample, bool gather, bool compare, cgUInt8 stencilBits = 0 ) const;
 	const cgTexturePoolDepthFormatDesc* getBestReadableDepthFormat  ( cgUInt32 precision, cgUInt8 stencilBits = 0 ) const;
     const cgTexturePoolDepthFormatDesc* getSharedDepthStencilFormat ( ) const;
-
-	void debugPool( cgUInt32 nDataTypeId = 0xffffffff );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)

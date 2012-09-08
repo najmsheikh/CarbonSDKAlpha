@@ -115,6 +115,8 @@ protected:
     // Configuration
     cgFloat                 mTargetRate;            // Target frame rate at which motion blur will be sampled
     cgRangeF                mAttenuationRates;      // Frame rates between which motion blur will begin to be attenuated out.
+	cgFloat                 mBlurAmt;               // General blurriness control.
+	cgFloat                 mCompositeSpeedScale;   // Compositing speed control.
 	cgFloat                 mRotationalBlurAmt;     // How much should rotational blur would we like (0 to 1)?
 	cgFloat                 mTranslationBlurAmt;    // How much should translation blur would we like (0 to 1)?
 };

@@ -563,9 +563,9 @@ void cgApplication::loadConfig( const cgString & strFileName )
     mSystemConfig = cgFileSystem::resolveFileLocation( strFileName );
 
     // Get application configuration
-    mMaximumFPS          = cgStringUtility::getPrivateProfileFloat( _T("Application"), _T("MaxFrameRate"), 0, strFileName.c_str() );
-    mMaximumSmoothedFPS  = cgStringUtility::getPrivateProfileFloat( _T("Application"), _T("MaxSmoothedFrameRate"), 59.9f, strFileName.c_str() );
-    bool bTimerSmoothing = (GetPrivateProfileInt( _T("Application"), _T("TimerSmoothing"), 0, strFileName.c_str() ) != 0);
+    mMaximumFPS          = cgStringUtility::getPrivateProfileFloat( _T("Application"), _T("MaxFrameRate"), 0, mSystemConfig.c_str() );
+    mMaximumSmoothedFPS  = cgStringUtility::getPrivateProfileFloat( _T("Application"), _T("MaxSmoothedFrameRate"), 59.9f, mSystemConfig.c_str() );
+    bool bTimerSmoothing = (GetPrivateProfileInt( _T("Application"), _T("TimerSmoothing"), 0, mSystemConfig.c_str() ) != 0);
     cgTimer::getInstance()->enableSmoothing( bTimerSmoothing );
 }
 

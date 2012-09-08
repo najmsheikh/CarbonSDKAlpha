@@ -1743,7 +1743,7 @@ void cgSpotLightNode::onComponentModified( cgComponentModifiedEventArgs * e )
     } // End if AttenMaskSampler
 
     // Call base class implementation last
-    cgObjectNode::onComponentModified( e );
+    cgLightNode::onComponentModified( e );
     
 }
 
@@ -2081,7 +2081,7 @@ bool cgSpotLightNode::reassignShadowMaps( cgTexturePool * pPool )
     {
         // Release shadow resources back to the pool.
         mShadowFrustum->releaseResources();
-        return true;
+        return false;
 
     } // End if not a caster
 

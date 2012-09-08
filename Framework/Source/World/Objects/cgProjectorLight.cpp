@@ -2244,7 +2244,7 @@ void cgProjectorLightNode::onComponentModified( cgComponentModifiedEventArgs * e
     } // End if FoV | Size
 
     // Call base class implementation last
-    cgObjectNode::onComponentModified( e );
+    cgLightNode::onComponentModified( e );
     
 }
 

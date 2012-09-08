@@ -218,6 +218,13 @@ void cgObjectNode::dispose( bool disposeBase )
     // a specific node is being unloaded and as a result will only 'silently' 
     // detach itself from any necessary application components.
 
+    // Paranoia: Although all pending updates should have been resolved
+    // by this point under normal conditions, should the node remain
+    // in the scene's pending update list for whatever reason there will
+    // be a potential catastrophic fault. Make sure we are gone from this list!
+    if ( mParentScene )
+        mParentScene->resolvedNodeUpdates( this );
+
     // Release all allocated behaviors (scripted or otherwise)
     BehaviorArray::iterator itBehavior;
     for ( itBehavior = mBehaviors.begin(); itBehavior != mBehaviors.end(); ++itBehavior )
@@ -4240,7 +4247,6 @@ void cgObjectNode::resolvePendingUpdates( cgUInt32 updateMask )
     onResolvePendingUpdates( updates );
     if ( !mPendingUpdates && mParentScene )
         mParentScene->resolvedNodeUpdates( this );
-
 
     /*// If the node requires that its full hierarchy is processed, find the top-most node 
     // in the hierarchy that has pending hierarchy updates and recurse back through.

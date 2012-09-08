@@ -556,13 +556,6 @@ bool cgShadowGenerator::update( cgUInt32 nResolution, const cgShadowSettingsSyst
 		// Update sampler states
 		updateSamplerStates();
 
-		// As we've changed the description, assign resources
-		assignResources();
-
-		// Build operations lists
-		if ( !buildOperations() )
-			return false;
-
 		// The description is no longer dirty
 		mDescriptionDirty = false;
 	
@@ -797,27 +790,12 @@ cgUInt32 cgShadowGenerator::assignResources( cgTexturePool * pPool )
 	// Keep track of the number of default resources we are assigned
 	mDefaultStatus = 0;
 
-	// If resource reassignment was already successful...
+	// If resource reassignment was already successful, filling is at the discretion of the caller.
 	if ( mReassignmentStatus )
-	{
-		// If any resources were lost and reset, we must force a refill.
-		for ( size_t i = 0; i < mResources.size(); ++i )
-		{
-			if ( mResources[ i ]->isResourceLost() || !mResources[ i ]->wasPreviousOwner( this ) ) //ToDo: 6767 - Should keep prev channels per resource in the generator for the latter test.
-			{
-				return cgShadowGeneratorFillResult::MustFill;
-			
-            } // End if lost
-
-		} // Next resource
-
-		// Otherwise, filling is at the discretion of the caller.
 		return cgShadowGeneratorFillResult::CanFill;
 
-	} // End if reassigned
-
 	// Reassignment was not successful, so we'll need a new set of resources
-	if ( !mPool->assignResources( mDescriptions, this, (cgUInt32)mType, mResources, mDefaultStatus  ) )
+	if ( !mPool->assignResources( mDescriptions, this, (cgUInt32)mType, mResources, mDefaultStatus ) )
 	{
 		cgAppLog::write( cgAppLog::Error, _T("Failed to find valid resources for shadow generator '%s' during assignment phase\n."), getName().c_str() );
 		return cgShadowGeneratorFillResult::DoNothing;
@@ -846,6 +824,10 @@ cgUInt32 cgShadowGenerator::assignResources( cgTexturePool * pPool )
 
 	} // End if edge masking
 
+	// Anytime we get new resources, we need to rebuild the operations list
+	if ( !buildOperations() )
+		return false;
+
 	// If we were assigned any defaults, we cannot fill now. Otherwise, we must fill.
 	if ( mDefaultStatus > 0 )
 		return cgShadowGeneratorFillResult::CannotFill;
@@ -861,13 +843,13 @@ cgUInt32 cgShadowGenerator::assignResources( cgTexturePool * pPool )
 //-----------------------------------------------------------------------------
 bool cgShadowGenerator::reassignResources( cgTexturePool * pPool )
 {	
-	// Initially assume we will find no matches
-	mReassignmentStatus = false;
-
 	// Attempt reassignment
-	if ( !( mReassignmentStatus = mPool->reassignResources( mDescriptions, this, (cgUInt32)mType, mResources ) ) )
+	mReassignmentStatus = mPool->reassignResources( mDescriptions, this, (cgUInt32)mType, mResources );
+
+	// Initially assume we will find no matches
+	if ( !mReassignmentStatus )
 	{
-		// If we did not successfully reassign, just clear the resource list
+		// If we did not successfully reassign, release all of our held resources
 		releaseResources();
 	
     } // End if failed

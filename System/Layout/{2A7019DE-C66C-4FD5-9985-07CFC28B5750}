@@ -11,5 +11,5 @@ CREATE TRIGGER [Objects::KinematicControllerJoint_OnDelete]
   BEFORE DELETE
   ON [Objects::KinematicControllerJoint]
   BEGIN
-    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+    DELETE FROM [Objects::Base::Joint] WHERE RefId=old.RefId;  
   END;

@@ -1007,7 +1007,7 @@ bool cgDirectionalLightNode::postCreate( )
 void cgDirectionalLightNode::onComponentModified( cgComponentModifiedEventArgs * e )
 {
     // Call base class implementation last
-    cgObjectNode::onComponentModified( e );
+    cgLightNode::onComponentModified( e );
 }
 
 //-----------------------------------------------------------------------------

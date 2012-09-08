@@ -571,29 +571,138 @@ void cgInputDriver::poll(  )
     // Poll keyboard state
     if ( mDIKeyboard )
     {
-        cgUInt32            nDataElements = mConfig.keyboardBufferSize;
-        DIDEVICEOBJECTDATA *pData = CG_NULL;
+        bool useImmediateResolve = (mConfig.keyboardBufferSize == 0);
 
-        // Buffered?
-        if ( mConfig.keyboardBufferSize == 0 )
+        // Buffered or immediate?
+        if ( mConfig.keyboardBufferSize )
         {
-            // Copy old key state data into "previous state" buffer
-            memcpy( mPrevKeyStates, mKeyStates, sizeof(mKeyStates) );
+            // Allocate enough room for buffered data
+            cgUInt32 nDataElements = mConfig.keyboardBufferSize;
+            DIDEVICEOBJECTDATA * pData = new DIDEVICEOBJECTDATA[ nDataElements ];
 
-            // Clear out the key state buffer
-            memset( mKeyStates, 0, sizeof(mKeyStates) );
-            
-            // Retrieve the state of all keys
-            hRet = mDIKeyboard->GetDeviceState( sizeof(mKeyStates), mKeyStates );
-            
+            // Retrieve the device data
+            hRet = mDIKeyboard->GetDeviceData( sizeof(DIDEVICEOBJECTDATA), pData, &nDataElements, 0 );
+
             // Failed to get state?
             if( FAILED(hRet) ) 
             {
                 // Attempt to re-acquire the device
                 hRet = mDIKeyboard->Acquire();
+
+                // If the keyboard was re-acquired, attempt to get the current state of
+                // the keyboard since any events that occurred while the device was
+                // in an unacquired state will now be lost.
+                if ( SUCCEEDED(hRet) )
+                {
+                    // Copy old key state data into "previous state" buffer
+                    memcpy( mPrevKeyStates, mKeyStates, sizeof(mKeyStates) );
+
+                    // Get current snapshot
+                    cgUInt8 pNewKeyStates[256];
+                    GetKeyboardState( pNewKeyStates );
+
+                    // Map into main key states array
+                    static HKL KeyboardLayout = GetKeyboardLayout(CG_NULL);
+                    for ( size_t i = 0; i < 256; ++i )
+                    {
+                        cgUInt nSourceIndex = MapVirtualKeyEx( i, MAPVK_VSC_TO_VK_EX, KeyboardLayout );
+                        mKeyStates[i] = pNewKeyStates[nSourceIndex];
+                    
+                    } // Next character
+                    
+                    // Process using standard 'immediate' style key press
+                    // resolution for the remainder of this step.
+                    useImmediateResolve = true;
+                
+                } // End if re-acquired
+
+                // Don't process device state further using buffered approach.
+                nDataElements = 0;
+
+            } // End if failed
+
+            // Update current key state buffer if any data retrieved
+            if ( nDataElements > 0 )
+            {
+                // Loop through buffered state changes
+                for ( cgUInt32 i = 0; i < nDataElements; ++i )
+                {
+                    // Update state
+                    mKeyStates[ pData[i].dwOfs ] = (cgUInt8)pData[i].dwData;
+
+                    // Build 'modifier' key states
+                    nModifiers = 0;
+                    if ( isKeyPressed( cgKeys::LControl ) ) nModifiers |= cgModifierKeys::LeftControl;
+                    if ( isKeyPressed( cgKeys::RControl ) ) nModifiers |= cgModifierKeys::RightControl;
+                    if ( isKeyPressed( cgKeys::LShift   ) ) nModifiers |= cgModifierKeys::LeftShift;
+                    if ( isKeyPressed( cgKeys::RShift   ) ) nModifiers |= cgModifierKeys::RightShift;
+                    if ( isKeyPressed( cgKeys::LAlt     ) ) nModifiers |= cgModifierKeys::LeftAlt;
+                    if ( isKeyPressed( cgKeys::RAlt     ) ) nModifiers |= cgModifierKeys::RightAlt;
+
+                    // Pressed or released?
+                    if ( (pData[i].dwData & 0x80) )
+                    {
+                        onKeyDown( (cgInt32)pData[i].dwOfs, nModifiers );
+                        onKeyPressed( (cgInt32)pData[i].dwOfs, nModifiers );
+
+                        // Store information about repeat onKeyPressed events that need to be sent
+                        KeyRepeatInfo Repeat;
+                        Repeat.timePressed       = nTime;
+                        Repeat.timeLastSignalled = nTime;
+                        mKeyRepeatData[ (cgInt32)pData[i].dwOfs ] = Repeat;
+
+                    } // End if key was pressed
+                    else
+                    {
+                        onKeyUp( (cgInt32)pData[i].dwOfs, nModifiers );
+
+                        // Remove from repeat data list
+                        mKeyRepeatData.erase( (cgInt32)pData[i].dwOfs );
+
+                    } // End if key was released
+
+                } // Next state change
+
+            } // End if anything changed
+
+            // Release buffered data storage array
+            delete []pData;
+
+        } // End if buffered
+        else
+        {
+            // Retrieve the state of all keys
+            cgUInt8 pNewKeyStates[256] = {0};
+            hRet = mDIKeyboard->GetDeviceState( sizeof(pNewKeyStates), pNewKeyStates );
+
+            // Failed to get state?
+            if( FAILED(hRet) ) 
+            {
+                // Attempt to re-acquire the device
+                hRet = mDIKeyboard->Acquire();
+
+                // Do not resolve
+                useImmediateResolve = false;
             
             } // End if failed
 
+            // If GetDeviceState() (or subsequent re-acquisition) succeeded then
+            // we should resolve the key state arrays normally.
+            if ( SUCCEEDED( hRet ) )
+            {
+                // Copy old key state data into "previous state" buffer
+                memcpy( mPrevKeyStates, mKeyStates, sizeof(mKeyStates) );
+
+                // Copy new states in
+                memcpy( mKeyStates, pNewKeyStates, sizeof(mKeyStates) );
+            
+            } // End if success
+
+        } // End if immediate
+
+        // Do we want to use the immediate resolve process?
+        if ( useImmediateResolve )
+        {
             // Build 'modifier' key states
             nModifiers = 0;
             if ( isKeyPressed( cgKeys::LControl ) ) nModifiers |= cgModifierKeys::LeftControl;
@@ -634,76 +743,7 @@ void cgInputDriver::poll(  )
 
             } // Next Key
 
-        } // End if not buffering keyboard input
-        else
-        {
-            // Copy old key state data into "previous state" buffer
-            memcpy( mPrevKeyStates, mKeyStates, sizeof(mKeyStates) );
-
-            // Allocate enough room for buffered data
-            pData = new DIDEVICEOBJECTDATA[ mConfig.keyboardBufferSize ];
-            
-            // Retrieve the device data
-            hRet = mDIKeyboard->GetDeviceData( sizeof(DIDEVICEOBJECTDATA), pData, &nDataElements, 0 );
-
-            // Failed to get state?
-            if( FAILED(hRet) ) 
-            {
-                // Attempt to re-acquire the device
-                hRet = mDIKeyboard->Acquire();
-                nDataElements = 0;
-            
-            } // End if failed
-
-            // Update current key state buffer
-            if ( nDataElements > 0 )
-            {
-                // Loop through buffered state changes
-                for ( cgUInt32 i = 0; i < nDataElements; ++i )
-                {
-                    // Update state
-                    mKeyStates[ pData[i].dwOfs ] = (cgUInt8)pData[i].dwData;
-
-                    // Build 'modifier' key states
-                    nModifiers = 0;
-                    if ( isKeyPressed( cgKeys::LControl ) ) nModifiers |= cgModifierKeys::LeftControl;
-                    if ( isKeyPressed( cgKeys::RControl ) ) nModifiers |= cgModifierKeys::RightControl;
-                    if ( isKeyPressed( cgKeys::LShift   ) ) nModifiers |= cgModifierKeys::LeftShift;
-                    if ( isKeyPressed( cgKeys::RShift   ) ) nModifiers |= cgModifierKeys::RightShift;
-                    if ( isKeyPressed( cgKeys::LAlt     ) ) nModifiers |= cgModifierKeys::LeftAlt;
-                    if ( isKeyPressed( cgKeys::RAlt     ) ) nModifiers |= cgModifierKeys::RightAlt;
-
-                    // Pressed or released?
-                    if ( (pData[i].dwData & 0x80) )
-                    {
-                        onKeyDown( (cgInt32)pData[i].dwOfs, nModifiers );
-                        onKeyPressed( (cgInt32)pData[i].dwOfs, nModifiers );
-
-                        // Store information about repeat onKeyPressed events that need to be sent
-                        KeyRepeatInfo Repeat;
-                        Repeat.timePressed       = nTime;
-                        Repeat.timeLastSignalled = nTime;
-                        mKeyRepeatData[ (cgInt32)pData[i].dwOfs ] = Repeat;
-
-                    } // End if key was pressed
-                    else
-                    {
-                        onKeyUp( (cgInt32)pData[i].dwOfs, nModifiers );
-                        
-                        // Remove from repeat data list
-                        mKeyRepeatData.erase( (cgInt32)pData[i].dwOfs );
-
-                    } // End if key was released
-
-                } // Next state change
-            
-            } // End if anything changed
-
-        } // End if buffering keyboard input
-
-        // Release buffered data storage array if allocated
-        if ( pData != CG_NULL )
-            delete []pData;
+        } // End if not resolving.
 
         // Build current 'control' key states for repeat processing
         nModifiers = 0;

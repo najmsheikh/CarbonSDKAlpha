@@ -75,7 +75,6 @@ using namespace cgExceptions;
 //-----------------------------------------------------------------------------
 cgWorldQuery cgScene::mInsertMaterialUsage;
 cgWorldQuery cgScene::mDeleteMaterialUsage;
-cgWorldQuery cgScene::mUpdateLandscapeRef;
 
 ///////////////////////////////////////////////////////////////////////////////
 // cgSceneDescriptor Member Definitions
@@ -683,154 +682,19 @@ bool cgScene::load( )
                                                           (maxCellsZ * importParams.blockGrid.height) + 1) );
         importLandscape( importParams );
         
-        // The landscape is also our main scene spatial tree.
-        /*setSceneTree( mLandscape );*/
+        // Was this successful?
+        if ( mLandscape )
+        {
+            // The landscape is also our main scene spatial tree.
+            /*setSceneTree( mLandscape );*/
+
+            // Mark the scene as immediately dirty.
+            setDirty( true );
         
-        // Mark the scene as immediately dirty.
-        setDirty( true );
+        } // End if imported
     
     } // End if generate landscape
-    
-    // ToDo: 9999 - Original Loading Code
-    /*cgInputStream      Stream;
-    cgSceneLoader      Loader;
-    
-    // Validate requirements
-    if ( mSceneDescriptor == CG_NULL )
-        return false;
 
-    // ToDo: Prevent loading twice.
-
-    // We are now in the process of loading.
-    mIsLoading = true;
-
-    // Get access to required systems.
-    cgResourceManager * resources  = cgResourceManager::getInstance();
-    cgPhysicsEngine   * physics    = cgPhysicsEngine::getInstance();
-
-    // Create and initialize a new physics world for this scene
-    mPhysicsWorld = physics->createWorld( getName() );
-    if ( mPhysicsWorld->initialize() == false )
-    {
-        cgAppLog::write( cgAppLog::Error, _T("Failed to initialize physics world while loading scene '%s'.\n"), getName().c_str() );
-        mIsLoading = false;
-        return false;
-
-    } // End if failed
-
-    // ToDo: Hardcoded currently.
-    // Initialize the physics unit conversion system.
-    mPhysicsWorld->SetUnitConversion( cgUnitType::Meters, 15.0f );
-
-    // ToDo: Add a System/Scripts/Render Control/Default.gs fallback render control script.
-
-    // Select the correct render control definition
-    cgString renderScriptFile = mSceneDescriptor.strRenderControl;
-    if ( renderScriptFile.empty() == true )
-        renderScriptFile = _T("sys://Scripts/Render Control/Default.gs");
-
-    // Create the render control script
-    if ( resources->loadScript( &mRenderScript, renderScriptFile, _T("Scene"), getName(), 0, cgDebugSource() ) == false )
-    {
-        cgAppLog::write( cgAppLog::Debug | cgAppLog::Error, _T("Failed to compile scene render control script '%s' while loading scene '%s'.\n"), renderScriptFile.c_str(), getName().c_str() );
-        mIsLoading = false;
-        return false;
-
-    } // End if failed to load render control script
-
-    // Set the script's global "this" handle.
-    cgScript * script = mRenderScript;
-    script->SetThisObject( this );
-
-    // Notify the script that we're about to load the scene.
-    try
-    {
-        bool callSucceeded = false, result = false;
-        
-        // Attempt to execute the specified (optional) script event function.
-        result = script->ExecuteFunctionBool( _T("onScenePreLoad"), cgScriptArgument::Array(), true, &callSucceeded );
-
-        // If the call succeeded, and it requested that we exit, do so.
-        if ( callSucceeded == true && result == false )
-        {
-            mIsLoading = true;
-            return false;
-        
-        } // End if failure
-    
-    } // End try to execute
-    catch ( cgScriptInterop::Exceptions::ExecuteException & e )
-    {
-        cgAppLog::write( cgAppLog::Error, _T("Failed to execute onScenePreLoad() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
-        mIsLoading = false;
-        return false;
-    
-    } // End catch exception
-
-    // Begin loading the scene data
-    if ( Loader.load( mSceneDescriptor.strSceneData, resources, this ) == false )
-    {
-        mIsLoading = false;
-        return false;
-    
-    } // End if failed
-
-    // Notify the script that the load has completed
-    try
-    {
-        bool callSucceeded = false, result = false;
-        
-        // Attempt to execute the specified (optional) script event function.
-        result = script->ExecuteFunctionBool( _T("onSceneLoaded"), cgScriptArgument::Array(), true, &callSucceeded );
-
-        // If the call succeeded, and it requested that we exit, do so.
-        if ( callSucceeded == true && result == false )
-        {
-            mIsLoading = false;
-            return false;
-        } // End if failure
-    
-    } // End try to execute
-    catch ( cgScriptInterop::Exceptions::ExecuteException & e )
-    {
-        cgAppLog::write( cgAppLog::Error, _T("Failed to execute onSceneLoaded() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
-        mIsLoading = false;
-        return false;
-    
-    } // End catch exception
-
-    // Create the default material used for the 'CollapseMaterials' batching method.
-    // ToDo: Error handling.
-    ResourceHandle hDefaultEffect;
-    cgMaterial * pDefaultMaterial = new cgMaterial( 0 );
-    pDefaultMaterial->BeginPopulate( resources );
-    resources->LoadEffectFile( &hDefaultEffect, resources->GetDefaultEffectFile(), 0, cgDebugSource() );
-    pDefaultMaterial->SetEffectFile( hDefaultEffect );
-    pDefaultMaterial->EndPopulate();
-    resources->AddMaterial( &m_hDefaultMaterial, pDefaultMaterial, 0, cgDebugSource() );
-
-    // ToDo: Allow for script to register other collapse materials referencable by name,
-    // or perhaps just have the BeginDrawBatch() accept a resource handle to a material.
-
-    // ToDo: Until we decide how to handle "action" definitions in Prescience, we'll
-    //       just create a new animation controller for each animation set loaded from
-    //       the file and leave it running.
-    const ResourceArray & LoadedSets = Loader.GetLoadedAnimationSets();
-    for ( size_t i = 0; i < LoadedSets.size(); ++i )
-    {
-        cgAnimationController * controller = new cgAnimationController( this );
-        controller->SetControllerEnabled( true );
-        controller->SetTrackAnimationSet( 0, LoadedSets[i] );
-        addController( controller );
-        
-    } // Next Animation Set
-    
-    // ToDo: Supply scene tree?
-    //m_pCollisionDB->SetSceneTree( m_pSpatialTree );*/
-
-    //cgToDoAssert( "Carbon Testing", "Applying a local / data level scale to all elements in the scene." );
-    //applySceneRescale( 1.0f / 90.0f );
-    
     // Success!!
     return true;
 }
@@ -1741,25 +1605,11 @@ cgLandscape * cgScene::importLandscape( const cgLandscapeImportParams & params )
     
     } // End if failed
 
-    // Update the scene's landscape reference identifier.
-    if ( getSceneId() != 0 && mLandscape->getDatabaseId() != 0 )
-    {
-        prepareQueries();
-        mUpdateLandscapeRef.bindParameter( 1, mLandscape->getDatabaseId() );
-        mUpdateLandscapeRef.bindParameter( 2, getSceneId() );
-        
-        // Execute
-        if ( mUpdateLandscapeRef.step( true ) == false )
-        {
-            cgString error;
-            mUpdateLandscapeRef.getLastError( error );
-            cgAppLog::write( cgAppLog::Error, _T("Failed to update landscape reference identifier for scene '0x%x' during import process. Error: %s\n"), getSceneId(), error.c_str() );
-            return false;
-        
-        } // End if failed
+    // Update the scene's landscape reference identifier in the database.
+    mSceneDescriptor.landscapeId = mLandscape->getDatabaseId();
+    if ( getSceneId() != 0 && mSceneDescriptor.landscapeId != 0 )
+        mWorld->updateSceneDescriptorById( getSceneId(), mSceneDescriptor );
     
-    } // End if serialize
-
     // Success!
     return mLandscape;
 }
@@ -1853,7 +1703,7 @@ cgObjectNode * cgScene::createObjectNode( bool internalNode, const cgUID & objec
 
         // Commit the changes.
         if ( !internalNode )
-            mWorld->commitTransaction( L"createObjectNode" );
+            mWorld->commitTransaction( _T("createObjectNode") );
 
     } // End try
 
@@ -1861,7 +1711,7 @@ cgObjectNode * cgScene::createObjectNode( bool internalNode, const cgUID & objec
     {
         cgAppLog::write( cgAppLog::Error, _T("%s\n"), e.toString().c_str() );
         if ( !internalNode )
-            mWorld->rollbackTransaction( L"createObjectNode" );
+            mWorld->rollbackTransaction( _T("createObjectNode") );
         return CG_NULL;
     
     } // End catch
@@ -4709,8 +4559,6 @@ void cgScene::prepareQueries()
             mInsertMaterialUsage.prepare( mWorld, _T("INSERT INTO 'Scenes::MaterialUsage' VALUES(NULL,?1,?2,?3)"), true );
         if ( mDeleteMaterialUsage.isPrepared() == false )
             mDeleteMaterialUsage.prepare( mWorld, _T("DELETE FROM 'Scenes::MaterialUsage' WHERE MaterialId=?1 AND SceneId=?2"), true );
-        if ( mUpdateLandscapeRef.isPrepared() == false )
-            mUpdateLandscapeRef.prepare( mWorld, _T("UPDATE 'Scenes' SET LandscapeId=?1 WHERE SceneId=?2"), true );
     
     } // End if sandbox
 }
@@ -4777,7 +4625,7 @@ void cgScene::onNodeDeleted( cgNodeUpdatedEventArgs * e )
 //-----------------------------------------------------------------------------
 // Name : onNodesDeleted () (Virtual)
 /// <summary>
-/// Can be overriden or called by derived class in order to trigger the event
+/// Can be overridden or called by derived class in order to trigger the event
 /// with matching name. All listeners will subsequently be notified.
 /// </summary>
 //-----------------------------------------------------------------------------

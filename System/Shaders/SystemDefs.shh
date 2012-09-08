@@ -124,6 +124,7 @@
     float4      _materialAmbient = {1.0, 1.0, 1.0, 1.0};
     float4      _materialEmissive = {0.0, 0.0, 0.0, 1.0};
     float4      _materialSpecular = {1.0, 1.0, 1.0, 1.0};
+    float4      _materialEmissiveTint;                          // Tint for emissive texture
     
     float       _materialGloss;
     float       _materialAlphaTestValue;
@@ -142,7 +143,7 @@
     float       _materialMetalnessSpecular;
     float       _materialMetalnessDiffuse;
 
-    float2      _materialOpacityMapStrength;                        // x = Diffuse, y = Specular
+    float2      _materialOpacityMapStrength;                    // x = Diffuse, y = Specular
 
     float       _parallaxHeightScale;
     float       _parallaxHeightBias;
@@ -152,17 +153,17 @@
     float       _materialILR;
 ?>
 
-<?cbuffer _cbObject : register(b7), globaloffset(c83)
+<?cbuffer _cbObject : register(b7), globaloffset(c84)
     float       _objectBlendFactor = 1.0;
 ?>
 
-<?cbuffer _cbWorld : register(b8), globaloffset(c85)
+<?cbuffer _cbWorld : register(b8), globaloffset(c86)
     matrix      _worldMatrix;
     matrix      _worldITMatrix;
 ?>
 
 // ToDo: Can these two be made local to the effect rather than global. 
-<?cbuffer _cbRSM : register(b9), globaloffset(c95)
+<?cbuffer _cbRSM : register(b9), globaloffset(c96)
     float4      _rsmTextureSize;
     float4      _rsmTextureScaleBias;                      
     float4      _rsmScreenToViewScaleBias;
@@ -176,7 +177,7 @@
     matrix      _rsmInvViewMatrix;
 ?>
 
-<?cbuffer _cbGrid : register(b10), globaloffset(c112)
+<?cbuffer _cbGrid : register(b10), globaloffset(c113)
 	float3      _gridMin;
 	float3      _gridMax;
 	float3      _gridDimensions;
@@ -189,7 +190,7 @@
     float       _blendRegionPrev;
 ?>
 
-<?cbuffer _cbVertexBlending : register(b11), globaloffset(c120), shaderconstraints(vs)
+<?cbuffer _cbVertexBlending : register(b11), globaloffset(c121), shaderconstraints(vs)
     float3x4      _worldMatrices[ 20 ];
 ?>
 

@@ -369,92 +369,6 @@ void cgCameraObject::applyObjectRescale( cgFloat fScale )
     cgWorldObject::applyObjectRescale( fScale );
 }
 
-// ToDo: Remove
-/*//-----------------------------------------------------------------------------
-//  Name : Deserialize ()
-/// <summary>
-/// Initialize the object based on the XML data pulled from the 
-/// environment / scene definition file.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgCameraObject::Deserialize( const cgXMLNode & InitData, cgSceneLoader * pLoader )
-{
-    // ToDo:
-    cgXMLNode     xProperties, xChild;
-    cgFloat     fValue;
-
-    // Get access to the scene physics engine
-    cgPhysicsEngine * pPhysics = pScene->GetPhysicsEngine();
-    if ( !pPhysics ) return false;
-    
-    // Retrieve the mesh properties
-    xProperties = InitData.getChildNode( _T("CameraProperties") );
-    if ( !xProperties.isEmpty() )
-    {
-        // Retrieve FOV
-        xChild = xProperties.getChildNode( _T("FOV") );
-        if ( xChild.isEmpty() )
-        {
-            // Throw warning and default
-            cgAppLog::Write( cgAppLog::Debug | cgAppLog::Warning, _T("Camera entity '%s' did not specify a field of view (FOV) value when loading scene '%s'. Defaulting to a value of 90 degrees.\n"), (LPCTSTR)GetInstanceName(), (LPCTSTR)pScene->GetName() );
-            setFOV( 90.0f );
-        
-        } // End if not provided
-        else
-        {
-            // Parse FOV and set
-            cgStringParser( xChild.getText() ) >> fValue;
-            setFOV( fValue );
-
-        } // End if provided
-
-        // Retrieve near clip distance (in meters)
-        xChild = xProperties.getChildNode( _T("NearClip") );
-        if ( xChild.isEmpty() )
-        {
-            // Throw warning and default
-            cgAppLog::Write( cgAppLog::Debug | cgAppLog::Warning, _T("Camera entity '%s' did not specify a near clip plane distance (NearClip) when loading scene '%s'. Defaulting to a distance of 1.01 world units.\n"), (LPCTSTR)GetInstanceName(), (LPCTSTR)pScene->GetName() );
-            setNearClip( 1.01f );
-        
-        } // End if not provided
-        else
-        {
-            // Parse and set
-            cgStringParser( xChild.getText() ) >> fValue;
-            setNearClip( pPhysics->MetersToWorld( fValue ) );
-
-        } // End if provided
-
-        // Retrieve far clip distance (in meters)
-        xChild = xProperties.getChildNode( _T("FarClip") );
-        if ( xChild.isEmpty() )
-        {
-            // Throw warning and default
-            cgAppLog::Write( cgAppLog::Debug | cgAppLog::Warning, _T("Camera entity '%s' did not specify a far clip plane distance (FarClip) when loading scene '%s'. Defaulting to a distance of 1000 meters.\n"), (LPCTSTR)GetInstanceName(), (LPCTSTR)pScene->GetName() );
-            setFarClip( pPhysics->MetersToWorld( 1000.0f ) );
-        
-        } // End if not provided
-        else
-        {
-            // Parse and set
-            cgStringParser( xChild.getText() ) >> fValue;
-            setFarClip( pPhysics->MetersToWorld( fValue ) );
-
-        } // End if provided
-
-    } // End if CameraProperties specified
-    else
-    {
-        // Write debug information
-        cgAppLog::Write( cgAppLog::Error, _T("Camera entity '%s' contains no 'CameraProperties' node when loading scene '%s'.\n"), (LPCTSTR)GetInstanceName(), (LPCTSTR)pScene->GetName() );
-        return false;
-
-    } // End if no node
-
-    // Call base class last
-    return cgSceneObject::Deserialize( InitData, pLoader );
-}*/
-
 ///////////////////////////////////////////////////////////////////////////////
 // cgCameraNode Member Definitions
 ///////////////////////////////////////////////////////////////////////////////
@@ -1155,13 +1069,7 @@ cgFloat cgCameraNode::estimateZoomFactor( const cgSize & ViewportSize, const cgP
 //-----------------------------------------------------------------------------
 cgFloat cgCameraNode::estimateZoomFactor( const cgSize & ViewportSize, const cgVector3 & WorldPos )
 {
-    // Just return the actual zoom factor if this is orthographic
-    if ( getProjectionMode() == cgProjectionMode::Orthographic )
-        return getZoomFactor();
-
-    // New Zoom factor is based on the distance to this position
-    cgFloat fDistance = cgVector3::length( WorldPos - getPosition( false ) );
-    return fDistance / ((cgFloat)ViewportSize.height * 0.4f /*(45.0f / getFOV())*/ );
+    return estimateZoomFactor( ViewportSize, WorldPos, FLT_MAX );
 }
 
 //-----------------------------------------------------------------------------
@@ -1208,10 +1116,12 @@ cgFloat cgCameraNode::estimateZoomFactor( const cgSize & ViewportSize, const cgV
     
     } // End if Orthographic
 
-    // New Zoom factor is based on the distance to this position
-    cgFloat fDistance = cgVector3::length( WorldPos - getPosition( false ) );
-    cgFloat fFactor = fDistance / ((cgFloat)ViewportSize.height * 1.0f);
-    return min( fFactor, fMax );
+    // New Zoom factor is based on the distance to this position 
+    // along the camera's look vector.
+    cgVector3 viewPos;
+    cgVector3::transformCoord( viewPos, WorldPos, getViewMatrix() );
+    cgFloat distance = viewPos.z / ((cgFloat)ViewportSize.height * (45.0f / getFOV()) );
+    return min( fMax, distance );
 }
 
 //-----------------------------------------------------------------------------
@@ -1232,7 +1142,7 @@ void cgCameraNode::update( cgFloat fElapsedTime )
 //-----------------------------------------------------------------------------
 //  Name : getVisibilitySet ()
 /// <summary>
-/// Retrieve the camera's visiblity set.
+/// Retrieve the camera's visibility set.
 /// </summary>
 //-----------------------------------------------------------------------------
 cgVisibilitySet * cgCameraNode::getVisibilitySet( )
@@ -1372,93 +1282,6 @@ void cgCameraNode::projectionInterlace()
 	cgMatrix::inverse( mtxInvBase, BaseVP );
 	cgMatrix::multiply( mProjectionMatrix, mtxShifted, mtxInvBase ); 
 }
-
-
-// ToDo: Remove
-/*//-----------------------------------------------------------------------------
-//  Name : Deserialize ()
-/// <summary>
-/// Initialize the object based on the XML data pulled from the 
-/// environment / scene definition file.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgCameraNode::Deserialize( const cgXMLNode & InitData, cgSceneLoader * pLoader )
-{
-    // ToDo:
-    cgXMLNode     xProperties, xChild;
-    cgFloat     fValue;
-
-    // Get access to the scene physics engine
-    cgPhysicsEngine * pPhysics = pScene->GetPhysicsEngine();
-    if ( !pPhysics ) return false;
-    
-    // Retrieve the mesh properties
-    xProperties = InitData.getChildNode( _T("CameraProperties") );
-    if ( !xProperties.isEmpty() )
-    {
-        // Retrieve FOV
-        xChild = xProperties.getChildNode( _T("FOV") );
-        if ( xChild.isEmpty() )
-        {
-            // Throw warning and default
-            cgAppLog::Write( cgAppLog::Debug | cgAppLog::Warning, _T("Camera entity '%s' did not specify a field of view (FOV) value when loading scene '%s'. Defaulting to a value of 90 degrees.\n"), (LPCTSTR)GetInstanceName(), (LPCTSTR)pScene->GetName() );
-            setFOV( 90.0f );
-        
-        } // End if not provided
-        else
-        {
-            // Parse FOV and set
-            cgStringParser( xChild.getText() ) >> fValue;
-            setFOV( fValue );
-
-        } // End if provided
-
-        // Retrieve near clip distance (in meters)
-        xChild = xProperties.getChildNode( _T("NearClip") );
-        if ( xChild.isEmpty() )
-        {
-            // Throw warning and default
-            cgAppLog::Write( cgAppLog::Debug | cgAppLog::Warning, _T("Camera entity '%s' did not specify a near clip plane distance (NearClip) when loading scene '%s'. Defaulting to a distance of 1.01 world units.\n"), (LPCTSTR)GetInstanceName(), (LPCTSTR)pScene->GetName() );
-            setNearClip( 1.01f );
-        
-        } // End if not provided
-        else
-        {
-            // Parse and set
-            cgStringParser( xChild.getText() ) >> fValue;
-            setNearClip( pPhysics->MetersToWorld( fValue ) );
-
-        } // End if provided
-
-        // Retrieve far clip distance (in meters)
-        xChild = xProperties.getChildNode( _T("FarClip") );
-        if ( xChild.isEmpty() )
-        {
-            // Throw warning and default
-            cgAppLog::Write( cgAppLog::Debug | cgAppLog::Warning, _T("Camera entity '%s' did not specify a far clip plane distance (FarClip) when loading scene '%s'. Defaulting to a distance of 1000 meters.\n"), (LPCTSTR)GetInstanceName(), (LPCTSTR)pScene->GetName() );
-            setFarClip( pPhysics->MetersToWorld( 1000.0f ) );
-        
-        } // End if not provided
-        else
-        {
-            // Parse and set
-            cgStringParser( xChild.getText() ) >> fValue;
-            setFarClip( pPhysics->MetersToWorld( fValue ) );
-
-        } // End if provided
-
-    } // End if CameraProperties specified
-    else
-    {
-        // Write debug information
-        cgAppLog::Write( cgAppLog::Error, _T("Camera entity '%s' contains no 'CameraProperties' node when loading scene '%s'.\n"), (LPCTSTR)GetInstanceName(), (LPCTSTR)pScene->GetName() );
-        return false;
-
-    } // End if no node
-
-    // Call base class last
-    return cgSceneObject::Deserialize( InitData, pLoader );
-}*/
 
 //-----------------------------------------------------------------------------
 //  Name : onComponentModified() (Virtual)

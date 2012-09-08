@@ -1667,7 +1667,8 @@ bool cgPointLightNode::reassignShadowMaps( cgTexturePool * pPool )
         // Release resources back to the pool.
         for ( cgInt i = 0; i < 6; ++i )
             mFrustums[i]->releaseResources();
-        return true;
+
+        return false;
     
     } // End if not a caster
 
@@ -2934,7 +2935,7 @@ void cgPointLightNode::onComponentModified( cgComponentModifiedEventArgs * e )
     } // End if Range | RangeAdjust | ApplyRescale
 
     // Call base class implementation last
-    cgObjectNode::onComponentModified( e );
+    cgLightNode::onComponentModified( e );
 
 }
 
