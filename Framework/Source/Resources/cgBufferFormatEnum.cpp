@@ -1757,7 +1757,7 @@ cgBufferFormat::Base cgBufferFormatEnum::getBestFourChannelFormat( cgBufferType:
 /// (irrespective of its physical capabilities).
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgBufferFormatEnum::isFormatSupported( cgBufferType::Base Type, cgBufferFormat::Base Format ) const
+bool cgBufferFormatEnum::isFormatSupported( cgBufferType::Base Type, cgBufferFormat::Base Format, cgUInt32 requiredCaps ) const
 {
     FormatEnumMap::const_iterator Item;
     const FormatEnumMap * pMap = CG_NULL;
@@ -1798,11 +1798,15 @@ bool cgBufferFormatEnum::isFormatSupported( cgBufferType::Base Type, cgBufferFor
     Item = pMap->find( Format );
 
     // We don't support the storage of this format.
-    if ( Item == pMap->end() )
+    if ( Item == pMap->end() || Item->second == 0 )
         return false;
 
-    // Item has any capabilities?
-    return (Item->second != 0);
+    // All bits in the required capabilities must be set.
+    if ( (Item->second & requiredCaps) != requiredCaps )
+        return false;
+
+    // Supported!
+    return true;
 }
 
 //-----------------------------------------------------------------------------

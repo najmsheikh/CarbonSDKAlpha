@@ -91,9 +91,9 @@ class AntialiasingShader : ISurfaceShader
     ///////////////////////////////////////////////////////////////////////////
 	//-------------------------------------------------------------------------
 	// Name : transform()
-	// Desc : Used when drawing full screen clip quad with eye ray interpolator 
+	// Desc : Used when drawing full screen clip quad
 	//-------------------------------------------------------------------------
-	bool transform( bool outputEyeRay )
+	bool transform( )
 	{
         /////////////////////////////////////////////
         // Definitions
@@ -105,15 +105,8 @@ class AntialiasingShader : ISurfaceShader
 
         // Define shader outputs.
 		<?out
-			float4 clipPosition     : SV_POSITION;
-			float2 texCoords        : TEXCOORD0;
+			float4 clipPosition     : SV_POSITION; 
 		?>
-		if ( outputEyeRay )
-		{
-			<?out	
-				float3 eyeRay           : TEXCOORD1;
-			?>
-		}
 		
         // Constant buffer usage.
         <?cbufferrefs
@@ -127,22 +120,7 @@ class AntialiasingShader : ISurfaceShader
 		<?
 		clipPosition.xyz = sourcePosition.xyz;
 		clipPosition.w   = 1.0;
-
-		// Get the screen coords into range [0,1]
-		texCoords.xy = float2( clipPosition.x, -clipPosition.y ) * 0.5 + 0.5;
-
-		// Adjust screen coords to take into account the currently set viewport and half pixel offset. 
-		texCoords.xy = texCoords.xy * _screenUVAdjustScale + _screenUVAdjustBias;
 		?>
-
-		// This ray goes from the camera position to the pixel in the screen
-		if ( outputEyeRay )
-		{
-			<?
-			float4 viewPosition = mul( float4( clipPosition.x * _cameraFar, clipPosition.y * _cameraFar, _cameraFar, _cameraFar ), _inverseProjectionMatrix );
-			eyeRay = mul( viewPosition.xyz, _inverseViewMatrix );
-			?>
-		}
 		
 		// Valid shader
 		return true;
@@ -154,7 +132,12 @@ class AntialiasingShader : ISurfaceShader
 	<?common
 
 		#define   FXAA_PC      1
+        #ifdef DX9C
 		#define   FXAA_HLSL_3  1
+        #endif
+        #ifdef DX11
+		#define   FXAA_HLSL_4  1
+        #endif
 		#define	  FXAA_QUALITY__PRESET 39
 
 		/*============================================================================
@@ -1076,7 +1059,6 @@ class AntialiasingShader : ISurfaceShader
         // Define shader inputs.
         <?in
 			float4  screenPosition : SV_POSITION;
-            float2  texCoords      : TEXCOORD0;
         ?>
 
         // Define shader outputs.
@@ -1086,6 +1068,7 @@ class AntialiasingShader : ISurfaceShader
 
         // Constant buffer usage.
         <?cbufferrefs
+            _cbCamera;
             cbAntialiasing;
         ?>
 
@@ -1093,6 +1076,9 @@ class AntialiasingShader : ISurfaceShader
         // Shader Code
         /////////////////////////////////////////////
 		<?
+
+        // Compute texture coordinates
+        float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
 		
 		// Prepare the required data
 		float2 rcpFrame     = textureSize.zw; 
@@ -1103,7 +1089,15 @@ class AntialiasingShader : ISurfaceShader
 		float4 rcpFrame3602 = textureSize.zwzw * float4( 8.0, 8.0, -4.0, -4.0 );
 
 		// Run the shader		
-		float4 fxaaResult   = fxaaQuality( texCoords, posPos, sImage, sImage, sImage, rcpFrame, rcpFrameCon, rcpFrameCon2, rcpFrame3602, 0.50, 0.063, 0.0625, 8.0, 0.125, 0.05, float4( 0, 0, 0, 0 ) );
+        FxaaTex input;
+        #ifdef DX9C
+            input = sImage;
+        #endif
+        #ifdef DX11
+            input.smpl = sImage;
+            input.tex = sImageTex;
+        #endif
+        float4 fxaaResult = fxaaQuality( texCoords, posPos, input, input, input, rcpFrame, rcpFrameCon, rcpFrameCon2, rcpFrame3602, 0.50, 0.063, 0.0625, 8.0, 0.125, 0.05, float4( 0, 0, 0, 0 ) );
 
 		// Store a low res version of the pixel speed (used during temporal AA resolve).
 		float2 velocity = sample2D( sVelocityTex, sVelocity, texCoords );
@@ -1135,7 +1129,6 @@ class AntialiasingShader : ISurfaceShader
         // Define shader inputs.
         <?in
 			float4  screenPosition : SV_POSITION;
-            float2  texCoords      : TEXCOORD0;
         ?>
 
         // Define shader outputs.
@@ -1153,6 +1146,9 @@ class AntialiasingShader : ISurfaceShader
         // Shader Code
         /////////////////////////////////////////////
 		<?
+        // Compute texture coordinates
+        float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
+
 		// Compute previous and current clip positions
 		float  eyeZ             = decompressF32( sample2D( sDepthTex, sDepth, texCoords ).rgb ) * _cameraInverseRangeScale + _cameraInverseRangeBias;
  		float3 viewPosition     = float3( texCoords * _cameraScreenToViewScale + _cameraScreenToViewBias, 1.0f ) * eyeZ;
@@ -1183,7 +1179,6 @@ class AntialiasingShader : ISurfaceShader
         // Define shader inputs.
         <?in
 			float4  screenPosition : SV_POSITION;
-            float2  texCoords      : TEXCOORD0;
         ?>
 
         // Define shader outputs.
@@ -1201,6 +1196,9 @@ class AntialiasingShader : ISurfaceShader
         // Shader Code
         /////////////////////////////////////////////
 		<?
+		// Compute texture coordinates
+        float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
+		
 		// Sample pixel velocity
 		float2 velocity = -sample2D( sVelocityTex, sVelocity, texCoords ).rg;
 

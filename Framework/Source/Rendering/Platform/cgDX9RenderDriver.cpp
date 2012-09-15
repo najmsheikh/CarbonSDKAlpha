@@ -555,7 +555,7 @@ bool cgDX9RenderDriver::initialize( cgResourceManager * pResources, const cgStri
 
     // Retrieve created device
     mD3DDevice = mD3DInitialize->getDirect3DDevice( );
-    
+
     // Store the current window size in the settings for accountabilities sake
     if ( mConfig.windowed )
     {
@@ -570,7 +570,7 @@ bool cgDX9RenderDriver::initialize( cgResourceManager * pResources, const cgStri
 	    mD3DDevice->Clear( 0, CG_NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL, 0, 1.0f, 0 );
     else
         mD3DDevice->Clear( 0, CG_NULL, D3DCLEAR_TARGET, 0, 1.0f, 0 );
-    
+
     // Show the window
     mFocusWindow->show();
 
@@ -772,7 +772,6 @@ bool cgDX9RenderDriver::cameraUpdated()
         //pCameraData->viewportSize;
         //pCameraData->viewportOffset;
         //pCameraData->targetSize;
-        //pCameraData->screenUVAdjustScale;
         //pCameraData->screenUVAdjustBias;
         
         // Unlock the buffer. If it is currently bound to the device
@@ -1996,7 +1995,7 @@ bool cgDX9RenderDriver::beginFrame( bool bClearTarget, cgUInt32 nTargetColor )
             onDeviceLost();
 
             // Reset the display
-            if ( FAILED( hRet = mD3DInitialize->resetDisplay( mD3DDevice, mD3DSettings, CG_NULL, false ) ) )
+            if ( FAILED( hRet = mD3DInitialize->resetDisplay( mD3DDevice, mD3DSettings, CG_NULL, CG_NULL, false ) ) )
             {
                 cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("Failed to reset display device. Waiting to try again. The error reported was: (0x%x) %s - %s\n"), hRet, DXGetErrorString( hRet ), DXGetErrorDescription( hRet ) );
                 return false;
@@ -2210,12 +2209,6 @@ bool cgDX9RenderDriver::beginTargetRender( cgRenderTargetHandle hRenderTarget, c
     // Pre-compute final screen UV adjust scale and bias (based on current
     // viewport and render target size) to prevent the need to compute this
     // in the shader for each pixel / vertex.
-    //pCameraData->screenUVAdjustScale.x = pCameraData->viewportSize.x * pCameraData->targetSize.z;
-    //pCameraData->screenUVAdjustScale.y = pCameraData->viewportSize.y * pCameraData->targetSize.w;
-    //pCameraData->screenUVAdjustBias.x  = (pCameraData->viewportOffset.x + 0.5f) * pCameraData->targetSize.z;
-    //pCameraData->screenUVAdjustBias.y  = (pCameraData->viewportOffset.y + 0.5f) * pCameraData->targetSize.w;
-    pCameraData->screenUVAdjustScale.x = 1.0f;
-    pCameraData->screenUVAdjustScale.y = 1.0f;
     pCameraData->screenUVAdjustBias.x  = 0.5f * pCameraData->targetSize.z;
     pCameraData->screenUVAdjustBias.y  = 0.5f * pCameraData->targetSize.w;
 
@@ -2392,12 +2385,6 @@ bool cgDX9RenderDriver::beginTargetRender( cgRenderTargetHandleArray aRenderTarg
     // Pre-compute final screen UV adjust scale and bias (based on current
     // viewport and render target size) to prevent the need to compute this
     // in the shader for each pixel / vertex.
-    //pCameraData->screenUVAdjustScale.x = pCameraData->viewportSize.x * pCameraData->targetSize.z;
-    //pCameraData->screenUVAdjustScale.y = pCameraData->viewportSize.y * pCameraData->targetSize.w;
-    //pCameraData->screenUVAdjustBias.x  = (pCameraData->viewportOffset.x + 0.5f) * pCameraData->targetSize.z;
-    //pCameraData->screenUVAdjustBias.y  = (pCameraData->viewportOffset.y + 0.5f) * pCameraData->targetSize.w;
-    pCameraData->screenUVAdjustScale.x = 1.0f;
-    pCameraData->screenUVAdjustScale.y = 1.0f;
     pCameraData->screenUVAdjustBias.x  = 0.5f * pCameraData->targetSize.z;
     pCameraData->screenUVAdjustBias.y  = 0.5f * pCameraData->targetSize.w;
 
@@ -2524,12 +2511,6 @@ bool cgDX9RenderDriver::endTargetRender( )
     // Pre-compute final screen UV adjust scale and bias (based on current
     // viewport and render target size) to prevent the need to compute this
     // in the shader for each pixel / vertex.
-    //pCameraData->screenUVAdjustScale.x = pCameraData->viewportSize.x * pCameraData->targetSize.z;
-    //pCameraData->screenUVAdjustScale.y = pCameraData->viewportSize.y * pCameraData->targetSize.w;
-    //pCameraData->screenUVAdjustBias.x  = (pCameraData->viewportOffset.x + 0.5f) * pCameraData->targetSize.z;
-    //pCameraData->screenUVAdjustBias.y  = (pCameraData->viewportOffset.y + 0.5f) * pCameraData->targetSize.w;
-    pCameraData->screenUVAdjustScale.x = 1.0f;
-    pCameraData->screenUVAdjustScale.y = 1.0f;
     pCameraData->screenUVAdjustBias.x  = 0.5f * pCameraData->targetSize.z;
     pCameraData->screenUVAdjustBias.y  = 0.5f * pCameraData->targetSize.w;
 
@@ -2999,7 +2980,7 @@ void cgDX9RenderDriver::windowResized( cgInt32 nWidth, cgInt32 nHeight )
     onDeviceLost();
 
     // Reset the display
-    HRESULT hRet = mD3DInitialize->resetDisplay( mD3DDevice, mD3DSettings, false );
+    HRESULT hRet = mD3DInitialize->resetDisplay( mD3DDevice, mD3DSettings, CG_NULL, CG_NULL, false );
     if ( FAILED( hRet ) )
     {
         cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("Failed to reset display device after window resize. The error reported was: (0x%x) %s - %s\n"), hRet, DXGetErrorString( hRet ), DXGetErrorDescription( hRet ) );

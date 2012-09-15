@@ -1788,17 +1788,30 @@ bool cgObjectNode::reloadTransforms( bool reloadChildren )
 //-----------------------------------------------------------------------------
 void cgObjectNode::setWorldTransform( const cgTransform & transform )
 {
+    setWorldTransform( transform, cgTransformSource::Standard );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setWorldTransform() (Virtual)
+/// <summary>
+/// Update our internal cell transformation based on an adjustment of the world
+/// transform provided. This overload allows the caller to describe the 
+/// operating mode under which the transformation is taking place.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgObjectNode::setWorldTransform( const cgTransform & transform, cgTransformSource::Base source )
+{
     // Compute the new cell relative version if necessary.
     if ( mParentCell )
     {
         cgTransform newTransform = transform;
         newTransform.translate( -mParentCell->getWorldOrigin() );
-        setCellTransform( newTransform );
+        setCellTransform( newTransform, source );
 
     } // End if has parent cell
     else
     {
-        setCellTransform( transform );
+        setCellTransform( transform, source );
 
     } // End if no parent cell
 }
@@ -2046,6 +2059,17 @@ bool cgObjectNode::setCellTransform( const cgTransform & transform, cgTransformS
         
         // Node is automatically dirty if the transformation changed.
         nodeUpdated( deferredUpdates, childDeferredUpdates );
+
+        /*// Trigger 'onTransformChange' of all listeners (duplicate list in case
+        // it is altered in response to event).
+        if ( !mEventListeners.empty() )
+        {
+            EventListenerList listeners = mEventListeners;
+            cgObjectNodeEventArgs eventArgs( this );
+            for ( EventListenerList::iterator itListener = listeners.begin(); itListener != listeners.end(); ++itListener )
+                ((cgObjectNodeEventListener*)(*itListener))->onTransformChange( &eventArgs );
+
+        } // End if any listeners*/
     
     } // End if !TransformResolve
 
@@ -4929,8 +4953,9 @@ bool cgObjectNode::showSelectionAABB( ) const
 //-----------------------------------------------------------------------------
 void cgObjectNode::onPhysicsBodyTransformed( cgPhysicsBody * sender, cgPhysicsBodyTransformedEventArgs * e )
 {
-    // Ignore updates that were not due to dynamics.
-    if ( !e->dynamicsUpdate )
+    // Ignore updates that were not due to dynamics, and did not 
+    // originate from our local physics body.
+    if ( !e->dynamicsUpdate || sender != mPhysicsBody )
         return;
 
     // Switch to standard transformation method.
@@ -5118,8 +5143,12 @@ void cgObjectNode::setInstanceIdentifier( const cgString & identifier )
 
     // Trigger 'onInstanceIdentifierChange' of all listeners (duplicate list in case
     // it is altered in response to event).
-    EventListenerList listeners = mEventListeners;
-    cgObjectNodeNameChangeEventArgs eventArgs( this, oldIdentifier );
-    for ( EventListenerList::iterator itListener = listeners.begin(); itListener != listeners.end(); ++itListener )
-        ((cgObjectNodeEventListener*)(*itListener))->onInstanceIdentifierChange( &eventArgs );
+    if ( !mEventListeners.empty() )
+    {
+        EventListenerList listeners = mEventListeners;
+        cgObjectNodeNameChangeEventArgs eventArgs( this, oldIdentifier );
+        for ( EventListenerList::iterator itListener = listeners.begin(); itListener != listeners.end(); ++itListener )
+            ((cgObjectNodeEventListener*)(*itListener))->onInstanceIdentifierChange( &eventArgs );
+    
+    } // End if any listeners
 }

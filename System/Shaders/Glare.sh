@@ -154,7 +154,7 @@ class GlareShader : ISurfaceShader
 			float white    = lumData.w;
 
 			// Ensure hdr color is within acceptable range
-			float4 ldrColor = toneMapping( finalColor.rgb, exposure, white, $ToneMapMethod::Filmic );	
+			float4 ldrColor = toneMapping( finalColor.rgb, exposure, white, $toneMappingMethod );	
             intensity = max( ldrColor.r, max( ldrColor.g, ldrColor.b ) );
             
             // Apply auto-exposure to the color

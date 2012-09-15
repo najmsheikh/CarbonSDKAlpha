@@ -28,6 +28,7 @@
 //-----------------------------------------------------------------------------
 #include <World/Objects/cgHingeJointObject.h>
 #include <World/Objects/cgCameraObject.h>
+#include <World/Objects/cgMeshObject.h>
 #include <World/cgScene.h>
 #include <Physics/Joints/cgHingeJoint.h>
 #include <Rendering/cgRenderDriver.h>
@@ -44,6 +45,7 @@
 //-----------------------------------------------------------------------------
 cgWorldQuery cgHingeJointObject::mInsertJoint;
 cgWorldQuery cgHingeJointObject::mLoadJoint;
+cgWorldQuery cgHingeJointObject::mUpdateLimits;
 cgWorldQuery cgHingeJointNode::mInsertInstanceData;
 cgWorldQuery cgHingeJointNode::mDeleteInstanceData;
 cgWorldQuery cgHingeJointNode::mLoadInstanceData;
@@ -135,8 +137,37 @@ cgBoundingBox cgHingeJointObject::getLocalBoundingBox( )
 //-----------------------------------------------------------------------------
 void cgHingeJointObject::enableLimits( bool enabled )
 {
-    // ToDo: 6767 -- Update database
+    // Is this a no-op?
+    if ( mUseLimits == enabled )
+        return;
+
+    // Update world database
+    if ( shouldSerialize() == true )
+    {
+        prepareQueries();
+        mUpdateLimits.bindParameter( 1, enabled );
+        mUpdateLimits.bindParameter( 2, mMinimumAngle );
+        mUpdateLimits.bindParameter( 3, mMaximumAngle );
+        mUpdateLimits.bindParameter( 4, mReferenceId );
+
+        // Execute
+        if ( mUpdateLimits.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateLimits.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update limit configuration for hinge joint object '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+
+        } // End if failed
+
+    } // End if serialize
+
+    // Update value.
     mUseLimits = enabled;
+
+    // Notify listeners that property was altered
+    static const cgString strContext = _T("UseLimits");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -160,9 +191,38 @@ void cgHingeJointObject::setLimits( const cgRangeF & range )
 //-----------------------------------------------------------------------------
 void cgHingeJointObject::setLimits( cgFloat minDegrees, cgFloat maxDegrees )
 {
-    // ToDo: 6767 -- Clamp min/max etc. and update database.
-    mMinimumAngle = CGEToRadian( minDegrees );
-    mMaximumAngle = CGEToRadian( maxDegrees );
+    // Is this a no-op?
+    if ( minDegrees == mMinimumAngle && maxDegrees == mMaximumAngle )
+        return;
+
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateLimits.bindParameter( 1, mUseLimits );
+        mUpdateLimits.bindParameter( 2, minDegrees );
+        mUpdateLimits.bindParameter( 3, maxDegrees );
+        mUpdateLimits.bindParameter( 4, mReferenceId );
+
+        // Execute
+        if ( mUpdateLimits.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateLimits.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update limit configuration for hinge joint object '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+
+        } // End if failed
+
+    } // End if serialize
+
+    // Update local members
+    mMinimumAngle = minDegrees;
+    mMaximumAngle = maxDegrees;
+
+    // Notify listeners that object data has changed.
+    static const cgString strContext = _T("LimitRange");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -217,7 +277,7 @@ bool cgHingeJointObject::pick( cgCameraNode * camera, cgObjectNode * issuer, con
     // Transform ray based on the scaling of the mesh itself.
     cgVector3 meshRayOrigin, meshRayDirection;
     cgRenderDriver * driver = mWorld->getRenderDriver();
-    cgFloat zoomFactor = camera->estimateZoomFactor( viewportSize, issuer->getPosition( false ), 2.5f );
+    cgFloat zoomFactor = camera->estimateZoomFactor( viewportSize, issuer->getPosition( false ), 0.05f );
     cgTransform t, inverseT = issuer->getWorldTransform(false);
     t.rotateLocal( CGEToRadian(90.0f), CGEToRadian(90.0f), 0 );
     t.scaleLocal( zoomFactor, zoomFactor, zoomFactor );
@@ -297,6 +357,64 @@ void cgHingeJointObject::sandboxRender( cgCameraNode * camera, cgVisibilitySet *
         shader->endTechnique();
 
     } // End if success
+    
+    // Render the connected nodes if the joint is selected
+    if ( issuer->isSelected() )
+    {
+        // Get the referenced nodes to which the issuer is attached.
+        cgHingeJointNode * hingeNode = static_cast<cgHingeJointNode*>(issuer);
+        cgObjectNode * body0Node = hingeNode->getBody0Node();
+        cgObjectNode * body1Node = hingeNode->getBody1Node();
+
+        // Select new colors.
+        constants->setVector( _T("shapeInteriorColor"), (cgVector4&)cgColorValue( 0.1f, 0.2f, 0.7f, 0.4f ) );
+        constants->setVector( _T("shapeWireColor"), (cgVector4&)cgColorValue( 0.1f, 0.2f, 0.7f, 1.0f ) );
+
+        // If the first referenced body is a mesh, draw a wireframe representation of it.
+        if ( body0Node && body0Node->queryObjectType( RTID_MeshObject ) )
+        {
+            cgMeshObject * meshObject = static_cast<cgMeshObject*>(body0Node->getReferencedObject() );
+            mesh = meshObject->getMesh().getResource(true);
+            if ( mesh && mesh->isLoaded() )
+            {
+                if ( shader->beginTechnique( _T("drawGhostedShapeMesh") ) )
+                {
+                    driver->setWorldTransform( body0Node->getWorldTransform(false) );
+                    while ( shader->executeTechniquePass( ) == cgTechniqueResult::Continue )
+                        mesh->draw( cgMeshDrawMode::Simple );
+                    shader->endTechnique();
+
+                } // End if success
+            
+            } // End if valid mesh
+
+        } // End if body0 = mesh
+
+        // Select new colors.
+        constants->setVector( _T("shapeInteriorColor"), (cgVector4&)cgColorValue( 0.1f, 0.7f, 0.2f, 0.4f ) );
+        constants->setVector( _T("shapeWireColor"), (cgVector4&)cgColorValue( 0.1f, 0.7f, 0.2f, 1.0f ) );
+
+        // If the second referenced body is a mesh, draw a wireframe representation of it.
+        if ( body1Node && body1Node->queryObjectType( RTID_MeshObject ) )
+        {
+            cgMeshObject * meshObject = static_cast<cgMeshObject*>(body1Node->getReferencedObject() );
+            mesh = meshObject->getMesh().getResource(true);
+            if ( mesh && mesh->isLoaded() )
+            {
+                if ( shader->beginTechnique( _T("drawGhostedShapeMesh") ) )
+                {
+                    driver->setWorldTransform( body1Node->getWorldTransform(false) );
+                    while ( shader->executeTechniquePass( ) == cgTechniqueResult::Continue )
+                        mesh->draw( cgMeshDrawMode::Simple );
+                    shader->endTechnique();
+
+                } // End if success
+
+            } // End if valid mesh
+
+        } // End if body1 = mesh 
+
+    } // End if selected
 
     // Call base class implementation last.
     cgJointObject::sandboxRender( camera, visibilityData, wireframe, gridPlane, issuer );
@@ -515,6 +633,8 @@ void cgHingeJointObject::prepareQueries()
     {
         if ( mInsertJoint.isPrepared() == false )
             mInsertJoint.prepare( mWorld, _T("INSERT INTO 'Objects::HingeJoint' VALUES(?1,?2,?3,?4,?5,?6)"), true );
+        if ( mUpdateLimits.isPrepared() == false )
+            mUpdateLimits.prepare( mWorld, _T("UPDATE 'Objects::HingeJoint' SET UseLimits=?1, MinimumAngle=?2, MaximumAngle=?3 WHERE RefId=?4"), true );
     
     } // End if sandbox
 
@@ -535,10 +655,10 @@ void cgHingeJointObject::prepareQueries()
 cgHingeJointNode::cgHingeJointNode( cgUInt32 nReferenceId, cgScene * pScene ) : cgJointNode( nReferenceId, pScene )
 {
     // Initialize members to sensible defaults
-    mJoint      = CG_NULL;
-    mBody0RefId = 0;
-    mBody1RefId = 0;
-    mColor      = 0xFF22AAFF;
+    mJoint              = CG_NULL;
+    mBody0RefId         = 0;
+    mBody1RefId         = 0;
+    mColor              = 0xFF22AAFF;
 }
 
 //-----------------------------------------------------------------------------
@@ -550,7 +670,7 @@ cgHingeJointNode::cgHingeJointNode( cgUInt32 nReferenceId, cgScene * pScene ) : 
 cgHingeJointNode::cgHingeJointNode( cgUInt32 nReferenceId, cgScene * pScene, cgObjectNode * pInit, cgCloneMethod::Base InitMethod, const cgTransform & InitTransform ) : cgJointNode( nReferenceId, pScene, pInit, InitMethod, InitTransform )
 {
     // Initialize members to sensible defaults
-    mJoint = CG_NULL;
+    mJoint              = CG_NULL;
 
     // Duplicate data
     cgHingeJointNode * hingeJoint = (cgHingeJointNode*)pInit;
@@ -646,60 +766,10 @@ bool cgHingeJointNode::getSandboxIconInfo( cgCameraNode * pCamera, const cgSize 
     strAtlas = _T("sys://Textures/ObjectBillboardSheet.xml");
     strFrame = _T("Joint");
 
-    // Compute the distance from the origin of the joint to the edge of
-    // the parent object oriented box.
-    cgFloat fZoomFactor = 0.0f;
-    cgFloat fArrowStalkLength = 0.0f;
-    cgVector3 vJointPos = getPosition(false);
-    if ( false && mParentNode )
-    {
-        // Joint will be rendered at the center of the parent' bounds.
-        cgTransform ParentTransform = mParentNode->getWorldTransform( false );
-        cgBoundingBox LocalBounds = mParentNode->getLocalBoundingBox( );
-        cgBoundingBox WorldBounds = LocalBounds;
-        WorldBounds.transform( ParentTransform );
-        vJointPos = WorldBounds.getCenter();
-
-        // We want to find out the distance to the edge of the parent's
-        // OOBB from the joint along the joint's fixed axis direction.
-        // This will allow us to draw an arrow that is long enough such
-        // that is always visible out of the 'top' of the object. We
-        // achieve this using ray-casting, so first transform the relevant
-        // position and direction into the space of the parent's OOBB.
-        cgTransform InverseParentTransform;
-        cgTransform::inverse( InverseParentTransform, ParentTransform );
-        cgVector3 vEdgeSearchOrigin = vJointPos;
-        cgVector3 vEdgeSearchDir    = getYAxis( false );
-        InverseParentTransform.transformCoord( vEdgeSearchOrigin, vEdgeSearchOrigin );
-        InverseParentTransform.transformNormal( vEdgeSearchDir, vEdgeSearchDir );
-        cgVector3::normalize( vEdgeSearchDir, vEdgeSearchDir );
-        
-        // Cast ray from a point known to be *outside* of the OOBB
-        // toward the *interior* in order to find the edge intersection point
-        cgFloat t;
-        vEdgeSearchOrigin = vEdgeSearchOrigin + vEdgeSearchDir * 10000.0f;
-        vEdgeSearchDir    = -vEdgeSearchDir;
-        if ( LocalBounds.intersect( vEdgeSearchOrigin, vEdgeSearchDir, t, false ) )
-        {
-            cgVector3 vIntersect = vEdgeSearchOrigin + vEdgeSearchDir * t;
-            ParentTransform.transformCoord( vIntersect, vIntersect );
-            fArrowStalkLength = cgVector3::length( vIntersect - vJointPos );
-        
-        } // End if intersecting
-    
-    } // End if has parent
-    
-    // Compute zoom factor for the selected joint location.
-    fZoomFactor = pCamera->estimateZoomFactor( ViewportSize, vJointPos, 2.5f );
-    
-    // Add the arrow padding, and the distance from the base to the tip of the pyramid.
-    fArrowStalkLength += 30.0f * fZoomFactor;
-
     // Position icon
-    vIconOrigin  = vJointPos + (getYAxis(false) * fArrowStalkLength);
-    vIconOrigin += (pCamera->getXAxis() * 0.0f * fZoomFactor) + (pCamera->getYAxis() * 13.0f * fZoomFactor);
-    
-    // Draw icon!
+    vIconOrigin = getPosition(false);
+    cgFloat fZoomFactor = pCamera->estimateZoomFactor( ViewportSize, vIconOrigin, 0.05f );
+    vIconOrigin += (pCamera->getXAxis() * 0.0f * fZoomFactor) + (pCamera->getYAxis() * 17.0f * fZoomFactor);
     return true;
 }
 
@@ -719,8 +789,9 @@ bool cgHingeJointNode::setCellTransform( const cgTransform & Transform, cgTransf
     if ( !cgJointNode::setCellTransform( Transform, Source ) )
         return false;
 
-    // Update the transform of the underlying hinge joint as we move.
-    if ( mJoint )
+    // Update the transform of the underlying hinge joint as we move, unless we're
+    // updating due to our attached physics body updates.
+    if ( mJoint && Source != cgTransformSource::Dynamics )
         mJoint->setPivotTransform( getWorldTransform(false) );
 
     // Success!
@@ -736,18 +807,6 @@ bool cgHingeJointNode::setCellTransform( const cgTransform & Transform, cgTransf
 //-----------------------------------------------------------------------------
 cgBoundingBox cgHingeJointNode::getLocalBoundingBox( )
 {
-    if ( mParentNode )
-    {
-        // Use the parent's bounding box transformed into the
-        // space of the rendered joint.
-        cgBoundingBox LocalBounds = mParentNode->getLocalBoundingBox();
-        cgTransform InverseObjectTransform;
-        cgTransform::inverse( InverseObjectTransform, getWorldTransform( false ) );
-        LocalBounds.transform( mParentNode->getWorldTransform( false ) * InverseObjectTransform );
-        return LocalBounds;
-
-    } // End if has parent
-
     // Pass through to the default handler.
     return cgJointNode::getLocalBoundingBox();
 }
@@ -772,8 +831,8 @@ void cgHingeJointNode::rebuildJoint( )
     // If we have all valid connections, rebuild the joint.
     if ( validConnections )
     {
-        cgObjectNode * body0Node = static_cast<cgObjectNode*>(cgReferenceManager::getReference(mBody0RefId));
-        cgObjectNode * body1Node = static_cast<cgObjectNode*>(cgReferenceManager::getReference(mBody1RefId));
+        cgObjectNode * body0Node = getBody0Node();
+        cgObjectNode * body1Node = getBody1Node();
         cgPhysicsBody * body0 = (body0Node) ? body0Node->getPhysicsBody() : CG_NULL;
         cgPhysicsBody * body1 = (body1Node) ? body1Node->getPhysicsBody() : CG_NULL;
         if ( body0 && body1 )
@@ -783,6 +842,13 @@ void cgHingeJointNode::rebuildJoint( )
             mJoint->enableLimits( isLimited() );
             mJoint->setLimits( getLimits().min, getLimits().max );
             mJoint->enableBodyCollision( isBodyCollisionEnabled() );
+
+            // Listen for changes (unregister first just in case we had previously registered).
+            cgPhysicsBodyEventListener * listener = static_cast<cgPhysicsBodyEventListener*>(this);
+            body0->unregisterEventListener( listener );
+            body0->registerEventListener( listener );
+            body1->unregisterEventListener( listener );
+            body1->registerEventListener( listener );
         
         } // End if has physics bodies
     
@@ -944,6 +1010,20 @@ cgUInt32 cgHingeJointNode::getBody0( ) const
 }
 
 //-----------------------------------------------------------------------------
+// Name : getBody0Node ()
+/// <summary>
+/// Get the object node referenced by the 'Body0' reference identifier set .
+/// </summary>
+//-----------------------------------------------------------------------------
+cgObjectNode * cgHingeJointNode::getBody0Node( ) const
+{
+    cgReference * refNode = cgReferenceManager::getReference( mBody0RefId );
+    if ( refNode && refNode->queryReferenceType( RTID_ObjectNode ) )
+        return static_cast<cgObjectNode*>(refNode);
+    return CG_NULL;
+}
+
+//-----------------------------------------------------------------------------
 // Name : setBody1 () (Virtual)
 /// <summary>
 /// Set the reference identifier of the second of two nodes to which this hinge
@@ -975,6 +1055,20 @@ void cgHingeJointNode::setBody1( cgUInt32 nodeReferenceId )
 cgUInt32 cgHingeJointNode::getBody1( ) const
 {
     return mBody1RefId;
+}
+
+//-----------------------------------------------------------------------------
+// Name : getBody1Node ()
+/// <summary>
+/// Get the object node referenced by the 'Body1' reference identifier set .
+/// </summary>
+//-----------------------------------------------------------------------------
+cgObjectNode * cgHingeJointNode::getBody1Node( ) const
+{
+    cgReference * refNode = cgReferenceManager::getReference( mBody1RefId );
+    if ( refNode && refNode->queryReferenceType( RTID_ObjectNode ) )
+        return static_cast<cgObjectNode*>(refNode);
+    return CG_NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -1048,4 +1142,30 @@ void cgHingeJointNode::prepareQueries()
     // Read queries
     if ( !mLoadInstanceData.isPrepared() )
         mLoadInstanceData.prepare( pWorld, _T("SELECT * FROM 'Objects::HingeJoint::InstanceData' WHERE NodeRefId=?1"), true );
+}
+
+//-----------------------------------------------------------------------------
+// Name : onPhysicsBodyTransformed ( )
+/// <summary>
+/// Triggered whenever the physics body designed represent this object during
+/// scene dynamics processing is transformed as a result of its simulation.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgHingeJointNode::onPhysicsBodyTransformed( cgPhysicsBody * sender, cgPhysicsBodyTransformedEventArgs * e )
+{
+    // Due to the fact that we registered this node as a listener for events raised by
+    // one or both of the attached physics bodies, this method will be triggered whenever 
+    // the transform of either of those bodies is modified... /not/ as a result of this 
+    // node being updated (since joints cannot be physics bodies).
+
+    // Ignore updates that were not due to dynamics.
+    if ( !e->dynamicsUpdate )
+        return;
+
+    // Update our transform relative to the joint if the joint's bodys are adjusted.
+    if ( mJoint && (sender == mJoint->getBody0() || sender == mJoint->getBody1()) )
+        setWorldTransform( mJoint->getPivotTransform( false ), cgTransformSource::Dynamics );
+    
+    // Call base class implementation.
+    cgJointNode::onPhysicsBodyTransformed( sender, e );
 }

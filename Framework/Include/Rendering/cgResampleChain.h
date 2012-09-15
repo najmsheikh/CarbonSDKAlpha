@@ -71,6 +71,7 @@ public:
     cgUInt32                    getLevelCount       ( ) const; 
     cgInt32                     getLevelIndex       ( cgUInt32 width, cgUInt32 height );
     const cgRenderTargetHandle &getLevel            ( cgUInt32 level ) const; 
+	bool						hasOddDimensions    ( cgUInt32 level ) const;
 
     //-------------------------------------------------------------------------
     // Public Static Functions

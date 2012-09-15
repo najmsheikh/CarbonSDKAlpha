@@ -33,6 +33,8 @@
 #include <Resources/cgConstantBuffer.h>
 #include <World/Objects/cgCameraObject.h>
 #include <Math/cgMathUtility.h>
+#include <Math/cgEulerAngles.h>
+
 
 // ToDo: 6767 -- Cache all shaders.
 
@@ -64,16 +66,20 @@ cgMotionBlurProcessor::cgMotionBlurProcessor(  )
 
 	mOperationData.blurAmount          = 0.5f;
 	mOperationData.maxSpeed            = 0.05f;
-	mOperationData.compositeSpeedScale = 100.0f;
 
     // Setup configuration defaults.
-	mBlurAmt                = 0.5f;
-	mCompositeSpeedScale    = 100.0f;
+	mBlurAmount             = 0.5f;
 	mRotationalBlurAmt      = 1.0f;   
 	mTranslationBlurAmt     = 0.0f;  
 
+	mMinimumAngularVelocity = 10.0f;
+	mMaximumAngularVelocity = 50.0f;
+	mBlendPower             = 1.0f;
+
     mTargetRate             = 50;
     mAttenuationRates       = cgRangeF( 0, 0 );
+
+	cgMatrix::identity( mPrevCamMatrix );
 }
 
 //-----------------------------------------------------------------------------
@@ -126,13 +132,12 @@ void cgMotionBlurProcessor::dispose( bool disposeBase )
     cgMatrix::identity( mViewKeyMatrix2 );
 	cgMatrix::identity( mOperationData.interpolatedCameraMatrix );
 
-	mOperationData.blurAmount          = 0.1f;
-	mOperationData.maxSpeed            = 0.05f;
-	mOperationData.compositeSpeedScale = 100.0f;
+	mOperationData.blurAmount     = 0.1f;
+	mOperationData.maxSpeed       = 0.05f;
+	mOperationData.compositeBlend = 100.0f;
     
     // Setup configuration defaults.
-    mBlurAmt                = 0.5f;
-	mCompositeSpeedScale    = 100.0f;
+    mBlurAmount             = 0.5f;
     mRotationalBlurAmt      = 1.0f;   
     mTranslationBlurAmt     = 0.0f;  
     mTargetRate             = 50;
@@ -174,7 +179,7 @@ bool cgMotionBlurProcessor::initialize( cgRenderDriver * driver )
 	mColorLowSampler = resources->createSampler( _T("ColorLow"), mMotionBlurShader );
 
     mDepthSampler->setStates( mSamplers.point->getStates() );
-    mColorSampler->setStates( mSamplers.point->getStates() );
+    mColorSampler->setStates( mSamplers.linear->getStates() );
 	mColorLowSampler->setStates( mSamplers.linear->getStates() );
 	mVelocitySampler->setStates( mSamplers.point->getStates() );
 
@@ -211,16 +216,14 @@ bool cgMotionBlurProcessor::computePixelVelocity( cgCameraNode * activeCamera, c
 	mDriver->setRasterizerState( cgRasterizerStateHandle::Null );
 	mDriver->setDepthStencilState( mDisabledDepthState );
 
-	// Use a null vertex shader for all screen quad draws
-	mMotionBlurShader->selectVertexShader( cgVertexShaderHandle::Null );
-
 	// Compute velocity
-	if ( mMotionBlurShader->selectPixelShader( _T("cameraPixelVelocity"), depthType ) )
+	if ( mMotionBlurShader->selectVertexShader( _T("transform") ) &&
+         mMotionBlurShader->selectPixelShader( _T("cameraPixelVelocity"), depthType ) )
 	{
 		mDepthSampler->apply( sourceDepth );
-		if ( mDriver->beginTargetRender( velocity ) )
+        if ( mDriver->beginTargetRender( velocity, cgDepthStencilTargetHandle::Null ) )
 		{
-			mDriver->drawScreenQuad( );
+			mDriver->drawClipQuad( );
 			mDriver->endTargetRender( );
 		}
 	}
@@ -248,6 +251,13 @@ bool cgMotionBlurProcessor::execute( cgInt32 nPasses,
 	if ( !mMotionBlurShader.getResource(true) || !mMotionBlurShader.isLoaded() )
 		return false;
 
+	// Setup targets
+	cgRenderTargetHandle target0 = sourceColorLow;
+	cgRenderTargetHandle target1 = sourceColorLowScratch;
+
+	// Clear the alpha channel of the initial blur target (assists with reducing out of bounds sampling artifacts)
+	processColorImage( target0, target1, cgImageOperation::CopyRGBSetAlpha, cgColorValue(0,0,0,1) );
+
 	// Set shader constants
 	mMotionBlurConstants->updateBuffer( 0, 0, &mOperationData );
 	mDriver->setConstantBufferAuto( mMotionBlurConstants );
@@ -257,18 +267,9 @@ bool cgMotionBlurProcessor::execute( cgInt32 nPasses,
 	mDriver->setRasterizerState( cgRasterizerStateHandle::Null );
 	mDriver->setDepthStencilState( mDisabledDepthState );
 
-	// Use a null vertex shader for all screen quad draws
-	mMotionBlurShader->selectVertexShader( cgVertexShaderHandle::Null );
-
-	// Run the blur 
-	cgRenderTargetHandle target0 = sourceColorLow;
-	cgRenderTargetHandle target1 = sourceColorLowScratch;
-
-	// Clear the alpha channel of the initial blur target (assists with reducing out of bounds sampling artifacts)
-	processColorImage( target0, target1, cgImageOperation::CopyRGBSetAlpha, cgColorValue(0,0,0,1) );
-
 	mVelocitySampler->apply( sourceVelocity );
-	if ( mMotionBlurShader->selectPixelShader( _T("cameraMotionBlur") ) )
+	if ( mMotionBlurShader->selectVertexShader( _T("transform") ) &&
+         mMotionBlurShader->selectPixelShader( _T("cameraMotionBlur") ) )
 	{
 		cgRenderTargetHandle currSrc = target1;
 		cgRenderTargetHandle currDst = target0;
@@ -279,9 +280,9 @@ bool cgMotionBlurProcessor::execute( cgInt32 nPasses,
 			currSrc = (i % 2) ? target0 : target1;
 			currDst = (i % 2) ? target1 : target0;
 			mColorSampler->apply( currSrc );
-			if ( mDriver->beginTargetRender( currDst ) )
+            if ( mDriver->beginTargetRender( currDst, cgDepthStencilTargetHandle::Null ) )
 			{
-				mDriver->drawScreenQuad( );
+				mDriver->drawClipQuad( );
 				mDriver->endTargetRender( );
 			}
 
@@ -290,11 +291,11 @@ bool cgMotionBlurProcessor::execute( cgInt32 nPasses,
 		// Composite the low res blurred results with the original source texture
 		if ( mMotionBlurShader->selectPixelShader( _T("cameraMotionBlurComposite") ) )
 		{
-			mColorSampler->apply( sourceColor );
+            mDriver->setBlendState( mAlphaBlendState );
 			mColorLowSampler->apply( currDst );
-			if ( mDriver->beginTargetRender( destination ) )
+			if ( mDriver->beginTargetRender( destination, cgDepthStencilTargetHandle::Null ) )
 			{
-				mDriver->drawScreenQuad( );
+				mDriver->drawClipQuad( );
 				mDriver->endTargetRender( );
 			}
 		}
@@ -328,9 +329,8 @@ bool cgMotionBlurProcessor::update( cgCameraNode * activeCamera, cgFloat timeDel
 
     // If enough time has elapsed such that we can sample new
     // matrices, then cycle the two key frames and capture new data.
-    const bool useRateLimiting = (mTargetRate >= CGE_EPSILON);
-    if ( !useRateLimiting || mAccumulatedTime >= (1.0f / mTargetRate) )
-    {
+	if ( mAccumulatedTime >= (1.0f / mTargetRate) )
+	{
         // Cycle key frames.
         mViewKeyMatrix1 = mViewKeyMatrix2;
 
@@ -338,20 +338,44 @@ bool cgMotionBlurProcessor::update( cgCameraNode * activeCamera, cgFloat timeDel
         mViewKeyMatrix2 = cameraWorld;
 
         // Setup for next capture
-        if ( useRateLimiting )
-            mAccumulatedTime -= (1.0f / mTargetRate);
-        else
-            mAccumulatedTime = 0.0f;
+        mAccumulatedTime = 0.0f;
 
     } // End if time expired
 
+	// Compute angular velocity
+	cgEulerAngles euler0, euler1;
+	euler0.fromMatrix( mPrevCamMatrix, cgEulerAnglesOrder::YXZ );
+	euler1.fromMatrix( cameraWorld,    cgEulerAnglesOrder::YXZ );
+	cgEulerAngles deltaEuler;
+	deltaEuler.x = euler1.x - euler0.x;
+	deltaEuler.y = euler1.y - euler0.y;
+	deltaEuler.z = euler1.z - euler0.z;
+	if ( deltaEuler.x > CGE_PI )
+		deltaEuler.x -= CGE_PI * 2.0f;
+	if ( deltaEuler.y > CGE_PI )
+		deltaEuler.y -= CGE_PI * 2.0f;
+	if ( deltaEuler.z > CGE_PI )
+		deltaEuler.z -= CGE_PI * 2.0f;
+
+	// Abs the values
+	deltaEuler.x = fabs( deltaEuler.x );
+	deltaEuler.y = fabs( deltaEuler.y );
+	deltaEuler.z = fabs( deltaEuler.z );
+
+	// Get the maximum angle difference
+	cgFloat maxAngleDelta = max( deltaEuler.x, max( deltaEuler.y, deltaEuler.z ) );
+	cgFloat angularVelocity = fabs( CGEToDegree(maxAngleDelta) / timeDelta );
+	
+	// Compute a weight for blending blurred and unblurred based on angular velocity (faster = blurrier)
+	cgFloat angularVelocityWeight = cgMathUtility::clamp( (angularVelocity - mMinimumAngularVelocity) / (mMaximumAngularVelocity - mMinimumAngularVelocity), 0.0f, 1.0f );
+	        angularVelocityWeight = powf( angularVelocityWeight, mBlendPower );
+	mOperationData.compositeBlend = angularVelocityWeight;
+
     // Compute the required blur attenuation based on current rate.
-    mBlurAttenuation = max( 0.0f, min( 1.0f, (mCurrentRenderRate - mAttenuationRates.min) / (mAttenuationRates.max - mAttenuationRates.min) ) );
-	mBlurAttenuation *= mBlurAttenuation;	
+	mBlurAttenuation = max( 0.0f, min( 1.0f, (mCurrentRenderRate - mAttenuationRates.min) / (mAttenuationRates.max - mAttenuationRates.min) ) );
 
 	// Attenuate blurriness factor(s)
-	mOperationData.blurAmount          = mBlurAmt * mBlurAttenuation;
-	mOperationData.compositeSpeedScale = mCompositeSpeedScale * mBlurAttenuation * mBlurAttenuation;
+	mOperationData.blurAmount = mBlurAmount * mBlurAttenuation * (mTargetRate / mCurrentRenderRate);
 
     // If there is blurring to do
     if ( mBlurAttenuation > 0.0f )
@@ -364,14 +388,14 @@ bool cgMotionBlurProcessor::update( cgCameraNode * activeCamera, cgFloat timeDel
 		cgQuaternion::rotationMatrix( qkey2, mViewKeyMatrix2 );
 		cgQuaternion::slerp( rotation, qkey1, qkey2, frameDelta );
 		cgQuaternion::rotationMatrix( tmpQuat, cameraWorld );
-		cgQuaternion::slerp( rotation, tmpQuat, rotation, mRotationalBlurAmt * mBlurAttenuation );
+		cgQuaternion::slerp( rotation, tmpQuat, rotation, mRotationalBlurAmt * 1.0f );
 
 		// Compute current translation for resulting blur matrix
 		cgVector3 translation;
 		const cgVector3 & key1 = (cgVector3&)mViewKeyMatrix1._41;
 		const cgVector3 & key2 = (cgVector3&)mViewKeyMatrix2._41;
 		cgVector3::lerp( translation, key1, key2, frameDelta );
-		cgVector3::lerp( translation, (cgVector3&)cameraWorld._41, translation, mTranslationBlurAmt * mBlurAttenuation );
+		cgVector3::lerp( translation, (cgVector3&)cameraWorld._41, translation, mTranslationBlurAmt * 1.0f );
 
 		// Generate scene blur matrix. (Rotation + Translation)
 		cgMatrix m;
@@ -382,6 +406,9 @@ bool cgMotionBlurProcessor::update( cgCameraNode * activeCamera, cgFloat timeDel
 
 	// Combine matrices
 	mOperationData.interpolatedCameraMatrix = invCameraView * (cameraView * cameraProj);
+
+	// Cache current camera matrix for use in the next frame
+	mPrevCamMatrix = cameraWorld;
 
     // Return success
     return true;
@@ -459,7 +486,7 @@ void cgMotionBlurProcessor::setTranslationBlurAmount( cgFloat amt )
 //-----------------------------------------------------------------------------
 void cgMotionBlurProcessor::setBlurAmount( cgFloat amt )
 {
-	mBlurAmt = amt;
+	mBlurAmount = amt;
 }
 
 //-----------------------------------------------------------------------------
@@ -479,8 +506,10 @@ void cgMotionBlurProcessor::setMaxSpeed( cgFloat speed )
 /// Sets the amount of blending between blurred and original colors during compositing (speed based).
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgMotionBlurProcessor::setCompositeSpeedScale( cgFloat scale )
+void cgMotionBlurProcessor::setCompositeSpeedScale( cgFloat minimumAngularVelocity, cgFloat maximumAngularVelocity, cgFloat power )
 {
-	mCompositeSpeedScale = scale;
+	mMinimumAngularVelocity = minimumAngularVelocity;
+	mMaximumAngularVelocity = maximumAngularVelocity;
+	mBlendPower             = power;
 }
 

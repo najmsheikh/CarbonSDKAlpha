@@ -731,6 +731,11 @@ cgUInt32 cgWorldConfiguration::insertScene( const cgSceneDescriptor & descriptio
     sceneDescriptor->sceneId = sceneId;
     mSceneDescriptors.push_back( sceneDescriptor );
 
+    // Add to the name based lookup table if one does not already exist 
+    // for a scene with this name.
+    if ( mSceneDescriptorLUT.find(sceneDescriptor->name) == mSceneDescriptorLUT.end() )
+        mSceneDescriptorLUT[sceneDescriptor->name] = mSceneDescriptors.size() - 1;
+
     // Success!
     return sceneId;
 }
@@ -1017,6 +1022,25 @@ bool cgWorldConfiguration::updateSceneDescriptorById( cgUInt32 sceneId, const cg
 
     // Scene Id cannot be modified. Overwrite whatever was provided with the original.
     mSceneDescriptors[sceneIndex]->sceneId = sceneId;
+
+    // If the old and new names are different, regenerate the descriptor 
+    // name lookup table.
+    if ( mSceneDescriptors[sceneIndex]->name != description.name )
+    {
+        mSceneDescriptorLUT.clear();
+        for ( size_t i = 0; i < mSceneDescriptors.size(); ++i )
+        {
+            // Ignore if a scene with this name already exists.
+            const cgSceneDescriptor * sceneDescriptor = mSceneDescriptors[i];
+            if ( mSceneDescriptorLUT.find( sceneDescriptor->name ) != mSceneDescriptorLUT.end() )
+                continue;
+
+            // Add the descriptor index to the LUT
+            mSceneDescriptorLUT[ sceneDescriptor->name ] = i;
+
+        } // Next scene
+
+    } // End if changed
 
     // Success
     return true;

@@ -94,7 +94,8 @@ protected:
 	cgSampler             * mDepthSampler;
 	cgSampler             * mVelocitySampler;
     cgSampler             * mAnisotropic4xSampler;
-    
+    cgMatrix                mPreviousViewProjection;
+
     // Configuration
     _cbAntialiasing         mAntialiasConfig;
 };

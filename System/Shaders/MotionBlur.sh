@@ -55,7 +55,7 @@ class MotionBlurShader : ISurfaceShader
 		matrix interpolatedCameraMatrix;
 		float  blurAmount;
 		float  maxSpeed;
-		float  compositeSpeedScale;
+		float  compositeBlend;
 	?>    
 
     ///////////////////////////////////////////////////////////////////////////
@@ -85,9 +85,48 @@ class MotionBlurShader : ISurfaceShader
     }
 
     ///////////////////////////////////////////////////////////////////////////
+    // Vertex Shaders
+    ///////////////////////////////////////////////////////////////////////////
+	//-------------------------------------------------------------------------
+	// Name : transform()
+	// Desc : Used when drawing full screen clip quad
+	//-------------------------------------------------------------------------
+	bool transform( )
+	{
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Define shader inputs.
+        <?in
+			float4 sourcePosition   : POSITION;
+        ?>
+
+        // Define shader outputs.
+		<?out
+			float4 clipPosition     : SV_POSITION; 
+		?>
+		
+        // Constant buffer usage.
+        <?cbufferrefs
+            _cbCamera;
+            _cbScene;
+        ?>
+
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+		<?
+		clipPosition.xyz = sourcePosition.xyz;
+		clipPosition.w   = 1.0;
+		?>
+		
+		// Valid shader
+		return true;
+	}
+
+    ///////////////////////////////////////////////////////////////////////////
     // Pixel Shaders
     ///////////////////////////////////////////////////////////////////////////
-
 	//-----------------------------------------------------------------------------
 	// Name : cameraPixelVelocity()
 	// Desc : Computes pixel velocity buffer for camera motion blur
@@ -100,7 +139,6 @@ class MotionBlurShader : ISurfaceShader
         // Define shader inputs.
         <?in
             float4  screenPosition : SV_POSITION;
-            float2  texCoords      : TEXCOORD0;
         ?>
 
         // Define shader outputs.
@@ -118,6 +156,9 @@ class MotionBlurShader : ISurfaceShader
         // Shader Code
         /////////////////////////////////////////////
 		<?
+		// Compute texture coords
+        float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
+
 		// Compute previous and current clip positions
 		float  eyeZ             = decompressF32( sample2D( sDepthTex, sDepth, texCoords ).rgb ) * _cameraInverseRangeScale + _cameraInverseRangeBias;
  		float3 viewPosition     = float3( texCoords * _cameraScreenToViewScale + _cameraScreenToViewBias, 1.0f ) * eyeZ;
@@ -131,7 +172,7 @@ class MotionBlurShader : ISurfaceShader
 		
 		// Apply user scale
 		velocity *= blurAmount;
-
+	
 		// Clamp to max speed
 		float speed = length( velocity.xy );
 		if ( speed > 0.0f )	velocity.xy /= speed;
@@ -156,13 +197,18 @@ class MotionBlurShader : ISurfaceShader
         /////////////////////////////////////////////
         // Define shader inputs.
         <?in
-            float4  screenPosition : SV_POSITION;
-            float2  texCoords      : TEXCOORD0;
+            float4 screenPosition : SV_POSITION;
         ?>
 
         // Define shader outputs.
         <?out
-            float4  color          : SV_TARGET0;
+            float4 color          : SV_TARGET0;
+        ?>
+
+        // Constant buffer usage.
+        <?cbufferrefs
+			cbMotionBlur;
+            _cbCamera;
         ?>
 
         /////////////////////////////////////////////
@@ -172,6 +218,9 @@ class MotionBlurShader : ISurfaceShader
 		float numSamples = 8.0f;
 		const float step = 2.0f / numSamples;
 
+		// Compute texture coords
+        float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
+		
 		// Sample pixel velocity
 		float2 velocity = -sample2D( sVelocityTex, sVelocity, texCoords );
 
@@ -199,8 +248,7 @@ class MotionBlurShader : ISurfaceShader
         /////////////////////////////////////////////
         // Define shader inputs.
         <?in
-            float4  screenPosition : SV_POSITION;
-            float2  texCoords      : TEXCOORD0;
+            float4 screenPosition : SV_POSITION;
         ?>
 
         // Define shader outputs.
@@ -211,25 +259,18 @@ class MotionBlurShader : ISurfaceShader
         // Constant buffer usage.
         <?cbufferrefs
 			cbMotionBlur;
+            _cbCamera;
         ?>
 
         /////////////////////////////////////////////
         // Shader Code
         /////////////////////////////////////////////
 		<?	
-		// Sample the high and low res color and velocity
-		float4 highResColor = sample2D( sColorTex,    sColor,    texCoords );
-		float4 lowResColor  = sample2D( sColorLowTex, sColorLow, texCoords );
-		float2 velocity     = sample2D( sVelocityTex, sVelocity, texCoords );
+		// Compute texture coords
+        float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
 
-		// Get the speed at this pixel
-		float speed = length( velocity.xy );
-
-		// Create a blur mask based on screen position
-		//float mask = saturate( length( texCoords * 2.0f - 1.0f ) * 2.0f ) );
-
-		// Blend the low and high res colors based on speed
-		color = lerp( highResColor, lowResColor, saturate( speed * compositeSpeedScale ) );
+		// Pass out to the blending pipeline.
+        color = float4( sample2D( sColorLowTex, sColorLow, texCoords ).rgb, compositeBlend );
 		?>
 
         // Valid shader

@@ -3103,9 +3103,9 @@ bool cgLightNode::updateLightConstants()
                     (fabsf(pLightData->ambientOcclusionAmount.z) > CGE_EPSILON);
 
     // Set the matching system states
-    pRenderDriver->setSystemState( cgSystemState::Trilighting, bTrilightingSource );
+    pRenderDriver->setSystemState( cgSystemState::Trilighting, true );
     pRenderDriver->setSystemState( cgSystemState::UseSSAO, bUseSSAO );
-    pRenderDriver->setSystemState( cgSystemState::ComputeAmbient, bAmbientSource );
+    pRenderDriver->setSystemState( cgSystemState::ComputeAmbient, bAmbientSource | bTrilightingSource );
     pRenderDriver->setSystemState( cgSystemState::ComputeDiffuse, bDiffuseSource );
     pRenderDriver->setSystemState( cgSystemState::ComputeSpecular, bSpecularSource );
 

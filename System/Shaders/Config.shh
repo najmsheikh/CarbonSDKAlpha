@@ -31,6 +31,13 @@ const float MAX_HDR_FLOAT               = 60000.0f;
 const float GAMMA_TO_LINEAR             = 2.2f;
 const float LINEAR_TO_GAMMA             = 1.0f / GAMMA_TO_LINEAR;
 
+// Should we use an approximate gamma <-> linear conversion (via squares and square roots)?
+const bool  APPROXIMATE_SRGB            = true;
+
+// The speular power at which we transition from Oren-Nayer to Lambertian diffuse 
+const float MAX_ORENNAYER_POWER         = 15.0f;
+const bool  USE_ORENNAYER               = false;
+
 // Specular gloss to power controls
 const float MAX_GLOSS_LEVELS            = 13; // Power of 2, thus maximum power = 8192
 

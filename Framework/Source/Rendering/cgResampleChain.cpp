@@ -335,6 +335,19 @@ void cgResampleChain::restoreLevels( )
     }
 }
 
+//-----------------------------------------------------------------------------
+//  Name : hasOddDimensions () 
+/// <summary>
+/// Returns whether either dimension of this target is odd
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgResampleChain::hasOddDimensions( cgUInt32 level ) const
+{
+	return ( mChain[ level ]->getInfo().width % 2 != 0 || 
+		     mChain[ level ]->getInfo().width % 2 != 0 );
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // cgResampleChain Member Functions
 ///////////////////////////////////////////////////////////////////////////////

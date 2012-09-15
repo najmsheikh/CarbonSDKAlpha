@@ -62,7 +62,7 @@ public:
 	void			setRotationBlurAmount   ( cgFloat amt );
 	void			setTranslationBlurAmount( cgFloat amt );
 	void			setMaxSpeed				( cgFloat speed );
-	void			setCompositeSpeedScale	( cgFloat scale );
+	void			setCompositeSpeedScale	( cgFloat minimumAngularVelocity, cgFloat maximumAngularVelocity, cgFloat power );
 
     bool			computePixelVelocity    ( cgCameraNode * activeCamera, cgFloat timeDelta, const cgTextureHandle & sourceDepth, cgDepthType::Base depthType, const cgRenderTargetHandle & velocity );
 	bool			execute                 ( cgInt32 nPasses, const cgTextureHandle & sourceColor, const cgTextureHandle & sourceVelocity, const cgRenderTargetHandle & sourceColorLow, const cgRenderTargetHandle & sourceColorLowScratch, const cgRenderTargetHandle & destination );
@@ -87,7 +87,7 @@ protected:
         cgMatrix interpolatedCameraMatrix;
 		cgFloat  blurAmount;
 		cgFloat  maxSpeed;
-		cgFloat  compositeSpeedScale;
+		cgFloat  compositeBlend;
     };
     
     //-------------------------------------------------------------------------
@@ -115,10 +115,15 @@ protected:
     // Configuration
     cgFloat                 mTargetRate;            // Target frame rate at which motion blur will be sampled
     cgRangeF                mAttenuationRates;      // Frame rates between which motion blur will begin to be attenuated out.
-	cgFloat                 mBlurAmt;               // General blurriness control.
-	cgFloat                 mCompositeSpeedScale;   // Compositing speed control.
+	cgFloat                 mBlurAmount;            // General blurriness control.
 	cgFloat                 mRotationalBlurAmt;     // How much should rotational blur would we like (0 to 1)?
 	cgFloat                 mTranslationBlurAmt;    // How much should translation blur would we like (0 to 1)?
+
+	cgFloat					mMinimumAngularVelocity;
+	cgFloat					mMaximumAngularVelocity;
+	cgFloat					mBlendPower;
+
+	cgMatrix                mPrevCamMatrix;
 };
 
 #endif // !_CGE_CGMOTIONBLURPROCESSOR_H_

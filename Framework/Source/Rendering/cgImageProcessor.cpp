@@ -682,8 +682,13 @@ void cgImageProcessor::downSample( const cgTextureHandle & hSrc, const cgRenderT
     const cgTexture * pSrcTexture = hSrc.getResourceSilent();
     const cgRenderTarget * pDestTexture = hDest.getResourceSilent();
     cgInt32 nSrcWidth   = pSrcTexture->getSize().width;
+	cgInt32 nSrcHeight  = pSrcTexture->getSize().height;
     cgInt32 nDstWidth   = pDestTexture->getSize().width;
     cgInt32 nKernelSize = 2; //srcWidth / dstWidth; // ToDo: revisit this support at some point
+
+	// For an odd sized source image, we will force 3x3 downsampling
+	bool oddU = (nSrcWidth  % 2) != 0;
+	bool oddV = (nSrcHeight % 2) != 0;
 
     // Set necessary states
     if ( mApplyDepthStencilState )
@@ -703,6 +708,10 @@ void cgImageProcessor::downSample( const cgTextureHandle & hSrc, const cgRenderT
     if ( bBilinear && !mForceLinearSampling )
         bBilinear = !bAlphaWeighted && !bAlphaWeightedBinary;
 
+	// Disallow linear filtering when an odd kernel is used (for now at least)
+	if ( oddU || oddV )
+		bBilinear = false;
+
     // Bind textures and set sampler state
     if ( bBilinear )
         mSamplers.linear->apply( hSrc );
@@ -711,7 +720,7 @@ void cgImageProcessor::downSample( const cgTextureHandle & hSrc, const cgRenderT
 
     // Select shaders
     if ( !mProcessShader->selectVertexShader( _T("transform"), false ) ||
-        !mProcessShader->selectPixelShader( _T("downSample"), nKernelSize, (cgInt32)Operation, bBilinear, bAlphaWeighted, bAlphaWeightedBinary, bAlphaBinaryOutput ) )
+        !mProcessShader->selectPixelShader( _T("downSample"), nKernelSize, (cgInt32)Operation, bBilinear, oddU, oddV, bAlphaWeighted, bAlphaWeightedBinary, bAlphaBinaryOutput ) )
         return;
 
     // Execute
@@ -752,6 +761,10 @@ void cgImageProcessor::downSampleDepth( const cgTextureHandle & hSrcDepth, const
 
     // Compute the required kernel size
     cgInt32 nKernelSize = 2; // SrcInfo.width / DestInfo.width; // ToDo: revisit this support at some point
+
+	// For an odd sized source image, we will force 3x3 downsampling
+	if ( SrcInfo.width % 2 != 0 || SrcInfo.height % 2 != 0 )
+		nKernelSize = 3;
 
     // Set necessary states
     if ( mApplyDepthStencilState )

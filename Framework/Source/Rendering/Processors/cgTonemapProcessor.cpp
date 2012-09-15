@@ -353,7 +353,7 @@ bool cgToneMapProcessor::execute( cgRenderView * activeView, cgFloat timeDelta, 
 
             // Reset the timer
             if ( useRateLimiting )
-                mAccumulatedTime -= ( 1.0f / mLuminanceSamplingRate);
+                mAccumulatedTime -= (1.0f / mLuminanceSamplingRate);
             else
                 mAccumulatedTime = 0.0f;
 
@@ -413,7 +413,7 @@ bool cgToneMapProcessor::downSampleLuminance( )
 	_cbDownsample dowsampleConfig;
 	
 	// Downsample the results
-	bool bAverageOnly = false;
+	bool bAverageOnly = mMethod != PhotographicWhitePoint;
 	if ( bAverageOnly )
 	{
 	    downSample( mLuminanceChain, cgImageOperation::DownSampleAverage );
@@ -425,11 +425,9 @@ bool cgToneMapProcessor::downSampleLuminance( )
 		mDriver->setBlendState( mDefaultRGBABlendState );
 		mDriver->setRasterizerState( cgRasterizerStateHandle::Null );
 
-		// Use a null vertex shader for all screen quad draws
-		mToneMapShader->selectVertexShader( cgVertexShaderHandle::Null );
-
 		// Select shaders
-		if ( !mToneMapShader->selectPixelShader( _T("luminanceDownsample") ) )
+		if ( !selectClipQuadVertexShader() ||
+             !mToneMapShader->selectPixelShader( _T("luminanceDownsample") ) )
 			return false;
 
 		cgInt numLevels = (cgInt)mLuminanceChain->getLevelCount();
@@ -453,7 +451,7 @@ bool cgToneMapProcessor::downSampleLuminance( )
 			// Draw
 			if ( mDriver->beginTargetRender( hDest ) )
 			{
-				mDriver->drawScreenQuad( );
+				mDriver->drawClipQuad( );
 				mDriver->endTargetRender( );
 			}
 		}

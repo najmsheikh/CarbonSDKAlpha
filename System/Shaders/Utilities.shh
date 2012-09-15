@@ -191,6 +191,55 @@ __shadercall float3 RGBMToRGB( float4 c, float maxValue )
 }
 
 //-----------------------------------------------------------------------------
+// Name : LinearToSRGB 
+// Desc : Converts color from linear to sRGB space (float3 version)
+//-----------------------------------------------------------------------------
+__shadercall float3 LinearToSRGB( float3 c ) 
+{
+	if ( APPROXIMATE_SRGB )
+		<?return sqrt( c );?>
+	else
+		<?return pow( c, $LINEAR_TO_GAMMA );?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : SRGBToLinear 
+// Desc : Converts color from sRGB to linear space (float3 version)
+//-----------------------------------------------------------------------------
+__shadercall float3 SRGBToLinear( float3 c ) 
+{
+	if ( APPROXIMATE_SRGB )
+		<?return c * c;?>
+	else
+		<?return pow( c, $GAMMA_TO_LINEAR );?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : LinearToSRGB4 
+// Desc : Converts color from linear to sRGB space (float4 version)
+//-----------------------------------------------------------------------------
+__shadercall float4 LinearToSRGB4( float4 c ) 
+{
+	if ( APPROXIMATE_SRGB )
+		<?return sqrt( c );?>
+	else
+		<?return pow( c, $LINEAR_TO_GAMMA );?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : SRGBToLinear4 
+// Desc : Converts color from sRGB to linear space (float4 version)
+//-----------------------------------------------------------------------------
+__shadercall float4 SRGBToLinear4( float4 c ) 
+{
+	if ( APPROXIMATE_SRGB )
+		<?return c * c;?>
+	else
+		<?return pow( c, $GAMMA_TO_LINEAR );?>
+}
+
+
+//-----------------------------------------------------------------------------
 // Name  : compressColor() (Utility Function)
 // Desc  : Compresses an RGB to the specified format
 //-----------------------------------------------------------------------------
@@ -264,7 +313,7 @@ __shadercall void computeMeshScreenTextureCoords( float4 clipPosition, inout flo
     texCoordsInOut.w = clipPosition.w;
 
     // Adjust coordinates to fit within the currently selected viewport   
-    texCoordsInOut.xy = (texCoordsInOut.xy * _screenUVAdjustScale) + (_screenUVAdjustBias * clipPosition.ww);
+    texCoordsInOut.xy = texCoordsInOut.xy + _screenUVAdjustBias * clipPosition.ww;
     ?>
 }
 
@@ -2347,7 +2396,7 @@ __shadercall float3 tonemapFilmicHable( float3 x )
 {
 	<?
 	float A = 0.15;   // Shoulder strength
-	float B = 0.15;   // Linear strength
+	float B = 0.50;   // Linear strength
 	float C = 0.10;   // Linear angle 
 	float D = 0.20;   // Toe strength
 	float E = 0.02;   // Toe numerator
@@ -2423,9 +2472,9 @@ __shadercall float4 toneMapping( float3 hdrColor, float exposure, float white, s
 			float3 curr = tonemapFilmicHable( exposureBias * hdrColor );
 			ldrColor.rgb = curr;
 
-			/*float W = 11.2f;
+			float W = 11.2f;
 			float3 currWhite = tonemapFilmicHable( W );
-			ldrColor.rgb *= 1.0f / currWhite;*/
+			ldrColor.rgb *= 1.0f / currWhite;
 			?>
 		}
 		else if ( toneMapper == ToneMapMethod::Exponential )

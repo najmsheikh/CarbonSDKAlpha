@@ -2278,6 +2278,30 @@ const cgObjectNodeMap & cgScene::getObjectNodes( ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getRootObjectNodes ()
+/// <summary>
+/// Retrieve a list of all scene object nodes that exist at the root level of
+/// the node hierarchy (those with no parent node).
+/// </summary>
+//-----------------------------------------------------------------------------
+cgObjectNodeMap & cgScene::getRootObjectNodes( )
+{
+    return mRootNodes;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getRootObjectNodes ()
+/// <summary>
+/// Retrieve a list of all scene object nodes that exist at the root level of
+/// the node hierarchy (those with no parent node).
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgObjectNodeMap & cgScene::getRootObjectNodes( ) const
+{
+    return mRootNodes;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getSceneCells () (const modifier)
 /// <summary>
 /// Retrieve a complete list of all allocated scene cells.

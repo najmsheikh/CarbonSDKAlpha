@@ -267,7 +267,9 @@ namespace cgBufferFormatCaps
         CanCompare          = 0x8,
         CanGather           = 0x10,
         CanGatherCompare    = 0x20,
-        CanLinearFilter     = 0x40
+        CanLinearMagnify    = 0x40,
+        CanLinearMinify     = 0x80,
+        CanLinearFilter     = 0xC0   // Mask for Magnify or Minify
     };
 
 } // End Namespace : cgBufferFormatCaps

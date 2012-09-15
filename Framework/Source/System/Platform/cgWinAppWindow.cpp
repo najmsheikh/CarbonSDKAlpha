@@ -98,6 +98,7 @@ bool cgWinAppWindow::create( bool bFullscreen, cgUInt32 Width, cgUInt32 Height, 
 {
     cgUInt32 Left  = CW_USEDEFAULT, Top = CW_USEDEFAULT;
     cgUInt32 Style = WS_OVERLAPPEDWINDOW;
+    cgUInt32 StyleEx = 0;
 
     // Store details
     mClassName = strTitle;
@@ -124,6 +125,7 @@ bool cgWinAppWindow::create( bool bFullscreen, cgUInt32 Width, cgUInt32 Height, 
     {
         Left  = 0; Top = 0;
         Style = WS_VISIBLE | WS_POPUP;
+        StyleEx = WS_EX_TOPMOST;
         
     } // End if Fullscreen
     else
@@ -135,7 +137,7 @@ bool cgWinAppWindow::create( bool bFullscreen, cgUInt32 Width, cgUInt32 Height, 
     } // End if windowed
 
     // Create the window
-    mWnd = CreateWindow( strTitle.c_str(), strTitle.c_str(), Style, Left,
+    mWnd = CreateWindowEx( StyleEx, strTitle.c_str(), strTitle.c_str(), Style, Left,
                            Top, Width, Height, NULL, NULL, mWndClass.hInstance, this );
 
 

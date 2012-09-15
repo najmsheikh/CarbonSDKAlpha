@@ -52,6 +52,8 @@ cgAntialiasProcessor::cgAntialiasProcessor(  )
 	mVelocitySampler      = CG_NULL;
 	mImagePrevSampler	  = CG_NULL;
 	mDepthSampler		  = CG_NULL;
+
+	cgMatrix::identity( mPreviousViewProjection );
 }
 
 //-----------------------------------------------------------------------------
@@ -193,14 +195,14 @@ bool cgAntialiasProcessor::executeFXAA( const cgTextureHandle & source, const cg
 	mDriver->setConstantBufferAuto( mAntialiasConstants );
 
 	// Select shaders
-	if ( !mAntialiasShader->selectVertexShader( _T("transform"), false ) ||
+	if ( !mAntialiasShader->selectVertexShader( _T("transform") ) ||
 		 !mAntialiasShader->selectPixelShader( _T("fxaa"), reverseToneMap ) )
 		return false;
 
 	// Composite the low res blurred results with the original source texture
 	if ( mDriver->beginTargetRender( destination ) )
 	{
-		mDriver->drawScreenQuad( );
+		mDriver->drawClipQuad( );
 		mDriver->endTargetRender( );
 	}
 
@@ -226,7 +228,7 @@ bool cgAntialiasProcessor::computePixelVelocity( cgCameraNode * activeCamera, co
 		return false;
 	cgSize sourceSize = sourceResource->getSize();
 	mAntialiasConfig.textureSize = cgVector4( (cgFloat)sourceSize.width, (cgFloat)sourceSize.height, 1.0f / (cgFloat)sourceSize.width, 1.0f / (cgFloat)sourceSize.height );
-	mAntialiasConfig.previousViewProjMatrix = activeCamera->getPreviousViewMatrix() * activeCamera->getPreviousProjectionMatrix();
+	mAntialiasConfig.previousViewProjMatrix = mPreviousViewProjection; 
 	mAntialiasConfig.resolveMaxSpeed    = 0.05f;
 	mAntialiasConfig.reprojectionWeight = 10.0f;
 	mAntialiasConstants->updateBuffer( 0, 0, &mAntialiasConfig );
@@ -237,19 +239,20 @@ bool cgAntialiasProcessor::computePixelVelocity( cgCameraNode * activeCamera, co
 	mDriver->setRasterizerState( cgRasterizerStateHandle::Null );
 	mDriver->setDepthStencilState( mDisabledDepthState );
 
-	// Use a null vertex shader for all screen quad draws
-	mAntialiasShader->selectVertexShader( cgVertexShaderHandle::Null );
-
 	// Compute velocity
-	if ( mAntialiasShader->selectPixelShader( _T("pixelVelocity"), depthType ) )
+    if ( mAntialiasShader->selectVertexShader( _T("transform") ) &&
+         mAntialiasShader->selectPixelShader( _T("pixelVelocity"), depthType ) )
 	{
 		mDepthSampler->apply( depth );
 		if ( mDriver->beginTargetRender( velocity ) )
 		{
-			mDriver->drawScreenQuad( );
+			mDriver->drawClipQuad( );
 			mDriver->endTargetRender( );
 		}
 	}
+
+	// Record the previous view projection matrix
+	mPreviousViewProjection = activeCamera->getViewMatrix() * activeCamera->getProjectionMatrix();
 
 	// Success!
 	return true;
@@ -283,20 +286,18 @@ bool cgAntialiasProcessor::temporalResolve( const cgTextureHandle & curr, const 
 	mDriver->setRasterizerState( cgRasterizerStateHandle::Null );
 	mDriver->setDepthStencilState( mDisabledDepthState );
 
-	// Use a null vertex shader for all screen quad draws
-	mAntialiasShader->selectVertexShader( cgVertexShaderHandle::Null );
-
 	// Bind textures and set sampler state
 	mSamplers.linear->apply( curr );
 	mImagePrevSampler->apply( prev );
 	mVelocitySampler->apply( velocity );
 
 	// Compute velocity
-	if ( mAntialiasShader->selectPixelShader( _T("temporalResolve") ) )
+	if ( mAntialiasShader->selectVertexShader( _T("transform") ) &&
+         mAntialiasShader->selectPixelShader( _T("temporalResolve") ) )
 	{
 		if ( mDriver->beginTargetRender( destination ) )
 		{
-			mDriver->drawScreenQuad( );
+			mDriver->drawClipQuad( );
 			mDriver->endTargetRender( );
 		}
 	}

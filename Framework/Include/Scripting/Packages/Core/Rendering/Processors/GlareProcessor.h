@@ -69,7 +69,7 @@ namespace GlareProcessor
 			BINDSUCCESS( engine->registerObjectMethod( "GlareProcessor", "void setCacheValues( float, float )", asMETHODPR(cgGlareProcessor, setCacheValues, (cgFloat,cgFloat), void), asCALL_THISCALL) );
 			BINDSUCCESS( engine->registerObjectMethod( "GlareProcessor", "void setGlareAmount( float )", asMETHODPR(cgGlareProcessor, setGlareAmount, (cgFloat), void), asCALL_THISCALL) );
 			BINDSUCCESS( engine->registerObjectMethod( "GlareProcessor", "void setGlareSteps( const array<GlareStepDesc> &in )", asMETHODPR(cgGlareProcessor, setGlareSteps, (const cgGlareProcessor::GlareStepArray&), void), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "GlareProcessor", "bool execute( const RenderTargetHandle &in, ResampleChain@+, ResampleChain@+, float)", asMETHODPR(cgGlareProcessor, execute, (const cgRenderTargetHandle&, cgResampleChain*, cgResampleChain*, cgFloat), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "GlareProcessor", "bool execute( const RenderTargetHandle &in, ResampleChain@+, ResampleChain@+, float, bool, bool)", asMETHODPR(cgGlareProcessor, execute, (const cgRenderTargetHandle&, cgResampleChain*, cgResampleChain*, cgFloat, bool, bool), bool), asCALL_THISCALL) );
 			BINDSUCCESS( engine->registerObjectMethod( "GlareProcessor", "void setToneMapper( ToneMapProcessor@+ )", asMETHODPR(cgGlareProcessor, setToneMapper, (cgToneMapProcessor*), void), asCALL_THISCALL) );
 		}
 

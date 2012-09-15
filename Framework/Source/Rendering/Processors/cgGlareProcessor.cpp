@@ -67,6 +67,9 @@ cgGlareProcessor::cgGlareProcessor(  )
 	mUpdateCacheConfig.blendRate        = 0.0f;
 	mGlareAmount                        = 0;
 	mAnamorphicFlares                   = false;
+
+	mFullSizeBrightPass                 = false;
+	mDownsampleBlurPrePass              = false; 
 }
 
 //-----------------------------------------------------------------------------
@@ -192,17 +195,6 @@ bool cgGlareProcessor::initialize( cgRenderDriver * driver )
 	cgAssert( mUpdateCacheConstants->getDesc().length == sizeof(_cbUpdateCache) );
 	cgAssert( mAddLayerConstants->getDesc().length == sizeof(_cbAddLayer) );
 
-	// Build buffers to cache average glare values.
-	cgImageInfo description;
-	description.width       = 1;
-	description.height      = 1;
-	description.mipLevels   = 1;
-
-	// Select an appropriate floating point format.
-	const cgBufferFormatEnum & formats = resources->getBufferFormats();
-	description.format = formats.getBestFormat( cgBufferType::RenderTarget, cgFormatSearchFlags::FloatingPoint | cgFormatSearchFlags::FullPrecisionFloat | 
-		cgFormatSearchFlags::HalfPrecisionFloat | cgFormatSearchFlags::FourChannels );
-
 	// Create samplers
 	mPointSampler = resources->createSampler( _T("Source"), mGlareShader );
 	mLinearSampler = resources->createSampler( _T("Source"), mGlareShader );
@@ -231,7 +223,7 @@ bool cgGlareProcessor::initialize( cgRenderDriver * driver )
 /// appear to glow or "glare".
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgGlareProcessor::execute( const cgRenderTargetHandle & target, cgResampleChain * chain0, cgResampleChain * chain1, float alphaMaskAmt )
+bool cgGlareProcessor::execute( const cgRenderTargetHandle & target, cgResampleChain * chain0, cgResampleChain * chain1, float alphaMaskAmt, bool fullSizeBrightPass, bool blurPrePass )
 {
 	// Glare shader must be valid and loaded at this point.
 	if ( !mGlareShader.getResource(true) || !mGlareShader.isLoaded() )
@@ -248,9 +240,11 @@ bool cgGlareProcessor::execute( const cgRenderTargetHandle & target, cgResampleC
 	mBrightPassConfig.alphaMaskAmount = alphaMaskAmt;
 
 	// Store operation configuration.
-	mOperationTarget   = target;
-	mResampleChain0    = chain0;
-	mResampleChain1    = chain1;
+	mOperationTarget       = target;
+	mResampleChain0        = chain0;
+	mResampleChain1        = chain1;
+	mFullSizeBrightPass    = fullSizeBrightPass;
+	mDownsampleBlurPrePass = blurPrePass;
 
 	// Run the bright pass on the specified target.
 	brightPass();
@@ -275,7 +269,31 @@ bool cgGlareProcessor::execute( const cgRenderTargetHandle & target, cgResampleC
 //-----------------------------------------------------------------------------
 void cgGlareProcessor::brightPass( )
 {
-	bool bFullSizeBrightPass = false; //ToDo: 6767 - Make config option
+	bool supportsLinearSampling;
+
+	// Downsample to 1/4 size
+	if ( !mFullSizeBrightPass )
+	{
+		downSample( mOperationTarget, mResampleChain1->getLevel( 1 ) );
+
+		// Set the texture and sampler states
+		const cgRenderTarget * pTarget = mOperationTarget.getResourceSilent();
+		supportsLinearSampling = (pTarget) ? pTarget->supportsLinearSampling() : false;
+		if ( supportsLinearSampling )
+			mLinearSampler->apply( mResampleChain1->getLevel( 1 ) );
+		else
+			mPointSampler->apply( mResampleChain1->getLevel( 1 ) );
+	}
+	else
+	{
+		// Set the texture and sampler states
+		const cgRenderTarget * pTarget = mOperationTarget.getResourceSilent();
+		supportsLinearSampling = (pTarget) ? pTarget->supportsLinearSampling() : false;
+		if ( supportsLinearSampling )
+			mLinearSampler->apply( mOperationTarget );
+		else
+			mPointSampler->apply( mOperationTarget );
+	}
 
 	// Setup depth-stencil state (depth always disabled for image processing)
 	// and rasterizer state (default).
@@ -285,30 +303,24 @@ void cgGlareProcessor::brightPass( )
 	// Set blend states
 	mDriver->setBlendState( mDefaultRGBABlendState );
 
-	// Set the texture and sampler states
-	const cgRenderTarget * pTarget = mOperationTarget.getResourceSilent();
-	bool supportsLinearSampling = (pTarget) ? pTarget->supportsLinearSampling() : false;
-	if ( supportsLinearSampling )
-		mLinearSampler->apply( mOperationTarget );
-	else
-		mPointSampler->apply( mOperationTarget );
-
 	// Set shader constants
 	mBrightPassConstants->updateBuffer( 0, 0, &mBrightPassConfig );
 	mDriver->setConstantBufferAuto( mBrightPassConstants );
 
 	// If we have a tone mapper, set the luminance data
-	int nTonemappingMethod = -1;
-	if ( mToneMapper && mDriver->getSystemState( cgSystemState::HDRLighting ) > 0 )
+	cgInt32 toneMappingMethod = -1;
+	if ( mDriver->getSystemState( cgSystemState::HDRLighting ) > 0 )
 	{
-		nTonemappingMethod = mToneMapper->getMethod();
-
-		// Get the current luminance for the scene. 
-		// ToDo: 6767 - Once tonemapper is fixed up properly, remove its call to getLuminanceData since we'll be fetching directly here
-		//cgRenderView * activeView = mDriver->getActiveRenderView();
-		//cgString bufferName = cgString::format( _T("Tonemapper::LuminanceCurr1x1_%i"), activeView->getReferenceId() );
-		//mLuminanceCurrTarget = activeView->getRenderSurface( bufferName ); 
-		mLuminanceSampler->apply( mToneMapper->getLuminanceData() );
+		toneMappingMethod = cgToneMapProcessor::Filmic;
+		if ( mToneMapper )
+		{
+			// Get the current luminance for the scene. 
+			// ToDo: 6767 - Once tonemapper is fixed up properly, remove its call to getLuminanceData since we'll be fetching directly here
+			//cgRenderView * activeView = mDriver->getActiveRenderView();
+			//cgString bufferName = cgString::format( _T("Tonemapper::LuminanceCurr1x1_%i"), activeView->getReferenceId() );
+			//mLuminanceCurrTarget = activeView->getRenderSurface( bufferName ); 
+			mLuminanceSampler->apply( mToneMapper->getLuminanceData() );
+		}
 	}
 
 	// Are we using an alpha/glow mask?
@@ -316,11 +328,11 @@ void cgGlareProcessor::brightPass( )
 
 	// Select shaders
 	if ( !selectClipQuadVertexShader() ||
-		!mGlareShader->selectPixelShader( _T("brightPass"), supportsLinearSampling, nTonemappingMethod, !bFullSizeBrightPass, glowMask ) )
+		!mGlareShader->selectPixelShader( _T("brightPass"), supportsLinearSampling, toneMappingMethod, !mFullSizeBrightPass, glowMask ) )
 		return;
 
-	// Do we want a full size bright pass of a quarter size pass?
-	if ( bFullSizeBrightPass )
+	// Do we want a full size bright pass or a quarter size pass?
+	if ( mFullSizeBrightPass )
 	{
 		// Get a scratch buffer (full size)
 		cgRenderView * activeView = mDriver->getActiveRenderView();
@@ -377,11 +389,10 @@ void cgGlareProcessor::downsampleAndBlur()
 
 	} // Next level
 
-	// Apply a blur to the first level
-	bool bDownsamplePreBlur = false; //ToDo: 6767 - Make config option
-	if ( bDownsamplePreBlur )
+	// Apply a blur to the first level before downsampling (optional)
+	if ( mDownsampleBlurPrePass )
 	{
-		cgBlurOpDesc blurDesc( 1, 3, 2.0 );
+		cgBlurOpDesc blurDesc( 1, 2, 2.0 );
 		blur( mResampleChain0->getLevel( 1 ), mResampleChain1->getLevel( 1 ), blurDesc );
 	}
 
@@ -397,13 +408,12 @@ void cgGlareProcessor::downsampleAndBlur()
 	// Weighted additive upsample
 	int nLastLayer = -1;
 	_cbAddLayer layerConfig;
-
 	for ( cgInt32 i = maximumLevel; i >= 1; --i )
 	{
 		// Blur current level if user data is available
 		if ( stepIndices[ i ] != 0xFFFFFFFF )
 		{
-			// Get the current layer's weight
+			// Get the current layer's weight (intensity)
 			float I = mSteps[ stepIndices[ i ] ].intensity * mGlareAmount;
 
 			// If we are adding a prior image to the current image

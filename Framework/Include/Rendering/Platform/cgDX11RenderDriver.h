@@ -198,7 +198,6 @@ protected:
         cgVector4       viewportSize;
         cgVector2       viewportOffset;
         cgVector4       targetSize;
-        cgVector2       screenUVAdjustScale;
         cgVector2       screenUVAdjustBias;
 
     }; // End Struct : _cbCamera
@@ -247,7 +246,7 @@ protected:
 
     struct _cbVertexBlending
     {
-        cgMatrix        transforms[cgDX11RenderingCapabilities::MaxVBTSlotsCB];
+        cgVector3       transforms[cgDX11RenderingCapabilities::MaxVBTSlotsCB*4];
 
     }; // End Struct : _cbVertexBlending
 

@@ -94,6 +94,7 @@ public:
     // Public Virtual Methods
     //-------------------------------------------------------------------------
     virtual void    onInstanceIdentifierChange  ( cgObjectNodeNameChangeEventArgs * e ) {};
+    virtual void    onTransformChange           ( cgObjectNodeEventArgs * e ) {};
 };
 
 //-----------------------------------------------------------------------------
@@ -166,6 +167,7 @@ public:
     void                            scale                   ( cgFloat x, cgFloat y, cgFloat z );
     void                            scale                   ( cgFloat x, cgFloat y, cgFloat z, const cgVector3 & center );
     void                            setPosition             ( cgFloat x, cgFloat y, cgFloat z );
+    void                            setWorldTransform       ( const cgTransform & transform );
     void                            setTransformMethod      ( cgTransformMethod::Base method );
     cgTransformMethod::Base         getTransformMethod      ( ) const;
     void                            lookAt                  ( cgFloat x, cgFloat y, cgFloat z );
@@ -253,7 +255,7 @@ public:
     virtual void                    resetOrientation        ( );
     virtual void                    resetScale              ( );
     virtual void                    resetPivot              ( );
-    virtual void                    setWorldTransform       ( const cgTransform & transform );
+    virtual void                    setWorldTransform       ( const cgTransform & transform, cgTransformSource::Base source );
     virtual bool                    setCellTransform        ( const cgTransform & transform, cgTransformSource::Base source = cgTransformSource::Standard );
     virtual void                    lookAt                  ( const cgVector3 & eye, const cgVector3 & at );
     virtual void                    lookAt                  ( const cgVector3 & eye, const cgVector3 & at, const cgVector3 & up );

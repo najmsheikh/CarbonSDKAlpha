@@ -66,7 +66,6 @@
     float4      _viewportSize;
     float2      _viewportOffset;
     float4      _targetSize;
-    float2      _screenUVAdjustScale;
     float2      _screenUVAdjustBias;
 ?>
 
@@ -321,7 +320,12 @@ class SystemExports
                     "#define Sampler2D   sampler2D\n" // Vertex texture fetch
 				);
 
-            #endif // DX9C
+            #elif defined(DX10) || defined(DX11)
+                strCommon.append(
+                    "#define POSITIONT POSITION\n"
+				);
+
+            #endif
 
         } // End if vertex shader
         

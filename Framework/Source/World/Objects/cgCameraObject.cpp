@@ -676,6 +676,9 @@ const cgMatrix & cgCameraNode::getProjectionMatrix()
 //-----------------------------------------------------------------------------
 const cgMatrix & cgCameraNode::getViewMatrix()
 {
+    // Make sure that any pending world transforms are up to date.
+    resolvePendingUpdates( cgDeferredUpdateFlags::Transforms );
+
     // Only update matrix if something has changed
     if ( mViewDirty ) 
     {

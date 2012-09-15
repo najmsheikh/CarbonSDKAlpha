@@ -68,6 +68,7 @@ public:
     void                        enableLimits                ( bool enable );
     void                        setLimits                   ( cgFloat minDegrees, cgFloat maxDegrees );
     void                        setPivotTransform           ( const cgTransform & pivotTransform );
+    cgTransform                 getPivotTransform           ( bool original ) const;
     cgFloat                     getAngle                    ( ) const;
     cgFloat                     getRelativeAngularVelocity  ( ) const;
     cgVector3                   getAxis                     ( ) const;

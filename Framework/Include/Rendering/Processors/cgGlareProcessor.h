@@ -79,7 +79,7 @@ public:
 	void            setGlareAmount          ( cgFloat amount );
 	void            setCacheValues          ( cgFloat amount, cgFloat rate );
     void            setGlareSteps           ( const GlareStepArray & steps );
-    bool            execute                 ( const cgRenderTargetHandle & target, cgResampleChain * chain0, cgResampleChain * chain1, float alphaMaskAmt );
+    bool            execute                 ( const cgRenderTargetHandle & target, cgResampleChain * chain0, cgResampleChain * chain1, float alphaMaskAmt, bool fullSizeBrightPass, bool blurPrePass );
 	void            setToneMapper           ( cgToneMapProcessor * toneMapper );
 
     //-------------------------------------------------------------------------
@@ -145,6 +145,8 @@ protected:
     _cbBrightPass           mBrightPassConfig;
 	_cbUpdateCache          mUpdateCacheConfig;
     GlareStepArray          mSteps;
+	bool                    mFullSizeBrightPass;
+	bool                    mDownsampleBlurPrePass;
 	bool					mAnamorphicFlares;
 
     // Data retained during execution.

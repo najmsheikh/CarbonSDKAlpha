@@ -59,7 +59,6 @@ class StandardRenderControl : IScriptedRenderControl
 
 	private bool                mDrawDepth;
 	private bool                mDrawGeometry;
-	private bool                mDrawDiscontinuity;
 	private bool                mDrawDirectLight;
 	private bool                mDrawIndirectLight;
 	private bool                mDrawSky;
@@ -104,7 +103,6 @@ class StandardRenderControl : IScriptedRenderControl
 	private Sampler@            mNormalsFitSampler;
 	private Sampler@            mRotationSampler;
 	private Sampler@            mLightingSampler;
-	private Sampler@            mEdgeSampler;
 
     // Image Processing Utilities
     private ImageProcessor@         mImageProcessor;
@@ -123,35 +121,25 @@ class StandardRenderControl : IScriptedRenderControl
 	private RenderTargetHandle   mGBuffer1;
 	private RenderTargetHandle   mGBuffer2;
 	private RenderTargetHandle   mLighting;
-	private	RenderTargetHandle   mEdgeBuffer;
 	private RenderTargetHandle   mVelocityBuffer;
 	private RenderTargetHandle   mVelocityBufferMB;
 	private RenderTargetHandle[] mAABuffer;
 
-	// Reprojection buffers
-	private RenderTargetHandle  mLightingPrev;
-	private RenderTargetHandle  mDepthPrev;
+	private RenderTargetHandle   mFrameBuffer;
+	private RenderTargetHandle   mLDRScratch0;
+	private RenderTargetHandle   mLDRScratch1;
 
-	private RenderTargetHandle  mFrameBuffer;
-	private RenderTargetHandle  mLDRScratch0;
-	private RenderTargetHandle  mLDRScratch1;
-	private	RenderTargetHandle  mLDRScratch2;
-
-	private ResampleChain @     mLDRChain0;
-	private ResampleChain @     mLDRChain1;
-	private ResampleChain @     mLightingChain0;
-	private ResampleChain @     mLightingChain1;
-	private ResampleChain @     mDepthChain0;
-	private ResampleChain @     mNormalChain0;
-	private ResampleChain @     mEdgeChain;
-
-	// Depth-Stencil Buffers 
-	private array< DepthStencilTargetHandle > mDepthStencilBuffers;
+	private ResampleChain @      mLDRChain0;
+	private ResampleChain @      mLDRChain1;
+	private ResampleChain @      mLightingChain0;
+	private ResampleChain @      mLightingChain1;
+	private ResampleChain @      mDepthChain0;
+	private ResampleChain @      mNormalChain0;
 
 	// Variable for tracking which render target currently
 	// contains the composited scene (allows post-processes to 
 	// easily keep track of the current state of the scene)
-	private RenderTargetHandle  mCurrentSceneTarget;
+	private RenderTargetHandle   mCurrentSceneTarget;
 
     // Material filtering expressions
     private FilterExpression @  mFilterOpaque;
@@ -181,12 +169,11 @@ class StandardRenderControl : IScriptedRenderControl
 		// Activate the desired features
 		mDrawDepth         = true;
 		mDrawGeometry      = true;
-		mDrawDiscontinuity = true;
 		mDrawDirectLight   = true;
 		mDrawIndirectLight = false;
 		mDrawSky           = true;
 		mDrawFog           = false;
-		mDrawTransparent   = true;
+		mDrawTransparent   = false;
 		mDrawGlare         = false;
 		mDrawDepthOfField  = false;
 		mDrawMotionBlur    = false;
@@ -332,7 +319,6 @@ class StandardRenderControl : IScriptedRenderControl
         @mNormalsFitSampler = resources.createSampler( "NormalsFit" );
         @mRotationSampler   = resources.createSampler( "DiscRotation" );
 		@mLightingSampler   = resources.createSampler( "Lighting" );
-		@mEdgeSampler       = resources.createSampler( "Edge" );
 
         // G-buffer texture reading (clamped/point)
         SamplerStateDesc smpStates;
@@ -348,7 +334,6 @@ class StandardRenderControl : IScriptedRenderControl
 		mLightingSampler.setStates( smpStates );
 		mDepthSampler.setStates( smpStates );
 		mNormalSampler.setStates( smpStates );
-		mEdgeSampler.setStates( smpStates );
 
 		// Allocate any resamplers required 
 		@mLightingChain0 = ResampleChain();
@@ -357,7 +342,6 @@ class StandardRenderControl : IScriptedRenderControl
 		@mLDRChain1      = ResampleChain();
 		@mDepthChain0    = ResampleChain();
 		@mNormalChain0   = ResampleChain();
-		@mEdgeChain      = ResampleChain();
 
         // Load custom textures necessary as input to various passes (film grain, vignette, etc.)
         if ( !resources.loadTexture( mNormalsFitTexture, "sys://Textures/NormalsFittingTexture.dds", 0, DebugSource() ) )
@@ -430,11 +414,6 @@ class StandardRenderControl : IScriptedRenderControl
 		// Fill our depth buffer
         profiler.beginProcess( "Depth" );
 		if ( mDrawDepth ) depth( activeCamera, renderDriver );
-        profiler.endProcess( );
-
-		// Compute geometric discontinuities (i.e., edge detection) for optimizations in upcoming algorithms
-        profiler.beginProcess( "Discontinuity" );
-        if ( mDrawDiscontinuity ) discontinuity( renderDriver, 0, 6 );
         profiler.endProcess( );
 
 		// Fill the geometry buffer
@@ -575,80 +554,30 @@ class StandardRenderControl : IScriptedRenderControl
         mGBuffer1 = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "GBuffer1" );    // Diffuse
         mGBuffer2 = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "GBuffer2" );    // Specular
 		
-		bool bReprojection = false;
-		if ( bReprojection )
-		{
-			// For reprojection, we need to "ping-pong" current and previous depth buffers
-			String currentDBInstanceId  = "DepthBuffer(" + activeView.getReferenceId() + ")" + (activeView.getRenderCount()       % 2);
-			String previousDBInstanceId = "DepthBuffer(" + activeView.getReferenceId() + ")" + ((activeView.getRenderCount() + 1) % 2);
-
-			// Create the depth buffer and downsample chain
-			if ( mDepthType == DepthType::LinearZ_Packed || mDepthType == DepthType::LinearDistance_Packed ) 
-			{
-				mDepthBuffer = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, currentDBInstanceId  ); // Depth
-				mDepthPrev   = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, previousDBInstanceId ); // Depth (prev frame)
-			}
-			else
-			{
-				// ToDo: GetBestFormat -- One channel, floating point, full precision | half precision?
-				mDepthBuffer = activeView.getRenderSurface( BufferFormat::R32_Float, 1.0, 1.0, currentDBInstanceId ); // Depth
-				mDepthPrev   = activeView.getRenderSurface( BufferFormat::R32_Float, 1.0, 1.0, previousDBInstanceId ); // Depth (prev frame)
-			}
-		}
+		// Create the depth buffer (ToDo: GetBestFormat -- One channel, floating point, full precision | half precision?)
+		if ( mDepthType == DepthType::LinearZ_Packed || mDepthType == DepthType::LinearDistance_Packed ) 
+			mDepthBuffer = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "DepthBuffer"  ); // Depth
 		else
-		{
-			// Create the depth buffer and downsample chain (ToDo: GetBestFormat -- One channel, floating point, full precision | half precision?)
-			if ( mDepthType == DepthType::LinearZ_Packed || mDepthType == DepthType::LinearDistance_Packed ) 
-				mDepthBuffer = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "DepthBuffer"  ); // Depth
-			else
-				mDepthBuffer = activeView.getRenderSurface( BufferFormat::R32_Float, 1.0, 1.0, "DepthBuffer" ); // Depth
-		}
+			mDepthBuffer = activeView.getRenderSurface( BufferFormat::R32_Float, 1.0, 1.0, "DepthBuffer" ); // Depth
+
+		// Create the depth buffer downsample chain 
+		int numDepthLevels = 2;
 		if ( mShadingQuality == ShadingQuality::LowQuality )
-			mDepthChain0.setSource( activeView, mDepthBuffer, 2, "DepthChain0" );
-		else
-			mDepthChain0.setSource( activeView, mDepthBuffer, 4, "DepthChain0" );
-		
-		// Create matching depth-stencil buffers for the chain
-		int numDepthLevels = mDepthChain0.getLevelCount();
-		mDepthStencilBuffers.resize( numDepthLevels );
-		mDepthStencilBuffers[ 0 ] = activeView.getDepthStencilBuffer( );
-		float fScale = 1.0f;
-		for ( int i = 1; i < numDepthLevels; i++ )
-		{
-			fScale /= 2.0f;
-            // ToDo: GetBestFormat -- requires stencil
-			mDepthStencilBuffers[ i ] = activeView.getDepthStencilSurface( BufferFormat::D24S8, fScale, fScale, "DepthStencilBuffers" );
-		}
+			numDepthLevels = 2;
 
-		// Create the surface normal buffer and downsample chain 
-		mNormalBuffer = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "NormalBuffer" ); // Surface normals
-		mNormalChain0.setSource( activeView, mNormalBuffer, numDepthLevels, "NormalChain0" );
+		mDepthChain0.setSource( activeView, mDepthBuffer, numDepthLevels, "DepthChain0" );
 		
 		// Create the lighting buffer and downsample chain(s) (2 for ping ponging)
-        mLighting = activeView.getRenderSurface( mLightingBufferFormat,  1.0, 1.0, "Lighting" );               // Lighting
+        mLighting = activeView.getRenderSurface( mLightingBufferFormat,  1.0, 1.0, "Lighting" ); // Lighting
 		mLightingChain0.setSource( activeView, mLighting, "LightingChain0" );
 		mLightingChain1.setSource( activeView, mLighting, "LightingChain1" );
 		
-		// For reprojection, we need current and previous lighting buffers
-		if ( bReprojection )
-		{
-			String strPreviousLBInstanceId = "LightingPrevious(" + activeView.getReferenceId() + ")";
-			mLightingPrev = activeView.getRenderSurface( mLightingBufferFormat,  1.0, 1.0, strPreviousLBInstanceId );  // Lighting (prev frame)
-		}
-
 		// Create some LDR scratch surfaces and downsample chain(s) (2 for ping ponging)
         mLDRScratch0 = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "LDRScratch0" ); // Scratch (ldr) 
         mLDRScratch1 = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "LDRScratch1" ); // Scratch (ldr) 
 		mLDRChain0.setSource( activeView, mLDRScratch0, "LDRScratchChain0" );
 		mLDRChain1.setSource( activeView, mLDRScratch1, "LDRScratchChain1" );
 		
-		// Create a chain for downsampling discontinuities (i.e., geometry edges)
-		if ( mDrawDiscontinuity )
-		{
-			mEdgeBuffer = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "EdgeBuffer" ); // Geometric edges
-			mEdgeChain.setSource( activeView, mEdgeBuffer, numDepthLevels, "EdgeChain" );
-		}
-
 		// Create a velocity buffer	for motion blur (half res)
 		mVelocityBufferMB = activeView.getRenderSurface( BufferFormat::R16G16_Float, 0.5, 0.5, "VelocityBufferMB" ); 
 
@@ -691,23 +620,9 @@ class StandardRenderControl : IScriptedRenderControl
 		// Close depth resources
         mDepthBuffer.close();
 		mDepthChain0.setSource( null );
-		mDepthPrev.close();
 
-		// Close depth-stencil resources
-		for ( uint i = 0; i < mDepthStencilBuffers.length(); i++ )
-			mDepthStencilBuffers[ i ].close();
-		
-		// Close surface normal buffers
-		mNormalBuffer.close();
-		mNormalChain0.setSource( null );
-		
-		// Close edge resources
-		mEdgeBuffer.close();
-		mEdgeChain.setSource( null );
-		
 		// Close lighting resources
         mLighting.close();
-		mLightingPrev.close();
 		mLightingChain0.setSource( null );
 		mLightingChain1.setSource( null );
 		
@@ -748,7 +663,7 @@ class StandardRenderControl : IScriptedRenderControl
 		mApplyShadows      = true;
 
 		// Setup the depth and normal buffer types
-		mSurfaceNormalType = mViewSpaceLighting ? NormalType::NormalView : NormalType::NormalWorld; 
+		mSurfaceNormalType = NormalType::NoNormal; //mViewSpaceLighting ? NormalType::NormalView : NormalType::NormalWorld; 
 		mDepthType = mViewSpaceLighting ? DepthType::LinearZ_Packed : DepthType::LinearDistance_Packed; 
 
 		// Are we using sandbox material rendering mode?
@@ -765,7 +680,6 @@ class StandardRenderControl : IScriptedRenderControl
 		// effects. It uses full g-buffers to ensure all material features are visualized.
 		if ( isSandboxMaterial )
 		{
-			mDrawDiscontinuity  = false;
 			mDrawHDR            = false;
 			mDrawSky            = false;
 			mDrawFog            = false;
@@ -785,30 +699,30 @@ class StandardRenderControl : IScriptedRenderControl
 			if ( mShadingQuality == ShadingQuality::LowQuality )
 			{
 				mDrawHDR            = false;
-				mHDRGlare           = false;
-				mHDRDepthOfField    = false;
-				mHDRMotionBlur      = false;
-				
 				mDrawGlare          = false;
 				mDrawDepthOfField   = false;
 				mDrawSSAO           = false;
 				mDrawMotionBlur     = false;
 				
+				mHDRGlare           = mDrawHDR && false;
+				mHDRDepthOfField    = mDrawHDR && false;
+				mHDRMotionBlur      = mDrawHDR && false;
+
 				mAntialiasing       = AntialiasingMethod::None;
 			}
 			else
 			{
-				mHDRGlare              = true;
-				mHDRDepthOfField       = true;
-				mHDRMotionBlur         = true;
-				
 				mDrawHDR               = true; 
 				mDrawGlare             = true;
 				mDrawDepthOfField      = false;
 				mDrawMotionBlur        = true;
 				mDrawSSAO			   = false;
 				
-				mAntialiasing          = AntialiasingMethod::FXAA_T2x;
+			    mHDRGlare              = mDrawHDR && true;
+				mHDRDepthOfField       = mDrawHDR && true;
+				mHDRMotionBlur         = mDrawHDR && true;				
+				
+				mAntialiasing          = AntialiasingMethod::FXAA;
 			}
 
             // Antialiasing should currently be disabled whilst rendering in editor.
@@ -849,9 +763,8 @@ class StandardRenderControl : IScriptedRenderControl
         ObjectRenderQueue @ queue = ObjectRenderQueue( mScene );
 		
 		// Setup the output target(s)
-		array<RenderTargetHandle> targets( 2 );		
+		array<RenderTargetHandle> targets( 1 );		
 		targets[ 0 ] = mDepthBuffer;
-		targets[ 1 ] = mNormalBuffer;
 
 		// If we are rendering with an orthographic camera, all depths will be forced to linear Z values
 		if ( activeCamera.getProjectionMode() == ProjectionMode::Orthographic )
@@ -866,7 +779,6 @@ class StandardRenderControl : IScriptedRenderControl
 			renderDriver.clear( ClearFlags::Depth | ClearFlags::Stencil, 0, 1, 0 );
 			renderDriver.endTargetRender();
 			mImageProcessor.processColorImage( targets[ 0 ], ImageOperation::SetColorRGBA, ColorValue( 1, 1, 1, 1 ) );
-			mImageProcessor.processColorImage( targets[ 1 ], ImageOperation::SetColorRGBA, ColorValue( 0, 0, 0, 1 ) );
 		}
 		
 		// Begin rendering to target(s)
@@ -908,7 +820,7 @@ class StandardRenderControl : IScriptedRenderControl
 			renderDriver.endTargetRender();
 		
         } // End if beginTargetRender()
-
+		
 		// Downsample depth and surface normal buffers (if available)
 		int numLevels = min( mDepthChain0.getLevelCount(), mNormalChain0.getLevelCount() );
 		for ( int j = 0; j < numLevels-1; j++ )
@@ -918,72 +830,8 @@ class StandardRenderControl : IScriptedRenderControl
 											 mDepthType, mDepthType, ImageOperation::DownSampleMinimum, j == 0 ? true : false );
 		}
 
-		// Initialize any lower resolution depth-stencil buffers we may have
-		for ( uint j = 1; j < mDepthStencilBuffers.length(); j++ )
-		{
-			// Clear the buffer
-			renderDriver.beginTargetRender( mLDRChain0.getLevel( j ), mDepthStencilBuffers[ j ] );
-			renderDriver.clear( ClearFlags::Depth | ClearFlags::Stencil, 0, 1, 0 );
-			renderDriver.endTargetRender( );
-					
-			// Convert depth to non-linear Z and output to depth-stencil buffer
-			mImageProcessor.processDepthImage( mLDRChain0.getLevel( j ), mDepthChain0.getLevel( j ), mDepthType, DepthType::NonLinearZ, mDepthStencilBuffers[ j ] );
-		}
-
 		// Update the current scene target
 		mCurrentSceneTarget = mDepthBuffer;
-	}
-
-	//-----------------------------------------------------------------------------
-	// Name : discontinuity()
-	// Desc : Computes the discontinuity (edge) buffer based on geometric differences.
-	//-----------------------------------------------------------------------------
-	void discontinuity( RenderDriver @ renderDriver, int mipLevel, int downsampleLevels )
-	{
-		// Setup the threshold data
-		mImageProcessor.setDepthExtents( 0.0635f, 0.5f ); // meters  
-        mImageProcessor.setNormalExtents( 15.0f, 40.0f ); // degrees
-        mImageProcessor.setNormalDistances( 10.0f, 80.0f ); // meters
-
-		// Pack depth and normal
-        bool packDepthAndNormal = false;
-        DepthType depthType = mDepthType;
-		if ( packDepthAndNormal )
-		{
-			mImageProcessor.packDepthNormal( mDepthChain0.getLevel(mipLevel), mNormalChain0.getLevel(mipLevel), true );
-			depthType = DepthType::LinearZ_Normal_Packed;
-			mImageProcessor.setDepthExtents( 0.01f, 0.5f ); // meters
-			mImageProcessor.setNormalExtents( 2.0f, 40.0f ); // degrees
-			mImageProcessor.setNormalDistances( 5.0f, 50.0f ); // meters
-		}
-		
-		// Clear the buffer
-		renderDriver.beginTargetRender( mEdgeBuffer, null );
-		renderDriver.clear( ClearFlags::Target, 0, 0, 0 );
-		renderDriver.endTargetRender();
-						
-		// Compute discontinuities at desired resolution
-		mImageProcessor.setDepthStencilTarget( mDepthStencilBuffers[ mipLevel ] );
-	    mImageProcessor.discontinuityDetect( mDepthChain0.getLevel(mipLevel), mNormalChain0.getLevel(mipLevel), mEdgeChain.getLevel(mipLevel),
-                                             DiscontinuityTestMethod::DepthAndNormal, false, depthType );
-		mImageProcessor.setDepthStencilTarget( DepthStencilTargetHandle() );
-		
-		// What is the maximum level in the chain?
-		int maxLevel = mEdgeChain.getLevelCount()-1;
-
-		// At what level should we stop downsampling?
-        int endLevel = ( downsampleLevels < 0 ) ? endLevel = maxLevel : min( maxLevel, downsampleLevels ); 
-				
-		// Downsample the mask
-		for ( int i = mipLevel; i < endLevel; i++ )
-			mImageProcessor.downSampleScreenMask( mEdgeChain.getLevel( i ), mEdgeChain.getLevel( i + 1 ) );
-	    
-	    // Upsample the mask if we started at a lower resolution
-	    for ( int i = mipLevel; i > 0; i-- )
-			mImageProcessor.processColorImage( mEdgeChain.getLevel( i ), mEdgeChain.getLevel( i - 1 ), ImageOperation::CopyRGBA );
-
-		// Update the current scene target
-		mCurrentSceneTarget = mEdgeBuffer;
 	}
 
 	//-----------------------------------------------------------------------------
@@ -1363,7 +1211,7 @@ class StandardRenderControl : IScriptedRenderControl
 	void glare( RenderDriver @ renderDriver )
 	{
 		// Set the glare paramaters
-		mGlare.setBrightThreshold( 0.8f, 1.0f );
+		mGlare.setBrightThreshold( 0.25f, 0.9f );
 		mGlare.setGlareAmount( 0.045f );
 
         // Set the downsampling/blurring steps
@@ -1371,8 +1219,8 @@ class StandardRenderControl : IScriptedRenderControl
         steps.resize( 4 );		
 		steps[ 0 ] = GlareStepDesc( 2, 0.40, 1, 2, 2.0, 0.0, 30 );			
 		steps[ 1 ] = GlareStepDesc( 3, 0.50, 1, 2, 2.0, 0.0, 30 );			
-		steps[ 2 ] = GlareStepDesc( 4, 0.10, 2, 2, 2.0, 0.0, 30 );			
-		steps[ 3 ] = GlareStepDesc( 5, 0.10, 2, 3, 2.0, 0.9, 0.001 );			
+		steps[ 2 ] = GlareStepDesc( 4, 0.60, 2, 2, 2.0, 0.0, 30 );			
+		steps[ 3 ] = GlareStepDesc( 5, 0.30, 2, 3, 2.0, 0.0, 0.001 );			
         mGlare.setGlareSteps( steps );
 
 		// Give the glare access to the tonemapper if needed
@@ -1380,7 +1228,7 @@ class StandardRenderControl : IScriptedRenderControl
 			mGlare.setToneMapper( mToneMapper );
 
         // Run the glare
-	    mGlare.execute( mCurrentSceneTarget, mLightingChain0, mLightingChain1, 0.0f );
+	    mGlare.execute( mCurrentSceneTarget, mLightingChain0, mLightingChain1, 0.0f, false, false );
 	}
 
 	//-----------------------------------------------------------------------------
@@ -1494,13 +1342,13 @@ class StandardRenderControl : IScriptedRenderControl
 	void motionBlur( CameraNode @ activeCamera, float frameTime )
 	{
 		// Set the motion blur parameters
-		mMotionBlur.setBlurAmount( 0.30 );
-		mMotionBlur.setRotationBlurAmount( 0.50 );
+		mMotionBlur.setBlurAmount( 0.25 );
+		mMotionBlur.setRotationBlurAmount( 0.95 );
 		mMotionBlur.setTranslationBlurAmount( 0.01 );
-        mMotionBlur.setTargetRate( 50 );
-        mMotionBlur.setAttenuationRates( 30, 50 );
-        mMotionBlur.setMaxSpeed( 0.1 );
-        mMotionBlur.setCompositeSpeedScale( 100.0 );
+        mMotionBlur.setTargetRate( 30 );
+        mMotionBlur.setAttenuationRates( 10, 30 );
+        mMotionBlur.setMaxSpeed( 0.005 );
+        mMotionBlur.setCompositeSpeedScale( 150.0, 250.0, 2.0 );
 
 		// Set the required buffers
         RenderTargetHandle sourceColor, sourceColorLow, scratchLow, velocity, destination;
@@ -1524,7 +1372,7 @@ class StandardRenderControl : IScriptedRenderControl
 		{
 			// Downsample the color buffer to 1/4 res
 			mImageProcessor.downSample( sourceColor, sourceColorLow );
-			
+		
 			// Run the filter
 			if ( mMotionBlur.execute( 2,
 									  sourceColor,       // High res color
@@ -1534,6 +1382,7 @@ class StandardRenderControl : IScriptedRenderControl
 									  destination ) )
 				mCurrentSceneTarget = destination;
 		}
+
 	}
 
 	//-----------------------------------------------------------------------------
@@ -1657,132 +1506,16 @@ class StandardRenderControl : IScriptedRenderControl
 	//-----------------------------------------------------------------------------
 	void indirectLighting( CameraNode @ activeCamera, RenderDriver @ renderDriver )
 	{
-		// For now, make sure we have a normal buffer and a linear Z depth buffer. Can make this more flexible later.
-		if ( mSurfaceNormalType == NormalType::NoNormal || mDepthType != DepthType::LinearZ_Packed )
-			return; 
-	
-		// Precompute SSAO if desired
-        Profiler @ profiler = getAppProfiler();
-        profiler.beginProcess( "SSAO" );
-		//if ( mDrawSSAO ) ssao( renderDriver );
-        profiler.endProcess( );
-
-		// Notify system that we are performing the "indirectLighting" pass.
-		if ( mScene.beginRenderPass( "indirectLighting" ) )
-		{
-			// Apply our discontinuity mask to the stencil buffer (used during compositing/upsampling)
-			//renderDriver.beginTargetRender( mLighting, mDepthStencilBuffers[ 0 ] );
-			//renderDriver.clear( ClearFlags::Stencil, 0, 0, 0 );
-			//mImageProcessor.resolveScreenMask( mEdgeChain.getLevel( 0 ), true );
-			//renderDriver.endTargetRender();
-
-			// Downsample the direct lighting buffer for SSGI
-			//mImageProcessor.downSample( mLighting, mLightingChain0.getLevel(1) );
-		
-			// Compute indirect lighting (note: does NOT include reflectance)
-			mLightingManager.processIndirectLights( mLighting, mLightingChain0.getLevel(1), mDepthChain0.getLevel(1), mDepthStencilBuffers[ 1 ], mDepthStencilBuffers[ 0 ], activeCamera, "onLightProcess", "onPassProcess" );
-			
-			// Set the lighting buffer as the current scene
-			mCurrentSceneTarget = mLighting;
-
-            // Finish up
-            mScene.endRenderPass( );
-			
-		} // End pass
+		// ToDo: Reimplement
 	}
 
 	//-----------------------------------------------------------------------------
 	// Name : ssao()
 	// Desc : Computes screen space ambient occlusion (results stored in depth.a).
-	/* ToDo : 
-	1. Use the edge mask texture to figure out which texels actually need SSAO computations. 
-	2. Use the edge mask texture to reduce the cost of the bilateral blur? 
- 	   -Alternative would be to downsample the results of SSAO and isolate the "white" pixels and exclude them (within a radius)
- 	    from consideration during filtering. */
 	//-----------------------------------------------------------------------------
 	void ssao( CameraNode @ activeCamera, RenderDriver @ renderDriver )
 	{	
-		// For now, make sure we have a normal buffer and a linear Z depth buffer. Can make this more flexible later.
-		if ( mSurfaceNormalType == NormalType::NoNormal || mDepthType != DepthType::LinearZ_Packed )
-			return; 
-
-		// Chooose the desired mip level for our computations
-		int mipLevel = 0;  //(0 = full size, 1 = half size, 2 = quarter size, etc.)
-	
-		// Set the SSAO mode
-        SSAOMethod method = SSAOMethod::HemisphereAO;
-        mSSAO.setSamplingMethod( method );
-		
-		// Set the SSAO parameters based on the mode
-		if ( method == SSAOMethod::ObscuranceAO || method == SSAOMethod::VolumetricAO )
-		{
-			mSSAO.setSampleCount( 2 );
-			mSSAO.setSampleRadii( 1, Vector4( 0.75, 0, 0, 0 ), Vector4( 80, 0, 0, 0 ), Vector4( 0.95, 0, 0, 0 ) );
-            mSSAO.setBiasFactor( 0.1f );
-            mSSAO.setDepthFalloff( 0.85f );
-		}
-		else
-		{
-            mSSAO.setSampleCount( 16 );
-			mSSAO.setSampleRadii( 1, Vector4( 0.5, 0, 0, 0 ), Vector4( 1.0, 0, 0, 0 ), Vector4( 0, 0, 0, 0 ) );
-            mSSAO.setBiasFactor( (mipLevel == 0) ? 0.004f : 0.008 );
-            mSSAO.setDepthFalloff( 1.2f );
-		}
-					
-		// Run the SSAO computation
-        RenderTargetHandle destination = mLDRChain0.getLevel(mipLevel);
-        if ( mSSAO.execute( activeCamera, mDepthChain0.getLevel(mipLevel), mNormalChain0.getLevel(mipLevel), 
-                            destination, mDepthStencilBuffers[mipLevel] ) )
-        {
-            // Blur (bilateral) 
-            mImageProcessor.setDepthExtents( 0.33f, 0.66f ); // meters  
-            mImageProcessor.setNormalExtents( 2.0f, 30.0f ); // degrees
-            mImageProcessor.setNormalDistances( 5.0f, 50.0f ); //meters
-
-            // Copy depth into RGB (AO in alpha)
-            mImageProcessor.processColorImage( mDepthChain0.getLevel(mipLevel), destination, ImageOperation::CopyRGB );
-
-            // Run a bilateral blur
-            mImageProcessor.bilateralBlur( mLDRChain0.getLevel(mipLevel), mLDRChain1.getLevel(mipLevel), mDepthChain0.getLevel(mipLevel), mNormalChain0.getLevel(mipLevel), 
-                                           3, 0, 0.0, 2, true, false, DepthType::LinearZ_Packed, true );
-        
-            // Upsample (bilateral)
-            for( int i = mipLevel; i > 0; --i )
-            {
-                // Use the edge mask to limit bilateral upsampling to texels that need it (i.e., geometric edges in the lower mip level).
-                renderDriver.beginTargetRender( mLDRChain0.getLevel(i-1), mDepthStencilBuffers[i-1] );
-                renderDriver.clear( ClearFlags::Stencil, 0, 0, 0 );
-                mImageProcessor.resolveScreenMask( mEdgeChain.getLevel( i ) );
-                renderDriver.endTargetRender();
-                            
-                // Run a bilateral upsample on the marked pixels and bilinear on the unmarked ones
-                mImageProcessor.testStencilBuffer( true, 1 );
-                mImageProcessor.setDepthStencilTarget( mDepthStencilBuffers[i-1] );
-                mImageProcessor.resample( mLDRChain0.getLevel(i), mDepthChain0.getLevel(i), mNormalChain0.getLevel(i),
-                                          mLDRChain0.getLevel(i-1), mDepthChain0.getLevel(i-1), mNormalChain0.getLevel(i-1),
-                                          true, true, DepthType::LinearZ_Packed, DepthType::LinearZ_Packed, true, false, false );
-                
-                // Copy the rest of the image
-                mImageProcessor.testStencilBuffer( true, 0 );
-                mImageProcessor.processColorImage( mLDRChain0.getLevel(i), mLDRChain0.getLevel(i-1), ImageOperation::CopyRGBA );
-                mImageProcessor.testStencilBuffer( false, 0 );
-                mImageProcessor.setDepthStencilTarget( DepthStencilTargetHandle() );
-            }
-                    
-            // Copy the final AO to depth buffer alpha
-            mImageProcessor.processColorImage( mLDRChain0.getLevel(0), mDepthBuffer, ImageOperation::CopyAlpha );
-
-            // Blend in any g-buffer AO (temporary fake approach to adding normal occlusion)
-            // mImageProcessor.processColorImage( mGBuffer2, mDepthBuffer, ImageOperation::TextureScaleA );
-				
-            //////////////////////////////////
-            // TEMP TESTING //////////////////
-            //mDrawDirectLight = false;
-            //mImageProcessor.processColorImage( mDepthBuffer, mLDRScratch1, ImageOperation::AlphaToRGBA );
-            //mCurrentSceneTarget = mLDRScratch1;
-            //////////////////////////////////
-        
-        } // End if success
+		// ToDo: Reimplement
 	}
 
 } // End Class StandardRenderControl

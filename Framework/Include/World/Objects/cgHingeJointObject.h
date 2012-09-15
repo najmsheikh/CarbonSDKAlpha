@@ -94,7 +94,7 @@ public:
     virtual bool                onComponentCreated      ( cgComponentCreatedEventArgs * e );
     virtual bool                onComponentLoading      ( cgComponentLoadingEventArgs * e );
     virtual cgString            getDatabaseTable        ( ) const;
-    
+
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
     //-------------------------------------------------------------------------
@@ -124,6 +124,7 @@ protected:
     // Cached database queries.
     static cgWorldQuery     mInsertJoint;
     static cgWorldQuery     mLoadJoint;
+    static cgWorldQuery     mUpdateLimits;
 };
 
 //-----------------------------------------------------------------------------
@@ -158,6 +159,8 @@ public:
     void                        setBody1                ( cgUInt32 nodeReferenceId );
     cgUInt32                    getBody0                ( ) const;
     cgUInt32                    getBody1                ( ) const;
+    cgObjectNode              * getBody0Node            ( ) const;
+    cgObjectNode              * getBody1Node            ( ) const;
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
@@ -175,6 +178,11 @@ public:
     virtual bool                onNodeLoading           ( const cgUID & objectType, cgWorldQuery * nodeData, cgSceneCell * parentCell, cgCloneMethod::Base cloneMethod );
     virtual bool                onNodeInit              ( const cgUInt32IndexMap & nodeReferenceRemap );
     virtual bool                onNodeDeleted           ( );
+
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods (Overrides cgPhysicsBodyEventListener)
+    //-------------------------------------------------------------------------
+    virtual void                onPhysicsBodyTransformed( cgPhysicsBody * sender, cgPhysicsBodyTransformedEventArgs * e );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldComponentEventListener)
@@ -228,9 +236,9 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    cgHingeJoint  * mJoint;         // The actual physics joint.
-    cgUInt32        mBody0RefId;    // Reference ID of the first joint body.
-    cgUInt32        mBody1RefId;    // Reference ID of the second joint body.
+    cgHingeJoint  * mJoint;             // The actual physics joint.
+    cgUInt32        mBody0RefId;        // Reference ID of the first joint body.
+    cgUInt32        mBody1RefId;        // Reference ID of the second joint body.
 
     //-------------------------------------------------------------------------
     // Protected Static Variables

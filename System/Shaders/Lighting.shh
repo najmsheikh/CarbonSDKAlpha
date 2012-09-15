@@ -131,7 +131,7 @@ LightingParameters initializeLightingSystem( int lightType, int lightFlags, int 
 	params.applyReflectance      = !testFlagAll(renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting));        
 	params.useSSAO               = testFlagAny(lightFlags, LightFlags::UseSSAO); 
 	params.trilighting           = testFlagAny(lightFlags, LightFlags::Trilighting);
-	params.approximateRoughness  = (shadingQuality >= ShadingQuality::HighQuality);
+	params.approximateRoughness  = (shadingQuality >= ShadingQuality::HighQuality) && USE_ORENNAYER;
     params.normalizeSpecular     = (shadingQuality >= ShadingQuality::HighQuality && SPECULAR_NORMALIZE_SCALE > 0.0);
 	params.visibilityTerm        = (shadingQuality >= ShadingQuality::HighQuality && MAX_MICROFACET_VISIBILITY > 0.0);
 	params.fresnelTerm           = (shadingQuality >= ShadingQuality::HighQuality) && !testFlagAll(renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting));
@@ -366,7 +366,7 @@ __shadercall float4 computeDiffuse( float3 diffuse, float3 ambient, float3 ambie
 		// which then maps from a min r of ~0.05 at 0 to a max r of ~50 at 1 (with an r of 5 at about ~0.5).
 		// The final function was determined in Excel using an exponential curve fitting of a scatter plot
 		// by manually placing r values, mapping them to 0 to 1 where we wanted them (the different r curves were viewed in SpeQ).
-		float r = 0.1834f * exp( 5.8413f * (1.0f - saturate( (m - 1.0f) / 15.0f ) ) );
+		float r = 0.1834f * exp( 5.8413f * (1.0f - saturate( (m - 1.0f) / $MAX_ORENNAYER_POWER ) ) );
 		clampedCosine = ((1.0 + r) / r) * (1.0 - 1.0 / (1.0 + r * clampedCosine));
 		?>
     
@@ -631,7 +631,7 @@ __shadercall void computeLighting( inout LightingData lighting, SurfaceData surf
     ?>
 
     // If we are computing lighting...
-    if ( params.diffuseEnabled || params.specularEnabled )
+    if ( params.diffuseEnabled || params.specularEnabled || params.ambientEnabled )
     {
         // Compute reflected & scattered light given the current light source type
         if ( params.lightType == LightType::IBL )
@@ -750,7 +750,7 @@ __shadercall void computeLighting( inout LightingData lighting, SurfaceData surf
             } // End if Projector
 			
             // Compute diffuse lighting
-            if ( params.diffuseEnabled )
+            if ( params.diffuseEnabled || params.ambientEnabled )
             {
                 <?
                 lD = computeDiffuse( lightDiffuse, lightAmbient, lightAmbientFar, lighting.shadow, surface.normal, lighting.lightDirection, surface.transmission, surface.specularPower, $params );

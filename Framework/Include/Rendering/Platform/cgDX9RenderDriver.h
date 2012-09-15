@@ -194,7 +194,6 @@ protected:
         cgVector4       viewportSize;
         cgVector2       viewportOffset;
         cgVector4       targetSize;
-        cgVector2       screenUVAdjustScale;
         cgVector2       screenUVAdjustBias;
 
     }; // End Struct : _cbCamera

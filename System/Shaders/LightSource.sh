@@ -146,7 +146,7 @@ class LightSourceShader : ISurfaceShader
 	// Name : getSurfaceData() 
 	// Desc : Assembles the surface data needed to run lighting
 	//-----------------------------------------------------------------------------
-	__shadercall void getSurfaceData( inout SurfaceData surface, float4 screenTexCoord, float3 eyeRay, script LightingParameters params )
+	__shadercall void getSurfaceData( inout SurfaceData surface, float2 screenTexCoord, float3 eyeRay, script LightingParameters params )
 	{
 		/////////////////////////////////////////////
 		// Definitions
@@ -175,11 +175,8 @@ class LightSourceShader : ISurfaceShader
         float2 depthBufferData;
         ?>
 		
-        // Compute screen space texture coordinates for g-buffer lookups
-        if ( params.lightType == LightType::Directional )
-            <?surface.screenCoords = screenTexCoord.xy;?>
-        else 
-            <?surface.screenCoords = screenTexCoord.xy / screenTexCoord.w;?>
+        // Capture screen space texture coordinates for g-buffer lookups
+        <?surface.screenCoords = screenTexCoord.xy;?>
 
 		// Is this a packed depth format (i.e., with something in the texture alpha channel?)
 		bool isCompressedDepth = isCompressedDepthType( params.depthType );
@@ -291,8 +288,8 @@ class LightSourceShader : ISurfaceShader
 			if ( testFlagAny( params.renderFlags, RenderFlags::GBufferSRGB ) )
 			{
 				<?
-				surface.diffuse.rgb  = pow( surface.diffuse.rgb,  $GAMMA_TO_LINEAR );
-				surface.specular.rgb = pow( surface.specular.rgb, $GAMMA_TO_LINEAR );
+				surface.diffuse.rgb  = SRGBToLinear( surface.diffuse.rgb );
+				surface.specular.rgb = SRGBToLinear( surface.specular.rgb );
 				?>
 			}
         
@@ -331,6 +328,479 @@ class LightSourceShader : ISurfaceShader
         } // End if computeProjTexCoords
 
 	} // End function                       
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Vertex Shaders
+    ///////////////////////////////////////////////////////////////////////////
+	//-----------------------------------------------------------------------------
+    // Name : transform() (Vertex Shader)
+	// Desc : Used to transform light shapes for stencil filling or screen execution.
+	//-----------------------------------------------------------------------------
+	bool transform( int lightType, bool stencilOnly )
+	{
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Define shader inputs.
+        <?in
+		    float3 sourcePosition   : POSITION;
+        ?>
+
+		// Define shader outputs.
+		<?out
+			float4 clipPosition     : SV_POSITION;
+		?>
+		if ( !stencilOnly )
+		{
+			<?out
+			   float3 eyeRay        : TEXCOORD0;
+			?>
+		
+        } // End if !stencilOnly
+
+        // Constant buffer usage.
+        <?cbufferrefs
+            _cbCamera;
+            _cbLight;
+            _cbLightingSystem;
+            _cbWorld;
+        ?>
+        
+        if ( lightType == LightType::Projector )
+        {
+            <?cbufferrefs
+                _cbProjectorLight;
+            ?>
+        
+        } // End if projector light
+
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+        if ( lightType == LightType::Directional )
+        {
+			<?
+			clipPosition.xyz = sourcePosition.xyz;
+			clipPosition.w   = 1.0;
+			?>
+
+			if ( !stencilOnly )
+			{
+				<?
+				// This ray goes from the camera position to the pixel in the screen
+				float4 viewPosition = mul( float4( clipPosition.x * _cameraFar, clipPosition.y * _cameraFar, _cameraFar, _cameraFar ), _inverseProjectionMatrix );
+				eyeRay = mul( viewPosition.xyz, _inverseViewMatrix );
+				?>
+			
+            } // End if !stencilOnly
+        
+        } // End if Directional
+        else 
+        {        
+			<?float4 modelPosition = float4( sourcePosition, 1 );?>
+
+			// Scale model position as required to construct the projector frustum shape
+			if ( lightType == LightType::Projector )        
+			{
+				<?
+				float2 windowSize = lerp( _lightConeAdjust.xz, _lightConeAdjust.yw, modelPosition.z );
+				modelPosition.xy *= windowSize;
+				modelPosition.z  *= _lightClipDistance.y;
+				?>
+			
+            } // End if Projector
+
+			<?			
+			// Transform geometry to clip space
+            float4 worldPosition = mul( modelPosition, _worldMatrix );
+            clipPosition = mul( worldPosition, _viewProjectionMatrix );
+			?>
+
+			// Compute data necessary for g-buffer lookups			
+			if ( !stencilOnly )
+			{
+				<?
+				// This ray goes from the camera position to the vertex
+                eyeRay = worldPosition.xyz - _cameraPosition;		
+                ?>
+			
+            } // End if !stencilOnly
+        
+        } // End if !Directional
+        
+        // Valid shader
+        return true;
+	}
+
+	//-----------------------------------------------------------------------------
+    // Name : transformBorderRepair() (Vertex Shader)
+	// Desc : Used to transform border repair quads into the clip space of the
+	//        relevant shadow map frustum.
+	//-----------------------------------------------------------------------------
+	bool transformBorderRepair( )
+	{
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Define shader inputs.
+        <?in
+		    float3  sourcePosition      : POSITION;
+		    float2  sourceTexCoords     : TEXCOORD0;
+        ?>
+
+        // Define shader outputs.
+        <?out
+            float4  clipPosition        : SV_POSITION;
+		    float2  texCoords           : TEXCOORD0;
+        ?>
+
+        // Constant buffer usage.
+        <?cbufferrefs
+            _cbCamera;
+            _cbLightingSystem;
+        ?>
+
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+		<?
+		// Compute clip space position (transform by upper 3x3 of frustum view matrix only)
+		clipPosition = float4( mul( sourcePosition, _lightTexProjMatrix ).xyz, 1 );
+		
+		// Offset quad to ensure we sample from the correct texel when
+		// similar shadow map edges connect (i.e. -V to -V). See 
+		// ShadowMapVertexShader() for more information.
+		clipPosition.x -= _targetSize.z; // Equivalent to (1.0 / TargetSize.x)
+		clipPosition.y += _targetSize.w; // Equivalent to (1.0 / TargetSize.y)
+
+		// Return texture coordinates
+		texCoords = sourceTexCoords;
+		?>
+	
+        // Valid shader
+        return true;
+	}
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Pixel Shaders
+    ///////////////////////////////////////////////////////////////////////////
+    //-------------------------------------------------------------------------
+    // Name : nullOutput() (Pixel Shader)
+	// Desc : Selected when no output is required (stencil fill / clear).
+    //-------------------------------------------------------------------------
+    bool nullOutput( )
+    {
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+		// Define shader inputs.
+		<?in
+			float4 screenPosition : SV_POSITION;
+		?>
+        
+        // Define shader outputs.
+		<?out
+			float4  data0    : SV_TARGET0;
+		?>
+		
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////		
+		<?data0 = float4(0,0,0,0);?>
+		
+        // Valid shader
+        return true;
+	}
+
+    //-------------------------------------------------------------------------
+    // Name : drawDirectLighting() (Pixel Shader)
+	// Desc : Used when drawing light sources. Handles diffuse, specular, and shadowing. 
+    //-------------------------------------------------------------------------
+    bool drawDirectLighting( int lightType, int lightFlags, int shadowMethod, int primaryTaps, int secondaryTaps, int renderFlags, int shadingQuality )
+    {
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Define shader inputs.
+        <?in
+			float4 screenPosition : SV_POSITION;
+        ?>
+
+		// If we are doing view space lighting...
+		if ( !testFlagAny( renderFlags, RenderFlags::ViewSpaceLighting ) )
+		{
+			<?in
+				float3 eyeRay  : TEXCOORD0;
+			?>
+		}
+
+        // Define shader outputs.
+		<?out
+			float4  data0           : SV_TARGET0;
+		?>
+		
+		// If we are using high quality deferred lighting (separate diffuse/specular), add another output	
+		bool deferredLightingHighQuality = testFlagAll( renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting) | uint(RenderFlags::SpecularColorOutput) );
+		if ( deferredLightingHighQuality )
+		{
+			<?out
+				float4  data1       : SV_TARGET1;
+			?>
+		}
+				
+        // Constant buffer usage.
+        <?cbufferrefs
+            _cbLight;
+            _cbCamera;
+        ?>
+
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+		
+		// Declare our lighting structures
+		initLightingStructures( true, false );
+        <?
+            LightingData lighting = (LightingData)0;
+            SurfaceData  surface  = (SurfaceData)0;
+        ?>
+
+		// Fill out the lighting parameter data structure 
+		LightingParameters params = initializeLightingSystem( lightType, lightFlags, shadowMethod, primaryTaps, secondaryTaps, renderFlags, shadingQuality );
+
+		// If we are doing view space lighting, create a placeholder eye ray since we don't pass it in...
+		if ( testFlagAny( renderFlags, RenderFlags::ViewSpaceLighting ) )
+			<?float3 eyeRay = 0;?>
+
+		<?
+		// Compute our screen texture coordinates
+		float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
+		
+        // Get the data needed for lighting
+		getSurfaceData( surface, texCoords, eyeRay, $params );
+        
+		// Compute lighting
+		computeLighting( lighting, surface, $params ); 
+        ?>
+
+		// Compute final lighting results
+		if ( deferredLightingHighQuality )
+		{
+	        <?data0 = float4( lighting.diffuse,  0 );?>
+	        <?data1 = float4( lighting.specular, 0 );?>
+		}
+		else if ( testFlagAll( renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting) ) )
+		{
+	        <?data0 = float4( lighting.diffuse, dot( lighting.specular.rgb, float3( 0.299, 0.587, 0.114 ) ) );?>
+		}
+		else
+		{
+	        <?data0 = float4( lighting.diffuse + lighting.specular, 0 );?>
+		}
+            
+        // Valid shader
+        return true;
+	}
+
+    //-------------------------------------------------------------------------
+    // Name : drawShadowing() (Pixel Shader)
+	// Desc : Used when drawing shadow-only sources or computing deferred shadows. 
+    //-------------------------------------------------------------------------
+    bool drawShadowing( int lightType, int lightFlags, int shadowMethod, int primaryTaps, int secondaryTaps, int renderFlags, int shadingQuality, bool writeAttenuationBuffer )
+    {
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Define shader inputs.
+        <?in
+			float4   screenPosition : SV_POSITION;
+			float3   eyeRay         : TEXCOORD0;
+        ?>
+
+        // Define shader outputs.
+		<?out
+			float4  data0       : SV_TARGET0;
+		?>
+		
+		// If we are using high quality deferred lighting (separate diffuse/specular), add another output		
+		bool deferredLightingHighQuality = testFlagAll( renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting) | uint(RenderFlags::SpecularColorOutput) );
+		if ( deferredLightingHighQuality )
+		{
+			<?out
+				float4  data1       : SV_TARGET1;
+			?>
+		}
+		
+        // Constant buffer usage.
+        <?cbufferrefs
+            _cbLight;
+        ?>
+
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+	
+		// Declare our lighting structures
+		initLightingStructures( true, false );
+        <?
+            LightingData lighting = (LightingData)0;
+            SurfaceData surface = (SurfaceData)0;
+        ?>
+
+		// Fill out the lighting parameter data structure 
+		LightingParameters params = initializeLightingSystem( lightType, 0, shadowMethod, primaryTaps, secondaryTaps, renderFlags, shadingQuality );
+
+		// Do not bother retrieving or using reflectance values
+		params.applyReflectance = false;
+		
+        <?
+		// Compute our screen texture coordinates
+		float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
+        
+		// Get the data needed for lighting
+		getSurfaceData( surface, texCoords, eyeRay, $params );
+
+		// Compute shadows and attenuation (no diffuse or specular)
+		computeLighting( lighting, surface, $params );
+        ?>
+
+		// If we are filling the attenuation buffer, just write out the masked shadows
+		if ( writeAttenuationBuffer )
+		{
+			<?
+			// We remap the shadow into the range [1/255, 1] to allow 0 to be used as means to identify texels that not influenced by the light source
+			float fMin       = 0.00392157;   // <- 1.0 / 255.0
+			float fMax       = 1.0f;
+			float ooRange    = 1.003937008;  // <- 1.0f / (fMax - fMin)
+			float nearAdjust = 0.003937008;  // <-  fMin * ooRange       We want to do (v + min) / range during packing and (v - min) / range during unpacking
+			//data0 = saturate( lighting.shadow * ooRange + nearAdjust ) * _lightAttenuationBufferMask;
+			data0 = lighting.shadow * _lightAttenuationBufferMask;
+			?>
+		}
+		else
+		{
+			// If shadows are disabled, this is just a 'negative' light source (modulative)
+			if ( primaryTaps == 0 )
+			{ 
+				<?data0 = float4( lighting.diffuse, dot( lighting.diffuse, float3( 0.2125, 0.7154, 0.0721 ) ) );?>
+			
+			} // End if no shadows
+			else
+			{
+				<?
+				// Compute attenuation luminance
+				float attenuationLuminance = dot( lighting.attenuation, float3( 0.2125, 0.7154, 0.0721 ) );
+
+				// Compute ambient luminance
+				float ambientLuminance = dot( lighting.ambient, float3( 0.2125, 0.7154, 0.0721 ) ); 
+
+				// Invert shadow 
+				float shadowTerm = 1.0 - lighting.shadow;
+
+				// Attenuate the shadow 
+				shadowTerm *= attenuationLuminance;
+				
+				// Bias by the ambient term 
+				shadowTerm = saturate( shadowTerm - ambientLuminance );
+
+				// Reverse the shadow term 
+				shadowTerm = 1.0 - shadowTerm;
+
+				// Apply an exponential falloff to darken the results (ToDo: Replace with something more configurable?)
+				shadowTerm = shadowTerm * shadowTerm * shadowTerm * shadowTerm; //i.e., pow( Shadow, 4 );
+
+				// Return shadow (for subtractive or modulative blend)
+				data0 = shadowTerm.xxxx;
+				?>
+			
+			} // End if shadows
+		
+		} // End if not writing to the attenuation buffer
+
+		// High quality deferred lighting requires shadows output to two targets (when not writing)
+		if ( !writeAttenuationBuffer && deferredLightingHighQuality )
+	        <?data1 = data0;?>
+
+        // Valid shader
+        return true;
+	}
+
+    //-------------------------------------------------------------------------
+    // Name : drawBorderRepair() (Pixel Shader)
+	// Desc : Duplicates shadow map border texels.
+    //-------------------------------------------------------------------------
+    bool drawBorderRepair( )
+    {
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Define shader inputs.
+        <?in
+			float4 screenPosition : SV_POSITION;
+			float4 texCoords      : TEXCOORD0;
+        ?>
+
+        // Define shader outputs.
+		<?out
+			float4 borderTexel  : SV_TARGET0;
+		?>
+		
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+		<?
+			borderTexel = sample2D( sShadowTex, sShadow, texCoords );
+		?>
+
+        // Valid shader
+        return true;
+	}
+
+	/***************************************************************************/
+	/***************************************************************************/
+	/***************************************************************************/
+    ///////////////////////////////////////////////////////////////////////////
+    // Indirect Lighting Functions (In Progress)
+    // Note: Need to adjust functions for removal of texcoords at vertex level
+    //       and use screen coordinates instead.
+    ///////////////////////////////////////////////////////////////////////////
+
+	//-----------------------------------------------------------------------------
+    // Name : transformPassThrough() (Vertex Shader)
+	// Desc : Basic pass-through vertex shader for clip quad draws.
+	//-----------------------------------------------------------------------------
+	bool transformPassThrough( )
+	{
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Define shader inputs.
+        <?in
+			float3 sourcePosition   : POSITION;
+		    float2 sourceTexCoords  : TEXCOORD0;
+        ?>
+
+        // Define shader outputs.
+		<?out
+			float4 clipPosition     : SV_POSITION;
+		?>
+		
+        // Constant buffer usage.
+        <?cbufferrefs
+            _cbCamera;
+            _cbScene;
+        ?>
+
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+		<?
+		clipPosition = float4( sourcePosition.xyz, 1 );
+		?>
+
+		// Valid shader
+		return true;
+	}
 
 	//-----------------------------------------------------------------------------
 	// Name : getGBufferData() 
@@ -482,8 +952,8 @@ class LightSourceShader : ISurfaceShader
 			if ( testFlagAny( renderFlags, RenderFlags::GBufferSRGB ) )
 			{
 				<?
-				surface.diffuse.rgb  = pow( surface.diffuse.rgb,  $GAMMA_TO_LINEAR );
-				surface.specular.rgb = pow( surface.specular.rgb, $GAMMA_TO_LINEAR );
+				surface.diffuse.rgb  = SRGBToLinear( surface.diffuse.rgb );
+				surface.specular.rgb = SRGBToLinear( surface.specular.rgb );
 				?>
 			}
 			
@@ -688,475 +1158,6 @@ class LightSourceShader : ISurfaceShader
 		?>
 	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Vertex Shaders
-    ///////////////////////////////////////////////////////////////////////////
-	//-----------------------------------------------------------------------------
-    // Name : transform() (Vertex Shader)
-	// Desc : Used to transform light shapes for stencil filling or screen execution.
-	//-----------------------------------------------------------------------------
-	bool transform( int lightType, bool stencilOnly )
-	{
-        /////////////////////////////////////////////
-        // Definitions
-        /////////////////////////////////////////////
-        // Define shader inputs.
-        <?in
-		    float3 sourcePosition   : POSITION;
-        ?>
-
-		// Define shader outputs.
-		<?out
-			float4 clipPosition     : SV_POSITION;
-		?>
-		if ( !stencilOnly )
-		{
-			<?out
-			   float4 texCoords     : TEXCOORD0;
-			   float3 eyeRay        : TEXCOORD1;
-			?>
-		
-        } // End if !stencilOnly
-
-        // Constant buffer usage.
-        <?cbufferrefs
-            _cbCamera;
-            _cbLight;
-            _cbLightingSystem;
-            _cbWorld;
-        ?>
-        
-        if ( lightType == LightType::Projector )
-        {
-            <?cbufferrefs
-                _cbProjectorLight;
-            ?>
-        
-        } // End if projector light
-
-        /////////////////////////////////////////////
-        // Shader Code
-        /////////////////////////////////////////////
-        if ( lightType == LightType::Directional )
-        {
-			<?
-			clipPosition.xyz = sourcePosition.xyz;
-			clipPosition.w   = 1.0;
-			?>
-
-			if ( !stencilOnly )
-			{
-				<?
-				// Get the screen coords into range [0,1]
-				texCoords.xy = float2( clipPosition.x, -clipPosition.y ) * 0.5 + 0.5;
-				texCoords.zw = float2( 0, 1 );
-
-				// Adjust screen coords to take into account the currently set viewport and half pixel offset. 
-				texCoords.xy = texCoords.xy * _screenUVAdjustScale + _screenUVAdjustBias;
-
-				// This ray goes from the camera position to the pixel in the screen
-				float4 viewPosition = mul( float4( clipPosition.x * _cameraFar, clipPosition.y * _cameraFar, _cameraFar, _cameraFar ), _inverseProjectionMatrix );
-				eyeRay = mul( viewPosition.xyz, _inverseViewMatrix );
-				?>
-			
-            } // End if !stencilOnly
-        
-        } // End if Directional
-        else 
-        {        
-			<?float4 modelPosition = float4( sourcePosition, 1 );?>
-
-			// Scale model position as required to construct the projector frustum shape
-			if ( lightType == LightType::Projector )        
-			{
-				<?
-				float2 windowSize = lerp( _lightConeAdjust.xz, _lightConeAdjust.yw, modelPosition.z );
-				modelPosition.xy *= windowSize;
-				modelPosition.z  *= _lightClipDistance.y;
-				?>
-			
-            } // End if Projector
-
-			<?			
-			// Transform geometry to clip space
-            float4 worldPosition = mul( modelPosition, _worldMatrix );
-            clipPosition = mul( worldPosition, _viewProjectionMatrix );
-			?>
-
-			// Compute data necessary for g-buffer lookups			
-			if ( !stencilOnly )
-			{
-				<?
-				// This ray goes from the camera position to the vertex
-                eyeRay = worldPosition.xyz - _cameraPosition;		
-				
-				// Compute texture coordinates for our lookup
-				computeMeshScreenTextureCoords( clipPosition, texCoords );
-                ?>
-			
-            } // End if !stencilOnly
-        
-        } // End if !Directional
-        
-        // Valid shader
-        return true;
-	}
-
-	//-----------------------------------------------------------------------------
-    // Name : transformBorderRepair() (Vertex Shader)
-	// Desc : Used to transform border repair quads into the clip space of the
-	//        relevant shadow map frustum.
-	//-----------------------------------------------------------------------------
-	bool transformBorderRepair( )
-	{
-        /////////////////////////////////////////////
-        // Definitions
-        /////////////////////////////////////////////
-        // Define shader inputs.
-        <?in
-		    float3  sourcePosition      : POSITION;
-		    float2  sourceTexCoords     : TEXCOORD0;
-        ?>
-
-        // Define shader outputs.
-        <?out
-            float4  clipPosition        : SV_POSITION;
-		    float2  texCoords           : TEXCOORD0;
-        ?>
-
-        // Constant buffer usage.
-        <?cbufferrefs
-            _cbCamera;
-            _cbLightingSystem;
-        ?>
-
-        /////////////////////////////////////////////
-        // Shader Code
-        /////////////////////////////////////////////
-		<?
-		// Compute clip space position (transform by upper 3x3 of frustum view matrix only)
-		clipPosition = float4( mul( sourcePosition, _lightTexProjMatrix ).xyz, 1 );
-		
-		// Offset quad to ensure we sample from the correct texel when
-		// similar shadow map edges connect (i.e. -V to -V). See 
-		// ShadowMapVertexShader() for more information.
-		clipPosition.x -= _targetSize.z; // Equivalent to (1.0 / TargetSize.x)
-		clipPosition.y += _targetSize.w; // Equivalent to (1.0 / TargetSize.y)
-
-		// Return texture coordinates
-		texCoords = sourceTexCoords;
-		?>
-	
-        // Valid shader
-        return true;
-	}
-
-	//-----------------------------------------------------------------------------
-    // Name : transformPassThrough() (Vertex Shader)
-	// Desc : Basic pass-through vertex shader for clip quad draws.
-	//-----------------------------------------------------------------------------
-	bool transformPassThrough( )
-	{
-        /////////////////////////////////////////////
-        // Definitions
-        /////////////////////////////////////////////
-        // Define shader inputs.
-        <?in
-			float3 sourcePosition   : POSITION;
-		    float2 sourceTexCoords  : TEXCOORD0;
-        ?>
-
-        // Define shader outputs.
-		<?out
-			float4 clipPosition     : SV_POSITION;
-			float2 texCoords        : TEXCOORD0;
-		?>
-		
-        // Constant buffer usage.
-        <?cbufferrefs
-            _cbCamera;
-            _cbScene;
-        ?>
-
-        /////////////////////////////////////////////
-        // Shader Code
-        /////////////////////////////////////////////
-		<?
-		clipPosition = float4( sourcePosition.xyz, 1 );
-
-		// Get the screen coords into range [0,1]
-		texCoords = float2( clipPosition.x, -clipPosition.y ) * 0.5 + 0.5;
-
-		// Adjust screen coords to take into account the currently set viewport and half pixel offset. 
-		texCoords = texCoords * _screenUVAdjustScale + _screenUVAdjustBias;
-		?>
-
-		// Valid shader
-		return true;
-	}
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Pixel Shaders
-    ///////////////////////////////////////////////////////////////////////////
-    //-------------------------------------------------------------------------
-    // Name : nullOutput() (Pixel Shader)
-	// Desc : Selected when no output is required (stencil fill / clear).
-    //-------------------------------------------------------------------------
-    bool nullOutput( )
-    {
-        /////////////////////////////////////////////
-        // Definitions
-        /////////////////////////////////////////////
-		// Define shader inputs.
-		<?in
-			float4 screenPosition : SV_POSITION;
-		?>
-        
-        // Define shader outputs.
-		<?out
-			float4  data0    : SV_TARGET0;
-		?>
-		
-        /////////////////////////////////////////////
-        // Shader Code
-        /////////////////////////////////////////////		
-		<?data0 = float4(0,0,0,0);?>
-		
-        // Valid shader
-        return true;
-	}
-
-    //-------------------------------------------------------------------------
-    // Name : drawDirectLighting() (Pixel Shader)
-	// Desc : Used when drawing light sources. Handles diffuse, specular, and shadowing. 
-    //-------------------------------------------------------------------------
-    bool drawDirectLighting( int lightType, int lightFlags, int shadowMethod, int primaryTaps, int secondaryTaps, int renderFlags, int shadingQuality )
-    {
-        /////////////////////////////////////////////
-        // Definitions
-        /////////////////////////////////////////////
-        // Define shader inputs.
-        <?in
-			float4   screenPosition : SV_POSITION;
-			float4   texCoords      : TEXCOORD0;
-			float3   eyeRay         : TEXCOORD1;
-        ?>
-
-        // Define shader outputs.
-		<?out
-			float4  data0           : SV_TARGET0;
-		?>
-		
-		// If we are using high quality deferred lighting (separate diffuse/specular), add another output	
-		bool deferredLightingHighQuality = testFlagAll( renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting) | uint(RenderFlags::SpecularColorOutput) );
-		if ( deferredLightingHighQuality )
-		{
-			<?out
-				float4  data1       : SV_TARGET1;
-			?>
-		}
-				
-        // Constant buffer usage.
-        <?cbufferrefs
-            _cbLight;
-        ?>
-
-        /////////////////////////////////////////////
-        // Shader Code
-        /////////////////////////////////////////////
-		
-		// Declare our lighting structures
-		initLightingStructures( true, false );
-        <?
-            LightingData lighting = (LightingData)0;
-            SurfaceData  surface  = (SurfaceData)0;
-        ?>
-
-		// Fill out the lighting parameter data structure 
-		LightingParameters params = initializeLightingSystem( lightType, lightFlags, shadowMethod, primaryTaps, secondaryTaps, renderFlags, shadingQuality );
-
-		<?
-        // Get the data needed for lighting
-		getSurfaceData( surface, texCoords, eyeRay, $params );
-        
-		// Compute lighting
-		computeLighting( lighting, surface, $params ); 
-        ?>
-
-		// Compute final lighting results
-		if ( deferredLightingHighQuality )
-		{
-	        <?data0 = float4( lighting.diffuse,  0 );?>
-	        <?data1 = float4( lighting.specular, 0 );?>
-		}
-		else if ( testFlagAll( renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting) ) )
-		{
-	        <?data0 = float4( lighting.diffuse, dot( lighting.specular.rgb, float3( 0.299, 0.587, 0.114 ) ) );?>
-		}
-		else
-		{
-	        <?data0 = float4( lighting.diffuse + lighting.specular, 0 );?>
-		}
-            
-        // Valid shader
-        return true;
-	}
-
-    //-------------------------------------------------------------------------
-    // Name : drawShadowing() (Pixel Shader)
-	// Desc : Used when drawing shadow-only sources or computing deferred shadows. 
-    //-------------------------------------------------------------------------
-    bool drawShadowing( int lightType, int lightFlags, int shadowMethod, int primaryTaps, int secondaryTaps, int renderFlags, int shadingQuality, bool writeAttenuationBuffer )
-    {
-        /////////////////////////////////////////////
-        // Definitions
-        /////////////////////////////////////////////
-        // Define shader inputs.
-        <?in
-			float4   screenPosition : SV_POSITION;
-			float4   texCoords      : TEXCOORD0;
-			float3   eyeRay         : TEXCOORD1;
-        ?>
-
-        // Define shader outputs.
-		<?out
-			float4  data0       : SV_TARGET0;
-		?>
-		
-		// If we are using high quality deferred lighting (separate diffuse/specular), add another output		
-		bool deferredLightingHighQuality = testFlagAll( renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting) | uint(RenderFlags::SpecularColorOutput) );
-		if ( deferredLightingHighQuality )
-		{
-			<?out
-				float4  data1       : SV_TARGET1;
-			?>
-		}
-		
-        // Constant buffer usage.
-        <?cbufferrefs
-            _cbLight;
-        ?>
-
-        /////////////////////////////////////////////
-        // Shader Code
-        /////////////////////////////////////////////
-	
-		// Declare our lighting structures
-		initLightingStructures( true, false );
-        <?
-            LightingData lighting = (LightingData)0;
-            SurfaceData surface = (SurfaceData)0;
-        ?>
-
-		// Fill out the lighting parameter data structure 
-		LightingParameters params = initializeLightingSystem( lightType, 0, shadowMethod, primaryTaps, secondaryTaps, renderFlags, shadingQuality );
-
-		// Do not bother retrieving or using reflectance values
-		params.applyReflectance = false;
-		
-        <?
-		// Get the data needed for lighting
-		getSurfaceData( surface, texCoords, eyeRay, $params );
-
-		// Compute shadows and attenuation (no diffuse or specular)
-		computeLighting( lighting, surface, $params );
-        ?>
-
-		// If we are filling the attenuation buffer, just write out the masked shadows
-		if ( writeAttenuationBuffer )
-		{
-			<?
-			// We remap the shadow into the range [1/255, 1] to allow 0 to be used as means to identify texels that not influenced by the light source
-			float fMin       = 0.00392157;   // <- 1.0 / 255.0
-			float fMax       = 1.0f;
-			float ooRange    = 1.003937008;  // <- 1.0f / (fMax - fMin)
-			float nearAdjust = 0.003937008;  // <-  fMin * ooRange       We want to do (v + min) / range during packing and (v - min) / range during unpacking
-			//data0 = saturate( lighting.shadow * ooRange + nearAdjust ) * _lightAttenuationBufferMask;
-			data0 = lighting.shadow * _lightAttenuationBufferMask;
-			?>
-		}
-		else
-		{
-			// If shadows are disabled, this is just a 'negative' light source (modulative)
-			if ( primaryTaps == 0 )
-			{ 
-				<?data0 = float4( lighting.diffuse, dot( lighting.diffuse, float3( 0.2125, 0.7154, 0.0721 ) ) );?>
-			
-			} // End if no shadows
-			else
-			{
-				<?
-				// Compute attenuation luminance
-				float attenuationLuminance = dot( lighting.attenuation, float3( 0.2125, 0.7154, 0.0721 ) );
-
-				// Compute ambient luminance
-				float ambientLuminance = dot( lighting.ambient, float3( 0.2125, 0.7154, 0.0721 ) ); 
-
-				// Invert shadow 
-				float shadowTerm = 1.0 - lighting.shadow;
-
-				// Attenuate the shadow 
-				shadowTerm *= attenuationLuminance;
-				
-				// Bias by the ambient term 
-				shadowTerm = saturate( shadowTerm - ambientLuminance );
-
-				// Reverse the shadow term 
-				shadowTerm = 1.0 - shadowTerm;
-
-				// Apply an exponential falloff to darken the results (ToDo: Replace with something more configurable?)
-				shadowTerm = shadowTerm * shadowTerm * shadowTerm * shadowTerm; //i.e., pow( Shadow, 4 );
-
-				// Return shadow (for subtractive or modulative blend)
-				data0 = shadowTerm.xxxx;
-				?>
-			
-			} // End if shadows
-		
-		} // End if not writing to the attenuation buffer
-
-		// High quality deferred lighting requires shadows output to two targets (when not writing)
-		if ( !writeAttenuationBuffer && deferredLightingHighQuality )
-	        <?data1 = data0;?>
-
-        // Valid shader
-        return true;
-	}
-
-    //-------------------------------------------------------------------------
-    // Name : drawBorderRepair() (Pixel Shader)
-	// Desc : Duplicates shadow map border texels.
-    //-------------------------------------------------------------------------
-    bool drawBorderRepair( )
-    {
-        /////////////////////////////////////////////
-        // Definitions
-        /////////////////////////////////////////////
-        // Define shader inputs.
-        <?in
-			float4 screenPosition : SV_POSITION;
-			float4 texCoords      : TEXCOORD0;
-        ?>
-
-        // Define shader outputs.
-		<?out
-			float4 borderTexel  : SV_TARGET0;
-		?>
-		
-        /////////////////////////////////////////////
-        // Shader Code
-        /////////////////////////////////////////////
-		<?
-			borderTexel = sample2D( sShadowTex, sShadow, texCoords );
-		?>
-
-        // Valid shader
-        return true;
-	}
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Member Functions
-    ///////////////////////////////////////////////////////////////////////////
 	//-------------------------------------------------------------------------
     // Name : drawRSM() (Pixel Shader)
 	// Desc : Used when drawing RSMs into radiance volume. 
@@ -1317,8 +1318,7 @@ class LightSourceShader : ISurfaceShader
 		if ( !stencilOnly )
 		{
 			<?out
-			   float4 texCoords     : TEXCOORD0;
-			   float3 eyeRay        : TEXCOORD1;
+			   float3 eyeRay        : TEXCOORD0;
 			?>
 		
         } // End if !stencilOnly
@@ -1345,9 +1345,6 @@ class LightSourceShader : ISurfaceShader
 			<?
 			// This ray goes from the camera position to the vertex
             eyeRay = worldPosition.xyz - _cameraPosition;		
-			
-			// Compute texture coordinates for our lookup
-			computeMeshScreenTextureCoords( clipPosition, texCoords );
             ?>
 		
         } // End if !stencilOnly
@@ -1368,8 +1365,7 @@ class LightSourceShader : ISurfaceShader
         // Define shader inputs.
         <?in
 			float4   screenPosition : SV_POSITION;
-			float4   texCoords      : TEXCOORD0;
-			float3   eyeRay         : TEXCOORD1;
+			float3   eyeRay         : TEXCOORD0;
         ?>
 
         // Define shader outputs.
@@ -1394,8 +1390,8 @@ class LightSourceShader : ISurfaceShader
         ?>
 
         // Compute screen space texture coordinates for g-buffer lookups
-        <?surface.screenCoords = texCoords.xy / texCoords.w;?>
-
+		<?surface.screenCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;?>
+        
 		// Get the data needed for lighting
 		getGBufferData( "surface", "eyeRay", renderFlags, shadingQuality, true );
       
@@ -1537,7 +1533,6 @@ class LightSourceShader : ISurfaceShader
         // Define shader inputs.
         <?in
 			float4   screenPosition : SV_POSITION;
-			float4   texCoords      : TEXCOORD0;
         ?>
 
         // Define shader outputs.
@@ -1567,7 +1562,7 @@ class LightSourceShader : ISurfaceShader
 		?>
          
         // Compute screen space texture coordinates for g-buffer lookups
-        <?float2 screenCoords = texCoords.xy / texCoords.w;?>
+        <?float2 screenCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;?>
 
 		// Sample depth (alpha contains the texel offset from the higher res texture to ease position reconstruction)
 		sampleDepthBuffer( "depthData", "sDepthTex", "sDepth", "screenCoords", true, DepthType::LinearZ_Packed );
@@ -1720,7 +1715,6 @@ class LightSourceShader : ISurfaceShader
 		// Define shader inputs.
         <?in
 			float4  screenPosition : SV_POSITION;
-            float2  texCoords      : TEXCOORD0;
         ?>
 
 		// Define shader outputs.
@@ -1744,6 +1738,8 @@ class LightSourceShader : ISurfaceShader
 		float2 sampleCoords;
 		float  weight, totalWeight = 0;
 		float  depthRef, depthSmp;
+
+		float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
 		?>
 
 		// Initialize kernel and get number of sampling iterations
@@ -1816,7 +1812,6 @@ class LightSourceShader : ISurfaceShader
         // Define shader inputs.
         <?in
 			float4   screenPosition : SV_POSITION;
-			float2   texCoords      : TEXCOORD0;
         ?>
 
         // Define shader outputs.
@@ -1842,7 +1837,7 @@ class LightSourceShader : ISurfaceShader
         ?>
 
         // Compute screen space texture coordinates for g-buffer lookups
-        <?surface.screenCoords = texCoords.xy;?>
+        <?surface.screenCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;?>        
 
 		// Get the surface data needed for resolving lighting
 		getGBufferData( "surface", "float3(0,0,0)", renderFlags, shadingQuality, true );
@@ -1965,7 +1960,6 @@ class LightSourceShader : ISurfaceShader
         // Define shader inputs.
         <?in
 			float4   screenPosition : SV_POSITION;
-			float4   texCoords      : TEXCOORD0;
         ?>
 
         // Define shader outputs.
@@ -2069,8 +2063,7 @@ class LightSourceShader : ISurfaceShader
         /////////////////////////////////////////////
         // Define shader inputs.
         <?in
-			float4   screenPosition : SV_POSITION;
-			float4   texCoords      : TEXCOORD0;
+			float4  screenPosition : SV_POSITION;
         ?>
 
         // Define shader outputs.
@@ -2143,146 +2136,6 @@ class LightSourceShader : ISurfaceShader
 		data2 = sample2D( sSHBPointTex, sSHBPoint, coords2D ) * blendAmt;
 		?>
             
-        // Valid shader
-        return true;
-	}
-
-	//-----------------------------------------------------------------------------
-	// Name : SSGI 
-	// Desc : Screen space global illumination
-	//-----------------------------------------------------------------------------
-	bool SSGI( )
-	{
-        /////////////////////////////////////////////
-        // Definitions
-        /////////////////////////////////////////////
-        // Define shader inputs.
-        <?in
-			float4  screenPosition : SV_POSITION;
-            float2  texCoords      : TEXCOORD0;
-        ?>
-
-        // Define shader outputs.
-        <?out
-            float4  data0       : SV_TARGET0;
-            float4  data1       : SV_TARGET1;
-            float4  data2       : SV_TARGET2;
-        ?>
-
-        // Constant buffer usage.
-        <?cbufferrefs
-			_cbCamera;
-			cbBilateral;
-        ?>
-
-        /////////////////////////////////////////////
-        // Shader Code
-        /////////////////////////////////////////////
-        
-        int numSamples = 12;
-        
-        // Initialize the poisson sampling distribution
-        // initializePoissonKernel( min( 16, numSamples ), false );
-        initializeHaltonKernel( numSamples );
-        
-		<?
-		float3 position, smpPosition;
-		float2 offset;
-		float  cosine, zRef, zSample, weight, weightSum = 0;
-		float2 focalLength = float2( _projectionMatrix._11, _projectionMatrix._22 ) * 0.5; 
-		float4 shR = 0, shG = 0, shB = 0, shCoeffs = float4( 0.282094792f, -0.488602512f, 0.488602512f, -0.488602512f );
-
-		float radius = 15.0f;
-		float halfR  = radius * 0.5;
-
-		// Get the rotation data (r=cos,g=sin) Note: rotation is tiled every 4x4 screen pixels
-		float2 cosSin = sample2D( sRandomTex, sRandom, texCoords * _viewportSize.xy * 0.25 ).rg;
-
-		// Get the normal
-		half3 N = sample2D( sNormalTex, sNormal, texCoords ).xyz * 2.0 - 1.0;
-		?>
-
-		// Compute the position of this pixel in view space
-		getDistance( "zRef", "sDepthTex", "sDepth", "texCoords", DepthType::LinearZ_Packed );
-
-		<?
-        // Compute view space position
-		position = getViewPosition( texCoords, zRef, $false );
-		position += N * 0.2f;
-		
-		// Apply perspective, FOV, and aspect ratio correct to the radius
-		// float2 screenRad = ( halfR * focalLength ) / zRef;
-		float2 screenRad = 8.0f * textureSize.zw;
-
-		// Iterate our samples and compute AO
-		for( int j = 0; j < $numSamples; j++ )
-		{
-			// Rotate the sample offset about Z axis
-			//offset.x = cosSin.x * poissonSamples[j].x - cosSin.y * poissonSamples[j].y;
-			//offset.y = cosSin.y * poissonSamples[j].x + cosSin.x * poissonSamples[j].y;
-
-			//offset.x = poissonSamples[j].x;
-			//offset.y = poissonSamples[j].y;
-
-			offset.x = haltonSamples[j].x;
-			offset.y = haltonSamples[j].y;
-			
-			// Compute texture lookup coords 
-			float2 uv = texCoords + offset * screenRad;
-			//float2 uv = texCoords + offset * textureSize.zw;
-			?>
-
-			// Get the samples' camera space Z
-			getDistance( "zSample", "sDepthTex", "sDepth", "uv", DepthType::LinearZ_Packed );
-
-			<?
-            // Convert to a view space coordinate
-			smpPosition = getViewPosition( uv, zSample, $false );
-
-			// Get the ray to the occluder
-			float3 ray = smpPosition - position;
-			
-			// Get the distance between the two points
-			float distance = length( ray );
-
-			// Normalize the occlusion direction
-			ray /= distance;
-
-			// Sample the color
-			float3 smpColor = sample2D( sLightingTex, sLighting, uv ) * 5.0f;
-
-			// Sample the normal
-			float3 smpNormal = normalize( sample2D( sNormalTex, sNormal, uv ).rgb * 2.0f - 1.0f );
-			
-			// Compute dot product and attenuation
-			float atten = max( 0, dot( smpNormal, -ray ) ) / (0.0001f + (distance * distance) ); 
-
-			// If this location has little to no lighting, don't allow it to count as much
-			float weight = dot( smpColor.rgb, float3( 0.2125, 0.7154, 0.0721 ) );
-			//atten     *= weight;
-			//weightSum += weight;
-
-			// Attenuate color
-			smpColor *= atten;
-
-			// Convert to SH and accumulate
-			float4 shRay = shCoeffs * float4( 1, -smpNormal.yzx );
-			shR += smpColor.r * shRay;
-			shG += smpColor.g * shRay;
-			shB += smpColor.b * shRay;
-		
-		} // Next sample
-		
-		// Normalize
-		float recipSum = 0;	
-		//if ( weightSum > 0.0f )
-			recipSum = 1.0f / 12.0; //weightSum;	
-			
-		data0 = shR * recipSum;
-		data1 = shG * recipSum;
-		data2 = shB * recipSum;
-		?>
-		
         // Valid shader
         return true;
 	}

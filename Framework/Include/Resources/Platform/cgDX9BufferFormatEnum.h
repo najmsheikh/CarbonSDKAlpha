@@ -72,18 +72,6 @@ public:
     virtual bool                    enumerate           ( cgRenderDriver * driver );
     virtual size_t                  estimateBufferSize  ( const cgImageInfo & description ) const;
     virtual cgBufferFormat::Base    getBestFormat       ( cgBufferType::Base type, cgUInt32 searchFlags ) const;
-
-protected:
-    //-------------------------------------------------------------------------
-    // Protected Methods
-    //-------------------------------------------------------------------------
-    bool                            testBilinearSupport ( cgDX9RenderDriver * driver );
-
-private:
-    //-------------------------------------------------------------------------
-    // Private Static Functions
-    //-------------------------------------------------------------------------
-    static void __stdcall           fillLinearTestTexture( D3DXVECTOR4 * outputColor, const D3DXVECTOR2 * texCoord, const D3DXVECTOR2 * texelSize, void * data );
 };
 
 #endif // CGE_DX9_RENDER_SUPPORT

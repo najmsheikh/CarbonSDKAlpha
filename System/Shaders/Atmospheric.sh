@@ -96,20 +96,7 @@ class AtmosphericShader : ISurfaceShader
 		<?out
 			float4 clipPosition     : SV_POSITION;
 		?>
-		if ( passTexCoords && passEyeDir )
-		{
-			<?out
-				float2 texCoords    : TEXCOORD0;
-				float3 eyeDir       : TEXCOORD1;
-			?>
-		}
-		else if ( passTexCoords )
-		{
-			<?out
-				float2 texCoords    : TEXCOORD0;
-			?>
-		}
-		else if ( passEyeDir )
+		if ( passEyeDir )
 		{
 			<?out
 				float3 eyeDir       : TEXCOORD0;
@@ -128,18 +115,6 @@ class AtmosphericShader : ISurfaceShader
 		// Compute clip position
 		clipPosition = float4( sign( inClipPosition.xy ), 1.0, 1.0 );
 		?>			
-
-		// Compute texture coordinates
-		if ( passTexCoords )
-		{
-			<?
-			// Get the screen coords into range [0,1]
-			texCoords = float2( clipPosition.x, -clipPosition.y ) * 0.5 + 0.5;
-
-			// Adjust screen coords to take into account the currently set viewport and half pixel offset.
-			texCoords = texCoords.xy * _screenUVAdjustScale + _screenUVAdjustBias;
-			?>
-		}
 
 		// Compute eye direction
 		if ( passEyeDir )
@@ -219,7 +194,6 @@ class AtmosphericShader : ISurfaceShader
         // Define shader inputs.
         <?in
             float4  screenPosition : SV_POSITION;
-            float2  texCoords      : TEXCOORD0;
         ?>
 
         // Define shader outputs.
@@ -230,12 +204,16 @@ class AtmosphericShader : ISurfaceShader
         // Constant buffer usage.
         <?cbufferrefs
             _cbScene;
+            _cbCamera;
         ?>
 
         /////////////////////////////////////////////
         // Shader Code
         /////////////////////////////////////////////
-		<?float distance;?>
+        <?
+		float  distance;
+        float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
+		?>
 		getDistance( "distance", "sDepthTex", "sDepth", "texCoords", depthType );
 		<?
         float factor = computeFogFactor( distance, $fogModel );

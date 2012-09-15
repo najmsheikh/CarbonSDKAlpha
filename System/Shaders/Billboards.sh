@@ -234,7 +234,7 @@ class BillboardShader : ISurfaceShader
         // Set necessary states
         mDriver.setDepthStencilState( mDepthStateDisabled );
         mDriver.setBlendState( mBlendStateSrcInvSrc );
-        mDriver.setRasterizerState( mRastStateScissorTest );
+        mDriver.setRasterizerState( mRastStateScissorTest ); // ToDo: Do not always force to true.
 
         // Force point sampling for input texture.
         mDriver.setSamplerState( 0, mSamplerStatePoint );
@@ -586,7 +586,7 @@ class BillboardShader : ISurfaceShader
         /////////////////////////////////////////////
         // Define shader inputs.
 		<?in
-            float4 sourcePosition   : POSITIONT;
+            float4 sourcePosition   : POSITION;
             float4 sourceColor      : COLOR;
             float2 sourceTexCoords  : TEXCOORD0;
 		?>

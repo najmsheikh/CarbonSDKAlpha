@@ -795,7 +795,7 @@ struct CGE_API cgMaterialTerms
         specular                    ( cgColorValue( 0.0f, 0.0f, 0.0f, 1.0f ) ),
         emissive                    ( cgColorValue( 0.0f, 0.0f, 0.0f, 1.0f ) ),
         emissiveHDRScale            ( 1.0f ),
-        gloss                       ( 0.0f ),
+        gloss                       ( 15.0f ),
         diffuseOpacityMapStrength   ( 1.0f ),
         specularOpacityMapStrength  ( 1.0f ),
         metalnessAmount             ( 0.0f ),

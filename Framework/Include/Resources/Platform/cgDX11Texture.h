@@ -708,6 +708,10 @@ bool cgDX11Texture<_BaseClass>::createTexture( )
                     resourceFormat = DXGI_FORMAT_R24G8_TYPELESS;
                     viewFormat = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
                     break;
+                case cgBufferFormat::D24_UNorm_X8_Typeless:
+                    resourceFormat = DXGI_FORMAT_R24G8_TYPELESS;
+                    viewFormat = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+                    break;
                 case cgBufferFormat::D16:
                     resourceFormat = DXGI_FORMAT_R16_TYPELESS;
                     viewFormat = DXGI_FORMAT_R16_UNORM;

@@ -151,6 +151,32 @@ void cgHingeJoint::setPivotTransform( const cgTransform & pivotTransform )
 }
 
 //-----------------------------------------------------------------------------
+// Name : getPivotTransform ( )
+/// <summary>
+/// Get either the original specified transform for the pivot frame (position 
+/// and orientation), or the current transform relative to the current location
+/// of the attached bodies.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgTransform cgHingeJoint::getPivotTransform( bool original ) const
+{
+    if ( original || !mBody0 )
+    {
+        cgTransform out = mGlobalPivotFrame;
+        out.position() *= mWorld->fromPhysicsScale();
+        return out;
+    
+    } // End if original
+    else
+    {
+        cgTransform out = mLocalPivotFrame0 * mBody0->getTransform();
+        out.position() *= mWorld->fromPhysicsScale();
+        return out;
+    
+    } // End if current
+}
+
+//-----------------------------------------------------------------------------
 //  Name : enableLimits ()
 /// <summary>
 /// Enable angle of rotation limiting for this hinge joint.

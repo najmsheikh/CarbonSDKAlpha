@@ -126,6 +126,17 @@ bool cgDX9BufferFormatEnum::enumerate( cgRenderDriver * pDriver )
                     Iterator->second |= cgBufferFormatCaps::CanAutoGenMipMaps;
             
             } // End if hardware supports
+
+            // Does this format support filtering other than point?
+            if ( SUCCEEDED( pD3D->CheckDeviceFormat( Params.AdapterOrdinal, Params.DeviceType, Mode.Format, 
+                                                     D3DUSAGE_QUERY_FILTER, D3DRTYPE_TEXTURE, (D3DFORMAT)NativeFormat ) ) )
+            {
+                if ( (HardwareCaps.TextureFilterCaps & D3DPTFILTERCAPS_MAGFLINEAR) )
+                    Iterator->second |= cgBufferFormatCaps::CanLinearMagnify;
+                if ( (HardwareCaps.TextureFilterCaps & D3DPTFILTERCAPS_MINFLINEAR) )
+                    Iterator->second |= cgBufferFormatCaps::CanLinearMinify;
+            
+            } // End if format supports filtering
             
         } // End if known format
         
@@ -154,6 +165,17 @@ bool cgDX9BufferFormatEnum::enumerate( cgRenderDriver * pDriver )
                     Iterator->second |= cgBufferFormatCaps::CanAutoGenMipMaps;
 
             } // End if hardware supports
+
+            // Does this format support filtering other than point?
+            if ( SUCCEEDED( pD3D->CheckDeviceFormat( Params.AdapterOrdinal, Params.DeviceType, Mode.Format, 
+                                                     D3DUSAGE_QUERY_FILTER, D3DRTYPE_VOLUMETEXTURE, (D3DFORMAT)NativeFormat ) ) )
+            {
+                if ( (HardwareCaps.TextureFilterCaps & D3DPTFILTERCAPS_MAGFLINEAR) )
+                    Iterator->second |= cgBufferFormatCaps::CanLinearMagnify;
+                if ( (HardwareCaps.TextureFilterCaps & D3DPTFILTERCAPS_MINFLINEAR) )
+                    Iterator->second |= cgBufferFormatCaps::CanLinearMinify;
+
+            } // End if format supports filtering
         
         } // End if known format
         
@@ -179,12 +201,24 @@ bool cgDX9BufferFormatEnum::enumerate( cgRenderDriver * pDriver )
                     Iterator->second |= cgBufferFormatCaps::CanAutoGenMipMaps;
 
             } // End if hardware supports
+
+            // Does this format support filtering other than point?
+            if ( SUCCEEDED( pD3D->CheckDeviceFormat( Params.AdapterOrdinal, Params.DeviceType, Mode.Format, 
+                                                     D3DUSAGE_QUERY_FILTER, D3DRTYPE_CUBETEXTURE, (D3DFORMAT)NativeFormat ) ) )
+            {
+                if ( (HardwareCaps.TextureFilterCaps & D3DPTFILTERCAPS_MAGFLINEAR) )
+                    Iterator->second |= cgBufferFormatCaps::CanLinearMagnify;
+                if ( (HardwareCaps.TextureFilterCaps & D3DPTFILTERCAPS_MINFLINEAR) )
+                    Iterator->second |= cgBufferFormatCaps::CanLinearMinify;
+
+            } // End if format supports filtering
         
         } // End if known format
         
     } // Next format
 
     // Render target texture formats
+    cgString strLinearSupporting;
     for ( Iterator = mRenderTarget.begin(); Iterator != mRenderTarget.end(); ++Iterator )
     {
         // Test the format
@@ -205,12 +239,33 @@ bool cgDX9BufferFormatEnum::enumerate( cgRenderDriver * pDriver )
                     Iterator->second |= cgBufferFormatCaps::CanAutoGenMipMaps;
 
             } // End if hardware supports
+
+            // Does this format support filtering other than point?
+            if ( SUCCEEDED( pD3D->CheckDeviceFormat( Params.AdapterOrdinal, Params.DeviceType, Mode.Format, 
+                                                     D3DUSAGE_QUERY_FILTER | D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, (D3DFORMAT)NativeFormat ) ) )
+            {
+                if ( (HardwareCaps.TextureFilterCaps & D3DPTFILTERCAPS_MAGFLINEAR) )
+                    Iterator->second |= cgBufferFormatCaps::CanLinearMagnify;
+                if ( (HardwareCaps.TextureFilterCaps & D3DPTFILTERCAPS_MINFLINEAR) )
+                    Iterator->second |= cgBufferFormatCaps::CanLinearMinify;
+
+            } // End if format supports filtering
+
+            // Add to debug output if linear is supported.
+            if ( Iterator->second & cgBufferFormatCaps::CanLinearFilter )
+            {
+                if ( !strLinearSupporting.empty() )
+                    strLinearSupporting.append( _T(", ") );
+                strLinearSupporting.append( cgBufferFormatEnum::formatToString( Iterator->first ) );
+            
+            } // End if can filter
             
         } // End if known format
         
     } // Next Format
 
     // Depth stencil surface formats
+    // ToDo: Test linear sampling support for depth surfaces.
     for ( Iterator = mDepthStencil.begin(); Iterator != mDepthStencil.end(); ++Iterator )
     {
         cgUInt32 NativeFormat = formatToNative(Iterator->first);
@@ -258,12 +313,15 @@ bool cgDX9BufferFormatEnum::enumerate( cgRenderDriver * pDriver )
         
     } // Next format
 
+    // Output debug info regarding formats thats upport linear filter.
+    cgAppLog::write( cgAppLog::Debug | cgAppLog::Info, _T("Hardware supports linear texture filtering for render targets with the following formats: %s.\n"), strLinearSupporting.c_str() );
+
     // Release D3D objects.
     pD3DDevice->Release();
     pD3D->Release();
 
-    // Run bilinear filtering tests.
-    return testBilinearSupport( pDX9Driver );
+    // Success!
+    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -671,15 +729,15 @@ cgBufferFormat::Base cgDX9BufferFormatEnum::getBestFormat( cgBufferType::Base Ty
             bool bAcceptFull = ((nSearchFlags & cgFormatSearchFlags::FullPrecisionFloat) != 0);
             if ( !bRequiresStencil )
             {
-                if ( bAcceptFull && isFormatSupported( Type, cgBufferFormat::D32_Float ) )
+                if ( bAcceptFull && isFormatSupported( Type, cgBufferFormat::D32_Float, 0 ) )
                     return cgBufferFormat::D32_Float;
-                else if ( bAcceptFull && isFormatSupported( Type, cgBufferFormat::D24_Float_S8_UInt ) )
+                else if ( bAcceptFull && isFormatSupported( Type, cgBufferFormat::D24_Float_S8_UInt, 0 ) )
                     return cgBufferFormat::D24_Float_S8_UInt;
             
             } // End if !bRequiresStencil
             else
             {
-                if ( bAcceptFull && isFormatSupported( Type, cgBufferFormat::D24_Float_S8_UInt ) )
+                if ( bAcceptFull && isFormatSupported( Type, cgBufferFormat::D24_Float_S8_UInt, 0 ) )
                     return cgBufferFormat::D24_Float_S8_UInt;
 
             } // End if bRequiresStencil
@@ -691,19 +749,19 @@ cgBufferFormat::Base cgDX9BufferFormatEnum::getBestFormat( cgBufferType::Base Ty
         {
             if ( !bRequiresStencil )
             {
-                if ( isFormatSupported( Type, cgBufferFormat::D24_UNorm_X8_Typeless ) )
+                if ( isFormatSupported( Type, cgBufferFormat::D24_UNorm_X8_Typeless, 0 ) )
                     return cgBufferFormat::D24_UNorm_X8_Typeless;
-                else if ( isFormatSupported( Type, cgBufferFormat::D24_UNorm_S8_UInt ) )
+                else if ( isFormatSupported( Type, cgBufferFormat::D24_UNorm_S8_UInt, 0 ) )
                     return cgBufferFormat::D24_UNorm_S8_UInt;
-                else if ( isFormatSupported( Type, cgBufferFormat::D16 ) )
+                else if ( isFormatSupported( Type, cgBufferFormat::D16, 0 ) )
                     return cgBufferFormat::D16;
             
             } // End if !bRequiresStencil
             else
             {
-                if ( isFormatSupported( Type, cgBufferFormat::D24_UNorm_S8_UInt ) )
+                if ( isFormatSupported( Type, cgBufferFormat::D24_UNorm_S8_UInt, 0 ) )
                     return cgBufferFormat::D24_UNorm_S8_UInt;
-                else if ( isFormatSupported( Type, cgBufferFormat::D24_Float_S8_UInt ) )
+                else if ( isFormatSupported( Type, cgBufferFormat::D24_Float_S8_UInt, 0 ) )
                     return cgBufferFormat::D24_Float_S8_UInt;
 
             } // End if bRequiresStencil
@@ -920,368 +978,6 @@ cgBufferFormat::Base cgDX9BufferFormatEnum::formatFromNative( cgUInt32 Format )
 
     // Unsupported / unknown format.
     return cgBufferFormat::Unknown;
-}
-
-//-----------------------------------------------------------------------------
-// Name : fillLinearTestTexture () (Callback)
-// Desc : Support callback function for populating the textures we are going to 
-//        be testing for linear filtering support via testBilinearSupport. 
-// Note : The test pattern used is to fill texel 0 with 0.0 and texel 1 with 1.0
-//        (the textures are 2x1) and the shader samples at texcoord 0.5.
-//-----------------------------------------------------------------------------
-void __stdcall cgDX9BufferFormatEnum::fillLinearTestTexture( D3DXVECTOR4 * pOut, const D3DXVECTOR2 * pTexCoord, const D3DXVECTOR2 * pTexelSize, void* pData )
-{	
-    if( pTexCoord->x < 0.5 )
-        *pOut = D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.0f);
-    else
-        *pOut = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-}
-
-//-----------------------------------------------------------------------------
-// Name : testBilinearSupport () (Protected)
-// Desc : Tests all available color formats to determine if bilinear sampling 
-//        is supported on the current device and lets the buffer format 
-//        enumeration know which formats pass the test (for later querying).
-//-----------------------------------------------------------------------------
-bool cgDX9BufferFormatEnum::testBilinearSupport( cgDX9RenderDriver * pDriver )
-{
-    // Supported test formats.
-    static const cgBufferFormat::Base TestFormats[] = {
-        cgBufferFormat::R32G32B32A32_Typeless, cgBufferFormat::R32G32B32A32_Float, cgBufferFormat::R32G32B32A32_UInt, cgBufferFormat::R32G32B32A32_SInt,
-        cgBufferFormat::R32G32B32_Typeless, cgBufferFormat::R32G32B32_Float, cgBufferFormat::R32G32B32_UInt, cgBufferFormat::R32G32B32_SInt, 
-        cgBufferFormat::R16G16B16A16_Typeless, cgBufferFormat::R16G16B16A16_Float, cgBufferFormat::R16G16B16A16, cgBufferFormat::R16G16B16A16_UInt,
-        cgBufferFormat::R16G16B16A16_Signed, cgBufferFormat::R16G16B16A16_SInt, cgBufferFormat::R32G32_Typeless, cgBufferFormat::R32G32_Float,
-        cgBufferFormat::R32G32_UInt, cgBufferFormat::R32G32_SInt, cgBufferFormat::R32G8X24_Typeless, cgBufferFormat::R32_Float_X8X24_Typeless,
-        cgBufferFormat::X32_Typeless_G8X24_UInt, cgBufferFormat::R10G10B10A2_Typeless, cgBufferFormat::R10G10B10A2, cgBufferFormat::R10G10B10A2_UInt,
-        cgBufferFormat::R11G11B10_Float, cgBufferFormat::R8G8B8A8_Typeless, cgBufferFormat::R8G8B8A8, cgBufferFormat::R8G8B8A8_SRGB,
-        cgBufferFormat::R8G8B8A8_UInt, cgBufferFormat::R8G8B8A8_Signed, cgBufferFormat::R8G8B8A8_SInt, cgBufferFormat::R16G16_Typeless,
-        cgBufferFormat::R16G16_Float, cgBufferFormat::R16G16, cgBufferFormat::R16G16_UInt, cgBufferFormat::R16G16_Signed,
-        cgBufferFormat::R16G16_SInt, cgBufferFormat::R32_Typeless, cgBufferFormat::R32_Float, cgBufferFormat::R32_UInt,
-        cgBufferFormat::R32_SInt, cgBufferFormat::R24G8_Typeless, cgBufferFormat::X24_Typeless_G8_UInt, cgBufferFormat::R8G8_Typeless,
-        cgBufferFormat::R8G8, cgBufferFormat::R8G8_UInt, cgBufferFormat::R8G8_Signed, cgBufferFormat::R8G8_SInt,
-        cgBufferFormat::R16_Typeless, cgBufferFormat::R16_Float, cgBufferFormat::R16, cgBufferFormat::R16_UInt,
-        cgBufferFormat::R16_Signed, cgBufferFormat::R16_SInt, cgBufferFormat::R8_Typeless, cgBufferFormat::R8,
-        cgBufferFormat::R8_UInt, cgBufferFormat::R8_Signed, cgBufferFormat::R8_SInt, cgBufferFormat::A8,
-        cgBufferFormat::R1, cgBufferFormat::R9G9B9E5_SharedExp, cgBufferFormat::R8G8_B8G8, cgBufferFormat::G8R8_G8B8,
-        cgBufferFormat::BC1_Typeless, cgBufferFormat::BC1, cgBufferFormat::BC1_SRGB, cgBufferFormat::BC2_Typeless,
-        cgBufferFormat::BC2, cgBufferFormat::BC2_SRGB, cgBufferFormat::BC3_Typeless, cgBufferFormat::BC3,
-        cgBufferFormat::BC3_SRGB, cgBufferFormat::BC4_Typeless, cgBufferFormat::BC4, cgBufferFormat::BC4_Signed,
-        cgBufferFormat::BC5_Typeless, cgBufferFormat::BC5, cgBufferFormat::BC5_Signed, cgBufferFormat::B5G6R5,
-        cgBufferFormat::B5G5R5A1, cgBufferFormat::B8G8R8A8, cgBufferFormat::B8G8R8X8, cgBufferFormat::B8G8R8A8_Typeless,
-        cgBufferFormat::B8G8R8A8_SRGB, cgBufferFormat::B8G8R8X8_Typeless, cgBufferFormat::B8G8R8X8_SRGB, cgBufferFormat::BC6H_Typeless,
-        cgBufferFormat::BC6H_UF16, cgBufferFormat::BC6H_SF16, cgBufferFormat::BC7_Typeless, cgBufferFormat::BC7,
-        cgBufferFormat::BC7_SRGB, cgBufferFormat::B8G8R8, cgBufferFormat::B5G5R5X1 };
-    static const cgUInt32 TestFormatCount = sizeof(TestFormats) / sizeof(TestFormats[0]);
-
-    // Local Variables
-    cgString strSupportedFormats;
-    IDirect3DDevice9 * pDevice = CG_NULL;
-    IDirect3DSurface9 * pScratchSurface = CG_NULL, * pRenderTarget = CG_NULL, * pReadbackTarget = CG_NULL;
-    HRESULT hRet;
-
-    // Get access to required systems.
-    cgSurfaceShader * pShader = pDriver->getSystemShader().getResource(true);
-    if ( !pShader || !(pDevice = pDriver->getD3DDevice()) )
-    {
-        cgAppLog::write( cgAppLog::Error, _T("Unable to access compatible Direct3D device or its associated system shader during the linear filtering support test.\n") );
-        return false;
-    
-    } // End if no device
-
-    try
-    {
-        // Create the two pixel shaders we will use during testing (alpha vs. red channels)
-        cgScriptArgument::Array psArgs( 1 );
-        static const bool bFalse = false, bTrue = true;
-        psArgs[0] = cgScriptArgument( cgScriptArgumentType::Bool, _T("bool"), &bFalse );
-        cgPixelShaderHandle hPSTestRed   = pShader->getPixelShader( _T("testLinearFiltering"), psArgs );
-        psArgs[0] = cgScriptArgument( cgScriptArgumentType::Bool, _T("bool"), &bTrue );
-        cgPixelShaderHandle hPSTestAlpha = pShader->getPixelShader( _T("testLinearFiltering"), psArgs );
-        if ( !hPSTestRed.isValid() || !hPSTestAlpha.isValid() )
-            throw cgExceptions::ResultException( _T("Failed to load or compile the 'testLinearFiltering' pixel shader used for the linear filtering support test."), cgDebugSource() );
-
-        // Create a system memory buffer for filling compressed textures with our test pattern
-        if ( FAILED( hRet = pDevice->CreateOffscreenPlainSurface( 2, 1, D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &pScratchSurface, NULL ) ) )
-            throw cgExceptions::ResultException( hRet, _T("Failed to create the source test pattern surface for the linear filtering support test. IDirect3DDevice9::CreateOffscreenplainSurface"), cgDebugSource() );
-
-        // Lock and fill the test pattern buffer
-        D3DLOCKED_RECT LockedRect;
-        if ( FAILED( hRet = pScratchSurface->LockRect( &LockedRect, NULL, 0 ) ) )
-            throw cgExceptions::ResultException( hRet, _T("Failed to lock the source test pattern surface during the linear filtering support test. IDirect3DSurface9::LockRect"), cgDebugSource() );
-        ((cgUInt32*)LockedRect.pBits)[0] = 0;
-        ((cgUInt32*)LockedRect.pBits)[1] = 0xffffffff;
-        pScratchSurface->UnlockRect();
-
-        // Create a 1x1 render target (RGBA8) for primary rendering
-        if ( FAILED( hRet = pDevice->CreateRenderTarget( 1, 1, D3DFMT_A8R8G8B8, D3DMULTISAMPLE_NONE, 0, FALSE, &pRenderTarget, NULL ) ) )
-            throw cgExceptions::ResultException( hRet, _T("Failed to create a render target for the linear filtering support test. IDirect3DDevice9::CreateRenderTarget"), cgDebugSource() );
-        
-        // Create a 1x1 system memory target (RGBA8) for render target readback to CPU
-        if ( FAILED( hRet = pDevice->CreateOffscreenPlainSurface( 1, 1, D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &pReadbackTarget, NULL ) ) )
-            throw cgExceptions::ResultException( hRet, _T("Failed to create a readback surface for the linear filtering support test. IDirect3DDevice9::CreateOffscreenPlainSurface"), cgDebugSource() );
-        
-        // Begin scene
-        if ( SUCCEEDED( pDevice->BeginScene() ) )
-        {
-            // Create a 1x1 viewport
-            D3DVIEWPORT9 Viewport;
-            Viewport.X      = 0;
-            Viewport.Y      = 0;
-            Viewport.Width  = 1;
-            Viewport.Height = 1;
-            Viewport.MinZ   = 0.0f;
-            Viewport.MaxZ   = 1.0f;
-
-            // Build a screen quad for drawing
-            cgScreenVertex Quad[4];
-            cgFloat fX      = -0.5f;
-            cgFloat fY      = -0.5f;
-            cgFloat fWidth  = 1.0f;
-            cgFloat fHeight = 1.0f;
-            cgFloat	fDepth  = 0.5f;
-            memset( Quad, 0, sizeof(cgScreenVertex) * 4 ); 
-            Quad[0].position  = cgVector4(fX, fY, fDepth, 1.0f);
-            Quad[1].position  = cgVector4(fX + fWidth, fY, fDepth, 1.0f);
-            Quad[2].position  = cgVector4(fX, fY + fHeight, fDepth, 1.0f);
-            Quad[3].position  = cgVector4(fX + fWidth, fY + fHeight, fDepth, 1.0f);
-
-            // Backup the current device values so that we can restore them when we are done.
-            D3DVIEWPORT9 OldViewport;
-            IDirect3DTexture9 * pOldTexture = CG_NULL;
-            IDirect3DSurface9 * pOldRenderTarget = CG_NULL, * pOldDepthStencil = CG_NULL;
-            pDevice->GetTexture( 0, (LPDIRECT3DBASETEXTURE9*)&pOldTexture );
-            pDevice->GetRenderTarget( 0, &pOldRenderTarget );
-            pDevice->GetDepthStencilSurface( &pOldDepthStencil );
-            pDevice->GetViewport( &OldViewport );
-
-            // Set the vertex format for quad drawing
-            pDriver->pushVertexFormat( cgVertexFormat::formatFromDeclarator( cgScreenVertex::Declarator ) );
-
-            // Get the current values for states we will modify
-            cgUInt32 nOldZEnable, nOldZWriteEnable, nOldScissorTest, nOldAlphaBlend, nOldCullMode, nOldMin, nOldMag, nOldMip;
-            pDevice->GetRenderState( D3DRS_ZENABLE, &nOldZEnable );
-            pDevice->GetRenderState( D3DRS_ZWRITEENABLE, &nOldZWriteEnable );                 
-            pDevice->GetRenderState( D3DRS_SCISSORTESTENABLE, &nOldScissorTest );
-            pDevice->GetRenderState( D3DRS_ALPHABLENDENABLE, &nOldAlphaBlend );
-            pDevice->GetRenderState( D3DRS_CULLMODE, &nOldCullMode );
-            pDevice->GetSamplerState( 0, D3DSAMP_MAGFILTER, &nOldMin );
-            pDevice->GetSamplerState( 0, D3DSAMP_MINFILTER, &nOldMag );
-            pDevice->GetSamplerState( 0, D3DSAMP_MIPFILTER, &nOldMip );
-
-            // Set required states for the test (e.g., linear filtering, no depth test, etc.)
-            pDevice->SetRenderState( D3DRS_ZENABLE, FALSE );                 
-            pDevice->SetRenderState( D3DRS_ZWRITEENABLE, FALSE );                 
-            pDevice->SetRenderState( D3DRS_SCISSORTESTENABLE, FALSE );
-            pDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE );
-            pDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
-            pDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
-            pDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
-            pDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_NONE );
-
-            // Run the test for each format
-            for ( cgUInt32 i = 0; i < TestFormatCount; i++ )
-            {
-                // Skip unknown formats.
-                D3DFORMAT Format = (D3DFORMAT)formatToNative(TestFormats[ i ]);
-                if ( Format == D3DFMT_UNKNOWN )
-                    continue;
-
-                // Skip formats that can't be sampled.
-                cgUInt32 FormatCaps = getFormatCaps( cgBufferType::Texture1D, TestFormats[i] );
-                if ( !(FormatCaps & cgBufferFormatCaps::CanSample) )
-                    continue;
-
-                // Create a 2x1 texture using the current format (1 mip level)
-                IDirect3DTexture9 * pTexture = CG_NULL;
-                if ( FAILED( hRet = D3DXCreateTexture ( pDevice, 2, 1, 1, 0, Format, D3DPOOL_MANAGED, &pTexture ) ) )
-                {
-                    cgAppLog::write( cgAppLog::Warning, _T("Failed to create a texture of format %s during linear filtering support test. Will assume no support.\n"), cgBufferFormatEnum::formatToString( TestFormats[i] ).c_str() );
-                    continue;
-                
-                } // End if failed
-                
-                // Is this a compressed texture format?
-                if ( formatIsCompressed( TestFormats[i] ) )
-                {
-                    IDirect3DSurface9 * pDstSurface = CG_NULL;
-                    if ( FAILED( hRet = pTexture->GetSurfaceLevel( 0, &pDstSurface ) ) )
-                    {
-                        cgAppLog::write( cgAppLog::Warning, _T("Failed to access top level surface for texture of format %s during linear filtering support test. Will assume no support.\n"), cgBufferFormatEnum::formatToString( TestFormats[i] ).c_str() );
-                        pTexture->Release();
-                        continue;
-                    
-                    } // End if no surface
-
-                    // Fill using the compressed texture scratch buffer
-                    if ( FAILED( hRet = D3DXLoadSurfaceFromSurface( pDstSurface, NULL, NULL, pScratchSurface, NULL, NULL, D3DX_FILTER_POINT, 0 ) ) )
-                    {
-                        cgAppLog::write( cgAppLog::Warning, _T("Failed to populate texture of format %s during linear filtering support test. Will assume no support.\n"), cgBufferFormatEnum::formatToString( TestFormats[i] ).c_str() );
-                        pDstSurface->Release();
-                        pTexture->Release();
-                        continue;
-                    
-                    } // End if failed
-
-                    // Release the surface
-                    pDstSurface->Release();
-                
-                } // End if compressed
-                else
-                {
-                    // Fill the texture with our testing data using D3DXFillTexture
-                    if ( FAILED( D3DXFillTexture( pTexture, fillLinearTestTexture, NULL ) ) )
-                    {
-                        cgAppLog::write( cgAppLog::Warning, _T("Unable to fill texture of format %s during linear filtering support test. Will assume no support.\n"), cgBufferFormatEnum::formatToString( TestFormats[i] ).c_str() );
-                        pTexture->Release();
-                        continue;
-                    
-                    } // End if failed
-
-                } // End if not compressed
-
-                // Set the texture and sampler state
-                pDevice->SetTexture( 0, pTexture );
-
-                // Select the appropriate pixel shader for the test
-                if ( !pDriver->pushPixelShader( (Format == cgBufferFormat::A8) ? hPSTestAlpha : hPSTestRed ) )
-                {
-                    cgAppLog::write( cgAppLog::Warning, _T("Failed to set pixel shader when testing format %s during linear filtering support test. Will assume no support.\n"), cgBufferFormatEnum::formatToString( TestFormats[i] ).c_str() );
-                    pTexture->Release();
-                    continue;
-                
-                } // End if failed
-                
-                // Set the render target and viewport
-                pDevice->SetRenderTarget( 0, pRenderTarget );
-                pDevice->SetDepthStencilSurface( CG_NULL );
-                pDevice->SetViewport( &Viewport );
-
-                // Clear the render target to 0 (i.e., not supported)
-                pDevice->Clear( 0, NULL, D3DCLEAR_TARGET, 0, 1, 0 );
-
-                // Draw a quad to execute the test (ps returns 0 or 1)
-                pDriver->drawPrimitiveUP( cgPrimitiveType::TriangleStrip, 2, Quad );
-
-                // Clear the render target
-                pDevice->SetRenderTarget( 0, CG_NULL );
-
-                // Release the texture, we are done with it
-                pTexture->Release();
-
-                // Restore pixel shader
-                pDriver->popPixelShader();
-
-                // Transfer the test results from GPU to CPU
-                if ( FAILED( pDevice->GetRenderTargetData( pRenderTarget, pReadbackTarget ) ) )
-                {
-                    cgAppLog::write( cgAppLog::Warning, _T("Failed to read linear filtering results back from GPU for format %s during linear format support test. Will assume no support.\n"), cgBufferFormatEnum::formatToString( TestFormats[i] ).c_str() );
-                    continue;
-                
-                } // End if failed
-
-                // Lock the scratch surface and check the result
-                if ( FAILED( hRet = pReadbackTarget->LockRect( &LockedRect, NULL, 0 ) ) )
-                {
-                    cgAppLog::write( cgAppLog::Warning, _T("Failed to lock read back target for final testing of texture format %s during linear format support test. Will assume no support.\n"), cgBufferFormatEnum::formatToString( TestFormats[i] ).c_str() );
-                    continue;
-                
-                } // End if failed
-
-                // If final result is > 0, filtering is supported, so add to table(s)
-                cgUInt32 nTestResults = *(cgUInt32 *)LockedRect.pBits;
-                if ( nTestResults > 0 )
-                {
-                    FormatEnumMap::iterator it;
-                    it = mTexture1D.find( TestFormats[i] );
-                    if ( it != mTexture1D.end() )
-                        it->second |= cgBufferFormatCaps::CanLinearFilter;
-                    it = mTexture2D.find( TestFormats[i] );
-                    if ( it != mTexture2D.end() )
-                        it->second |= cgBufferFormatCaps::CanLinearFilter;
-                    it = mTexture3D.find( TestFormats[i] );
-                    if ( it != mTexture3D.end() )
-                        it->second |= cgBufferFormatCaps::CanLinearFilter;
-                    it = mTextureCube.find( TestFormats[i] );
-                    if ( it != mTextureCube.end() )
-                        it->second |= cgBufferFormatCaps::CanLinearFilter;
-                    it = mRenderTarget.find( TestFormats[i] );
-                    if ( it != mRenderTarget.end() )
-                        it->second |= cgBufferFormatCaps::CanLinearFilter;
-                    
-                    // Add to debug output
-                    if ( !strSupportedFormats.empty() )
-                        strSupportedFormats.append( _T(", ") );
-                    strSupportedFormats.append( cgBufferFormatEnum::formatToString( TestFormats[i] ) );
-                
-                } // End if supported
-
-                // Unlock the scratch target
-                pReadbackTarget->UnlockRect();
-                
-            } // Next format
-
-            // Restore vertex format
-            pDriver->popVertexFormat( );
-
-            // Restore targets and viewport
-            pDevice->SetTexture( 0, pOldTexture );
-            pDevice->SetRenderTarget( 0, pOldRenderTarget );
-            pDevice->SetDepthStencilSurface( pOldDepthStencil );
-            pDevice->SetViewport( &OldViewport );
-            if ( pOldTexture )
-                pOldTexture->Release();
-            if ( pOldRenderTarget )
-                pOldRenderTarget->Release();
-            if ( pOldDepthStencil )
-                pOldDepthStencil->Release();
-
-            // Restore states
-            pDevice->SetRenderState( D3DRS_ZENABLE, nOldZEnable );                 
-            pDevice->SetRenderState( D3DRS_ZWRITEENABLE, nOldZWriteEnable );                 
-            pDevice->SetRenderState( D3DRS_SCISSORTESTENABLE, nOldScissorTest );
-            pDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, nOldAlphaBlend );
-            pDevice->SetRenderState( D3DRS_CULLMODE, nOldCullMode );
-            pDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, nOldMin );
-            pDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, nOldMag );
-            pDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, nOldMip );
-
-            // End scene
-            pDevice->EndScene();
-
-        } // End begin scene
-
-        // Clean up what we need to
-        if ( pDevice )
-            pDevice->Release();
-        if ( pScratchSurface )
-            pScratchSurface->Release();
-        if ( pRenderTarget )
-            pRenderTarget->Release();
-        if ( pReadbackTarget )
-            pReadbackTarget->Release();
-
-    } // End try
-    catch ( const cgExceptions::ResultException & e )
-    {
-        // Clean up what we need to
-        if ( pDevice )
-            pDevice->Release();
-        if ( pScratchSurface )
-            pScratchSurface->Release();
-        if ( pRenderTarget )
-            pRenderTarget->Release();
-        if ( pReadbackTarget )
-            pReadbackTarget->Release();
-
-        // Fail.
-        cgAppLog::write( cgAppLog::Error, _T("%s\n"), e.toString().c_str() );
-        return false;
-    
-    } // End catch
-    
-    // Success
-    cgAppLog::write( cgAppLog::Debug | cgAppLog::Info, _T("Hardware supports linear texture filtering with the following formats: %s.\n"), strSupportedFormats.c_str() );
-    return true;
 }
 
 #endif // CGE_DX9_RENDER_SUPPORT

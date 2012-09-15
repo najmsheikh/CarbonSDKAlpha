@@ -179,8 +179,8 @@ class ImageProcessingShader : ISurfaceShader
 		// Get the screen coords into range [0,1]
 		texCoords.xy = float2( clipPosition.x, -clipPosition.y ) * 0.5 + 0.5;
 
-		// Adjust screen coords to take into account the currently set viewport and half pixel offset. 
-		texCoords.xy = texCoords.xy * _screenUVAdjustScale + _screenUVAdjustBias;
+		// Adjust screen coords to take into account the optional half pixel offset. 
+		texCoords.xy = texCoords.xy + _screenUVAdjustBias;
 		?>
 
 		// This ray goes from the camera position to the pixel in the screen
@@ -534,71 +534,40 @@ class ImageProcessingShader : ISurfaceShader
     }
 
 	//-----------------------------------------------------------------------------
-	// Name : downSample()
-	// Desc : NxN down sampling using manual averaging or hw bilinear filtering
-	// Note : N (i.e., nDownSampleKernelSize) must be a power of 2
-    // Note : If alpha weighting is required, point sampling is preferable although
-    //        bilinear sampling is still available as a faster but less accurate method.
-    //        For extents downsampling, bilinear sampling should be turned off.
+	// Name : downSampleOperation()
+	// Desc : Runs the specified downsampling operation on the list of samples gathered by the caller.
    	//-----------------------------------------------------------------------------
-	bool downSample( int kernelSize, int operation, bool bilinear, bool alphaWeighted, bool alphaWeightedBinary, bool binaryAlphaOutput )
+	void downSampleOperation( int numSamples, int operation, bool bilinear, bool alphaWeighted, bool alphaWeightedBinary, bool binaryAlphaOutput )
 	{
-		/////////////////////////////////////////////
-		// Definitions
-		/////////////////////////////////////////////
-		// Define shader inputs.
-        <?in
-			float4  screenPosition : SV_POSITION;
-            float2  texCoords2      : TEXCOORD0;
-        ?>
+		// This call assumes the "samples" array of numSamples size has already been created and filled by the caller shader.
 
-		// Define shader outputs.
-		<?out
-			float4  color       : SV_TARGET0;
-		?>
-
-		// Constant buffer usage.
-		<?cbufferrefs
-			cbImageProcessing;
-			_cbCamera;
-		?>
-
-		/////////////////////////////////////////////
-		// Shader Code
-		/////////////////////////////////////////////
 		bool computeMin = ( operation == ImageOperation::DownSampleMinimum || operation == ImageOperation::DownSampleMinMax );
 		bool computeMax = ( operation == ImageOperation::DownSampleMaximum || operation == ImageOperation::DownSampleMinMax );
 
 		<?
 		float4 sample, currentColor;
 		float  weight, totalWeight = 0;
-		
-		float2 texCoords = (screenPosition.xy + float2(0.5,0.5)) * _targetSize.zw; 
-		
 		?>
 				
-		// Fast option for bilinear 2x2 average downsampling with no alpha weighting
-		if ( kernelSize == 2 && operation == ImageOperation::DownSampleAverage && bilinear && !alphaWeighted && !alphaWeightedBinary )
+		// Fast option for bilinear average downsampling with no alpha weighting
+		if ( operation == ImageOperation::DownSampleAverage && bilinear && !alphaWeighted && !alphaWeightedBinary )
 		{
-			<?color = sample2D( sImageTex, sImage, texCoords );?>
+			<?color = samples[0];?>
 
         } // End if simple downsample
 		else
 		{
-			// Initialize the kernel (uv offsets)
-			int numSamples = initializeDownSampleKernel( kernelSize, bilinear );
-		
 			// Initialize our starting value
 			if ( operation == ImageOperation::DownSampleAverage )			
 				<?currentColor = 0;?>
 			else
 				<?currentColor = float4( 99999999.0, -99999999.0, 0, 0 );?>
-			
+		
 			// Iterate our samples
 			for ( int i = 0; i < numSamples; i++ )
 			{
-				// Retrieve the sample
-				<?sample = sample2D( sImageTex, sImage, texCoords + downSampleKernel[$i] * textureSize.zw );?>
+				// Retrieve the sample from the array
+				<?sample = samples[ $i ];?>
 				
 				// If we are weighting the sample's color by its alpha, we can optionally force a binary weight
 				if ( alphaWeightedBinary )
@@ -642,7 +611,7 @@ class ImageProcessingShader : ISurfaceShader
 					color.rgb = currentColor.rgb * ( 1.0 / (currentColor.a + 1e-6f) );
 					color.a   = currentColor.a   * ( 1.0 / $numSamples );
 					?>
-				}	
+				}
 				else
 				{
 					<?color = currentColor * (1.0 / $numSamples);?>
@@ -660,6 +629,64 @@ class ImageProcessingShader : ISurfaceShader
 		// If a binary output alpha is desired, set it		
 		if ( binaryAlphaOutput )
 			<?color.a = totalWeight > 0.0f;?>
+	}
+
+
+	//-----------------------------------------------------------------------------
+	// Name : downSample()
+	// Desc : NxN down sampling using manual averaging or hw bilinear filtering
+	// Note : N (i.e., nDownSampleKernelSize) must be a power of 2
+    // Note : If alpha weighting is required, point sampling is preferable although
+    //        bilinear sampling is still available as a faster but less accurate method.
+    //        For extents downsampling, bilinear sampling should be turned off.
+   	//-----------------------------------------------------------------------------
+	bool downSample( int kernelSize, int operation, bool bilinear, bool oddU, bool oddV, bool alphaWeighted, bool alphaWeightedBinary, bool binaryAlphaOutput )
+	{
+		/////////////////////////////////////////////
+		// Definitions
+		/////////////////////////////////////////////
+		// Define shader inputs.
+        <?in
+			float4  screenPosition : SV_POSITION;
+        ?>
+
+		// Define shader outputs.
+		<?out
+			float4  color       : SV_TARGET0;
+		?>
+
+		// Constant buffer usage.
+		<?cbufferrefs
+			cbImageProcessing;
+			_cbCamera;
+		?>
+
+		/////////////////////////////////////////////
+		// Shader Code
+		/////////////////////////////////////////////
+
+		// Compute texture coords
+        <?float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;?>
+	
+		// If needed, adjust the tex coords for odd size downsampling (place in upper left texel center)
+		if ( oddU || oddV )
+			<?texCoords = ( floor(texCoords * textureSize.xy) - float2(0.5, 0.5) ) * textureSize.zw;?> 
+	
+		// Initialize the kernel (uv offsets and weights)
+		int numSamples = initializeDownSampleKernel( kernelSize, bilinear, oddU, oddV );
+
+		// Declare our samples array
+		<?float4 samples[ $numSamples ];?>
+		
+		// Iterate our samples
+		for ( int i = 0; i < numSamples; i++ )
+		{
+			<?samples[$i] = sample2D( sImageTex, sImage, texCoords + downSampleKernel[$i] * textureSize.zw );?>
+
+		} // End if generic downsample
+		
+		// Run the required operation(s) on the samples
+		downSampleOperation( numSamples, operation, bilinear, alphaWeighted, alphaWeightedBinary, binaryAlphaOutput );
 		
 		// Valid shader
 		return true;
@@ -2243,24 +2270,50 @@ class ImageProcessingShader : ISurfaceShader
 	// Desc: NxN downsample tex coord constructor.
 	// Note: N must be a power of 2: i.e., nKernel = 2,4,8,16,32,64,etc.
 	//-----------------------------------------------------------------------------
-	int initializeDownSampleKernel( int kernel, bool bilinear )
+	int initializeDownSampleKernel( int kernel, bool bilinear, bool oddU, bool oddV )
 	{
 		float   u, v;
 		int     i, j, index = 0;
 		int     halfKernel  = kernel / 2;				
 		float   offset      = bilinear ? 1.0 : 0.5;
 		int     step        = bilinear ? 2 : 1;
+		bool    oddKernel   = ( kernel % 2 != 0 ) ? true : false;
 		int     numSamples  = bilinear ? (halfKernel * halfKernel) : (kernel * kernel);
+
+		// For odd kernels, we'll need to take extra samples at the edges (Note: We only support point sampling at the moment for odd kernels.)
+		if ( oddU || oddV )
+		{
+			numSamples = 4;
+			if ( oddU )         numSamples += 2;
+			if ( oddV )         numSamples += 2;
+			if ( oddU && oddV ) numSamples += 1;
+		}
 
         // Open constant array definition
         <?
         const float2 downSampleKernel[ $numSamples ] = {
         ?>
 
+		// For a 1x1, just output the sample
 		if ( kernel == 1 )
 		{
 			// Output computed sample
 			<?float2( 0.0, 0.0 )?>
+		}
+		// For odd kernels, create the appropriate offsets
+		else if ( oddU || oddV )
+		{
+			// Assume we are starting in the upper left texel of a 2x2 group
+			<?float2( 0.0, 0.0 ), float2( 1.0, 0.0 ), float2( 0.0, 1.0 ), float2( 1.0, 1.0 )?>
+			
+			if ( oddU )
+				<?, float2( 2.0, 0.0 ), float2( 2.0, 1.0 )?>
+				
+			if ( oddV )
+				<?, float2( 0.0, 2.0 ), float2( 1.0, 2.0 )?>
+			
+			if ( oddU && oddV )
+				<?, float2( 2.0, 2.0 )?>
 		}
 		else
 		{

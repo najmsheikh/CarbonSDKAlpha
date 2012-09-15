@@ -211,13 +211,49 @@ bool cgDX11BufferFormatEnum::enumerate( cgRenderDriver * pDriver )
 			 itFormat->first == cgBufferFormat::INTZ || itFormat->first == cgBufferFormat::RAWZ )
             continue;
 
+        // ToDo: 6767 -- With the remapping approach here, if the format doesn't come back 
+        // as supported for use with a depth stencil view, it potentially needs to check again 
+        // using the original native format to get the 'surface only' properties.
+
+        // We always map depth stencil format to the equivalent typeless 
+        // color format so that it can be bound as a shader resource.
+        // The DepthStencilView will set the appropriate depth format however
+        // so that it can be used in calls to BeginTargetRender().
+        cgUInt32 NativeFormat;
+        switch ( itFormat->first )
+        {
+            case cgBufferFormat::D32_Float_S8X24_UInt:
+                NativeFormat = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
+                break;
+
+            case cgBufferFormat::D32_Float:
+                NativeFormat = DXGI_FORMAT_R32_FLOAT;
+                break;
+
+            case cgBufferFormat::D24_UNorm_S8_UInt:
+                NativeFormat = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+                break;
+
+            case cgBufferFormat::D24_UNorm_X8_Typeless:
+                NativeFormat = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+                break;
+
+            case cgBufferFormat::D16:
+                NativeFormat = DXGI_FORMAT_R16_UNORM;
+                break;
+
+            default:
+                NativeFormat = formatToNative(itFormat->first);
+                break;
+
+        } // End switch format
+
         // Test the format
-        cgUInt32 NativeFormat = formatToNative(itFormat->first);
         if ( NativeFormat != DXGI_FORMAT_UNKNOWN )
         {
             cgUInt nSupportFlags = 0;
-            if ( SUCCEEDED( pDevice->CheckFormatSupport( (DXGI_FORMAT)NativeFormat, &nSupportFlags ) ) &&
-                 (nSupportFlags & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL) )
+            if ( SUCCEEDED( pDevice->CheckFormatSupport( (DXGI_FORMAT)NativeFormat, &nSupportFlags ) ) /*&&
+                 (nSupportFlags & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL)*/ )
             {
                 itFormat->second |= cgBufferFormatCaps::CanWrite;
 
@@ -377,7 +413,7 @@ size_t cgDX11BufferFormatEnum::estimateBufferSize( const cgImageInfo & Info ) co
         for ( cgUInt i = 0; i < MipLevels; ++i )
         {
             // Compute the number of bytes per row
-            size_t BytesPerRow = (((BitsPerPixel * Width) + 31) * 0xFFFFFFE0) / 8;
+            size_t BytesPerRow = (((BitsPerPixel * Width) + 31) & 0xFFFFFFE0) / 8;
 
             // Add correct number of bytes for entire mip level
             TotalSize += (Height * Depth) * BytesPerRow;
@@ -653,15 +689,15 @@ cgBufferFormat::Base cgDX11BufferFormatEnum::getBestFormat( cgBufferType::Base T
             bool bAcceptFull = ((nSearchFlags & cgFormatSearchFlags::FullPrecisionFloat) != 0);
             if ( !bRequiresStencil )
             {
-                if ( bAcceptFull && isFormatSupported( Type, cgBufferFormat::D32_Float ) )
+                if ( bAcceptFull && isFormatSupported( Type, cgBufferFormat::D32_Float, 0 ) )
                     return cgBufferFormat::D32_Float;
-                else if ( bAcceptFull && isFormatSupported( Type, cgBufferFormat::D24_Float_S8_UInt ) )
+                else if ( bAcceptFull && isFormatSupported( Type, cgBufferFormat::D24_Float_S8_UInt, 0 ) )
                     return cgBufferFormat::D24_Float_S8_UInt;
             
             } // End if !bRequiresStencil
             else
             {
-                if ( bAcceptFull && isFormatSupported( Type, cgBufferFormat::D24_Float_S8_UInt ) )
+                if ( bAcceptFull && isFormatSupported( Type, cgBufferFormat::D24_Float_S8_UInt, 0 ) )
                     return cgBufferFormat::D24_Float_S8_UInt;
 
             } // End if bRequiresStencil
@@ -673,19 +709,19 @@ cgBufferFormat::Base cgDX11BufferFormatEnum::getBestFormat( cgBufferType::Base T
         {
             if ( !bRequiresStencil )
             {
-                if ( isFormatSupported( Type, cgBufferFormat::D24_UNorm_X8_Typeless ) )
+                if ( isFormatSupported( Type, cgBufferFormat::D24_UNorm_X8_Typeless, 0 ) )
                     return cgBufferFormat::D24_UNorm_X8_Typeless;
-                else if ( isFormatSupported( Type, cgBufferFormat::D24_UNorm_S8_UInt ) )
+                else if ( isFormatSupported( Type, cgBufferFormat::D24_UNorm_S8_UInt, 0 ) )
                     return cgBufferFormat::D24_UNorm_S8_UInt;
-                else if ( isFormatSupported( Type, cgBufferFormat::D16 ) )
+                else if ( isFormatSupported( Type, cgBufferFormat::D16, 0 ) )
                     return cgBufferFormat::D16;
             
             } // End if !bRequiresStencil
             else
             {
-                if ( isFormatSupported( Type, cgBufferFormat::D24_UNorm_S8_UInt ) )
+                if ( isFormatSupported( Type, cgBufferFormat::D24_UNorm_S8_UInt, 0 ) )
                     return cgBufferFormat::D24_UNorm_S8_UInt;
-                else if ( isFormatSupported( Type, cgBufferFormat::D24_Float_S8_UInt ) )
+                else if ( isFormatSupported( Type, cgBufferFormat::D24_Float_S8_UInt, 0 ) )
                     return cgBufferFormat::D24_Float_S8_UInt;
 
             } // End if bRequiresStencil

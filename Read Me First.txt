@@ -27,6 +27,7 @@ Basic Camera Controls
 Viewport Pan = Middle Mouse Button
 Viewport Grid Orbit = Alt + Middle Mouse Button
 Viewport Selection Orbit = Ctrl + Middle Mouse Button
+Zoom In/Out = Mouse Wheel Scroll
 
 The above controls work in both orthographic and perspective views, but the following additional controls are also available for perspective viewports:
 

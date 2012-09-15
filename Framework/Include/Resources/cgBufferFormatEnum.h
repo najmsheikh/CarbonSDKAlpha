@@ -71,7 +71,7 @@ public:
     // Public Methods
     //-------------------------------------------------------------------------
     void                    initialize              ( );
-    bool                    isFormatSupported       ( cgBufferType::Base type, cgBufferFormat::Base format ) const;
+    bool                    isFormatSupported       ( cgBufferType::Base type, cgBufferFormat::Base format, cgUInt32 requiredCaps = cgBufferFormatCaps::CanSample ) const;
     cgUInt32                getFormatCaps           ( cgBufferType::Base type, cgBufferFormat::Base format ) const;
     cgBufferFormat::Base    getBestDepthFormat      ( bool floatingPoint, bool requireStencil ) const;
     cgBufferFormat::Base    getBestOneChannelFormat ( cgBufferType::Base type, bool floatingPoint, bool requireAlpha, bool preferCompressed, bool allowPadding ) const;

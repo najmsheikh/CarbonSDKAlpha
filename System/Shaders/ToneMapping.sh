@@ -139,6 +139,10 @@ class ToneMappingShader : ImageProcessingShader
         return true;
 	}
 
+	//-----------------------------------------------------------------------------
+	// Name : luminanceDownsample()
+	// Desc : Downsamples the luminance data
+	//-----------------------------------------------------------------------------
     bool luminanceDownsample( )
     {
         /////////////////////////////////////////////
@@ -147,7 +151,6 @@ class ToneMappingShader : ImageProcessingShader
         // Define shader inputs.
         <?in
             float4  screenPosition : SV_POSITION;
-            float2  texCoords2      : TEXCOORD0;
         ?>
 
         // Define shader outputs.
@@ -165,7 +168,8 @@ class ToneMappingShader : ImageProcessingShader
         // Shader Code
         /////////////////////////////////////////////
 		<?
-		float2 texCoords = (screenPosition.xy + float2(0.5, 0.5)) * _targetSize.zw; 
+		// Compute texture coords
+        float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
 		
 		// Sample the 4 texels
 		float4 s0 = sample2D( sLightingPointTex, sLightingPoint, texCoords + float2( -0.5, -0.5 ) * lumTextureSize.zw );

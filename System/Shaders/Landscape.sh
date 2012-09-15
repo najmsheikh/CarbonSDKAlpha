@@ -1173,7 +1173,7 @@ class LandscapeTerrainShader : ISurfaceShader
         <?
         // Normal.a needs to be overwritten with specular power
         //data0 = float4( 0, 0, 0, MaterialPower / MaxPower );
-        data0 = float4( 0, 0, 0, 0 );
+        data0 = float4( 0, 0, 0, 0.31f );
         ?>
         
         // Low or high quality shading?

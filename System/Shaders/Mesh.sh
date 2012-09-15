@@ -561,8 +561,8 @@ class MeshShader : ISurfaceShader
 		if ( manualSRGBLinearize )
 		{
 			<?
-			surface.diffuse.rgb  = pow( surface.diffuse.rgb,  $GAMMA_TO_LINEAR );
-			surface.specular.rgb = pow( surface.specular.rgb, $GAMMA_TO_LINEAR );
+			surface.diffuse.rgb  = SRGBToLinear( surface.diffuse.rgb );
+			surface.specular.rgb = SRGBToLinear( surface.specular.rgb );
 			?>
 		}
 	
@@ -1388,9 +1388,9 @@ class MeshShader : ISurfaceShader
 		// If we need to manually non-linearize the color data, do so now
 		if ( encodeSRGB )
 		{
-			<?data1 = pow( data1, $LINEAR_TO_GAMMA );?>
+			<?data1 = LinearToSRGB4( data1 );?>
 			if ( testFlagAny( renderFlags, RenderFlags::SpecularColorOutput ) )
-				<?data2.rgb = pow( data2.rgb, $LINEAR_TO_GAMMA );?>
+				<?data2.rgb = LinearToSRGB( data2.rgb );?>
 		}
 
         // Valid shader

@@ -779,7 +779,6 @@ bool cgDX11RenderDriver::cameraUpdated()
         //pCameraData->viewportSize;
         //pCameraData->viewportOffset;
         //pCameraData->targetSize;
-        //pCameraData->screenUVAdjustScale;
         //pCameraData->screenUVAdjustBias;
         
         // Unlock the buffer. If it is currently bound to the device
@@ -1401,7 +1400,7 @@ bool cgDX11RenderDriver::selectInputLayout( )
                     pOut->SemanticName = "TESSFACTOR";
                     break;
                 case D3DDECLUSAGE_POSITIONT:
-                    pOut->SemanticName = "POSITIONT";
+                    pOut->SemanticName = "POSITION";
                     break;
                 case D3DDECLUSAGE_COLOR:
                     pOut->SemanticName = "COLOR";
@@ -2645,13 +2644,9 @@ bool cgDX11RenderDriver::beginTargetRender( cgRenderTargetHandle hRenderTarget, 
     // Pre-compute final screen UV adjust scale and bias (based on current
     // viewport and render target size) to prevent the need to compute this
     // in the shader for each pixel / vertex.
-    //pCameraData->screenUVAdjustScale.x = pCameraData->viewportSize.x * pCameraData->targetSize.z;
-    //pCameraData->screenUVAdjustScale.y = pCameraData->viewportSize.y * pCameraData->targetSize.w;
     //pCameraData->screenUVAdjustBias.x  = (pCameraData->viewportOffset.x + 0.5f) * pCameraData->targetSize.z;
     //pCameraData->screenUVAdjustBias.y  = (pCameraData->viewportOffset.y + 0.5f) * pCameraData->targetSize.w;
     // No half texel offset in DX11
-    pCameraData->screenUVAdjustScale.x = 1.0f;
-    pCameraData->screenUVAdjustScale.y = 1.0f;
     pCameraData->screenUVAdjustBias.x  = 0.0f; //0.5f * pCameraData->targetSize.z;
     pCameraData->screenUVAdjustBias.y  = 0.0f; //0.5f * pCameraData->targetSize.w;
 
@@ -2669,6 +2664,14 @@ bool cgDX11RenderDriver::beginTargetRender( cgRenderTargetHandle hRenderTarget, 
     Viewport.minimumZ   = 0.0f;
     Viewport.maximumZ   = 1.0f;
     pushViewport( &Viewport );
+
+    // Set a full size scissor rectangle by default.
+    D3D11_RECT rcScissors;
+    rcScissors.left   = (cgInt)Viewport.x;
+    rcScissors.right  = rcScissors.left + (cgInt)Viewport.width;
+    rcScissors.top    = (cgInt)Viewport.y;
+    rcScissors.bottom = rcScissors.left + (cgInt)Viewport.height;
+    mD3DDeviceContext->RSSetScissorRects( 1, &rcScissors );
 
     // Success!
     return true;
@@ -2828,13 +2831,9 @@ bool cgDX11RenderDriver::beginTargetRender( cgRenderTargetHandleArray aRenderTar
     // Pre-compute final screen UV adjust scale and bias (based on current
     // viewport and render target size) to prevent the need to compute this
     // in the shader for each pixel / vertex.
-    //pCameraData->screenUVAdjustScale.x = pCameraData->viewportSize.x * pCameraData->targetSize.z;
-    //pCameraData->screenUVAdjustScale.y = pCameraData->viewportSize.y * pCameraData->targetSize.w;
     //pCameraData->screenUVAdjustBias.x  = (pCameraData->viewportOffset.x + 0.5f) * pCameraData->targetSize.z;
     //pCameraData->screenUVAdjustBias.y  = (pCameraData->viewportOffset.y + 0.5f) * pCameraData->targetSize.w;
     // No half texel offset in DX11
-    pCameraData->screenUVAdjustScale.x = 1.0f;
-    pCameraData->screenUVAdjustScale.y = 1.0f;
     pCameraData->screenUVAdjustBias.x  = 0.0f; //0.5f * pCameraData->targetSize.z;
     pCameraData->screenUVAdjustBias.y  = 0.0f; //0.5f * pCameraData->targetSize.w;
 
@@ -2852,6 +2851,14 @@ bool cgDX11RenderDriver::beginTargetRender( cgRenderTargetHandleArray aRenderTar
     Viewport.minimumZ   = 0.0f;
     Viewport.maximumZ   = 1.0f;
     pushViewport( &Viewport );
+
+    // Set a full size scissor rectangle by default.
+    D3D11_RECT rcScissors;
+    rcScissors.left   = (cgInt)Viewport.x;
+    rcScissors.right  = rcScissors.left + (cgInt)Viewport.width;
+    rcScissors.top    = (cgInt)Viewport.y;
+    rcScissors.bottom = rcScissors.left + (cgInt)Viewport.height;
+    mD3DDeviceContext->RSSetScissorRects( 1, &rcScissors );
 
     // Success!
     return true;
@@ -2961,13 +2968,7 @@ bool cgDX11RenderDriver::endTargetRender( )
     // Pre-compute final screen UV adjust scale and bias (based on current
     // viewport and render target size) to prevent the need to compute this
     // in the shader for each pixel / vertex.
-    //pCameraData->screenUVAdjustScale.x = pCameraData->viewportSize.x * pCameraData->targetSize.z;
-    //pCameraData->screenUVAdjustScale.y = pCameraData->viewportSize.y * pCameraData->targetSize.w;
-    //pCameraData->screenUVAdjustBias.x  = (pCameraData->viewportOffset.x + 0.5f) * pCameraData->targetSize.z;
-    //pCameraData->screenUVAdjustBias.y  = (pCameraData->viewportOffset.y + 0.5f) * pCameraData->targetSize.w;
     // No half texel offset in DX11
-    pCameraData->screenUVAdjustScale.x = 1.0f;
-    pCameraData->screenUVAdjustScale.y = 1.0f;
     pCameraData->screenUVAdjustBias.x  = 0.0f; //0.5f * pCameraData->targetSize.z;
     pCameraData->screenUVAdjustBias.y  = 0.0f; //0.5f * pCameraData->targetSize.w;
 
@@ -3589,6 +3590,102 @@ bool cgDX11RenderDriver::setVertexBlendData( const cgMatrix pMatrices[], const c
     cgAssert( MatrixCount ? pMatrices != CG_NULL : true );
     cgAssert( MatrixCount <= mCaps->getMaxBlendTransforms() );
 
+    // Using vertex texture fetch or constants for blending?
+    if ( !mConfig.useVTFBlending )
+    {
+        // Update constant buffers only if any matrices are supplied.
+        if ( MatrixCount != 0 )
+        {
+            // Update the first of the two constant buffers designed to contain the
+            // standard and inverse transpose matrices. Standard matrix buffer first.
+            cgConstantBuffer * pMatrixBuffer = mVertexBlendingConstants.getResource( true );
+            cgAssert( pMatrixBuffer != CG_NULL );
+
+            // Lock the buffer ready for population
+            _cbVertexBlending * pMatrixData;
+            if ( !(pMatrixData = (_cbVertexBlending*)pMatrixBuffer->lock( 0, 0, cgLockFlags::WriteOnly | cgLockFlags::Discard ) ) )
+            {
+                cgAppLog::write( cgAppLog::Error, _T("Failed to lock vertex blending constant buffer in preparation for device update.\n") );
+                return false;
+
+            } // End if failed
+
+            // Update buffer with matrix data.
+            cgVector3 * pRows = pMatrixData->transforms;
+            for ( cgUInt32 i = 0; i < MatrixCount; ++i )
+            {
+                *pRows++ = (cgVector3&)pMatrices[i]._11;
+                *pRows++ = (cgVector3&)pMatrices[i]._21;
+                *pRows++ = (cgVector3&)pMatrices[i]._31;
+                *pRows++ = (cgVector3&)pMatrices[i]._41;
+
+            } // Next matrix
+
+            // Unlock the buffer. If it is currently bound to the device
+            // then the appropriate constants will be automatically updated
+            // next time 'drawPrimitive*' is called.
+            pMatrixBuffer->unlock();
+
+            // If the constant buffer is not currently bound to the device, do so now.
+            if ( !pMatrixBuffer->isBound() )
+                setConstantBufferAuto( mVertexBlendingConstants );
+
+        } // End if matrices supplied
+
+    } // End if !VTF
+    else
+    {
+        // Populate the VTF texture.
+        /*if ( MatrixCount )
+        {
+            cgDX9Texture<cgTexture> * pTexture = (cgDX9Texture<cgTexture>*)mVertexBlendingTexture.getResource(true);
+            if ( pTexture )
+            {
+                cgUInt32 nMatrixBlockSize = cgMathUtility::nextPowerOfTwo( mCaps->getMaxBlendTransforms() * 3 );
+
+                // Pack matrix data into the texture.
+                cgUInt32 nPitch;
+                cgVector4 * pRows = (cgVector4*)pTexture->lock( nPitch, cgLockFlags::Discard );
+                for ( cgUInt32 i = 0; i < MatrixCount; ++i )
+                {
+                    const cgMatrix & m = pMatrices[i];
+                    pRows[i*4]   = cgVector4( m._11, m._12, m._13, m._41 );
+                    pRows[i*4+1] = cgVector4( m._21, m._22, m._23, m._42 );
+                    pRows[i*4+2] = cgVector4( m._31, m._32, m._33, m._43 );
+
+                    const cgMatrix & mit  = (pITMatrices) ? pITMatrices[i] : pMatrices[i];
+                    pRows[i*4+nMatrixBlockSize]   = cgVector4( mit._11, mit._12, mit._13, mit._41 );
+                    pRows[i*4+nMatrixBlockSize+1] = cgVector4( mit._21, mit._22, mit._23, mit._42 );
+                    pRows[i*4+nMatrixBlockSize+2] = cgVector4( mit._31, mit._32, mit._33, mit._43 );
+
+                } // Next matrix
+                pTexture->unlock(0);
+
+                // Apply the texture to the device for use with vertex texture fetch
+                LPDIRECT3DBASETEXTURE9 pD3DTexture = pTexture->getD3DTexture();
+                mD3DDevice->SetTexture( D3DVERTEXTEXTURESAMPLER0, pD3DTexture );
+                if ( pD3DTexture )
+                    pD3DTexture->Release();
+
+                // Setup VTF sampler states.
+                mD3DDevice->SetSamplerState(D3DVERTEXTEXTURESAMPLER0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP );
+                mD3DDevice->SetSamplerState(D3DVERTEXTEXTURESAMPLER0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP );
+                mD3DDevice->SetSamplerState(D3DVERTEXTEXTURESAMPLER0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+                mD3DDevice->SetSamplerState(D3DVERTEXTEXTURESAMPLER0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+                mD3DDevice->SetSamplerState(D3DVERTEXTEXTURESAMPLER0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+
+                cgToDo( "Carbon General", "Output specific warning on failure." );
+
+            } // End if valid
+
+        } // End if matrices supplied*/
+
+    } // End if VTF
+
+    // Set the system script side max blend index member variable.
+    *mSystemExportVars.maximumBlendIndex = nMaxBlendIndex;
+    *mSystemExportVars.useVTFBlending = mConfig.useVTFBlending;
+
     /*// Update constant buffers only if any matrices are supplied.
     if ( MatrixCount != 0 )
     {
@@ -3638,7 +3735,7 @@ bool cgDX11RenderDriver::setVertexBlendData( const cgMatrix pMatrices[], const c
     } // End if matrices supplied.*/
     
     // Set the system script side max blend index member variable.
-    *mSystemExportVars.maximumBlendIndex = nMaxBlendIndex;
+    //*mSystemExportVars.maximumBlendIndex = nMaxBlendIndex;
 
 
     // 7777

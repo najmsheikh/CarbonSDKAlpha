@@ -289,6 +289,8 @@ public:
     void                        removeRootNode          ( cgObjectNode * node );
     cgObjectNodeMap           & getObjectNodes          ( );
     const cgObjectNodeMap     & getObjectNodes          ( ) const;
+    cgObjectNodeMap           & getRootObjectNodes      ( );
+    const cgObjectNodeMap     & getRootObjectNodes      ( ) const;
     const cgSceneCellMap      & getSceneCells           ( ) const;
     // ToDo: 9999 - Reintroduce?
     /*bool                        getObjectsByType        ( cgUID objectType, cgSceneObjectList **objects );
