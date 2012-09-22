@@ -184,15 +184,19 @@ bool cgKinematicControllerJointObject::pick( cgCameraNode * pCamera, cgObjectNod
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgKinematicControllerJointObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgKinematicControllerJointObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
+
     /*cgRenderDriver * pDriver = cgRenderDriver::GetInstance();
         
     // Draw the bounding box (use "sealed" edges - i.e. no gaps).
     pDriver->DrawOOBB( getLocalBoundingBox(), 0.0f, pIssuer->GetWorldTransform( false ), ((pIssuer->IsSelected()) ? 0xFFFFFFFF : 0xFF0EFF02), true );*/
 
     // Call base class implementation last.
-    cgJointObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+    cgJointObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
 }
 
 //-----------------------------------------------------------------------------

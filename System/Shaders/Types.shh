@@ -74,9 +74,11 @@ enum RenderFlags
 	NormalizedDistance   = 0x800,
 	SurfaceNormals       = 0x1000,
 	PackedDepth          = 0x2000,
+	DepthStencilReads    = 0x4000,
 	
-	// General	
-	ComputeGroupID       = 0x4000,
+	// General
+	ColorWrites          = 0x8000,
+	CullMode             = 0x10000,
 };
 
 enum LightFlags

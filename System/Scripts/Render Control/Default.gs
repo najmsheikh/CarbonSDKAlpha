@@ -56,6 +56,9 @@ class StandardRenderControl : IScriptedRenderControl
 	private float               mFrameTime; 
 	private bool                mApplyShadows;
 	private bool                mViewSpaceLighting;
+	private bool                mDepthStencilReads;
+	private bool                mFullSpecularColor;
+	private bool                mDeferredLighting;
 
 	private bool                mDrawDepth;
 	private bool                mDrawGeometry;
@@ -121,6 +124,7 @@ class StandardRenderControl : IScriptedRenderControl
 	private RenderTargetHandle   mGBuffer1;
 	private RenderTargetHandle   mGBuffer2;
 	private RenderTargetHandle   mLighting;
+	private RenderTargetHandle   mLightingScratch;
 	private RenderTargetHandle   mVelocityBuffer;
 	private RenderTargetHandle   mVelocityBufferMB;
 	private RenderTargetHandle[] mAABuffer;
@@ -128,6 +132,8 @@ class StandardRenderControl : IScriptedRenderControl
 	private RenderTargetHandle   mFrameBuffer;
 	private RenderTargetHandle   mLDRScratch0;
 	private RenderTargetHandle   mLDRScratch1;
+
+	private DepthStencilTargetHandle mDepthStencilBuffer;
 
 	private ResampleChain @      mLDRChain0;
 	private ResampleChain @      mLDRChain1;
@@ -167,7 +173,8 @@ class StandardRenderControl : IScriptedRenderControl
 		@mLightingManager  = mScene.getLightingManager();
 
 		// Activate the desired features
-		mDrawDepth         = true;
+		mDeferredLighting  = false;
+		mDrawDepth         = false;
 		mDrawGeometry      = true;
 		mDrawDirectLight   = true;
 		mDrawIndirectLight = false;
@@ -182,6 +189,8 @@ class StandardRenderControl : IScriptedRenderControl
 		mHDRGlare          = false;
 		mHDRDepthOfField   = false;
 		mHDRMotionBlur     = false;
+		mDepthStencilReads = false;
+		mFullSpecularColor = false;
 		
 		// Setup anti-aliasing
 		mAABuffer.resize(2);
@@ -397,19 +406,8 @@ class StandardRenderControl : IScriptedRenderControl
         // Are we using sandbox material rendering mode?
 		bool isSandboxMaterial = (mContext == SceneRenderContext::SandboxMaterial);
 
-		// Let the system know what general settings we are using
-		renderDriver.setSystemState( SystemState::OrthographicCamera, activeCamera.getProjectionMode() == ProjectionMode::Orthographic ? 1 : 0 );
-		renderDriver.setSystemState( SystemState::DepthType, mDepthType );
-		renderDriver.setSystemState( SystemState::SurfaceNormalType, mSurfaceNormalType );
-		renderDriver.setSystemState( SystemState::DeferredRendering, 1 );
-        renderDriver.setSystemState( SystemState::DeferredLighting, 0 ); // Use deferred shading
-		renderDriver.setSystemState( SystemState::SpecularColorOutput, mShadingQuality > ShadingQuality::LowQuality ? 1 : 0 );
-		renderDriver.setSystemState( SystemState::HDRLighting, mDrawHDR ? 1 : 0 );
-		renderDriver.setSystemState( SystemState::GBufferSRGB, mDrawHDR ? 1 : 0 );
-		renderDriver.setSystemState( SystemState::ViewSpaceLighting, mViewSpaceLighting ? 1 : 0 );
-
 		// Prepare this frame (i.e., setup resources, etc.)
-		frameBegin( activeView, activeCamera );
+		frameBegin( activeView, activeCamera, renderDriver );
 
 		// Fill our depth buffer
         profiler.beginProcess( "Depth" );
@@ -429,6 +427,11 @@ class StandardRenderControl : IScriptedRenderControl
 		// Compute indirect lighting 
         profiler.beginProcess( "Indirect Lighting" );
 		if ( mDrawIndirectLight ) indirectLighting( activeCamera, renderDriver );
+        profiler.endProcess( );
+
+		// Composite lighting
+        profiler.beginProcess( "Composite Lighting" );
+		if ( mDeferredLighting ) compositeLighting( activeCamera, renderDriver );
         profiler.endProcess( );
 
 		// Draw the sky
@@ -541,8 +544,20 @@ class StandardRenderControl : IScriptedRenderControl
 	//        we are about to render as well as any other setup tasks we need to address
 	//        before we start drawing
 	//-----------------------------------------------------------------------------
-	void frameBegin( RenderView @ activeView, CameraNode @ activeCamera )
+	void frameBegin( RenderView @ activeView, CameraNode @ activeCamera, RenderDriver @ renderDriver )
 	{
+        // Get the rendering capabilities
+        RenderingCapabilities @ capabilities = renderDriver.getCapabilities();
+
+		// Get access to our depth-stencil buffer
+		mDepthStencilBuffer = activeView.getDepthStencilBuffer();
+
+		// Is the depth-stencil buffer readable?
+		mDepthStencilReads = activeView.readableDepthStencilBuffer();
+
+		// We can't support full specular color without depth reading
+		mFullSpecularColor = mDepthStencilReads && mFullSpecularColor;
+
         // Retrieve the primary frame buffer
         mFrameBuffer = activeView.getViewBuffer();
 
@@ -552,7 +567,8 @@ class StandardRenderControl : IScriptedRenderControl
         // Retrieve our geometry buffers
         mGBuffer0 = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "GBuffer0" );    // Normal
         mGBuffer1 = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "GBuffer1" );    // Diffuse
-        mGBuffer2 = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "GBuffer2" );    // Specular
+        if ( mFullSpecularColor )
+			mGBuffer2 = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "GBuffer2" );    // Specular
 		
 		// Create the depth buffer (ToDo: GetBestFormat -- One channel, floating point, full precision | half precision?)
 		if ( mDepthType == DepthType::LinearZ_Packed || mDepthType == DepthType::LinearDistance_Packed ) 
@@ -566,11 +582,12 @@ class StandardRenderControl : IScriptedRenderControl
 			numDepthLevels = 2;
 
 		mDepthChain0.setSource( activeView, mDepthBuffer, numDepthLevels, "DepthChain0" );
-		
+	
 		// Create the lighting buffer and downsample chain(s) (2 for ping ponging)
-        mLighting = activeView.getRenderSurface( mLightingBufferFormat,  1.0, 1.0, "Lighting" ); // Lighting
-		mLightingChain0.setSource( activeView, mLighting, "LightingChain0" );
-		mLightingChain1.setSource( activeView, mLighting, "LightingChain1" );
+        mLighting        = activeView.getRenderSurface( mLightingBufferFormat, 1.0, 1.0, "Lighting" );        // Lighting
+		mLightingScratch = activeView.getRenderSurface( mLightingBufferFormat, 1.0, 1.0, "LightingScratch" ); // Lighting scratch
+		mLightingChain0.setSource( activeView, mLighting,        "LightingChain0" );
+		mLightingChain1.setSource( activeView, mLightingScratch, "LightingChain1" );
 		
 		// Create some LDR scratch surfaces and downsample chain(s) (2 for ping ponging)
         mLDRScratch0 = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "LDRScratch0" ); // Scratch (ldr) 
@@ -600,6 +617,18 @@ class StandardRenderControl : IScriptedRenderControl
 				mCurrentJitter = Vector2(-0.25,  0.25);
 		}
 		activeCamera.setJitterAA( mCurrentJitter );
+
+		// Let the system know what general settings we are using
+		renderDriver.setSystemState( SystemState::OrthographicCamera, activeCamera.getProjectionMode() == ProjectionMode::Orthographic ? 1 : 0 );
+		renderDriver.setSystemState( SystemState::DepthType, mDepthType );
+		renderDriver.setSystemState( SystemState::SurfaceNormalType, mSurfaceNormalType );
+		renderDriver.setSystemState( SystemState::DeferredRendering, 1 );
+        renderDriver.setSystemState( SystemState::DeferredLighting, mDeferredLighting ? 1 : 0 );
+		renderDriver.setSystemState( SystemState::HDRLighting, mDrawHDR ? 1 : 0 );
+		renderDriver.setSystemState( SystemState::GBufferSRGB, mDrawHDR ? 1 : 0 );
+		renderDriver.setSystemState( SystemState::ViewSpaceLighting, mViewSpaceLighting ? 1 : 0 );
+		renderDriver.setSystemState( SystemState::DepthStencilReads, mDepthStencilReads ? 1 : 0 );
+		renderDriver.setSystemState( SystemState::SpecularColorOutput, mDepthStencilReads && mFullSpecularColor ? 1 : 0 );
 	}
 
 	//-----------------------------------------------------------------------------
@@ -620,9 +649,11 @@ class StandardRenderControl : IScriptedRenderControl
 		// Close depth resources
         mDepthBuffer.close();
 		mDepthChain0.setSource( null );
+		mDepthStencilBuffer.close();
 
 		// Close lighting resources
         mLighting.close();
+        mLightingScratch.close();
 		mLightingChain0.setSource( null );
 		mLightingChain1.setSource( null );
 		
@@ -698,8 +729,10 @@ class StandardRenderControl : IScriptedRenderControl
 			mShadingQuality = renderDriver.getSystemState( SystemState::ShadingQuality );
 			if ( mShadingQuality == ShadingQuality::LowQuality )
 			{
+				mFullSpecularColor  = false;
+
 				mDrawHDR            = false;
-				mDrawGlare          = false;
+				mDrawGlare          = true;
 				mDrawDepthOfField   = false;
 				mDrawSSAO           = false;
 				mDrawMotionBlur     = false;
@@ -710,8 +743,26 @@ class StandardRenderControl : IScriptedRenderControl
 
 				mAntialiasing       = AntialiasingMethod::None;
 			}
+			else if( mShadingQuality == ShadingQuality::MediumQuality )
+			{
+				mFullSpecularColor     = false;
+
+				mDrawHDR               = true; 
+				mDrawGlare             = true;
+				mDrawDepthOfField      = false;
+				mDrawMotionBlur        = true;
+				mDrawSSAO			   = false;
+				
+			    mHDRGlare              = mDrawHDR && true;
+				mHDRDepthOfField       = mDrawHDR && false;
+				mHDRMotionBlur         = mDrawHDR && false;				
+				
+				mAntialiasing          = AntialiasingMethod::FXAA;
+			}
 			else
 			{
+				mFullSpecularColor     = true;
+
 				mDrawHDR               = true; 
 				mDrawGlare             = true;
 				mDrawDepthOfField      = false;
@@ -722,7 +773,7 @@ class StandardRenderControl : IScriptedRenderControl
 				mHDRDepthOfField       = mDrawHDR && true;
 				mHDRMotionBlur         = mDrawHDR && true;				
 				
-				mAntialiasing          = AntialiasingMethod::FXAA;
+				mAntialiasing          = AntialiasingMethod::FXAA_T2x;
 			}
 
             // Antialiasing should currently be disabled whilst rendering in editor.
@@ -751,46 +802,27 @@ class StandardRenderControl : IScriptedRenderControl
 
     //-----------------------------------------------------------------------------
 	// Name : depth()
-	// Desc : Render the entire scene in order to establish per-pixel depth
-	//        information. These depth values are written to a render target
-	//        texture such that it is available as input to other subsequent
-	//        render passes. Also populates the main depth stencil buffer to
-	//        improve rendering performance with early depth culling, etc.
+	// Desc : Render the entire scene in order to establish per-pixel depth-stencil
+	//        information. 
 	//-----------------------------------------------------------------------------
 	void depth( CameraNode @ activeCamera, RenderDriver @ renderDriver )
 	{
 		VisibilitySet @ cameraVis = activeCamera.getVisibilitySet();
         ObjectRenderQueue @ queue = ObjectRenderQueue( mScene );
-		
+
 		// Setup the output target(s)
 		array<RenderTargetHandle> targets( 1 );		
 		targets[ 0 ] = mDepthBuffer;
 
-		// If we are rendering with an orthographic camera, all depths will be forced to linear Z values
-		if ( activeCamera.getProjectionMode() == ProjectionMode::Orthographic )
-			mDepthType = DepthType::LinearZ_Packed; 
-
-		// PerfHUD does not work correctly with the standard device clear call (it ignores color). So we 
-        // simulate it here with manual clearing.
-		bool usePerfHUD = renderDriver.getConfig().usePerfHUD;
-		if ( usePerfHUD )
-		{
-			renderDriver.beginTargetRender( mDepthBuffer );
-			renderDriver.clear( ClearFlags::Depth | ClearFlags::Stencil, 0, 1, 0 );
-			renderDriver.endTargetRender();
-			mImageProcessor.processColorImage( targets[ 0 ], ImageOperation::SetColorRGBA, ColorValue( 1, 1, 1, 1 ) );
-		}
-		
 		// Begin rendering to target(s)
-		if ( renderDriver.beginTargetRender( targets ) == true )
+		if ( renderDriver.beginTargetRender( targets, mDepthStencilBuffer ) )
 		{
 			// Clear the buffer(s)
-			if ( !usePerfHUD )
-				renderDriver.clear( ClearFlags::Target | ClearFlags::Depth | ClearFlags::Stencil, ColorValue(0xFFFFFFFF), 1, 0 );
+			renderDriver.clear( ClearFlags::Depth | ClearFlags::Stencil, ColorValue(0xFFFFFFFF), 1, 0 );
 
-			// Set the depth type
-			renderDriver.setSystemState( SystemState::DepthType, mDepthType );
-			    
+			// Set the depth type to none to indicate no depth texture output
+			renderDriver.setSystemState( SystemState::DepthType, DepthType::None );
+			 
 			// Notify system that we are performing the "depth" pass. 
             if ( mScene.beginRenderPass( "depth" ) )
             {
@@ -821,15 +853,6 @@ class StandardRenderControl : IScriptedRenderControl
 		
         } // End if beginTargetRender()
 		
-		// Downsample depth and surface normal buffers (if available)
-		int numLevels = min( mDepthChain0.getLevelCount(), mNormalChain0.getLevelCount() );
-		for ( int j = 0; j < numLevels-1; j++ )
-		{
-			mImageProcessor.downSampleDepth( mDepthChain0.getLevel(j),   mNormalChain0.getLevel(j),
-                                             mDepthChain0.getLevel(j+1), mNormalChain0.getLevel(j+1),
-											 mDepthType, mDepthType, ImageOperation::DownSampleMinimum, j == 0 ? true : false );
-		}
-
 		// Update the current scene target
 		mCurrentSceneTarget = mDepthBuffer;
 	}
@@ -843,8 +866,13 @@ class StandardRenderControl : IScriptedRenderControl
 	//-----------------------------------------------------------------------------
 	void geometry( CameraNode @ activeCamera, RenderDriver @ renderDriver )
 	{
-		array<RenderTargetHandle> targets( 4 );		
+		// If we are rendering with an orthographic camera, all depths will be forced to linear Z values
+		if ( activeCamera.getProjectionMode() == ProjectionMode::Orthographic )
+			mDepthType = DepthType::LinearZ_Packed; 
 
+		// Set the depth type
+		renderDriver.setSystemState( SystemState::DepthType, mDepthType );
+	
 		// When HDR is enabled, we use a temporary 8-bit buffer for precomputed
 		// lighting which we'll subsequently decode to the main lighting target
 		RenderTargetHandle lightingBuffer = mLighting;
@@ -855,24 +883,18 @@ class StandardRenderControl : IScriptedRenderControl
 		}
 
 		// Clear render targets
-		if ( mShadingQuality == ShadingQuality::LowQuality )
+		array<RenderTargetHandle> targets( 4 );		
+		targets[0] = mGBuffer0;
+		targets[1] = mGBuffer1;
+		targets[2] = mFullSpecularColor ? mGBuffer2 : mDepthBuffer;
+		targets[3] = lightingBuffer; 
+		if ( renderDriver.beginTargetRender( targets, mDepthStencilBuffer ) )
 		{
-			targets.resize( 3 );
-			targets[0] = mGBuffer0;
-			targets[1] = mGBuffer1;
-			targets[2] = lightingBuffer; 
-		}
-		else
-		{
-			targets.resize( 4 );
-			targets[0] = mGBuffer0;
-			targets[1] = mGBuffer1;
-			targets[2] = mGBuffer2;
-			targets[3] = lightingBuffer; 
-		}
-        if ( renderDriver.beginTargetRender( targets, null ) == true )
-		{
-			renderDriver.clear( ClearFlags::Target, mClearColor, 0, 0 );
+			if ( mDrawDepth )
+				renderDriver.clear( ClearFlags::Target, 0, 1, 0 );
+			else
+				renderDriver.clear( ClearFlags::Target | ClearFlags::Depth | ClearFlags::Stencil, 0, 1, 0 );
+			
 			renderDriver.endTargetRender();
 
         } // End if beginTargetRender()
@@ -889,11 +911,22 @@ class StandardRenderControl : IScriptedRenderControl
         Landscape @ landscape = mScene.getLandscape();
         if ( @landscape != null )
         {
+            // Temporary: Draw a terrain depth pass separately
+            if ( renderDriver.beginTargetRender( mDepthBuffer, mDepthStencilBuffer ) )
+            {
+                // Draw terrain
+                landscape.renderPass( LandscapeRenderMethod::TerrainDepthFill, activeCamera, activeCamera.getVisibilitySet() );
+
+                // End rendering to specified target.
+                renderDriver.endTargetRender();
+
+            } // End if beginTargetRender()
+
             // Setup render targets and perform terrain g-buffer fill
             targets.resize( 2 );
             targets[0] = mGBuffer0; //Normal
             targets[1] = mGBuffer1; //Diffuse
-            if ( renderDriver.beginTargetRender( targets ) == true )
+			if ( renderDriver.beginTargetRender( targets, mDepthStencilBuffer ) )
             {
                 landscape.renderPass( LandscapeRenderMethod::TerrainGBufferFill, activeCamera, activeCamera.getVisibilitySet() );
                 renderDriver.endTargetRender();
@@ -902,12 +935,12 @@ class StandardRenderControl : IScriptedRenderControl
             
             // Run a screen pass to fill in correct data (use stencil testing!)
             targets.resize( 3 );
-            targets[0] = mGBuffer0;  //Normal
-            targets[1] = mGBuffer1;  //Diffuse
-            targets[2] = mGBuffer2;  //Specular
+			targets[0] = mGBuffer0;
+			targets[1] = mGBuffer1;
+			targets[2] = mFullSpecularColor ? mGBuffer2 : mDepthBuffer;
 
             // Fill in specular color, gloss, transmission (0) via appropriate channels
-            if ( renderDriver.beginTargetRender( targets ) == true )
+			if ( renderDriver.beginTargetRender( targets, mDepthStencilBuffer ) )
             {
                 landscape.renderPass( LandscapeRenderMethod::TerrainGBufferPost, activeCamera, activeCamera.getVisibilitySet() );
                 renderDriver.endTargetRender();
@@ -920,15 +953,8 @@ class StandardRenderControl : IScriptedRenderControl
 		// Setup render targets for prelit objects (i.e., lighting buffer needed)
 		////////////////////////////////////////////////////
 		
-		// Setup the output targets based on quality mode		
-		if ( mShadingQuality == ShadingQuality::LowQuality )
-		{
-			targets.resize( 3 );
-			targets[0] = mGBuffer0;
-			targets[1] = mGBuffer1;
-			targets[2] = lightingBuffer; 
-		}
-		else
+		// Set the targets and begin rendering
+		if ( mFullSpecularColor )
 		{
 			targets.resize( 4 );
 			targets[0] = mGBuffer0;
@@ -936,23 +962,54 @@ class StandardRenderControl : IScriptedRenderControl
 			targets[2] = mGBuffer2;
 			targets[3] = lightingBuffer; 
 		}
+		else
+		{
+			if ( mDepthStencilReads )
+			{
+				targets.resize( 3 );
+				targets[0] = mGBuffer0;
+				targets[1] = mGBuffer1;
+				targets[2] = lightingBuffer; 
+			}
+			else
+			{
+				targets.resize( 4 );
+				targets[0] = mGBuffer0;
+				targets[1] = mGBuffer1;
+				targets[2] = mDepthBuffer;
+				targets[3] = lightingBuffer; 
+			}
+		}
 		
-		// Set the targets and begin rendering
-		if ( renderDriver.beginTargetRender( targets ) == true )
+		if ( renderDriver.beginTargetRender( targets, mDepthStencilBuffer ) )
 		{	
-            // (TODO: NEED TO CHANGE FLAG BELOW BACK TO TRUE ONCE SUPPORT IS IN PLACE!!!)
 			drawGeometry( activeCamera, renderDriver, false /*true*/ );
 			renderDriver.endTargetRender();
 
 		} // End if beginTargetRender()
 
 		// If necessary, decode 8-bit HDR precomputed lighting values to the main lighting buffer
-		if( mDrawHDR )
+		if( mDrawHDR && !mDeferredLighting )
 		{
 			mImageProcessor.processColorImage( mLDRScratch0, mLighting, ImageOperation::RGBEtoRGB );
 			renderDriver.setSystemState( SystemState::OutputEncodingType, OutputEncodingType::NoEncode );
 		}	
 
+		// If we used a readable depth-stencil buffer, transfer contents to depth texture
+		if ( mDepthStencilReads )
+		{
+			mImageProcessor.processDepthImage( mDepthStencilBuffer, mDepthBuffer, DepthType::NonLinearZ, DepthType::LinearZ_Packed );
+		}
+		
+		// Downsample depth buffers 
+		int numLevels = min( mDepthChain0.getLevelCount(), mNormalChain0.getLevelCount() );
+		for ( int j = 0; j < numLevels-1; j++ )
+		{
+			mImageProcessor.downSampleDepth( mDepthChain0.getLevel(j),   mNormalChain0.getLevel(j),
+                                             mDepthChain0.getLevel(j+1), mNormalChain0.getLevel(j+1),
+											 mDepthType, mDepthType, ImageOperation::DownSampleMinimum, j == 0 ? true : false );
+		}
+		
 		// Set the lighting buffer as the current scene
 		mCurrentSceneTarget = mLighting;
 	}
@@ -993,6 +1050,9 @@ class StandardRenderControl : IScriptedRenderControl
 	//-----------------------------------------------------------------------------
 	void directLighting( CameraNode @ activeCamera, RenderDriver @ renderDriver )
 	{
+		array<RenderTargetHandle> targets( 1 );		
+		targets[0] = mLighting;
+
 		// Notify system that we are performing the "directLighting" pass.
 		if ( mScene.beginRenderPass( "directLighting" ) )
 		{
@@ -1000,16 +1060,29 @@ class StandardRenderControl : IScriptedRenderControl
 			if ( mApplyShadows )
 				mLightingManager.processShadowMaps( activeCamera, true, "onLightProcess" );
 
-			// Compute lighting (deferred)
-            mLightingManager.processLights( mLighting, activeCamera, true, mApplyShadows, mViewSpaceLighting, "onLightProcess", "onPassProcess" );
+			// Set lighting targets
+			if ( renderDriver.beginTargetRender( targets, mDepthStencilBuffer ) )
+			{
+				// For deferred HDR lighting, we'll need to clear the lighting buffer(s)
+				if ( mDeferredLighting && mDrawHDR )
+					renderDriver.clear( ClearFlags::Target, 0, 0, 0 );
+			
+				// Compute lighting (deferred)
+				mLightingManager.processLights( activeCamera, true, mApplyShadows, mViewSpaceLighting, "onLightProcess", "onPassProcess" );
+
+				// End target render			
+				renderDriver.endTargetRender();
+
+			} // End if beginTargetRender()
 
 			// Set the lighting buffer as the current scene
 			mCurrentSceneTarget = mLighting;
 
-            // Finish up
-            mScene.endRenderPass( );
+			// Finish up
+			mScene.endRenderPass( );
 			
 		} // End pass
+
 	}
 
 	//-----------------------------------------------------------------------------
@@ -1187,6 +1260,33 @@ class StandardRenderControl : IScriptedRenderControl
 	}
 
 	//-----------------------------------------------------------------------------
+	// Name : compositeLighting()
+	// Desc : Sums all lighting computed for opaque rendering
+	//-----------------------------------------------------------------------------
+	void compositeLighting( CameraNode @ activeCamera, RenderDriver @ renderDriver )
+	{
+        // We'll always choose an LDR output (output compressed to RGBE if HDR enabled)
+        RenderTargetHandle destination = mLDRScratch1;
+        
+		bool specularReflectanceColor  = mFullSpecularColor;
+		bool specularLightingColor     = false; //mShadingQuality > ShadingQuality::LowQuality;
+
+		// Execute the composite pass
+		mImageProcessor.compositeLighting( mGBuffer1, mGBuffer2, mLighting, mLightingScratch, mLDRScratch0, destination, specularReflectanceColor, specularLightingColor, mDrawHDR, mDrawHDR );
+
+		// If HDR, we'll need to decompress the results to our 16-bit target
+		if ( mDrawHDR )
+		{
+			mImageProcessor.processColorImage( destination, mLighting, ImageOperation::RGBEtoRGB );
+			mCurrentSceneTarget = mLighting;
+		}
+		else
+		{
+			mCurrentSceneTarget = destination;
+		}
+	}
+
+	//-----------------------------------------------------------------------------
 	// Name : sky()
 	// Desc : Draws the sky.
 	//-----------------------------------------------------------------------------
@@ -1210,9 +1310,17 @@ class StandardRenderControl : IScriptedRenderControl
 	//-----------------------------------------------------------------------------
 	void glare( RenderDriver @ renderDriver )
 	{
-		// Set the glare paramaters
-		mGlare.setBrightThreshold( 0.25f, 0.9f );
-		mGlare.setGlareAmount( 0.045f );
+		// Set the glare parameters
+		if ( mHDRGlare )
+		{
+			mGlare.setBrightThreshold( 0.25f, 0.9f );
+			mGlare.setGlareAmount( 0.045f );
+		}
+		else
+		{
+			mGlare.setBrightThreshold( 0.85f, 0.95f );
+			mGlare.setGlareAmount( 2.5f );
+		}
 
         // Set the downsampling/blurring steps
         array<GlareStepDesc> steps;
@@ -1222,13 +1330,24 @@ class StandardRenderControl : IScriptedRenderControl
 		steps[ 2 ] = GlareStepDesc( 4, 0.60, 2, 2, 2.0, 0.0, 30 );			
 		steps[ 3 ] = GlareStepDesc( 5, 0.30, 2, 3, 2.0, 0.0, 0.001 );			
         mGlare.setGlareSteps( steps );
-
-		// Give the glare access to the tonemapper if needed
+		
+		// Should we attempt to reduce flickering due to aliasing?
+		bool reduceFlicker = true;
+		
+		// If HDR glare
 		if ( mHDRGlare )
+		{
+			// Give the glare access to the tonemapper if needed
 			mGlare.setToneMapper( mToneMapper );
 
-        // Run the glare
-	    mGlare.execute( mCurrentSceneTarget, mLightingChain0, mLightingChain1, 0.0f, false, false );
+			// Run the glare
+			mGlare.execute( mCurrentSceneTarget, mLightingChain0, mLightingChain1, mHDRGlare, 0.0f, reduceFlicker, reduceFlicker );
+		}
+		else
+		{
+			// Run the glare
+			mGlare.execute( mCurrentSceneTarget, mLDRChain0, mLDRChain1, mHDRGlare, 0.0f, reduceFlicker, reduceFlicker );
+		}
 	}
 
 	//-----------------------------------------------------------------------------
@@ -1247,7 +1366,7 @@ class StandardRenderControl : IScriptedRenderControl
 		mToneMapper.setLuminanceAdaptation( 0.75, 1.25, 1 ); // cones, rods, rod sensitivity
 
 		// Set the luminance computation update rate (times per second) 
-        mToneMapper.setLuminanceSampleRate( 10.0f );
+        mToneMapper.setLuminanceSampleRate( 15.0f );
 
 		// Set optional image processing to be done after tonemapping finishes (but before shader exits)
 		//toneMappingPostProcesses();
@@ -1355,16 +1474,16 @@ class StandardRenderControl : IScriptedRenderControl
 		if ( mHDRMotionBlur )
 		{
 			sourceColor    = (mCurrentSceneTarget == mLightingChain0.getLevel(0)) ? mLightingChain0.getLevel(0) : mLightingChain1.getLevel(0);
-			destination    = (mCurrentSceneTarget == mLightingChain0.getLevel(0)) ? mLightingChain1.getLevel(0) : mLightingChain0.getLevel(0);
+			destination    = sourceColor; 
 			sourceColorLow = mLightingChain0.getLevel(1);
 			scratchLow     = mLightingChain1.getLevel(1);
 		}
 		else
 		{
 			sourceColor    = (mCurrentSceneTarget == mLDRScratch0) ? mLDRScratch0 : mLDRScratch1;
-			destination    = (mCurrentSceneTarget == mLDRScratch0) ? mLDRScratch1 : mLDRScratch0;
-			sourceColorLow = mLightingChain0.getLevel(1);
-			scratchLow     = mLightingChain1.getLevel(1);
+			destination    = sourceColor;
+			sourceColorLow = mLDRChain0.getLevel(1);
+			scratchLow     = mLDRChain1.getLevel(1);
 		}
 
 		// Compute pixel velocity (at 1/4 res)

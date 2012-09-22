@@ -241,7 +241,7 @@ class MotionBlurShader : ISurfaceShader
 	// Name : cameraMotionBlurComposite()
 	// Desc : Composites the original and blurred color buffers for camera motion blur effect
 	//-----------------------------------------------------------------------------
-    bool cameraMotionBlurComposite( )
+    bool cameraMotionBlurComposite( bool useBlending )
 	{
         /////////////////////////////////////////////
         // Definitions
@@ -265,13 +265,19 @@ class MotionBlurShader : ISurfaceShader
         /////////////////////////////////////////////
         // Shader Code
         /////////////////////////////////////////////
-		<?	
+			
 		// Compute texture coords
-        float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
-
-		// Pass out to the blending pipeline.
-        color = float4( sample2D( sColorLowTex, sColorLow, texCoords ).rgb, compositeBlend );
-		?>
+        <?float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;?>
+		
+		// We use alpha blending if the source and destination were the same target		
+		if ( useBlending )
+		{
+			<?color = float4( sample2D( sColorLowTex, sColorLow, texCoords ).rgb, compositeBlend );?>
+		}
+		else
+		{
+			<?color = lerp( sample2D( sColorTex, sColor, texCoords ), sample2D( sColorLowTex, sColorLow, texCoords ), compositeBlend );?>
+		}
 
         // Valid shader
         return true;

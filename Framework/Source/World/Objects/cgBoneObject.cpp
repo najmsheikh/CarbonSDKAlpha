@@ -161,8 +161,12 @@ bool cgBoneObject::pick( cgCameraNode * camera, cgObjectNode * issuer, const cgS
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgBoneObject::sandboxRender( cgCameraNode * camera, cgVisibilitySet * visibilityData, bool wireframe, const cgPlane & gridPlane, cgObjectNode * issuer )
+void cgBoneObject::sandboxRender( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer )
 {
+    // ONLY post-clear rendering.
+    if ( !(flags & cgSandboxRenderFlags::PostDepthClear) )
+        return;
+
     // Get access to required systems.
     cgRenderDriver * driver = mWorld->getRenderDriver();
 
@@ -178,7 +182,7 @@ void cgBoneObject::sandboxRender( cgCameraNode * camera, cgVisibilitySet * visib
     cgMesh * mesh = mSandboxMesh.getResource(true);
     if ( !mesh || !mesh->isLoaded() )
     {
-        cgWorldObject::sandboxRender( camera, visibilityData, wireframe, gridPlane, issuer );
+        cgWorldObject::sandboxRender( flags, camera, visibilityData, gridPlane, issuer );
         return;
     
     } // End if no mesh
@@ -206,7 +210,7 @@ void cgBoneObject::sandboxRender( cgCameraNode * camera, cgVisibilitySet * visib
     } // End if success
 
     // Call base class implementation last.
-    cgWorldObject::sandboxRender( camera, visibilityData, wireframe, gridPlane, issuer );
+    cgWorldObject::sandboxRender( flags, camera, visibilityData, gridPlane, issuer );
 }
 
 //-----------------------------------------------------------------------------
@@ -1212,13 +1216,145 @@ void cgBoneNode::moveLocal( const cgVector3 & amount )
 }
 
 //-----------------------------------------------------------------------------
+// Name : recomputeDimensions()
+/// <summary>
+/// Automatically compute the width, height (and optionally length) of the bone
+/// based on the specified skin's vertex data as it exists in the original 
+/// reference pose. Returns false if no dimensions could be computed because
+/// no vertices could be found that were influenced by this bone.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgBoneNode::recomputeDimensions( cgMesh * mesh, bool updateLength, cgFloat radialScale, cgUInt32 boneIndex /* = cgUInt32(-1) */ )
+{
+    // Find the binding data for this bone unless one was supplied.
+    cgSkinBindData * bindData = mesh->getSkinBindData(); 
+    const cgSkinBindData::BoneArray & boneData = bindData->getBones();
+    for ( cgUInt32 i = 0; i < boneData.size() && (boneIndex == cgUInt32(-1)); ++i )
+    {
+        if ( boneData[i]->boneIdentifier == getInstanceIdentifier() )
+            boneIndex = i;
+    
+    } // Next bone
+
+    // Any binding data found for this node?
+    if ( boneIndex == cgUInt32(-1) )
+        return false;
+    
+    // Get the vertex data we need from the mesh.
+    cgVertexFormat * format         = mesh->getVertexFormat();
+    size_t           positionOffset = (size_t)format->getElementOffset( D3DDECLUSAGE_POSITION );
+    size_t           weightOffset   = (size_t)format->getElementOffset( D3DDECLUSAGE_BLENDWEIGHT );
+    size_t           indicesOffset  = (size_t)format->getElementOffset( D3DDECLUSAGE_BLENDINDICES );
+    size_t           vertexStride   = (size_t)format->getStride();
+    cgByte         * vertices       = mesh->getSystemVB();
+
+    // Format must have at least a position component
+    if ( !vertices || positionOffset == size_t(-1) )
+        return false;
+
+    // If there are influences available in the skin binding data, use those.
+    // Otherwise build a list of vertices that are influenced by this bone.
+    cgSkinBindData::VertexInfluenceArray customInfluences;
+    const cgSkinBindData::VertexInfluenceArray * finalInfluences;
+    const cgSkinBindData::BoneInfluence & bone = *boneData[boneIndex];
+    if ( bone.influences.empty() )
+    {
+        // Format must have all required components
+        if ( weightOffset == size_t(-1) || indicesOffset == size_t(-1) )
+            return false;
+
+        // Use the custom influences list.
+        finalInfluences = &customInfluences;
+
+        // Search through each bone palette to get influence data.
+        const cgMesh::BonePaletteArray & bonePalettes = mesh->getBonePalettes();
+        for ( size_t i = 0; i < bonePalettes.size(); ++i )
+        {
+            cgBonePalette * palette = bonePalettes[i];
+
+            // Find the subset associated with this bone palette.
+            const cgMesh::MeshSubset * subset = mesh->getSubset( palette->getMaterial(), palette->getDataGroup() );
+            if ( !subset )
+                continue;
+
+            // Process faces in this subset to retrieve referenced vertex data.
+            cgUInt32 * indices = mesh->getSystemIB();
+            cgByte * vertices = mesh->getSystemVB();
+            cgInt32 maxBlendIndex = palette->getMaximumBlendIndex();
+            const cgUInt32Array & boneReferences = palette->getBones();
+            for ( cgInt32 j = subset->faceStart; j < (subset->faceStart + subset->faceCount); ++j )
+            {
+                for ( size_t k = 0; k < 3; ++k )
+                {
+                    cgInt vertexIndex = indices[j*3+k];
+                    cgFloat * blendWeights = (cgFloat*)(vertices + weightOffset + vertexIndex * vertexStride);
+                    cgByte  * blendIndices = (cgByte*)(vertices + indicesOffset + vertexIndex * vertexStride);
+
+                    // Search the blend indices for data matching this bone.
+                    for ( cgInt32 l = 0; l <= maxBlendIndex; ++l )
+                    {
+                        if ( blendIndices[l] != 0xFF && boneReferences[blendIndices[l]] == boneIndex )
+                            customInfluences.push_back( cgSkinBindData::VertexInfluence( vertexIndex, blendWeights[l] ) );
+
+                    } // Next blend reference
+
+                } // Next triangle index
+
+            } // Next face
+
+        } // Next Palette
+
+    } // End if no influences
+    else
+    {
+        // Use the original influences list.
+        finalInfluences = &bone.influences;
+
+    } // End if influences exist
+
+    // Process the influences for this bone and collect the bounding box.
+    cgBoundingBox bounds;
+    for ( size_t i = 0; i < finalInfluences->size(); ++i )
+    {
+        // Retrieve the position of this vertex in it's correct reference pose
+        // and test it against the frame bounding box and update if necessary
+        cgVector3 position = *(cgVector3*)(vertices + positionOffset + finalInfluences->at(i).vertexIndex * vertexStride);
+        cgVector3::transformCoord( position, position, bone.bindPoseTransform );
+        bounds.addPoint( position );
+
+    } // Next influence
+
+    // If we found data, update the bone dimensions.
+    if ( bounds.isPopulated() )
+    {
+        ((cgBoneObject*)mReferencedObject)->setWidth( bounds.depth() * radialScale );
+        ((cgBoneObject*)mReferencedObject)->setHeight( bounds.height() * radialScale );
+        if ( updateLength )
+        {
+            mDisableChildUpdates = true;
+            ((cgBoneObject*)mReferencedObject)->setLength( bounds.width() );
+            mDisableChildUpdates = false;
+        
+        } // End if update length
+
+        // We computed dimensions
+        return true;
+
+    } // End if data
+
+    // No dimensions were computed
+    return false;
+}
+
+//-----------------------------------------------------------------------------
 // Name : recomputeLength()
 /// <summary>
 /// Compute the average position of all child bones and then recompute
-/// our length (without adjusting the child positions).
+/// our length (without adjusting the child positions). Returns false if no 
+/// dimensions could be computed because no child bones were available.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgBoneNode::recomputeLength( )
+bool cgBoneNode::recomputeLength( )
 {
     cgVector3 averageChildPosition( 0, 0, 0 );
     cgInt     childBoneCount = 0;
@@ -1263,4 +1399,7 @@ void cgBoneNode::recomputeLength( )
 
     // Allow child updates to take place once more.
     mDisableChildUpdates = false;
+
+    // Was an update made?
+    return (childBoneCount != 0);
 }

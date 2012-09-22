@@ -892,47 +892,93 @@ bool cgScriptPreprocessor::parsePreprocessorDirective( TokenData & t, std::strin
 /// This only applies to surface shader scripts.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgScriptPreprocessor::parseScriptString( TokenData & t, std::string & strScript )
+bool cgScriptPreprocessor::parseScriptString( TokenData & t, std::string & strScript, bool shaderParameter, bool addParentheses )
 {
-    bool bModified = false;
+    bool bModified   = false;
+    bool bProcessing = !shaderParameter; // We're not automatically processing data immediately when processing a __shadercall parameter
 
     // Search the string for the '$' symbol and replace as appropriate.
-    std::string strInterior;
-    strInterior.reserve( t.tokenLength );
-    for ( size_t i = t.tokenStart; i < t.position; ++i )
+    std::string strInterior, strWhitespace;
+    strInterior.reserve( (t.sectionEnd - t.sectionBegin) + 1 );
+    for ( size_t i = t.position; i <= t.sectionEnd; ++i )
     {
         cgChar c = strScript[i];
-        if ( c == '$' )
+        bool bProcessFurther = true;
+        if ( !bProcessing && (c == ' ' || c == '\t' || c == '\n' || c == '\r') )
         {
-            // Variable references "$Identifier". Does this use scoping braces
-            // to denote more than just a single identifier (i.e. "${Identifier.Member}")
+            // Whitespace should be buffered and output only when necessary.
+            strWhitespace += c;
+            bProcessFurther = false;
+
+        } // End if whitespace
+        else if ( c == '$' )
+        {
+            // Variable references "$Identifier". Does this use scoping parentheses
+            // to denote more than just a single identifier (i.e. "$(Identifier.Member)")
             cgChar nc;
-            if ( (i+1) < t.position && (nc = strScript[i+1]) == '{' )
+            if ( (i+1) <= t.sectionEnd && (nc = strScript[i+1]) == '(' )
             {
-                // Uses scoping braces. Find the closing brace.
-                size_t nEndBrace = strScript.find_first_of( '}', i + 1 );
-                if ( nEndBrace != std::string::npos )
+                // Uses scoping parentheses. Find the closing paren.
+                cgInt nDepth = 1;
+                size_t nEndParen = i+2;
+                for ( ; nEndParen <= t.sectionEnd; ++nEndParen )
                 {
-                    // Break the string and insert the variable value as a string.
-                    // Note: The value is wrapped in parenthesis to avoid any
-                    // operator precedence confusion in the final generated code.
-                    // i.e. "Value=$MyVar;" becomes "Value=(" + String(MyVar) + ");"
-                    cgInt nIdentifierLen = (cgInt)nEndBrace - (i+2);
-                    strInterior.append( "(\" + (" );
-                    strInterior.append( strScript.substr( i+2, nIdentifierLen ) );
-                    strInterior.append( ") + \")" );
-                    i += nIdentifierLen + 2; // +2 to skip both braces.
+                    nc = strScript[nEndParen];
+                    if ( nc == '(')
+                        ++nDepth;
+                    else if ( nc == ')' )
+                    {
+                        if ( --nDepth == 0 )
+                            break;
+                    
+                    } // End if ')'
+                
+                } // Next character
+                
+                if ( nEndParen <= t.sectionEnd )
+                {
+                    cgInt nIdentifierLen = (cgInt)nEndParen - (i+2);
+
+                    // For shader parameters, if we weren't currently processing this as 
+                    // legitimate parameter data so far, then we need to dump out the whitespace
+                    // before we do anything and output the variable reference AS IT IS.
+                    // In all other cases, we need to close the currently open string, 
+                    // output the variable reference, and then re-open the string.
+                    if ( shaderParameter && !bProcessing )
+                    {
+                        strInterior.append( strWhitespace );
+                        strWhitespace.clear();
+
+                        // Note: The value is wrapped in parenthesis to avoid any
+                        // operator precedence confusion in the final generated code.
+                        // i.e. "$MyVar;" becomes "(MyVar);"
+                        strInterior += '(';
+                        strInterior.append( strScript.substr( i+2, nIdentifierLen ) );
+                        strInterior += ')';
+
+                    } // End if shader parameter
+                    else
+                    {
+                        // Break the string and insert the variable value as a string.
+                        // Note: The value is wrapped in parenthesis to avoid any
+                        // operator precedence confusion in the final generated code.
+                        // i.e. "Value=$MyVar;" becomes "Value=(" + String(MyVar) + ");"
+                        strInterior.append( addParentheses ? "(\" + (" : "\" + (" );
+                        strInterior.append( strScript.substr( i+2, nIdentifierLen ) );
+                        strInterior.append( addParentheses ? ") + \")" : ") + \"" );
+
+                    } // End if !shader parameter
 
                     // We modified the script code.
+                    i += nIdentifierLen + 2; // +2 to skip both braces.
                     bModified = true;
+                    bProcessFurther = false;
 
                 } // End if found
-                else
-                {
-                    // Just output the dollar symbol.
-                    strInterior += c;
 
-                } // End if !found
+                // NB: If we didn't find a closing parenthesis, we will automatically
+                // drop into the standard character handling case and the dollar
+                // symbol will simply be output.
 
             } // End if scoped
             else
@@ -941,31 +987,154 @@ bool cgScriptPreprocessor::parseScriptString( TokenData & t, std::string & strSc
                 size_t nEndIdentifier = strScript.find_first_not_of( IdentifierChars, i + 1 );
                 if ( nEndIdentifier == std::string::npos )
                     nEndIdentifier = t.sectionEnd + 1;
-                        
-                // Break the string and insert the variable value as a string.
-                // Note: The value is wrapped in parenthesis to avoid any
-                // operator precedence confusion in the final generated code.
-                // i.e. "Value=$MyVar;" becomes "Value=(" + String(MyVar) + ");"
                 size_t nLength = (cgInt)nEndIdentifier - (i+1);
-                strInterior.append( "(\" + (" );
-                strInterior.append( strScript.substr( i+1, nLength ) );
-                strInterior.append( ") + \")" );
-                i += nLength;
+
+                // For shader parameters, if we weren't currently processing this as 
+                // legitimate parameter data so far, then we need to dump out the whitespace
+                // before we do anything and output the variable reference AS IT IS.
+                // In all other cases, we need to close the currently open string, 
+                // output the variable reference, and then re-open the string.
+                if ( shaderParameter && !bProcessing )
+                {
+                    strInterior.append( strWhitespace );
+                    strWhitespace.clear();
+
+                    // Note: The value is wrapped in parenthesis to avoid any
+                    // operator precedence confusion in the final generated code.
+                    // i.e. "$MyVar;" becomes "(MyVar);"
+                    strInterior += '(';
+                    strInterior.append( strScript.substr( i+1, nLength ) );
+                    strInterior += ')';
+
+                } // End if shader parameter
+                else
+                {
+                    // Break the string and insert the variable value as a string.
+                    // Note: The value is wrapped in parenthesis to avoid any
+                    // operator precedence confusion in the final generated code.
+                    // i.e. "Value=$MyVar;" becomes "Value=(" + String(MyVar) + ");"
+                    strInterior.append( addParentheses ? "(\" + (" : "\" + (" );
+                    strInterior.append( strScript.substr( i+1, nLength ) );
+                    strInterior.append( addParentheses ? ") + \")" : ") + \"" );
+
+                } // End if !shader parameter
 
                 // We modified the script code.
+                i += nLength;
                 bModified = true;
-                
+                bProcessFurther = false;
 
             } // End if !scoped
 
         } // End if '$'
-        else
-        {
-            strInterior += c;
         
-        } // End if supported
+        // Should we process the character further?
+        if ( bProcessFurther )
+        {
+            // Building shader parameter or not?
+            if ( shaderParameter )
+            {
+                // For shader parameters, if we weren't currently processing this as 
+                // legitimate parameter data so far, then we need to open the parameter
+                // string and dump any buffered whitespace before we do so. Everything
+                // else in this case will be assumed to be part of a string being built.
+                if ( !bProcessing )
+                {
+                    // If the buffer has been modified already, but we're not actually 
+                    // processing, then we need to APPEND to the existing data. An example
+                    // of such a case would be "$foo.bar" where '$foo' is a script variable.
+                    if ( bModified )
+                        strInterior += " + ";
+
+                    // Now open the string before outputting
+                    strInterior += '"';
+                    strInterior.append( strWhitespace );
+                    strWhitespace.clear();
+                    bProcessing = true;
+                    bModified = true;
+
+                } // End if !processing
+
+                // Process "invalid" characters before we output them.
+                switch ( c )
+                {
+                    case 0:     // null
+                        strInterior += "\\0";
+                        bModified = true;
+                        break;
+                    case 8:     // backspace
+                        strInterior += "\\x8";
+                        bModified = true;
+                        break;
+                    case 9:     // horizontal tab
+                        strInterior += "\\t";
+                        bModified = true;
+                        break;
+                    case 10:    // new line
+                        // We respect the physical newline here by closing the
+                        // output and re-opening on a new line in order to ensure 
+                        // line counts remain the same.
+                        strInterior += "\\n\"\n\"";
+                        bModified = true;
+                        break;
+                    case 13:    // carriage return
+                        // Carriage returns are stripped.
+                        bModified = true;
+                        break;
+                    case 26:    // substitute
+                        strInterior += "\\x1A";
+                        bModified = true;
+                        break;
+                    case 34:    // double quote
+                        strInterior += "\\\"";
+                        bModified = true;
+                        break;
+                    case 39:    // single quote
+                        strInterior += "\\'";
+                        bModified = true;
+                        break;
+                    case 92:    // backslash
+                        strInterior += "\\\\";
+                        bModified = true;
+                        break;
+                    case 96:    // grave accent
+                        strInterior += "\\`";
+                        bModified = true;
+                        break;
+
+                    default:
+                        strInterior += c;
+                        break;
+
+                } // End switch
+            
+            } // End if shader parameter
+            else
+            {
+                // Just output the character
+                strInterior += c;
+            
+            } // End if !shader parameter
+            
+        } // End if other character
 
     } // Next Character
+
+    // If we were processing shader parameter data and we reached the end
+    // then there are two potential cases to resolve. If we opened a string
+    // we need to dump whitespace and close it. Otherwise we need simply
+    // output the whitespace and we're done.
+    if ( shaderParameter )
+    {
+        strInterior.append( strWhitespace );
+        if ( bProcessing )
+        {
+            strInterior += '"';
+            bModified = true;
+        
+        } // End if processing
+    
+    } // End if shaderParameter
 
     // If we discovered that changes were necessary, replace the script
     // code with the new 'interior' section.
@@ -973,31 +1142,34 @@ bool cgScriptPreprocessor::parseScriptString( TokenData & t, std::string & strSc
     {
         // Enough space in the script string to just replace the existing block?
         size_t nNewSize = strInterior.length();
-        if ( nNewSize == t.tokenLength )
+        size_t nOldSize = (t.sectionEnd - t.sectionBegin) + 1;
+        if ( nNewSize == nOldSize )
         {
             // Exact match in size. We can just replace.
-            strScript.replace( t.tokenStart, nNewSize, strInterior );
+            strScript.replace( t.sectionBegin, nNewSize, strInterior );
         
         } // End if exact size
-        else if ( nNewSize < t.tokenLength )
+        else if ( nNewSize < nOldSize )
         {
             // Smaller. We can replace the first part, and clear the rest.
-            strScript.replace( t.tokenStart, nNewSize, strInterior );
-            overwriteCode( strScript, t.tokenStart + nNewSize, t.tokenLength - nNewSize );
-
+            strScript.replace( t.sectionBegin, nNewSize, strInterior );
+            overwriteCode( strScript, t.sectionBegin + nNewSize, nOldSize - nNewSize );
+            
         } // End if smaller
         else
         {
             // Code is larger, we can replace the contents entirely but we must 
             // also adjust the current read position to take this expanded string 
             // size into account.
-            strScript.replace( t.tokenStart, t.tokenLength, strInterior );
-            t.sectionEnd += (cgInt)nNewSize - (cgInt)t.tokenLength;
-            t.position = t.tokenStart + nNewSize;
+            strScript.replace( t.sectionBegin, nOldSize, strInterior );
+            t.sectionEnd += (cgInt)nNewSize - (cgInt)nOldSize;
 
         } // End if larger  
 
     } // End if code modified
+
+    // Move to end of section
+    t.position = t.sectionEnd + 1;
 
     // Success!
     return true;
@@ -1189,64 +1361,50 @@ bool cgScriptPreprocessor::parseShaderBlock( TokenData & t, std::string & strScr
                     strNewCode.append( strScript.substr( tCode.tokenStart, tCode.tokenLength ) );
 
                     // What follows should be the parameter list, keep processing until we find the closing paren.
-                    bool bNewParam = true, bInShaderParam = false;
                     cgInt nCallParenDepth = 1;
+                    std::string strParameter;
+                    bool bNewParam = true, bInShaderParam = false;
                     while ( bResult = getNextToken(tCode, strScript, false) )
                     {
                         if ( tCode.tokenType == asTC_WHITESPACE )
                         {
                             // Always append whitespace to preserve line count.
-                            strNewCode.append( strScript.substr( tCode.tokenStart, tCode.tokenLength ) );
+                            //strNewCode.append( strScript.substr( tCode.tokenStart, tCode.tokenLength ) );
+                            strParameter.append( strScript.substr( tCode.tokenStart, tCode.tokenLength ) );
 
                         } // End if whitespace
                         else
                         {
                             cgChar c = strScript.at(tCode.tokenStart);
-                            if ( nCallParenDepth == 1 && tCode.tokenLength == 1 && c == '$' )
+                            if ( nCallParenDepth == 1 && tCode.tokenLength == 1 && (c == ',' || c == ')') )
                             {
-                                // This is a script parameter if the $ is the first token.
-                                if ( !bInShaderParam )
-                                {
-                                    bNewParam = false;
-                                    bInShaderParam = false;
+                                // Moving on to next parameter, or closing the function call.
+                                // Parse the parameter data.
+                                TokenData tParam;
+                                tParam.position     = 0;
+                                tParam.sectionBegin = 0;
+                                tParam.sectionEnd   = strParameter.size() -1;
+                                parseScriptString( tParam, strParameter, true, true );
 
-                                } // End if !already in parameter
+                                // Append the parameter and the comma / closing paren
+                                strNewCode += strParameter;
+                                strNewCode += c;
 
-                                // Variable references "$Identifier". Does this use scoping braces
-                                // to denote more than just a single identifier (i.e. "${Identifier.Member}")
-                                cgChar nc;
-                                if ( tCode.position < tCode.sectionEnd && (nc = strScript.at(tCode.position)) == '{' )
-                                {
-                                    // Uses scoping braces. Find the closing brace.
-                                    size_t nEndBrace = strScript.find_first_of( '}', tCode.position+1 );
-                                    if ( nEndBrace != std::string::npos )
-                                    {
-                                        // Insert the entire contents up to the closing brace
-                                        size_t nLength = (cgInt)nEndBrace - (tCode.position + 1);
-                                        strNewCode.append( strScript.substr( (tCode.position + 1), nLength ) );
-                                        tCode.position += nLength + 2; // +2 to skip both braces.
+                                // We're done with the parameter ready for the next.
+                                strParameter.clear();
 
-                                    } // End if found
+                                // Break out once we reach the final closing parenthesis?
+                                if ( c == ')' && --nCallParenDepth == 0 )
+                                    break;
                                 
-                                } // End if scoped
-
-                            } // End if $ at root (scriptvar)
+                            } // End if next/final param
                             else if ( tCode.tokenLength == 1 && tCode.tokenType == asTC_KEYWORD )
                             {
                                 // What keyword character is this?
                                 if ( c == '(' )
                                 {
-                                    // Parameter data. Add opening quote for variable name string.
-                                    if ( bNewParam )
-                                    {
-                                        strNewCode += '"';
-                                        bInShaderParam = true;
-
-                                    } // End if entering shader param
-                                    bNewParam = false;
-
                                     // Append opening paren
-                                    strNewCode += c;
+                                    strParameter += c;
 
                                     // We're one level deeper into the nested parens
                                     ++nCallParenDepth;
@@ -1254,52 +1412,22 @@ bool cgScriptPreprocessor::parseShaderBlock( TokenData & t, std::string & strScr
                                 } // End if open paren
                                 else if ( c == ')' )
                                 {
-                                    // Append the parameter closing quote if opened assuming we're
-                                    // parsing the interior of the function's root parentheses.
-                                    if ( nCallParenDepth == 1 && bInShaderParam )
-                                        strNewCode += '"';
-
                                     // Append closing paren
-                                    strNewCode += c;
+                                    strParameter += c;
 
-                                    // Break out once we reach the final closing parenthesis?
-                                    if ( --nCallParenDepth == 0 )
-                                        break;
+                                    // We've moved one level back up in the nested params.
+                                    --nCallParenDepth;
 
                                 } // End if close paren
-                                else if ( nCallParenDepth == 1 && c == ',' )
-                                {
-                                    // Append the parameter closing quote if opened.
-                                    if ( bInShaderParam )
-                                        strNewCode += '"';
-
-                                    // Append comma
-                                    strNewCode += c;
-
-                                    // Move on to next parameter
-                                    bInShaderParam = false;
-                                    bNewParam = true;
-
-                                } // End if parameter separator
                                 else
-                                    strNewCode += c;
-
+                                    strParameter += c;
+                            
                             } // End if 1 character keyword
                             else
                             {
-                                // Parameter data. Add opening quote for variable name string.
-                                if ( bNewParam )
-                                {
-                                    strNewCode += '"';
-                                    bInShaderParam = true;
-
-                                } // End if entering shader param
-                                bNewParam = false;
-
-                                // Add the token.
-                                strNewCode.append( strScript.substr( tCode.tokenStart, tCode.tokenLength ) );
-
-                            } // End if other tokens
+                                strParameter.append( strScript.substr( tCode.tokenStart, tCode.tokenLength ) );
+                            
+                            } // End if other token
 
                         } // End if !whitespace
 
@@ -1308,7 +1436,7 @@ bool cgScriptPreprocessor::parseShaderBlock( TokenData & t, std::string & strScr
                     // If we found the final closing parenthesis then we can process.
                     if ( nCallParenDepth == 0 )
                     {
-                        // Add semi-colon to script code and then re-open the shader block again.
+                        // Re-open the shader block again.
                         strNewCode.append( "+\"" );
 
                         // Append to the new interior code directly, do NOT parse characters
@@ -1320,56 +1448,6 @@ bool cgScriptPreprocessor::parseShaderBlock( TokenData & t, std::string & strScr
                 } // End if found function
 
             } // End if identifier
-            else if ( tCode.tokenLength == 1 && strScript.at( tCode.tokenStart ) == '$' )
-            {
-                // Variable references "$Identifier". Does this use scoping braces
-                // to denote more than just a single identifier (i.e. "${Identifier.Member}")
-                cgChar nc;
-                if ( tCode.position < tCode.sectionEnd && (nc = strScript.at(tCode.position)) == '{' )
-                {
-                    // Uses scoping braces. Find the closing brace.
-                    size_t nEndBrace = strScript.find_first_of( '}', tCode.position+1 );
-                    if ( nEndBrace != std::string::npos )
-                    {
-                        // Break the string and insert the variable value as a string.
-                        // Note: The value is wrapped in parenthesis to avoid any
-                        // operator precedence confusion in the final generated code.
-                        // i.e. "Value=$MyVar;" becomes "Value=(" + String(MyVar) + ");"
-                        size_t nLength = (cgInt)nEndBrace - (tCode.position+1);
-                        strNewInterior.append( ( nType != 1 && nType != 2 ) ? "(\" + (" : "\" + (" );
-                        strNewInterior.append( strScript.substr( tCode.position+1, nLength ) );
-                        strNewInterior.append( ( nType != 1 && nType != 2 ) ? ") + \")" : ") + \"" );
-                        tCode.position += nLength + 2; // +2 to skip both braces.
-
-                        // Don't parse buffer, it was added directly to new interior.
-                        strBuffer.clear();
-
-                    } // End if found
-                    
-                } // End if scoped
-                else
-                {
-                    // Find the end of the identifier.
-                    size_t nEndIdentifier = strScript.find_first_not_of( IdentifierChars, tCode.position );
-                    if ( nEndIdentifier == std::string::npos )
-                        nEndIdentifier = tCode.sectionEnd + 1;
-
-                    // Break the string and insert the variable value as a string.
-                    // Note: The value is wrapped in parenthesis to avoid any
-                    // operator precedence confusion in the final generated code.
-                    // i.e. "Value=$MyVar;" becomes "Value=(" + String(MyVar) + ");"
-                    size_t nLength = (cgInt)nEndIdentifier - tCode.position;
-                    strNewInterior.append( ( nType != 1 && nType != 2 ) ? "(\" + (" : "\" + (" );
-                    strNewInterior.append( strScript.substr( tCode.position, nLength ) );
-                    strNewInterior.append( ( nType != 1 && nType != 2 ) ? ") + \")" : ") + \"" );
-                    tCode.position += nLength;
-
-                    // Don't parse buffer, it was added directly to the new interior
-                    strBuffer.clear();
-
-                } // End if !scoped
-                
-            } // End if script identifier
 
             // If there is anything in the code append buffer, clean it up
             // before appending it to the new interior code string.
@@ -1428,7 +1506,14 @@ bool cgScriptPreprocessor::parseShaderBlock( TokenData & t, std::string & strScr
             
             } // End if data to append
 
-        } // Next token        
+        } // Next token       
+
+        // Parse for variable referenced ($)
+        TokenData tNew;
+        tNew.position     = 0;
+        tNew.sectionBegin = 0;
+        tNew.sectionEnd   = strNewInterior.size() -1;
+        parseScriptString( tNew, strNewInterior, false );
 
         // Wrap generated string with correct output variable based on type
         // i.e. __sh_code("[Interior Contents]");
@@ -1520,8 +1605,17 @@ bool cgScriptPreprocessor::processScriptSection( asIScriptModule * pModule, cons
         } // End if '#'
         else if ( mShaderScript == true && t.tokenType == asTC_VALUE && strScript[ t.tokenStart ] == '\"' )
         {
-            if ( !parseScriptString( t, strScript ) )
+            TokenData tString;
+            tString.position     = t.tokenStart;
+            tString.sectionBegin = t.tokenStart;
+            tString.sectionEnd   = t.tokenStart + (t.tokenLength - 1);
+            if ( !parseScriptString( tString, strScript, false ) )
                 return false;
+
+            // We're now positioned after the string and the script has grown
+            // appropriately.
+            t.sectionEnd += tString.position - t.position;
+            t.position    = tString.position;
 
         } // End if '"'
         else if ( mShaderScript == true && t.tokenType == asTC_KEYWORD && t.tokenLength == 1 && 

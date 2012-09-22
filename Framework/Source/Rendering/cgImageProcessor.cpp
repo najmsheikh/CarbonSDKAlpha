@@ -120,6 +120,15 @@ void cgImageProcessor::dispose( bool bDisposeBase )
     if ( mSamplers.edge )
         mSamplers.edge->scriptSafeDispose();
 
+	for ( cgUInt32 i = 0; i < 15; i++ )
+	{
+		if( mSamplers.aPoint[i])
+			mSamplers.aPoint[i]->scriptSafeDispose();
+
+		if( mSamplers.aLinear[i])
+			mSamplers.aLinear[i]->scriptSafeDispose();
+	}
+
     // Close resource handles.
     mMultiOpShaderCache.clear();
     mDepthStencilTarget.close();
@@ -255,7 +264,7 @@ bool cgImageProcessor::initialize( cgRenderDriver * pDriver )
     // Screen Mask Pass 0 (Stencil Fill Only)
     dsStates.depthEnable                  = true;
     dsStates.depthWriteEnable             = false;
-    dsStates.depthFunction                    = cgComparisonFunction::Greater;
+    dsStates.depthFunction                = cgComparisonFunction::Greater;
     dsStates.stencilEnable                = true;
     dsStates.stencilReadMask              = 1;
     dsStates.stencilWriteMask             = 1;
@@ -268,7 +277,7 @@ bool cgImageProcessor::initialize( cgRenderDriver * pDriver )
     // Screen Mask Pass 1
     dsStates.depthEnable                  = true;
     dsStates.depthWriteEnable             = false;
-    dsStates.depthFunction                    = cgComparisonFunction::LessEqual;
+    dsStates.depthFunction                = cgComparisonFunction::LessEqual;
     dsStates.stencilEnable                = true;
     dsStates.stencilReadMask              = 1;
     dsStates.stencilWriteMask             = 0;
@@ -282,7 +291,7 @@ bool cgImageProcessor::initialize( cgRenderDriver * pDriver )
     // Screen Mask Near Pass
     dsStates.depthEnable                  = true;
     dsStates.depthWriteEnable             = false;
-    dsStates.depthFunction                    = cgComparisonFunction::Greater;
+    dsStates.depthFunction                = cgComparisonFunction::Greater;
     dsStates.stencilEnable                = true;
     dsStates.stencilReadMask              = 1;
     dsStates.stencilWriteMask             = 3;
@@ -295,7 +304,7 @@ bool cgImageProcessor::initialize( cgRenderDriver * pDriver )
     // Screen Mask Far Pass
     dsStates.depthEnable                  = true;
     dsStates.depthWriteEnable             = false;
-    dsStates.depthFunction                    = cgComparisonFunction::Less;
+    dsStates.depthFunction                = cgComparisonFunction::Less;
     dsStates.stencilEnable                = true;
     dsStates.stencilReadMask              = 1;
     dsStates.stencilWriteMask             = 3;
@@ -412,11 +421,17 @@ bool cgImageProcessor::initialize( cgRenderDriver * pDriver )
     mSamplers.curr             = pResources->createSampler( _T("ImageCurr"), mProcessShaderHandle );
     mSamplers.prev             = pResources->createSampler( _T("ImagePrev"), mProcessShaderHandle );
 
+	for ( cgUInt32 i = 0; i < 15; i++ )
+	{
+		mSamplers.aPoint[i]  = pResources->createSampler( cgString::format( _T("Image%d"), i ), mProcessShaderHandle );
+		mSamplers.aLinear[i] = pResources->createSampler( cgString::format( _T("Image%d"), i ), mProcessShaderHandle );
+	}
+
     // Point sampling (clamped)
     cgSamplerStateDesc smpStates;
     smpStates.minificationFilter = cgFilterMethod::Point;
     smpStates.magnificationFilter = cgFilterMethod::Point;
-    smpStates.mipmapFilter = cgFilterMethod::None;
+    smpStates.mipmapFilter = cgFilterMethod::Point;
     smpStates.addressU = cgAddressingMode::Clamp;
     smpStates.addressV = cgAddressingMode::Clamp;
     smpStates.addressW = cgAddressingMode::Clamp;
@@ -431,6 +446,9 @@ bool cgImageProcessor::initialize( cgRenderDriver * pDriver )
     mSamplers.curr->setStates( smpStates );
     mSamplers.prev->setStates( smpStates );
 
+	for ( cgUInt32 i = 0; i < 15; i++ )
+		mSamplers.aPoint[i]->setStates( smpStates );
+
     // Linear sampling (clamped)
     smpStates.minificationFilter = cgFilterMethod::Linear;
     smpStates.magnificationFilter = cgFilterMethod::Linear;		
@@ -440,6 +458,9 @@ bool cgImageProcessor::initialize( cgRenderDriver * pDriver )
     mSamplers.verticalLinear->setStates( smpStates );
     mSamplers.horizontalLinear->setStates( smpStates );
     mSamplers.imageLinear->setStates( smpStates );
+
+	for ( cgUInt32 i = 0; i < 15; i++ )
+		mSamplers.aLinear[i]->setStates( smpStates );
 
     // Linear sampling (wrapped)
     smpStates.addressU = cgAddressingMode::Wrap;
@@ -1778,4 +1799,45 @@ void cgImageProcessor::applyRasterizerStates( bool enable )
 void cgImageProcessor::applyBlendStates( bool enable )
 {
     mApplyBlendState = enable;
+}
+
+
+
+
+//-----------------------------------------------------------------------------
+// Name: compositeLighting()
+/// <summary>
+/// Composites precomputed and dynamic deferred lighting.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgImageProcessor::compositeLighting( const cgTextureHandle & hDiffuseReflectance, const cgTextureHandle & hSpecularReflectance, 
+								          const cgTextureHandle & hDiffuseLighting,    const cgTextureHandle & hSpecularLighting, 
+									      const cgTextureHandle & hPrecomputedLighting, 
+									      const cgRenderTargetHandle & hDest, bool specularMaterialColor, bool specularLightColor, bool hdrLighting, bool compressOutput )
+{
+	// Set necessary states
+	mDriver->setRasterizerState( cgRasterizerStateHandle::Null );
+	mDriver->setBlendState( mDefaultRGBABlendState );
+	mDriver->setDepthStencilState( mGreaterDepthState );
+
+	// Set core shader constants
+	setConstants( hDiffuseReflectance, cgImageOperation::None, mDefaultUserColor );
+
+	// Bind textures and set sampler state
+	mSamplers.aPoint[0]->apply( hDiffuseReflectance );
+	mSamplers.aPoint[2]->apply( hDiffuseLighting );
+	mSamplers.aPoint[4]->apply( hPrecomputedLighting );
+
+	if ( specularMaterialColor )
+		mSamplers.aPoint[1]->apply( hSpecularReflectance );
+	if ( specularLightColor )
+		mSamplers.aPoint[3]->apply( hSpecularLighting );
+
+	// Select shaders
+	if ( !mProcessShader->selectVertexShader( _T("transform"), false ) ||
+		 !mProcessShader->selectPixelShader( _T("compositeLighting"), specularMaterialColor, specularLightColor, hdrLighting, compressOutput ) )
+		return;
+
+	// Draw a screen quad
+	drawClipQuad( hDest );
 }

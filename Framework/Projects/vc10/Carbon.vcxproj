@@ -1363,6 +1363,7 @@
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\Processors.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\RenderControl.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\RenderDriver.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\RenderingCapabilities.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\RenderView.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\ResampleChain.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\Sampler.h" />

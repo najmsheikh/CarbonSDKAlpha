@@ -311,12 +311,11 @@ bool cgFixedAxisJointObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssue
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgFixedAxisJointObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgFixedAxisJointObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
-    cgShadedVertex  Points[30];
-    cgUInt32        Indices[35];
-    bool            bCull;
-    cgUInt32        i;
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
 
     // Get access to required systems.
     cgRenderDriver  * pDriver = cgRenderDriver::getInstance();
@@ -407,7 +406,8 @@ void cgFixedAxisJointObject::sandboxRender( cgCameraNode * pCamera, cgVisibility
 
     // Set the color of each of the points first of all. This saves
     // us from having to set them during object construction.
-    for ( i = 0; i < 30; ++i )
+    cgShadedVertex Points[30];
+    for ( cgInt i = 0; i < 30; ++i )
         Points[i].color = nColor;
 
     // Compute vertices for the tip of the axis arrow
@@ -420,11 +420,13 @@ void cgFixedAxisJointObject::sandboxRender( cgCameraNode * pCamera, cgVisibility
     
     // Compute indices that will allow us to draw the arrow tip using a 
     // tri-list (wireframe) so that we can easily take advantage of back-face culling.
+    cgUInt32 Indices[35];
     Indices[0]  = 0; Indices[1]  = 1; Indices[2]  = 2;
     Indices[3]  = 0; Indices[4]  = 2; Indices[5]  = 3;
     Indices[6]  = 0; Indices[7]  = 3; Indices[8]  = 4;
     Indices[9]  = 0; Indices[10] = 4; Indices[11] = 1;
 
+    bool bCull, bWireframe = (flags & cgSandboxRenderFlags::Wireframe);
     pDriver->setVertexFormat( cgVertexFormat::formatFromDeclarator( cgShadedVertex::Declarator ) );
     pShader->setBool( _T("wireViewport"), bWireframe );
     pDriver->setWorldTransform( ObjectTransform );
@@ -562,7 +564,7 @@ void cgFixedAxisJointObject::sandboxRender( cgCameraNode * pCamera, cgVisibility
             pDriver->drawIndexedPrimitiveUP( cgPrimitiveType::LineList, 0, 16, nCount / 2, Indices, cgBufferFormat::Index32, Points );
 
             // Generate line strip circle to show the axis of rotation.
-            for ( i = 0; i < 30; ++i )
+            for ( cgInt i = 0; i < 30; ++i )
             {
                 // Build vertex
                 cgVector3 vPoint;
@@ -590,7 +592,7 @@ void cgFixedAxisJointObject::sandboxRender( cgCameraNode * pCamera, cgVisibility
     } // End if begun technique
 
     // Call base class implementation last.
-    cgJointObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+    cgJointObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
 }
 
 //-----------------------------------------------------------------------------

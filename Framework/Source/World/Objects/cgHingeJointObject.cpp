@@ -309,8 +309,12 @@ bool cgHingeJointObject::pick( cgCameraNode * camera, cgObjectNode * issuer, con
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgHingeJointObject::sandboxRender( cgCameraNode * camera, cgVisibilitySet * visibilityData, bool wireframe, const cgPlane & gridPlane, cgObjectNode * issuer )
+void cgHingeJointObject::sandboxRender( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer )
 {
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
+
     // Get access to required systems.
     cgRenderDriver * driver = mWorld->getRenderDriver();
 
@@ -326,7 +330,7 @@ void cgHingeJointObject::sandboxRender( cgCameraNode * camera, cgVisibilitySet *
     cgMesh * mesh = mSandboxMesh.getResource(true);
     if ( !mesh || !mesh->isLoaded() )
     {
-        cgJointObject::sandboxRender( camera, visibilityData, wireframe, gridPlane, issuer );
+        cgJointObject::sandboxRender( flags, camera, visibilityData, gridPlane, issuer );
         return;
 
     } // End if no mesh
@@ -417,7 +421,7 @@ void cgHingeJointObject::sandboxRender( cgCameraNode * camera, cgVisibilitySet *
     } // End if selected
 
     // Call base class implementation last.
-    cgJointObject::sandboxRender( camera, visibilityData, wireframe, gridPlane, issuer );
+    cgJointObject::sandboxRender( flags, camera, visibilityData, gridPlane, issuer );
 }
 
 //-----------------------------------------------------------------------------

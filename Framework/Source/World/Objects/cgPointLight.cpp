@@ -563,11 +563,11 @@ bool cgPointLightObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, c
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgPointLightObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgPointLightObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
-    cgShadedVertex  Points[30];
-    cgUInt32        Indices[31];
-    cgUInt32        i, j;
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
     
     // Get access to required systems.
     cgRenderDriver  * pDriver = cgRenderDriver::getInstance();
@@ -581,7 +581,8 @@ void cgPointLightObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet 
     
     // Set the color of each of the points first of all. This saves
     // us from having to set them during object construction.
-    for ( i = 0; i < 6; ++i )
+    cgShadedVertex Points[30];
+    for ( cgInt i = 0; i < 6; ++i )
         Points[i].color = nColor;
 
     // Compute vertices for the light source representation (central diamond)
@@ -594,6 +595,7 @@ void cgPointLightObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet 
     
     // Compute indices that will allow us to draw the diamond using a tri-list (wireframe)
     // so that we can easily take advantage of back-face culling.
+    cgUInt32 Indices[31];
     Indices[0]  = 0; Indices[1]  = 1; Indices[2]  = 2;
     Indices[3]  = 0; Indices[4]  = 2; Indices[5]  = 3;
     Indices[6]  = 0; Indices[7]  = 3; Indices[8]  = 4;
@@ -604,6 +606,7 @@ void cgPointLightObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet 
     Indices[21] = 5; Indices[22] = 1; Indices[23] = 4;
     
     // Begin rendering
+    bool bWireframe = (flags & cgSandboxRenderFlags::Wireframe);
     pDriver->setVertexFormat( cgVertexFormat::formatFromDeclarator( cgShadedVertex::Declarator ) );
     pShader->setBool( _T("wireViewport"), bWireframe );
     pDriver->setWorldTransform( pIssuer->getWorldTransform( false ) );
@@ -626,7 +629,7 @@ void cgPointLightObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet 
 
                 // A circle for each axis
                 cgVector3 vPoint, vAxis, vOrthoAxis1, vOrthoAxis2, vPos = pIssuer->getPosition( false );
-                for ( i = 0; i < 3; ++i )
+                for ( cgInt i = 0; i < 3; ++i )
                 {
                     // Retrieve the three axis vectors necessary for constructing the
                     // circle representation for this axis.
@@ -656,7 +659,7 @@ void cgPointLightObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet 
                         continue;
                     
                     // Generate line strip circle
-                    for ( j = 0; j < 30; ++j )
+                    for ( cgInt j = 0; j < 30; ++j )
                     {
                         // Build vertex
                         vPoint  = vPos;
@@ -707,7 +710,7 @@ void cgPointLightObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet 
     } // End if begun technique
 
     // Call base class implementation last.
-    cgLightObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+    cgLightObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
 }
 
 //-----------------------------------------------------------------------------

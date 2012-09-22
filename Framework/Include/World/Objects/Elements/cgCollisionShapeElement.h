@@ -86,7 +86,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
-    virtual void                sandboxRender           ( cgCameraNode * camera, cgVisibilitySet * visibilityData, bool wireframe, const cgPlane & gridPlane, cgObjectNode * issuer );
+    virtual void                sandboxRender           ( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer );
     virtual bool                pick                    ( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut );
     virtual void                setTransform            ( const cgTransform & transform );
     virtual void                autoFit                 ( AutoFitType type ) = 0;

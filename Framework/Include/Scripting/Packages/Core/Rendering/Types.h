@@ -271,6 +271,7 @@ namespace Types
             BINDSUCCESS( engine->registerEnumValue( typeName, "NormalizedDistance"         , cgSystemState::NormalizedDistance ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "SurfaceNormals"             , cgSystemState::SurfaceNormals ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "PackedDepth"                , cgSystemState::PackedDepth ) );
+			BINDSUCCESS( engine->registerEnumValue( typeName, "DepthStencilReads"          , cgSystemState::DepthStencilReads ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "MaximumBlendIndex"          , cgSystemState::MaximumBlendIndex ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "DepthType"                  , cgSystemState::DepthType ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "SurfaceNormalType"          , cgSystemState::SurfaceNormalType ) );

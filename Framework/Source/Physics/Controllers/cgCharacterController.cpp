@@ -176,6 +176,7 @@ cgCharacterController::cgCharacterController( cgPhysicsWorld * world ) : cgPhysi
     mJumpImpulse          = 4.0f;          // 4.0m/s
     mAirborneWalkDamping  = 0.3f;
     mRampWalkDamping      = 0.2f;
+    mRampJumpDamping      = 1.0f;           // Allow jumping
     mCrouchHeightScale    = 0.5f;
     mProneHeightScale     = 0.2f;
     
@@ -452,7 +453,7 @@ void cgCharacterController::preStep( cgFloat timeDelta )
     {
         case OnFloor:
         {
-            // Was a jumpStrength requested?
+            // Was a jump requested?
             cgFloat jumpStrength = mParentObject->getInputChannelState( _T("Jump"), 0.0f );
             if ( jumpStrength > 0 )
             {
@@ -472,9 +473,28 @@ void cgCharacterController::preStep( cgFloat timeDelta )
         } // End case OnFloor
         
         case OnRamp:
+        {
+
             // Only a portion of the requested motion will be applied when standing on a ramp?
             walkDirection *= mRampWalkDamping;
+
+            // Was a jump requested?
+            cgFloat jumpStrength = mParentObject->getInputChannelState( _T("Jump"), 0.0f ) * mRampJumpDamping;
+            if ( jumpStrength > 0 )
+            {
+                // Apply impulse to vertical velocity
+                verticalVelocity += mUpAxis * jumpStrength * mJumpImpulse;
+
+                // Mark as airborne.
+                mState = Airborne;
+                mAirborneTime = 1.0f;
+
+                // Apply airborne damping.
+                walkDirection *= mAirborneWalkDamping;
+
+            } // End if jumping
             break;
+        }
 
         case Airborne:
             // Only a portion of the requested motion will be applied when airborne?
@@ -1412,6 +1432,19 @@ void cgCharacterController::setRampWalkDamping( cgFloat value )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : setRampJumpDamping ()
+/// <summary>
+/// Set the scaling factor that will be applied to the jumping forces when the
+/// character is on an 'illegal' ramp. This allows the application to configure
+/// the percentage of force that will be allowed whilst sliding for example.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCharacterController::setRampJumpDamping( cgFloat value )
+{
+    mRampJumpDamping = value;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getKinematicCushion ()
 /// <summary>
 /// Get the size of the 'cushion' that surrounds the character in order to
@@ -1593,6 +1626,19 @@ cgFloat cgCharacterController::getAirborneWalkDamping( ) const
 cgFloat cgCharacterController::getRampWalkDamping( ) const
 {
     return mRampWalkDamping;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getRampJumpDamping ()
+/// <summary>
+/// Get the scaling factor that will be applied to the jumping forces when the
+/// character is on an 'illegal' ramp. This allows the application to configure
+/// the percentage of force that will be allowed whilst sliding for example.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloat cgCharacterController::getRampJumpDamping( ) const
+{
+    return mRampJumpDamping;
 }
 
 //-----------------------------------------------------------------------------

@@ -314,7 +314,7 @@ __shadercall float pcfHalton( float2 shadowMapUV, float pixelDepth, float radius
 		adjustedDistance = pixelDepth - haltonSamples[$i].z * _shadowBias.x;
 		
 		// Run the depth comparison		
-		shadow = shadowMapCompare( coords, adjustedDistance, weights, $params, ${!params.manual2x2} );
+		shadow = shadowMapCompare( coords, adjustedDistance, weights, $params, $(!params.manual2x2) );
 		
 		// Accumulate result
 		lit += shadow;
@@ -418,9 +418,9 @@ __shadercall float pcss( float2 shadowMapUV, float pixelDepth, float linearDepth
 	else
 	{
 		if ( params.linearDepth )
-			<?computeAverageBlocker( avgDepth, numBlockers, shadowMapUV, linearDepth, ${params.secondaryTaps} );?>
+			<?computeAverageBlocker( avgDepth, numBlockers, shadowMapUV, linearDepth, $(params.secondaryTaps) );?>
 		else
-			<?computeAverageBlocker( avgDepth, numBlockers, shadowMapUV, pixelDepth, ${params.secondaryTaps} );?>
+			<?computeAverageBlocker( avgDepth, numBlockers, shadowMapUV, pixelDepth, $(params.secondaryTaps) );?>
 	
 		float nss = params.secondaryTaps;
 		<?
@@ -499,7 +499,7 @@ __shadercall float pcss( float2 shadowMapUV, float pixelDepth, float linearDepth
 		adjustedDistance = pixelDepth - haltonSamples[$tapIndex].z * 0.0000f; //_shadowBias.x <- Maximum bias
 		
 		// Run the depth comparison		
-		shadow = shadowMapCompare( coords, adjustedDistance, weights, $params, ${!params.manual2x2} );	
+		shadow = shadowMapCompare( coords, adjustedDistance, weights, $params, $(!params.manual2x2) );	
 		
 		// Accumulate result
 		lit += shadow;
@@ -540,7 +540,7 @@ __shadercall float pcss( float2 shadowMapUV, float pixelDepth, float linearDepth
 			adjustedDistance = pixelDepth - haltonSamples[$tapIndex].z * 0.0000f; //_shadowBias.x <- Maximum bias
 			
 			// Run the depth comparison		
-			shadow = shadowMapCompare( coords, adjustedDistance, weights, $params, ${!params.manual2x2} );	
+			shadow = shadowMapCompare( coords, adjustedDistance, weights, $params, $(!params.manual2x2) );	
 			
 			// Accumulate result
 			lit += shadow;
@@ -717,7 +717,7 @@ __shadercall void computeShadow( inout LightingData lighting, SurfaceData surfac
 				lighting.shadow = shadowMapCompare( shadowMapCoords.xy, shadowMapCoords.z - 0.0000f, float4(0,0,0,0), $params, $false );	
 
 				// Apply attenuation 
-				attenuateShadow( lighting.shadow, surface.linearZ, ${params.lightType == LightType::Directional} );
+				attenuateShadow( lighting.shadow, surface.linearZ, $(params.lightType == LightType::Directional) );
 
 				// Exit
 				return;
@@ -729,7 +729,7 @@ __shadercall void computeShadow( inout LightingData lighting, SurfaceData surfac
 		
 		// Run the full algorithm
 		if ( params.PCF )
-			<?lighting.shadow = pcfHalton( shadowMapCoords.xy, shadowMapCoords.z, _shadowRadii.y, $params.primaryTaps, $params );?>
+			<?lighting.shadow = pcfHalton( shadowMapCoords.xy, shadowMapCoords.z, _shadowRadii.y, $(params.primaryTaps), $params );?>
 		else if ( params.PCSS )
 			<?lighting.shadow = pcss( shadowMapCoords.xy, shadowMapCoords.z, linearDepth, surface.screenCoords, $params );?>
 		else if ( params.VSM )
@@ -740,7 +740,7 @@ __shadercall void computeShadow( inout LightingData lighting, SurfaceData surfac
 			<?lighting.shadow = evsm( shadowMapCoords.xy, linearDepth, $params );?>
 		
 		// Apply attenuation
-		<?attenuateShadow( lighting.shadow, surface.linearZ, ${params.lightType == LightType::Directional} );?>
+		<?attenuateShadow( lighting.shadow, surface.linearZ, $(params.lightType == LightType::Directional) );?>
 
                 
     } // End if apply shadows

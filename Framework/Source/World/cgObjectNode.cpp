@@ -732,6 +732,10 @@ bool cgObjectNode::setName( const cgString & name )
 
         } // End if has existing name
 
+        // Notify scene listeners.
+        if ( mParentScene )
+            mParentScene->onNodeNameChange( &cgNodeUpdatedEventArgs( mParentScene, this ) );
+
     } // End if allow name change
 
     // No error occurred.
@@ -2574,7 +2578,7 @@ bool cgObjectNode::pick( cgCameraNode * camera, const cgSize & viewportSize, con
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgObjectNode::sandboxRender( cgCameraNode * camera, cgVisibilitySet * visibilityData, bool wireframe, const cgPlane & gridPlane )
+bool cgObjectNode::sandboxRender( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane )
 {
     // Validate requirements
     if ( !mParentScene )
@@ -2586,7 +2590,7 @@ bool cgObjectNode::sandboxRender( cgCameraNode * camera, cgVisibilitySet * visib
 
     // Pass on this message to any referenced object.
     if ( mReferencedObject )
-        mReferencedObject->sandboxRender( camera, visibilityData, wireframe, gridPlane, this );
+        mReferencedObject->sandboxRender( flags, camera, visibilityData, gridPlane, this );
 
     // Derived class should draw this object
     return true;
@@ -3506,6 +3510,7 @@ bool cgObjectNode::setParent( cgObjectNode * parent, bool constructing )
         parent->attachChild( this );
     
     // We're now attached / detached as required.
+    cgObjectNode * oldParent = mParentNode;
     mParentNode = parent;
 
     // Update relative transformation matrix as required.
@@ -3552,6 +3557,10 @@ bool cgObjectNode::setParent( cgObjectNode * parent, bool constructing )
                     childNode->onParentLevelChanged();
 
             } // Next child node
+
+            // Send notifications to scene listeners too.
+            if ( mParentScene )
+                mParentScene->onNodeParentChange( &cgNodeParentChangeEventArgs( mParentScene, this, oldParent, mParentNode ) );
         
         } // End if notify.
 

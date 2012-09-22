@@ -457,8 +457,12 @@ void cgCollisionShapeElement::applyElementRescale( cgFloat fScale )
 /// element editing for this type is active.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgCollisionShapeElement::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgCollisionShapeElement::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
+    // All collision shapes are draw pre-clear
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
+
     // Get access to required systems.
     cgRenderDriver * pDriver = mWorld->getRenderDriver();
 
@@ -474,7 +478,7 @@ void cgCollisionShapeElement::sandboxRender( cgCameraNode * pCamera, cgVisibilit
     cgMesh * pMesh = mSandboxMesh.getResource(true);
     if ( !pMesh || !pMesh->isLoaded() )
     {
-        cgCollisionShapeElement::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+        cgObjectSubElement::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
         return;
     
     } // End if no mesh

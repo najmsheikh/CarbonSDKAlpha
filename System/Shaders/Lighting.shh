@@ -132,10 +132,10 @@ LightingParameters initializeLightingSystem( int lightType, int lightFlags, int 
 	params.useSSAO               = testFlagAny(lightFlags, LightFlags::UseSSAO); 
 	params.trilighting           = testFlagAny(lightFlags, LightFlags::Trilighting);
 	params.approximateRoughness  = (shadingQuality >= ShadingQuality::HighQuality) && USE_ORENNAYER;
-    params.normalizeSpecular     = (shadingQuality >= ShadingQuality::HighQuality && SPECULAR_NORMALIZE_SCALE > 0.0);
-	params.visibilityTerm        = (shadingQuality >= ShadingQuality::HighQuality && MAX_MICROFACET_VISIBILITY > 0.0);
-	params.fresnelTerm           = (shadingQuality >= ShadingQuality::HighQuality) && !testFlagAll(renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting));
-	params.lightTransmission     = (shadingQuality >= ShadingQuality::HighQuality);
+    params.normalizeSpecular     = (shadingQuality >= ShadingQuality::MediumQuality && SPECULAR_NORMALIZE_SCALE > 0.0);
+	params.visibilityTerm        = (shadingQuality >= ShadingQuality::MediumQuality && MAX_MICROFACET_VISIBILITY > 0.0);
+	params.fresnelTerm           = (shadingQuality >= ShadingQuality::MediumQuality) && !testFlagAll(renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting));
+	params.lightTransmission     = (shadingQuality >= ShadingQuality::MediumQuality);
 	params.performClipping       = !testFlagAny(renderFlags, RenderFlags::DeferredRendering);
 
     // Forcibly disable attenuation masks for IBL and projector lights (they should be built into the color texture) 
@@ -224,8 +224,10 @@ void initLightingStructures( bool dynamic, bool precomputed )
 		float3 viewDirection;           // Pos-To-Cam Vector (Normalized)
 		float  distanceToCamera;        // Distance from point to camera 
 		float  linearZ;                 // Camera space Z coordinate for point
-		float3 diffuse;                 // Diffuse reflectance
-		float3 specular;                // Specular reflectance
+		float3 diffuse;                 // Diffuse reflectance  (linear)
+		float3 specular;                // Specular reflectance (linear)
+		float3 diffuseSRGB;             // Diffuse reflectance  (sRGB)
+		float3 specularSRGB;            // Specular reflectance (sRGB)
 		half   ambientOcclusion;        // Ambient occlusion
 	};
 

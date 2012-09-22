@@ -169,4 +169,17 @@ bool cgDX11RenderingCapabilities::supportsShaderModel( cgShaderModel::Base Model
     return false;
 }
 
+//-----------------------------------------------------------------------------
+//  Name : supportsDepthStencilReading () (Virtual)
+/// <summary>
+/// Determine if the hardware supports depth-stencil buffer reading. For DX11,
+/// there is always support for depth-stencil reading through a proper view.
+/// For now, however, we are requiring INTZ format support only. 
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgDX11RenderingCapabilities::supportsDepthStencilReading ( ) const
+{
+	return mBufferFormats->isFormatSupported( cgBufferType::DepthStencil, cgBufferFormat::INTZ, cgBufferFormatCaps::CanSample );
+}
+
 #endif // CGE_DX11_RENDER_SUPPORT

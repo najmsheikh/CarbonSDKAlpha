@@ -6486,6 +6486,21 @@ const cgMesh::BonePaletteArray & cgMesh::getBonePalettes( ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getSubset ()
+/// <summary>
+/// Retrieve information about the subset of the mesh that is associated with
+/// the specified material and data group identifier.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgMesh::MeshSubset * cgMesh::getSubset( const cgMaterialHandle & material, cgUInt32 dataGroupId /* = 0 */ ) const
+{
+    SubsetKeyMap::const_iterator itSubset = mSubsetLookup.find( MeshSubsetKey(material, dataGroupId) );
+    if ( itSubset == mSubsetLookup.end() )
+        return CG_NULL;
+    return itSubset->second;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : setDefaultColor ()
 /// <summary>
 /// Set the 'default' color to use whenever the default material is invoked

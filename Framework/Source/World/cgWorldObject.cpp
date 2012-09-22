@@ -250,7 +250,7 @@ bool cgWorldObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const 
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgWorldObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgWorldObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
     // Iterate through active sub-elements so that they can render their representation.
     // We skip nodes that are currently merged as closed groups since they we do not
@@ -265,7 +265,7 @@ void cgWorldObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVi
             // Allow the sub-elements to render.
             cgObjectSubElementArray & aSubElements = itCategory->second;
             for ( size_t i = 0; i < aSubElements.size(); ++i )
-                aSubElements[i]->sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+                aSubElements[i]->sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
 
         } // End if valid category
     

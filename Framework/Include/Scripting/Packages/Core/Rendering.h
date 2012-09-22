@@ -11,6 +11,7 @@
 #include "Rendering/Sampler.h"
 #include "Rendering/ImageProcessor.h"
 #include "Rendering/RenderControl.h"
+#include "Rendering/RenderingCapabilities.h"
 #include "Rendering/ObjectRenderContext.h"
 #include "Rendering/ObjectRenderQueue.h"
 #include "Rendering/Processors.h"
@@ -35,6 +36,7 @@ namespace Rendering
             DECLARE_PACKAGE_CHILD( ObjectRenderContext )
             DECLARE_PACKAGE_CHILD( ObjectRenderQueue )
             DECLARE_PACKAGE_CHILD( Processors )
+			DECLARE_PACKAGE_CHILD( RenderingCapabilities )
         END_SCRIPT_PACKAGE( )
 
         // Member bindings

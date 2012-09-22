@@ -69,12 +69,13 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
-    virtual bool                    enumerate               ( ) = 0;
-    virtual cgUInt32                getMaxBlendTransforms   ( ) const = 0;
-    virtual cgUInt32                getMaxAnisotropySamples ( ) const = 0;
-    virtual bool                    supportsFastStencilFill ( ) const = 0;
-    virtual bool                    supportsNonPow2Textures ( ) const = 0;
-    virtual bool                    supportsShaderModel     ( cgShaderModel::Base model ) const = 0;
+    virtual bool                    enumerate					( ) = 0;
+    virtual cgUInt32                getMaxBlendTransforms		( ) const = 0;
+    virtual cgUInt32                getMaxAnisotropySamples		( ) const = 0;
+    virtual bool                    supportsFastStencilFill		( ) const = 0;
+    virtual bool                    supportsNonPow2Textures		( ) const = 0;
+	virtual bool                    supportsDepthStencilReading ( ) const = 0;
+    virtual bool                    supportsShaderModel         ( cgShaderModel::Base model ) const = 0;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)

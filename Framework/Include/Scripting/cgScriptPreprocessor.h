@@ -103,7 +103,7 @@ protected:
     
     // Script code parsers
     bool    parsePreprocessorDirective  ( TokenData & t, std::string & script, std::stack<bool> & conditionStack, asIScriptModule * module, const cgString & sectionName, cgScript::SourceFileArray & sourceFiles );
-    bool    parseScriptString           ( TokenData & t, std::string & script );
+    bool    parseScriptString           ( TokenData & t, std::string & script, bool shaderParameter, bool addParentheses = false );
     bool    parseShaderBlock            ( TokenData & t, std::string & script, const std::string & parentNamespace, bool shaderCallFunction );
     bool    parseShaderCallDeclaration  ( TokenData & t, std::string & script, cgShaderCallFunctionDesc & description, const std::string & parentNamespace );
 

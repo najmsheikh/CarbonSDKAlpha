@@ -159,7 +159,7 @@ bool cgObjectSubElement::queryReferenceType( const cgUID & type ) const
 /// element editing for this type is active.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgObjectSubElement::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgObjectSubElement::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
     // Nothing in base implementation.
 }

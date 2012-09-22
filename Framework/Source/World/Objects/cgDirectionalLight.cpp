@@ -478,12 +478,11 @@ bool cgDirectionalLightObject::pick( cgCameraNode * pCamera, cgObjectNode * pIss
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgDirectionalLightObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgDirectionalLightObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
-    cgShadedVertex  Points[16];
-    cgUInt32        Indices[35];
-    bool            bCull;
-    cgUInt32        i;
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
 
     // Get access to required systems.
     cgRenderDriver  * pDriver = cgRenderDriver::getInstance();
@@ -504,7 +503,8 @@ void cgDirectionalLightObject::sandboxRender( cgCameraNode * pCamera, cgVisibili
 
     // Set the color of each of the points first of all. This saves
     // us from having to set them during object construction.
-    for ( i = 0; i < 16; ++i )
+    cgShadedVertex Points[16];
+    for ( cgInt i = 0; i < 16; ++i )
         Points[i].color = nColor;
 
     // Compute vertices for the tip of the directional light source arrow
@@ -517,11 +517,13 @@ void cgDirectionalLightObject::sandboxRender( cgCameraNode * pCamera, cgVisibili
     
     // Compute indices that will allow us to draw the arrow tip using a 
     // tri-list (wireframe) so that we can easily take advantage of back-face culling.
+    cgUInt32 Indices[35];
     Indices[0]  = 0; Indices[1]  = 1; Indices[2]  = 2;
     Indices[3]  = 0; Indices[4]  = 2; Indices[5]  = 3;
     Indices[6]  = 0; Indices[7]  = 3; Indices[8]  = 4;
     Indices[9]  = 0; Indices[10] = 4; Indices[11] = 1;
 
+    bool bCull, bWireframe = (flags & cgSandboxRenderFlags::Wireframe);
     pDriver->setVertexFormat( cgVertexFormat::formatFromDeclarator( cgShadedVertex::Declarator ) );
     pShader->setBool( _T("wireViewport"), bWireframe );
     pDriver->setWorldTransform( ObjectTransform );
@@ -678,7 +680,7 @@ void cgDirectionalLightObject::sandboxRender( cgCameraNode * pCamera, cgVisibili
     } // End if begun technique
 
     // Call base class implementation last.
-    cgLightObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+    cgLightObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
 }
 
 //-----------------------------------------------------------------------------

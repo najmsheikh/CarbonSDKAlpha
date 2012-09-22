@@ -724,13 +724,17 @@ bool cgMeshObject::renderSubset( cgCameraNode * pCamera, cgVisibilitySet * pVisD
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgMeshObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgMeshObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
+
     // Sandbox render is only necessary in wireframe mode.
     // Standard scene rendering behavior applies in other modes.
-    if ( !bWireframe )
+    if ( !(flags & cgSandboxRenderFlags::Wireframe) )
     {
-        cgWorldObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+        cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
         return;
     
     } // End if !wireframe
@@ -743,7 +747,7 @@ void cgMeshObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVis
     cgMesh * pMesh = mMesh.getResource(true);
     if ( pMesh == CG_NULL || pMesh->isLoaded() == false )
     {
-        cgWorldObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+        cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
         return;
     
     } // End if no mesh
@@ -766,7 +770,7 @@ void cgMeshObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVis
     } // End if success
 
     // Call base class implementation last.
-    cgWorldObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+    cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
 }
 
 //-----------------------------------------------------------------------------

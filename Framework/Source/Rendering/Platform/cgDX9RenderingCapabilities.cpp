@@ -194,4 +194,17 @@ bool cgDX9RenderingCapabilities::supportsShaderModel( cgShaderModel::Base Model 
     return false;
 }
 
+//-----------------------------------------------------------------------------
+//  Name : supportsDepthStencilReading () (Virtual)
+/// <summary>
+/// Determine if the hardware supports depth-stencil buffer reading. For DX9,
+/// this will only be true if the hardware supports the INTZ format.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgDX9RenderingCapabilities::supportsDepthStencilReading ( ) const
+{
+	return mBufferFormats->isFormatSupported( cgBufferType::DepthStencil, cgBufferFormat::INTZ, cgBufferFormatCaps::CanSample );
+}
+
+
 #endif // CGE_DX9_RENDER_SUPPORT

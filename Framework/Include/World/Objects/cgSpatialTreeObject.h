@@ -62,7 +62,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldObject)
     //-------------------------------------------------------------------------
-    virtual void                    sandboxRender       ( cgCameraNode * camera, cgVisibilitySet * visibilityData, bool wireframe, const cgPlane & gridPlane, cgObjectNode * issuer );
+    virtual void                    sandboxRender       ( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer );
     virtual bool                    render              ( cgCameraNode * camera, cgVisibilitySet * visibilityData, cgObjectNode * issuer );
     virtual bool                    renderSubset        ( cgCameraNode * camera, cgVisibilitySet * visibilityData, cgObjectNode * issuer, const cgMaterialHandle & hMaterial );
     virtual cgBoundingBox           getLocalBoundingBox ( );

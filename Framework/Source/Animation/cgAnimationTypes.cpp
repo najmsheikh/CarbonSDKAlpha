@@ -1379,6 +1379,7 @@ void cgEulerAnglesTargetController::addLinearKey( cgInt32 frame, const cgQuatern
         if ( !mCurves[i].isEmpty() )
         {
             const cgBezierSpline2::SplinePoint & pt = mCurves[i].data.getSplinePoints().back();
+            // ToDo: Always Y???
             while ( fabsf(e[i] - pt.point.y) > CGE_PI )
                 e[i] = (pt.point.y < e[i]) ? (e[i] - CGE_TWO_PI) : (e[i] + CGE_TWO_PI);
 

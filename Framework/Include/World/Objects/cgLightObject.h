@@ -164,7 +164,7 @@ public:
     // Public Virtual Methods (Overrides cgWorldObject)
     //-------------------------------------------------------------------------
     virtual bool                isRenderable                ( ) const;
-    virtual void                sandboxRender               ( cgCameraNode * camera, cgVisibilitySet * visibilityData, bool wireframe, const cgPlane & gridPlane, cgObjectNode * issuer );
+    virtual void                sandboxRender               ( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer );
     virtual void                applyObjectRescale          ( cgFloat scale );
     
     //-------------------------------------------------------------------------

@@ -311,8 +311,12 @@ void cgGroupObject::prepareQueries()
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgGroupObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgGroupObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
+
     // Get access to required systems.
     cgRenderDriver * pDriver = mWorld->getRenderDriver();
 
@@ -321,7 +325,7 @@ void cgGroupObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVi
         pDriver->drawOOBB( pIssuer->getLocalBoundingBox( ), 2.5f, pIssuer->getWorldTransform(false), (pIssuer->isSelected()) ? 0xFFFFFFFF : 0xFFFF7FB2 );
 
     // Call base class implementation last.
-    cgWorldObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+    cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
 }
 
 //-----------------------------------------------------------------------------

@@ -295,6 +295,7 @@ public:
     cgMaterialHandleArray & getMaterials        ( );
     cgSkinBindData        * getSkinBindData     ( );
     const BonePaletteArray& getBonePalettes     ( ) const;
+    const MeshSubset      * getSubset           ( const cgMaterialHandle & material, cgUInt32 dataGroupId = 0 ) const;
 
     //-------------------------------------------------------------------------
     // Public Inline Methods

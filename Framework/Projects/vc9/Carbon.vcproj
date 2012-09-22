@@ -4870,6 +4870,10 @@
 								>
 							</File>
 							<File
+								RelativePath="..\..\Include\Scripting\Packages\Core\Rendering\RenderingCapabilities.h"
+								>
+							</File>
+							<File
 								RelativePath="..\..\Include\Scripting\Packages\Core\Rendering\RenderView.h"
 								>
 							</File>

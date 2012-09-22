@@ -659,8 +659,13 @@ bool cgHemisphereLightObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssu
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgHemisphereLightObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgHemisphereLightObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
+
+    // Local variables
     cgShadedVertex  Points[30];
     cgUInt32        Indices[35];
     cgTransform     ObjectTransform, InverseObjectTransform;
@@ -676,6 +681,7 @@ void cgHemisphereLightObject::sandboxRender( cgCameraNode * pCamera, cgVisibilit
     bool        bOrtho      = (pCamera->getProjectionMode() == cgProjectionMode::Orthographic);
     
     // Begin rendering
+    bool bWireframe = (flags & cgSandboxRenderFlags::Wireframe);
     pDriver->setVertexFormat( cgVertexFormat::formatFromDeclarator( cgShadedVertex::Declarator ) );
     pShader->setBool( _T("wireViewport"), bWireframe );
     if ( pShader->beginTechnique( _T("drawWireframeNode") ) )
@@ -1010,7 +1016,7 @@ void cgHemisphereLightObject::sandboxRender( cgCameraNode * pCamera, cgVisibilit
     } // End if begun technique
 
     // Call base class implementation last.
-    cgLightObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+    cgLightObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
 }
 
 //-----------------------------------------------------------------------------

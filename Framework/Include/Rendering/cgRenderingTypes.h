@@ -70,6 +70,7 @@ namespace cgSystemState
         NormalizedDistance,
         SurfaceNormals,
         PackedDepth,
+		DepthStencilReads,
         ColorWrites,
         CullMode,
 

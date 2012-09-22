@@ -100,11 +100,7 @@ class ImageProcessingShader : ISurfaceShader
         Sampler2D sHorizontal  : register(s2);
         Sampler2D sImageCurr   : register(s0);
         Sampler2D sImagePrev   : register(s1);
-        Sampler2D sImage0      : register(s0);
-        Sampler2D sImage1      : register(s1);
-        Sampler2D sImage2      : register(s2);
-        Sampler2D sImage3      : register(s3);
-        
+
 		// Post-processing samplers
         Sampler2D sVignette    : register(s3);
         Sampler3D sGrain       : register(s4);
@@ -116,6 +112,24 @@ class ImageProcessingShader : ISurfaceShader
         Sampler2D sDepthDst    : register(s8);
         Sampler2D sNormalDst   : register(s9);
         Sampler2D sEdge        : register(s10);
+
+		// Generic image samplers (arrays)
+        Sampler2D sImage0      : register(s0);
+        Sampler2D sImage1      : register(s1);
+        Sampler2D sImage2      : register(s2);
+        Sampler2D sImage3      : register(s3);
+        Sampler2D sImage4      : register(s4);
+        Sampler2D sImage5      : register(s5);
+        Sampler2D sImage6      : register(s6);
+        Sampler2D sImage7      : register(s7);
+        Sampler2D sImage8      : register(s8);
+        Sampler2D sImage9      : register(s9);
+        Sampler2D sImage10     : register(s10);
+        Sampler2D sImage11     : register(s11);
+        Sampler2D sImage12     : register(s12);
+        Sampler2D sImage13     : register(s13);
+        Sampler2D sImage14     : register(s14);
+        Sampler2D sImage15     : register(s15);
     ?>
 
     ///////////////////////////////////////////////////////////////////////////
@@ -300,7 +314,7 @@ class ImageProcessingShader : ISurfaceShader
         // Define shader inputs.
         <?in
 			float4  screenPosition : SV_POSITION;
-            float2  texCoords      : TEXCOORD0;
+            float2  texCoordsInt   : TEXCOORD0;
 			float3  eyeRay         : TEXCOORD1;
         ?>
 
@@ -324,42 +338,28 @@ class ImageProcessingShader : ISurfaceShader
         /////////////////////////////////////////////
         // Shader Code
         /////////////////////////////////////////////
+        
+		// Renormalize the eye ray if needed
+		if ( getPureDepthType( inputType ) == DepthType::LinearDistance || getPureDepthType( outputType ) == DepthType::LinearDistance )
+			<?eyeRay = normalize( eyeRay );?>
+			
 		<?
-		float depthOut = 0, alphaOut = 0;
-
-		// Renormalize the eye ray
-		eyeRay = normalize( eyeRay );
+		// Compute the screen texture coordinates and center on pixel
+		float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
 
 		// Sample the depth image
 		float4 sample = sample2D( sImageTex, sImage, texCoords );
+
+		// Convert/compress the depth format as needed
+		color.rgb = convertDepthType( sample.rgb, eyeRay, $inputType, $outputType, $true, $true );
 		
-		color.rgb = 0;
-		color.a   = sample.a;
+		// Copy alpha 
+		color.a = sample.a;
 		?>
 	
-		// If we are outputting to a depth buffer, don't compress the output until after
-		// we've done the non-linear z conversion
+		// If we are outputting to a depth-stencil buffer, convert to non-linear z as needed.
 		if ( outputDepth )
-		{
-			// Find out the uncompressed output type
-			int outputTypePure = getPureDepthType( outputType );
-		
-			// First convert the depth format as needed
-            <?
-			depthOut = convertDepthType( sample.rgb, eyeRay, $inputType, $outputTypePure, $true, $true );
-			
-			// Next convert to a non-linear Z depth (for the depth buffer output)
-			depth = convertDepthType( depthOut, eyeRay, $outputTypePure, ${DepthType::NonLinearZ}, $true, $true );
-
-			// Finally call the conversion function one last time to pack the output into our color
-			color.rgb = convertDepthType( depthOut, eyeRay, $outputTypePure, $outputType, $true, $true );
-            ?>
-		}
-		else
-		{
-			// Convert/compress the depth format as needed
-			<?color.rgb = convertDepthType( sample.rgb, eyeRay, $inputType, $outputType, $true, $true );?>
-		}
+			<?depth = convertDepthType( sample.rgb, eyeRay, $inputType, $(DepthType::NonLinearZ), $true, $true ).x;?>
 						
         // Valid shader
         return true;
@@ -517,7 +517,7 @@ class ImageProcessingShader : ISurfaceShader
 		if ( preservePrecision )
 			<?color = sampleOut;?>
 		else
-			<?color.rgb = convertDepthType( depthOut, eyeRay, ${getPureDepthType( inputType )}, $outputType, $true, $true );?>
+			<?color.rgb = convertDepthType( depthOut, eyeRay, $(getPureDepthType( inputType )), $outputType, $true, $true );?>
 
 		// Sample the data buffer based on the best coordinate found (ensures match at pixel or hw bilinear blend if averaging)
 		if ( outputData )
@@ -957,7 +957,7 @@ class ImageProcessingShader : ISurfaceShader
 				
 				<?
                 // Unpack the depth
-				depthData.x = convertDepthType( origDepth.rgb, float3(0,0,0), ${DepthType::LinearZ_Packed}, ${DepthType::LinearZ}, $true, $false );
+				depthData.x = convertDepthType( origDepth.rgb, float3(0,0,0), $(DepthType::LinearZ_Packed), $(DepthType::LinearZ), $true, $false );
 				
 				// Copy the alpha value over as color data
 				depthData.y = origDepth.a;
@@ -2414,11 +2414,11 @@ class ImageProcessingShader : ISurfaceShader
 		{
 			<?
             float3 zeroVec = 0;
-			depthRef = convertDepthType( depthRef, zeroVec, $depthType, ${DepthType::LinearZ}, $true, $true );
-			neighborDepths[0] = convertDepthType( neighborDepths[0], zeroVec, $depthType, ${DepthType::LinearZ}, $true, $true );
-			neighborDepths[1] = convertDepthType( neighborDepths[1], zeroVec, $depthType, ${DepthType::LinearZ}, $true, $true );
-			neighborDepths[2] = convertDepthType( neighborDepths[2], zeroVec, $depthType, ${DepthType::LinearZ}, $true, $true );
-			neighborDepths[3] = convertDepthType( neighborDepths[3], zeroVec, $depthType, ${DepthType::LinearZ}, $true, $true );
+			depthRef = convertDepthType( depthRef, zeroVec, $depthType, $(DepthType::LinearZ), $true, $true );
+			neighborDepths[0] = convertDepthType( neighborDepths[0], zeroVec, $depthType, $(DepthType::LinearZ), $true, $true );
+			neighborDepths[1] = convertDepthType( neighborDepths[1], zeroVec, $depthType, $(DepthType::LinearZ), $true, $true );
+			neighborDepths[2] = convertDepthType( neighborDepths[2], zeroVec, $depthType, $(DepthType::LinearZ), $true, $true );
+			neighborDepths[3] = convertDepthType( neighborDepths[3], zeroVec, $depthType, $(DepthType::LinearZ), $true, $true );
             ?>
 		}
 
@@ -2662,7 +2662,7 @@ class ImageProcessingShader : ISurfaceShader
 
 				// Convert to linear 
                 <?
-				sample.x = convertDepthType( sample.x, float3(0,0,0), ${DepthType::NonLinearZ}, ${DepthType::LinearZ}, $true, $true );
+				sample.x = convertDepthType( sample.x, float3(0,0,0), $(DepthType::NonLinearZ), $(DepthType::LinearZ), $true, $true );
                 ?>
 
 			} // End convert non-linear depth
@@ -2903,6 +2903,112 @@ class ImageProcessingShader : ISurfaceShader
 		data2     = colAvg;
 	    ?>
 
+		// Valid shader
+		return true;
+	}
+
+
+	//-----------------------------------------------------------------------------
+	// Name: compositeLighting()
+	// Desc: Full screen pass to composite direct lighting with reflectance along
+	//       with any precomputed lighting from the g-buffer fill.
+	// Note: Can easily add opaque fog here as well to save a screen pass (if desired).
+	//-----------------------------------------------------------------------------
+	bool compositeLighting( bool specularMaterialColor, bool specularLightColor, bool hdrLighting, bool compressOutput )
+	{
+		/////////////////////////////////////////////
+		// Definitions
+		/////////////////////////////////////////////
+		// Define shader inputs.
+        <?in
+			float4  screenPosition : SV_POSITION;
+        ?>
+
+		// Define shader outputs.
+		<?out
+			float4  color       : SV_TARGET0;
+		?>
+
+		// Constant buffer usage.
+		<?cbufferrefs
+			cbImageProcessing;
+			_cbCamera;
+			_cbScene;
+		?>
+
+		/////////////////////////////////////////////
+		// Shader Code
+		/////////////////////////////////////////////
+		<?
+		float3 diffuseReflectance, specularReflectance, diffuseDirectLighting, specularDirectLighting, precomputedLighting;
+
+		// Compute screen coords
+		float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
+		?>
+		
+		// Sample reflectance
+		if ( specularMaterialColor )
+		{
+			<?
+			diffuseReflectance  = sample2D( sImage0Tex, sImage0, texCoords ).rgb;
+			specularReflectance = sample2D( sImage1Tex, sImage1, texCoords ).rgb;
+			?>
+			// Convert to linear space
+			if( hdrLighting )
+			{
+				<?
+				diffuseReflectance  = SRGBToLinear( diffuseReflectance );
+				specularReflectance = SRGBToLinear( specularReflectance );
+				?>
+			}			
+		}
+		else
+		{
+			<?float4 reflectance  = sample2D( sImage0Tex, sImage0, texCoords );?>
+
+			// Convert to linear space
+			if( hdrLighting )
+				<?reflectance = SRGBToLinear4( reflectance );?>
+
+			<?			
+			diffuseReflectance  = reflectance.rgb;
+			specularReflectance = reflectance.aaa;
+			?>
+		}
+		
+		// Sample direct lighting
+		if ( specularLightColor )
+		{
+			<?
+			diffuseDirectLighting  = sample2D( sImage2Tex, sImage2, texCoords ).rgb;
+			specularDirectLighting = sample2D( sImage3Tex, sImage3, texCoords ).rgb;
+			?>
+		}
+		else
+		{
+			<?
+			float4 lighting = sample2D( sImage2Tex, sImage2, texCoords );
+			diffuseDirectLighting = lighting.rgb;
+			float luma = dot( lighting.rgb, float3( 0.2125, 0.7154, 0.0721 ) );
+			specularDirectLighting = (lighting.rgb / (luma + 1e-6f)) * lighting.a;
+			?>			
+		}
+		
+		<?
+		// Sample pre-computed lighting (always compressed to RGBE)
+		precomputedLighting = RGBEToRGB( sample2D( sImage4Tex, sImage4, texCoords ) );
+		
+		// Compute final lighting 
+		float4 finalLighting = float4( (diffuseDirectLighting * diffuseReflectance) + (specularDirectLighting * specularReflectance) + precomputedLighting, 0 );
+		?>
+
+		// Optionally compress the output to RGBE
+		if ( compressOutput )
+			<?compressColor( finalLighting, finalLighting, $(OutputEncodingType::RGBE) );?>
+		
+		// Return results
+		<?color = finalLighting;?>
+		
 		// Valid shader
 		return true;
 	}

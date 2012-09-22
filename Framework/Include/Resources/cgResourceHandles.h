@@ -667,7 +667,8 @@ typedef ResourceHandle<cgBlendState>                            cgBlendStateHand
 //-----------------------------------------------------------------------------
 CGE_VECTOR_DECLARE( cgRenderTargetHandle, cgRenderTargetHandleArray )
 CGE_VECTOR_DECLARE( cgAnimationSetHandle, cgAnimationSetHandleArray )
-CGE_VECTOR_DECLARE( cgMaterialHandle, cgMaterialHandleArray )
 CGE_VECTOR_DECLARE( cgSamplerStateHandle, cgSamplerStateHandleArray )
+CGE_VECTOR_DECLARE( cgMaterialHandle, cgMaterialHandleArray )
+CGE_SET_DECLARE   ( cgMaterialHandle, cgMaterialHandleSet )
 
 #endif // !_CGE_CGRESOURCEHANDLES_H_

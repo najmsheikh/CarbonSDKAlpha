@@ -566,7 +566,7 @@ class BillboardShader : ISurfaceShader
 	        worldPosition = worldPosition - _cameraPosition;
             
             // Compute fog factor (adjust alpha by its inverse)
-	        //fogFactor = computeFogFactor( length( worldPosition ), ${FogModel::Exponential} );
+	        //fogFactor = computeFogFactor( length( worldPosition ), $(FogModel::Exponential) );
 	        //color.a  *= 1.0f - fogFactor;
             fogFactor = 0;
         ?>

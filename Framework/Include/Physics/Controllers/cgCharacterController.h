@@ -97,6 +97,7 @@ public:
     void                setJumpImpulse          ( cgFloat value );
     void                setAirborneWalkDamping  ( cgFloat value );
     void                setRampWalkDamping      ( cgFloat value );
+    void                setRampJumpDamping      ( cgFloat value );
     bool                requestStandingMode     ( StandingMode mode );
     cgFloat             getKinematicCushion     ( ) const;
     cgFloat             getCharacterMass        ( ) const;
@@ -108,11 +109,12 @@ public:
     cgFloat             getMaximumStepHeight    ( ) const;
     cgFloat             getMaximumWalkSpeed     ( ) const;
     cgFloat             getWalkAcceleration     ( ) const;
-    const cgVector3 & getGravity              ( ) const;
-    const cgVector3 & getVelocity             ( ) const;
+    const cgVector3   & getGravity              ( ) const;
+    const cgVector3   & getVelocity             ( ) const;
     cgFloat             getJumpImpulse          ( ) const;
     cgFloat             getAirborneWalkDamping  ( ) const;
     cgFloat             getRampWalkDamping      ( ) const;
+    cgFloat             getRampJumpDamping      ( ) const;
     StandingMode        getRequestedStandingMode( ) const;
     StandingMode        getActualStandingMode   ( ) const;
 
@@ -180,6 +182,7 @@ protected:
     cgFloat             mJumpImpulse;           // Impulse to apply when jumping.
     cgFloat             mAirborneWalkDamping;   // Amount to damp walk acceleration when airborne.
     cgFloat             mRampWalkDamping;       // Amount to damp walk acceleration when on a ramp.
+    cgFloat             mRampJumpDamping;       // Amount to damp jump strength when on a ramp.
     StandingMode        mRequestedStandMode;    // The stand mode that was most recently requested.
     StandingMode        mActualStandMode;       // The standing mode that the character is currently using.
     cgFloat             mCrouchHeightScale;     // Amount to scale the character's height when crouching.

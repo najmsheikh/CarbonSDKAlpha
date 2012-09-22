@@ -133,7 +133,7 @@ class DepthOfFieldShader : ISurfaceShader
 		{
 			<?
             eyeRay = normalize( eyeRay );
-			distance = convertDepthType( distance, eyeRay, ${getPureDepthType( depthType )}, ${DepthType::LinearZ}, $false, $false );
+			distance = convertDepthType( distance, eyeRay, $(getPureDepthType( depthType )), $(DepthType::LinearZ), $false, $false );
             ?>
 		}	
 		

@@ -343,8 +343,12 @@ bool cgSpatialTreeObject::renderSubset( cgCameraNode * pCamera, cgVisibilitySet 
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgSpatialTreeObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgSpatialTreeObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
+
     // ToDo: 9999
     /*// Get access to required systems.
     cgRenderDriver    * pDriver    = cgRenderDriver::GetInstance();
@@ -354,7 +358,7 @@ void cgSpatialTreeObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet
     cgMesh * pMesh = m_hMesh;
     if ( pMesh == CG_NULL || pMesh->IsLoaded() == false )
     {
-        cgWorldObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+        cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
         return;
     } // End if no mesh
 
@@ -366,7 +370,7 @@ void cgSpatialTreeObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet
     cgEffectFile * pEffect = m_hSandboxEffect;
     if ( pEffect == CG_NULL || pEffect->IsLoaded() == false )
     {
-        cgWorldObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+        cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
         return;
 
     } // End if no effect
@@ -383,7 +387,7 @@ void cgSpatialTreeObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet
     pMesh->Draw( cgMeshDrawMode::EffectPasses );
     
     // Call base class implementation last.
-    cgWorldObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+    cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
     */
 }
 

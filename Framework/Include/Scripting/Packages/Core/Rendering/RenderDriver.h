@@ -66,7 +66,9 @@ namespace RenderDriver
             // Configuration and Capabilities
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "RenderDriverConfig getConfig() const", asMETHODPR(cgRenderDriver, getConfig, () const, cgRenderDriver::InitConfig), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "ResourceManager@+ getResourceManager( ) const", asMETHODPR(cgRenderDriver,getResourceManager,() const,cgResourceManager*), asCALL_THISCALL) );
-            // ToDo: BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "AppWindow@+ getWindow( ) const", asMETHODPR(cgRenderDriver, GetWindow, () const, cgAppWindow*), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "RenderingCapabilities@+ getCapabilities( ) const", asMETHODPR(cgRenderDriver,getCapabilities,() const,cgRenderingCapabilities*), asCALL_THISCALL) );
+			
+			// ToDo: BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "AppWindow@+ getWindow( ) const", asMETHODPR(cgRenderDriver, GetWindow, () const, cgAppWindow*), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool useHardwareTnL( ) const", asMETHODPR(cgRenderDriver,useHardwareTnL,() const, bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool isWindowActive( ) const", asMETHODPR(cgRenderDriver,isWindowActive,() const, bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool isInitialized( ) const", asMETHODPR(cgRenderDriver,isInitialized,() const, bool), asCALL_THISCALL) );

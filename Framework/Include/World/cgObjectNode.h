@@ -312,7 +312,7 @@ public:
 
     // Sandbox Integration
     virtual bool                    pick                    ( cgCameraNode * camera, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut, cgObjectNode *& closestNodeOut );
-    virtual bool                    sandboxRender           ( cgCameraNode * camera, cgVisibilitySet * visibilityData, bool wireframe, const cgPlane & gridPlane );
+    virtual bool                    sandboxRender           ( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane );
     virtual bool                    isSelected              ( ) const;
     virtual void                    setSelected             ( bool selected, bool updateDependents = true, bool sendNotifications = true );
     virtual cgUInt32                getNodeColor            ( ) const;

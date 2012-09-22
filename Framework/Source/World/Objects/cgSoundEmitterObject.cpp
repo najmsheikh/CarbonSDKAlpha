@@ -213,8 +213,12 @@ bool cgSoundEmitterObject::pick( cgCameraNode * camera, cgObjectNode * issuer, c
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgSoundEmitterObject::sandboxRender( cgCameraNode * camera, cgVisibilitySet * visibilityData, bool wireframe, const cgPlane & gridPlane, cgObjectNode * issuer )
+void cgSoundEmitterObject::sandboxRender( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer )
 {
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
+
     // Get access to required systems.
     cgRenderDriver  * driver = cgRenderDriver::getInstance();
     cgSurfaceShader * shader = driver->getSandboxSurfaceShader().getResource(true);
@@ -252,6 +256,7 @@ void cgSoundEmitterObject::sandboxRender( cgCameraNode * camera, cgVisibilitySet
     indices[21] = 5; indices[22] = 1; indices[23] = 4;
 
     // Begin rendering
+    bool wireframe = (flags & cgSandboxRenderFlags::Wireframe);
     driver->setVertexFormat( cgVertexFormat::formatFromDeclarator( cgShadedVertex::Declarator ) );
     shader->setBool( _T("wireViewport"), wireframe );
     driver->setWorldTransform( issuer->getWorldTransform( false ) );
@@ -350,7 +355,7 @@ void cgSoundEmitterObject::sandboxRender( cgCameraNode * camera, cgVisibilitySet
     } // End if begun technique
 
     // Call base class implementation last.
-    cgWorldObject::sandboxRender( camera, visibilityData, wireframe, gridPlane, issuer );
+    cgWorldObject::sandboxRender( flags, camera, visibilityData, gridPlane, issuer );
 }
 
 //-----------------------------------------------------------------------------

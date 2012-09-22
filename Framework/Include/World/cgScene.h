@@ -101,6 +101,19 @@ struct CGE_API cgNodeUpdatedEventArgs : public cgSceneEventArgs
 
 }; // End Struct cgNodeUpdatedEventArgs
 
+struct CGE_API cgNodeParentChangeEventArgs : public cgSceneEventArgs
+{
+    cgNodeParentChangeEventArgs( cgScene * _scene, cgObjectNode * _node, cgObjectNode * _oldParent, cgObjectNode * _newParent ) :
+        cgSceneEventArgs( _scene ),
+        node            ( _node ),
+        oldParent       ( _oldParent ),
+        newParent       ( _newParent ) {}
+    cgObjectNode * node;
+    cgObjectNode * oldParent;
+    cgObjectNode * newParent;
+
+}; // End Struct cgNodeParentChangeEventArgs
+
 struct CGE_API cgSelectionSetEventArgs : public cgSceneEventArgs
 {
     cgSelectionSetEventArgs( cgScene * _scene, cgSelectionSet * _set ) :
@@ -159,6 +172,8 @@ public:
     virtual void    onSceneDirtyChange      ( cgSceneEventArgs * e ) {};
     virtual void    onNodeAdded             ( cgNodeUpdatedEventArgs * e ) {};
     virtual void    onNodeDeleted           ( cgNodeUpdatedEventArgs * e ) {};
+    virtual void    onNodeNameChange        ( cgNodeUpdatedEventArgs * e ) {};
+    virtual void    onNodeParentChange      ( cgNodeParentChangeEventArgs * e ) {};
     virtual void    onNodesDeleted          ( cgNodesUpdatedEventArgs * e ) {};
     virtual void    onSelectionUpdated      ( cgSelectionUpdatedEventArgs * e ) {};
     virtual void    onSelectionCleared      ( cgSceneEventArgs * e ) {};
@@ -287,6 +302,7 @@ public:
     void                        unloadObjectNodes       ( cgObjectNodeMap & nodes );
     void                        addRootNode             ( cgObjectNode * node );
     void                        removeRootNode          ( cgObjectNode * node );
+    cgObjectNode              * getObjectNodeById       ( cgUInt32 referenceId ) const;
     cgObjectNodeMap           & getObjectNodes          ( );
     const cgObjectNodeMap     & getObjectNodes          ( ) const;
     cgObjectNodeMap           & getRootObjectNodes      ( );
@@ -318,7 +334,7 @@ public:
 
     // Scene Rendering
     void                        render                  ( );
-    void                        sandboxRender           ( bool wireframe, const cgPlane & gridPlane );
+    void                        sandboxRender           ( cgUInt32 flags, const cgPlane & gridPlane );
     bool                        beginRenderPass         ( const cgString & passName );
     void                        endRenderPass           ( );
     
@@ -348,6 +364,7 @@ public:
     bool                        getSelectedPivot        ( cgVector3 & pivotOut ) const;
     bool                        getObjectNodesPivot     ( const cgObjectNodeMap & nodes, cgVector3 & pivotOut ) const;
     void                        selectAllNodes          ( );
+    void                        selectSimilarNodes      ( cgObjectNodeMap & nodes, bool replaceSelection );
     bool                        selectNodes             ( cgObjectNodeMap & nodes, bool replaceSelection );
     void                        clearSelection          ( );
     cgObjectNodeMap           & getSelectedNodes        ( );
@@ -385,6 +402,8 @@ public:
     // Sandbox Event Dispatchers
     virtual void                onSceneDirtyChange      ( cgSceneEventArgs * e );
     virtual void                onNodeAdded             ( cgNodeUpdatedEventArgs * e );
+    virtual void                onNodeNameChange        ( cgNodeUpdatedEventArgs * e );
+    virtual void                onNodeParentChange      ( cgNodeParentChangeEventArgs * e );
     virtual void                onNodeDeleted           ( cgNodeUpdatedEventArgs * e );
     virtual void                onNodesDeleted          ( cgNodesUpdatedEventArgs * e );
     virtual void                onModifySelection       ( cgSceneEventArgs * e );

@@ -690,6 +690,14 @@ bool cgApplication::frameBegin( bool bRunSimulation /* = true */ )
     cgTimer           * pTimer     = cgTimer::getInstance();
     cgInputDriver     * pInput     = cgInputDriver::getInstance();
 
+	cgInputDriver * inputDriver = cgInputDriver::getInstance();
+	if ( !inputDriver->wasKeyPressed( cgKeys::F ) && inputDriver->isKeyPressed( cgKeys::F ) )
+	{
+		mMaximumFPS += 30.0f;
+		if ( mMaximumFPS > 120.0f )
+			mMaximumFPS = 30.0f;
+	}
+
     // Allowing simulation to run?
     if ( bRunSimulation == true )
     {

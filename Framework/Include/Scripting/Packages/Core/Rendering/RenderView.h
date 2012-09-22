@@ -51,6 +51,7 @@ namespace RenderView
             BINDSUCCESS( engine->registerObjectMethod( "RenderView", "bool present( )", asMETHODPR(cgRenderView, present, ( ), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderView", "const RenderTargetHandle & getViewBuffer( ) const", asMETHODPR(cgRenderView, getViewBuffer, ( ) const, const cgRenderTargetHandle&), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderView", "const DepthStencilTargetHandle & getDepthStencilBuffer( ) const", asMETHODPR(cgRenderView, getDepthStencilBuffer, ( ) const, const cgDepthStencilTargetHandle&), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "RenderView", "bool readableDepthStencilBuffer()", asMETHODPR(cgRenderView, readableDepthStencilBuffer, ( ), bool), asCALL_THISCALL) );
 
             BINDSUCCESS( engine->registerObjectMethod( "RenderView", "const RenderTargetHandle & getRenderSurface( BufferFormat )", asMETHODPR(cgRenderView, getRenderSurface, ( cgBufferFormat::Base ), const cgRenderTargetHandle&), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderView", "const RenderTargetHandle & getRenderSurface( BufferFormat, const String &in )", asMETHODPR(cgRenderView, getRenderSurface, ( cgBufferFormat::Base, const cgString& ), const cgRenderTargetHandle&), asCALL_THISCALL) );

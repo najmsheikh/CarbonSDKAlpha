@@ -179,16 +179,19 @@ bool cgDummyObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const 
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgDummyObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgDummyObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
-    cgRenderDriver * pDriver = cgRenderDriver::getInstance();
-        
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
+
     // Draw the bounding box (use "sealed" edges - i.e. no gaps).
     cgBoundingBox Bounds = pIssuer->getLocalBoundingBox();
+    cgRenderDriver * pDriver = cgRenderDriver::getInstance();
     pDriver->drawOOBB( Bounds, 0.0f, pIssuer->getWorldTransform( false ), ((pIssuer->isSelected()) ? 0xFFFFFFFF : 0xFF0EFF02), true );
 
     // Call base class implementation last.
-    cgWorldObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+    cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
 }
 
 //-----------------------------------------------------------------------------

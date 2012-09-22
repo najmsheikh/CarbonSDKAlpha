@@ -78,6 +78,16 @@ namespace cgSceneRenderContext
 
 }; // End Namespace : cgSceneRenderContext
 
+namespace cgSandboxRenderFlags
+{
+    enum Base
+    {
+        Wireframe       = 0x1,
+        PostDepthClear  = 0x10
+    };
+
+}; // End Namespace : cgSandboxRenderFlags
+
 // Contains items which describe how often to perform an update (i.e. on an object)
 namespace cgUpdateRate
 {

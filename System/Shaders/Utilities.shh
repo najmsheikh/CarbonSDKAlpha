@@ -449,16 +449,14 @@ __shadercall float3 convertDepthType( float3 depthIn, float3 eyeRay, script int 
     /////////////////////////////////////////////
     // Shader Code
     /////////////////////////////////////////////
-    <?
-	float3 depthOut;
-	?> 
+    <?float depth;?> 
 
     // If the input is compressed, decompress it, else just copy it locally to our working variable
     bool inputCompressed = isCompressedDepthType( inputType );
     if ( inputCompressed )
-        <?depthOut = decompressF32( depthIn );?>
+        <?depth = decompressF32( depthIn );?>
     else
-        <?depthOut = depthIn;?>
+        <?depth = depthIn.x;?>
 
     // Will we need to denormalize the input?
     bool denormalizeInput = (normalizedInput || inputCompressed);
@@ -470,21 +468,21 @@ __shadercall float3 convertDepthType( float3 depthIn, float3 eyeRay, script int 
             
             // If the input is in the [0, 1] range, undo it...
             if ( denormalizeInput )
-                <?depthOut = depthOut * _cameraInverseRangeScale + _cameraInverseRangeBias;?>
+                <?depth = depth * _cameraInverseRangeScale + _cameraInverseRangeBias;?>
 
             switch( getPureDepthType( outputType ) )
             {
                 case DepthType::LinearDistance:
-                    <?depthOut /= dot( _cameraDirection, eyeRay );?>
+                    <?depth /= dot( _cameraDirection, eyeRay );?>
                     if ( normalizeOutput )
-                        <?depthOut *= _cameraRecipMaxDistance;?>
+                        <?depth *= _cameraRecipMaxDistance;?>
                     break;
                 case DepthType::NonLinearZ:
-                    <?depthOut = (1.0f / depthOut) * _projectionMatrix._43 + _projectionMatrix._33;?>
+                    <?depth = (1.0f / depth) * _projectionMatrix._43 + _projectionMatrix._33;?>
                     break;
                 case DepthType::LinearZ:
                     if ( normalizeOutput && !normalizedInput )
-                        <?depthOut = depthOut * _cameraRangeScale + _cameraRangeBias;?>
+                        <?depth = depth * _cameraRangeScale + _cameraRangeBias;?>
                 break;
             
             } // End switch type
@@ -494,23 +492,23 @@ __shadercall float3 convertDepthType( float3 depthIn, float3 eyeRay, script int 
             
             // If the input is in the [0, 1] range, undo it...
             if ( denormalizeInput )
-                <?depthOut *= _cameraMaxDistance;?>
+                <?depth *= _cameraMaxDistance;?>
 
             switch( getPureDepthType( outputType ) )
             {
                 case DepthType::LinearZ:
-                    <?depthOut = dot( _cameraDirection, eyeRay ) * depthOut;?>
+                    <?depth = dot( _cameraDirection, eyeRay ) * depth;?>
                     if ( normalizeOutput )
-                        <?depthOut = depthOut * _cameraRangeScale + _cameraRangeBias;?>
+                        <?depth = depth * _cameraRangeScale + _cameraRangeBias;?>
                     break;
                 
                 case DepthType::NonLinearZ:
-                    <?depthOut = (1.0f / ( dot( _cameraDirection, eyeRay ) * depthOut ) ) * _projectionMatrix._43 + _projectionMatrix._33;?>
+                    <?depth = (1.0f / ( dot( _cameraDirection, eyeRay ) * depth ) ) * _projectionMatrix._43 + _projectionMatrix._33;?>
                     break;
 
                 case DepthType::LinearDistance:
                     if ( normalizeOutput && !normalizedInput )
-                        <?depthOut *= _cameraRecipMaxDistance;?>
+                        <?depth *= _cameraRecipMaxDistance;?>
                     break;
             
             } // End switch type
@@ -521,15 +519,15 @@ __shadercall float3 convertDepthType( float3 depthIn, float3 eyeRay, script int 
             switch( getPureDepthType( outputType ) )
             {
                 case DepthType::LinearZ:
-                    <?depthOut = _projectionMatrix._43 / (depthOut - _projectionMatrix._33);?>
+                    <?depth = _projectionMatrix._43 / (depth - _projectionMatrix._33);?>
                     if ( normalizeOutput )
-                        <?depthOut = depthOut * _cameraRangeScale + _cameraRangeBias;?>
+                        <?depth = depth * _cameraRangeScale + _cameraRangeBias;?>
                     break;
                 
                 case DepthType::LinearDistance:
                     <?
                     float cosTheta = dot( _cameraDirection, eyeRay );
-                    depthOut = _projectionMatrix._43 / ( (depthOut - _projectionMatrix._33) * cosTheta);
+                    depth = _projectionMatrix._43 / ( (depth - _projectionMatrix._33) * cosTheta);
                     ?>
                     if ( normalizeOutput )
                         <?__depth *= _cameraRecipMaxDistance;?>
@@ -542,9 +540,9 @@ __shadercall float3 convertDepthType( float3 depthIn, float3 eyeRay, script int 
 
     // Return results (optional compression as requested)
     if ( isCompressedDepthType( outputType ) )
-        <?return compressF32( depthOut );?>
+        <?return compressF32( depth );?>
     else
-        <?return depthOut;?>
+        <?return depth.xxx;?>
 }
 
 //-----------------------------------------------------------------------------
@@ -632,7 +630,7 @@ __shadercall void sampleDepthNormalBufferEx( out float outDepth, out float3 outN
 	outDepth = decompressF16( depthData.zw );
 
     // Convert to full range linear Z
-	outDepth = convertDepthType( outDepth, float3(0,0,0), ${DepthType::LinearZ}, ${DepthType::LinearZ}, $true, $false );
+	outDepth = convertDepthType( outDepth, float3(0,0,0), $(DepthType::LinearZ), $(DepthType::LinearZ), $true, $false );
 	?>
 }
 __shadercall void sampleDepthNormalBuffer( out float outDepth, out float3 outNormal, Texture2D dnTexture, Sampler2D dnSampler, float2 texCoords )

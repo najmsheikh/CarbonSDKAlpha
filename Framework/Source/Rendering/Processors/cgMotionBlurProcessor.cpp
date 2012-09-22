@@ -288,10 +288,22 @@ bool cgMotionBlurProcessor::execute( cgInt32 nPasses,
 
 		} // Next pass
 
+		// If a separate destination was provided, do not use blending
+		bool useBlending = (sourceColor == destination);
+
 		// Composite the low res blurred results with the original source texture
-		if ( mMotionBlurShader->selectPixelShader( _T("cameraMotionBlurComposite") ) )
+		if ( mMotionBlurShader->selectPixelShader( _T("cameraMotionBlurComposite"), useBlending ) )
 		{
-            mDriver->setBlendState( mAlphaBlendState );
+			if ( !useBlending )
+			{
+				mColorSampler->apply( sourceColor );
+				mDriver->setBlendState( mDefaultRGBABlendState );
+			}
+			else
+			{
+				mDriver->setBlendState( mAlphaBlendState );
+			}
+
 			mColorLowSampler->apply( currDst );
 			if ( mDriver->beginTargetRender( destination, cgDepthStencilTargetHandle::Null ) )
 			{

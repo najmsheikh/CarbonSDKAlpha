@@ -175,8 +175,13 @@ bool cgTargetObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgTargetObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgTargetObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
+
+    // Local Variables
     const cgUInt32      ColorX = 0xFFC00000, ColorY = 0xFF00B000, ColorZ = 0xFF0000C0;
     cgShadedVertex      Points[8];
     cgUInt32            Indices[48];
@@ -323,6 +328,7 @@ void cgTargetObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pV
 
     // Begin rendering
     cgObjectNode * pTargetingNode = CG_NULL;
+    bool bWireframe = (flags & cgSandboxRenderFlags::Wireframe);
     pDriver->setVertexFormat( cgVertexFormat::formatFromDeclarator( cgShadedVertex::Declarator ) );
     pShader->setBool( _T("wireViewport"), bWireframe );
     if ( pShader->beginTechnique( _T("drawWireframeNode") ) )
@@ -411,7 +417,7 @@ void cgTargetObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pV
     } // End if selected
 
     // Call base class implementation last.
-    cgWorldObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+    cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
 }
 
 //-----------------------------------------------------------------------------

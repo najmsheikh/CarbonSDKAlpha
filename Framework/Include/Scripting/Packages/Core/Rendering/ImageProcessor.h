@@ -93,6 +93,8 @@ namespace ImageProcessor
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void resolveScreenMask( const TextureHandle &in, float )", asMETHODPR(type, resolveScreenMask, (const cgTextureHandle&, cgFloat ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void resolveScreenMask( const TextureHandle &in, const RenderTargetHandle &in, float, bool )", asMETHODPR(type, resolveScreenMask, (const cgTextureHandle&, const cgRenderTargetHandle&, cgFloat, bool ), void), asCALL_THISCALL) );
 
+		BINDSUCCESS( engine->registerObjectMethod( typeName, "void compositeLighting( const TextureHandle &in, const TextureHandle &in, const TextureHandle &in, const TextureHandle &in, const TextureHandle &in, const RenderTargetHandle &in, bool, bool, bool, bool )", asMETHODPR(type, compositeLighting, (const cgTextureHandle&, const cgTextureHandle&, const cgTextureHandle&, const cgTextureHandle&, const cgTextureHandle&, const cgRenderTargetHandle&, bool, bool, bool, bool ), void), asCALL_THISCALL) );
+
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void drawClipQuad( )", asMETHODPR(type, drawClipQuad, ( ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void drawClipQuad( float )", asMETHODPR(type, drawClipQuad, ( cgFloat ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void drawClipQuad( const RenderTargetHandle &in )", asMETHODPR(type, drawClipQuad, ( const cgRenderTargetHandle& ), void), asCALL_THISCALL) );

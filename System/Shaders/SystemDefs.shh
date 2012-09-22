@@ -238,7 +238,7 @@ class SystemExports
 		////////////////////////////////////////////
 		outputEncodingType          = OutputEncodingType::NoEncode;
 		fogModel                    = FogModel::None;
-		shadingQuality              = ShadingQuality::HighQuality;
+		shadingQuality              = ShadingQuality::MediumQuality;
 		orthographicCamera          = false;
 		hdrLighting                 = false;
 		viewSpaceLighting           = false;
@@ -250,7 +250,7 @@ class SystemExports
 		normalizedDistance          = false;
 		surfaceNormals              = false;
 		packedDepth                 = false;
-		computeGroupID              = false;
+		depthStencilReads           = false;
 		cullMode                    = CullMode::Back;
 		colorWrites                 = ColorChannel::All;
 
@@ -467,7 +467,7 @@ class SystemExports
 	bool          normalizedDistance;
 	bool          surfaceNormals;
 	bool          packedDepth;
-	bool          computeGroupID;
+	bool          depthStencilReads;
 	int           cullMode;
 	int           colorWrites;
 

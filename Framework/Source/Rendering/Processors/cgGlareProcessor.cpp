@@ -223,7 +223,7 @@ bool cgGlareProcessor::initialize( cgRenderDriver * driver )
 /// appear to glow or "glare".
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgGlareProcessor::execute( const cgRenderTargetHandle & target, cgResampleChain * chain0, cgResampleChain * chain1, float alphaMaskAmt, bool fullSizeBrightPass, bool blurPrePass )
+bool cgGlareProcessor::execute( const cgRenderTargetHandle & target, cgResampleChain * chain0, cgResampleChain * chain1, bool hdrGlare, float alphaMaskAmt, bool fullSizeBrightPass, bool blurPrePass )
 {
 	// Glare shader must be valid and loaded at this point.
 	if ( !mGlareShader.getResource(true) || !mGlareShader.isLoaded() )
@@ -245,6 +245,7 @@ bool cgGlareProcessor::execute( const cgRenderTargetHandle & target, cgResampleC
 	mResampleChain1        = chain1;
 	mFullSizeBrightPass    = fullSizeBrightPass;
 	mDownsampleBlurPrePass = blurPrePass;
+	mHDRGlare              = hdrGlare;
 
 	// Run the bright pass on the specified target.
 	brightPass();
@@ -309,7 +310,7 @@ void cgGlareProcessor::brightPass( )
 
 	// If we have a tone mapper, set the luminance data
 	cgInt32 toneMappingMethod = -1;
-	if ( mDriver->getSystemState( cgSystemState::HDRLighting ) > 0 )
+	if ( mHDRGlare )
 	{
 		toneMappingMethod = cgToneMapProcessor::Filmic;
 		if ( mToneMapper )

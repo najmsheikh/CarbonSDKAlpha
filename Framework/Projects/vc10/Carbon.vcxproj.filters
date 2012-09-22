@@ -1736,6 +1736,9 @@
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\RenderDriver.h">
       <Filter>Header Files\Scripting\Packages\Core\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\RenderingCapabilities.h">
+      <Filter>Header Files\Scripting\Packages\Core\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\RenderView.h">
       <Filter>Header Files\Scripting\Packages\Core\Rendering</Filter>
     </ClInclude>

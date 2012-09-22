@@ -188,7 +188,7 @@ class LightSourceShader : ISurfaceShader
 		if ( testFlagAny( params.renderFlags, RenderFlags::ViewSpaceLighting ) )
 		{
 			<?
-            surface.position         = getViewPosition( surface.screenCoords, depthBufferData.x, ${params.orthographicCamera} );
+            surface.position         = getViewPosition( surface.screenCoords, depthBufferData.x, $(params.orthographicCamera) );
 			surface.distanceToCamera = length( surface.position );
 			surface.linearZ          = depthBufferData.x;
 			?>
@@ -219,10 +219,10 @@ class LightSourceShader : ISurfaceShader
                 surface.viewDirection = normalize( eyeRay.xyz );
 
 				// If the depth type is not what we need (i.e., distance from camera along eye ray), convert it
-				surface.distanceToCamera = convertDepthType( depthBufferData.x, surface.viewDirection, $pureType, ${DepthType::LinearDistance}, $false, $false );
+				surface.distanceToCamera = convertDepthType( depthBufferData.x, surface.viewDirection, $pureType, $(DepthType::LinearDistance), $false, $false );
 				
 				// Get the linear Z distance as well
-				surface.linearZ = convertDepthType( depthBufferData.x, surface.viewDirection, $pureType, ${DepthType::LinearZ}, $false, $false );
+				surface.linearZ = convertDepthType( depthBufferData.x, surface.viewDirection, $pureType, $(DepthType::LinearZ), $false, $false );
 				
 				// Compute position 
 				surface.position = surface.viewDirection * surface.distanceToCamera + _cameraPosition;
@@ -261,18 +261,9 @@ class LightSourceShader : ISurfaceShader
         // Retrieve reflectance properties if needed
         if ( params.applyReflectance )
         {
-            if ( params.shadingQuality == ShadingQuality::LowQuality )
-            {
-                <?
-                texData                    = sample2D( sGBuffer1Tex, sGBuffer1, surface.screenCoords );
-                surface.diffuse.rgb        = texData.rgb;
-                surface.specular.rgb       = texData.aaa;
-                surface.ambientOcclusion   = 1; 
-	            surface.transmission       = 0;
-                ?>
-            
-            } // End if low quality	
-            else
+			// Did we store full specular reflectance color
+       		bool fullSpecularColor = testFlagAny( params.renderFlags, RenderFlags::SpecularColorOutput );
+            if ( fullSpecularColor )
             {
                 <?
                 texData                    = sample2D( sGBuffer1Tex, sGBuffer1, surface.screenCoords );
@@ -281,17 +272,32 @@ class LightSourceShader : ISurfaceShader
                 texData                    = sample2D( sGBuffer2Tex, sGBuffer2, surface.screenCoords );
                 surface.specular.rgb       = texData.rgb;
                 ?>
-            
-            } // End if high quality
-        
-			// If we need to manually linearize the color data, so so now
-			if ( testFlagAny( params.renderFlags, RenderFlags::GBufferSRGB ) )
-			{
-				<?
-				surface.diffuse.rgb  = SRGBToLinear( surface.diffuse.rgb );
-				surface.specular.rgb = SRGBToLinear( surface.specular.rgb );
-				?>
-			}
+
+				// If we need to manually linearize the color data, so so now
+				if ( testFlagAny( params.renderFlags, RenderFlags::GBufferSRGB ) )
+				{
+					<?
+					surface.diffuse.rgb  = SRGBToLinear( surface.diffuse.rgb );
+					surface.specular.rgb = SRGBToLinear( surface.specular.rgb );
+					?>
+				}
+
+            } // End if chromatic specular 
+            else
+            {
+                <?texData = sample2D( sGBuffer1Tex, sGBuffer1, surface.screenCoords );?>
+				// If we need to manually linearize the color data, so so now
+				if ( testFlagAny( params.renderFlags, RenderFlags::GBufferSRGB ) )
+					<?texData = SRGBToLinear4( texData );?>
+                
+                <?
+                surface.diffuse.rgb        = texData.rgb;
+                surface.specular.rgb       = texData.aaa;
+                surface.ambientOcclusion   = 1; 
+	            surface.transmission       = 0;
+                ?>
+
+            } // End if specular intensity only
         
         } // End if getReflectance
 		
@@ -540,7 +546,7 @@ class LightSourceShader : ISurfaceShader
 		?>
 		
 		// If we are using high quality deferred lighting (separate diffuse/specular), add another output	
-		bool deferredLightingHighQuality = testFlagAll( renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting) | uint(RenderFlags::SpecularColorOutput) );
+		bool deferredLightingHighQuality = false; //testFlagAll( renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting) | uint(RenderFlags::SpecularColorOutput) );
 		if ( deferredLightingHighQuality )
 		{
 			<?out
@@ -889,10 +895,10 @@ class LightSourceShader : ISurfaceShader
                 surface.viewDirection = normalize( eyeRay.xyz );
 
 				// If the depth type is not what we need (i.e., distance from camera along eye ray), convert it
-				surface.distanceToCamera = convertDepthType( depthBufferData.x, surface.viewDirection, $pureType, ${DepthType::LinearDistance}, $false, $false );
+				surface.distanceToCamera = convertDepthType( depthBufferData.x, surface.viewDirection, $pureType, $(DepthType::LinearDistance), $false, $false );
 				
 				// Get the linear Z distance as well
-				surface.linearZ = convertDepthType( depthBufferData.x, surface.viewDirection, $pureType, ${DepthType::LinearZ}, $false, $false );
+				surface.linearZ = convertDepthType( depthBufferData.x, surface.viewDirection, $pureType, $(DepthType::LinearZ), $false, $false );
 				
 				// Compute position 
 				surface.position = surface.viewDirection * surface.distanceToCamera + _cameraPosition;

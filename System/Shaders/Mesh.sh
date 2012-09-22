@@ -14,6 +14,7 @@ const String transformDefaultShader             = "transformDefault";
 const String transformReflectiveShadowMapShader = "transformReflectiveShadowMap";
 
 const String drawDepthShader                    = "drawDepth";
+const String drawDepthPrePassShader             = "drawDepthPrePass";
 const String drawGBufferShader                  = "drawGBuffer";
 const String drawOpacityShader                  = "drawOpacity";
 const String drawDirectLightingShader           = "drawDirectLighting";
@@ -197,7 +198,25 @@ class MeshShader : ISurfaceShader
 
         // Select shaders
         if ( !mOwner.selectVertexShader( transformDepthShader, System.maxBlendIndex, System.useVTFBlending, System.depthType, System.surfaceNormalType, int(LightType::NoLight), System.materialFlags, System.renderFlags ) ||
-             !mOwner.selectPixelShader( drawDepthShader, System.depthType, System.surfaceNormalType, System.materialFlags, System.renderFlags ) )
+             !mOwner.selectPixelShader( drawDepthPrePassShader, System.materialFlags, System.renderFlags ) )
+
+            return TechniqueResult::Abort;
+
+        // We're done 
+        return TechniqueResult::Complete; // Continue, Abort
+    }
+
+    TechniqueResult geometry( int pass, bool commitChanges )
+    {
+        // Set necessary states
+        // mDriver.setDepthStencilState( mDepthEqualState ); // ToDo: Add a flag to indicate a depth-stencil pre-pass took place.
+        mDriver.setDepthStencilState( mDepthFillState );
+        mDriver.setBlendState( null );
+        mDriver.setRasterizerState( null );
+
+        // Select shaders
+        if ( !mOwner.selectVertexShader( transformDefaultShader, System.maxBlendIndex, System.useVTFBlending, System.normalSource, System.lightTextureType, System.viewSpaceLighting, System.orthographicCamera ) ||
+             !mOwner.selectPixelShader( drawGBufferDSShader, System.depthType, System.normalSource, System.reflectionMode, System.lightTextureType, System.materialFlags, System.renderFlags, System.outputEncodingType, System.shadingQuality ) )
             return TechniqueResult::Abort;
 
         // We're done 
@@ -218,12 +237,9 @@ class MeshShader : ISurfaceShader
         else
 			mDriver.setRasterizerState( mFrontFaceRasterizerState );
 		
-		// Turn off group ID compute flag 
-        int renderFlagsNoGroup = System.renderFlags & ~int( RenderFlags::ComputeGroupID );
-        
         // Select shaders
-        if ( !mOwner.selectVertexShader( transformDepthShader, System.maxBlendIndex, System.useVTFBlending, int(DepthType::LinearZ), int(NormalType::NoNormal), System.lightType, System.materialFlags, renderFlagsNoGroup ) ||
-             !mOwner.selectPixelShader( drawDepthShader, int(DepthType::LinearZ), int(NormalType::NoNormal), System.materialFlags, renderFlagsNoGroup ) )
+        if ( !mOwner.selectVertexShader( transformDepthShader, System.maxBlendIndex, System.useVTFBlending, int(DepthType::LinearZ), int(NormalType::NoNormal), System.lightType, System.materialFlags, System.renderFlags ) ||
+             !mOwner.selectPixelShader( drawDepthShader, int(DepthType::LinearZ), int(NormalType::NoNormal), System.materialFlags, System.renderFlags ) )
             return TechniqueResult::Abort;
 
         // We're done 
@@ -237,28 +253,9 @@ class MeshShader : ISurfaceShader
         mDriver.setBlendState( null );
         mDriver.setRasterizerState( null );
 		
-		// Turn off group ID compute flag 
-        int renderFlagsNoGroup = System.renderFlags & ~int( RenderFlags::ComputeGroupID );
-        
         // Select shaders
-        if ( !mOwner.selectVertexShader( transformReflectiveShadowMapShader, System.maxBlendIndex, System.useVTFBlending, System.lightType, System.materialFlags, renderFlagsNoGroup ) ||
-             !mOwner.selectPixelShader( drawReflectiveShadowMapShader, System.lightType, System.materialFlags, renderFlagsNoGroup ) )
-            return TechniqueResult::Abort;
-
-        // We're done 
-        return TechniqueResult::Complete; // Continue, Abort
-    }
-
-    TechniqueResult geometry( int pass, bool commitChanges )
-    {
-        // Set necessary states
-        mDriver.setDepthStencilState( mDepthEqualState );
-        mDriver.setBlendState( null );
-        mDriver.setRasterizerState( null );
-
-        // Select shaders
-        if ( !mOwner.selectVertexShader( transformDefaultShader, System.maxBlendIndex, System.useVTFBlending, System.normalSource, System.reflectionMode, System.lightTextureType, false, true, System.viewSpaceLighting, System.orthographicCamera ) ||
-             !mOwner.selectPixelShader( drawGBufferDSShader, System.normalSource, System.reflectionMode, System.lightTextureType, System.materialFlags, System.renderFlags, System.outputEncodingType, System.shadingQuality ) )
+        if ( !mOwner.selectVertexShader( transformReflectiveShadowMapShader, System.maxBlendIndex, System.useVTFBlending, System.lightType, System.materialFlags, System.renderFlags ) ||
+             !mOwner.selectPixelShader( drawReflectiveShadowMapShader, System.lightType, System.materialFlags, System.renderFlags ) )
             return TechniqueResult::Abort;
 
         // We're done 
@@ -292,7 +289,7 @@ class MeshShader : ISurfaceShader
         bool projective = ( System.primaryTaps > 0 || System.lightType == LightType::Projector || testFlagAny(System.lightFlags, LightFlags::AttenuationTexture) );
 
         // Select shaders
-        if ( !mOwner.selectVertexShader( transformDefaultShader, System.maxBlendIndex, System.useVTFBlending, System.normalSource, System.reflectionMode, System.lightTextureType, false, true, System.viewSpaceLighting, System.orthographicCamera ) ||
+        if ( !mOwner.selectVertexShader( transformDefaultShader, System.maxBlendIndex, System.useVTFBlending, System.normalSource, System.lightTextureType, System.viewSpaceLighting, System.orthographicCamera ) ||
              !mOwner.selectPixelShader( drawDirectLightingShader, System.normalSource, System.lightType, System.shadowMethod, System.primaryTaps, System.secondaryTaps, System.materialFlags, System.lightFlags, System.renderFlags, System.shadingQuality ) )
             return TechniqueResult::Abort;
 
@@ -308,7 +305,7 @@ class MeshShader : ISurfaceShader
         mDriver.setRasterizerState( null );
 
         // Select shaders
-        if ( !mOwner.selectVertexShader( transformDefaultShader, System.maxBlendIndex, System.useVTFBlending, System.normalSource, System.reflectionMode, System.lightTextureType, false, true, System.viewSpaceLighting, System.orthographicCamera ) ||
+        if ( !mOwner.selectVertexShader( transformDefaultShader, System.maxBlendIndex, System.useVTFBlending, System.normalSource, System.lightTextureType, System.viewSpaceLighting, System.orthographicCamera ) ||
              !mOwner.selectPixelShader( drawPrecomputedLightingShader, System.normalSource, System.reflectionMode, System.lightTextureType, System.materialFlags, System.renderFlags, System.shadingQuality ) )
             return TechniqueResult::Abort;
 
@@ -406,7 +403,7 @@ class MeshShader : ISurfaceShader
 		{
 			// Store the surface bumpiness
 			// <?surface.bumpiness = _materialBumpiness;?>
-			<?surface.bumpiness = 1.0f;?> // ToDo: 6767 -- Reset for now. Will come in as strength for the normal sampler, _materialBumpiness can be removed from the CB
+			<?surface.bumpiness = 2.0f;?> // ToDo: 6767 -- Reset for now. Will come in as strength for the normal sampler, _materialBumpiness can be removed from the CB
 		
 			// Compute texture coord adjustments for parallax mapping (if needed)
 			if ( normalType == NormalSource::ParallaxOffset ) 
@@ -552,9 +549,18 @@ class MeshShader : ISurfaceShader
 			?>
 		
         } // End if !isTranslucent
+
+		// Do we need to clip based on opacity?
+		if ( hasOpacityTexture )
+			<?clip( (kD.a * _materialDiffuse.a) - _materialAlphaTestValue );?> 
+
 		<?	
 		// Get ambient occlusion (not supported in forward mode -- yet)
 		surface.ambientOcclusion = 1; 
+
+		// Keep track of sRGB versions of the reflectance (ToDo 6767: assumes no hw conversion. Will need to re-address this once support is in place.)
+		surface.diffuseSRGB  = surface.diffuse.rgb;
+		surface.specularSRGB = surface.specular.rgb;
 		?>
 
 		// If we need to convert from sRGB to linear, do so now
@@ -565,14 +571,13 @@ class MeshShader : ISurfaceShader
 			surface.specular.rgb = SRGBToLinear( surface.specular.rgb );
 			?>
 		}
-	
 	}
 
 	//-----------------------------------------------------------------------------
 	// Name  : getPrecomputedLighting()
 	// Desc  : Retrieves precomputed lighting from lightmaps, reflections, emissives, etc.
 	//-----------------------------------------------------------------------------
-	__shadercall void getPrecomputedLighting( inout LightingData lighting, SurfaceData surface, float4 reflectionCoords, float4 texCoords, float2 texCoordsLight,
+	__shadercall void getPrecomputedLighting( inout LightingData lighting, SurfaceData surface, float2 screenCoords, float4 texCoords, float2 texCoordsLight,
                                               script int reflectionType, script int lightmapType, script int materialFlags, script int renderFlags )
 	{
 		/////////////////////////////////////////////
@@ -596,7 +601,7 @@ class MeshShader : ISurfaceShader
 			<?float4 reflectionColor;?>
 			if ( reflectionType == ReflectionMode::Planar )
 			{
-				<?reflectionColor = sample2D( sReflectionTex, sReflection, reflectionCoords.xy / reflectionCoords.w );?>
+				<?reflectionColor = sample2D( sReflectionTex, sReflection, screenCoords );?>
 			
             }	// End if Planar
 			else
@@ -706,7 +711,7 @@ class MeshShader : ISurfaceShader
 	// Name : computeProjectiveCoords()
 	// Desc : Computes projective texture coordinates for lighting
 	//-----------------------------------------------------------------------------
-	__shadercall void computeProjectiveCoords( inout SurfaceData surface, float4 texCoordsProj, script int lightType  )
+	__shadercall void computeProjectiveCoords( inout SurfaceData surface, float3 worldPosition, script int lightType  )
 	{
 		/////////////////////////////////////////////
 		// Definitions
@@ -727,9 +732,7 @@ class MeshShader : ISurfaceShader
 		/////////////////////////////////////////////
 		// Shader Code
 		/////////////////////////////////////////////
-		<?
-        surface.projectiveTexCoords = TexCoordsProj;
-		?>
+		<?surface.projectiveTexCoords = mul( float4( worldPos, 1 ), _lightTexProjMatrix );?>
         // For projector lights, we have to interpolate our projection window size based on distance along light's z axis
         if ( lightType == LightType::Projector )
         {
@@ -761,7 +764,7 @@ class MeshShader : ISurfaceShader
         /////////////////////////////////////////////
         // Setup
         /////////////////////////////////////////////
-		bool computeTexCoords   = testFlagAny( renderFlags, RenderFlags::ComputeGroupID ) || testFlagAny( materialFlags, MaterialFlags::SampleOpacityTexture ) || testFlagAny( materialFlags, MaterialFlags::SampleDiffuseTexture );
+		bool computeTexCoords   = testFlagAny( materialFlags, MaterialFlags::SampleOpacityTexture ) || testFlagAny( materialFlags, MaterialFlags::SampleDiffuseTexture );
 		bool orthographicCamera = testFlagAny( renderFlags, RenderFlags::OrthographicCamera );
 
         /////////////////////////////////////////////
@@ -787,7 +790,7 @@ class MeshShader : ISurfaceShader
         // Define shader outputs.
 		<?out
 			float4  clipPosition : SV_POSITION;
-			${mapDepthTexCoordRegisters( depthOutputType, normalOutputType, computeTexCoords )}
+			$(mapDepthTexCoordRegisters( depthOutputType, normalOutputType, computeTexCoords ))
 		?>
 		
         // Constant buffer usage.
@@ -902,7 +905,7 @@ class MeshShader : ISurfaceShader
     // Name : transformDefault() (Vertex Shader)
     // Desc : Outputs vertex data needed for lighting and g-buffer filling.
     //-------------------------------------------------------------------------
-	bool transformDefault( int maxBlendIndex, bool useVTFBlending, int normalType, int reflectionType, int lightmapType, bool projectiveCoords, bool screenCoords, bool useViewSpace, bool orthographicCamera )
+	bool transformDefault( int maxBlendIndex, bool useVTFBlending, int normalType, int lightmapType, bool useViewSpace, bool orthographicCamera )
 	{
         /////////////////////////////////////////////
         // Definitions
@@ -937,19 +940,13 @@ class MeshShader : ISurfaceShader
         // Define shader outputs.
 		<?out
 			float4 clipPosition : SV_POSITION;   
-			${mapTexCoordRegisters(normalType, reflectionType, lightmapType, projectiveCoords, screenCoords)}
+			$(mapTexCoordRegisters(normalType, lightmapType))
 		?>
 
         // Constant buffer usage.
         <?cbufferrefs
             _cbCamera;
         ?>
-        if ( projectiveCoords )
-        {
-			<?cbufferrefs
-				_cbLightingSystem;
-			?>
-        } // End if projectiveCoords
 
         /////////////////////////////////////////////
         // Shader Code
@@ -981,11 +978,11 @@ class MeshShader : ISurfaceShader
         texCoords.zw = 0;
 		?>
 
-		// Compute eye direction
+		// Return camera space linear depth
 		if ( orthographicCamera )
-			<?float3 eyeRay = -_cameraDirection;?>
+			<?depth = clipPosition.z;?>  
 		else
-			<?float3 eyeRay = _cameraPosition - worldPos;?>
+			<?depth = clipPosition.w * _cameraRangeScale + _cameraRangeBias;?>  
 
 		if ( normalType == NormalSource::Vertex )
 		{
@@ -1014,39 +1011,13 @@ class MeshShader : ISurfaceShader
 			} // End if ParallaxOffset
 		}
 
-		if ( projectiveCoords )
+		// Copy lightmap coords if needed
+		if ( lightmapType != LightTextureType::None )
 		{
-			<?
-			// Compute projective texture coords for the current light source
-			texCoordsProj = mul( worldPosition, _lightTexProjMatrix );
-			?>
-		}
-		else if ( lightmapType != LightTextureType::None )
-		{
-			<?
-			// Compute lightmap coords
-			texCoordsLight = sourceTexCoords[ 1 ];
-			?>
+			<?texCoordsLight = sourceTexCoords[ 1 ];?>
 		
         } // End if has lightmap
 
-		if ( reflectionType == ReflectionMode::Planar )
-		{
-			<?
-			// Compute planar reflection coords
-            computeMeshScreenTextureCoords( clipPosition, reflection );
-			?>
-			
-		}
-	
-		if ( screenCoords )
-		{
-			<?
-			// Compute screen texture lookup coords
-            computeMeshScreenTextureCoords( clipPosition, texCoordsScreen );
-			?>
-		}
-		
 		// Transform required items to view space as needed
 		if ( useViewSpace )
 		{
@@ -1171,10 +1142,9 @@ class MeshShader : ISurfaceShader
         // Setup
         /////////////////////////////////////////////
 	    bool orthographicCamera = testFlagAny( renderFlags, RenderFlags::OrthographicCamera );
-	    bool computeGroup       = testFlagAny( renderFlags, RenderFlags::ComputeGroupID );
 	    bool hasOpacityTexture  = testFlagAny( materialFlags, MaterialFlags::SampleOpacityTexture );
 	    bool hasEmissiveTexture = testFlagAny( materialFlags, MaterialFlags::SampleEmissiveTexture );
-   		bool computeTexCoords   = hasOpacityTexture || computeGroup || testFlagAny( materialFlags, MaterialFlags::SampleDiffuseTexture );
+   		bool computeTexCoords   = hasOpacityTexture || testFlagAny( materialFlags, MaterialFlags::SampleDiffuseTexture );
     
         /////////////////////////////////////////////
         // Definitions
@@ -1182,7 +1152,7 @@ class MeshShader : ISurfaceShader
         // Define shader inputs.
 		<?in
 			float4 screenPosition : SV_POSITION;
-			${mapDepthTexCoordRegisters(depthOutputType, normalOutputType, hasOpacityTexture || computeGroup)}
+			$(mapDepthTexCoordRegisters(depthOutputType, normalOutputType, hasOpacityTexture))
 		?>
 
         // Define shader outputs.
@@ -1249,20 +1219,6 @@ class MeshShader : ISurfaceShader
 		
         } // End switch depthOutputType
 
-		// Optional material data group computation  // TODO: PRE-COMPUTE OFFLINE?
-		if ( computeGroup )
-		{
-			<?float3 diffuseColor  = _materialDiffuse.rgb * sample2DBias( sDiffuseTex, sDiffuse, texCoords, 12 ).rgb;?>
-			<?float3 emissiveColor = _materialEmissive.rgb;?>
-			if ( hasEmissiveTexture ) 
-				<?emissiveColor *= sample2D( sEmissiveTex, sEmissive, texCoords ).rgb;?>
-			<?			
-			float avgDiffuse  = dot( diffuseColor, float3( 0.33333, 0.33333, 0.33333 ) );
-			float maxEmissive = max( emissiveColor.r, max( emissiveColor.g, emissiveColor.b ) ); 
-			depthOut.a = lerp( avgDiffuse, maxEmissive, maxEmissive );
-			?>
-		}
-		
 		// Output normal 
 		if ( normalOutputType != NormalType::NoNormal )
 			<?normalOut = float4( normal * 0.5f + 0.5f, 0 );?> 
@@ -1272,43 +1228,86 @@ class MeshShader : ISurfaceShader
     }
 
     //-------------------------------------------------------------------------
-    // Name  : drawGBufferDS() (Pixel Shader)
-    // Desc  : G-Buffer render pixel shader for deferred shading
+    // Name  : drawDepthPrePass() (Pixel Shader)
+    // Desc  : Depth render pixel shader
     //-------------------------------------------------------------------------
-    bool drawGBufferDS( int normalType, int reflectionType, int lightmapType, int materialFlags, int renderFlags, int outputType, int shadingQuality )
+    bool drawDepthPrePass( int materialFlags, int renderFlags )
     {
         /////////////////////////////////////////////
         // Setup
         /////////////////////////////////////////////
-		// Is there pre-computed lighting we need to account for?
+	    bool orthographicCamera = testFlagAny( renderFlags, RenderFlags::OrthographicCamera );
+	    bool hasOpacityTexture  = testFlagAny( materialFlags, MaterialFlags::SampleOpacityTexture );
+   		bool computeTexCoords   = hasOpacityTexture || testFlagAny( materialFlags, MaterialFlags::SampleDiffuseTexture );
+    
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Define shader inputs.
+		<?in
+			float4 screenPosition : SV_POSITION;
+			$(mapDepthTexCoordRegisters(0, 0, hasOpacityTexture))
+		?>
+
+        // Define shader outputs.
+		<?out
+			float4 depthOut : SV_TARGET0;
+		?>
+
+        // Constant buffer usage.
+        <?cbufferrefs
+            _cbMaterial;
+            _cbCamera;
+        ?>
+
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+
+        // Do we have an opactity map?
+        if ( hasOpacityTexture )
+			<?clip( (sample2D( sOpacityTex, sOpacity, texCoords ).a * _materialDiffuse.a) - _materialAlphaTestValue );?> 
+
+		<?depthOut = 0;?>
+
+        // Valid shader
+        return true;
+    }
+
+    //-------------------------------------------------------------------------
+    // Name  : drawGBufferDS() (Pixel Shader)
+    // Desc  : G-Buffer render pixel shader for deferred shading
+    //-------------------------------------------------------------------------
+    bool drawGBufferDS( int depthOutputType, int normalType, int reflectionType, int lightmapType, int materialFlags, int renderFlags, int outputType, int shadingQuality )
+    {
+        /////////////////////////////////////////////
+        // Setup
+        /////////////////////////////////////////////
 		bool precomputedLighting = false;
+		bool depthStencilReading = testFlagAny( renderFlags, RenderFlags::DepthStencilReads );
+		bool fullSpecularColor   = testFlagAny( renderFlags, RenderFlags::SpecularColorOutput );
+	    bool orthographicCamera  = testFlagAny( renderFlags, RenderFlags::OrthographicCamera );
+
+		// Is there pre-computed lighting we need to account for?
 		if ( (reflectionType != ReflectionMode::None) || (lightmapType != LightTextureType::None) ||
 		     testFlagAny( materialFlags, uint(MaterialFlags::Emissive) | uint(MaterialFlags::SampleEmissiveTexture) ) )
 			precomputedLighting = true;
 
-		// If there is no precomputed diffuse or specular lighting
-		bool encodeSRGB = false;
+		// If there is no precomputed diffuse or specular lighting...
 		if ( (reflectionType == ReflectionMode::None) && (lightmapType == LightTextureType::None) )
 		{
-			// There is no need to decode sRGB (Note: No need to encode output either as it is already sRGB.)
+			// ...there is no need to decode diffuse or specular sRGB (can output as is)
 			materialFlags &= ~uint(MaterialFlags::DecodeSRGB);
 			
 		} // End no precomputed diffuse/specular
-		else
-		{
-			// We linearized diffuse/specular, so we'll need to re-encode
-			if ( testFlagAny( renderFlags, RenderFlags::GBufferSRGB ) )
-				encodeSRGB = true;
-				
-		} // End precomputed diffuse/specular
-		
+
         /////////////////////////////////////////////
         // Definitions
         /////////////////////////////////////////////
         // Define shader inputs.
         <?in
 			float4 screenPosition : SV_POSITION;
-			${mapTexCoordRegisters( normalType, reflectionType, lightmapType, false, true )}
+			$(mapTexCoordRegisters( normalType, lightmapType ))
         ?>
 
         // Define shader outputs.
@@ -1316,8 +1315,13 @@ class MeshShader : ISurfaceShader
             float4  data0     : SV_TARGET0;
             float4  data1     : SV_TARGET1;
             float4  data2     : SV_TARGET2;
+        ?>
+		if ( fullSpecularColor || !depthStencilReading )
+		{        
+        <?out
             float4  data3     : SV_TARGET3;
         ?>
+        }
 
         /////////////////////////////////////////////
         // Shader Code
@@ -1326,7 +1330,7 @@ class MeshShader : ISurfaceShader
 
 		// Declare our lighting structures
 		initLightingStructures( false, true );
-        
+
         // Retrieve surface data
         <?
         LightingData lighting = (LightingData)0;
@@ -1335,12 +1339,15 @@ class MeshShader : ISurfaceShader
                         $normalType, $materialFlags, $renderFlags, $shadingQuality );
         ?>
 			
-		// If we are using precomputed lighting 
-		if ( precomputedLighting )
+		// Get precomputed lighting (i.e., emissive, reflections, lightmaps)
+		if ( precomputedLighting ) 
 		{		
 			<?
+			// Compute screen texture coordinates
+			float2 screenCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
+			
             // Sample all precomputed lighting 
-			getPrecomputedLighting( lighting, surface, reflection, texCoords, texCoordsLight, 
+			getPrecomputedLighting( lighting, surface, screenCoords, texCoords, texCoordsLight, 
 			                        $reflectionType, $lightmapType, $materialFlags, $renderFlags );
 
 			// Combine lighting results with reflectance as needed 
@@ -1354,8 +1361,8 @@ class MeshShader : ISurfaceShader
 		
 		/////////////////////////////////////////		
 		// Fill the g-buffer
-		/////////////////////////////////////////		
-
+		/////////////////////////////////////////
+		
 		// Simulate fitting the normal to a tesslated cube to reduce quantization artifacts
 		if ( testFlagAny( materialFlags, MaterialFlags::CorrectNormals ) && ( normalType != NormalSource::Vertex ) )
 			<?compressUnsignedNormal( surface.normal, sNormalsFitTex, sNormalsFit );?>
@@ -1365,33 +1372,54 @@ class MeshShader : ISurfaceShader
 		data0.xyz = surface.normal;
 		data0.w   = surface.gloss;
 		?>
-		if ( testFlagAny( renderFlags, RenderFlags::SpecularColorOutput ) )
+		
+		// If we are storing full specular color... (Note: we must be using depth-stencil reads for this)
+		if ( fullSpecularColor )
 		{
 			<?		
-			data1.rgb = surface.diffuse;
+			data1.rgb = surface.diffuseSRGB;
 			data1.a   = surface.transmission;
-			data2.rgb = surface.specular;
+			data2.rgb = surface.specularSRGB;
 			data2.a   = 0;
-			data3     = sceneLighting;		
 			?>
+
+			// Store precompute lighting
+			// if ( precomputedLighting )
+				<?data3 = sceneLighting;?>
 
         } // End if full specular color
 		else
 		{	
-			<?
-			data1     = float4( surface.diffuse, dot( surface.specular, float3( 0.2125, 0.7154, 0.0721 ) ) );
-			data2     = sceneLighting;
-			?>
+			// If we are storing specular intensity only
+			<?data1 = float4( surface.diffuseSRGB, dot( surface.specularSRGB, float3( 0.2125, 0.7154, 0.0721 ) ) );?>
+
+			// If we are not doing depth-stencil reads, output depth to target
+			if ( !depthStencilReading )
+			{
+				// Output depth        
+				switch( getPureDepthType( depthOutputType ) )
+				{
+					case DepthType::LinearDistance:
+						<?data2 = setDistance( length( worldPos - _cameraPosition ), $depthOutputType );?>
+						break;
+					default:
+						<?data2 = setNormalizedDistance( depth, $depthOutputType );?>
+						break;
+				
+				} // End switch depthOutputType
+
+				// Store precompute lighting
+				// if ( precomputedLighting )
+					<?data3 = sceneLighting;?>
+			}
+			else
+			{
+				// Store precompute lighting
+				// if ( precomputedLighting )
+					<?data2 = sceneLighting;?>
+			}
 
         } // End if specular intensity only
-		
-		// If we need to manually non-linearize the color data, do so now
-		if ( encodeSRGB )
-		{
-			<?data1 = LinearToSRGB4( data1 );?>
-			if ( testFlagAny( renderFlags, RenderFlags::SpecularColorOutput ) )
-				<?data2.rgb = LinearToSRGB( data2.rgb );?>
-		}
 
         // Valid shader
         return true;
@@ -1413,7 +1441,7 @@ class MeshShader : ISurfaceShader
 
         <?in
 			float4 screenPosition : SV_POSITION;
-			${mapTexCoordRegisters( normalType, ReflectionMode::None, LightTextureType::None, projective, false )}
+			$(mapTexCoordRegisters( normalType, LightTextureType::None ))
         ?>
 
         // Define shader outputs.
@@ -1440,8 +1468,7 @@ class MeshShader : ISurfaceShader
         ?>
 
 		// Compute projective texture coordinates
-		if ( projective )
-			<?computeProjectiveCoords( surface, texCoordsProj, $lightType );?>
+		<?computeProjectiveCoords( surface, worldPos, $lightType );?>
 
         // Compute lighting
         <?
@@ -1564,7 +1591,7 @@ class MeshShader : ISurfaceShader
         // Define shader inputs.
         <?in
 			float4 screenPosition : SV_POSITION;
-			${mapTexCoordRegisters( normalType, reflectionType, lightmapType, false, false )}
+			$(mapTexCoordRegisters( normalType, lightmapType ))
         ?>
 
         // Define shader outputs.
@@ -1587,8 +1614,11 @@ class MeshShader : ISurfaceShader
         getSurfaceData( surface, worldPos, normal, texCoords, parallaxDirection, tangentToWorldSpace, 
                         $normalType, $materialFlags, $renderFlags, $shadingQuality );
 
+		// Compute screen texture coordinates
+		float2 screenCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
+
         // Sample precomputed lighting
-        getPrecomputedLighting( lighting, surface, reflection, texCoords, texCoordsLight,
+        getPrecomputedLighting( lighting, surface, screenCoords, texCoords, texCoordsLight,
                                 $reflectionType, $lightmapType, $materialFlags, $renderFlags );
 
 		// Compute final lighting results
@@ -1613,7 +1643,7 @@ class MeshShader : ISurfaceShader
         // Define shader inputs.
         <?in
 			float4 screenPosition : SV_POSITION;
-			${mapDepthTexCoordRegisters(DepthType::LinearDistance, NormalType::NormalWorld, hasOpacityTexture)}
+			$(mapDepthTexCoordRegisters(DepthType::LinearDistance, NormalType::NormalWorld, hasOpacityTexture))
         ?>
 
         // Define shader outputs.
@@ -1672,7 +1702,7 @@ class MeshShader : ISurfaceShader
         // Define shader inputs.
         <?in
 			float4 screenPosition : SV_POSITION;
-			${mapDepthTexCoordRegisters(DepthType::LinearDistance, NormalType::NoNormal, hasOpacityTexture)}
+			$(mapDepthTexCoordRegisters(DepthType::LinearDistance, NormalType::NoNormal, hasOpacityTexture))
         ?>
 
         // Define shader outputs.
@@ -1722,19 +1752,15 @@ class MeshShader : ISurfaceShader
     // Desc : Sets up the minimal texture coordinate registers for shader I/O
     //        based on what features are currently active for the permutation
     //-------------------------------------------------------------------------
-	String mapTexCoordRegisters( int normalType, int reflectionType, int lightmapType, bool projectiveCoords, bool screenCoords )
+	String mapTexCoordRegisters( int normalType, int lightmapType )
 	{	
 		String str;
 		int coordIndex = 0;
 		
         str += "float4 texCoords : TEXCOORD" + coordIndex++ + ";";
-		str += "float3 worldPos : TEXCOORD" + coordIndex++ + ";";
+		str += "float3 worldPos  : TEXCOORD" + coordIndex++ + ";";
+		str += "float  depth     : TEXCOORD" + coordIndex++ + ";";
 
-		if ( projectiveCoords )
-			str += "float4 texCoordsProj : TEXCOORD" + coordIndex++ + ";";
-        else
-            <?float4 texCoordsProj;?>
-		
 		if ( lightmapType != LightTextureType::None )
             str += "float2 texCoordsLight : TEXCOORD" + coordIndex++ + ";";
         else
@@ -1769,24 +1795,7 @@ class MeshShader : ISurfaceShader
 			    break;
 		
         } // End switch normalType
- 
-        switch( reflectionType )
-        {
-            case ReflectionMode::Planar:
-				str += "float4 reflection : TEXCOORD" + coordIndex++ + ";";
-			    break;
-            default:
-                // Dummy variables
-                <?float4 reflection;?>
-                break;
-        
-        } // End switch reflectionType
-       
-		if ( screenCoords )
-			str += "float4 texCoordsScreen : TEXCOORD" + coordIndex++ + ";";
-        else
-            <?float4 texCoordsScreen;?>
-       
+   
 		return str;
 	}	
 

@@ -40,6 +40,7 @@
 #include <Resources/cgTexture.h> // ToDo: 6767 - Introduced by VPL stuff
 #include <Resources/cgVertexBuffer.h> // ToDo: 6767 - Introduced by VPL stuff
 #include <Rendering/cgSampler.h> // ToDo: 6767 - Introduced by VPL stuff
+#include <Resources/cgDepthStencilTarget.h>
 #include <System/cgMessageTypes.h>
 #include <System/cgFilterExpression.h>
 #include <System/cgStringUtility.h>
@@ -900,6 +901,7 @@ bool cgRenderDriver::initShaderSystem()
          !(mSystemExportVars.nonLinearZ = (bool*)mSystemExports->getAddressOfMember( _T("nonLinearZ") )) ||
          !(mSystemExportVars.normalizedDistance = (bool*)mSystemExports->getAddressOfMember( _T("normalizedDistance") )) ||
          !(mSystemExportVars.surfaceNormals = (bool*)mSystemExports->getAddressOfMember( _T("surfaceNormals") )) ||
+		 !(mSystemExportVars.depthStencilReads = (bool*)mSystemExports->getAddressOfMember( _T("depthStencilReads") )) ||
 
 		 !(mSystemExportVars.maximumBlendIndex = (cgInt32*)mSystemExports->getAddressOfMember( _T("maxBlendIndex") )) ||
          !(mSystemExportVars.useVTFBlending = (bool*)mSystemExports->getAddressOfMember( _T("useVTFBlending") )) ||
@@ -1327,6 +1329,13 @@ bool cgRenderDriver::setSystemState( cgSystemState::Base State, cgInt32 Value )
 			else
 				*mSystemExportVars.renderFlags &= ~PackedDepth;
             break;
+		case cgSystemState::DepthStencilReads:
+			*mSystemExportVars.depthStencilReads = (Value != 0);
+			if ( Value > 0 )
+				*mSystemExportVars.renderFlags |=  DepthStencilReads;
+			else
+				*mSystemExportVars.renderFlags &= ~DepthStencilReads;
+			break;
 		case cgSystemState::ColorWrites:
             *mSystemExportVars.colorWrites = Value;
             break;
@@ -1662,6 +1671,9 @@ cgInt32 cgRenderDriver::getSystemState( cgSystemState::Base State )
 		case cgSystemState::PackedDepth:
             Value = (*mSystemExportVars.packedDepth != 0);
             break;
+		case cgSystemState::DepthStencilReads:
+			Value = (*mSystemExportVars.depthStencilReads != 0);
+			break;
 		case cgSystemState::ColorWrites:
             Value = *mSystemExportVars.colorWrites;
             break;
@@ -5413,8 +5425,12 @@ bool cgRenderView::createBuffers( )
         
         } // End if failed
 
-        // Also allocate new depth stencil target of the same size.
-        Desc.format = Formats.getBestDepthFormat( false, true );
+        // Also allocate new depth stencil target of the same size. We'll prefer readable depth-stencil buffers.
+		if ( mDriver->getCapabilities()->supportsDepthStencilReading() )
+			Desc.format = cgBufferFormat::INTZ; // ToDo: 6767 - Make this more robust.
+		else
+			Desc.format = Formats.getBestDepthFormat( false, true );
+
         strName = cgString::format( _T("Core::RenderView(0x%x)::DepthStencil"), getReferenceId() );
         if ( !pResources->createDepthStencilTarget( &mDepthStencilBuffer, Desc, cgResourceFlags::ForceNew, strName, cgDebugSource() ) )
         {
@@ -5427,6 +5443,17 @@ bool cgRenderView::createBuffers( )
 
     // Success!
     return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : readableDepthStencilBuffer() (Public)
+/// <summary>
+/// Is the primary depth-stencil buffer readable?
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgRenderView::readableDepthStencilBuffer( )
+{
+	return mDriver->getCapabilities()->supportsDepthStencilReading();
 }
 
 //-----------------------------------------------------------------------------

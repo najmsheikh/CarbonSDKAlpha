@@ -239,7 +239,7 @@ public:
     void                            drawClipQuad            ( const cgSurfaceShaderHandle & shader, cgFloat depth, bool linearZ );
     void                            drawClipQuad            ( cgSurfaceShaderHandle shader, cgFloat depth, const cgVector2 textureCoordinates[], bool linearZ );
     bool                            beginTargetRender       ( const cgRenderTargetHandle & renderTarget );
-    bool                            beginTargetRender       ( const cgRenderTargetHandle & renderTarget, const cgDepthStencilTargetHandle & depthStencilTarget );
+	bool                            beginTargetRender       ( const cgRenderTargetHandle & renderTarget, const cgDepthStencilTargetHandle & depthStencilTarget );
     bool                            beginTargetRender       ( const cgRenderTargetHandle & renderTarget, cgInt32 cubeFace );
     bool                            beginTargetRender       ( const cgRenderTargetHandle & renderTarget, cgInt32 cubeFace, const cgDepthStencilTargetHandle & depthStencilTarget );
     bool                            beginTargetRender       ( const cgRenderTargetHandle & renderTarget, cgInt32 cubeFace, bool autoUseMultiSample );
@@ -392,10 +392,11 @@ protected:
 		NormalizedDistance   = 0x800,
 		SurfaceNormals       = 0x1000,
 		PackedDepth          = 0x2000,
+		DepthStencilReads    = 0x4000,
 		
 		// General
-		ColorWrites          = 0x4000,
-		CullMode             = 0x8000,
+		ColorWrites          = 0x8000,
+		CullMode             = 0x10000,
 	};
 
 	enum LightFlags
@@ -490,6 +491,7 @@ protected:
 		bool          * normalizedDistance;
 		bool          * surfaceNormals;
 		bool          * packedDepth;
+		bool          * depthStencilReads;
 
 	    // Geometry
         cgInt32       * maximumBlendIndex;
@@ -729,7 +731,7 @@ public:
     bool                                end                     ( );
     bool                                end                     ( bool presentView );
     bool                                present                 ( );
-
+	
     // Render surfaces
     const cgRenderTargetHandle        & getViewBuffer           ( ) const;
     const cgDepthStencilTargetHandle  & getDepthStencilBuffer   ( ) const;
@@ -751,6 +753,8 @@ public:
     const cgDepthStencilTargetHandle  & getDepthStencilSurface  ( cgBufferFormat::Base format, cgMultiSampleType::Base multiSampleType, cgUInt32 multiSampleQuality, const cgString & instanceId );
     const cgDepthStencilTargetHandle  & getDepthStencilSurface  ( cgBufferFormat::Base format, cgFloat scalarWidth, cgFloat scalarHeight, cgMultiSampleType::Base multiSampleType, cgUInt32 multiSampleQuality );
     const cgDepthStencilTargetHandle  & getDepthStencilSurface  ( cgBufferFormat::Base format, cgFloat scalarWidth, cgFloat scalarHeight, cgMultiSampleType::Base multiSampleType, cgUInt32 multiSampleQuality, const cgString & instanceId );
+
+	bool                                readableDepthStencilBuffer( );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)

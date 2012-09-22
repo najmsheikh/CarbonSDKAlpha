@@ -220,8 +220,13 @@ bool cgSplineObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgSplineObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgSplineObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
+
+    // Get access to required systems
     cgRenderDriver * pDriver = cgRenderDriver::getInstance();
     cgSurfaceShader * pShader = pDriver->getSandboxSurfaceShader().getResource(true);
 
@@ -254,6 +259,7 @@ void cgSplineObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pV
     nPoint++;
 
     // Begin rendering
+    bool bWireframe = (flags & cgSandboxRenderFlags::Wireframe);
     pDriver->setVertexFormat( cgVertexFormat::formatFromDeclarator( cgShadedVertex::Declarator ) );
     pShader->setBool( _T("wireViewport"), bWireframe );
     pDriver->setWorldTransform( pIssuer->getWorldTransform( false ) );
@@ -271,7 +277,7 @@ void cgSplineObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pV
     delete []Points;
 
     // Call base class implementation last.
-    cgWorldObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+    cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
 }
 
 //-----------------------------------------------------------------------------

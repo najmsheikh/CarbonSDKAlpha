@@ -152,6 +152,11 @@ public:
                                               const cgTextureHandle & currentDepth, const cgTextureHandle & prevDepth, 
                                               const cgRenderTargetHandle & destination, const cgMatrix & reprojection, cgFloat depthTolerance, cgFloat blendAmount );
 
+	void			compositeLighting      ( const cgTextureHandle & hDiffuseReflectance, const cgTextureHandle & hSpecularReflectance, 
+											 const cgTextureHandle & hDiffuseLighting,    const cgTextureHandle & hSpecularLighting, 
+											 const cgTextureHandle & hPrecomputedLighting, 
+											 const cgRenderTargetHandle & hDest, bool specularMaterialColor, bool specularLightColor, bool hdrLighting, bool compressOutput );
+
     void            drawClipQuad            ( );
     void            drawClipQuad            ( cgFloat z );
     void            drawClipQuad            ( const cgRenderTargetHandle & destination );
@@ -190,7 +195,10 @@ protected:
         cgSampler * curr;
         cgSampler * prev;
         cgSampler * edge;
-    };
+
+		cgSampler * aPoint[16];
+		cgSampler * aLinear[16];
+	};
 
     struct MultiOpShaderCacheKey
     {

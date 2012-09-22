@@ -2256,6 +2256,21 @@ void cgScene::setObjectUpdateRate( cgObjectNode * node, cgUpdateRate::Base rate 
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getObjectNodeById ()
+/// <summary>
+/// Retrieve the object node with the specified reference identifier if it
+/// exists within the database of currently loaded (or created) scene objects.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgObjectNode * cgScene::getObjectNodeById( cgUInt32 referenceId ) const
+{
+    cgObjectNodeMap::const_iterator itNode = mObjectNodes.find( referenceId );
+    if ( itNode != mObjectNodes.end() )
+        return itNode->second;
+    return CG_NULL;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getObjectNodes ()
 /// <summary>
 /// Retrieve a complete list of all scene object nodes.
@@ -2757,7 +2772,7 @@ void cgScene::render( )
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgScene::sandboxRender( bool wireframe, const cgPlane & gridPlane )
+void cgScene::sandboxRender( cgUInt32 flags, const cgPlane & gridPlane )
 {
     // Validate requirements
     if ( mActiveCamera == CG_NULL )
@@ -2788,9 +2803,9 @@ void cgScene::sandboxRender( bool wireframe, const cgPlane & gridPlane )
     cgObjectNodeArray & visibleObjects = visibilityData->getVisibleObjects();
     cgObjectNodeArray & visibleLights  = visibilityData->getVisibleLights();
     for ( size_t i = 0; i < visibleObjects.size(); ++i )
-        visibleObjects[i]->sandboxRender( mActiveCamera, visibilityData, wireframe, gridPlane );
+        visibleObjects[i]->sandboxRender( flags, mActiveCamera, visibilityData, gridPlane );
     for ( size_t i = 0; i < visibleLights.size(); ++i )
-        visibleLights[i]->sandboxRender( mActiveCamera, visibilityData, wireframe, gridPlane );
+        visibleLights[i]->sandboxRender( flags, mActiveCamera, visibilityData, gridPlane );
 
     // End sandbox render pass.
     endRenderPass( );
@@ -3089,9 +3104,11 @@ bool cgScene::selectNodes( cgObjectNodeMap & nodes, bool replaceSelection )
     } // End if !sandbox
 
     // Deselect all prior nodes if requested.
+    cgObjectNodeMap alteredSelection;
     if ( replaceSelection )
     {
         cgObjectNodeMap::iterator itNode;
+        alteredSelection = mSelectedNodes;
         for ( itNode = mSelectedNodes.begin(); itNode != mSelectedNodes.end(); ++itNode )
         {
             cgObjectNode * node = itNode->second;
@@ -3124,16 +3141,72 @@ bool cgScene::selectNodes( cgObjectNodeMap & nodes, bool replaceSelection )
         // Mark as selected without notifying the scene.
         node->setSelected( true, false );
         node->mSelectionId = mNextSelectionId++;
+        alteredSelection[ node->getReferenceId() ] = node;
         mSelectedNodes[ node->getReferenceId() ] = node;
         mSelectedNodesOrdered[ node->mSelectionId ] = node;
 
     } // Next Node
 
     // Notify whoever is listening that we're applying this selection set
-    onSelectionUpdated( &cgSelectionUpdatedEventArgs( this, &nodes ) );
+    onSelectionUpdated( &cgSelectionUpdatedEventArgs( this, &alteredSelection ) );
 
     // Success!
     return true;
+}
+
+//-----------------------------------------------------------------------------
+// Name : selectSimilarNodes ( )
+/// <summary>
+/// Select nodes that have types similar to the nodes specified.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScene::selectSimilarNodes( cgObjectNodeMap & nodes, bool replaceSelection )
+{
+    if ( cgGetSandboxMode() == cgSandboxMode::Disabled )
+    {
+        cgAppLog::write( cgAppLog::Debug | cgAppLog::Error, _T("cgScene::selectSimilarNodes() is a sandbox function and can only be called when sandbox mode is enabled.\n") );
+        return;
+
+    } // End if !sandbox
+
+    // Make a copy of the specified node list in case it represents the currently
+    // selected objects.
+    cgObjectNodeMap referenceNodes = nodes;
+
+    // Build a list of unique type identifiers common to the specified objects.
+    CGE_SET_DECLARE( cgUID, ObjectTypeSet )
+    ObjectTypeSet uniqueTypes;
+    cgObjectNodeMap::iterator itNode;
+    for ( itNode = referenceNodes.begin(); itNode != referenceNodes.end(); ++itNode )
+    {
+        cgObjectNode * node = itNode->second;
+        if ( node && !node->isDisposed() )
+            uniqueTypes.insert( node->getObjectType() );
+
+    } // Next Node
+
+    // Iterate through all nodes in the scene and build the final list of nodes to select.
+    cgObjectNodeMap selectedNodes;
+    for ( itNode = mObjectNodes.begin(); itNode != mObjectNodes.end(); ++itNode )
+    {
+        cgObjectNode * node = itNode->second;
+        if ( node && !node->isDisposed() )
+        {
+            // One way or another we should ignore selected nodes because they will
+            // either A) already be in the selection list, or B) are being replaced.
+            if ( node->isSelected() )
+                continue;
+
+            // Has an object type that matches one of the selected types?
+            if ( uniqueTypes.find( node->getObjectType() ) != uniqueTypes.end() )
+                selectedNodes[node->getReferenceId()] = node;
+
+        } // End if valid
+
+    } // Next node
+
+    // Select the nodes.
+    selectNodes( selectedNodes, replaceSelection );
 }
 
 //-----------------------------------------------------------------------------
@@ -4661,6 +4734,40 @@ void cgScene::onNodesDeleted( cgNodesUpdatedEventArgs * e )
     EventListenerList listeners = mEventListeners;
     for ( itListener = listeners.begin(); itListener != listeners.end(); ++itListener )
         ((cgSceneEventListener*)(*itListener))->onNodesDeleted( e );
+}
+
+//-----------------------------------------------------------------------------
+// Name : onNodeNameChange() (Virtual)
+/// <summary>
+/// Can be overriden or called by derived class in order to trigger the event
+/// with matching name. All listeners will subsequently be notified.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScene::onNodeNameChange( cgNodeUpdatedEventArgs * e )
+{
+    // Trigger 'onNodeNameChange' of all listeners (duplicate list in case
+    // it is altered in response to event).
+    EventListenerList::iterator itListener;
+    EventListenerList listeners = mEventListeners;
+    for ( itListener = listeners.begin(); itListener != listeners.end(); ++itListener )
+        ((cgSceneEventListener*)(*itListener))->onNodeNameChange( e );
+}
+
+//-----------------------------------------------------------------------------
+// Name : onNodeParentChange() (Virtual)
+/// <summary>
+/// Can be overriden or called by derived class in order to trigger the event
+/// with matching name. All listeners will subsequently be notified.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScene::onNodeParentChange( cgNodeParentChangeEventArgs * e )
+{
+    // Trigger 'onNodeParentChange' of all listeners (duplicate list in case
+    // it is altered in response to event).
+    EventListenerList::iterator itListener;
+    EventListenerList listeners = mEventListeners;
+    for ( itListener = listeners.begin(); itListener != listeners.end(); ++itListener )
+        ((cgSceneEventListener*)(*itListener))->onNodeParentChange( e );
 }
 
 //-----------------------------------------------------------------------------

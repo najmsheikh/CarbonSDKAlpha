@@ -219,12 +219,14 @@ bool cgParticleEmitterObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssu
 /// representation to be displayed within an editing environment.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::sandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+void cgParticleEmitterObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
-    cgShadedVertex Points[29];
-    cgUInt32       Indices[29];
-    cgUInt32       i;
-    cgFloat        fRange = 2.0f;
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
+
+    // Configuration
+    cgFloat fRange = 2.0f;
 
     // Get access to required systems.
     cgRenderDriver  * pDriver = cgRenderDriver::getInstance();
@@ -245,14 +247,15 @@ void cgParticleEmitterObject::sandboxRender( cgCameraNode * pCamera, cgVisibilit
 
     // Set the color of each of the points first of all. This saves
     // us from having to set them during object construction.
-    for ( i = 0; i < 9; ++i )
+    cgShadedVertex Points[29];
+    for ( cgInt i = 0; i < 9; ++i )
         Points[i].color = nColor;
 
     // Compute vertices for the tip and base of the cone
     cgFloat fSize      = fZoomFactor * 25.0f * cosf(CGEToRadian(mProperties.outerCone * 0.5f));
     cgFloat fRadius    = tanf(CGEToRadian(mProperties.outerCone * 0.5f)) * fSize;
     Points[0].position = cgVector3( 0, 0, 0 );
-    for ( i = 0; i < 8; ++i )
+    for ( cgInt i = 0; i < 8; ++i )
     {
         // Build vertex
         Points[i+1].position.x = (sinf( (CGE_TWO_PI / 8.0f) * (cgFloat)i ) * fRadius);
@@ -263,6 +266,7 @@ void cgParticleEmitterObject::sandboxRender( cgCameraNode * pCamera, cgVisibilit
     
     // Compute indices that will allow us to draw the cone using a 
     // tri-list (wireframe) so that we can easily take advantage of back-face culling.
+    cgUInt32 Indices[29];
     Indices[0]  = 0; Indices[1]  = 1; Indices[2]  = 2;
     Indices[3]  = 0; Indices[4]  = 2; Indices[5]  = 3;
     Indices[6]  = 0; Indices[7]  = 3; Indices[8]  = 4;
@@ -273,6 +277,7 @@ void cgParticleEmitterObject::sandboxRender( cgCameraNode * pCamera, cgVisibilit
     Indices[21] = 0; Indices[22] = 8; Indices[23] = 1;
 
     // Begin rendering
+    bool bWireframe = (flags & cgSandboxRenderFlags::Wireframe);
     pDriver->setVertexFormat( cgVertexFormat::formatFromDeclarator( cgShadedVertex::Declarator ) );
     pShader->setBool( _T("wireViewport"), bWireframe );
     pDriver->setWorldTransform( ObjectTransform );
@@ -297,7 +302,7 @@ void cgParticleEmitterObject::sandboxRender( cgCameraNode * pCamera, cgVisibilit
             // Build base indices
             if ( !bCull )
             {
-                for ( i = 0; i < 8; ++i )
+                for ( cgInt i = 0; i < 8; ++i )
                     Indices[i] = i+1;
                 Indices[8] = 1;
                 
@@ -316,7 +321,7 @@ void cgParticleEmitterObject::sandboxRender( cgCameraNode * pCamera, cgVisibilit
                 nColor  = 0xFF99CCE5;
                 
                 // Generate line strip circle 
-                for ( i = 0; i < 28; ++i )
+                for ( cgInt i = 0; i < 28; ++i )
                 {
                     // Build vertex
                     Points[i].position.x = (sinf( (CGE_TWO_PI / 28.0f) * (float)i ) * fRadius);
@@ -351,7 +356,7 @@ void cgParticleEmitterObject::sandboxRender( cgCameraNode * pCamera, cgVisibilit
                     nColor  = 0xFF4C6672;
 
                     // Generate line strip circle 
-                    for ( i = 0; i < 28; ++i )
+                    for ( cgInt i = 0; i < 28; ++i )
                     {
                         // Build vertex
                         Points[i].position.x = (sinf( (CGE_TWO_PI / 28.0f) * (float)i ) * fRadius);
@@ -391,7 +396,7 @@ void cgParticleEmitterObject::sandboxRender( cgCameraNode * pCamera, cgVisibilit
     } // End if begun technique
 
     // Call base class implementation last.
-    cgWorldObject::sandboxRender( pCamera, pVisData, bWireframe, GridPlane, pIssuer );
+    cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
 }
 
 //-----------------------------------------------------------------------------

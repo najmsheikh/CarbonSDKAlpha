@@ -39,6 +39,12 @@ const cgUID RTID_BoneNode   = {0x13BB0956, 0x1CF7, 0x43B9, {0x87, 0x72, 0x02, 0x
 const cgUID RTID_BoneObject = { 0xD4FAA572, 0xA4A4, 0x4F14, { 0x8E, 0x74, 0x75, 0x84, 0x2E, 0x63, 0xD4, 0xCB } };
 
 //-----------------------------------------------------------------------------
+// Forward Declarations
+//-----------------------------------------------------------------------------
+class cgMesh;
+class cgSkinBindData;
+
+//-----------------------------------------------------------------------------
 // Main Class Declarations
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -81,7 +87,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods (cgWorldObject)
     //-------------------------------------------------------------------------
-    virtual void                sandboxRender           ( cgCameraNode * camera, cgVisibilitySet * visibilityData, bool wireframe, const cgPlane & gridPlane, cgObjectNode * issuer );
+    virtual void                sandboxRender           ( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer );
     virtual bool                pick                    ( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, const cgVector3 & wireTolerance, cgFloat & distanceOut );
     virtual cgBoundingBox       getLocalBoundingBox     ( );
     virtual void                applyObjectRescale      ( cgFloat scale );
@@ -154,7 +160,8 @@ public:
     //-------------------------------------------------------------------------
     cgVector3                   getDirection            ( );
     void                        setBoneOrientation      ( const cgVector3 & source, const cgVector3 & destination, const cgVector3 & up );
-    void                        recomputeLength         ( );
+    bool                        recomputeDimensions     ( cgMesh * mesh, bool updateLength, cgFloat radialScale, cgUInt32 boneIndex = cgUInt32(-1) );
+    bool                        recomputeLength         ( );
 
     // Object Property 'Set' Routing
     void                        setWidth                ( cgFloat width );
