@@ -35,12 +35,47 @@
 //-----------------------------------------------------------------------------
 //  Name : cgPropertyContainer () (Constructor)
 /// <summary>
-/// cgPropertyContainer Class Constructor
+/// cgPropertyContainer class constructor
 /// </summary>
 //-----------------------------------------------------------------------------
 cgPropertyContainer::cgPropertyContainer()
 {
     // Nothing at this time.
+}
+
+//-----------------------------------------------------------------------------
+//  Name : cgPropertyContainer () (Constructor)
+/// <summary>
+/// cgPropertyContainer class constructor
+/// </summary>
+//-----------------------------------------------------------------------------
+cgPropertyContainer::cgPropertyContainer( const cgPropertyContainer & init )
+{
+    mProperties = init.mProperties;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : ~cgPropertyContainer () (Destructor)
+/// <summary>
+/// cgPropertyContainer class destructor
+/// </summary>
+//-----------------------------------------------------------------------------
+cgPropertyContainer::~cgPropertyContainer()
+{
+    dispose(false);
+}
+
+//-----------------------------------------------------------------------------
+//  Name : dispose () (Virtual)
+/// <summary>
+/// Release any memory, references or resources allocated by this object.
+/// </summary>
+/// <copydetails cref="cgScriptInterop::DisposableScriptObject::dispose()" />
+//-----------------------------------------------------------------------------
+void cgPropertyContainer::dispose( bool bDisposeBase )
+{
+    // Clear out properties
+    clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -90,35 +125,6 @@ const cgVariant & cgPropertyContainer::getProperty( const cgString & strName ) c
 {
 	Collection::const_iterator i = mProperties.find( strName );
 	return i->second;
-}
-
-//-----------------------------------------------------------------------------
-//  Name : getProperty () {vector version}
-/// <summary>
-/// Parses a string variant into a float vector type.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgPropertyContainer::getProperty( const cgString & strName, cgFloat *pVector, cgUInt32 nVectorSize )
-{
-	cgString s = (cgString)mProperties[ strName ];
-
-    // Tokenize the string into separate components.
-    cgStringArray aTokens;
-    if ( cgStringUtility::tokenize( s, aTokens, _T(",") ) == false )
-        return 0;
-
-    // Bail if the vector is larger than the data; we have no
-    // idea what the remaining components should be filled with.
-    if ( nVectorSize > aTokens.size() )
-        return false;
-
-    // Convert components.
-    size_t nComponents = std::min<size_t>( aTokens.size(), nVectorSize );
-    for ( size_t i = 0; i < nComponents; ++i )
-        cgStringParser( aTokens[i] ) >> pVector[0];
-    
-    // Success!
-    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -282,6 +288,12 @@ void cgPropertyContainer::parseXML( const cgXMLNode & xData )
             Type = cgVariant::Type_bool;
         else if ( strType == _T("float") || strType == _T("single") )
             Type = cgVariant::Type_float;
+        else if ( strType == _T("vector2") )
+            Type = cgVariant::Type_vector2;
+        else if ( strType == _T("vector3") )
+            Type = cgVariant::Type_vector3;
+        else if ( strType == _T("vector4") )
+            Type = cgVariant::Type_vector4;
         else if ( strType == _T("double") )
             Type = cgVariant::Type_double;
         else if ( strType == _T("int8") )
@@ -292,8 +304,6 @@ void cgPropertyContainer::parseXML( const cgXMLNode & xData )
             Type = cgVariant::Type_int64;
         else if ( strType == _T("uint64") )
             Type = cgVariant::Type_uint64;
-        else if ( strType == _T("vector2") || strType == _T("vector3") || strType == _T("vector4") )
-            Type = cgVariant::Type_string;
         else
             cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("Property '%s' contained an unrecognized 'type' attribute of '%s' when parsing property container data. Defaulting to 'string'.\n"), strName.c_str(), strType.c_str() );
 
@@ -351,4 +361,16 @@ bool cgPropertyContainer::operator == ( const cgPropertyContainer &rhs ) const
 bool cgPropertyContainer::operator != ( const cgPropertyContainer& rhs ) const
 {
 	return !( *this == rhs );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : operator = 
+/// <summary>
+/// Assignment operator
+/// </summary>
+//-----------------------------------------------------------------------------
+cgPropertyContainer & cgPropertyContainer::operator= ( const cgPropertyContainer& rhs )
+{
+	mProperties = rhs.mProperties;
+    return *this;
 }

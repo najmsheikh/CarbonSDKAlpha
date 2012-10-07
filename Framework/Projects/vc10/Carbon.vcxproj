@@ -520,6 +520,7 @@
     <ClCompile Include="..\..\Source\World\Objects\cgProjectorLight.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgSpotLight.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgSpatialTreeObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\Elements\cgAnimationSetElement.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\Elements\cgBoxCollisionShapeElement.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\Elements\cgCapsuleCollisionShapeElement.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\Elements\cgCollisionShapeElement.cpp" />
@@ -1288,6 +1289,7 @@
     <ClInclude Include="..\..\Include\World\Objects\cgProjectorLight.h" />
     <ClInclude Include="..\..\Include\World\Objects\cgSpotLight.h" />
     <ClInclude Include="..\..\Include\World\Objects\cgSpatialTreeObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\Elements\cgAnimationSetElement.h" />
     <ClInclude Include="..\..\Include\World\Objects\Elements\cgBoxCollisionShapeElement.h" />
     <ClInclude Include="..\..\Include\World\Objects\Elements\cgCapsuleCollisionShapeElement.h" />
     <ClInclude Include="..\..\Include\World\Objects\Elements\cgCollisionShapeElement.h" />

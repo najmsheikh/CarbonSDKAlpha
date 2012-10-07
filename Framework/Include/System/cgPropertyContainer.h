@@ -27,7 +27,7 @@
 //-----------------------------------------------------------------------------
 #include <cgBaseTypes.h>
 #include <System/cgVariant.h>
-#include <map>
+#include <Scripting/cgScriptInterop.h>
 
 //-----------------------------------------------------------------------------
 // Forward Declarations
@@ -44,13 +44,17 @@ class cgXMLNode;
 /// properties.
 /// </summary>
 //-----------------------------------------------------------------------------
-class CGE_API cgPropertyContainer
-{
+class CGE_API cgPropertyContainer : public cgScriptInterop::DisposableScriptObject
+{   
+    DECLARE_SCRIPTOBJECT( cgPropertyContainer, "PropertyContainer" )
+
 public:
 	//-------------------------------------------------------------------------
 	// Constructors & Destructors
 	//-------------------------------------------------------------------------
-    cgPropertyContainer( );
+     cgPropertyContainer( );
+     cgPropertyContainer( const cgPropertyContainer & init );
+    ~cgPropertyContainer( );
 
 	//-------------------------------------------------------------------------
 	// Public Typedefs, Structures and Enumerations
@@ -64,7 +68,6 @@ public:
     cgVariant         & getProperty         ( const cgString & propertyName );
     const cgVariant   & getProperty         ( const cgString & propertyName ) const;
     cgVariant           getProperty         ( const cgString & propertyName, const cgVariant & defaultValue ) const;
-	bool                getProperty         ( const cgString & propertyName, cgFloat * vectorValue, cgUInt32 vectorSize );
 	void                setProperty         ( const cgString & propertyName, const cgVariant & value );
     void                removeProperty      ( const cgString & propertyName );
     void                clear               ( );
@@ -79,6 +82,12 @@ public:
 	//-------------------------------------------------------------------------
     bool                operator ==         ( const cgPropertyContainer & rhs ) const;
 	bool                operator !=         ( const cgPropertyContainer & rhs ) const;
+    cgPropertyContainer&operator =          ( const cgPropertyContainer & rhs );
+
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods (Overrides DisposableScriptObject)
+    //-------------------------------------------------------------------------
+    virtual void        dispose             ( bool disposeBase );
 
 private:
     //-------------------------------------------------------------------------

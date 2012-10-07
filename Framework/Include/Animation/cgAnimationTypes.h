@@ -272,8 +272,9 @@ public:
     //-------------------------------------------------------------------------
 	// Public Methods
 	//-------------------------------------------------------------------------
-    void            evaluate            ( cgDouble position, cgVector3 & p, const cgVector3 & default );
-    void            addLinearKey        ( cgInt32 frame, const cgVector3 & value );
+    void                                    evaluate            ( cgDouble position, cgVector3 & p, const cgVector3 & default );
+    void                                    addLinearKey        ( cgInt32 frame, const cgVector3 & value );
+    const cgFloatCurveAnimationChannel    & getAnimationChannel ( cgUInt32 index ) const;
 
     //-------------------------------------------------------------------------
 	// Public Virtual Methods (Overrides cgAnimationTargetController)
@@ -319,8 +320,9 @@ public:
     //-------------------------------------------------------------------------
 	// Public Methods
 	//-------------------------------------------------------------------------
-    void            evaluate            ( cgDouble position, cgVector3 & s, const cgVector3 & default );
-    void            addLinearKey        ( cgInt32 frame, const cgVector3 & value );
+    void                                    evaluate            ( cgDouble position, cgVector3 & s, const cgVector3 & default );
+    void                                    addLinearKey        ( cgInt32 frame, const cgVector3 & value );
+    const cgFloatCurveAnimationChannel    & getAnimationChannel ( cgUInt32 index ) const;
 
     //-------------------------------------------------------------------------
 	// Public Virtual Methods (Overrides cgAnimationTargetController)
@@ -460,10 +462,11 @@ public:
     //-------------------------------------------------------------------------
 	// Public Methods
 	//-------------------------------------------------------------------------
-    void            evaluate            ( cgDouble position, cgEulerAngles & a, const cgEulerAngles & default );
-    void            evaluate            ( cgDouble position, cgEulerAngles & a, const cgQuaternion & default );
-    void            addLinearKey        ( cgInt32 frame, const cgEulerAngles & value );
-    void            addLinearKey        ( cgInt32 frame, const cgQuaternion & value );
+    void                                    evaluate            ( cgDouble position, cgEulerAngles & a, const cgEulerAngles & default );
+    void                                    evaluate            ( cgDouble position, cgEulerAngles & a, const cgQuaternion & default );
+    void                                    addLinearKey        ( cgInt32 frame, const cgEulerAngles & value );
+    void                                    addLinearKey        ( cgInt32 frame, const cgQuaternion & value );
+    const cgFloatCurveAnimationChannel    & getAnimationChannel ( cgUInt32 index ) const;
 
     //-------------------------------------------------------------------------
 	// Public Virtual Methods (Overrides cgAnimationTargetController)

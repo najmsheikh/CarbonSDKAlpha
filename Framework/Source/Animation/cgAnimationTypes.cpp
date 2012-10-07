@@ -737,6 +737,21 @@ void cgPositionXYZTargetController::addLinearKey( cgInt32 frame, const cgVector3
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getAnimationChannel ()
+/// <summary>
+/// Retrieve the data associated with a specific animation channel by index.
+/// Valid indices are 0=X, 1=Y, 2=Z
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgFloatCurveAnimationChannel & cgPositionXYZTargetController::getAnimationChannel( cgUInt32 index ) const
+{
+    static cgFloatCurveAnimationChannel Empty;
+    if ( index >= 3 )
+        return Empty;
+    return mCurves[index];
+}
+
+//-----------------------------------------------------------------------------
 // Name : getSupportedChannels ( )
 /// <summary>
 /// Retrieve an array containing the string identifiers of the animation
@@ -866,6 +881,21 @@ void cgScaleXYZTargetController::addLinearKey( cgInt32 frame, const cgVector3 & 
 {
     for ( cgInt i = 0; i < 3; ++i )
         mCurves[i].addLinearKey( frame, value[i] );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getAnimationChannel ()
+/// <summary>
+/// Retrieve the data associated with a specific animation channel by index.
+/// Valid indices are 0=X, 1=Y, 2=Z
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgFloatCurveAnimationChannel & cgScaleXYZTargetController::getAnimationChannel( cgUInt32 index ) const
+{
+    static cgFloatCurveAnimationChannel Empty;
+    if ( index >= 3 )
+        return Empty;
+    return mCurves[index];
 }
 
 //-----------------------------------------------------------------------------
@@ -1389,6 +1419,21 @@ void cgEulerAnglesTargetController::addLinearKey( cgInt32 frame, const cgQuatern
         mCurves[i].addLinearKey( frame, e[i] );
 
     } // Next curve
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getAnimationChannel ()
+/// <summary>
+/// Retrieve the data associated with a specific animation channel by index.
+/// Valid indices are 0=X, 1=Y, 2=Z
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgFloatCurveAnimationChannel & cgEulerAnglesTargetController::getAnimationChannel( cgUInt32 index ) const
+{
+    static cgFloatCurveAnimationChannel Empty;
+    if ( index >= 3 )
+        return Empty;
+    return mCurves[index];
 }
 
 //-----------------------------------------------------------------------------

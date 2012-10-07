@@ -186,7 +186,7 @@ bool cgWorldConfiguration::newConfiguration( cgWorldType::Base type )
 /// database file.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgConfigResult::Base cgWorldConfiguration::loadConfiguration( cgUInt32 minSupportedVersion /* = 0 */, cgUInt32 maxSupportedVersion /* = 0xFFFFFFFF */ )
+cgConfigResult::Base cgWorldConfiguration::loadConfiguration( cgUInt32 minSupportedVersion /* = 0 */, cgUInt32 maxSupportedVersion /* = 0xFFFFFFFF */, bool autoUpgrade /* = false */ )
 {
     // Load the primary configuration row.
     cgString error;
@@ -226,6 +226,43 @@ cgConfigResult::Base cgWorldConfiguration::loadConfiguration( cgUInt32 minSuppor
     mVersion = cgMakeVersion( version, subversion, revision );
     if ( mVersion < minSupportedVersion || mVersion > maxSupportedVersion )
         return cgConfigResult::Mismatch;
+
+    // If layout is not the latest version, check to see if it 
+    // can be / needs to be converted.
+    mLayoutStatus = cgWorldDatabaseStatus::Valid;
+    if ( mVersion < maxSupportedVersion )
+    {
+        // Check to see if a conversion file exists (this indicates that an upgrade is REQUIRED)
+        cgString conversionFile = cgString::format( _T("sys://Layout/Conversion/%x_to_%x.dat"), mVersion, maxSupportedVersion );
+        bool conversionRequired = cgFileSystem::fileExists( cgFileSystem::resolveFileLocation( conversionFile ) );
+
+        // Upgrade?
+        mLayoutStatus = cgWorldDatabaseStatus::LegacyLayout;
+        if ( autoUpgrade && conversionRequired )
+        {
+            cgUInt32 newVersion, newSubversion, newRevision;
+            cgDecomposeVersion( maxSupportedVersion, newVersion, newSubversion, newRevision );
+            cgAppLog::write( cgAppLog::Info, _T("Attempting to upgrade layout of world database from v%i.%02i.%04i to v%i.%02i.%04i.\n"), 
+                             version, subversion, revision, newVersion, newSubversion, newRevision );
+
+            // Run the upgrade script
+            cgString layout = cgFileSystem::loadStringFromStream( conversionFile );
+            if ( !mWorld->executeQuery( layout, true ) )
+                return cgConfigResult::Error;
+
+            // Update version number and mark as upgraded
+            mVersion = maxSupportedVersion;
+            mLayoutStatus = cgWorldDatabaseStatus::LayoutUpdated;
+
+        } // End if auto upgrade
+        else if ( conversionRequired )
+        {
+            // Just fail.
+            return cgConfigResult::Mismatch;
+
+        } // End if cannot upgrade
+
+    } // End if not latest version
     
     // Build local object type table.
     if ( !loadObjectTypeTable( ) )
@@ -1128,6 +1165,20 @@ const cgObjectSubElementTypeDesc * cgWorldConfiguration::getObjectSubElementType
 cgUInt32 cgWorldConfiguration::getVersion( ) const
 {
     return mVersion;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getLayoutStatus ()
+/// <summary>
+/// When the database configuration is loaded, version testing is performed
+/// and the layout of the database is potentially updated. The layout status
+/// returned by this method indicates the action (if any) that was taken during
+/// this process when the configuration was first loaded.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgWorldDatabaseStatus::Base cgWorldConfiguration::getLayoutStatus() const
+{
+    return mLayoutStatus;
 }
 
 //-----------------------------------------------------------------------------

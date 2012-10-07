@@ -50,6 +50,8 @@ cgObjectBehavior::cgObjectBehavior( )
     // Initialize variables to sensible defaults
     mParentObject     = CG_NULL;
     mScriptObject     = CG_NULL;
+    mLoadOrder        = 0;
+    mUserId           = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -196,6 +198,76 @@ void cgObjectBehavior::unregisterAsInputListener( )
 {
     cgInputDriver * pDriver = cgInputDriver::getInstance();
     pDriver->unregisterEventListener( static_cast<cgInputListener*>(this) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isScripted ()
+/// <summary>
+/// Returns true if the behavior is implemented through a script. Returns false
+/// if this behavior has a native application side implementation.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgObjectBehavior::isScripted( ) const
+{
+    return mScript.isValid();
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getScript ()
+/// <summary>
+/// Retrieve the handle the script containing the behavior logic if this is
+/// a scripted behavior (see cgObjectBehavior::isScripted()).
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgScriptHandle & cgObjectBehavior::getScript( ) const
+{
+    return mScript;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getLoadOrder ()
+/// <summary>
+/// Retrieve the interger value that indicates the sorted order in which this 
+/// behavior is loaded / executed when attached to a parent node.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt32 cgObjectBehavior::getLoadOrder( ) const
+{
+    return mLoadOrder;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getUserId ()
+/// <summary>
+/// Retrieve the user specified integer identifier for this behavior.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgUInt32 cgObjectBehavior::getUserId( ) const
+{
+    return mUserId;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setLoadOrder ()
+/// <summary>
+/// Set the interger value that indicates the sorted order in which this 
+/// behavior is loaded / executed when attached to a parent node.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgObjectBehavior::setLoadOrder( cgInt32 order )
+{
+    mLoadOrder = order;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setUserId ()
+/// <summary>
+/// Set the user specified integer identifier for this behavior.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgObjectBehavior::setUserId( cgUInt32 identifier )
+{
+    mUserId = identifier;
 }
 
 //-----------------------------------------------------------------------------

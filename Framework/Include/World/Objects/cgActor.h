@@ -88,6 +88,11 @@ public:
     //---------------------------------------------------------------------
     virtual void                setOpen                 ( bool open );
 
+    //---------------------------------------------------------------------
+    // Public Virtual Methods (Overrides cgWorldObject)
+    //---------------------------------------------------------------------
+    virtual bool                getSubElementCategories ( cgObjectSubElementCategory::Map & categories ) const;
+
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldComponent)
     //-------------------------------------------------------------------------
@@ -144,6 +149,11 @@ class CGE_API cgActorNode : public cgGroupNode, public cgObjectNodeEventListener
 
 public:
     //-------------------------------------------------------------------------
+    // Protected Typedefs
+    //-------------------------------------------------------------------------
+    CGE_MAP_DECLARE( cgString, cgAnimationTarget*, TargetMap )
+
+    //-------------------------------------------------------------------------
     // Constructors & Destructors
     //-------------------------------------------------------------------------
              cgActorNode( cgUInt32 referenceId, cgScene * scene );
@@ -160,6 +170,7 @@ public:
     // Public Methods
     //-------------------------------------------------------------------------
     cgAnimationController     * getAnimationController      ( ) const;
+    const TargetMap           & getAnimationTargets         ( ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgGroupNode)
@@ -223,11 +234,6 @@ public:
     virtual bool                queryReferenceType          ( const cgUID & type ) const;
 
 protected:
-    //-------------------------------------------------------------------------
-    // Protected Typedefs
-    //-------------------------------------------------------------------------
-    CGE_MAP_DECLARE( cgString, cgAnimationTarget*, TargetMap )
-
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------

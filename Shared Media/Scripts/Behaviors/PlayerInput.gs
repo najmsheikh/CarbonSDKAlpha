@@ -102,7 +102,7 @@ class PlayerInputBehavior : IScriptedObjectBehavior
 	void onUpdate( float elapsedTime )
 	{
         InputDriver @ inputDriver   = getAppInputDriver();
-		float         angularSpeed  = 120.0f * elapsedTime;
+		float         angularSpeed  = 420.0f * elapsedTime;
 		ObjectNode  @ parentObject  = mBehavior.getParentObject();
 
 		// Bail if the cursor is up.
@@ -118,8 +118,10 @@ class PlayerInputBehavior : IScriptedObjectBehavior
 		// cases (i.e. 30fps or below) where the above smoothing can't be applied.
 		Vector2 rotation = mTotalOffset * consumeRate;
 		Vector2 finalRotation = (mPrevRotation + rotation) * 0.5f;
-		mPrevRotation = rotation;
-
+        mPrevRotation = rotation;
+		//Vector2 finalRotation = mTotalOffset;
+		//consumeRate = 1;		
+		
         // Get the camera attached as an immediate child of the parent object.
         CameraNode @ camera = cast<CameraNode>(parentObject.findChildOfType( RTID_CameraObject, false ));
 

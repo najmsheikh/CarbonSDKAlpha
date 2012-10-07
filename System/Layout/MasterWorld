@@ -199,6 +199,38 @@ CREATE TABLE [Nodes] (
   [UpdateRate] smallint DEFAULT (0));
 CREATE INDEX [Nodes_CellIdIndex] ON [Nodes] ([CellId]);
 CREATE INDEX [Nodes_LevelIndex] ON [Nodes] ([Level]);
+CREATE TRIGGER [Nodes_OnDelete]
+  BEFORE DELETE
+  ON [Nodes]
+  BEGIN
+    DELETE FROM [Nodes::CustomProperties] WHERE NodeId=old.RefId;  
+    DELETE FROM [Nodes::Behaviors] WHERE NodeId=old.RefId;  
+  END;
+
+--Table: Nodes::CustomProperties
+
+CREATE TABLE [Nodes::CustomProperties] (
+  [PropertyId] integer PRIMARY KEY AUTOINCREMENT, 
+  [NodeId] integer, 
+  [Name] varchar(64), 
+  [Type] smallint DEFAULT 0, 
+  [Value] BLOB);
+
+CREATE INDEX [Nodes::CustomProperties_NodeIdIndex] ON [Nodes::CustomProperties] ([NodeId]);
+
+--Table: Nodes::Behaviors
+
+CREATE TABLE [Nodes::Behaviors] (
+  [BehaviorId] integer PRIMARY KEY AUTOINCREMENT, 
+  [NodeId] integer,
+  [LoadOrder] integer,
+  [Type] smallint DEFAULT 0, 
+  [Script] path,
+  [TypeName] varchar(64), 
+  [Data] BLOB);
+
+CREATE INDEX [Nodes::Behaviors_NodeIdIndex] ON [Nodes::Behaviors] ([NodeId]);
+CREATE INDEX [Nodes::Behaviors_SortedLoad] ON [Nodes::Behaviors] ([NodeId], [LoadOrder]);
 
 --Table: ObjectClasses
 

@@ -89,6 +89,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
+    virtual cgString            getDisplayName          ( ) const;
     virtual void                sandboxRender           ( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer );
     virtual const cgUID       & getElementCategory      ( ) const = 0;
     virtual void                applyElementRescale     ( cgFloat fScale );

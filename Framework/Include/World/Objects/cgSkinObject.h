@@ -76,6 +76,7 @@ public:
     virtual bool                renderSubset            ( cgCameraNode * camera, cgVisibilitySet * visibilityData, cgObjectNode * issuer, const cgMaterialHandle & hMaterial );
     virtual bool                getSubElementCategories ( cgObjectSubElementCategory::Map & Categories ) const;
     virtual cgBoundingBox       getLocalBoundingBox     ( );
+    virtual bool                pick                    ( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldComponent)

@@ -122,6 +122,7 @@ cgScene::cgScene( cgWorld * world, const cgSceneDescriptor * description )  : cg
     mIsLoading            = false;
     mIsDirty              = false;
     mDynamicsEnabled      = true;
+    mUpdatingEnabled      = true;
     mSceneWritesEnabled   = true;
     mNextSelectionId      = 0;
     mActiveElementType    = cgUID::Empty;
@@ -249,6 +250,7 @@ void cgScene::dispose( bool disposeBase )
     mLandscape            = CG_NULL;
     mActiveElementType    = cgUID::Empty;
     mDynamicsEnabled      = true;
+    mUpdatingEnabled      = true;
     mSceneWritesEnabled   = true;
     mOnSceneRenderMethod  = CG_NULL;
 
@@ -423,12 +425,14 @@ bool cgScene::reload( )
 {
     // Backup necessary settings
     bool oldDynamics = mDynamicsEnabled;
+    bool oldUpdating = mUpdatingEnabled;
 
     // Clear out scene data.
     dispose(false);
 
     // Restore necessary settings
     mDynamicsEnabled = oldDynamics;
+    mUpdatingEnabled = oldUpdating;
 
     // Reload the scene
     return load();
@@ -2500,16 +2504,20 @@ void cgScene::update( )
 
     // Allow scene nodes to update. First iterate through the 'Always Update' list.
     cgObjectNodeList::iterator itNode;
-    cgObjectNodeList * bucketNodes = &mUpdateBuckets[ cgUpdateRate::Always ].nodes;
-    for ( itNode = bucketNodes->begin(); itNode != bucketNodes->end(); )
+    if ( mUpdatingEnabled )
     {
-        // Increment as we go as the 'update' call may delete the node
-        cgObjectNode * node = *itNode++;
-        
-        // Trigger the node's update process
-        node->update( timeDelta );    
+        cgObjectNodeList * bucketNodes = &mUpdateBuckets[ cgUpdateRate::Always ].nodes;
+        for ( itNode = bucketNodes->begin(); itNode != bucketNodes->end(); )
+        {
+            // Increment as we go as the 'update' call may delete the node
+            cgObjectNode * node = *itNode++;
+            
+            // Trigger the node's update process
+            node->update( timeDelta );    
 
-    } // Next scene node
+        } // Next scene node
+
+    } // End if updates enabled
 
     // Now iterate through all other update rate buckets
     for ( cgUInt32 i = cgUpdateRate::FPS1; i < cgUpdateRate::Count; ++i )
@@ -2527,17 +2535,23 @@ void cgScene::update( )
         {
             cgFloat finalDelta = std::min<cgFloat>(1.0f,(cgFloat)(currentTime - bucket->lastUpdateTime));
 
-            // Step through the list and update
-            bucketNodes = &mUpdateBuckets[i].nodes;
-            for ( itNode = bucketNodes->begin(); itNode != bucketNodes->end(); )
+            // Step through the list and update unless updates are disabled.
+            // Still allow schedule / housekeeping to update so that times don't
+            // get wildly out of control.
+            if ( mUpdatingEnabled )
             {
-                // Increment as we go as the 'update' call may delete the node
-                cgObjectNode * node = *itNode++;
-                
-                // Trigger the node's update process
-                node->update( finalDelta );
+                cgObjectNodeList * bucketNodes = &mUpdateBuckets[i].nodes;
+                for ( itNode = bucketNodes->begin(); itNode != bucketNodes->end(); )
+                {
+                    // Increment as we go as the 'update' call may delete the node
+                    cgObjectNode * node = *itNode++;
+                    
+                    // Trigger the node's update process
+                    node->update( finalDelta );
 
-            } // Next scene object
+                } // Next scene object
+            
+            } // End if allow updates
 
             // Just for housekeeping purposes, record the last time an update was run
             bucket->lastUpdateTime = currentTime;
@@ -2639,6 +2653,30 @@ void cgScene::queueNodeUpdates( cgObjectNode * node )
 void cgScene::resolvedNodeUpdates( cgObjectNode * node )
 {
     mPendingUpdates.erase( node );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : enableUpdates ()
+/// <summary>
+/// Set the state which determines whether scene objects will automatically
+/// receive calls to their 'update' method during scene update processing.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScene::enableUpdates( bool enabled )
+{
+    mUpdatingEnabled = enabled;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isUpdatingEnabled ()
+/// <summary>
+/// Get the state which determines whether scene objects will automatically
+/// receive calls to their 'update' method during scene update processing.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgScene::isUpdatingEnabled( ) const
+{
+    return mUpdatingEnabled;
 }
 
 //-----------------------------------------------------------------------------

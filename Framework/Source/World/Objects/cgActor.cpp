@@ -28,6 +28,7 @@
 // cgActor Module Includes
 //-----------------------------------------------------------------------------
 #include <World/Objects/cgActor.h>
+#include <World/Objects/Elements/cgAnimationSetElement.h>
 #include <World/cgScene.h>
 #include <Animation/cgAnimationController.h>
 #include <Resources/cgAnimationSet.h>
@@ -373,6 +374,12 @@ bool cgActorObject::onComponentLoading( cgComponentLoadingEventArgs * e )
         // Restore handle database update options.
         mAnimationSets.back().enableDatabaseUpdate( (isInternalReference() == false) );
 
+        // Create a sub element to represent this animation set (this is an internal element 
+        // only in this build simply to create a link between the actor and the editing environment).
+        cgAnimationSetElement * element = (cgAnimationSetElement*)createSubElement( true, OSECID_AnimationSets, RTID_AnimationSetElement );
+        if ( element )
+            element->setAnimationSet( animationSet );
+
     } // Next reference
 
     // We're done reading references.
@@ -531,6 +538,12 @@ bool cgActorObject::addAnimationSet( const cgAnimationSetHandle & animationSet )
     
     } // End if serialize
 
+    // Create a sub element to represent this animation set (this is an internal element 
+    // only in this build simply to create a link between the actor and the editing environment).
+    cgAnimationSetElement * element = (cgAnimationSetElement*)createSubElement( true, OSECID_AnimationSets, RTID_AnimationSetElement );
+    if ( element )
+        element->setAnimationSet( animationSet );
+
     // Notify listeners that object data has changed.
     static const cgString modificationContext = _T("AnimationSetAdded");
     onComponentModified( &cgComponentModifiedEventArgs( modificationContext ) );
@@ -579,6 +592,39 @@ const cgAnimationSetHandle & cgActorObject::getAnimationSet( cgUInt32 index ) co
     if ( index >= (cgUInt32)mAnimationSets.size() )
         return cgAnimationSetHandle::Null;
     return mAnimationSets[index];
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getSubElementCategories () (Virtual)
+/// <summary>
+/// Enumerate the list of sub-element categories and types that can be accessed
+/// by the sandbox environment / application. Returns true if sub-elements are
+/// supported.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgActorObject::getSubElementCategories( cgObjectSubElementCategory::Map & Categories ) const
+{
+    // Call base class implementation to populate base elements.
+    cgWorldObject::getSubElementCategories( Categories );
+
+    // Actor objects also expose animation sets
+    cgObjectSubElementCategory & Category = Categories[ OSECID_AnimationSets ];
+    Category.identifier   = OSECID_AnimationSets;
+    Category.name         = _T("Animation Sets");
+    Category.canCreate    = true;
+    Category.canDelete    = true;
+    Category.canEnumerate = true;
+    
+    // Animation Set
+    {
+        cgObjectSubElementDesc & Type = Category.supportedTypes[ RTID_AnimationSetElement ];
+        Type.identifier = RTID_AnimationSetElement;
+        Type.name       = _T("Animation Set");
+    
+    } // End Animation Set
+        
+    // Success!
+    return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -897,4 +943,17 @@ void cgActorNode::onInstanceIdentifierChange( cgObjectNodeNameChangeEventArgs * 
 cgAnimationController * cgActorNode::getAnimationController( ) const
 {
     return mController;
+}
+
+//-----------------------------------------------------------------------------
+// Name : getAnimationTargets( )
+/// <summary>
+/// Retrieve the container that provides a mapping between a specific instance 
+/// identifier, and an associated object node (if any) contained somewhere
+/// below this actor in the hierarchy.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgActorNode::TargetMap & cgActorNode::getAnimationTargets( ) const
+{
+    return mTargets;
 }

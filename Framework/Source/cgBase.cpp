@@ -84,6 +84,7 @@
 #include <World/Objects/Elements/cgCapsuleCollisionShapeElement.h>
 #include <World/Objects/Elements/cgConeCollisionShapeElement.h>
 #include <World/Objects/Elements/cgHullCollisionShapeElement.h>
+#include <World/Objects/Elements/cgAnimationSetElement.h>
 
 // Physics Controllers
 #include <Physics/Controllers/cgCharacterController.h>
@@ -288,6 +289,7 @@ bool cgEngineInit( const CGEConfig & Config, cgLogOutput * pOutput /* = CG_NULL 
     cgObjectSubElement::registerType( RTID_CapsuleCollisionShapeElement , _T("Capsule Collision Shape")    , cgCapsuleCollisionShapeElement::allocateNew, cgCapsuleCollisionShapeElement::allocateClone );
     cgObjectSubElement::registerType( RTID_ConeCollisionShapeElement    , _T("Cone Collision Shape")       , cgConeCollisionShapeElement::allocateNew, cgConeCollisionShapeElement::allocateClone );
     cgObjectSubElement::registerType( RTID_HullCollisionShapeElement    , _T("Convex Hull Collision Shape"), cgHullCollisionShapeElement::allocateNew, cgHullCollisionShapeElement::allocateClone );
+    cgObjectSubElement::registerType( RTID_AnimationSetElement          , _T("Animation Set")              , cgAnimationSetElement::allocateNew, cgAnimationSetElement::allocateClone );
 
     // Initialize the main script engine
     cgScriptEngine * pEngine = cgScriptEngine::getInstance();

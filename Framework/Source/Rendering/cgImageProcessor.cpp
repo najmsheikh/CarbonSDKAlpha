@@ -89,6 +89,10 @@ void cgImageProcessor::dispose( bool bDisposeBase )
         mSamplers.point->scriptSafeDispose();
     if ( mSamplers.linear )
         mSamplers.linear->scriptSafeDispose();
+	if ( mSamplers.pointBorder )
+		mSamplers.pointBorder->scriptSafeDispose();
+	if ( mSamplers.linearBorder )
+		mSamplers.linearBorder->scriptSafeDispose();
     if ( mSamplers.imageLinear )
         mSamplers.imageLinear->scriptSafeDispose();
     if ( mSamplers.grain )
@@ -405,6 +409,8 @@ bool cgImageProcessor::initialize( cgRenderDriver * pDriver )
     // Create samplers
     mSamplers.point            = pResources->createSampler( _T("Image"), mProcessShaderHandle );
     mSamplers.linear           = pResources->createSampler( _T("Image"), mProcessShaderHandle );
+	mSamplers.pointBorder      = pResources->createSampler( _T("Image"), mProcessShaderHandle );
+	mSamplers.linearBorder     = pResources->createSampler( _T("Image"), mProcessShaderHandle );
     mSamplers.imageLinear      = pResources->createSampler( _T("ImageLinear"), mProcessShaderHandle );
     mSamplers.vignette         = pResources->createSampler( _T("Vignette"), mProcessShaderHandle );
     mSamplers.grain            = pResources->createSampler( _T("Grain"), mProcessShaderHandle );
@@ -467,6 +473,24 @@ bool cgImageProcessor::initialize( cgRenderDriver * pDriver )
     smpStates.addressV = cgAddressingMode::Wrap;
     smpStates.addressW = cgAddressingMode::Wrap;
     mSamplers.grain->setStates( smpStates );
+
+	// Linear sampling (border)
+	smpStates.minificationFilter = cgFilterMethod::Linear;
+	smpStates.magnificationFilter = cgFilterMethod::Linear;		
+	smpStates.addressU = cgAddressingMode::Border;
+	smpStates.addressV = cgAddressingMode::Border;
+	smpStates.addressW = cgAddressingMode::Border;
+	smpStates.borderColor = 0;
+	mSamplers.linearBorder->setStates( smpStates );
+
+	// Point sampling (border)
+	smpStates.minificationFilter = cgFilterMethod::Point;
+	smpStates.magnificationFilter = cgFilterMethod::Point;		
+	smpStates.addressU = cgAddressingMode::Border;
+	smpStates.addressV = cgAddressingMode::Border;
+	smpStates.addressW = cgAddressingMode::Border;
+	smpStates.borderColor = 0;
+	mSamplers.pointBorder->setStates( smpStates );
 
     // Create constant buffers that map operation data
     // to the physical processing shader.

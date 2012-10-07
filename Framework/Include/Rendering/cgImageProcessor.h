@@ -180,7 +180,9 @@ protected:
     {
         cgSampler * point;
         cgSampler * linear;
-        cgSampler * imageLinear;
+		cgSampler * pointBorder;
+		cgSampler * linearBorder;
+		cgSampler * imageLinear;
         cgSampler * grain;
         cgSampler * vignette;
         cgSampler * remap;

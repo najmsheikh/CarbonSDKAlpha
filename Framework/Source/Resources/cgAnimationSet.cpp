@@ -802,6 +802,18 @@ cgFloat cgAnimationSet::getFrameRate( ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getFrameRange ()
+/// <summary>
+/// Get the minimum and maximum indices of the frames of animation contained 
+/// within this animation set.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgRange cgAnimationSet::getFrameRange( ) const
+{
+    return cgRange( mFirstFrame, mLastFrame );
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getTargetData ()
 /// <summary>
 /// Retrieve the animation target data contained in this set.
@@ -989,6 +1001,42 @@ void cgAnimationSet::addMatrixKey( cgInt32 nFrame, const cgString & strTargetId,
     addScaleKey( nFrame, strTargetId, Scale );
     addRotationKey( nFrame, strTargetId, Rotation );
     addTranslationKey( nFrame, strTargetId, Translation );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : computeFrameIndex ()
+/// <summary>
+/// Given a position in seconds, convert that position to the closest frame
+/// index as it would be interpreted by the animation set during a call to
+/// the 'getSRT()' method.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt32 cgAnimationSet::computeFrameIndex( cgDouble position )
+{
+    cgInt32 nMinFrame = 0x7FFFFFFF; // For future expansion
+    cgInt32 nMaxFrame = 0x7FFFFFFF; // For future expansion
+
+    // Convert position in seconds into position in frames.
+    position *= mFramesPerSecond;
+
+    // Compute the minimum and maximum period for this animation set.
+    // It isn't necessarily the case that the set starts on frame 0.
+    cgDouble fMinPeriod = (nMinFrame == 0x7FFFFFFF) ? (cgDouble)mFirstFrame : (cgDouble)nMinFrame;
+    cgDouble fMaxPeriod = (nMaxFrame == 0x7FFFFFFF) ? (cgDouble)mLastFrame : (cgDouble)nMaxFrame;
+
+    // Map the specified frame position into the "periodic" for this animation set.
+    if ( position > 0 )
+    {
+        cgDouble fPeriodic = fMinPeriod + fmod( position, (fMaxPeriod - fMinPeriod) );
+        return (cgInt32)floor(fPeriodic);
+    
+    } // End if > 0
+    else
+    {
+        cgDouble fPeriodic = fMinPeriod + ((fMaxPeriod - fMinPeriod) + fmod( position, (fMaxPeriod - fMinPeriod) ));
+        return (cgInt32)ceil(fPeriodic);
+    
+    } // End if <= 0
 }
 
 //-----------------------------------------------------------------------------

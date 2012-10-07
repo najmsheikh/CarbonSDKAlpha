@@ -1403,3 +1403,15 @@ bool cgBoneNode::recomputeLength( )
     // Was an update made?
     return (childBoneCount != 0);
 }
+
+//-----------------------------------------------------------------------------
+// Name : enableChildUpdates()
+/// <summary>
+/// Enable or disable the automatic repositioning of child bones when the 
+/// length of this bone is modified.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgBoneNode::enableChildUpdates( bool enable )
+{
+    mDisableChildUpdates = !enable;
+}

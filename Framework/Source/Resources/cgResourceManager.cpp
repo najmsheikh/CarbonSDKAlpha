@@ -3626,7 +3626,7 @@ cgString cgResourceManager::listActiveResources( ResourceItemList & ResourceList
         strLost = (pResource->isResourceLost()) ? _T(" (Lost)") : _T("");
 
         // Build string representing the item
-        strItem = cgString::format( _T("Item %i - Resource '%s'%s remains referenced in %i location(s) beginning with '%s'.\n"), Counter, pResource->getResourceName().c_str(), strLost.c_str(), pResource->getReferenceCount( true ), pResource->getResourceSource().c_str() );
+        strItem = cgString::format( _T("Item %i - Resource '%s'%s remains referenced in %i location(s) beginning with '%s'.\n"), Counter, pResource->getResourceName().c_str(), strLost.c_str(), pResource->getReferenceCount( true ), pResource->getResourceName().c_str() );
 
         // Append to list
         strList += strItem + _T("\n");

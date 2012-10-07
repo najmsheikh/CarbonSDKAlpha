@@ -285,6 +285,8 @@ public:
     const cgFilterExpression::IdentifierArray & getMaterialPropertyIdentifiers( ) const;
 
     // update Process
+    void                        enableUpdates           ( bool enabled );
+    bool                        isUpdatingEnabled       ( ) const;
     void                        update                  ( );
     void                        queueNodeUpdates        ( cgObjectNode * node );
     void                        resolvedNodeUpdates     ( cgObjectNode * node );
@@ -479,6 +481,7 @@ protected:
     // Object Update Processing
     UpdateBucket            mUpdateBuckets[cgUpdateRate::Count];
     cgObjectNodeSet         mPendingUpdates;
+    bool                    mUpdatingEnabled;
 
     // Controllers
     ControllerArray         mSceneControllers;      // List of applied scene controllers that may manipulate scene data.

@@ -45,6 +45,9 @@ namespace Variant
             BINDSUCCESS( engine->registerEnumValue( "VariantType", "Int64", cgVariant::Type_int64 ) );
             BINDSUCCESS( engine->registerEnumValue( "VariantType", "UInt64", cgVariant::Type_uint64 ) );
             BINDSUCCESS( engine->registerEnumValue( "VariantType", "Float", cgVariant::Type_float ) );
+            BINDSUCCESS( engine->registerEnumValue( "VariantType", "Vector2", cgVariant::Type_vector2 ) );
+            BINDSUCCESS( engine->registerEnumValue( "VariantType", "Vector3", cgVariant::Type_vector3 ) );
+            BINDSUCCESS( engine->registerEnumValue( "VariantType", "Vector4", cgVariant::Type_vector4 ) );
             BINDSUCCESS( engine->registerEnumValue( "VariantType", "Double", cgVariant::Type_double ) );
             BINDSUCCESS( engine->registerEnumValue( "VariantType", "String", cgVariant::Type_string ) );
 
@@ -62,8 +65,11 @@ namespace Variant
             BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_CONSTRUCT,  "void f(int64)", asFUNCTIONPR(constructVariant,(cgInt64,cgVariant*),void), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_CONSTRUCT,  "void f(uint64)", asFUNCTIONPR(constructVariant,(cgUInt64,cgVariant*),void), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_CONSTRUCT,  "void f(float)", asFUNCTIONPR(constructVariant,(cgFloat,cgVariant*),void), asCALL_CDECL_OBJLAST) );
-            BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_CONSTRUCT,  "void f(double)", asFUNCTIONPR(constructVariant,(cgDouble,cgVariant*),void), asCALL_CDECL_OBJLAST) );
+            BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_CONSTRUCT,  "void f(const Vector2 &in)", asFUNCTIONPR(constructVariant,(const cgVector2&,cgVariant*),void), asCALL_CDECL_OBJLAST) );
+            BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_CONSTRUCT,  "void f(const Vector3 &in)", asFUNCTIONPR(constructVariant,(const cgVector3&,cgVariant*),void), asCALL_CDECL_OBJLAST) );
+            BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_CONSTRUCT,  "void f(const Vector4 &in)", asFUNCTIONPR(constructVariant,(const cgVector4&,cgVariant*),void), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_CONSTRUCT,  "void f(const String &in)", asFUNCTIONPR(constructVariant,(const cgString&,cgVariant*),void), asCALL_CDECL_OBJLAST) );
+            BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_CONSTRUCT,  "void f(double)", asFUNCTIONPR(constructVariant,(cgDouble,cgVariant*),void), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_DESTRUCT,   "void f()", asFUNCTION(destructVariant), asCALL_CDECL_OBJLAST) );
 
             // Register the object operator overloads
@@ -76,6 +82,9 @@ namespace Variant
             BINDSUCCESS( engine->registerObjectMethod( "Variant", "Variant &opAssign(int64)", asMETHODPR(cgVariant, operator=, (cgInt64), cgVariant&), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Variant", "Variant &opAssign(uint64)", asMETHODPR(cgVariant, operator=, (cgUInt64), cgVariant&), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Variant", "Variant &opAssign(float)", asMETHODPR(cgVariant, operator=, (cgFloat), cgVariant&), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Variant", "Variant &opAssign(const Vector2 &in)", asMETHODPR(cgVariant, operator=, (const cgVector2&), cgVariant&), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Variant", "Variant &opAssign(const Vector3 &in)", asMETHODPR(cgVariant, operator=, (const cgVector3&), cgVariant&), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Variant", "Variant &opAssign(const Vector4 &in)", asMETHODPR(cgVariant, operator=, (const cgVector4&), cgVariant&), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Variant", "Variant &opAssign(double)", asMETHODPR(cgVariant, operator=, (cgDouble), cgVariant&), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Variant", "Variant &opAssign(const String &in)", asMETHODPR(cgVariant, operator=, (const cgString&), cgVariant&), asCALL_THISCALL) );
 	        BINDSUCCESS( engine->registerObjectMethod( "Variant", "bool opEquals(const Variant &in) const", asMETHODPR(cgVariant, operator==, (const cgVariant &) const, bool), asCALL_THISCALL) );
@@ -89,6 +98,9 @@ namespace Variant
             BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_IMPLICIT_VALUE_CAST, "int64 f() const", asMETHODPR(cgVariant,operator cgInt64,() const,cgInt64), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_IMPLICIT_VALUE_CAST, "uint64 f() const", asMETHODPR(cgVariant,operator cgUInt64,() const,cgUInt64), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_IMPLICIT_VALUE_CAST, "float f() const", asMETHODPR(cgVariant,operator cgFloat,() const,cgFloat), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_IMPLICIT_VALUE_CAST, "Vector2 f() const", asMETHODPR(cgVariant,operator cgVector2,() const,cgVector2), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_IMPLICIT_VALUE_CAST, "Vector3 f() const", asMETHODPR(cgVariant,operator cgVector3,() const,cgVector3), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_IMPLICIT_VALUE_CAST, "Vector4 f() const", asMETHODPR(cgVariant,operator cgVector4,() const,cgVector4), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_IMPLICIT_VALUE_CAST, "double f() const", asMETHODPR(cgVariant,operator cgDouble,() const,cgDouble), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectBehavior( "Variant", asBEHAVE_IMPLICIT_VALUE_CAST, "String f() const", asMETHODPR(cgVariant,operator cgString,() const,cgString), asCALL_THISCALL) );
             
@@ -209,6 +221,45 @@ namespace Variant
         /// </summary>
         //-----------------------------------------------------------------------------
         static void constructVariant( cgFloat value, cgVariant *thisPointer )
+        {
+            // Use placement new to allocate which will in turn call the constructor
+            new(thisPointer) cgVariant( value );
+        }
+
+        //-----------------------------------------------------------------------------
+        //  Name : constructVariant ()
+        /// <summary>
+        /// This is a wrapper for the alternate cgVariant constructor, since
+        /// it is not possible to take the address of the constructor directly.
+        /// </summary>
+        //-----------------------------------------------------------------------------
+        static void constructVariant( const cgVector2 & value, cgVariant *thisPointer )
+        {
+            // Use placement new to allocate which will in turn call the constructor
+            new(thisPointer) cgVariant( value );
+        }
+
+        //-----------------------------------------------------------------------------
+        //  Name : constructVariant ()
+        /// <summary>
+        /// This is a wrapper for the alternate cgVariant constructor, since
+        /// it is not possible to take the address of the constructor directly.
+        /// </summary>
+        //-----------------------------------------------------------------------------
+        static void constructVariant( const cgVector3 & value, cgVariant *thisPointer )
+        {
+            // Use placement new to allocate which will in turn call the constructor
+            new(thisPointer) cgVariant( value );
+        }
+
+        //-----------------------------------------------------------------------------
+        //  Name : constructVariant ()
+        /// <summary>
+        /// This is a wrapper for the alternate cgVariant constructor, since
+        /// it is not possible to take the address of the constructor directly.
+        /// </summary>
+        //-----------------------------------------------------------------------------
+        static void constructVariant( const cgVector4 & value, cgVariant *thisPointer )
         {
             // Use placement new to allocate which will in turn call the constructor
             new(thisPointer) cgVariant( value );

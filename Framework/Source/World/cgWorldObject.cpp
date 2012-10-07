@@ -44,6 +44,7 @@
 #include <World/Objects/Elements/cgSphereCollisionShapeElement.h>
 #include <World/Objects/Elements/cgCapsuleCollisionShapeElement.h>
 #include <World/Objects/Elements/cgHullCollisionShapeElement.h>
+#include <World/Objects/Elements/cgAnimationSetElement.h> // ToDo: Remove when validation is done by derived types.
 
 //-----------------------------------------------------------------------------
 // Static Member Definitions
@@ -359,7 +360,7 @@ bool cgWorldObject::getSubElementCategories( cgObjectSubElementCategory::Map & C
     Category.name           = _T("Collision Shapes");
     Category.canCreate      = true;
     Category.canDelete      = true;
-    Category.canEnumerate   = true;
+    Category.canEnumerate   = false;
     
     // Box Collision Shape
     {
@@ -414,7 +415,25 @@ bool cgWorldObject::getSubElementCategories( cgObjectSubElementCategory::Map & C
 //-----------------------------------------------------------------------------
 cgObjectSubElement * cgWorldObject::createSubElement( const cgUID & Category, const cgUID & Identifier )
 {
+    return createSubElement( false, Category, Identifier );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : createSubElement () (Virtual)
+/// <summary>
+/// Create a new object sub-element of the specified type and add it to the
+/// object's internal list. Optionally specify whether the element should
+/// be created as an internal, or serialized component.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgObjectSubElement * cgWorldObject::createSubElement( bool internalElement, const cgUID & Category, const cgUID & Identifier )
+{
+    // Elements will always be internal if this object is internal.
+    if ( isInternalReference() )
+        internalElement = true;
+
     // Validate supported categories.
+    // ToDo: Validation should be done in a separate function that can be overloaded, rather than hardcoded.
     if ( Category == OSECID_CollisionShapes )
     {
         // Validate supported types.
@@ -427,6 +446,13 @@ cgObjectSubElement * cgWorldObject::createSubElement( const cgUID & Category, co
              return CG_NULL;
 
     } // End OSECID_CollisionShapes
+    else if ( Category == OSECID_AnimationSets )
+    {
+        // Validate supported types.
+        if ( Identifier != RTID_AnimationSetElement )
+             return CG_NULL;
+
+    } // End OSECID_AnimationSets
     else
     {
         return CG_NULL;
@@ -434,12 +460,12 @@ cgObjectSubElement * cgWorldObject::createSubElement( const cgUID & Category, co
     } // End if unsupported
 
     // Begin a creation transaction (if necessary) so that we can roll back
-    bool bShouldSerialize = shouldSerialize();
+    bool bShouldSerialize = shouldSerialize() && !internalElement;
     if ( bShouldSerialize )
         mWorld->beginTransaction( _T("WorldObject::createSubElement") );
 
     // Create the cloned element.
-    cgObjectSubElement * pNewElement = mWorld->createObjectSubElement( isInternalReference(), Identifier, this );
+    cgObjectSubElement * pNewElement = mWorld->createObjectSubElement( internalElement, Identifier, this );
     
     // If this was a supported element type, reference it and add it to the list.
     if ( pNewElement )
@@ -469,7 +495,7 @@ cgObjectSubElement * cgWorldObject::createSubElement( const cgUID & Category, co
         } // End if serialize
         
         // Full live reference if applicable.
-        pNewElement->addReference( this, isInternalReference() );
+        pNewElement->addReference( this, internalElement );
 
         // Push into the correct category list
         mSubElementCategories[Category].push_back( pNewElement );

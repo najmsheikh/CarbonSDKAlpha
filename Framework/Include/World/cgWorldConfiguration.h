@@ -85,6 +85,7 @@ public:
     cgWorld                                   * getParentWorld                  ( ) const;
     cgUInt32                                    getVersion                      ( ) const;
     cgUInt32                                    getSceneCount                   ( ) const;
+    cgWorldDatabaseStatus::Base                 getLayoutStatus                 ( ) const;
     const cgSceneDescriptor                   * getSceneDescriptor              ( cgUInt32 index ) const;
     const cgSceneDescriptor                   * getSceneDescriptorById          ( cgUInt32 sceneId ) const;
     const cgSceneDescriptor                   * getSceneDescriptorByName        ( const cgString & sceneName ) const;
@@ -124,7 +125,7 @@ protected:
     // cgWorld interface
     cgUInt32                generateRefId                   ( );
     bool                    newConfiguration                ( cgWorldType::Base type );
-    cgConfigResult::Base    loadConfiguration               ( cgUInt32 minSupportedVersion = 0, cgUInt32 maxSupportedVersion = 0xFFFFFFFF );
+    cgConfigResult::Base    loadConfiguration               ( cgUInt32 minSupportedVersion = 0, cgUInt32 maxSupportedVersion = 0xFFFFFFFF, bool autoUpgrade = false );
     cgUInt32                insertScene                     ( const cgSceneDescriptor & description );
     bool                    insertMaterialProperty          ( const cgString & name, const cgString & identifier, const cgString & description, cgInt bitOffset );
     bool                    insertRenderClass               ( const cgString & identifier, const cgString & description );
@@ -145,6 +146,7 @@ protected:
     cgWorld                           * mWorld;                         // Parent world described by this configuration.
     cgWorldType::Base                   mWorldType;                     // The type of world file opened / being managed.
     cgUInt32                            mVersion;                       // World database version number.
+    cgWorldDatabaseStatus::Base         mLayoutStatus;                  // Was the database layout upgraded during configuration load?
 
     cgWorldObjectTypeDesc::Map          mObjectTypes;                   // Local copy of the type descriptor map with database specific entries completed.
     ObjectTypeLUT                       mObjectTypeLUT;                 // Look up table that allows us to convert the local 'integer' type identifier into its UID counterpart.

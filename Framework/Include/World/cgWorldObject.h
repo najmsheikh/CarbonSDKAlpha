@@ -93,6 +93,7 @@ public:
     void                            setMassTransformAmount  ( cgFloat amount );
     cgFloat                         getBaseMass             ( ) const;
     cgFloat                         getMassTransformAmount  ( ) const;
+    cgObjectSubElement            * createSubElement        ( const cgUID & category, const cgUID & identifier );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods
@@ -104,7 +105,7 @@ public:
     
     // Sub-elements
     virtual bool                    getSubElementCategories ( cgObjectSubElementCategory::Map & categories ) const;
-    virtual cgObjectSubElement    * createSubElement        ( const cgUID & category, const cgUID & identifier );
+    virtual cgObjectSubElement    * createSubElement        ( bool internalElement, const cgUID & category, const cgUID & identifier );
     virtual cgObjectSubElement    * cloneSubElement         ( cgObjectSubElement * element );
     virtual const cgObjectSubElementArray & getSubElements  ( const cgUID & category ) const;
     virtual void                    deleteSubElement        ( cgObjectSubElement * element );

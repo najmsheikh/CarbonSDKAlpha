@@ -649,12 +649,13 @@ bool cgWorld::open( const cgInputStream & stream )
 
     } // End if failed
 
-    // Create a new world configuration object and instruct it
-    // load the configuration data from the database.
+    // Create a new world configuration object and instruct it load the configuration data 
+    // from the database. In sandbox mode, we instruct the configuration object to automatically
+    // upgrade the database layout if it does not match the maximum required version.
     mConfiguration = new cgWorldConfiguration( this );
-    cgUInt32 requiredVersionMinimum = cgMakeVersion( CGE_WORLD_VERSION, CGE_WORLD_SUBVERSION, CGE_WORLD_REVISION );
-    cgUInt32 requiredVersionMaximum = requiredVersionMinimum;
-    cgConfigResult::Base configResult = mConfiguration->loadConfiguration( requiredVersionMinimum, requiredVersionMaximum );
+    cgUInt32 requiredVersionMinimum = cgMakeVersion( 1, 0, 0 );
+    cgUInt32 requiredVersionMaximum = cgMakeVersion( CGE_WORLD_VERSION, CGE_WORLD_SUBVERSION, CGE_WORLD_REVISION );
+    cgConfigResult::Base configResult = mConfiguration->loadConfiguration( requiredVersionMinimum, requiredVersionMaximum, (cgGetSandboxMode() == cgSandboxMode::Enabled) );
     if ( configResult == cgConfigResult::Mismatch )
     {
         cgUInt32 actualVersion, actualSubversion, actualRevision;
@@ -663,7 +664,7 @@ bool cgWorld::open( const cgInputStream & stream )
         cgDecomposeVersion( mConfiguration->getVersion(), actualVersion, actualSubversion, actualRevision );
         cgDecomposeVersion( requiredVersionMinimum, minimumVersion, minimumSubversion, minimumRevision );
         cgDecomposeVersion( requiredVersionMaximum, maximumVersion, maximumSubversion, maximumRevision );
-        cgAppLog::write( cgAppLog::Error, _T("Unable to establish connection with world database in stream '%s'. The database layout version (v%i.%02i.%04i) did not fall within the range supported by this application (v%i.%02i.%04i through v%i.%02i.%04i). It may however be possible for the sandbox editing environment to convert the database to a layout that is compatible with this application. Check with your vendor for more information.\n"),
+        cgAppLog::write( cgAppLog::Error, _T("Unable to establish connection with world database in stream '%s'. The database layout version (v%i.%02i.%04i) did not fall within the range supported by this application (v%i.%02i.%04i through v%i.%02i.%04i) or conversion is required. It may however be possible for the sandbox editing environment to convert the database to a layout that is compatible with this application. Check with your vendor for more information.\n"),
                          stream.getName().c_str(), actualVersion, actualSubversion, actualRevision, minimumVersion, minimumSubversion, minimumRevision, maximumVersion, maximumSubversion, maximumRevision );
         dispose( false );
         return false;

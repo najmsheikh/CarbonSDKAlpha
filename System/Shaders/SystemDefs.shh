@@ -238,7 +238,7 @@ class SystemExports
 		////////////////////////////////////////////
 		outputEncodingType          = OutputEncodingType::NoEncode;
 		fogModel                    = FogModel::None;
-		shadingQuality              = ShadingQuality::MediumQuality;
+		shadingQuality              = ShadingQuality::HighQuality;
 		orthographicCamera          = false;
 		hdrLighting                 = false;
 		viewSpaceLighting           = false;

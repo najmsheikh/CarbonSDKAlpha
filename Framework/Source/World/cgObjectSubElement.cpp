@@ -234,3 +234,16 @@ bool cgObjectSubElement::clone( cgWorldObject * pObject, bool bInternal, cgObjec
     // Success?
     return (pObjectSubElementOut != CG_NULL);
 }
+
+//-----------------------------------------------------------------------------
+// Name : getDisplayName ()
+/// <summary>
+/// Get the name that will be displayed in the sub element list for this
+/// particular object sub element. By default this will simply return 
+/// "<Unnamed>", but derived classes can override this behavior when required.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgString cgObjectSubElement::getDisplayName( ) const
+{
+    return _T("<Unnamed>");
+}

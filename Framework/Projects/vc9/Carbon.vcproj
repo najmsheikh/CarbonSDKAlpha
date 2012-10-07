@@ -1441,6 +1441,10 @@
 						Name="Elements"
 						>
 						<File
+							RelativePath="..\..\Source\World\Objects\Elements\cgAnimationSetElement.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\..\Source\World\Objects\Elements\cgBoxCollisionShapeElement.cpp"
 							>
 						</File>
@@ -4522,6 +4526,10 @@
 					<Filter
 						Name="Elements"
 						>
+						<File
+							RelativePath="..\..\Include\World\Objects\Elements\cgAnimationSetElement.h"
+							>
+						</File>
 						<File
 							RelativePath="..\..\Include\World\Objects\Elements\cgBoxCollisionShapeElement.h"
 							>

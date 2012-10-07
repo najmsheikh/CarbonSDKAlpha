@@ -83,11 +83,17 @@ public:
     // Public Methods
     //-------------------------------------------------------------------------
     cgObjectNode              * getParentObject             ( ) { return mParentObject; }
+    const cgScriptHandle      & getScript                   ( ) const;
+    cgInt32                     getLoadOrder                ( ) const;
+    cgUInt32                    getUserId                   ( ) const;
+    void                        setLoadOrder                ( cgInt32 order );
+    void                        setUserId                   ( cgUInt32 identifier );
+    bool                        isScripted                  ( ) const;
     void                        registerAsInputListener     ( );
     void                        unregisterAsInputListener   ( );
     void                        registerAsPhysicsListener   ( );
     void                        unregisterAsPhysicsListener ( );
-
+    
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
@@ -162,6 +168,8 @@ protected:
     cgScriptHandle  mScript;        // Base behavior script.
     cgScriptObject* mScriptObject;  // Reference to the scripted behavior object (owned exclusively by the script).
     MethodHandles   mScriptMethods; // Cached handles to the script callback methods.
+    cgInt32         mLoadOrder;     // The order in which this behavior is loaded / executed when attached to its parent.
+    cgUInt32        mUserId;        // User specified identifier for this behavior.
 
 private:
     //-------------------------------------------------------------------------

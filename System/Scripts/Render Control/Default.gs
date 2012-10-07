@@ -71,12 +71,14 @@ class StandardRenderControl : IScriptedRenderControl
 	private bool                mDrawDepthOfField;
 	private bool                mDrawMotionBlur;
 	private bool                mDrawSSAO;
+	private bool                mDrawILR;
 
 	private bool                mDrawHDR;
 	private bool                mHDRGlare;
 	private bool                mHDRDepthOfField;
 	private bool                mHDRMotionBlur;
-	
+	private bool                mHDRILR;
+
 	private DepthType           mDepthType;
 	private int                 mSurfaceNormalType;
 	private int                 mShadingQuality;
@@ -186,9 +188,11 @@ class StandardRenderControl : IScriptedRenderControl
 		mDrawMotionBlur    = false;
 		mDrawSSAO          = false;
 		mDrawHDR           = false;
+		mDrawILR           = false;
 		mHDRGlare          = false;
 		mHDRDepthOfField   = false;
 		mHDRMotionBlur     = false;
+		mHDRILR            = false;
 		mDepthStencilReads = false;
 		mFullSpecularColor = false;
 		
@@ -490,6 +494,14 @@ class StandardRenderControl : IScriptedRenderControl
 				glare( renderDriver );
 				profiler.endProcess( );
 			}
+
+			// Compute ILR
+			if ( mHDRILR && mDrawILR )
+			{
+				profiler.beginProcess( "ILR (HDR)" );
+				ilr( renderDriver );
+				profiler.endProcess( );
+			}
 			
 			// Run depth of field
 			if ( mHDRDepthOfField && mDrawDepthOfField )
@@ -518,6 +530,14 @@ class StandardRenderControl : IScriptedRenderControl
 		{
 			profiler.beginProcess( "Glare (LDR)" );
 			glare( renderDriver );
+			profiler.endProcess( );
+		}
+
+		// Compute ilr
+		if ( !mHDRILR && mDrawILR )
+		{
+			profiler.beginProcess( "ILR (LDR)" );
+			ilr( renderDriver );
 			profiler.endProcess( );
 		}
 		
@@ -736,10 +756,12 @@ class StandardRenderControl : IScriptedRenderControl
 				mDrawDepthOfField   = false;
 				mDrawSSAO           = false;
 				mDrawMotionBlur     = false;
+				mDrawILR            = false;
 				
 				mHDRGlare           = mDrawHDR && false;
 				mHDRDepthOfField    = mDrawHDR && false;
 				mHDRMotionBlur      = mDrawHDR && false;
+				mHDRILR             = mDrawILR && false;
 
 				mAntialiasing       = AntialiasingMethod::None;
 			}
@@ -752,10 +774,12 @@ class StandardRenderControl : IScriptedRenderControl
 				mDrawDepthOfField      = false;
 				mDrawMotionBlur        = true;
 				mDrawSSAO			   = false;
+				mDrawILR               = true;
 				
 			    mHDRGlare              = mDrawHDR && true;
 				mHDRDepthOfField       = mDrawHDR && false;
 				mHDRMotionBlur         = mDrawHDR && false;				
+				mHDRILR                = mDrawILR && false;
 				
 				mAntialiasing          = AntialiasingMethod::FXAA;
 			}
@@ -768,10 +792,12 @@ class StandardRenderControl : IScriptedRenderControl
 				mDrawDepthOfField      = false;
 				mDrawMotionBlur        = true;
 				mDrawSSAO			   = false;
+				mDrawILR               = true;
 				
 			    mHDRGlare              = mDrawHDR && true;
 				mHDRDepthOfField       = mDrawHDR && true;
 				mHDRMotionBlur         = mDrawHDR && true;				
+				mHDRILR                = mDrawILR && true;
 				
 				mAntialiasing          = AntialiasingMethod::FXAA_T2x;
 			}
@@ -911,17 +937,17 @@ class StandardRenderControl : IScriptedRenderControl
         Landscape @ landscape = mScene.getLandscape();
         if ( @landscape != null )
         {
-            // Temporary: Draw a terrain depth pass separately
-            if ( renderDriver.beginTargetRender( mDepthBuffer, mDepthStencilBuffer ) )
-            {
-                // Draw terrain
-                landscape.renderPass( LandscapeRenderMethod::TerrainDepthFill, activeCamera, activeCamera.getVisibilitySet() );
+			// Temporary: Draw a terrain depth pass separately
+			if ( renderDriver.beginTargetRender( mDepthBuffer, mDepthStencilBuffer ) )
+			{
+				// Draw terrain
+				landscape.renderPass( LandscapeRenderMethod::TerrainDepthFill, activeCamera, activeCamera.getVisibilitySet() );
 
-                // End rendering to specified target.
-                renderDriver.endTargetRender();
-
-            } // End if beginTargetRender()
-
+				// End rendering to specified target.
+				renderDriver.endTargetRender();
+			
+			} // End if beginTargetRender()
+			
             // Setup render targets and perform terrain g-buffer fill
             targets.resize( 2 );
             targets[0] = mGBuffer0; //Normal
@@ -1002,12 +1028,10 @@ class StandardRenderControl : IScriptedRenderControl
 		}
 		
 		// Downsample depth buffers 
-		int numLevels = min( mDepthChain0.getLevelCount(), mNormalChain0.getLevelCount() );
+		int numLevels = mDepthChain0.getLevelCount();
 		for ( int j = 0; j < numLevels-1; j++ )
 		{
-			mImageProcessor.downSampleDepth( mDepthChain0.getLevel(j),   mNormalChain0.getLevel(j),
-                                             mDepthChain0.getLevel(j+1), mNormalChain0.getLevel(j+1),
-											 mDepthType, mDepthType, ImageOperation::DownSampleMinimum, j == 0 ? true : false );
+			mImageProcessor.downSampleDepth( mDepthChain0.getLevel(j), mDepthChain0.getLevel(j+1), ImageOperation::DownSampleMinimum );
 		}
 		
 		// Set the lighting buffer as the current scene
@@ -1333,6 +1357,9 @@ class StandardRenderControl : IScriptedRenderControl
 		
 		// Should we attempt to reduce flickering due to aliasing?
 		bool reduceFlicker = true;
+
+		// Set anamorphic flare data (#passes, radius, intensity, color, edgeScale, edgeBias)		
+		mGlare.setAnamorphicData( 5, 5, 0.4, Vector3( 0.55, 0.55, 1.0 ), 0.75, 0.65 );
 		
 		// If HDR glare
 		if ( mHDRGlare )
@@ -1347,6 +1374,57 @@ class StandardRenderControl : IScriptedRenderControl
 		{
 			// Run the glare
 			mGlare.execute( mCurrentSceneTarget, mLDRChain0, mLDRChain1, mHDRGlare, 0.0f, reduceFlicker, reduceFlicker );
+		}
+	}
+
+	//-----------------------------------------------------------------------------
+	// Name : ilr()
+	// Desc : Adds an ilr effect to the current lighting buffer.
+	//-----------------------------------------------------------------------------
+	void ilr( RenderDriver @ renderDriver )
+	{
+		// Set the ILR parameters
+		mGlare.setILRBrightThreshold( 0.95 );
+		mGlare.setILRDepthRange( 1.00f, 3.0f );
+		mGlare.setILRHighResData( 15, 2, 7, 3.0f );
+		mGlare.setILRLowResData( 15, 2, 7, 3.0f );
+		mGlare.setILRContrast( 0.5 );
+
+		// Set overall intensity
+		float intensity = mHDRILR ? 0.15 : 2.5f;
+
+		// Define individual ILR lens elements
+        array<ILRElement> elements;
+        elements.resize( 8 );		
+		elements[0] = ILRElement(  0.75f, intensity * 0.15f, false );
+		elements[1] = ILRElement(  0.40f, intensity * 0.23f, false );
+		elements[2] = ILRElement(  0.20f, intensity * 0.23f, false );
+		elements[3] = ILRElement( -0.20f, intensity * 0.25f, true  );
+		elements[4] = ILRElement( -0.35f, intensity * 0.45f, false );
+		elements[5] = ILRElement( -0.65f, intensity * 0.30f, false );
+		elements[6] = ILRElement( -0.80f, intensity * 0.15f, false );
+		elements[7] = ILRElement( -1.00f, intensity * 0.15f, false );
+        mGlare.setILRElements( elements );
+		
+		// If HDR glare
+		if ( mHDRILR )
+		{
+			// Give the glare access to the tonemapper if needed
+			mGlare.setToneMapper( mToneMapper );
+
+			// Downsample the color buffer to 1/4 res
+			mImageProcessor.downSample( mLightingChain0.getLevel(0), mLightingChain0.getLevel(1) );
+
+			// Run the ILR
+			mGlare.executeILR( mCurrentSceneTarget, mDepthChain0.getLevel(1), mLightingChain0, mLightingChain1, mHDRILR, false );
+		}
+		else
+		{
+			// Downsample the color buffer to 1/4 res
+			mImageProcessor.downSample( mLDRChain0.getLevel(0), mLDRChain0.getLevel(1) );
+		
+			// Run the ILR
+			mGlare.executeILR( mCurrentSceneTarget, mDepthChain0.getLevel(1), mLDRChain0, mLDRChain1, mHDRILR, false );
 		}
 	}
 
@@ -1516,8 +1594,17 @@ class StandardRenderControl : IScriptedRenderControl
 			RenderTargetHandle src = mCurrentSceneTarget;
 			RenderTargetHandle dst = (src == mLDRScratch0) ? mLDRScratch1 : mLDRScratch0;
 
-			// If we did not tonemap we need luma in the alpha channel of the input texture
+			// If we did not tonemap OR if we ran any LDR post-processes, we need luma in the alpha channel of the input texture
+			bool computeLuma = false;			
 			if ( !mDrawHDR )
+			{
+				computeLuma = true;
+			}
+			else
+			{
+				computeLuma = (mDrawGlare && !mHDRGlare) || (mDrawDepthOfField && !mHDRDepthOfField) || (mDrawMotionBlur && !mHDRMotionBlur) || (mDrawILR && !mHDRILR);
+			}
+			if ( computeLuma )
 			{
 				mImageProcessor.processColorImage( src, dst, ImageOperation::RGBAtoRGBL );
 				RenderTargetHandle tmp = src;

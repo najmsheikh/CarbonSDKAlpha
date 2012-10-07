@@ -29,6 +29,13 @@
 #include <sstream>
 
 //-----------------------------------------------------------------------------
+// Forward Declarations
+//-----------------------------------------------------------------------------
+class cgVector2;
+class cgVector3;
+class cgVector4;
+
+//-----------------------------------------------------------------------------
 // Main class declarations
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -45,13 +52,14 @@ public:
 	// Public Structures, Typedefs and Enumerations
 	//-------------------------------------------------------------------------
     enum VariantType { Type_none = 0, Type_bool, Type_int8, Type_uint8, Type_int32, 
-                       Type_uint32, Type_int64, Type_uint64, Type_float, Type_double,
-                       Type_string };
+                       Type_uint32, Type_int64, Type_uint64, Type_float, Type_vector2, 
+                       Type_vector3, Type_vector4, Type_double, Type_string };
 
 	//-------------------------------------------------------------------------
 	// Constructors & Destructors
 	//-------------------------------------------------------------------------
     cgVariant( );
+    cgVariant( void * data, VariantType type );
     cgVariant( cgInt8 value );
     cgVariant( cgUInt8 value );
     cgVariant( bool value );
@@ -62,9 +70,14 @@ public:
     cgVariant( cgInt64 value );
     cgVariant( cgUInt64 value );
     cgVariant( cgFloat value );
+    cgVariant( const cgVector2 & value );
+    cgVariant( const cgVector3 & value );
+    cgVariant( const cgVector4 & value );
     cgVariant( cgDouble value );
     cgVariant( const cgString & value );
     cgVariant( const cgTChar * value );
+    cgVariant( const cgVariant & value );
+    ~cgVariant();
 
 	//-------------------------------------------------------------------------
 	// Public Operators
@@ -80,6 +93,9 @@ public:
     operator cgUInt64   ( ) const;
     operator cgInt64    ( ) const;
     operator cgFloat    ( ) const;
+    operator cgVector2  ( ) const;
+    operator cgVector3  ( ) const;
+    operator cgVector4  ( ) const;
     operator cgDouble   ( ) const;
     operator cgString   ( ) const;
 
@@ -94,9 +110,17 @@ public:
     cgVariant & operator=       ( cgUInt64 value );
     cgVariant & operator=       ( cgInt64 value );
     cgVariant & operator=       ( cgFloat value );
+    cgVariant & operator=       ( const cgVector2 & value );
+    cgVariant & operator=       ( const cgVector3 & value );
+    cgVariant & operator=       ( const cgVector4 & value );
     cgVariant & operator=       ( cgDouble value );
     cgVariant & operator=       ( const cgString & value );
     cgVariant & operator=       ( const cgTChar * value );
+    cgVariant & operator=       ( const cgVariant & value );
+
+    // Comparison Operators
+    bool            operator ==   ( const cgVariant& rhs ) const;
+	bool            operator !=   ( const cgVariant& rhs ) const;
 
     //-------------------------------------------------------------------------
 	// Public Functions
@@ -107,21 +131,17 @@ public:
 	cgUInt32        getSize       ( ) const;
     const void    * getData       ( ) const;
 
-	bool            operator ==   ( const cgVariant& rhs ) const;
-	bool            operator !=   ( const cgVariant& rhs ) const;
-
 private:
+    //-------------------------------------------------------------------------
+	// Private Methods
+	//-------------------------------------------------------------------------
+    void            releaseData     ( );
+
     //-------------------------------------------------------------------------
 	// Private Variables
 	//-------------------------------------------------------------------------
-    // ToDo: 6767 -- Can we union these?
-    cgUInt32    mNumeric32;     // 32 bit numeric type
-    cgUInt64    mNumeric64;     // 64 bit numeric type
-    cgString    mString;        // String data type
-
-    // Placed last to improve structure packing
-    cgUInt8     mNumeric8;      // 8 bit numeric type
-    VariantType mStorageType;   // Describes the type of variable currently stored.
+    void      * mData;          // Reference to data stored in the variant
+    VariantType mStorageType;   // Describes the type of data currently stored.
 };
 
 #endif // !_CGE_CGVARIANT_H_

@@ -42,6 +42,7 @@
 #include <Rendering/cgRenderDriver.h> // ToDo: Remove if cached buffer goes away.
 #include <Resources/cgResourceManager.h> // ToDo: Remove if cached buffer goes away.
 #include <Resources/cgConstantBuffer.h> // ToDo: Remove if cached buffer goes away.
+#include <Resources/cgScript.h>
 #include <System/cgStringUtility.h>
 #include <System/cgExceptions.h>
 #include <System/cgXML.h> // ToDo: Remove when no longer needed
@@ -76,7 +77,13 @@ cgWorldQuery                    cgObjectNode::mNodeUpdateGroup;
 cgWorldQuery                    cgObjectNode::mNodeUpdatePhysicsProperties;
 cgWorldQuery                    cgObjectNode::mNodeUpdateUpdateRate;
 cgWorldQuery                    cgObjectNode::mNodeUpdateTargetReference;
+cgWorldQuery                    cgObjectNode::mNodeClearCustomProperties;
+cgWorldQuery                    cgObjectNode::mNodeInsertCustomProperty;
+cgWorldQuery                    cgObjectNode::mNodeDeleteBehavior;
+cgWorldQuery                    cgObjectNode::mNodeInsertBehavior;
 cgWorldQuery                    cgObjectNode::mNodeLoadTransforms;
+cgWorldQuery                    cgObjectNode::mNodeLoadCustomProperties;
+cgWorldQuery                    cgObjectNode::mNodeLoadBehaviors;
 
 ///////////////////////////////////////////////////////////////////////////////
 // cgObjectNode Member Functions
@@ -111,6 +118,7 @@ cgObjectNode::cgObjectNode( cgUInt32 referenceId, cgScene * scene ) : cgAnimatio
     mNodeLevel          = 0;
     mPhysicsBody        = CG_NULL;
     mRenderClassId      = 1;        // Automatically assign to the 'default' render class.
+    mCustomProperties   = new cgPropertyContainer();
 
     // Assign a default color to the node
     mColor = cgMathUtility::randomColor( );
@@ -152,7 +160,7 @@ cgObjectNode::cgObjectNode( cgUInt32 referenceId, cgScene * scene, cgObjectNode 
     mLocalTransform     = initTransform;
     mOffsetTransform    = init->mOffsetTransform;
     mColor              = init->mColor;
-    mCustomProperties   = init->mCustomProperties;
+    mCustomProperties   = new cgPropertyContainer(*init->mCustomProperties);
     mPhysicsBody        = CG_NULL;
     mRenderClassId      = init->mRenderClassId;
 
@@ -197,6 +205,11 @@ cgObjectNode::~cgObjectNode()
 {
     // Clean up object resources.
     dispose( false );
+
+    // Finally release objects allocated in the constructor.
+    if ( mCustomProperties )
+        mCustomProperties->scriptSafeDispose();
+    mCustomProperties = CG_NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -239,7 +252,7 @@ void cgObjectNode::dispose( bool disposeBase )
     // Silently remove this node from any parent cell
     if ( mParentCell )
         mParentCell->removeNode( this );
-    
+
     // ToDo: 9999 - Detaching silently may not be a good idea. Hinge joint as an example?
     // Silently detach all children from this object.
     cgObjectNodeList::iterator itChild;
@@ -278,6 +291,10 @@ void cgObjectNode::dispose( bool disposeBase )
     
     // Clear out any input channel data that may have been set.
     mInputChannels.clear();
+
+    // Clear out old custom properties
+    if ( mCustomProperties )
+        mCustomProperties->clear();
 
     // Clear variables
     mReferencedObject  = CG_NULL;
@@ -520,6 +537,55 @@ cgInt32 cgObjectNode::addBehavior( cgObjectBehavior * behavior )
     if ( !behavior )
         return -1;
 
+    // Get the load order of the behavior at the end of our
+    // current behavior array, and set that value + 1 to the 
+    // new behavior.
+    if ( !mBehaviors.empty() )
+        behavior->setLoadOrder( mBehaviors.back()->getLoadOrder() + 1 );
+
+    // Insert into the database if necessary.
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+
+        // Setup common behavior data.
+        mNodeInsertBehavior.bindParameter( 1, mReferenceId );
+        mNodeInsertBehavior.bindParameter( 2, behavior->getLoadOrder() );
+        
+        // Is this a scripted behavior?
+        if ( behavior->isScripted() )
+        {
+            cgScriptHandle scriptHandle = behavior->getScript();
+            mNodeInsertBehavior.bindParameter( 3, (cgUInt8)0 );         // Type
+            mNodeInsertBehavior.bindParameter( 4, scriptHandle->getInputStream().getName() );
+            mNodeInsertBehavior.bindParameter( 5, cgString::Empty );    // TypeName (native only)
+            mNodeInsertBehavior.bindParameter( 6, CG_NULL, 0 );         // Data
+        
+        } // End if scripted
+        else
+        {
+            mNodeInsertBehavior.bindParameter( 3, (cgUInt8)1 );         // Type
+            mNodeInsertBehavior.bindParameter( 4, cgString::Empty );    // Script file (scripted only)
+            mNodeInsertBehavior.bindParameter( 5, cgString::Empty );    // TypeName (native only) // TODO
+            mNodeInsertBehavior.bindParameter( 6, CG_NULL, 0 );         // Data
+
+        } // End if native
+            
+        // Insert new behavior.
+        if ( !mNodeInsertBehavior.step( true ) )
+        {
+            cgString error;
+            mNodeInsertBehavior.getLastError( error );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to insert new behavior for object node '0x%x'. Error: %s\n"), mReferenceId, error.c_str() );
+            return -1;
+        
+        } // End if failed
+
+        // Behavior was serialized.
+        behavior->setUserId( mNodeInsertBehavior.getLastInsertId() );
+    
+    } // End if serialize
+
     // Notify behavior that we're now it's owner
     behavior->setParentObject( this );
 
@@ -574,6 +640,21 @@ bool cgObjectNode::removeBehavior( cgObjectBehavior * behavior, bool destroy /* 
     // Did we find it?
     if ( itBehavior != mBehaviors.end() )
     {
+        // Remove from the database
+        if ( shouldSerialize() && behavior->getUserId() )
+        {
+            mNodeDeleteBehavior.bindParameter( 1, behavior->getUserId() );
+            if ( !mNodeDeleteBehavior.step( true ) )
+            {
+                cgString error;
+                mNodeDeleteBehavior.getLastError( error );
+                cgAppLog::write( cgAppLog::Error, _T("Failed to remove behavior '0x%x' from the database for object node '0x%x'. Error: %s\n"), behavior->getUserId(), mReferenceId, error.c_str() );
+                return false;
+            
+            } // End if failed
+
+        } // End if remove from database
+
         // Remove it
         mBehaviors.erase( itBehavior );
 
@@ -2219,7 +2300,7 @@ bool cgObjectNode::onNodeLoading( const cgUID & objectType, cgWorldQuery * nodeD
     cgInt32 targetId = 0;
     nodeData->getColumn( _T("TargetId"), targetId );
     if ( targetId != 0 )
-        mCustomProperties.setProperty( _T("Core::NodeInitData::TargetId"), targetId );
+        mCustomProperties->setProperty( _T("Core::NodeInitData::TargetId"), targetId );
 
     // Retrieve transforms. Cell transform first.
     cgQuaternion rotation;
@@ -2284,6 +2365,92 @@ bool cgObjectNode::onNodeLoading( const cgUID & objectType, cgWorldQuery * nodeD
     matrixData[1] = finalTransform;
     matrixBuffer->unlock();
 
+    // Load node custom properties (if any)
+    prepareQueries();
+    mNodeLoadCustomProperties.bindParameter( 1, mReferenceId );
+    if ( !mNodeLoadCustomProperties.step() )
+    {
+        // Log any error.
+        cgString error;
+        if ( !mNodeLoadCustomProperties.getLastError( error ) )
+            cgAppLog::write( cgAppLog::Error, _T("Failed to retrieve custom property data for object node '0x%x'. World database has potentially become corrupt.\n"), mReferenceId );
+        else
+            cgAppLog::write( cgAppLog::Error, _T("Failed to retrieve custom property data for object node '0x%x'. Error: %s\n"), mReferenceId, error.c_str() );
+
+        // Release any pending read operation.
+        mNodeLoadCustomProperties.reset();
+        return false;
+
+    } // End if failed
+    for ( ; mNodeLoadCustomProperties.nextRow(); )
+    {
+        // Load the variant data
+        cgString name;
+        cgUInt32 type, dataSize;
+        void * variantData;
+        mNodeLoadCustomProperties.getColumn( _T("Name"), name );
+        mNodeLoadCustomProperties.getColumn( _T("Type"), type );
+        mNodeLoadCustomProperties.getColumn( _T("Value"), &variantData, dataSize );
+
+        // Insert into the custom property container.
+        mCustomProperties->setProperty( name, cgVariant( variantData, (cgVariant::VariantType)type ) );
+
+    } // Next property
+
+    // We're done reading properties
+    mNodeLoadCustomProperties.reset();
+
+    // Load node behaviors (if any)
+    mNodeLoadBehaviors.bindParameter( 1, mReferenceId );
+    if ( !mNodeLoadBehaviors.step() )
+    {
+        // Log any error.
+        cgString error;
+        if ( !mNodeLoadBehaviors.getLastError( error ) )
+            cgAppLog::write( cgAppLog::Error, _T("Failed to retrieve behavior data for object node '0x%x'. World database has potentially become corrupt.\n"), mReferenceId );
+        else
+            cgAppLog::write( cgAppLog::Error, _T("Failed to retrieve behavior data for object node '0x%x'. Error: %s\n"), mReferenceId, error.c_str() );
+
+        // Release any pending read operation.
+        mNodeLoadBehaviors.reset();
+        return false;
+
+    } // End if failed
+    for ( ; mNodeLoadBehaviors.nextRow(); )
+    {
+        // Load the behavior data.
+        cgInt32 loadOrder, type;
+        cgUInt32 behaviorId;
+        mNodeLoadBehaviors.getColumn( _T("BehaviorId"), behaviorId );
+        mNodeLoadBehaviors.getColumn( _T("LoadOrder"), loadOrder );
+        mNodeLoadBehaviors.getColumn( _T("Type"), type );
+
+        // Scripted or native?
+        if ( type == 0 )
+        {
+            // Scripted behavior.
+            cgString scriptFile;
+            cgObjectBehavior * newBehavior = new cgObjectBehavior();
+            newBehavior->setUserId( behaviorId );
+            newBehavior->setLoadOrder( loadOrder );
+            mNodeLoadBehaviors.getColumn( _T("Script"), scriptFile );
+            newBehavior->initialize( mParentScene->getResourceManager(), scriptFile, _T("") );
+            newBehavior->setParentObject( this );
+            mBehaviors.push_back( newBehavior );
+
+        } // End if scripted
+        else
+        {
+            // Native behavior class.
+            // ToDo: Support deserialization for native classes.
+
+        } // End if native
+
+    } // Next behavior
+
+    // We're done reading behaviors
+    mNodeLoadBehaviors.reset();
+
     // Mark object as dirty immediately upon its creation and ensure
     // that its bounding box and ownership status are up to date.
     nodeUpdated( cgDeferredUpdateFlags::BoundingBox | cgDeferredUpdateFlags::OwnershipStatus, 0 );
@@ -2317,7 +2484,7 @@ bool cgObjectNode::onNodeLoading( const cgUID & objectType, cgWorldQuery * nodeD
 bool cgObjectNode::onNodeInit( const cgUInt32IndexMap & nodeReferenceRemap )
 {
     // Was it requested for us to re-attach to an existing target node?
-    cgInt32 targetId = mCustomProperties.getProperty( _T("Core::NodeInitData::TargetId"), 0 );
+    cgInt32 targetId = mCustomProperties->getProperty( _T("Core::NodeInitData::TargetId"), 0 );
     if ( targetId > 0 )
     {
         // A target node was specified. We must re-attach to it.
@@ -2336,7 +2503,7 @@ bool cgObjectNode::onNodeInit( const cgUInt32IndexMap & nodeReferenceRemap )
         } // End if valid target
         
     } // End if re-attach
-    mCustomProperties.removeProperty( _T("Core::NodeInitData::TargetId") );
+    mCustomProperties->removeProperty( _T("Core::NodeInitData::TargetId") );
 
     // Success!
     return true;
@@ -2624,9 +2791,68 @@ cgSceneCell * cgObjectNode::getCell( ) const
 /// Retrieve a reference to the interal custom property container.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgPropertyContainer & cgObjectNode::getCustomProperties( )
+const cgPropertyContainer & cgObjectNode::getCustomProperties( ) const
 {
-    return mCustomProperties;
+    return *mCustomProperties;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setCustomProperties()
+/// <summary>
+/// Update the node's internal custom property container with newly specified
+/// values.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgObjectNode::setCustomProperties( const cgPropertyContainer & properties )
+{
+    // Update the database as necessary.
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+
+        // Start a transaction so that we can roll back.
+        cgWorld * world = mParentScene->getParentWorld();
+        world->beginTransaction( _T("setCustomProperties") );
+
+        // Clear out old properties
+        mNodeClearCustomProperties.bindParameter( 1, mReferenceId );
+        if ( !mNodeClearCustomProperties.step( true ) )
+        {
+            cgString error;
+            mNodeClearCustomProperties.getLastError( error );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to clear prior custom properties for object node '0x%x'. Error: %s\n"), mReferenceId, error.c_str() );
+            world->rollbackTransaction( _T("setCustomProperties") );
+            return;
+        
+        } // End if failed
+
+        // Insert new properties.
+        cgPropertyContainer::Collection::const_iterator itProperty;
+        for ( itProperty = properties.getProperties().begin(); itProperty != properties.getProperties().end(); ++itProperty )
+        {
+            mNodeInsertCustomProperty.bindParameter( 1, mReferenceId );
+            mNodeInsertCustomProperty.bindParameter( 2, itProperty->first );
+            mNodeInsertCustomProperty.bindParameter( 3, (cgInt)itProperty->second.getType() );
+            mNodeInsertCustomProperty.bindParameter( 4, itProperty->second.getData(), itProperty->second.getSize() );
+            if ( !mNodeInsertCustomProperty.step( true ) )
+            {
+                cgString error;
+                mNodeInsertCustomProperty.getLastError( error );
+                cgAppLog::write( cgAppLog::Error, _T("Failed to insert custom property '%s' for object node '0x%x'. Error: %s\n"), itProperty->first.c_str(), mReferenceId, error.c_str() );
+                world->rollbackTransaction( _T("setCustomProperties") );
+                return;
+            
+            } // End if failed
+
+        } // Next property
+
+        // Commit the data
+        world->commitTransaction( _T("setCustomProperties") );
+    
+    } // End if should serialize
+
+    // Update local member
+    *mCustomProperties = properties;
 }
 
 //-----------------------------------------------------------------------------
@@ -4024,6 +4250,34 @@ void cgObjectNode::prepareQueries()
 
         } // End if !prepared
 
+        if ( !mNodeClearCustomProperties.isPrepared() )
+        {
+            cgString statement = _T("DELETE FROM 'Nodes::CustomProperties' WHERE NodeId=?1");
+            mNodeClearCustomProperties.prepare( world, statement, true );
+
+        } // End if !prepared
+
+        if ( !mNodeInsertCustomProperty.isPrepared() )
+        {
+            cgString statement = _T("INSERT INTO 'Nodes::CustomProperties' VALUES (NULL,?1,?2,?3,?4)");
+            mNodeInsertCustomProperty.prepare( world, statement, true );
+
+        } // End if !prepared
+
+        if ( !mNodeDeleteBehavior.isPrepared() )
+        {
+            cgString statement = _T("DELETE FROM 'Nodes::Behaviors' WHERE BehaviorId=?1");
+            mNodeDeleteBehavior.prepare( world, statement, true );
+
+        } // End if !prepared
+
+        if ( !mNodeInsertBehavior.isPrepared() )
+        {
+            cgString statement = _T("INSERT INTO 'Nodes::Behaviors' VALUES (NULL,?1,?2,?3,?4,?5,?6)");
+            mNodeInsertBehavior.prepare( world, statement, true );
+
+        } // End if !prepared
+
     } // End if sandbox
 
     if ( !mNodeLoadTransforms.isPrepared() )
@@ -4043,6 +4297,19 @@ void cgObjectNode::prepareQueries()
     
     } // End if !prepared
 
+    if ( !mNodeLoadCustomProperties.isPrepared() )
+    {
+        cgString statement = _T("SELECT * FROM [Nodes::CustomProperties] WHERE NodeId=?1");
+        mNodeLoadCustomProperties.prepare( world, statement, true );
+
+    } // End if !prepared
+
+    if ( !mNodeLoadBehaviors.isPrepared() )
+    {
+        cgString statement = _T("SELECT * FROM [Nodes::Behaviors] WHERE NodeId=?1 ORDER BY LoadOrder ASC");
+        mNodeLoadBehaviors.prepare( world, statement, true );
+
+    } // End if !prepared
 }
 
 //-----------------------------------------------------------------------------

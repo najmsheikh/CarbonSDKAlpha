@@ -102,6 +102,15 @@ public:
             case cgVariant::Type_float:
                 type = cgScriptArgumentType::Float;
                 break;
+            case cgVariant::Type_vector2:
+                type = cgScriptArgumentType::Address;
+                break;
+            case cgVariant::Type_vector3:
+                type = cgScriptArgumentType::Address;
+                break;
+            case cgVariant::Type_vector4:
+                type = cgScriptArgumentType::Address;
+                break;
             case cgVariant::Type_uint32:
             case cgVariant::Type_int32:
                 type = cgScriptArgumentType::DWord;

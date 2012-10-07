@@ -83,6 +83,7 @@ public:
     // Public Methods
     //-------------------------------------------------------------------------
     cgScriptEngine        * getScriptEngine         ( );
+    const cgInputStream   & getInputStream          ( ) const;
     cgScriptFunctionHandle  getFunctionHandle       ( const cgString & declaration );
     bool                    executeFunctionBool     ( const cgString & functionName, const cgScriptArgument::Array & arguments, bool optional = false, bool * successOut = CG_NULL );
     bool                    executeFunctionBool     ( cgScriptFunctionHandle functionHandle, const cgScriptArgument::Array & arguments, bool * successOut = CG_NULL );

@@ -741,6 +741,9 @@
     <ClCompile Include="..\..\Source\World\Objects\cgSpatialTreeObject.cpp">
       <Filter>Source Files\World\Objects\Graphs</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\World\Objects\Elements\cgAnimationSetElement.cpp">
+      <Filter>Source Files\World\Objects\Elements</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\World\Objects\Elements\cgBoxCollisionShapeElement.cpp">
       <Filter>Source Files\World\Objects\Elements</Filter>
     </ClCompile>
@@ -1510,6 +1513,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\World\Objects\cgSpatialTreeObject.h">
       <Filter>Header Files\World\Objects\Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\World\Objects\Elements\cgAnimationSetElement.h">
+      <Filter>Header Files\World\Objects\Elements</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\World\Objects\Elements\cgBoxCollisionShapeElement.h">
       <Filter>Header Files\World\Objects\Elements</Filter>

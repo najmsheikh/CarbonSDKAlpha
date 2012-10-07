@@ -28,7 +28,8 @@ namespace ObjectNode
         BINDSUCCESS( engine->registerObjectMethod(typeName, "const String & getName( ) const", asMETHODPR(type,getName,() const,const cgString&), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "const String & getObjectClass( ) const", asMETHODPR(type,getObjectClass,() const,const cgString&), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "WorldObject @+ getReferencedObject( ) const", asMETHODPR(type,getReferencedObject,() const,cgWorldObject*), asCALL_THISCALL) );
-        BINDSUCCESS( engine->registerObjectMethod(typeName, "PropertyContainer & getCustomProperties( )", asMETHODPR(type,getCustomProperties,(),cgPropertyContainer&), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "const PropertyContainer @+ getCustomProperties( ) const", asMETHODPR(type,getCustomProperties,() const, const cgPropertyContainer&), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "void setCustomProperties( PropertyContainer @+ )", asMETHODPR(type,setCustomProperties,( const cgPropertyContainer&), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "const BoundingBox & getBoundingBox( )", asMETHODPR(type,getBoundingBox,(),const cgBoundingBox&), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "BoundingBox getLocalBoundingBox( )", asMETHODPR(type,getLocalBoundingBox,(),cgBoundingBox), asCALL_THISCALL) );
         

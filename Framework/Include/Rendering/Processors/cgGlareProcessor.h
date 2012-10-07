@@ -65,6 +65,17 @@ public:
     };
     CGE_VECTOR_DECLARE( GlareStepDesc, GlareStepArray )
 
+	struct ILRElement
+	{
+		cgFloat flareDelta;
+		cgFloat flareAlpha;
+		bool    flareHighDetail;
+		
+		ILRElement(){}
+		ILRElement( cgFloat delta, cgFloat alpha, bool highDetail ) : flareDelta(delta), flareAlpha(alpha), flareHighDetail(highDetail){}
+	};
+	CGE_VECTOR_DECLARE( ILRElement, ILRElementArray )
+
     //-------------------------------------------------------------------------
     // Constructors & Destructors
     //-------------------------------------------------------------------------
@@ -80,6 +91,16 @@ public:
 	void            setCacheValues          ( cgFloat amount, cgFloat rate );
     void            setGlareSteps           ( const GlareStepArray & steps );
     bool            execute                 ( const cgRenderTargetHandle & target, cgResampleChain * chain0, cgResampleChain * chain1, bool hdrGlare, float alphaMaskAmt, bool fullSizeBrightPass, bool blurPrePass );
+
+	void            setILRBrightThreshold   ( cgFloat minimum );
+	void            setILRContrast          ( cgFloat contrast );
+	void			setILRDepthRange        ( cgFloat minimum, cgFloat maximum );
+	void            setILRElements          ( const ILRElementArray & elements );
+	void            setILRLowResData        ( cgInt32 targetPadding, cgInt32 filterPasses, cgInt32 filterSize, cgFloat filterFactor );
+	void            setILRHighResData       ( cgInt32 targetPadding, cgInt32 filterPasses, cgInt32 filterSize, cgFloat filterFactor );
+	bool            executeILR              ( const cgRenderTargetHandle & target, const cgTextureHandle & depth, cgResampleChain * chain0, cgResampleChain * chain1, bool hdr, bool materialAlphaMask );
+
+	void            setAnamorphicData       ( cgInt32 numPasses, cgInt32 radius, cgFloat intensity, const cgVector3 & flareColor, cgFloat edgeScale, cgFloat edgeBias );
 	void            setToneMapper           ( cgToneMapProcessor * toneMapper );
 
     //-------------------------------------------------------------------------
@@ -99,22 +120,44 @@ protected:
     // Constant buffers
     struct _cbUpdateCache
     {
-        float blendAmount;
-        float blendRate;
+        cgFloat blendAmount;
+        cgFloat blendRate;
     };
 
 	struct _cbAddLayer
 	{
-		float layerWeight;
+		cgFloat layerWeight;
 	};
 
     struct _cbBrightPass
     {
-        float     brightRangeScale;
-        float     brightRangeBias;
-		float     alphaMaskAmount;
+        cgFloat   brightRangeScale;
+        cgFloat   brightRangeBias;
+		cgFloat   alphaMaskAmount;
         cgVector2 textureSizeRecip;
     };
+
+	struct _cbILRBrightPass
+	{
+		cgFloat   brightThreshold;
+		cgFloat   flareContrast;
+		cgVector2 distanceAttenScaleBias;
+	};
+
+	struct _cbILRCompositePass
+	{
+		cgFloat flareDelta;
+		cgFloat flareAlpha;
+		cgFloat flareSlice;
+	};
+
+	struct _cbAnamorphicFlare
+	{
+		cgVector3 flareColor;
+		cgFloat   flarePassScale;
+		cgFloat   flareCoordScale;
+		cgFloat   flareCoordBias;
+	};
 
     //-------------------------------------------------------------------------
     // Protected Methods
@@ -124,6 +167,7 @@ protected:
 	void			updateCache				( size_t levelIndex );
     size_t          getGlareStepIndex       ( size_t levelIndex );
 	void			computeAnamorphicFlares ( size_t levelIndex );
+	void			internalLensReflection  ( );
 
 	//-------------------------------------------------------------------------
     // Protected Variables
@@ -132,11 +176,15 @@ protected:
     cgConstantBufferHandle  mBrightPassConstants;
     cgConstantBufferHandle  mUpdateCacheConstants;
 	cgConstantBufferHandle  mAddLayerConstants;
+	cgConstantBufferHandle  mAnamorphicConstants;
 	cgBlendStateHandle      mLayerBlendState;
 
     cgSampler             * mPointSampler;
     cgSampler             * mLinearSampler;
+	cgSampler             * mPointBorderSampler;
+	cgSampler             * mLinearBorderSampler;
 	cgSampler             * mLuminanceSampler;
+
 	cgToneMapProcessor    * mToneMapper;
 
     // Configuration
@@ -148,12 +196,37 @@ protected:
 	bool                    mHDRGlare;
 	bool                    mFullSizeBrightPass;
 	bool                    mDownsampleBlurPrePass;
-	bool					mAnamorphicFlares;
 
     // Data retained during execution.
     cgRenderTargetHandle    mOperationTarget;
     cgResampleChain       * mResampleChain0;
     cgResampleChain       * mResampleChain1;
+
+	// ILR 
+	cgVertexFormat        * mILRVertexFormat;
+	cgSampler             * mDepthSampler;
+	cgSampler             * mFlareSampler;
+	cgTextureHandle         mDepthBuffer;
+	cgTextureHandle         mFlareColor;
+	ILRElementArray 		mILRElements;
+	cgFloat					mILRBrightThreshold;
+	cgFloat					mILRFlareContrast;
+	cgInt32					mILRHighTargetPadding, mILRLowTargetPadding;
+	cgBlurOpDesc            mILRLowFilter, mILRHighFilter;
+	cgVector2				mILRDistanceRange;
+	bool					mILRMaterialAlphaMask;
+	bool					mHDRILR;
+
+	_cbILRBrightPass		mILRBrightPassConfig;
+	_cbILRCompositePass		mILRCompositePassConfig;
+	cgConstantBufferHandle  mILRBrightPassConstants;
+	cgConstantBufferHandle  mILRCompositePassConstants;
+
+	// Anamorphic flares 
+	cgFloat				    mAnamorphicIntensity;
+	cgInt32				    mAnamorphicPasses;
+	cgInt32                 mAnamorphicRadius;
+	_cbAnamorphicFlare      mAnamorphicConfig;
 };
 
 #endif // !_CGE_CGGLAREPROCESSOR_H_

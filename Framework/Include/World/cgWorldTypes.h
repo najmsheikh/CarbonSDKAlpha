@@ -126,6 +126,17 @@ namespace cgWorldType
 
 }; // End Namespace : cgWorldType
 
+namespace cgWorldDatabaseStatus
+{
+    enum Base
+    {
+        Valid           = 0,
+        LayoutUpdated   = 1,
+        LegacyLayout    = 2
+    };
+
+}; // End Namespace cgWorldDatabaseStatus
+
 // Describes the type of the scene file being managed.
 namespace cgSceneType
 {
@@ -244,6 +255,8 @@ namespace cgDeferredUpdateFlags
 // System defined object sub-element category identifiers.
 // {FF337EAC-C68E-4C21-8445-3A5B042A82EF}
 const cgUID OSECID_CollisionShapes = {0xFF337EAC, 0xC68E, 0x4C21, {0x84, 0x45, 0x3A, 0x5B, 0x4, 0x2A, 0x82, 0xEF}};
+// {AF077C13-AD53-4ac3-A231-5C0A3B602A0B}
+const cgUID OSECID_AnimationSets = {0xAF077C13, 0xAD53, 0x4AC3, {0xA2, 0x31, 0x5C, 0x0A, 0x3B, 0x60, 0x2A, 0x0B}};
 
 //-----------------------------------------------------------------------------
 // Common Global Structures

@@ -683,6 +683,19 @@ cgBoundingBox cgSkinObject::getLocalBoundingBox( )
     return cgBoundingBox();
 }
 
+//-----------------------------------------------------------------------------
+// Name : pick ( ) (Virtual)
+/// <summary>
+/// Given the specified object space ray, determine if this object is 
+/// intersected and also compute the object space intersection distance. 
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgSkinObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance )
+{
+    // ToDo: Picking is temporarily disabled.
+    return false;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // cgSkinNode Member Definitions
 ///////////////////////////////////////////////////////////////////////////////

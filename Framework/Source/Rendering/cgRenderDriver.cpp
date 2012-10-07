@@ -5843,9 +5843,10 @@ const cgRenderTargetHandle & cgRenderView::getRenderSurface( cgBufferFormat::Bas
         return cgRenderTargetHandle::Null;
 
     // Brand new target?
-    const cgResource * pResource = (const cgResource*)hTarget.getResourceSilent();
+    // These are no longer necessary for debugging purposes, but I'll leave them here regardless.
+    /*const cgResource * pResource = (const cgResource*)hTarget.getResourceSilent();
     if ( pResource && pResource->getReferenceCount(true) == 2 )
-        cgAppLog::write( cgAppLog::Info | cgAppLog::Debug, _T("Allocating '%s' for render view '%s'.\n"), strResource.str().c_str(), mName.c_str() );
+        cgAppLog::write( cgAppLog::Info | cgAppLog::Debug, _T("Allocating '%s' for render view '%s'.\n"), strResource.str().c_str(), mName.c_str() );*/
 
     // Is this a resource that is new to this particular view?
     RenderSurfaceMap::iterator itSurface = mRenderSurfaces.find( hTarget.getReferenceId() );
@@ -6033,9 +6034,10 @@ const cgDepthStencilTargetHandle & cgRenderView::getDepthStencilSurface( cgBuffe
         return cgDepthStencilTargetHandle::Null;
 
     // Brand new target?
-    const cgResource * pResource = (const cgResource*)hTarget.getResourceSilent();
+    // These are no longer necessary for debugging purposes, but I'll leave them here regardless.
+    /*const cgResource * pResource = (const cgResource*)hTarget.getResourceSilent();
     if ( pResource && pResource->getReferenceCount(true) == 2 )
-        cgAppLog::write( cgAppLog::Info | cgAppLog::Debug, _T("Allocating '%s' for render view '%s'.\n"), strResource.str().c_str(), mName.c_str() );
+        cgAppLog::write( cgAppLog::Info | cgAppLog::Debug, _T("Allocating '%s' for render view '%s'.\n"), strResource.str().c_str(), mName.c_str() );*/
 
     // Is this a resource that is new to this particular view?
     DepthStencilSurfaceMap::iterator itSurface = mDepthStencilSurfaces.find( hTarget.getReferenceId() );
@@ -6113,12 +6115,13 @@ bool cgRenderView::processMessage( cgMessage * pMessage )
                 cgFloat fDestroyDelay = 20.0f;
                 if ( fCurrentTime > (Surface.lastRequested + fDestroyDelay) )
                 {
-                    const cgResource * pResource = (const cgResource*)Surface.handle.getResourceSilent();
+                    // These are no longer necessary for debugging purposes, but I'll leave them here regardless.
+                    /*const cgResource * pResource = (const cgResource*)Surface.handle.getResourceSilent();
                     const cgString & strResourceName = (pResource) ? pResource->getResourceName() : cgString::Empty;
                     if ( strResourceName.empty() )
                         cgAppLog::write( cgAppLog::Info | cgAppLog::Debug, _T("Detaching render surface from render view '%s' because it was not requested within a %g second period.\n"), mName.c_str(), fDestroyDelay );
                     else
-                        cgAppLog::write( cgAppLog::Info | cgAppLog::Debug, _T("Detaching '%s' from render view '%s' because it was not requested within a %g second period.\n"), strResourceName.c_str(), mName.c_str(), fDestroyDelay );
+                        cgAppLog::write( cgAppLog::Info | cgAppLog::Debug, _T("Detaching '%s' from render view '%s' because it was not requested within a %g second period.\n"), strResourceName.c_str(), mName.c_str(), fDestroyDelay );*/
 
                     // Erase from the management list. This will automatically
                     // close the associated render target handle owned by this view.
@@ -6141,12 +6144,13 @@ bool cgRenderView::processMessage( cgMessage * pMessage )
                 cgFloat fDestroyDelay = 20.0f;
                 if ( fCurrentTime > (Surface.lastRequested + fDestroyDelay) )
                 {
-                    const cgResource * pResource = (const cgResource*)Surface.handle.getResourceSilent();
+                    // These are no longer necessary for debugging purposes, but I'll leave them here regardless.
+                    /*const cgResource * pResource = (const cgResource*)Surface.handle.getResourceSilent();
                     const cgString & strResourceName = (pResource) ? pResource->getResourceName() : cgString::Empty;
                     if ( strResourceName.empty() )
                         cgAppLog::write( cgAppLog::Info | cgAppLog::Debug, _T("Detaching depth stencil surface from render view '%s' because it was not requested within a %g second period.\n"), mName.c_str(), fDestroyDelay );
                     else
-                        cgAppLog::write( cgAppLog::Info | cgAppLog::Debug, _T("Detaching '%s' from render view '%s' because it was not requested within a %g second period.\n"), strResourceName.c_str(), mName.c_str(), fDestroyDelay );
+                        cgAppLog::write( cgAppLog::Info | cgAppLog::Debug, _T("Detaching '%s' from render view '%s' because it was not requested within a %g second period.\n"), strResourceName.c_str(), mName.c_str(), fDestroyDelay );*/
 
                     // Erase from the management list. This will automatically
                     // close the associated depth stencil target handle owned by this view.

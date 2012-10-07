@@ -162,6 +162,7 @@ public:
     void                        setBoneOrientation      ( const cgVector3 & source, const cgVector3 & destination, const cgVector3 & up );
     bool                        recomputeDimensions     ( cgMesh * mesh, bool updateLength, cgFloat radialScale, cgUInt32 boneIndex = cgUInt32(-1) );
     bool                        recomputeLength         ( );
+    void                        enableChildUpdates      ( bool enable );
 
     // Object Property 'Set' Routing
     void                        setWidth                ( cgFloat width );

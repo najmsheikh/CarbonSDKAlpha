@@ -178,6 +178,18 @@ bool cgScript::isMacroDefined( const cgString & strWord ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getInputStream()
+/// <summary>
+/// Retrieve the original input stream from which this script resource is 
+/// being loaded.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgInputStream & cgScript::getInputStream( ) const
+{
+    return mInputStream;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : loadResource ()
 /// <summary>
 /// If deferred loading is employed, load the underlying resources.

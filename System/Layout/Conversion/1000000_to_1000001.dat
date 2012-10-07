@@ -1,0 +1,37 @@
+-- Master world database conversion from v1.0.0 to v1.0.1
+
+-- New Nodes::Customproperties table
+CREATE TABLE [Nodes::CustomProperties] (
+  [PropertyId] integer PRIMARY KEY AUTOINCREMENT, 
+  [NodeId] integer, 
+  [Name] varchar(64), 
+  [Type] smallint DEFAULT 0, 
+  [Value] BLOB);
+
+CREATE INDEX [Nodes::CustomProperties_NodeIdIndex] ON [Nodes::CustomProperties] ([NodeId]);
+
+-- New Nodes::Behaviors table
+
+CREATE TABLE [Nodes::Behaviors] (
+  [BehaviorId] integer PRIMARY KEY AUTOINCREMENT, 
+  [NodeId] integer,
+  [LoadOrder] integer,
+  [Type] smallint DEFAULT 0, 
+  [Script] path,
+  [TypeName] varchar(64), 
+  [Data] BLOB);
+
+CREATE INDEX [Nodes::Behaviors_NodeIdIndex] ON [Nodes::Behaviors] ([NodeId]);
+CREATE INDEX [Nodes::Behaviors_SortedLoad] ON [Nodes::Behaviors] ([NodeId], [LoadOrder]);
+
+-- Now automatically remove custom node properties and behaviors when a node is deleted from the [Nodes] table.
+CREATE TRIGGER [Nodes_OnDelete]
+  BEFORE DELETE
+  ON [Nodes]
+  BEGIN
+    DELETE FROM [Nodes::CustomProperties] WHERE NodeId=old.RefId;  
+    DELETE FROM [Nodes::Behaviors] WHERE NodeId=old.RefId;  
+  END;
+
+-- Update version number to 1.0.1
+UPDATE [Configuration] SET Version=1,Subversion=0,Revision=1 WHERE Type='Primary';

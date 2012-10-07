@@ -140,7 +140,8 @@ public:
     const cgString                & getRenderClass          ( ) const;
     cgUInt32                        getRenderClassId        ( ) const;
     cgWorldObject                 * getReferencedObject     ( ) const;
-    cgPropertyContainer           & getCustomProperties     ( );
+    const cgPropertyContainer     & getCustomProperties     ( ) const;
+    void                            setCustomProperties     ( const cgPropertyContainer & properties );
 
     // Type Information
     const cgUID                   & getObjectType           ( ) const;
@@ -432,7 +433,7 @@ protected:
     cgWorldObject             * mReferencedObject;          // Physical object being referenced by this node.
     cgString                    mName;                      // The name of this node (must be unique).
     cgString                    mObjectClass;               // A custom user specified string that allows object nodes to be categorized.
-    cgPropertyContainer         mCustomProperties;          // List of custom, application defined properties for this node.
+    cgPropertyContainer       * mCustomProperties;          // List of custom, application defined properties for this node.
     cgUInt32                    mColor;                     // Base node color (if no material is assigned).
     cgUInt32                    mRenderClassId;             // Custom user specified identifier used to identify the object's rendering category / class.
 
@@ -516,8 +517,20 @@ protected:
     static cgWorldQuery mNodeUpdateUpdateRate;
     /// <summary>Update the Id of the node being targeted by this one.</summary>
     static cgWorldQuery mNodeUpdateTargetReference;
+    /// <summary>Remove all custom properties associated with this node.</summary>
+    static cgWorldQuery mNodeClearCustomProperties;
+    /// <summary>Insert a new custom property associated with this node.</summary>
+    static cgWorldQuery mNodeInsertCustomProperty;
+    /// <summary>Remove specific behavior data associated with this node from the database.</summary>
+    static cgWorldQuery mNodeDeleteBehavior;
+    /// <summary>Insert a new behavior to be associated with this node.</summary>
+    static cgWorldQuery mNodeInsertBehavior;
     /// <summary>Reload transformations from the database.</summary>
     static cgWorldQuery mNodeLoadTransforms;
+    /// <summary>Load any custom properties associated with this node from the database.</summary>
+    static cgWorldQuery mNodeLoadCustomProperties;
+    /// <summary>Load any behaviors to be associated with this node.</summary>
+    static cgWorldQuery mNodeLoadBehaviors;
 
 private:
     //-------------------------------------------------------------------------
