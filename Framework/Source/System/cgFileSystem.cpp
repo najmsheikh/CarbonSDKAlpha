@@ -753,6 +753,169 @@ bool cgFileSystem::createDirectory( const cgString & strDirectory )
     return ( SHCreateDirectoryEx( NULL, strDirectory.c_str(), NULL ) == ERROR_SUCCESS );
 }
 
+//-----------------------------------------------------------------------------
+//  Name : getTemporaryFile () (Static)
+/// <summary>
+/// Generate a new (empty) temporary file located in the system's configured 
+/// temporary file directory and return the full path to that file. Returns an 
+/// empty string if a suitable temporary file name or associated empty file 
+/// failed to be generated.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgString cgFileSystem::getTemporaryFile()
+{
+    //  Retrieve the temporary directory environment variable.
+    cgTChar tempPathBuffer[MAX_PATH];
+    cgUInt32 result = GetTempPath(MAX_PATH, tempPathBuffer );
+    if ( result > MAX_PATH || (result == 0))
+        return cgString::Empty;
+    
+    //  Generates a temporary file / file name. 
+    cgTChar tempFileName[MAX_PATH];  
+    if ( !GetTempFileName( tempPathBuffer, _T("CGE"), 0, tempFileName ) )
+        return cgString::Empty;
+
+    // We're done.
+    return tempFileName;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getTemporaryFile () (Static)
+/// <summary>
+/// Generate a new (empty) temporary file located in the specified directory
+/// and return the full path to that file. Returns an empty string if a 
+/// suitable temporary file name or associated empty file failed to be 
+/// generated.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgString cgFileSystem::getTemporaryFile( const cgString & basePath )
+{
+    // Generates a temporary file / file name. 
+    cgTChar tempFileName[MAX_PATH];  
+    if ( !GetTempFileName( basePath.c_str(), _T("CGE"), 0, tempFileName ) )
+        return cgString::Empty;
+
+    // We're done.
+    return tempFileName;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : copyFile () (Static)
+/// <summary>
+/// Copy the specified source file to a new location. If the destination file
+/// already exists and the caller supplies a value of 'false' to the 
+/// 'overwriteExisting', the call will fail. Otherwise, the destination file
+/// will be overwritten (where possible). Returns false if the copy operation 
+/// failed for this or any other reason.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgFileSystem::copyFile( const cgString & source, const cgString & destination, bool overwriteExisting )
+{
+    return (CopyFile( source.c_str(), destination.c_str(), !overwriteExisting) != 0);
+}
+
+//-----------------------------------------------------------------------------
+//  Name : moveFile () (Static)
+/// <summary>
+/// Move the specified source file to a new location. This function can also
+/// be used to rename a file. Returns false if the move / rename operation 
+/// failed for any reason.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgFileSystem::moveFile( const cgString & source, const cgString & destination, bool overwriteExisting )
+{
+    cgUInt32 flags = MOVEFILE_COPY_ALLOWED | MOVEFILE_WRITE_THROUGH;
+    if ( overwriteExisting )
+        flags |= MOVEFILE_REPLACE_EXISTING;
+    return (MoveFileEx( source.c_str(), destination.c_str(), flags ) != 0);
+}
+
+//-----------------------------------------------------------------------------
+//  Name : deleteFile () (Static)
+/// <summary>
+/// Delete the specified file. Returns false if the delete operation failed
+/// for any reason, i.e. the file was not found, or access was denied.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgFileSystem::deleteFile( const cgString & pathFile )
+{
+    return (DeleteFile( pathFile.c_str() ) != 0);
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isSameFile () (Static)
+/// <summary>
+/// Attempt to determine if the two specified paths / files reference the same 
+/// file on disk. User must have sufficient permissions to access both files
+/// in order for this function to succeed. Returns false on failure for this or
+/// any other reason, or if the files don't reference the same file. See 
+/// alternative version of this function if you need explicit success / failure
+/// information.
+/// Note: May return 'false' when paths reference the same file via two 
+/// separate network shares.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgFileSystem::isSameFile( const cgString & file1, const cgString & file2 )
+{
+    bool success;
+    return isSameFile( file1, file2, success );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isSameFile () (Static)
+/// <summary>
+/// Attempt to determine if the two specified paths / files reference the same 
+/// file on disk. User must have sufficient permissions to access both files
+/// in order for this function to succeed. This version of the function 
+/// returns extended success or failure information via its third parameter.
+/// Note: May return 'false' when paths reference the same file via two 
+/// separate network shares.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgFileSystem::isSameFile( const cgString & file1, const cgString & file2, bool & success )
+{
+    // Failed by default
+    success = true;
+
+    // Get handles to both files.
+    HANDLE h1 = CreateFile( file1.c_str(), 0, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 
+                            CG_NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_ATTRIBUTE_NORMAL, CG_NULL );
+    if ( !h1 )
+        return false;
+    
+    HANDLE h2 = CreateFile( file2.c_str(), 0, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 
+                            CG_NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_ATTRIBUTE_NORMAL, CG_NULL );
+    if ( !h2 )
+    {
+        if ( h1 )
+            CloseHandle(h1);
+        return false;
+    
+    } // End if create failed
+
+    // Get file information for both files
+    bool result = false;
+    BY_HANDLE_FILE_INFORMATION info1, info2;
+    if ( GetFileInformationByHandle( h1, &info1 ) && GetFileInformationByHandle( h2, &info2 ) )
+    {
+        success = true;
+
+        // Reference the same file?
+        if ( info1.dwVolumeSerialNumber == info2.dwVolumeSerialNumber &&
+             info1.nFileIndexHigh == info2.nFileIndexHigh &&
+             info1.nFileIndexLow == info2.nFileIndexLow )
+             result = true;
+
+    } // End if query success
+
+    // Clean up
+    CloseHandle(h1);
+    CloseHandle(h2);
+
+    // We're done.
+    return result;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // cgInputStream Member Functions
 ///////////////////////////////////////////////////////////////////////////////

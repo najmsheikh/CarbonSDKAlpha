@@ -88,28 +88,42 @@ cgActorObject::cgActorObject( cgUInt32 referenceId, cgWorld * world, cgWorldObje
             cgResourceManager * resources = cgResourceManager::getInstance();
             resources->addAnimationSet( &newSetHandle, newSet, cgResourceFlags::ForceNew, animationSet->getResourceName(), cgDebugSource() );
 
-            // Store! Since we're creating a new connection to existing information, the 
-            // database ref count SHOULD be incremented when we attach (i.e. we're not
-            // simply reconnecting as we would be during a load) assuming we are not an 
-            // internal reference outselves.
-            mAnimationSets.push_back( cgAnimationSetHandle( (isInternalReference() == false), this ) );
+            // Store, but don't update database reference counts yet.
+            mAnimationSets.push_back( cgAnimationSetHandle( false, this ) );
             mAnimationSets.back() = newSetHandle;
 
         } // Next animation set
+
+        // Restore handle database update options. Since we're creating a new 
+        // connection to existing information, the database ref count SHOULD be 
+        // incremented when we enable updates (i.e. we're not simply reconnecting 
+        // as we would be during a load) assuming we are not an internal reference 
+        // ourselves (second parameter == true). We do this only after all sets have 
+        // been added to prevent  mAnimationSets vector resize operations from 
+        // triggering database updates via operator=.
+        for ( size_t i = 0; i < mAnimationSets.size(); ++i )
+            mAnimationSets[i].enableDatabaseUpdate( (isInternalReference() == false), true );
     
     } // End if Copy
     else if ( initMethod == cgCloneMethod::DataInstance )
     {
         for ( size_t i = 0; i < object->mAnimationSets.size(); ++i )
         {
-            // Store! Since we're creating a new connection to existing information, the 
-            // database ref count SHOULD be incremented when we attach (i.e. we're not
-            // simply reconnecting as we would be during a load) assuming we are not an 
-            // internal reference outselves.
-            mAnimationSets.push_back( cgAnimationSetHandle( (isInternalReference() == false), this ) );
+            // Store, but don't update database reference counts yet.
+            mAnimationSets.push_back( cgAnimationSetHandle( false, this ) );
             mAnimationSets.back() = object->mAnimationSets[i];
 
         } // Next animation set
+
+        // Restore handle database update options. Since we're creating a new 
+        // connection to existing information, the database ref count SHOULD be 
+        // incremented when we enable updates (i.e. we're not simply reconnecting 
+        // as we would be during a load) assuming we are not an internal reference 
+        // ourselves (second parameter == true). We do this only after all sets have 
+        // been added to prevent  mAnimationSets vector resize operations from 
+        // triggering database updates via operator=.
+        for ( size_t i = 0; i < mAnimationSets.size(); ++i )
+            mAnimationSets[i].enableDatabaseUpdate( (isInternalReference() == false), true );
 
     } // End if DataInstance
 }
@@ -367,12 +381,8 @@ bool cgActorObject::onComponentLoading( cgComponentLoadingEventArgs * e )
         // Store! Since we're reloading prior information, the database ref count 
         // should NOT be incremented when we attach (i.e. we're just reconnecting),
         // but we should be marked as an owner.
-        mAnimationSets.push_back( cgAnimationSetHandle() );
-        mAnimationSets.back().setOwnerDetails( this );
+        mAnimationSets.push_back( cgAnimationSetHandle( false, this ) );
         mAnimationSets.back() = animationSet;
-
-        // Restore handle database update options.
-        mAnimationSets.back().enableDatabaseUpdate( (isInternalReference() == false) );
 
         // Create a sub element to represent this animation set (this is an internal element 
         // only in this build simply to create a link between the actor and the editing environment).
@@ -381,6 +391,12 @@ bool cgActorObject::onComponentLoading( cgComponentLoadingEventArgs * e )
             element->setAnimationSet( animationSet );
 
     } // Next reference
+
+    // Restore handle database update options. We do this only after 
+    // all sets have been added to prevent mAnimationSets vector resize
+    // operations from triggering database updates via operator=.
+    for ( size_t i = 0; i < mAnimationSets.size(); ++i )
+        mAnimationSets[i].enableDatabaseUpdate( (isInternalReference() == false) );
 
     // We're done reading references.
     mLoadSetReferences.reset();
@@ -506,9 +522,16 @@ bool cgActorObject::addAnimationSet( const cgAnimationSetHandle & animationSet )
     // The set handle should manage the resource as an 'owner' handle. 
     // This will ensure that soft (database) reference counting will be
     // considered and that the object ownership is correctly recorded.
+    // Take care not to trigger database updates for existing handles
+    // during vector resize operations (operator=)
+    cgAnimationSetHandleArray tempSets( mAnimationSets.size() );
+    for ( size_t i = 0; i < mAnimationSets.size(); ++i )
+        mAnimationSets[i].swap( tempSets[i] );
     mAnimationSets.push_back( cgAnimationSetHandle() );
     mAnimationSets.back().enableDatabaseUpdate( (isInternalReference() == false) );
     mAnimationSets.back().setOwnerDetails( this );
+    for ( size_t i = 0; i < tempSets.size(); ++i )
+        mAnimationSets[i].swap( tempSets[i] );
 
     // Take ownership of the set.
     mAnimationSets.back() = animationSet;
@@ -531,6 +554,7 @@ bool cgActorObject::addAnimationSet( const cgAnimationSetHandle & animationSet )
             // Remove our reference to the animation set in memory 
             // (this should also remove animation set from the database 
             // entirely if this was the last DB reference) and fail.
+            // ToDo: THIS POTENTIALLY RESIZES -- NEED TO DO SWAPS HERE TOO?
             mAnimationSets.pop_back();
             return false;
         

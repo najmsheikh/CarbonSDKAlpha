@@ -374,9 +374,9 @@ protected:
     //-------------------------------------------------------------------------
     // Private Variables
     //-------------------------------------------------------------------------
-    cgResource    * mResource;        // The resource managed by this handle
-    cgReference   * mOwner;           // Who should we mark as owner?
-    bool            mDatabaseUpdate;  // Should reference counting update database soft reference count?
+    cgResource    * mResource;          // The resource managed by this handle
+    cgReference   * mOwner;             // Who should we mark as owner?
+    bool            mDatabaseUpdate;    // Should reference counting update database soft reference count?
 };
 
 //-----------------------------------------------------------------------------
@@ -480,6 +480,36 @@ public:
     }
 
     //-------------------------------------------------------------------------
+    //  Name : swap ()
+    /// <summary>
+    /// Swap the contents of the two resource handles without triggering any
+    /// reference counting mechanisms or updates.
+    /// </summary>
+    //-------------------------------------------------------------------------
+    ResourceHandle & swap( ResourceHandle & handle )
+    {
+        // Straight up transfer of handle.
+        {
+            cgResource * temp = mResource;
+            mResource         = handle.mResource;
+            handle.mResource  = temp;
+        }
+        {
+            bool temp               = mDatabaseUpdate;
+            mDatabaseUpdate         = handle.mDatabaseUpdate;
+            handle.mDatabaseUpdate  = temp;
+        }
+        {
+            cgReference * temp      = mOwner;
+            mOwner                  = handle.mOwner;
+            handle.mOwner           = temp;
+        }
+
+        // Return reference to self in order to allow follow on operations
+        return *this;
+    }
+
+    //-------------------------------------------------------------------------
     //  Name : exchangeResource ()
     /// <summary>
     /// Swap internal resource data with that maintained by the specified 
@@ -502,7 +532,7 @@ public:
     // Operator Overloads
     //-------------------------------------------------------------------------
     //-------------------------------------------------------------------------
-    //  Name : operator= () (ResourceHandle<_RT>&)
+    //  Name : operator= () (const ResourceHandle<_RT>&)
     /// <summary>
     /// Overloaded assignment operator.
     /// </summary>

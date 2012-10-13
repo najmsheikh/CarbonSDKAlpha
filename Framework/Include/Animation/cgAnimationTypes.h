@@ -267,6 +267,7 @@ public:
 	// Constructors & Destructors
 	//-------------------------------------------------------------------------
              cgPositionXYZTargetController( );
+             cgPositionXYZTargetController( const cgPositionXYZTargetController & init, const cgRange & frameRange );
 	virtual ~cgPositionXYZTargetController( );
 
     //-------------------------------------------------------------------------
@@ -315,6 +316,7 @@ public:
 	// Constructors & Destructors
 	//-------------------------------------------------------------------------
              cgScaleXYZTargetController( );
+             cgScaleXYZTargetController( const cgScaleXYZTargetController & init, const cgRange & frameRange );
 	virtual ~cgScaleXYZTargetController( );
 
     //-------------------------------------------------------------------------
@@ -363,6 +365,7 @@ public:
 	// Constructors & Destructors
 	//-------------------------------------------------------------------------
              cgUniformScaleTargetController( );
+             cgUniformScaleTargetController( const cgUniformScaleTargetController & init, const cgRange & frameRange );
 	virtual ~cgUniformScaleTargetController( );
 
     //-------------------------------------------------------------------------
@@ -410,6 +413,7 @@ public:
 	// Constructors & Destructors
 	//-------------------------------------------------------------------------
              cgQuaternionTargetController( );
+             cgQuaternionTargetController( const cgQuaternionTargetController & init, const cgRange & frameRange );
 	virtual ~cgQuaternionTargetController( );
 
     //-------------------------------------------------------------------------
@@ -457,6 +461,7 @@ public:
 	// Constructors & Destructors
 	//-------------------------------------------------------------------------
              cgEulerAnglesTargetController( );
+             cgEulerAnglesTargetController( const cgEulerAnglesTargetController & init, const cgRange & frameRange );
 	virtual ~cgEulerAnglesTargetController( );
 
     //-------------------------------------------------------------------------

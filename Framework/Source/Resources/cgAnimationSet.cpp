@@ -108,23 +108,66 @@ cgAnimationSet::cgAnimationSet( cgUInt32 nReferenceId, cgWorld * pWorld, cgFloat
 //-----------------------------------------------------------------------------
 cgAnimationSet::cgAnimationSet( cgUInt32 nReferenceId, cgWorld * pWorld, cgAnimationSet * pInit ) : cgWorldResourceComponent( nReferenceId, pWorld, pInit )
 {
-    // ToDo: 9999 - INSERT INTO DB!
-
     // Set variables to sensible defaults
-    mFirstFrame         = pInit->mFirstFrame;
-    mLastFrame         = pInit->mLastFrame;
+    mFirstFrame       = pInit->mFirstFrame;
+    mLastFrame        = pInit->mLastFrame;
     mFramesPerSecond  = pInit->mFramesPerSecond;
-    mTargetData        = pInit->mTargetData;
+
+    // ToDo: Perform deep clone!
+    mTargetData       = pInit->mTargetData;
 
     // Loading and serialization
     mSourceRefId      = 0;
     mSetSerialized    = false;
-    mDBDirtyFlags     = 0;
+    mDBDirtyFlags     = AllDirty;
     mSuspendSerialization = false;
     
     // Cached resource responses
-    mResourceType      = cgResourceType::AnimationSet;
-    mResourceLoaded   = pInit->mResourceLoaded;
+    mResourceType     = cgResourceType::AnimationSet;
+    mResourceLoaded   = false; // Note: Important that the set is not classed as loaded since its data may need to be serialized.
+    mResourceLost     = false;
+    mCanEvict         = (isInternalReference() == false);
+}
+
+//-----------------------------------------------------------------------------
+//  Name : cgAnimationSet () (Constructor)
+/// <summary>
+/// cgAnimationSet Class Constructor
+/// </summary>
+//-----------------------------------------------------------------------------
+cgAnimationSet::cgAnimationSet( cgUInt32 nReferenceId, cgWorld * pWorld, cgAnimationSet * pInit, const cgRange & frameRange ) : cgWorldResourceComponent( nReferenceId, pWorld, pInit )
+{
+    // Set variables to sensible defaults
+    mFirstFrame       = 0;
+    mLastFrame        = (frameRange.max - frameRange.min);
+    mFramesPerSecond  = pInit->mFramesPerSecond;
+
+    // Duplicate target data within specified frame ranges.
+    TargetDataMap::const_iterator itTarget;
+    for ( itTarget = pInit->mTargetData.begin(); itTarget != pInit->mTargetData.end(); ++itTarget )
+    {
+        const TargetData & Data = itTarget->second;
+        TargetData & DestData = mTargetData.insert(TargetDataMap::value_type(itTarget->first, TargetData())).first->second;
+
+        // ToDo: Support different controller types
+        if ( Data.translationController )
+            DestData.translationController = new cgPositionXYZTargetController( *(cgPositionXYZTargetController*)Data.translationController, frameRange );
+        if ( Data.scaleController )
+            DestData.scaleController = new cgScaleXYZTargetController( *(cgScaleXYZTargetController*)Data.scaleController, frameRange );
+        if ( Data.rotationController )
+            DestData.rotationController = new cgEulerAnglesTargetController( *(cgEulerAnglesTargetController*)Data.rotationController, frameRange );
+    
+    } // Next target
+
+    // Loading and serialization
+    mSourceRefId      = 0;
+    mSetSerialized    = false;
+    mDBDirtyFlags     = AllDirty;
+    mSuspendSerialization = false;
+    
+    // Cached resource responses
+    mResourceType     = cgResourceType::AnimationSet;
+    mResourceLoaded   = false; // Note: Important that the set is not classed as loaded since its data may need to be serialized.
     mResourceLost     = false;
     mCanEvict         = (isInternalReference() == false);
 }
@@ -138,8 +181,8 @@ cgAnimationSet::cgAnimationSet( cgUInt32 nReferenceId, cgWorld * pWorld, cgAnima
 cgAnimationSet::cgAnimationSet( cgUInt32 nReferenceId, cgWorld * pWorld, cgUInt32 nSourceRefId ) : cgWorldResourceComponent( nReferenceId, pWorld )
 {
     // Set variables to sensible defaults
-    mFirstFrame         = INT_MAX;
-    mLastFrame         = INT_MIN;
+    mFirstFrame       = INT_MAX;
+    mLastFrame        = INT_MIN;
     mFramesPerSecond  = 30.0f;
     
     // Loading and serialization
@@ -184,7 +227,7 @@ void cgAnimationSet::dispose( bool bDisposeBase )
 
     // Dispose base.
     if ( bDisposeBase == true )
-        cgResource::dispose( true );
+        cgWorldResourceComponent::dispose( true );
     else
         mDisposing = false;
 }
@@ -203,7 +246,7 @@ bool cgAnimationSet::queryReferenceType( const cgUID & type ) const
         return true;
 
     // Supported by base?
-    return cgResource::queryReferenceType( type );
+    return cgWorldResourceComponent::queryReferenceType( type );
 }
 
 //-----------------------------------------------------------------------------
@@ -810,7 +853,7 @@ cgFloat cgAnimationSet::getFrameRate( ) const
 //-----------------------------------------------------------------------------
 cgRange cgAnimationSet::getFrameRange( ) const
 {
-    return cgRange( mFirstFrame, mLastFrame );
+    return cgRange( (mFirstFrame == INT_MAX) ? 0 : mFirstFrame, (mLastFrame == INT_MIN) ? 0 : mLastFrame );
 }
 
 //-----------------------------------------------------------------------------

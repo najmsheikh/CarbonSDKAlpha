@@ -83,10 +83,17 @@ public:
     static cgString getFileName         ( const cgString & pathFile, bool stripExtension );
     static cgString getDirectoryName    ( const cgString & pathFile );
     static cgString getAppDirectory     ( );
+    static cgString getTemporaryFile    ( );
+    static cgString getTemporaryFile    ( const cgString & basePath );
     static bool     fileExists          ( const cgString & pathFile );
     static bool     directoryExists     ( const cgString & directoryName );
     static bool     createDirectory     ( const cgString & directoryName );
     static bool     pathProtocolDefined ( const cgString & protocol );
+    static bool     copyFile            ( const cgString & source, const cgString & destination, bool overwriteExisting );
+    static bool     moveFile            ( const cgString & source, const cgString & destination, bool overwriteExisting );
+    static bool     deleteFile          ( const cgString & pathFile );
+    static bool     isSameFile          ( const cgString & file1, const cgString & file2 );
+    static bool     isSameFile          ( const cgString & file1, const cgString & file2, bool & success );
 
 private:
     //-------------------------------------------------------------------------

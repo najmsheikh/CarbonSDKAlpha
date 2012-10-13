@@ -66,6 +66,7 @@ cgWorld::cgWorld( ) : cgReference( cgReferenceManager::generateInternalRefId( ) 
     mStatementCommit    = CG_NULL;
     mStatementRollback  = CG_NULL;
     mConfiguration      = CG_NULL;
+    mStreamIsTemporary  = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -116,26 +117,46 @@ void cgWorld::dispose( bool disposeBase )
     delete mConfiguration;
 
     // Finalize any cached database statements that remain active.
-    if ( mStatementBegin != CG_NULL )
+    if ( mStatementBegin )
         sqlite3_finalize( mStatementBegin );
-    if ( mStatementCommit != CG_NULL )
+    if ( mStatementCommit )
         sqlite3_finalize( mStatementCommit );
-    if ( mStatementRollback != CG_NULL )
+    if ( mStatementRollback )
         sqlite3_finalize( mStatementRollback );
-    
+
     // Close any database connection that remains open.
-    if ( mDatabase != CG_NULL )
-        sqlite3_close( mDatabase );
+    if ( mDatabase )
+    {
+        if ( sqlite3_close( mDatabase ) == SQLITE_BUSY )
+        {
+            cgAppLog::write( cgAppLog::Warning | cgAppLog::Debug, _T("Failed to close database because it was marked as busy. Enumerating statements that have not yet been finalized:\n") );
+
+            // List all currently non-finalized statements.
+            STRING_CONVERT;
+            sqlite3_stmt * testStatement = NULL;
+            while ( (testStatement = sqlite3_next_stmt( mDatabase, testStatement )) != CG_NULL )
+                cgAppLog::write( cgAppLog::Debug, _T("%s\n"), stringConvertA2CT(sqlite3_sql( testStatement )) );
+
+        } // End if busy
+    
+    } // End if open
 
     // Remove our local reference to the database stream.
+    cgString databaseFile = mDatabaseStream.getSourceFile().c_str();
     mDatabaseStream.reset();
-    
+    mOriginalStream.reset();
+
+    // Remove the temporary world file if necessary.
+    if ( mStreamIsTemporary )
+        cgFileSystem::deleteFile( databaseFile );
+
     // Clear variables
-    mConfiguration                = CG_NULL;
-    mDatabase                     = CG_NULL;
-    mStatementBegin               = CG_NULL;
-    mStatementCommit              = CG_NULL;
-    mStatementRollback            = CG_NULL;
+    mConfiguration      = CG_NULL;
+    mDatabase           = CG_NULL;
+    mStatementBegin     = CG_NULL;
+    mStatementCommit    = CG_NULL;
+    mStatementRollback  = CG_NULL;
+    mStreamIsTemporary  = false;
     mActiveScenes.clear();
     
     // Dispose of base class(es) if requested.
@@ -245,17 +266,22 @@ bool cgWorld::executeQuery( const cgString & statements, bool asOneTransaction )
         #endif // !_UNICODE
         
         // Bail out of nothing was available to prepare (not an error, we're just done).
-        if ( prepareResult == SQLITE_OK && statement == NULL )
+        if ( prepareResult == SQLITE_OK && !statement )
             break;
 
-        // Check for preparation errors and then execute the statement if valid.
-        if ( prepareResult != SQLITE_OK || sqlite3_step( statement ) != SQLITE_DONE )
+        // If successful, execute the statement.
+        cgInt stepResult = SQLITE_DONE;
+        if ( prepareResult == SQLITE_OK )
+            stepResult = sqlite3_step( statement );
+
+        // Check for preparation or execution errors.
+        if ( prepareResult != SQLITE_OK || (stepResult != SQLITE_DONE && stepResult != SQLITE_ROW) )
         {
             STRING_CONVERT;
-            cgString error = _T("Failed to prepare or execute statement. Error: ") + cgString(stringConvertA2CT(sqlite3_errmsg(mDatabase)));
+            cgString error = _T("Failed to prepare or execute statement(s) '") + statements + _T("'. Error: ") + cgString(stringConvertA2CT(sqlite3_errmsg(mDatabase)));
 
             // Clean up any prepared statement.
-            if ( statement != NULL )
+            if ( statement )
                 sqlite3_finalize( statement );
 
             // ROLLBACK!
@@ -278,7 +304,7 @@ bool cgWorld::executeQuery( const cgString & statements, bool asOneTransaction )
         } // End if failed
 
         // Clean up any prepared statement
-        if ( statement != CG_NULL )
+        if ( statement )
             sqlite3_finalize( statement );
 
     } // Next section of the queryString.
@@ -428,7 +454,9 @@ bool cgWorld::create( cgWorldType::Base type )
     } // End if not found
     
     // Attempt to create this new database.
-    if ( sqlite3_open_v2( "", &mDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX, CG_NULL ) != SQLITE_OK || (mDatabase == CG_NULL) )
+    STRING_CONVERT;
+    cgString temporaryFile = cgFileSystem::getTemporaryFile();
+    if ( temporaryFile.empty() || sqlite3_open_v2( stringConvertT2CA(temporaryFile.c_str()), &mDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX, CG_NULL ) != SQLITE_OK || (mDatabase == CG_NULL) )
     {
         // Log and fail
         cgAppLog::write( cgAppLog::Error, _T("Failed to create connection with new world database. Access was denied or an out of memory error occurred.\n") );
@@ -445,8 +473,13 @@ bool cgWorld::create( cgWorldType::Base type )
     
     } // End if failed
 
+    // Use the temporary file as the input stream.
+    mOriginalStream     = cgInputStream( temporaryFile );
+    mDatabaseStream     = cgInputStream( temporaryFile );
+    mStreamIsTemporary  = true;
+
     // Execute any database post connection logic.
-    if ( !postConnect() )
+    if ( !postConnect( true ) )
     {
         dispose( false );
         return false;
@@ -474,16 +507,171 @@ bool cgWorld::create( cgWorldType::Base type )
 /// been established.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgWorld::postConnect( )
+bool cgWorld::postConnect( bool newWorld )
 {
-    STRING_CONVERT;
-    sqlite3_stmt * statement = NULL;
+    // Select performance related options.
+    executeQuery( _T("PRAGMA cache_size=2000"),false );         // 2000 pages (2mb, the default)
+    executeQuery( _T("PRAGMA synchronous=OFF"), false );        // Don't wait for file access to complete.
+    executeQuery( _T("PRAGMA count_changes=OFF"), false );      // Don't count database changes.
+    executeQuery( _T("PRAGMA temp_store=2"), false );           // Temporary tables in memory.
+    executeQuery( _T("PRAGMA main.journal_mode=MEMORY"), false );    // Use in-memory journal
+
+    // In sandbox mode, we need to perform some adjustments on the data in the database.
+    if ( !newWorld && cgGetSandboxMode() != cgSandboxMode::Disabled )
+    {
+        cgWorldQuery query;
+        cgString fileName = mOriginalStream.getSourceFile();
+
+        // Catch exceptions
+        try
+        {
+            // Before allowing a final export, perform a full scan of the database for all
+            // 'path' entries in all tables in the database. These will be converted to
+            // relative paths if necessary. In case of failure, run it within a transaction.
+            query.prepare( mDatabase, _T("BEGIN") );
+            query.step( true );
+
+            // Files will all be relative to original database file.
+            cgString databaseDirectory = cgFileSystem::getDirectoryName( fileName );
+
+            // Retrieve a list of all tables in the database.
+            cgStringArray tables;
+            if ( query.prepare( mDatabase, _T("SELECT name FROM 'SQLITE_MASTER' WHERE type='table'") ) == false || query.step() == false )
+            {
+                cgString error;
+                query.getLastError( error );
+                throw cgExceptions::ResultException( cgString::format(_T("Failed to select table names from world database. Error: %s"), error.c_str()), cgDebugSource() );
+            
+            } // End if failed
+            while ( query.nextRow() )
+            {
+                cgString tableName;
+                query.getColumn( 0, tableName );
+                tables.push_back( tableName );
+
+            } // Next Row
+
+            // For each table, retrieve column information and collect a list
+            // of all table.column combinations that have 'path' as their type.
+            struct ColumnData
+            {
+                cgUInt32 table;
+                cgString name;
+            };
+            std::vector<ColumnData> pathColumns;
+            for ( size_t i = 0; i < tables.size(); ++i )
+            {
+                // Retrieve a list of all path columns.
+                cgString tableName = tables[i];
+                if ( query.prepare( mDatabase, _T("PRAGMA table_info('") + tableName + _T("')") ) == false || query.step() == false )
+                {
+                    cgString error;
+                    query.getLastError( error );
+                    throw cgExceptions::ResultException( cgString::format(_T("Failed to select column information for world database table %s. Error: %s"), tableName.c_str(), error.c_str()), cgDebugSource() );
+                
+                } // End if failed
+                while ( query.nextRow() )
+                {
+                    cgString columnType;
+                    query.getColumn( _T("type"), columnType );
+                    
+                    // type is set to 'path'?
+                    if ( columnType.compare( _T("path"), true ) == 0 )
+                    {
+                        // Record column information.
+                        ColumnData data;
+                        data.table = i;
+                        query.getColumn( _T("name"), data.name );
+                        pathColumns.push_back( data );
+                        
+                    } // End if type = 'path'
+
+                } // Next Column
+
+            } // Next table
+
+            // Process all path columns to ensure they contain absolute paths.
+            for ( size_t i = 0; i < pathColumns.size(); ++i )
+            {
+                const ColumnData & data = pathColumns[i];
+                const cgTChar * c = data.name.c_str(), * t = tables[data.table].c_str();
+
+                // Build query that allows us to update specified row data.
+                cgWorldQuery updateQuery;
+                cgString queryString = cgString::format( _T("UPDATE '%s' SET %s=?1 WHERE rowid=?2"), t, c );
+                if ( updateQuery.prepare( mDatabase, queryString ) == false )
+                {
+                    cgString error;
+                    updateQuery.getLastError( error );
+                    throw cgExceptions::ResultException( cgString::format(_T("Failed to prepare row update queryString while generating world database absolute paths. Error: %s"), error.c_str()), cgDebugSource() );
+                
+                } // End if failed
+
+                // Select all rows where the path column does not contain an absolute style
+                // path in the format '<single-letter>:{other-characters}' i.e. "c:\mydata"
+                // or a file system path protocol i.e. "sys://"
+                cgToDo( "Carbon General", "Rather than using a wildcard for the path protocols, perhaps iterate them (cgFileSystem) and provide them explicitly?" )
+                queryString = cgString::format( _T("SELECT rowid,%s FROM '%s' WHERE %s NOT LIKE '_:%%' AND %s NOT LIKE '%%://%%'"), c, t, c, c );
+                if ( query.prepare( mDatabase, queryString ) == false || query.step() == false )
+                {
+                    cgString error;
+                    query.getLastError( error );
+                    throw cgExceptions::ResultException( cgString::format(_T("Failed to select row data while generating world database absolute paths. Error: %s"), error.c_str()), cgDebugSource() );
+                
+                } // End if failed
+                while ( query.nextRow() )
+                {
+                    cgString currentPath;
+                    cgUInt32 rowId;
+                    query.getColumn( 0, rowId );
+                    query.getColumn( 1, currentPath );
+
+                    // Skip if the path is completely empty.
+                    if ( currentPath.empty() )
+                        continue;
+
+                    // Correct path.
+                    currentPath = cgFileSystem::getAbsolutePath( currentPath, databaseDirectory );
+
+                    // Update row
+                    updateQuery.bindParameter( 1, currentPath );
+                    updateQuery.bindParameter( 2, rowId );
+                    if ( updateQuery.step( true ) == false )
+                    {
+                        cgString error;
+                        updateQuery.getLastError( error );
+                        throw cgExceptions::ResultException( cgString::format(_T("Failed to update row data while generating world database absolute paths. Error: %s"), error.c_str()), cgDebugSource() );
+                    
+                    } // End if failed
+
+                } // Next Column
+
+            } // Next path column
+
+            // Commit changes
+            query.prepare( mDatabase, _T("COMMIT") );
+            query.step( true );
+
+        } // End try
+
+        catch( const cgExceptions::ResultException & e )
+        {
+            query.prepare( mDatabase, _T("ROLLBACK") );
+            query.step( true );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to prepare database for import from file '%s'. %s.\n"), fileName.c_str(), e.toString().c_str() );
+            return false;
+
+        } // End catch
+
+    } // End if sandbox
 
     // Prepare the standard 'BEGIN' transaction queryString we'll be using often.
+    sqlite3_stmt * statement = CG_NULL;
     const cgChar * queryString = "BEGIN";
     sqlite3_prepare_v2( mDatabase, queryString, strlen(queryString), &mStatementBegin, NULL );
     if ( !mStatementBegin )
     {
+        STRING_CONVERT;
         cgAppLog::write( cgAppLog::Error, _T("Failed to compile common transaction begin queryString. Error: %s\n"), stringConvertA2CT(sqlite3_errmsg(mDatabase)) );
         return false;
     
@@ -494,6 +682,7 @@ bool cgWorld::postConnect( )
     sqlite3_prepare_v2( mDatabase, queryString, strlen(queryString), &mStatementCommit, NULL );
     if ( !mStatementCommit )
     {
+        STRING_CONVERT;
         cgAppLog::write( cgAppLog::Error, _T("Failed to compile common transaction commit queryString. Error: %s\n"), stringConvertA2CT(sqlite3_errmsg(mDatabase)) );
         return false;
     
@@ -504,6 +693,7 @@ bool cgWorld::postConnect( )
     sqlite3_prepare_v2( mDatabase, queryString, strlen(queryString), &mStatementRollback, NULL );
     if ( !mStatementRollback )
     {
+        STRING_CONVERT;
         cgAppLog::write( cgAppLog::Error, _T("Failed to compile common transaction rollback queryString. Error: %s\n"), stringConvertA2CT(sqlite3_errmsg(mDatabase)) );
         return false;
     
@@ -522,11 +712,8 @@ bool cgWorld::postConnect( )
 //-----------------------------------------------------------------------------
 bool cgWorld::open( const cgInputStream & stream )
 {
-    STRING_CONVERT;
-    sqlite3 * database = CG_NULL, * databaseIn = CG_NULL;
+    sqlite3 * databaseIn = CG_NULL;
     cgInt     result;
-
-    cgToDo( "Carbon General", "In sandbox mode, database MUST be a file!" )
 
     // Already open?
     if ( mDatabase )
@@ -536,40 +723,61 @@ bool cgWorld::open( const cgInputStream & stream )
     
     } // End if already open
 
-    // Store required details.
-    mDatabaseStream = stream;
-
-    // In sandbox mode, we use a temporary read/write database into which we open
-    // the specified file database. 
+    // In sandbox mode, duplicate the database to a temporary file
+    // before we open it.
+    cgToDo( "Carbon General", "In sandbox mode, if the stream is a mapped file or memory stream, allow opening but add read-only support to the editor." )
     if ( cgGetSandboxMode() != cgSandboxMode::Disabled )
     {
-        result = sqlite3_open_v2( "", &database, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX, CG_NULL );
-        
-        // Failed to open connection?
-        if ( !database || result != SQLITE_OK )
+        // In sandbox mode, database must be a file.
+        if ( stream.getType() != cgStreamType::File )
         {
-            // Log and fail
-            cgAppLog::write( cgAppLog::Error, _T("Failed to create connection with sandbox world database '%s'. Access was denied or an out of memory error occurred.\n"), stream.getName().c_str() );
-            if ( database != CG_NULL )
-                sqlite3_close( database );
+            cgAppLog::write( cgAppLog::Error, _T("Attempted to open a non-file based world database in sandbox mode. This behavior is not supported.\n") );
+            return false;
+        
+        } // End if already open
+
+        // Generate a new temporary copy of the source file.
+        cgString temporaryFile = cgFileSystem::getTemporaryFile();
+        if ( temporaryFile.empty() || !cgFileSystem::copyFile( stream.getSourceFile(), temporaryFile, true ) )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Unable to create temporary files when establishing a connection with world database '%s'. The disk may be full.\n"), stream.getName().c_str() );
             return false;
         
         } // End if failed
 
-    } // End if sandbox
+        // Use the temporary file as the new input stream.
+        mOriginalStream     = stream;
+        mDatabaseStream     = cgInputStream( temporaryFile );
+        mStreamIsTemporary  = true;
+        
+    } // End if sandbox mode
+    else
+    {
+        // Store required details.
+        mOriginalStream = stream;
+        mDatabaseStream = stream;
+    
+    } // End if !sandbox
 
     cgToDo( "Carbon General", "If file does not exist, this steps into the VFS and apparently still succeeds even if the file is not found." )
     
     // Where are we loading from?
     if ( mDatabaseStream.getType() == cgStreamType::File )
     {
+        STRING_CONVERT;
+
         // Loading from file, just pass the name of the file in bypassing the VFS.
         const cgChar * databaseName = stringConvertT2CA( mDatabaseStream.getSourceFile().c_str() );
-        result = sqlite3_open_v2( databaseName, &databaseIn, SQLITE_OPEN_READONLY | SQLITE_OPEN_FULLMUTEX, CG_NULL );
+        if ( cgGetSandboxMode() != cgSandboxMode::Disabled )
+            result = sqlite3_open_v2( databaseName, &databaseIn, SQLITE_OPEN_READWRITE | SQLITE_OPEN_FULLMUTEX, CG_NULL );
+        else
+            result = sqlite3_open_v2( databaseName, &databaseIn, SQLITE_OPEN_READONLY | SQLITE_OPEN_FULLMUTEX, CG_NULL );
     
     } // End if file
     else
     {
+        STRING_CONVERT;
+
         // Register the memory VFS (virtual file system) handler if necessary.
         sqlite3_vfs * fileSystem = cgWorldQuery::registerMemoryVFS( );
 
@@ -590,12 +798,7 @@ bool cgWorld::open( const cgInputStream & stream )
         // Log and fail
         cgAppLog::write( cgAppLog::Error, _T("Failed to establish connection with world database '%s'. Access was denied or an out of memory error occurred.\n"), stream.getName().c_str() );
         if ( databaseIn )
-        {
             sqlite3_close( databaseIn );
-            if ( database )
-                sqlite3_close( database );
-        
-        } // End if failed
         return false;
     
     } // End if failed
@@ -603,45 +806,10 @@ bool cgWorld::open( const cgInputStream & stream )
     // Database opened successfully. Store the database connection pointer.
     // We either need to use the 'temporary' sandbox database, or the source
     // file database depending on which mode the application is in.
-    mDatabase = (cgGetSandboxMode() != cgSandboxMode::Disabled) ? database : databaseIn;
-
-    // In sandbox mode, we need to copy data from the specified file into our
-    // 'temporary' database copy.
-    if ( cgGetSandboxMode() != cgSandboxMode::Disabled )
-    {
-        result = SQLITE_OK;
-        
-        // Copy from the specified database file into the main database.
-        sqlite3_backup * backup = sqlite3_backup_init( database, "main", databaseIn, "main" );
-        if ( backup != NULL )
-        {
-            sqlite3_backup_step( backup, -1 );
-            sqlite3_backup_finish( backup );
-        
-        } // End if valid backup
-
-        // Recieve any error messages.
-        result = sqlite3_errcode( database );
-
-        // Run post import processes such as transforming relative paths to
-        // absolute paths.
-        if ( !postDatabaseImport( mDatabaseStream.getSourceFile(), database ) )
-            result = SQLITE_ERROR;
-
-        // Close the input database connection and check the result.
-        sqlite3_close( databaseIn );
-        if (result != SQLITE_OK)
-        {
-            cgAppLog::write( cgAppLog::Error, _T("Failed to update sandbox database with data from world database '%s'. Access was denied or an out of memory error occurred.\n"), stream.getName().c_str() );
-            dispose( false );
-            return false;
-        
-        } // End if failed
-
-    } // End if sandbox
+    mDatabase = databaseIn;
 
     // Success?
-    if ( !postConnect() )
+    if ( !postConnect(false) )
     {
         cgAppLog::write( cgAppLog::Error, _T("Failed to execute post-connection processes on world database '%s'. See previous errors for more information.\n"), stream.getName().c_str() );
         dispose( false );
@@ -698,7 +866,7 @@ bool cgWorld::save( const cgString & fileName )
 {
     STRING_CONVERT;
     cgInt result = SQLITE_OK;
-    sqlite3 * databaseIn = CG_NULL, * databaseOut = CG_NULL;
+    sqlite3 * databaseOut = CG_NULL;
 
     // Requires FULL sandbox mode.
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
@@ -708,375 +876,208 @@ bool cgWorld::save( const cgString & fileName )
     
     } // End if !sandbox
 
-    // Open the output database file.
-    databaseIn = mDatabase;
-    if ( (result = sqlite3_open( stringConvertT2CA(fileName.c_str()), &databaseOut )) == SQLITE_OK )
+    // Overwriting a file?
+    bool overwriting = false;
+    cgString workingFileName;
+    cgString databaseDirectory = cgFileSystem::getDirectoryName( fileName );
+    if ( cgFileSystem::fileExists( fileName ) )
     {
-        // Copy from the main database to the output database.
-        sqlite3_backup * backup = sqlite3_backup_init( databaseOut, "main", databaseIn, "main" );
-        if ( backup != NULL )
-        {
-            sqlite3_backup_step( backup, -1 );
-            sqlite3_backup_finish( backup );
+        // We are overwriting.
+        overwriting = true;
+
+        // Copy the working database file to a temporary file in the 
+        // same directory as the destination fie.
+        workingFileName = cgFileSystem::getTemporaryFile( databaseDirectory );
         
-        } // End if valid backup
-
-        // Recieve any error messages.
-        result = sqlite3_errcode( databaseOut );
-
-    } // End if success
-
-    // Assuming the output went as expected, we need to perform
-    // some post-export processes on the database. Such operations
-    // include replacing any absolute paths with relative ones.
-    if ( result == SQLITE_OK )
+    } // End if overwriting
+    else
     {
-        // Run a final vacuum on the main (temporary) database 
-        // now we've exported.
-        executeQuery( _T("VACUUM"), false );
+        // Just output to the referenced file.
+        workingFileName = fileName;
 
-        // Run post processes on exported database.
-        if ( postDatabaseExport( fileName, databaseOut ) == false )
-            result = SQLITE_ERROR;
+    } // End if !overwriting
+
+    // Copy database file to the specified location.
+    if ( !cgFileSystem::copyFile(mDatabaseStream.getSourceFile(), workingFileName, true ) )
+    {
+        cgAppLog::write( cgAppLog::Error, _T("Failed to write world database to the selected directory. The user may not have sufficient permissions. The save operation has been aborted before the destination file was overwritten.\n") );
+        return false;
     
-    } // End if success
+    } // End if failed
+    
+    // Perform a full scan of the database for all 'path' entries in all tables in the 
+    // database. These will be converted to relative paths if necessary.
+    if ( (result = sqlite3_open( stringConvertT2CA(workingFileName.c_str()), &databaseOut )) == SQLITE_OK )
+    {
+        // Catch exceptions
+        try
+        {
+            cgWorldQuery query; // Make sure query goes out of scope before database is closed.
 
+            // Retrieve a list of all tables in the database.
+            cgStringArray tables;
+            if ( query.prepare( databaseOut, _T("SELECT name FROM 'SQLITE_MASTER' WHERE type='table'") ) == false || query.step() == false )
+            {
+                cgString error;
+                query.getLastError( error );
+                throw cgExceptions::ResultException( cgString::format(_T("Failed to select table names from world database. Error: %s"), error.c_str()), cgDebugSource() );
+            
+            } // End if failed
+            while ( query.nextRow() )
+            {
+                cgString tableName;
+                query.getColumn( 0, tableName );
+                tables.push_back( tableName );
+
+            } // Next Row
+
+            // For each table, retrieve column information and collect a list
+            // of all table.column combinations that have 'path' as their type.
+            struct ColumnData
+            {
+                cgUInt32 table;
+                cgString name;
+            };
+            std::vector<ColumnData> pathColumns;
+            for ( size_t i = 0; i < tables.size(); ++i )
+            {
+                // Retrieve a list of all path columns.
+                cgString tableName = tables[i];
+                if ( query.prepare( databaseOut, _T("PRAGMA table_info('") + tableName + _T("')") ) == false || query.step() == false )
+                {
+                    cgString error;
+                    query.getLastError( error );
+                    throw cgExceptions::ResultException( cgString::format(_T("Failed to select column information for world database table %s. Error: %s"), tableName.c_str(), error.c_str()), cgDebugSource() );
+                
+                } // End if failed
+                while ( query.nextRow() )
+                {
+                    cgString columnType;
+                    query.getColumn( _T("type"), columnType );
+                    
+                    // type is set to 'path'?
+                    if ( columnType.compare( _T("path"), true ) == 0 )
+                    {
+                        // Record column information.
+                        ColumnData data;
+                        data.table = i;
+                        query.getColumn( _T("name"), data.name );
+                        pathColumns.push_back( data );
+                        
+                    } // End if type = 'path'
+
+                } // Next Column
+
+            } // Next table
+
+            // Process all path columns to ensure they contain relative paths.
+            for ( size_t i = 0; i < pathColumns.size(); ++i )
+            {
+                const ColumnData & data = pathColumns[i];
+                const cgTChar * c = data.name.c_str(), * t = tables[data.table].c_str();
+
+                // Build query that allows us to update specified row data.
+                cgWorldQuery updateQuery;
+                cgString queryString = cgString::format( _T("UPDATE '%s' SET %s=?1 WHERE rowid=?2"), t, c );
+                if ( updateQuery.prepare( databaseOut, queryString ) == false )
+                {
+                    cgString error;
+                    updateQuery.getLastError( error );
+                    throw cgExceptions::ResultException( cgString::format(_T("Failed to prepare row update queryString while generating world database relative paths. Error: %s"), error.c_str()), cgDebugSource() );
+                
+                } // End if failed
+
+                // Select all rows where the path column contains an absolute style
+                // path in the format '<single-letter>:{other-characters}' i.e. "c:\mydata"
+                queryString = cgString::format( _T("SELECT rowid,%s FROM '%s' WHERE %s LIKE '_:%%'"), c, t, c );
+                if ( query.prepare( databaseOut, queryString ) == false || query.step() == false )
+                {
+                    cgString error;
+                    query.getLastError( error );
+                    throw cgExceptions::ResultException( cgString::format(_T("Failed to select row data while generating world database relative paths. Error: %s"), error.c_str()), cgDebugSource() );
+                
+                } // End if failed
+                while ( query.nextRow() )
+                {
+                    cgString currentPath;
+                    cgUInt32 rowId;
+                    query.getColumn( 0, rowId );
+                    query.getColumn( 1, currentPath );
+
+                    // Correct path.
+                    currentPath = cgFileSystem::getRelativePath( currentPath, databaseDirectory );
+
+                    // Update row
+                    updateQuery.bindParameter( 1, currentPath );
+                    updateQuery.bindParameter( 2, rowId );
+                    if ( updateQuery.step( true ) == false )
+                    {
+                        cgString error;
+                        updateQuery.getLastError( error );
+                        throw cgExceptions::ResultException( cgString::format(_T("Failed to update row data while generating world database relative paths. Error: %s"), error.c_str()), cgDebugSource() );
+                    
+                    } // End if failed
+
+                } // Next Column
+
+            } // Next path column
+
+            // Run a final vacuum on the exported database before saving.
+            //query.prepare( databaseOut, _T("VACUUM") );
+            //query.step( true );
+
+        } // End try
+
+        catch( const cgExceptions::ResultException & e )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to finalize world database records during export to file '%s'. %s.\n"), fileName.c_str(), e.toString().c_str() );
+
+            // Close the database
+            sqlite3_close( databaseOut );
+
+            // Delete the working file and then fail.
+            cgFileSystem::deleteFile( workingFileName );
+            return false;
+
+        } // End catch
+
+        // Close the output database.
+        sqlite3_close( databaseOut );
+
+    } // End if success
+    else
+    {
+        cgAppLog::write( cgAppLog::Error, _T("Failed to access exported world database in order to finalize data. The user may not have sufficient permissions. The save operation has been aborted before any existing destination file was overwritten.\n") );
+
+        // Close the output database (just in case).
+        if ( databaseOut )
+            sqlite3_close( databaseOut );
+
+        // Delete the working file and then fail.
+        cgFileSystem::deleteFile( workingFileName );
+        return false;
+
+    } // End if failed
+
+    // If we are overwriting an existing file, move the temporary file now.
+    if ( overwriting )
+    {
+        if ( !cgFileSystem::moveFile( workingFileName, fileName, true ) )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to overwrite existing file '%s' while exporting the world database. The user may not have sufficient permissions.\n"), fileName.c_str() );
+
+            // Delete the working file and then fail.
+            cgFileSystem::deleteFile( workingFileName );
+            return false;
+
+        } // End if move failed
+
+    } // End if overwriting
+    
     // Mark all loaded scenes as no longer being dirty.
-    if ( result == SQLITE_OK )
-    {
-        SceneMap::iterator itScene;
-        for ( itScene = mActiveScenes.begin(); itScene != mActiveScenes.end(); ++itScene )
-            itScene->second->setDirty( false );
-
-    } // End if success
-
-    // Close the output database connection and return the result.
-    sqlite3_close( databaseOut );
-    return (result == SQLITE_OK);
-}
-
-//-----------------------------------------------------------------------------
-//  Name : postDatabaseExport () (Private)
-/// <summary>
-/// Run post export processing on the database. Processes include absolute
-/// path transformation, etc.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgWorld::postDatabaseExport( const cgString & fileName, sqlite3 * databaseOut )
-{
-    cgWorldQuery query;
-
-    // Requires FULL sandbox mode.
-    if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
-    {
-        cgAppLog::write( cgAppLog::Debug | cgAppLog::Error, _T("cgWorld::postDatabaseExport() is a sandbox function and can only be called when sandbox mode is enabled.\n") );
-        return false;
-    
-    } // End if !sandbox
-
-    // Catch exceptions
-    try
-    {
-
-        // Before allowing a final export, perform a full scan of the database for all
-        // 'path' entries in all tables in the database. These will be converted to
-        // relative paths if necessary. In case of failure, run it within a transaction.
-        query.prepare( databaseOut, _T("BEGIN") );
-        query.step( true );
-
-        // Files will all be relative to database.
-        cgString databaseDirectory = cgFileSystem::getDirectoryName( fileName );
-
-        // Retrieve a list of all tables in the database.
-        cgStringArray tables;
-        if ( query.prepare( databaseOut, _T("SELECT name FROM 'SQLITE_MASTER' WHERE type='table'") ) == false || query.step() == false )
-        {
-            cgString error;
-            query.getLastError( error );
-            throw cgExceptions::ResultException( cgString::format(_T("Failed to select table names from world database. Error: %s"), error.c_str()), cgDebugSource() );
-        
-        } // End if failed
-        while ( query.nextRow() )
-        {
-            cgString tableName;
-            query.getColumn( 0, tableName );
-            tables.push_back( tableName );
-
-        } // Next Row
-
-        // For each table, retrieve column information and collect a list
-        // of all table.column combinations that have 'path' as their type.
-        struct ColumnData
-        {
-            cgUInt32 table;
-            cgString name;
-        };
-        std::vector<ColumnData> pathColumns;
-        for ( size_t i = 0; i < tables.size(); ++i )
-        {
-            // Retrieve a list of all path columns.
-            cgString tableName = tables[i];
-            if ( query.prepare( databaseOut, _T("PRAGMA table_info('") + tableName + _T("')") ) == false || query.step() == false )
-            {
-                cgString error;
-                query.getLastError( error );
-                throw cgExceptions::ResultException( cgString::format(_T("Failed to select column information for world database table %s. Error: %s"), tableName.c_str(), error.c_str()), cgDebugSource() );
-            
-            } // End if failed
-            while ( query.nextRow() )
-            {
-                cgString columnType;
-                query.getColumn( _T("type"), columnType );
-                
-                // type is set to 'path'?
-                if ( columnType.compare( _T("path"), true ) == 0 )
-                {
-                    // Record column information.
-                    ColumnData data;
-                    data.table = i;
-                    query.getColumn( _T("name"), data.name );
-                    pathColumns.push_back( data );
-                    
-                } // End if type = 'path'
-
-            } // Next Column
-
-        } // Next table
-
-        // Process all path columns to ensure they contain relative paths.
-        for ( size_t i = 0; i < pathColumns.size(); ++i )
-        {
-            const ColumnData & data = pathColumns[i];
-            const cgTChar * c = data.name.c_str(), * t = tables[data.table].c_str();
-
-            // Build query that allows us to update specified row data.
-            cgWorldQuery updateQuery;
-            cgString queryString = cgString::format( _T("UPDATE '%s' SET %s=?1 WHERE rowid=?2"), t, c );
-            if ( updateQuery.prepare( databaseOut, queryString ) == false )
-            {
-                cgString error;
-                updateQuery.getLastError( error );
-                throw cgExceptions::ResultException( cgString::format(_T("Failed to prepare row update queryString while generating world database relative paths. Error: %s"), error.c_str()), cgDebugSource() );
-            
-            } // End if failed
-
-            // Select all rows where the path column contains an absolute style
-            // path in the format '<single-letter>:{other-characters}' i.e. "c:\mydata"
-            queryString = cgString::format( _T("SELECT rowid,%s FROM '%s' WHERE %s LIKE '_:%%'"), c, t, c );
-            if ( query.prepare( databaseOut, queryString ) == false || query.step() == false )
-            {
-                cgString error;
-                query.getLastError( error );
-                throw cgExceptions::ResultException( cgString::format(_T("Failed to select row data while generating world database relative paths. Error: %s"), error.c_str()), cgDebugSource() );
-            
-            } // End if failed
-            while ( query.nextRow() )
-            {
-                cgString currentPath;
-                cgUInt32 rowId;
-                query.getColumn( 0, rowId );
-                query.getColumn( 1, currentPath );
-
-                // Correct path.
-                currentPath = cgFileSystem::getRelativePath( currentPath, databaseDirectory );
-
-                // Update row
-                updateQuery.bindParameter( 1, currentPath );
-                updateQuery.bindParameter( 2, rowId );
-                if ( updateQuery.step( true ) == false )
-                {
-                    cgString error;
-                    updateQuery.getLastError( error );
-                    throw cgExceptions::ResultException( cgString::format(_T("Failed to update row data while generating world database relative paths. Error: %s"), error.c_str()), cgDebugSource() );
-                
-                } // End if failed
-
-            } // Next Column
-
-        } // Next path column
-
-        // Commit changes
-        query.prepare( databaseOut, _T("COMMIT") );
-        query.step( true );
-
-        // Run a final vacuum on the exported database before saving.
-        //query.prepare( databaseOut, _T("VACUUM") );
-        //query.step( true );
-
-    } // End try
-
-    catch( const cgExceptions::ResultException & e )
-    {
-        query.prepare( databaseOut, _T("ROLLBACK") );
-        query.step( true );
-        cgAppLog::write( cgAppLog::Error, _T("Failed to prepare database for export to file '%s'. %s.\n"), fileName.c_str(), e.toString().c_str() );
-        return false;
-
-    } // End catch
-
-    // Success!
-    return true;
-}
-
-//-----------------------------------------------------------------------------
-//  Name : postDatabaseImport () (Private)
-/// <summary>
-/// Run post import processing on the database. Processes include relative
-/// path transformation, etc.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgWorld::postDatabaseImport( const cgString & fileName, sqlite3 * databaseIn )
-{
-    cgWorldQuery query;
-
-    // Requires either sandbox mode.
-    if ( cgGetSandboxMode() == cgSandboxMode::Disabled )
-    {
-        cgAppLog::write( cgAppLog::Debug | cgAppLog::Error, _T("cgWorld::postDatabaseImport() is a sandbox function and can only be called when sandbox mode is enabled.\n") );
-        return false;
-    
-    } // End if !sandbox
-
-    // Catch exceptions
-    try
-    {
-        // Before allowing a final export, perform a full scan of the database for all
-        // 'path' entries in all tables in the database. These will be converted to
-        // relative paths if necessary. In case of failure, run it within a transaction.
-        query.prepare( databaseIn, _T("BEGIN") );
-        query.step( true );
-
-        // Files will all be relative to database.
-        cgString databaseDirectory = cgFileSystem::getDirectoryName( fileName );
-
-        // Retrieve a list of all tables in the database.
-        cgStringArray tables;
-        if ( query.prepare( databaseIn, _T("SELECT name FROM 'SQLITE_MASTER' WHERE type='table'") ) == false || query.step() == false )
-        {
-            cgString error;
-            query.getLastError( error );
-            throw cgExceptions::ResultException( cgString::format(_T("Failed to select table names from world database. Error: %s"), error.c_str()), cgDebugSource() );
-        
-        } // End if failed
-        while ( query.nextRow() )
-        {
-            cgString tableName;
-            query.getColumn( 0, tableName );
-            tables.push_back( tableName );
-
-        } // Next Row
-
-        // For each table, retrieve column information and collect a list
-        // of all table.column combinations that have 'path' as their type.
-        struct ColumnData
-        {
-            cgUInt32 table;
-            cgString name;
-        };
-        std::vector<ColumnData> pathColumns;
-        for ( size_t i = 0; i < tables.size(); ++i )
-        {
-            // Retrieve a list of all path columns.
-            cgString tableName = tables[i];
-            if ( query.prepare( databaseIn, _T("PRAGMA table_info('") + tableName + _T("')") ) == false || query.step() == false )
-            {
-                cgString error;
-                query.getLastError( error );
-                throw cgExceptions::ResultException( cgString::format(_T("Failed to select column information for world database table %s. Error: %s"), tableName.c_str(), error.c_str()), cgDebugSource() );
-            
-            } // End if failed
-            while ( query.nextRow() )
-            {
-                cgString columnType;
-                query.getColumn( _T("type"), columnType );
-                
-                // type is set to 'path'?
-                if ( columnType.compare( _T("path"), true ) == 0 )
-                {
-                    // Record column information.
-                    ColumnData data;
-                    data.table = i;
-                    query.getColumn( _T("name"), data.name );
-                    pathColumns.push_back( data );
-                    
-                } // End if type = 'path'
-
-            } // Next Column
-
-        } // Next table
-
-        // Process all path columns to ensure they contain absolute paths.
-        for ( size_t i = 0; i < pathColumns.size(); ++i )
-        {
-            const ColumnData & data = pathColumns[i];
-            const cgTChar * c = data.name.c_str(), * t = tables[data.table].c_str();
-
-            // Build query that allows us to update specified row data.
-            cgWorldQuery updateQuery;
-            cgString queryString = cgString::format( _T("UPDATE '%s' SET %s=?1 WHERE rowid=?2"), t, c );
-            if ( updateQuery.prepare( databaseIn, queryString ) == false )
-            {
-                cgString error;
-                updateQuery.getLastError( error );
-                throw cgExceptions::ResultException( cgString::format(_T("Failed to prepare row update queryString while generating world database absolute paths. Error: %s"), error.c_str()), cgDebugSource() );
-            
-            } // End if failed
-
-            // Select all rows where the path column does not contain an absolute style
-            // path in the format '<single-letter>:{other-characters}' i.e. "c:\mydata"
-            // or a file system path protocol i.e. "sys://"
-            cgToDo( "Carbon General", "Rather than using a wildcard for the path protocols, perhaps iterate them (cgFileSystem) and provide them explicitly?" )
-            queryString = cgString::format( _T("SELECT rowid,%s FROM '%s' WHERE %s NOT LIKE '_:%%' AND %s NOT LIKE '%%://%%'"), c, t, c, c );
-            if ( query.prepare( databaseIn, queryString ) == false || query.step() == false )
-            {
-                cgString error;
-                query.getLastError( error );
-                throw cgExceptions::ResultException( cgString::format(_T("Failed to select row data while generating world database absolute paths. Error: %s"), error.c_str()), cgDebugSource() );
-            
-            } // End if failed
-            while ( query.nextRow() )
-            {
-                cgString currentPath;
-                cgUInt32 rowId;
-                query.getColumn( 0, rowId );
-                query.getColumn( 1, currentPath );
-
-                // Skip if the path is completely empty.
-                if ( currentPath.empty() )
-                    continue;
-
-                // Correct path.
-                currentPath = cgFileSystem::getAbsolutePath( currentPath, databaseDirectory );
-
-                // Update row
-                updateQuery.bindParameter( 1, currentPath );
-                updateQuery.bindParameter( 2, rowId );
-                if ( updateQuery.step( true ) == false )
-                {
-                    cgString error;
-                    updateQuery.getLastError( error );
-                    throw cgExceptions::ResultException( cgString::format(_T("Failed to update row data while generating world database absolute paths. Error: %s"), error.c_str()), cgDebugSource() );
-                
-                } // End if failed
-
-            } // Next Column
-
-        } // Next path column
-
-        // Commit changes
-        query.prepare( databaseIn, _T("COMMIT") );
-        query.step( true );
-
-    } // End try
-
-    catch( const cgExceptions::ResultException & e )
-    {
-        query.prepare( databaseIn, _T("ROLLBACK") );
-        query.step( true );
-        cgAppLog::write( cgAppLog::Error, _T("Failed to prepare database for import from file '%s'. %s.\n"), fileName.c_str(), e.toString().c_str() );
-        return false;
-
-    } // End catch
+    SceneMap::iterator itScene;
+    for ( itScene = mActiveScenes.begin(); itScene != mActiveScenes.end(); ++itScene )
+        itScene->second->setDirty( false );
 
     // Success!
     return true;
@@ -1298,7 +1299,6 @@ cgObjectSubElement * cgWorld::createObjectSubElement( bool internalElement, cons
 cgObjectSubElement * cgWorld::createObjectSubElement( bool internalElement, const cgUID & typeIdentifier, cgWorldObject * object, cgObjectSubElement * init )
 {
     cgObjectSubElement * element = CG_NULL;
-    cgString error;
 
     // If the engine is not in sandbox mode, all new object elements are internal.
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
@@ -1749,11 +1749,11 @@ bool cgWorld::updateSceneDescriptorById( cgUInt32 sceneId, const cgSceneDescript
 {
     cgToDo( "Carbon General", "The restriction that we must exist in sandbox mode should be removed. Add support for internal scenes." );
 
-    // Scenes cannot be dynamically created unless we are in sandbox mode.
+    // Scene descriptors cannot be adjusted unless we are in sandbox mode.
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
-        cgAppLog::write( cgAppLog::Debug | cgAppLog::Error, _T("Scenes descriptors cannot be updated unless the engine is configured to run in sandbox mode.\n") );
-        return 0;
+        cgAppLog::write( cgAppLog::Debug | cgAppLog::Error, _T("Scene descriptors cannot be updated unless the engine is configured to run in sandbox mode.\n") );
+        return false;
 
     } // End if invalid
 
@@ -1901,55 +1901,6 @@ cgResourceManager * cgWorld::getResourceManager( ) const
     // Worlds always currently use the main singleton resource manager.
     return cgResourceManager::getInstance();
 }
-
-/*//-----------------------------------------------------------------------------
-//  Name : ParseEnvironment () (Private)
-/// <summary>
-/// Parse the data loaded from the XML file relating to the environment
-/// as a whole.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgWorld::ParseEnvironment( const cgXMLNode & xMainNode )
-{
-    cgXMLNode                xSceneNode;
-    cgSceneDescriptor      * pDescriptor = CG_NULL;
-    DescriptorMap::iterator  itDesc;
-
-    // Find all child scene nodes
-    for ( cgUInt32 i = 0;; )
-    {
-        // Retrieve the scene node from the child
-        xSceneNode = xMainNode.GetNextChildNode( _T("Scene"), i );
-        if ( xSceneNode.IsEmpty() == true ) break;
-
-        // Allocate a new scene desriptor object ready for population
-        pDescriptor = new cgSceneDescriptor();
-
-        // Parse the XML for this scene
-        pDescriptor->ParseSceneXML( xSceneNode );
-
-        // Validate the loaded descriptor data and output to the log
-        if ( pDescriptor->Validate( true, m_DefinitionStream.getName() ) == false )
-        {
-            delete pDescriptor;
-            return false;
-        
-        } // End if failed to parse scene
-
-        // Add descriptor our internal containers
-        if ( AddScene( pDescriptor ) == false )
-        {
-            cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("%s : A scene descriptor with the name '%s' already exists. This duplicate entry will be ignored.\n"), m_DefinitionStream.getName().c_str(), itDesc->first.c_str() );
-            delete pDescriptor;
-            continue;
-        
-        } // End if duplicate scene
-        
-    } // Next available scene
-
-    // Success!!
-    return true;
-}*/
 
 //-----------------------------------------------------------------------------
 //  Name : onWorldDisposing () (Virtual)

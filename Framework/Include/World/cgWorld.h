@@ -201,9 +201,7 @@ protected:
     bool                        buildObjectSubElementTypeTable  ( );
     bool                        buildSceneTable                 ( );
     sqlite3                   * getDatabaseConnection           ( );
-    bool                        postConnect                     ( );
-    bool                        postDatabaseExport              ( const cgString & fileName, sqlite3 * databaseOut );
-    bool                        postDatabaseImport              ( const cgString & fileName, sqlite3 * databaseIn );
+    bool                        postConnect                     ( bool newWorld );
 
     //-------------------------------------------------------------------------
     // Protected Virtual Methods
@@ -224,6 +222,8 @@ protected:
 
     // File database management.
     cgInputStream                   mDatabaseStream;            // The stream of the database to which we are connected.
+    cgInputStream                   mOriginalStream;            // The original stream that was specified in the call to 'open()' (may not be the stream in use).
+    bool                            mStreamIsTemporary;         // Is the database contained in a temporary file? (sandbox only).
     sqlite3                       * mDatabase;                  // The main connection maintained with the world file database.
     sqlite3_stmt                  * mStatementBegin;            // Cached SQL "BEGIN" statement.
     sqlite3_stmt                  * mStatementCommit;           // Cached SQL "COMMIT" statement.

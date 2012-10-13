@@ -633,6 +633,39 @@ cgPositionXYZTargetController::cgPositionXYZTargetController( )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : cgPositionXYZTargetController () (Constructor)
+/// <summary>
+/// cgPositionXYZTargetController Class Constructor
+/// </summary>
+//-----------------------------------------------------------------------------
+cgPositionXYZTargetController::cgPositionXYZTargetController( const cgPositionXYZTargetController & init, const cgRange & frameRange )
+{
+    for ( size_t i = 0; i < 3; ++i )
+    {
+        cgBezierSpline2 & destSpline = mCurves[i].data;
+        const cgBezierSpline2::SplinePointArray & srcPoints = init.mCurves[i].data.getSplinePoints();
+        for ( size_t j = 0; j < srcPoints.size(); ++j )
+        {
+            if ( srcPoints[j].point.x >= (cgFloat)frameRange.min && srcPoints[j].point.x <= (cgFloat)frameRange.max )
+            {
+                // Offset to start of range and add.
+                cgBezierSpline2::SplinePoint pt = srcPoints[j];
+                pt.point.x -= (cgFloat)frameRange.min;
+                pt.controlPointIn.x -= (cgFloat)frameRange.min;
+                pt.controlPointOut.x -= (cgFloat)frameRange.min;
+                destSpline.addPoint( pt );
+            
+            } // End if in range
+
+        } // Next point
+
+        // Channel is dirty and needs serializing.
+        mCurves[i].dirty = true;
+    
+    } // Next channel
+}
+
+//-----------------------------------------------------------------------------
 //  Name : ~cgPositionXYZTargetController () (Destructor)
 /// <summary>
 /// cgPositionXYZTargetController Class Destructor
@@ -777,6 +810,39 @@ const cgStringArray & cgPositionXYZTargetController::getSupportedChannels( ) con
 //-----------------------------------------------------------------------------
 cgScaleXYZTargetController::cgScaleXYZTargetController( )
 {
+}
+
+//-----------------------------------------------------------------------------
+//  Name : cgScaleXYZTargetController () (Constructor)
+/// <summary>
+/// cgScaleXYZTargetController Class Constructor
+/// </summary>
+//-----------------------------------------------------------------------------
+cgScaleXYZTargetController::cgScaleXYZTargetController( const cgScaleXYZTargetController & init, const cgRange & frameRange )
+{
+    for ( size_t i = 0; i < 3; ++i )
+    {
+        cgBezierSpline2 & destSpline = mCurves[i].data;
+        const cgBezierSpline2::SplinePointArray & srcPoints = init.mCurves[i].data.getSplinePoints();
+        for ( size_t j = 0; j < srcPoints.size(); ++j )
+        {
+            if ( srcPoints[j].point.x >= (cgFloat)frameRange.min && srcPoints[j].point.x <= (cgFloat)frameRange.max )
+            {
+                // Offset to start of range and add.
+                cgBezierSpline2::SplinePoint pt = srcPoints[j];
+                pt.point.x -= (cgFloat)frameRange.min;
+                pt.controlPointIn.x -= (cgFloat)frameRange.min;
+                pt.controlPointOut.x -= (cgFloat)frameRange.min;
+                destSpline.addPoint( pt );
+            
+            } // End if in range
+
+        } // Next point
+
+        // Channel is dirty and needs serializing.
+        mCurves[i].dirty = true;
+    
+    } // Next channel
 }
 
 //-----------------------------------------------------------------------------
@@ -927,6 +993,35 @@ cgUniformScaleTargetController::cgUniformScaleTargetController( )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : cgUniformScaleTargetController () (Constructor)
+/// <summary>
+/// cgUniformScaleTargetController Class Constructor
+/// </summary>
+//-----------------------------------------------------------------------------
+cgUniformScaleTargetController::cgUniformScaleTargetController( const cgUniformScaleTargetController & init, const cgRange & frameRange )
+{
+    cgBezierSpline2 & destSpline = mCurve.data;
+    const cgBezierSpline2::SplinePointArray & srcPoints = init.mCurve.data.getSplinePoints();
+    for ( size_t j = 0; j < srcPoints.size(); ++j )
+    {
+        if ( srcPoints[j].point.x >= (cgFloat)frameRange.min && srcPoints[j].point.x <= (cgFloat)frameRange.max )
+        {
+            // Offset to start of range and add.
+            cgBezierSpline2::SplinePoint pt = srcPoints[j];
+            pt.point.x -= (cgFloat)frameRange.min;
+            pt.controlPointIn.x -= (cgFloat)frameRange.min;
+            pt.controlPointOut.x -= (cgFloat)frameRange.min;
+            destSpline.addPoint( pt );
+        
+        } // End if in range
+
+    } // Next point
+
+    // Channel is dirty and needs serializing.
+    mCurve.dirty = true;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : ~cgUniformScaleTargetController () (Destructor)
 /// <summary>
 /// cgUniformScaleTargetController Class Destructor
@@ -1043,6 +1138,33 @@ const cgStringArray & cgUniformScaleTargetController::getSupportedChannels( ) co
 //-----------------------------------------------------------------------------
 cgQuaternionTargetController::cgQuaternionTargetController( )
 {
+}
+
+//-----------------------------------------------------------------------------
+//  Name : cgEulerAnglesTargetController () (Constructor)
+/// <summary>
+/// cgEulerAnglesTargetController Class Constructor
+/// </summary>
+//-----------------------------------------------------------------------------
+cgQuaternionTargetController::cgQuaternionTargetController( const cgQuaternionTargetController & init, const cgRange & frameRange )
+{
+    cgQuaternionAnimationChannel::QuaternionKeyArray & destFrames = mKeyFrames.data;
+    const cgQuaternionAnimationChannel::QuaternionKeyArray & srcFrames = init.mKeyFrames.data;
+    for ( size_t j = 0; j < srcFrames.size(); ++j )
+    {
+        if ( srcFrames[j].frame >= frameRange.min && srcFrames[j].frame <= frameRange.max )
+        {
+            destFrames.push_back( srcFrames[j] );
+
+            // Offset to start of range.
+            destFrames.back().frame -= frameRange.min;
+
+        } // End if in-range
+
+    } // Next point
+
+    // Channel is dirty and needs serializing.
+    mKeyFrames.dirty = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -1244,6 +1366,39 @@ const cgStringArray & cgQuaternionTargetController::getSupportedChannels( ) cons
 //-----------------------------------------------------------------------------
 cgEulerAnglesTargetController::cgEulerAnglesTargetController( )
 {
+}
+
+//-----------------------------------------------------------------------------
+//  Name : cgEulerAnglesTargetController () (Constructor)
+/// <summary>
+/// cgEulerAnglesTargetController Class Constructor
+/// </summary>
+//-----------------------------------------------------------------------------
+cgEulerAnglesTargetController::cgEulerAnglesTargetController( const cgEulerAnglesTargetController & init, const cgRange & frameRange )
+{
+    for ( size_t i = 0; i < 3; ++i )
+    {
+        cgBezierSpline2 & destSpline = mCurves[i].data;
+        const cgBezierSpline2::SplinePointArray & srcPoints = init.mCurves[i].data.getSplinePoints();
+        for ( size_t j = 0; j < srcPoints.size(); ++j )
+        {
+            if ( srcPoints[j].point.x >= (cgFloat)frameRange.min && srcPoints[j].point.x <= (cgFloat)frameRange.max )
+            {
+                // Offset to start of range and add.
+                cgBezierSpline2::SplinePoint pt = srcPoints[j];
+                pt.point.x -= (cgFloat)frameRange.min;
+                pt.controlPointIn.x -= (cgFloat)frameRange.min;
+                pt.controlPointOut.x -= (cgFloat)frameRange.min;
+                destSpline.addPoint( pt );
+            
+            } // End if in range
+
+        } // Next point
+
+        // Channel is dirty and needs serializing.
+        mCurves[i].dirty = true;
+    
+    } // Next channel
 }
 
 //-----------------------------------------------------------------------------

@@ -84,6 +84,7 @@ public:
              cgAnimationSet( cgUInt32 referenceId, cgWorld * world, cgFloat frameRate );
              cgAnimationSet( cgUInt32 referenceId, cgWorld * world, cgUInt32 sourceRefId );
              cgAnimationSet( cgUInt32 referenceId, cgWorld * world, cgAnimationSet * init );
+             cgAnimationSet( cgUInt32 referenceId, cgWorld * world, cgAnimationSet * init, const cgRange & frameRange );
 	virtual ~cgAnimationSet( );
 
     //-------------------------------------------------------------------------
