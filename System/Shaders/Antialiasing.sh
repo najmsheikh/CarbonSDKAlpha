@@ -1119,7 +1119,7 @@ class AntialiasingShader : ISurfaceShader
 		{
 			<?
 			float vignetteBias  = 0.65f;
-			float vignetteScale = 0.75f;
+			float vignetteScale = 0.45f;
 			float2 clipCoords   = texCoords * 2.0f - 1.0f;
 			float  sqLength     = dot( clipCoords, clipCoords );
 			color.rgb *= saturate( 1.0f - (sqLength - vignetteBias) * vignetteScale );

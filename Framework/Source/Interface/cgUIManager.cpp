@@ -728,13 +728,24 @@ cgRect cgUIManager::printText( const cgPoint & ptScreen, const cgString & strTex
     cgSize ScreenSize = pDriver->getScreenSize();
 
     // Set the text rendering properties
+    cgInt32 oldKerning = mTextEngine->getKerning();
+    cgInt32 oldLineSpacing = mTextEngine->getLineSpacing();
+    cgUInt32 oldColor = mTextEngine->getColor();
     mTextEngine->setKerning( nKerning );
     mTextEngine->setLineSpacing( nLineSpacing );
     mTextEngine->setColor( nColor );
 
     // Render the text
     cgRect rcText( ptScreen.x, ptScreen.y, ScreenSize.width, ScreenSize.height );
-    return mTextEngine->printText( rcText, nFlags, strText );
+    cgRect rcResult = mTextEngine->printText( rcText, nFlags, strText );
+
+    // Restore old settings
+    mTextEngine->setKerning( oldKerning );
+    mTextEngine->setLineSpacing( oldLineSpacing );
+    mTextEngine->setColor( oldColor );
+
+    // Return the area of the screen we rendered to.
+    return rcResult;
 }
 
 //-----------------------------------------------------------------------------
@@ -804,12 +815,23 @@ cgRect cgUIManager::printText( const cgRect & rcScreen, const cgString & strText
         return cgRect(0,0,0,0);
 
     // Set the text rendering properties
+    cgInt32 oldKerning = mTextEngine->getKerning();
+    cgInt32 oldLineSpacing = mTextEngine->getLineSpacing();
+    cgUInt32 oldColor = mTextEngine->getColor();
     mTextEngine->setKerning( nKerning );
     mTextEngine->setLineSpacing( nLineSpacing );
     mTextEngine->setColor( nColor );
 
     // Render the text
-    return mTextEngine->printText( rcScreen, nFlags, strText, ptOffset );
+    cgRect rcResult = mTextEngine->printText( rcScreen, nFlags, strText, ptOffset );
+
+    // Restore old settings
+    mTextEngine->setKerning( oldKerning );
+    mTextEngine->setLineSpacing( oldLineSpacing );
+    mTextEngine->setColor( oldColor );
+
+    // Return the area of the screen we rendered to.
+    return rcResult;
 }
 
 //-----------------------------------------------------------------------------
@@ -879,12 +901,23 @@ cgRect cgUIManager::printText( const cgRect & rcScreen, const cgString & strText
         return cgRect(0,0,0,0);
 
     // Set the text rendering properties
+    cgInt32 oldKerning = mTextEngine->getKerning();
+    cgInt32 oldLineSpacing = mTextEngine->getLineSpacing();
+    cgUInt32 oldColor = mTextEngine->getColor();
     mTextEngine->setKerning( nKerning );
     mTextEngine->setLineSpacing( nLineSpacing );
     mTextEngine->setColor( nColor );
 
     // Render the text
-    return mTextEngine->printText( rcScreen, nFlags, strText );
+    cgRect rcResult = mTextEngine->printText( rcScreen, nFlags, strText );
+
+    // Restore old settings
+    mTextEngine->setKerning( oldKerning );
+    mTextEngine->setLineSpacing( oldLineSpacing );
+    mTextEngine->setColor( oldColor );
+
+    // Return the area of the screen we rendered to.
+    return rcResult;
 }
 
 //-----------------------------------------------------------------------------

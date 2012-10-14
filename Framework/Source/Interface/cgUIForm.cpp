@@ -515,6 +515,10 @@ bool cgUIForm::onCreateForm( )
 //-----------------------------------------------------------------------------
 bool cgUIForm::onMouseButtonDown( cgInt32 nButtons, const cgPoint & Position )
 {
+    // Do nothing if form is not visible
+    if ( !isVisible() )
+        return false;
+
     // Call base class implementation
     if ( cgUIControl::onMouseButtonDown( nButtons, Position ) == true )
     {

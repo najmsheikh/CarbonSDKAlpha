@@ -852,7 +852,7 @@ public:
     static const cgString Empty;
 };
 
-#if defined(__SGI_STL_PORT)
+#if defined(__SGI_STL_PORT) || (_MSC_VER >= 1700 )
 // This allows us to use cgString as a key in a unordered_map or unordered_set
 namespace std
 {

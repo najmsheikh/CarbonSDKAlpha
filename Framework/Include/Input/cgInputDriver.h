@@ -127,8 +127,10 @@ public:
     void                        poll                    ( );
     bool                        wasKeyPressed           ( cgInt32 keyCode ) const;
     bool                        isKeyPressed            ( cgInt32 keyCode ) const;
+    bool                        isKeyPressed            ( cgInt32 keyCode, bool wasNotPressed ) const;
     bool                        wasMouseButtonPressed   ( cgMouseButtons::Base button ) const;
     bool                        isMouseButtonPressed    ( cgMouseButtons::Base button ) const;
+    bool                        isMouseButtonPressed    ( cgMouseButtons::Base button, bool wasNotPressed ) const;
     void                        setMouseMode            ( cgMouseHandlerMode::Base mode );
     cgMouseHandlerMode::Base    getMouseMode            ( ) const;
     const cgPoint             & getCursorPosition       ( ) const;

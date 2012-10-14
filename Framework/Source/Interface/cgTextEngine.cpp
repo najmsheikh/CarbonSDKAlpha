@@ -250,6 +250,39 @@ void cgTextEngine::setColor( cgUInt32 color )
     mColor = color;
 }
 
+//-----------------------------------------------------------------------------
+//  Name : getLineSpacing ()
+/// <summary>
+/// Get the currently configured spacing inbetween each line of text in pixels.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt32 cgTextEngine::getLineSpacing( ) const
+{
+    return mLineSpacing;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getKerning ()
+/// <summary>
+/// Get the currently configured spacing in between each (column of) characters 
+/// in pixels.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt32 cgTextEngine::getKerning( ) const
+{
+    return mKerning;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getColor ()
+/// <summary>
+/// Get the currently configured color to use for rendering text.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgUInt32 cgTextEngine::getColor( ) const
+{
+    return mColor;
+}
 
 //-----------------------------------------------------------------------------
 //  Name : printText ()

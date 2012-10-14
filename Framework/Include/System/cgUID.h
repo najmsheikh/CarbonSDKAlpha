@@ -112,7 +112,7 @@ inline bool operator != (const cgUID& u1, const cgUID& u2 )
     return ( u1.data1 != u2.data1 || u1.data2 != u2.data2 || u1.data3 != u2.data3 ||
              (unsigned __int64&)u1.data4 != (unsigned __int64&)u2.data4 );
 }
-#if defined(__SGI_STL_PORT)
+#if defined(__SGI_STL_PORT) || (_MSC_VER >= 1700 )
 // This allows us to use cgUID as a key in a unordered_map or unordered_set
 namespace std
 {

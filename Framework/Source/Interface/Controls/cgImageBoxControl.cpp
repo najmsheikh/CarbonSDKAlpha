@@ -115,14 +115,14 @@ void cgImageBoxControl::renderSecondary( )
     else if ( mScaleMode == cgImageScaleMode::None )
     {
         // Enable clipping of the image to client area.
-        pDriver->setScissorRect( &rcClient );
+        pDriver->pushScissorRect( &rcClient );
 
         // Draw at it's original size
         cgPoint ptPosition( rcClient.left, rcClient.top );
         pManager->drawImage( ptPosition, strLibrary, mLibraryItem );
 
         // Turn clipping off again
-        pDriver->setScissorRect( CG_NULL );
+        pDriver->popScissorRect( );
     
     } // End if original size
 

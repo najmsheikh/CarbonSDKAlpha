@@ -620,6 +620,12 @@ void cgInputDriver::poll(  )
                 nDataElements = 0;
 
             } // End if failed
+            else
+            {
+                // Copy old key state data into "previous state" buffer
+                memcpy( mPrevKeyStates, mKeyStates, sizeof(mKeyStates) );
+            
+            } // End if success
 
             // Update current key state buffer if any data retrieved
             if ( nDataElements > 0 )
@@ -995,6 +1001,24 @@ bool cgInputDriver::isKeyPressed( cgInt32 nKeyCode ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : isKeyPressed ()
+/// <summary>
+/// Simple query routine to determine if a key is currently pressed. By 
+/// specifying true to the 'wasNotPressed' parameter, this method will only
+/// return a positive result if the key was not previously pressed in the last
+/// poll event (i.e. last frame)
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgInputDriver::isKeyPressed( cgInt32 nKeyCode, bool wasNotPressed ) const
+{
+    // Is key pressed?
+    if ( !wasNotPressed )
+        return ((mKeyStates[ nKeyCode ] & 0x80) != 0);
+    else
+        return ((mKeyStates[ nKeyCode ] & 0x80) != 0) && ((mPrevKeyStates[ nKeyCode ] & 0x80) == 0);
+}
+
+//-----------------------------------------------------------------------------
 //  Name : wasMouseButtonPressed ()
 /// <summary>
 /// Simple query routine to determine if a mouse button was previously
@@ -1026,6 +1050,28 @@ bool cgInputDriver::isMouseButtonPressed( cgMouseButtons::Base Button ) const
     
     // Is button pressed?
     return ((mMouseButtonStates[ nIndex ] & 0x80) != 0);
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isMouseButtonPressed ()
+/// <summary>
+/// Simple query routine to determine if a mouse button is currently 
+/// pressed. By specifying true to the 'wasNotPressed' parameter, this method 
+/// will only return a positive result if the key was not previously pressed in
+/// the last poll event (i.e. last frame)
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgInputDriver::isMouseButtonPressed( cgMouseButtons::Base Button, bool wasNotPressed ) const
+{
+    cgInt32 nIndex = mouseButtonEnumToIdx( Button );
+    if ( nIndex < 0 )
+        return false;
+    
+    // Is button pressed?
+    if ( !wasNotPressed )
+        return ((mMouseButtonStates[ nIndex ] & 0x80) != 0);
+    else
+        return ((mMouseButtonStates[ nIndex ] & 0x80) != 0) && ((mPrevMouseButtonStates[ nIndex ] & 0x80) == 0);
 }
 
 //-----------------------------------------------------------------------------

@@ -266,6 +266,9 @@ public:
     void        setLineSpacing      ( cgInt32 spacing );
     void        setKerning          ( cgInt32 kerning );
     void        setColor            ( cgUInt32 color );
+    cgInt32     getLineSpacing      ( ) const;
+    cgInt32     getKerning          ( ) const;
+    cgUInt32    getColor            ( ) const;
     bool        computeTextMetrics  ( const cgRect & destination, cgUInt32 flags, const cgString & text, const cgPoint & offset, cgTextMetrics & metricsOut );
     bool        computeTextMetrics  ( const cgRect & destination, cgUInt32 flags, const cgString & text, cgTextMetrics & metricsOut );
 

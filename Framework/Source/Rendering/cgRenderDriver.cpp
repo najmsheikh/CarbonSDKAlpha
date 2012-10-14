@@ -3646,7 +3646,7 @@ bool cgRenderDriver::setScissorRect( const cgRect * pRect )
     cgAssert( mScissorRectStack.size() > 0 );    
 
     // Revert to full size?
-    if ( pRect == CG_NULL )
+    if ( !pRect || (pRect->left >= pRect->right) || (pRect->top >= pRect->bottom) )
     {
         cgSize Size = getScreenSize();
         cgRect & Data = mScissorRectStack.top();

@@ -248,7 +248,7 @@ void cgTextBoxControl::renderSecondary( )
     const cgUISkin::ControlConfig & Config = pSkin->getControlConfig();
 
     // Clip caret and selection rect to client area too
-    pDriver->setScissorRect( &rcText );
+    pDriver->pushScissorRect( &rcText );
 
     // Render caret?
     if ( mShowCaret && isEnabled() && mCaretCharacter >= 0 && pManager->getFocus() == this )
@@ -314,7 +314,7 @@ void cgTextBoxControl::renderSecondary( )
     } // End if draw selection rectangle
 
     // Reset clipping rect
-    pDriver->setScissorRect( CG_NULL );
+    pDriver->popScissorRect( );
 
     // Call base class implementation
     cgUIControl::renderSecondary();

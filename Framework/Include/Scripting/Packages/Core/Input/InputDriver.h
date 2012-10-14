@@ -53,8 +53,10 @@ namespace InputDriver
             BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "void poll()", asMETHODPR(cgInputDriver, poll, (), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "bool wasKeyPressed( int ) const", asMETHODPR(cgInputDriver, wasKeyPressed, ( cgInt32 ) const, bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "bool isKeyPressed( int ) const", asMETHODPR(cgInputDriver, isKeyPressed, ( cgInt32 ) const, bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "bool isKeyPressed( int, bool ) const", asMETHODPR(cgInputDriver, isKeyPressed, ( cgInt32, bool ) const, bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "bool wasMouseButtonPressed( MouseButtons ) const", asMETHODPR(cgInputDriver, wasMouseButtonPressed, ( cgMouseButtons::Base ) const, bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "bool isMouseButtonPressed( MouseButtons ) const", asMETHODPR(cgInputDriver, isMouseButtonPressed, ( cgMouseButtons::Base ) const, bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "bool isMouseButtonPressed( MouseButtons, bool ) const", asMETHODPR(cgInputDriver, isMouseButtonPressed, ( cgMouseButtons::Base, bool ) const, bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "const Point & getCursorPosition( ) const", asMETHODPR(cgInputDriver, getCursorPosition, ( ) const, const cgPoint&), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "void setMouseMode( MouseHandlerMode )", asMETHODPR(cgInputDriver, setMouseMode, ( cgMouseHandlerMode::Base ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "MouseHandlerMode getMouseMode( ) const", asMETHODPR(cgInputDriver, getMouseMode, ( ) const, cgMouseHandlerMode::Base), asCALL_THISCALL) );
