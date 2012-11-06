@@ -263,7 +263,7 @@ public:
     virtual bool                    reloadTransforms        ( bool reloadChildren );
 
     // Visibility
-    virtual void                    showNode                ( bool visible = true );
+    virtual void                    showNode                ( bool visible = true, bool updateChildren = false );
     virtual bool                    isRenderable            ( ) const;
     virtual bool                    isShadowCaster          ( ) const;
     virtual bool                    registerVisibility      ( cgVisibilitySet * visibilityData, cgUInt32 flags );
@@ -321,7 +321,9 @@ public:
     virtual bool                    showSelectionAABB       ( ) const;
     virtual bool                    validateAttachment      ( cgObjectNode * node, bool nodeAsChild );
     virtual bool                    getSubElementCategories ( cgObjectSubElementCategory::Map & categoriesOut ) const;
+    virtual bool                    supportsSubElement      ( const cgUID & Category, const cgUID & Identifier ) const;
     virtual bool                    getSandboxIconInfo      ( cgCameraNode * camera, const cgSize & viewportSize, cgString & atlasName, cgString & frameName, cgVector3 & iconOrigin );
+    virtual bool                    allowSandboxUpdate      ( ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldComponentEventListener)

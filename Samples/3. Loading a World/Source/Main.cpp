@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 // Main Module Includes
 //-----------------------------------------------------------------------------
-#include <cgAPI.h>
+#include <Carbon.h>
 #include <windows.h>
 #include <tchar.h>
 #include "Main.h"
@@ -71,7 +71,8 @@ int WINAPI _tWinMain( HINSTANCE instance, HINSTANCE previousInstance, LPTSTR com
 
     // Select APIs
     cgTChar renderingAPI[128];
-    GetPrivateProfileString( _T("Drivers"), _T("Rendering"), _T("D3D9"), renderingAPI, 128, _T("../../System/Config/SampleConfig.ini") );
+    cgString configFile = cgFileSystem::resolveFileLocation( _T("sys://Config/SampleConfig.ini") );
+    GetPrivateProfileString( _T("Drivers"), _T("Rendering"), _T("D3D9"), renderingAPI, 128, configFile.c_str() );
 
 #   if defined( CGE_DX11_RENDER_SUPPORT )
         if ( _tcsicmp( renderingAPI, _T("D3D11") ) == 0 )

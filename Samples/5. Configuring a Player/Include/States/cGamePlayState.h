@@ -23,18 +23,7 @@
 //-----------------------------------------------------------------------------
 // cGamePlayState Header Includes
 //-----------------------------------------------------------------------------
-
-// CGE Includes
-#include <Math/cgMathTypes.h>
-#include <States/cgAppStateManager.h>
-
-//-----------------------------------------------------------------------------
-// Forward Declarations
-//-----------------------------------------------------------------------------
-class cgScene;
-class cgRenderView;
-class cgObjectNode;
-class cgCameraNode;
+#include <Carbon.h>
 
 //-----------------------------------------------------------------------------
 // Globally Unique Type ID(s)

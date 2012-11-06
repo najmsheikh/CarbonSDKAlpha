@@ -25,9 +25,6 @@
 #include "cApplication.h"
 #include "Res/resource.h"
 
-// CGE Includes
-#include <System/cgStringUtility.h>
-
 //-----------------------------------------------------------------------------
 // Name : cApplication () (Constructor)
 // Desc : cApplication Class Constructor

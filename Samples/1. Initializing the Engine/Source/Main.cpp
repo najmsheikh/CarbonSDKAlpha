@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 // Main Module Includes
 //-----------------------------------------------------------------------------
-#include <cgAPI.h>
+#include <Carbon.h>
 #include <windows.h>
 #include <tchar.h>
 #include "Main.h"

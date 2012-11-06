@@ -44,7 +44,6 @@
 #include <World/Objects/Elements/cgSphereCollisionShapeElement.h>
 #include <World/Objects/Elements/cgCapsuleCollisionShapeElement.h>
 #include <World/Objects/Elements/cgHullCollisionShapeElement.h>
-#include <World/Objects/Elements/cgAnimationSetElement.h> // ToDo: Remove when validation is done by derived types.
 
 //-----------------------------------------------------------------------------
 // Static Member Definitions
@@ -419,6 +418,34 @@ cgObjectSubElement * cgWorldObject::createSubElement( const cgUID & Category, co
 }
 
 //-----------------------------------------------------------------------------
+//  Name : supportsSubElement () (Virtual)
+/// <summary>
+/// Determine if the specified object sub element type is supported by this
+/// world object. Derived object types should implement this to extend the
+/// allowable sub element types.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgWorldObject::supportsSubElement( const cgUID & Category, const cgUID & Identifier ) const
+{
+    // Validate supported categories.
+    if ( Category == OSECID_CollisionShapes )
+    {
+        // Validate supported types.
+        if ( Identifier == RTID_BoxCollisionShapeElement ||
+             Identifier == RTID_CylinderCollisionShapeElement ||
+             Identifier == RTID_SphereCollisionShapeElement ||
+             Identifier == RTID_ConeCollisionShapeElement ||
+             Identifier == RTID_CapsuleCollisionShapeElement ||
+             Identifier == RTID_HullCollisionShapeElement )
+             return true;
+
+    } // End OSECID_CollisionShapes
+    
+    // Unsupported
+    return false;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : createSubElement () (Virtual)
 /// <summary>
 /// Create a new object sub-element of the specified type and add it to the
@@ -432,32 +459,9 @@ cgObjectSubElement * cgWorldObject::createSubElement( bool internalElement, cons
     if ( isInternalReference() )
         internalElement = true;
 
-    // Validate supported categories.
-    // ToDo: Validation should be done in a separate function that can be overloaded, rather than hardcoded.
-    if ( Category == OSECID_CollisionShapes )
-    {
-        // Validate supported types.
-        if ( Identifier != RTID_BoxCollisionShapeElement &&
-             Identifier != RTID_CylinderCollisionShapeElement &&
-             Identifier != RTID_SphereCollisionShapeElement &&
-             Identifier != RTID_ConeCollisionShapeElement &&
-             Identifier != RTID_CapsuleCollisionShapeElement &&
-             Identifier != RTID_HullCollisionShapeElement )
-             return CG_NULL;
-
-    } // End OSECID_CollisionShapes
-    else if ( Category == OSECID_AnimationSets )
-    {
-        // Validate supported types.
-        if ( Identifier != RTID_AnimationSetElement )
-             return CG_NULL;
-
-    } // End OSECID_AnimationSets
-    else
-    {
+    // Validate support.
+    if ( !supportsSubElement( Category, Identifier ) )
         return CG_NULL;
-
-    } // End if unsupported
 
     // Begin a creation transaction (if necessary) so that we can roll back
     bool bShouldSerialize = shouldSerialize() && !internalElement;
@@ -536,23 +540,9 @@ cgObjectSubElement * cgWorldObject::cloneSubElement( cgObjectSubElement * pEleme
     cgUID Category   = pElement->getElementCategory();
     cgUID Identifier = pElement->getReferenceType();
 
-    // Recognized type? (must be an exact match -- full class chain query is not valid)
-    if ( Category == OSECID_CollisionShapes )
-    {
-        // Validate supported types.
-        if ( Identifier != RTID_BoxCollisionShapeElement &&
-             Identifier != RTID_CylinderCollisionShapeElement &&
-             Identifier != RTID_SphereCollisionShapeElement &&
-             Identifier != RTID_ConeCollisionShapeElement &&
-             Identifier != RTID_CapsuleCollisionShapeElement )
-             return CG_NULL;
-
-    } // End OSECID_CollisionShapes
-    else
-    {
+    // Validate support.
+    if ( !supportsSubElement( Category, Identifier ) )
         return CG_NULL;
-
-    } // End if unsupported
 
     // Begin a creation transaction (if necessary) so that we can roll back
     bool bShouldSerialize = shouldSerialize();
@@ -652,7 +642,7 @@ void cgWorldObject::deleteSubElement( cgObjectSubElement * pElement )
     if ( itCategory == mSubElementCategories.end() )
         return;
 
-    cgToDo( "Carbon General", "Should we optimize this by storing an cgObjectSubElementMap instead of array?" );
+    cgToDo( "Carbon General", "Should we optimize this by storing a cgObjectSubElementMap instead of array?" );
     // Remove it from the list.
     bool bObjectOwner = false;
     for ( size_t i = 0; i < itCategory->second.size(); ++i )

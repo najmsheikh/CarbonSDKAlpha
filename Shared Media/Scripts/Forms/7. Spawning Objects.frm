@@ -94,8 +94,8 @@ class SpawnObjectsForm : IScriptedForm
 
         // Configure controls - Main form first.
         mForm.minimumSize       = Size( 290, 290 );
-        mForm.size              = Size( 330, 290 );
-        mForm.position          = Point( 5, screenSize.height - (mForm.size.height + 20) );
+        mForm.size              = Size( 410, 300 );
+        mForm.position          = Point( (screenSize.width - mForm.size.width) / 2, (screenSize.height - mForm.size.height) / 3 );
         mForm.controlText       = "Spawn Objects";
         mForm.padding           = Rect( 0, 10, 0, 0 );
         mForm.backgroundOpacity = 0.85f;
@@ -115,7 +115,7 @@ class SpawnObjectsForm : IScriptedForm
 
         // Create buttons.
         int i = 0;
-        mButtons.resize( 7 );
+        mButtons.resize( 8 );
         Size buttonSize( mGroupSimplePrimitives.clientSize.width - 20, 20 );
 
         // *****************
@@ -183,6 +183,14 @@ class SpawnObjectsForm : IScriptedForm
         button.size     = buttonSize;
         button.controlText = "Red Lamp";
         button.registerEventHandler( SystemMessages::UI_Button_OnClick, "spawnRedLamp_OnClick", this );
+        @mButtons[i++] = button;
+
+        // Spawn flaming barrel button
+        @button = createButton( "spawnBarrel", mGroupObjects );
+        button.position = Point( 10, 10 + (y++ * (buttonSize.height + 3)) );
+        button.size     = buttonSize;
+        button.controlText = "Barrel";
+        button.registerEventHandler( SystemMessages::UI_Button_OnClick, "spawnBarrel_OnClick", this );
         @mButtons[i++] = button;
 
         // Success!
@@ -294,6 +302,12 @@ class SpawnObjectsForm : IScriptedForm
     {
         // Spawn the red lamp object from the 'Objects' scene.
         spawnObject( 0xBA );
+    }
+
+    void spawnBarrel_OnClick( UIControl @ control )
+    {
+        // Spawn the barrel object from the 'Objects' scene.
+        spawnObject( 0x18F );
     }
 
 } // End Class SpawnObjectsForm

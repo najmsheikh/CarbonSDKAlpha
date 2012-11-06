@@ -1895,6 +1895,9 @@
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\ObjectNode.h">
       <Filter>Header Files\Scripting\Packages\Core\World\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\ParticleEmitter.h">
+      <Filter>Header Files\Scripting\Packages\Core\World\Objects</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\WorldObject.h">
       <Filter>Header Files\Scripting\Packages\Core\World\Objects</Filter>
     </ClInclude>

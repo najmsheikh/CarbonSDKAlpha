@@ -105,6 +105,7 @@ public:
     
     // Sub-elements
     virtual bool                    getSubElementCategories ( cgObjectSubElementCategory::Map & categories ) const;
+    virtual bool                    supportsSubElement      ( const cgUID & Category, const cgUID & Identifier ) const;
     virtual cgObjectSubElement    * createSubElement        ( bool internalElement, const cgUID & category, const cgUID & identifier );
     virtual cgObjectSubElement    * cloneSubElement         ( cgObjectSubElement * element );
     virtual const cgObjectSubElementArray & getSubElements  ( const cgUID & category ) const;

@@ -54,11 +54,6 @@ cgSSAOProcessor::cgSSAOProcessor(  )
     mMethod                         = HemisphereAO;
     mSampleCount                    = 16;
     mRadiusCount                    = 1;
-    mOperationData.radii            = cgVector4( 0.5f, 0, 0, 0 );
-    mOperationData.powers           = cgVector4( 1.0f, 0, 0, 0 );
-    mOperationData.maximumDistances = cgVector4( 0, 0, 0, 0 );
-    mOperationData.radiusBias       = 0.004f;
-    mOperationData.depthFalloff     = 1.2f;
 }
 
 //-----------------------------------------------------------------------------
@@ -105,11 +100,6 @@ void cgSSAOProcessor::dispose( bool disposeBase )
     mMethod                         = HemisphereAO;
     mSampleCount                    = 16;
     mRadiusCount                    = 1;
-    mOperationData.radii            = cgVector4( 0.5f, 0, 0, 0 );
-    mOperationData.powers           = cgVector4( 1.0f, 0, 0, 0 );
-    mOperationData.maximumDistances = cgVector4( 0, 0, 0, 0 );
-    mOperationData.radiusBias       = 0.004f;
-    mOperationData.depthFalloff     = 1.2f;
     
     // Dispose base if requested.
     if ( disposeBase )
@@ -266,10 +256,6 @@ void cgSSAOProcessor::setSampleCount( cgInt32 samples )
 //-----------------------------------------------------------------------------
 void cgSSAOProcessor::setSampleRadii( cgInt32 radiusCount, const cgVector4 & radii, const cgVector4 & powers, const cgVector4 & maximumDistances )
 {
-    mRadiusCount = radiusCount;
-    mOperationData.radii = radii;
-    mOperationData.powers = powers;
-    mOperationData.maximumDistances = maximumDistances;
 }
 
 //-----------------------------------------------------------------------------
@@ -281,7 +267,6 @@ void cgSSAOProcessor::setSampleRadii( cgInt32 radiusCount, const cgVector4 & rad
 //-----------------------------------------------------------------------------
 void cgSSAOProcessor::setBiasFactor( cgFloat bias )
 {
-    mOperationData.radiusBias = bias;
 }
 
 //-----------------------------------------------------------------------------
@@ -293,5 +278,4 @@ void cgSSAOProcessor::setBiasFactor( cgFloat bias )
 //-----------------------------------------------------------------------------
 void cgSSAOProcessor::setDepthFalloff( cgFloat falloff )
 {
-    mOperationData.depthFalloff = falloff;
 }

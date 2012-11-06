@@ -84,6 +84,7 @@ public:
     //-------------------------------------------------------------------------
     cgObjectNode              * getParentObject             ( ) { return mParentObject; }
     const cgScriptHandle      & getScript                   ( ) const;
+    cgScriptObject            * getScriptObject             ( );
     cgInt32                     getLoadOrder                ( ) const;
     cgUInt32                    getUserId                   ( ) const;
     void                        setLoadOrder                ( cgInt32 order );
@@ -98,8 +99,8 @@ public:
     // Public Virtual Methods
     //-------------------------------------------------------------------------
     virtual void                onUpdate                    ( cgFloat timeDelta );
-    virtual void                onAttach                    ( );
-    virtual void                onDetach                    ( );
+    virtual void                onAttach                    ( cgObjectNode * node );
+    virtual void                onDetach                    ( cgObjectNode * node );
     virtual bool                processMessage              ( cgMessage * message ) { return false; }
     virtual bool                supportsInputChannels       ( ) const;
     virtual bool                initialize                  ( const cgXMLNode & initData, cgScene * scene ) { return true; }

@@ -55,6 +55,9 @@ cgWorldQuery cgMeshObject::mLoadMesh;
 //-----------------------------------------------------------------------------
 cgMeshObject::cgMeshObject( cgUInt32 nReferenceId, cgWorld * pWorld ) : cgWorldObject( nReferenceId, pWorld )
 {
+    // Initialize defaults
+    mShadowStage = cgSceneProcessStage::Both;
+
     // The mesh handle should manage the resource as an 'owner' handle. 
     // This will ensure that soft (database) reference counting will be
     // considered and that the object ownership is correctly recorded.
@@ -78,9 +81,9 @@ cgMeshObject::cgMeshObject( cgUInt32 nReferenceId, cgWorld * pWorld, cgWorldObje
 
     // Duplicate values from object to clone.
     cgMeshObject * pObject = (cgMeshObject*)pInit;
+    mShadowStage = pObject->mShadowStage;
     // ToDo: 9999 - Clone
     /*m_Lighting              = pObject->m_Lighting;
-    m_CastShadows           = pObject->m_CastShadows;
     m_ReceiveShadows        = pObject->m_ReceiveShadows;*/
 
     // Clone any mesh.
@@ -189,10 +192,9 @@ cgWorldObject * cgMeshObject::allocateClone( const cgUID & type, cgUInt32 nRefer
 //-----------------------------------------------------------------------------
 void cgMeshObject::setMesh( const cgMeshHandle & hMesh )
 {
-    // Cleanup any previous allocation
-    dispose( false );
-
     // Store the new reference to the specified mesh.
+    // This will dereference the old mesh automatically
+    // which may lead to it being removed from the database.
     mMesh = hMesh;
 
     // Notify listeners that object data has changed.
@@ -730,9 +732,9 @@ void cgMeshObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisi
     if ( flags & cgSandboxRenderFlags::PostDepthClear )
         return;
 
-    // Sandbox render is only necessary in wireframe mode.
-    // Standard scene rendering behavior applies in other modes.
-    if ( !(flags & cgSandboxRenderFlags::Wireframe) )
+    // Sandbox render is only necessary in wireframe mode unless the
+    // node is hidden. Standard scene rendering behavior applies in other modes.
+    if ( pIssuer->isRenderable() && !(flags & cgSandboxRenderFlags::Wireframe) )
     {
         cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
         return;
@@ -797,6 +799,62 @@ void cgMeshObject::applyObjectRescale( cgFloat fScale )
 
     // Call base class implementation.
     cgWorldObject::applyObjectRescale( fScale );
+}
+
+//-----------------------------------------------------------------------------
+// Name : getShadowStage()
+/// <summary>
+/// Retrieve the state that describes whether or not the object will cast
+/// shadows onto surrounding objects, and during which lighting stage that
+/// should occur (if any).
+/// </summary>
+//-----------------------------------------------------------------------------
+cgSceneProcessStage::Base cgMeshObject::getShadowStage( ) const
+{
+    return mShadowStage;
+}
+
+//-----------------------------------------------------------------------------
+// Name : setShadowStage()
+/// <summary>
+/// Set the state that describes whether or not the object will cast
+/// shadows onto surrounding objects, and during which lighting stage that
+/// should occur (if any).
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgMeshObject::setShadowStage( cgSceneProcessStage::Base stage )
+{
+    // Is this a no-op?
+    if ( mShadowStage == stage )
+        return;
+
+    // Update world database
+    if ( shouldSerialize() == true )
+    {
+        prepareQueries();
+        mUpdateProcessStages.bindParameter( 1, (cgInt32)0 );     // LightingStage
+        mUpdateProcessStages.bindParameter( 2, (cgInt32)stage ); // ShadowCastStage
+        mUpdateProcessStages.bindParameter( 3, (cgInt32)0 );     // ShadowReceiveStage
+        mUpdateProcessStages.bindParameter( 4, mReferenceId );
+        
+        // Execute
+        if ( mUpdateProcessStages.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateProcessStages.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update shadow rendering stage data for mesh object '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
+    // Update value.
+    mShadowStage = stage;
+
+    // Notify listeners that property was altered
+    static const cgString strContext = _T("ShadowStage");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -865,9 +923,8 @@ bool cgMeshObject::isRenderable() const
 //-----------------------------------------------------------------------------
 bool cgMeshObject::isShadowCaster() const
 {
-    // ToDo: 9999 - Pay attention to flag?
-	// All meshes can cast shadows by default.
-    return true;
+	// Can this mesh cast shadows at runtime (assuming there is any data).
+    return mMesh.isValid() && (mShadowStage == cgSceneProcessStage::Runtime || mShadowStage == cgSceneProcessStage::Both);
 }
 
 //-----------------------------------------------------------------------------
@@ -904,9 +961,9 @@ bool cgMeshObject::insertComponentData( )
         prepareQueries();
         mInsertMesh.bindParameter( 1, mReferenceId );
         mInsertMesh.bindParameter( 2, mMesh.getReferenceId() );
-        mInsertMesh.bindParameter( 3, (cgInt32)0 ); // m_Lighting
-        mInsertMesh.bindParameter( 4, (cgInt32)0 ); // m_CastShadows
-        mInsertMesh.bindParameter( 5, (cgInt32)0 ); // m_ReceiveShadows
+        mInsertMesh.bindParameter( 3, (cgInt32)0 ); // LightingStage
+        mInsertMesh.bindParameter( 4, (cgInt32)mShadowStage );
+        mInsertMesh.bindParameter( 5, (cgInt32)0 ); // ShadowReceiveStage
         mInsertMesh.bindParameter( 6, mSoftRefCount );
         
         // Execute
@@ -960,14 +1017,14 @@ bool cgMeshObject::onComponentLoading( cgComponentLoadingEventArgs * e )
     e->componentData = &mLoadMesh;
 
     // ToDo: 9999
-    /*// Grab basic object properties.
-    cgUInt32 nValue = 0;
-    m_oqLoadMesh->getColumn( L"LightStage", nValue );
-    m_Lighting = (LightingStage)nValue;
-    m_oqLoadMesh->getColumn( L"ShadowCastStage", nValue );
-    m_CastShadows = (LightingStage)nValue;
-    m_oqLoadMesh->getColumn( L"ShadowReceiveStage", nValue );
-    m_ReceiveShadows = (LightingStage)nValue;*/
+    // Grab basic object properties.
+    cgUInt32 nStage = 0;
+    //m_oqLoadMesh->getColumn( L"LightStage", nStage );
+    //m_Lighting = (LightingStage)nStage;
+    mLoadMesh.getColumn( L"ShadowCastStage", nStage );
+    mShadowStage = (cgSceneProcessStage::Base)nStage;
+    //m_oqLoadMesh->getColumn( L"ShadowReceiveStage", nStage );
+    //m_ReceiveShadows = (LightingStage)nStage;
 
     // Load the referenced mesh data source.
     cgUInt32 nMeshRefId = 0;
@@ -1181,6 +1238,33 @@ bool cgMeshObject::getSubElementCategories( cgObjectSubElementCategory::Map & Ca
     return true;
 }
 
+//-----------------------------------------------------------------------------
+//  Name : supportsSubElement () (Virtual)
+/// <summary>
+/// Determine if the specified object sub element type is supported by this
+/// world object. Derived object types should implement this to extend the
+/// allowable sub element types.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgMeshObject::supportsSubElement( const cgUID & Category, const cgUID & Identifier ) const
+{
+    // Call base class implementation first.
+    if ( cgWorldObject::supportsSubElement( Category, Identifier ) )
+        return true;
+
+    // Validate supported categories.
+    if ( Category == OSECID_CollisionShapes )
+    {
+        // Validate supported types.
+        if ( Identifier == RTID_HullCollisionShapeElement )
+             return true;
+
+    } // End OSECID_AnimationSets
+    
+    // Unsupported
+    return false;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // cgMeshNode Member Definitions
 ///////////////////////////////////////////////////////////////////////////////
@@ -1317,7 +1401,14 @@ void cgMeshNode::onComponentModified( cgComponentModifiedEventArgs * e )
         // process if necessary.
         nodeUpdated( cgDeferredUpdateFlags::BoundingBox | cgDeferredUpdateFlags::OwnershipStatus, 0 );
 
-    } // End if MeshData
+    } // End if MeshData | ApplyRescale
+    else if ( e->context == _T("ShadowStage") )
+    {
+        // Mesh node is now 'dirty' and should re-trigger a shadow map fill 
+        // during the next render process if necessary.
+        nodeUpdated( 0, 0 );
+    
+    } // End if ShadowStage
 
     // Call base class implementation last
     cgObjectNode::onComponentModified( e );
@@ -1492,6 +1583,27 @@ bool cgMeshNode::getSubElementCategories( cgObjectSubElementCategory::Map & cate
 
     // Any sub-elements remaining?
     return (!categoriesOut.empty());
+}
+
+//-----------------------------------------------------------------------------
+//  Name : supportsSubElement () (Virtual)
+/// <summary>
+/// Determine if the specified object sub element type is supported by this
+/// world object. Derived object types should implement this to extend the
+/// allowable sub element types.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgMeshNode::supportsSubElement( const cgUID & Category, const cgUID & Identifier ) const
+{
+    // For meshes, the 'CollisionOnly' model uses an automatic collision mesh
+    // based on the renderable geometry. As a result, no collision shape editing
+    // should be made available in this mode (shapes support is already disabled 
+    // by the base class when model is set to 'None')
+    if ( mPhysicsModel == cgPhysicsModel::CollisionOnly && Category == OSECID_CollisionShapes )
+        return false;
+
+    // Call base class implementation last.
+    return cgObjectNode::supportsSubElement( Category, Identifier );
 }
 
 //-----------------------------------------------------------------------------

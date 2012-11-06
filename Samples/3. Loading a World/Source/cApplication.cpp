@@ -26,15 +26,6 @@
 #include "States/cGamePlayState.h"
 #include "Res/resource.h"
 
-// CGE Includes
-#include <World/cgWorld.h>
-#include <Interface/cgUIManager.h>
-#include <Rendering/cgRenderDriver.h>
-#include <Resources/cgResourceManager.h>
-#include <States/cgAppStateManager.h>
-#include <System/cgStringUtility.h>
-#include <System/cgTimer.h>
-
 //-----------------------------------------------------------------------------
 // Name : cApplication () (Constructor)
 // Desc : cApplication Class Constructor

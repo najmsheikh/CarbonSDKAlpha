@@ -28,13 +28,34 @@ namespace ObjectBehavior
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void registerAsPhysicsListener( )", asMETHODPR(type,registerAsPhysicsListener,(),void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void unregisterAsPhysicsListener( )", asMETHODPR(type,unregisterAsPhysicsListener,(),void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void onUpdate( float )", asMETHODPR(type,onUpdate,( cgFloat ), void), asCALL_THISCALL) );
-        BINDSUCCESS( engine->registerObjectMethod(typeName, "void onAttach( )", asMETHODPR(type,onAttach,( ), void), asCALL_THISCALL) );
-        BINDSUCCESS( engine->registerObjectMethod(typeName, "void onDetach( )", asMETHODPR(type,onDetach,( ), void), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "void onAttach( ObjectNode@+ )", asMETHODPR(type,onAttach,( cgObjectNode* ), void), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "void onDetach( ObjectNode@+ )", asMETHODPR(type,onDetach,( cgObjectNode* ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void hitByObject( ObjectNode @+, const Vector3 &in, const Vector3 &in )", asMETHODPR(type,hitByObject,( cgObjectNode*, const cgVector3&, const cgVector3& ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void objectHit( ObjectNode @+, const Vector3 &in, const Vector3 &in )", asMETHODPR(type,objectHit,( cgObjectNode*, const cgVector3&, const cgVector3& ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "bool supportsInputChannels( ) const", asMETHODPR(type,supportsInputChannels,( ) const, bool), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "IScriptedObjectBehavior@ getScriptObject( )", asFUNCTIONPR(getScriptObject,( type* ), asIScriptObject*), asCALL_CDECL_OBJLAST ) );
 
     } // End Method registerObjectBehaviorMethods<>
+
+    //-------------------------------------------------------------------------
+    // Name : getScriptObject ()
+    // Desc : Wrapper function that returns a reference to the script based
+    //        'IScriptedObjectBehavior' interface rather than the C++ side 
+    //        'cgScriptObject' that is returned by the 'cgObjectBehavior' 
+    //        native method of the same name.
+    //-------------------------------------------------------------------------
+    template <class type>
+    asIScriptObject * getScriptObject( type* thisPointer )
+    {
+        cgScriptObject * object = thisPointer->getScriptObject();
+        if ( object && object->getInternalObject() )
+        {
+            object->getInternalObject()->AddRef();
+            return object->getInternalObject();
+        
+        } // End if valid
+        return CG_NULL;
+    }
 
     // Package descriptor
     class Package : public cgScriptPackage

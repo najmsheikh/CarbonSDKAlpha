@@ -22,22 +22,6 @@
 //-----------------------------------------------------------------------------
 #include "States/cGamePlayState.h"
 
-// CGE Includes
-#include <cgBase.h>
-#include <Rendering/cgRenderDriver.h>
-#include <Resources/cgScript.h>
-#include <Input/cgInputDriver.h>
-#include <World/cgWorld.h>
-#include <World/cgScene.h>
-#include <World/cgObjectBehavior.h>
-#include <World/Objects/cgCameraObject.h>
-#include <World/Objects/cgDummyObject.h>
-#include <Physics/Controllers/cgCharacterController.h>
-#include <Interface/cgUIManager.h>
-#include <Interface/cgUIForm.h>
-#include <Math/cgMathUtility.h>
-#include <Math/cgMathTypes.h>
-
 //-----------------------------------------------------------------------------
 // Name : cGamePlayState () (Constructor)
 /// <summary> cGamePlayState Class Constructor </summary>
@@ -157,6 +141,79 @@ void cGamePlayState::end( )
 
     // Call base class implementation
     cgAppState::end();
+}
+
+//-----------------------------------------------------------------------------
+// Name : loadScene () (Private)
+/// <summary>
+/// Contains code responsible for loading the main scene.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cGamePlayState::loadScene( )
+{
+    // Get access to required systems.
+    cgWorld * world = cgWorld::getInstance();
+
+    // Load the first scene from the file.
+    if ( !(mScene = world->loadScene( 0x1 )) )
+        return false;
+
+    // Create a dummy object to represent the player
+    mPlayer = static_cast<cgDummyNode*>(mScene->createObjectNode( true, RTID_DummyObject, false ));
+
+    // We want the object's update process to execute every frame so that
+    // its behavior script (assigned in a moment) will get a chance to execute.
+    mPlayer->setUpdateRate( cgUpdateRate::Always );
+
+    // Assign a character controller to the player.
+    cgCharacterController * controller;
+    controller = static_cast<cgCharacterController*>(cgPhysicsController::createInstance( _T("Core::PhysicsControllers::Character"), mScene->getPhysicsWorld() ));
+    mPlayer->setPhysicsController( controller );
+
+    // Allow the controller to initialize.
+    controller->setCharacterRadius( 0.4f );
+    controller->initialize( );
+    
+    // Position the player in the world.
+    mPlayer->setPosition( cgVector3(0.0f, 2.8f, -20.0f) );
+    //mPlayer->setPosition( cgVector3(0.0f, 2.8f, -2.0f) );
+    
+    // Now create a camera that can be attached to the player object.
+    mCamera = static_cast<cgCameraNode*>(mScene->createObjectNode( true, RTID_CameraObject, false ));
+    
+    // Setup camera properties
+    mCamera->setFOV( 75.0f );
+    mCamera->setNearClip( 0.2f );
+    mCamera->setFarClip( 10000.01f );
+    mCamera->setUpdateRate( cgUpdateRate::Always );
+
+    // Offset the camera to "eye" level based on the configured height
+    // of the character controller prior to attaching to the player.
+    mLastCamPos    = mPlayer->getPosition();
+    mLastCamPos.y += (controller->getCharacterHeight() * 0.5f) * 0.95f;
+    mCamera->setPosition( mLastCamPos );
+    
+    // Attach the camera as a child of the player object.
+    mCamera->setParent( mPlayer );
+    
+    // Spawn the first person player actor (Reference Id: 0x16D) and attach it to the camera.
+    cgActorNode * firstPersonActor = static_cast<cgActorNode*>(mScene->loadObjectNode( 0x16D, cgCloneMethod::ObjectInstance, true ));
+    firstPersonActor->setWorldTransform( mCamera->getWorldTransform() );
+    firstPersonActor->setParent( mCamera );
+
+    // Assign necessary behavior to the player object. In this case we assign the 'Player.gs' behavior
+    // to the player object which provides keyboard and mouse input to control the player and its child
+    // camera. We assign the behavior *after* having attached the camera and first person actor so that
+    // references to them can be found during the call to the script object's 'onAttach()' method.
+    cgObjectBehavior * pBehavior = new cgObjectBehavior( );
+    pBehavior->initialize( mScene->getResourceManager(), _T("Scripts/Behaviors/Player.gs"), _T("") );
+    mPlayer->addBehavior( pBehavior );
+    
+    // Set up the scene ready for rendering
+    mScene->setActiveCamera( mCamera );
+
+    // Success!
+    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -298,6 +355,16 @@ void cGamePlayState::update( )
         newPosition += mCamera->getXAxis() * bobOffset.x;
         newPosition += mCamera->getYAxis() * bobOffset.y;
         mCamera->setPosition( newPosition );
+        
+        // Apply a 'counter' bob to the child of the camera (first person weapon)
+        cgObjectNode * childActor = mCamera->findChildOfType( RTID_ActorObject, false );
+        if ( childActor )
+        {
+            cgFloat counterBobStrength = 0.1f;
+            childActor->setPosition( mCamera->getPosition() );
+            childActor->moveLocal( -bobOffset.x * counterBobStrength, bobOffset.y * counterBobStrength, 0 );
+        
+        } // End if has child
     
     } // End if !suspended
 
@@ -308,72 +375,6 @@ void cGamePlayState::update( )
 
     // Call base class implementation
     cgAppState::update();
-}
-
-//-----------------------------------------------------------------------------
-// Name : loadScene () (Private)
-/// <summary>
-/// Contains code responsible for loading the main scene.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cGamePlayState::loadScene( )
-{
-    // Get access to required systems.
-    cgWorld * world = cgWorld::getInstance();
-
-    // Load the first scene from the file.
-    if ( !(mScene = world->loadScene( 0x1 )) )
-        return false;
-
-    // Create a dummy object to represent the player
-    mPlayer = static_cast<cgDummyNode*>(mScene->createObjectNode( true, RTID_DummyObject, false ));
-
-    // We want the objects update process to execute every frame so that
-    // its behavior script (assigned in a moment) will get a chance to execute.
-    mPlayer->setUpdateRate( cgUpdateRate::Always );
-
-    // Assign a character controller to the player.
-    cgCharacterController * controller;
-    controller = static_cast<cgCharacterController*>(cgPhysicsController::createInstance( _T("Core::PhysicsControllers::Character"), mScene->getPhysicsWorld() ));
-    mPlayer->setPhysicsController( controller );
-
-    // Allow the controller to initialize.
-    controller->setCharacterRadius( 0.4f );
-    controller->initialize( );
-    
-    // Position the player in the world.
-    mPlayer->setPosition( cgVector3(0.0f, 2.8f, -20.0f) );
-    
-    // Now create a camera that can be attached to the player object.
-    mCamera = static_cast<cgCameraNode*>(mScene->createObjectNode( true, RTID_CameraObject, false ));
-    
-    // Setup camera properties
-    mCamera->setFOV( 75.0f );
-    mCamera->setNearClip( 0.2f );
-    mCamera->setFarClip( 10000.01f );
-    mCamera->setUpdateRate( cgUpdateRate::Always );
-
-    // Offset the camera to "eye" level based on the configured height
-    // of the character controller prior to attaching to the player.
-    mLastCamPos    = mPlayer->getPosition();
-    mLastCamPos.y += (controller->getCharacterHeight() * 0.5f) * 0.95f;
-    mCamera->setPosition( mLastCamPos );
-    
-    // Attach the camera as a child of the player object.
-    mCamera->setParent( mPlayer );
-    
-    // Assign necessary "input" behavior to the player object. In this case 
-    // we assign the 'PlayerInput.gs' behavior to the player which provides
-    // keyboard and mouse input to control the player and its child camera.
-    cgObjectBehavior * pBehavior = new cgObjectBehavior( );
-    pBehavior->initialize( mScene->getResourceManager(), _T("Scripts/Behaviors/PlayerInput.gs"), _T("") );
-    mPlayer->addBehavior( pBehavior );
-    
-    // Set up the scene ready for rendering
-    mScene->setActiveCamera( mCamera );
-
-    // Success!
-    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -419,6 +420,17 @@ void cGamePlayState::render( )
                 cgRect rcScreen( 10, 10, screenSize.width - 10, screenSize.height - 10 );
                 interfaceManager->selectFont( _T("fixed_v01_white") );
                 interfaceManager->printText( rcScreen, output, cgTextFlags::Multiline | cgTextFlags::AlignRight, 0xFFFF0000 );
+
+                // Render a basic crosshair
+                cgRenderDriver * renderDriver = mScene->getRenderDriver();
+                cgFloat halfWidth = screenSize.width / 2.0f, halfHeight = screenSize.height / 2.0f;
+                cgVector2 crosshair[8] = {
+                    cgVector2( halfWidth - 8.0f, halfHeight ), cgVector2( halfWidth - 3.0f, halfHeight ),
+                    cgVector2( halfWidth + 3.0f, halfHeight ), cgVector2( halfWidth + 8.0f, halfHeight ),
+                    cgVector2( halfWidth, halfHeight - 8.0f ), cgVector2( halfWidth, halfHeight - 3.0f ),
+                    cgVector2( halfWidth, halfHeight + 3.0f ), cgVector2( halfWidth, halfHeight + 8.0f )
+                };  
+                renderDriver->drawLines( crosshair, 4, 0xAAFFFFFF );
 
             } // End if scene loaded
 

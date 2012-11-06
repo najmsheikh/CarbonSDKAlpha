@@ -86,11 +86,14 @@ public:
     bool                        pickFace                ( const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgVector3 & intersectionOut, cgUInt32 & faceOut, cgMaterialHandle & materialOut );
     bool                        setMeshMaterial         ( const cgMaterialHandle & material );
     bool                        setFaceMaterial         ( cgUInt32 faceIndex, const cgMaterialHandle & material );
+    void                        setShadowStage          ( cgSceneProcessStage::Base stage );
+    cgSceneProcessStage::Base   getShadowStage          ( ) const;
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldObject)
     //-------------------------------------------------------------------------
     virtual bool                getSubElementCategories ( cgObjectSubElementCategory::Map & categories ) const;
+    virtual bool                supportsSubElement      ( const cgUID & Category, const cgUID & Identifier ) const;
     virtual cgBoundingBox       getLocalBoundingBox     ( );
     virtual void                sandboxRender           ( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer );
     virtual bool                pick                    ( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, const cgVector3 & wireTolerance, cgFloat & distanceOut );
@@ -130,7 +133,8 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    cgMeshHandle    mMesh;    // Handle to mesh resource
+    cgMeshHandle                mMesh;          // Handle to mesh resource
+    cgSceneProcessStage::Base   mShadowStage;   // Describes the lighting stage(s) in which this object is allowed to cast shadows.
     
     //-------------------------------------------------------------------------
     // Protected Static Variables
@@ -171,10 +175,19 @@ public:
     // Public Inline Methods
     //-------------------------------------------------------------------------
     // Object Property 'Set' Routing
+    inline void setShadowStage( cgSceneProcessStage::Base stage ) const
+    {
+        ((cgMeshObject*)mReferencedObject)->setShadowStage( stage );
+    }
+
     // Object Property 'Get' Routing
     inline cgMeshHandle getMesh( ) const
     {
         return ((cgMeshObject*)mReferencedObject)->getMesh( );
+    }
+    inline cgSceneProcessStage::Base getShadowStage( ) const
+    {
+        return ((cgMeshObject*)mReferencedObject)->getShadowStage();
     }
 
     //-------------------------------------------------------------------------
@@ -187,6 +200,7 @@ public:
     virtual cgFloat             getObjectSize           ( );
     virtual bool                setCellTransform        ( const cgTransform & transform, cgTransformSource::Base source = cgTransformSource::Standard );
     virtual bool                getSubElementCategories ( cgObjectSubElementCategory::Map & categoriesOut ) const;
+    virtual bool                supportsSubElement      ( const cgUID & Category, const cgUID & Identifier ) const;
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)

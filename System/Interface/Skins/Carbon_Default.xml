@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <SkinDefinition>
     <Name>Carbon Default</Name>
-    <Texture>sys://Interface/Skins/Carbon_Default.dds</Texture>
-	<Glyphs>sys://Interface/Skins/Carbon_Default_Glyphs.xml</Glyphs>
+    <Texture>Carbon_Default.dds</Texture>
+	<Glyphs>Carbon_Default_Glyphs.xml</Glyphs>
 	<Cursor>
-		<Texture>sys://Interface/Skins/Carbon_Default_Cursor.dds</Texture>
+		<Texture>Carbon_Default_Cursor.dds</Texture>
 		<Type name="Arrow" animated="0">
 		<Hotpoint>7,1</Hotpoint>
 		<Rect>0,0,40,40</Rect>

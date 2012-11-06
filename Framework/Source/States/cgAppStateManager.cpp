@@ -26,6 +26,7 @@
 // cgAppStateManager Module Includes
 //-----------------------------------------------------------------------------
 #include <States/cgAppStateManager.h>
+#include <Resources/cgScript.h>
 
 //-----------------------------------------------------------------------------
 // Static member definitions.
@@ -530,6 +531,30 @@ cgAppState::cgAppState( const cgString & strStateId ) : cgReference( cgReference
     mOutgoingTransition  = CG_NULL;
     mIncomingTransition  = CG_NULL;
     mBegun               = false;
+    mScriptObject        = CG_NULL;
+    mResourceManager     = CG_NULL;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : cgAppState () (Constructor)
+/// <summary>
+/// Constructor for this class.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgAppState::cgAppState( const cgString & stateId, const cgInputStream & scriptStream, cgResourceManager * resourceManager )  : cgReference( cgReferenceManager::generateInternalRefId( ) )
+{
+    // Initialize variables to sensible defaults
+    mStateManager        = CG_NULL;
+    mStateId             = stateId;
+    mStateSuspended      = false;
+    mChildState          = CG_NULL;
+    mParentState         = CG_NULL;
+    mOutgoingTransition  = CG_NULL;
+    mIncomingTransition  = CG_NULL;
+    mBegun               = false;
+    mScriptObject        = CG_NULL;
+    mScriptStream        = scriptStream;
+    mResourceManager     = resourceManager;
 }
 
 //-----------------------------------------------------------------------------
@@ -557,6 +582,14 @@ void cgAppState::dispose( bool bDisposeBase )
     if ( mBegun == true )
         end();
 
+    // Release any script objects we retain.
+    if ( mScriptObject != CG_NULL )
+        mScriptObject->release();
+    mScriptObject = CG_NULL;
+
+    // Release resources
+    mScript.close();
+
     // Clear variables
     mStateManager         = CG_NULL;
     mStateSuspended       = false;
@@ -564,6 +597,7 @@ void cgAppState::dispose( bool bDisposeBase )
     mParentState          = CG_NULL;
     mOutgoingTransition   = CG_NULL;
     mIncomingTransition   = CG_NULL;
+    mResourceManager      = CG_NULL;
     mBegun                = false;
 
     // Clear any STL containers
@@ -691,6 +725,62 @@ cgAppState * cgAppState::getTerminalState( )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : initialize ()
+/// <summary>
+/// Allow the state to initialize (occurs during registration).
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAppState::initialize()
+{
+    // Load state script if supplied.
+    if ( mResourceManager && mScriptStream.sourceExists() )
+    {
+        // Attempt to load the state script.
+        if ( !mResourceManager->loadScript( &mScript, mScriptStream, cgString::Empty, cgString::Empty, 0, cgDebugSource() ) )
+            return false;
+
+        // Create the scripted state object.
+        cgScript * script = mScript.getResource(true);
+        if ( script )
+        {
+            try
+            {
+                // Attempt to create the IScriptedAppState
+                // object whose name matches the name of the file.
+                cgString objectType = cgFileSystem::getFileName(mScriptStream.getName(), true);
+                mScriptObject = script->createObjectInstance( objectType );
+
+                // Collect handles to any supplied methods.
+                if ( mScriptObject )
+                {
+                    mScriptMethods.initialize = mScriptObject->getMethodHandle( _T("bool initialize()") );
+                    mScriptMethods.begin      = mScriptObject->getMethodHandle( _T("bool begin(float)") );
+                    mScriptMethods.end        = mScriptObject->getMethodHandle( _T("void end()") );
+                    mScriptMethods.update     = mScriptObject->getMethodHandle( _T("void update()") );
+                    mScriptMethods.render     = mScriptObject->getMethodHandle( _T("void render()") );
+                    mScriptMethods.suspend    = mScriptObject->getMethodHandle( _T("void suspend()") );
+                    mScriptMethods.resume     = mScriptObject->getMethodHandle( _T("void resume()") );
+                    
+                } // End if valid object
+
+            } // End try to execute
+
+            catch ( cgScriptInterop::Exceptions::ExecuteException & e )
+            {
+                cgAppLog::write( cgAppLog::Error, _T("Failed to execute createBehaviorScript() function in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+                return false;
+
+            } // End catch exception
+
+        } // End if valid.
+
+    } // End if load script
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : begin () (Virtual)
 /// <summary>
 /// This signifies that the state has actually been selected and
@@ -701,8 +791,29 @@ cgAppState * cgAppState::getTerminalState( )
 //-----------------------------------------------------------------------------
 bool cgAppState::begin( )
 {
-    mBegun = true;
-    return true;
+    bool bResult = true;
+    
+    // Notify the script (if any).
+    if ( mScriptObject && mScriptMethods.begin )
+    {
+        try
+        {
+            cgScriptArgument::Array ScriptArgs;
+            bResult = *(bool*)mScriptObject->executeMethod( mScriptMethods.begin, ScriptArgs );
+        
+        } // End try to execute
+        catch ( cgScriptInterop::Exceptions::ExecuteException & e )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to execute begin() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+            return false;
+        
+        } // End catch exception
+
+    } // End if valid
+
+    if ( bResult )
+        mBegun = true;
+    return bResult;
 }
 
 //-----------------------------------------------------------------------------
@@ -716,15 +827,35 @@ bool cgAppState::begin( )
 //-----------------------------------------------------------------------------
 void cgAppState::end( )
 {
+    // Notify the script (if any).
+    if ( mScriptObject && mScriptMethods.end )
+    {
+        try
+        {
+            cgScriptArgument::Array ScriptArgs;
+            mScriptObject->executeMethod( mScriptMethods.end, ScriptArgs );
+        
+        } // End try to execute
+        catch ( cgScriptInterop::Exceptions::ExecuteException & e )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to execute end() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+            return;
+        
+        } // End catch exception
+
+    } // End if valid
+
     // First recurse into any child state
-    if ( mChildState ) mChildState->end();
+    if ( mChildState )
+        mChildState->end();
     mChildState = CG_NULL;
 
     // Notify manager that the state ended
     mStateManager->stateEnded( this );
 
     // Now detach this from parent
-    if ( mParentState ) mParentState->mChildState = CG_NULL;
+    if ( mParentState )
+        mParentState->mChildState = CG_NULL;
 
     // We are no longer attached to anything (simply being stored in
     // the registered state list maintained by the manager).
@@ -744,7 +875,26 @@ void cgAppState::end( )
 //-----------------------------------------------------------------------------
 void cgAppState::update( )
 {
-    if ( mChildState ) mChildState->update();
+    // Notify the script (if any).
+    if ( mScriptObject && mScriptMethods.update )
+    {
+        try
+        {
+            cgScriptArgument::Array ScriptArgs;
+            mScriptObject->executeMethod( mScriptMethods.update, ScriptArgs );
+        
+        } // End try to execute
+        catch ( cgScriptInterop::Exceptions::ExecuteException & e )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to execute update() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+            return;
+        
+        } // End catch exception
+
+    } // End if valid
+
+    if ( mChildState )
+        mChildState->update();
 }
 
 //-----------------------------------------------------------------------------
@@ -756,7 +906,26 @@ void cgAppState::update( )
 //-----------------------------------------------------------------------------
 void cgAppState::render( )
 {
-    if ( mChildState ) mChildState->render();
+    // Notify the script (if any).
+    if ( mScriptObject && mScriptMethods.render )
+    {
+        try
+        {
+            cgScriptArgument::Array ScriptArgs;
+            mScriptObject->executeMethod( mScriptMethods.render, ScriptArgs );
+        
+        } // End try to execute
+        catch ( cgScriptInterop::Exceptions::ExecuteException & e )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to execute render() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+            return;
+        
+        } // End catch exception
+
+    } // End if valid
+
+    if ( mChildState )
+        mChildState->render();
 }
 
 //-----------------------------------------------------------------------------
@@ -769,6 +938,24 @@ void cgAppState::render( )
 void cgAppState::suspend( )
 {
     mStateSuspended = true;
+
+    // Notify the script (if any).
+    if ( mScriptObject && mScriptMethods.suspend )
+    {
+        try
+        {
+            cgScriptArgument::Array ScriptArgs;
+            mScriptObject->executeMethod( mScriptMethods.suspend, ScriptArgs );
+        
+        } // End try to execute
+        catch ( cgScriptInterop::Exceptions::ExecuteException & e )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to execute suspend() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+            return;
+        
+        } // End catch exception
+
+    } // End if valid
 }
 
 //-----------------------------------------------------------------------------
@@ -781,6 +968,24 @@ void cgAppState::suspend( )
 void cgAppState::resume( )
 {
     mStateSuspended = false;
+
+    // Notify the script (if any).
+    if ( mScriptObject && mScriptMethods.resume )
+    {
+        try
+        {
+            cgScriptArgument::Array ScriptArgs;
+            mScriptObject->executeMethod( mScriptMethods.resume, ScriptArgs );
+        
+        } // End try to execute
+        catch ( cgScriptInterop::Exceptions::ExecuteException & e )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to execute resume() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+            return;
+        
+        } // End catch exception
+
+    } // End if valid
 }
 
 //-----------------------------------------------------------------------------

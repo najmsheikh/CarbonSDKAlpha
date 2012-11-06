@@ -31,7 +31,8 @@
 // cgDX9Initialize Header Includes
 //-----------------------------------------------------------------------------
 #include <cgBase.h>
-#include <D3DX9.h>
+#include <d3d9.h>	// Win8 SDK required
+#include <d3dx9.h>
 
 //-----------------------------------------------------------------------------
 // Forward Declarations

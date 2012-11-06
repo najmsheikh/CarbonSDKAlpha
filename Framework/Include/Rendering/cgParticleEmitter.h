@@ -30,12 +30,37 @@
 #include <Math/cgBezierSpline.h>
 
 //-----------------------------------------------------------------------------
+// Global Enumerations
+//-----------------------------------------------------------------------------
+namespace cgParticleBlendMethod
+{
+    enum Base
+    {
+        Additive    = 0,
+        Linear      = 1,
+        Screen      = 2
+    };
+
+} // End Namespace : cgParticleBlendMethod
+
+namespace cgParticleEmitterType
+{
+    enum Base
+    {
+        Billboards      = 0,
+        LocalBillboards = 1
+    };
+
+} // End Namespace : cgParticleEmitterType
+
+//-----------------------------------------------------------------------------
 // Global Structures
 //-----------------------------------------------------------------------------
 // Contains setup information for the emitter
 struct cgParticleEmitterProperties
 {
     // Emitter Properties
+    cgParticleEmitterType::Base emitterType;
     cgFloat             innerCone;                  // The inner angle (in degrees) of the cone that will be used to emit particles.
     cgFloat             outerCone;                  // The outer angle (in degrees) of the cone that will be used to emit particles.
     cgFloat             emissionRadius;             // The radius around the emitter position from which particles can be released
@@ -44,8 +69,9 @@ struct cgParticleEmitterProperties
     cgUInt32            initialParticles;           // Number of particles to create before the emitter starts
     cgUInt32            maxFiredParticles;          // Maximum number of allowed particles over the emitter lifetime.
     cgFloat             birthFrequency;             // Number of particles to create every second
-    cgString            textureFile;                // The base texture (or atlas) file applied to billboards.
-    cgString            shaderSource;               // The surface shader source file to use for rendering billboards for this emitter.
+    cgString            particleTexture;            // The base texture (or atlas) file applied to billboards.
+    cgString            particleShader;             // The surface shader source file to use for rendering billboards for this emitter.
+    cgParticleBlendMethod::Base blendMethod;        // Method to use when blending particles to the frame buffer.
     
     bool                sortedRender;               // The particles should be rendered in a back to front order? (Warning: Performance Penalty)        
     cgVector3           emitterDirection;           // A fixed emitter direction (world space, not based on emitter Y axis) can be specified.
@@ -62,6 +88,7 @@ struct cgParticleEmitterProperties
     cgRangeF            lifetime;
     cgFloat             airResistance;
     cgSizeF             baseSize;
+    cgFloat             hdrScale;
 
     // Property Adjustment Keyframes
     cgBezierSpline2     scaleXCurve;
@@ -155,6 +182,8 @@ public:
     bool                                particlesSpent          ( bool includeAlive = true );
     void                                setGravity              ( const cgVector3 & gravity );
     void                                setGlobalForce          ( const cgVector3 & force );
+    void                                enableEmission          ( bool enable );
+    bool                                isEmissionEnabled       ( ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
@@ -170,6 +199,7 @@ private:
     //-------------------------------------------------------------------------
 	// Private Variables
 	//-------------------------------------------------------------------------
+    bool                        mEnabled;               // Is emission currently enabled.
     cgString                    mScriptFile;            // The name of the particle script file.
     cgRenderDriver            * mRenderDriver;          // render used for creating billboard buffers and rendering.
     cgParticleEmitterProperties mProperties;            // Setup information for the emitter (birth rate etc.)

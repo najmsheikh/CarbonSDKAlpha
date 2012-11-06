@@ -10,14 +10,4 @@ CREATE TRIGGER [Objects::Actor_OnDelete]
   ON [Objects::Actor]
   BEGIN
     DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
-    DELETE FROM [Objects::Actor::AnimationSets] WHERE ObjectId=old.RefId;  
   END;
-
---Table: Objects::Actor::AnimationSets
-
-CREATE TABLE "Objects::Actor::AnimationSets" (
-  [AnimationSetEntryId] integer PRIMARY KEY AUTOINCREMENT, 
-  [ObjectId] integer,
-  [DataSourceId] integer);
-
-CREATE INDEX [Objects::Actor::AnimationSets_ObjectIndex] ON "Objects::Actor::AnimationSets" ([ObjectId]);

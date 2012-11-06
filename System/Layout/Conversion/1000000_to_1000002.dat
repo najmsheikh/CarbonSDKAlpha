@@ -1,0 +1,281 @@
+-- *************************************************************
+--  Master world database conversion from v1.0.0 to v1.0.1
+-- *************************************************************
+
+-- New Nodes::CustomProperties table
+CREATE TABLE [Nodes::CustomProperties] (
+  [PropertyId] integer PRIMARY KEY AUTOINCREMENT, 
+  [NodeId] integer, 
+  [Name] varchar(64), 
+  [Type] smallint DEFAULT 0, 
+  [Value] BLOB);
+
+CREATE INDEX [Nodes::CustomProperties_NodeIdIndex] ON [Nodes::CustomProperties] ([NodeId]);
+
+-- New Nodes::Behaviors table
+
+CREATE TABLE [Nodes::Behaviors] (
+  [BehaviorId] integer PRIMARY KEY AUTOINCREMENT, 
+  [NodeId] integer,
+  [LoadOrder] integer,
+  [Type] smallint DEFAULT 0, 
+  [Script] path,
+  [TypeName] varchar(64), 
+  [Data] BLOB);
+
+CREATE INDEX [Nodes::Behaviors_NodeIdIndex] ON [Nodes::Behaviors] ([NodeId]);
+CREATE INDEX [Nodes::Behaviors_SortedLoad] ON [Nodes::Behaviors] ([NodeId], [LoadOrder]);
+
+-- Now automatically remove custom node properties and behaviors when a node is deleted from the [Nodes] table.
+CREATE TRIGGER [Nodes_OnDelete]
+  BEFORE DELETE
+  ON [Nodes]
+  BEGIN
+    DELETE FROM [Nodes::CustomProperties] WHERE NodeId=old.RefId;  
+    DELETE FROM [Nodes::Behaviors] WHERE NodeId=old.RefId;  
+  END;
+
+-- Update version number to 1.0.1
+UPDATE [Configuration] SET Version=1,Subversion=0,Revision=1 WHERE Type='Primary';
+
+
+-- *************************************************************
+--  Master world database conversion from v1.0.1 to v1.0.2
+-- *************************************************************
+--  Added visibility flag to node table.
+-- *************************************************************
+
+-- Copy existing node table data into temporary table and drop the original.
+CREATE TEMPORARY TABLE [TEMP_Nodes] AS SELECT * FROM [Nodes];
+DROP TABLE [Nodes];
+
+-- Create the updated table.
+CREATE TABLE [Nodes] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [RefType] smallint DEFAULT (0), 
+  [Level] integer, 
+  [CellId] integer, 
+  [Flags] smallint, 
+  [ObjectTypeId] integer, 
+  [ObjectClassId] integer, 
+  [RenderClassId] integer,
+  [ObjectId] integer, 
+  [ParentRefId] integer, 
+  [OwnerGroup] integer, 
+  [TargetId] integer DEFAULT(0), 
+  [EditorName] varchar(255),
+  [FriendlyName] varchar(255),
+  [InstanceIdentifier] varchar(255),
+  [PositionX] real DEFAULT (0), 
+  [PositionY] real DEFAULT (0), 
+  [PositionZ] real DEFAULT (0), 
+  [RotationX] real DEFAULT (0), 
+  [RotationY] real DEFAULT (0), 
+  [RotationZ] real DEFAULT (0), 
+  [RotationW] real DEFAULT (1), 
+  [ShearXY] real DEFAULT (0), 
+  [ShearXZ] real DEFAULT (0), 
+  [ShearYZ] real DEFAULT (0), 
+  [ScaleX] real DEFAULT (1), 
+  [ScaleY] real DEFAULT (1), 
+  [ScaleZ] real DEFAULT (1),
+  [OffsetPositionX] real DEFAULT (0), 
+  [OffsetPositionY] real DEFAULT (0), 
+  [OffsetPositionZ] real DEFAULT (0), 
+  [OffsetRotationX] real DEFAULT (0), 
+  [OffsetRotationY] real DEFAULT (0), 
+  [OffsetRotationZ] real DEFAULT (0), 
+  [OffsetRotationW] real DEFAULT (1), 
+  [OffsetShearXY] real DEFAULT (0), 
+  [OffsetShearXZ] real DEFAULT (0), 
+  [OffsetShearYZ] real DEFAULT (0), 
+  [OffsetScaleX] real DEFAULT (1), 
+  [OffsetScaleY] real DEFAULT (1), 
+  [OffsetScaleZ] real DEFAULT (1), 
+  [EditorColor] integer, 
+  [PhysicsModel] smallint DEFAULT (0),
+  [SimulationQuality] smallint DEFAULT (0),
+  [UpdateRate] smallint DEFAULT (0),
+  [Visible] tinyint DEFAULT(1));
+CREATE INDEX [Nodes_CellIdIndex] ON [Nodes] ([CellId]);
+CREATE INDEX [Nodes_LevelIndex] ON [Nodes] ([Level]);
+CREATE TRIGGER [Nodes_OnDelete]
+  BEFORE DELETE
+  ON [Nodes]
+  BEGIN
+    DELETE FROM [Nodes::CustomProperties] WHERE NodeId=old.RefId;  
+    DELETE FROM [Nodes::Behaviors] WHERE NodeId=old.RefId;  
+  END;
+
+-- Copy data over to new table.
+INSERT INTO [Nodes] SELECT 
+  [RefId],
+  [RefType],
+  [Level], 
+  [CellId], 
+  [Flags], 
+  [ObjectTypeId], 
+  [ObjectClassId], 
+  [RenderClassId],
+  [ObjectId], 
+  [ParentRefId], 
+  [OwnerGroup], 
+  [TargetId], 
+  [EditorName],
+  [FriendlyName],
+  [InstanceIdentifier],
+  [PositionX], 
+  [PositionY], 
+  [PositionZ], 
+  [RotationX], 
+  [RotationY], 
+  [RotationZ], 
+  [RotationW], 
+  [ShearXY], 
+  [ShearXZ], 
+  [ShearYZ], 
+  [ScaleX], 
+  [ScaleY], 
+  [ScaleZ],
+  [OffsetPositionX], 
+  [OffsetPositionY], 
+  [OffsetPositionZ], 
+  [OffsetRotationX], 
+  [OffsetRotationY], 
+  [OffsetRotationZ], 
+  [OffsetRotationW], 
+  [OffsetShearXY], 
+  [OffsetShearXZ], 
+  [OffsetShearYZ], 
+  [OffsetScaleX], 
+  [OffsetScaleY], 
+  [OffsetScaleZ], 
+  [EditorColor], 
+  [PhysicsModel],
+  [SimulationQuality],
+  [UpdateRate],
+  1 FROM [TEMP_Nodes];
+
+-- Drop the temporary table.
+DROP TABLE [TEMP_Nodes];
+
+-- *************************************************************
+--  Actor specific animation set references migrated to become
+--  object sub-elements.
+-- *************************************************************
+
+-- Since the following code assumes that the actor's animation set
+-- table exists, create an empty one if it does not.
+CREATE TABLE IF NOT EXISTS "Objects::Actor::AnimationSets" (
+  [AnimationSetEntryId] integer PRIMARY KEY AUTOINCREMENT, 
+  [ObjectId] integer,
+  [DataSourceId] integer);
+
+-- New 'ObjectSubElements::AnimationSet' table
+CREATE TABLE [ObjectSubElements::AnimationSet] (
+  [RefId] integer NOT NULL PRIMARY KEY,  
+  [DataSourceId] integer,
+  [RefCount] integer DEFAULT 0);
+
+-- Insert animations et sub-element type information into the type table.
+INSERT INTO [ObjectSubElementTypes] VALUES(NULL,"{FDE03341-7209-44C9-8A73-D8B71ABEDA74}", "Animation Set", "ObjectSubElements::AnimationSet");
+
+-- Create a temporary table used as intermediate storage for the transfer
+-- with an 'AUTOINCREMENT' reference identifier (so that we can keep a new
+-- running count on the relevant rows to insert).
+CREATE TEMPORARY TABLE [ObjectSubElements::Temp_AnimationSet] (
+  [RefId] integer PRIMARY KEY AUTOINCREMENT, 
+  [SourceObjectId] integer,
+  [DataSourceId] integer,
+  [RefCount] integer DEFAULT 0);
+
+-- Copy the old actor animation set data into the temporary table, generating
+-- new temporary row identifiers as we go.
+INSERT INTO [ObjectSubElements::Temp_AnimationSet] 
+  SELECT NULL, ObjectId, DataSourceId, 1 FROM [Objects::Actor::AnimationSets];
+
+-- Transfer the data into the new animation set sub-element table
+-- taking care to add the world's "NextRefId" value to the generated
+-- row value (minus one) so that the new element's reference ids
+-- are correctly synchronized.
+INSERT INTO [ObjectSubElements::AnimationSet] 
+  SELECT RefId+((SELECT NextRefId FROM [Configuration] WHERE Type='Primary')-1), DataSourceId, RefCount FROM [ObjectSubElements::Temp_AnimationSet];
+
+-- Create the links between the original actor world objects and the 
+-- new sub-elements.
+INSERT INTO [Objects::Base::All::SubElements]
+  SELECT NULL, 
+    (SELECT ObjectSubElementTypeId FROM [ObjectSubElementTypes] WHERE Identifier="{FDE03341-7209-44C9-8A73-D8B71ABEDA74}"),
+    SourceObjectId, RefId+((SELECT NextRefId FROM [Configuration] WHERE Type='Primary')-1) FROM [ObjectSubElements::Temp_AnimationSet];
+
+-- These reference ids have now all been used. Update the configuration.
+UPDATE [Configuration] SET NextRefId = NextRefId + (SELECT count(*) FROM [ObjectSubElements::Temp_AnimationSet]);
+
+-- Remove the temporary table.
+DROP TABLE [ObjectSubElements::Temp_AnimationSet];
+
+-- Create the actor table if it doesn't already exist. The following trigger update
+-- logic will fail if it does not.
+CREATE TABLE IF NOT EXISTS [Objects::Actor] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [Open] tinyint(1) DEFAULT 0,
+  [RefCount] integer DEFAULT 0);
+
+-- Insert object type information for the actor table we just created into the type 
+-- table ONLY if it does not already exist.
+INSERT INTO [ObjectTypes] 
+  SELECT NULL,"{9039210A-CBD9-4D7E-AAB8-7B959BE0EA1C}", "Actor", "Objects::Actor"
+  WHERE NOT EXISTS(SELECT 1 FROM [ObjectTypes] WHERE Identifier="{9039210A-CBD9-4D7E-AAB8-7B959BE0EA1C}");
+
+-- Replace the old 'Objects::Actor' trigger which previously deleted from the 
+-- table we are about to remove.
+DROP TRIGGER IF EXISTS [Objects::Actor_OnDelete];
+CREATE TRIGGER [Objects::Actor_OnDelete]
+  BEFORE DELETE
+  ON [Objects::Actor]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;
+
+-- Automatically remove the old 'Objects::Actor::AnimationSets' table.
+DROP TABLE [Objects::Actor::AnimationSets];
+
+-- *************************************************************
+--  All meshes should have their 'ShadowCastStage' property
+--  defaulted to 'Both' (3).
+-- *************************************************************
+
+-- Create the mesh table if it doesn't already exist. The following update
+-- logic will fail if it does not.
+CREATE TABLE IF NOT EXISTS [Objects::Mesh] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [DataSourceId] integer,
+  [LightStage] smallint DEFAULT 2,
+  [ShadowCastStage] smallint DEFAULT 2,
+  [ShadowReceiveStage] smallint DEFAULT 2,
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER IF NOT EXISTS [Objects::Mesh_OnDelete]
+  BEFORE DELETE
+  ON [Objects::Mesh]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;
+
+-- Insert object type information for the mesh table we just created into the type 
+-- table ONLY if it does not already exist.
+INSERT INTO [ObjectTypes] 
+  SELECT NULL,"{68CA65E0-8768-489D-9257-2DD101975A93}", "Mesh", "Objects::Mesh"
+  WHERE NOT EXISTS(SELECT 1 FROM [ObjectTypes] WHERE Identifier="{68CA65E0-8768-489D-9257-2DD101975A93}");
+
+-- Update all 'ShadowCastStage' columns to '3'
+UPDATE [Objects::Mesh] SET ShadowCastStage=3 WHERE 1;
+
+-- *************************************************************
+--  Update default render classes.
+-- *************************************************************
+UPDATE [Configuration::RenderClasses] SET Description='Transparent / translucent meshes.' WHERE Identifier='Transparent';
+INSERT INTO [Configuration::RenderClasses] VALUES(NULL,'Effects','Special effect related objects such as particle emitters.');
+
+-- Update version number to 1.0.2
+UPDATE [Configuration] SET Version=1,Subversion=0,Revision=2 WHERE Type='Primary';

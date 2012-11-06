@@ -217,8 +217,12 @@ bool cgBillboardBuffer::prepareBufferFromAtlas( cgUInt32 flags, cgRenderDriver *
 
     } // End if failed
 
+    // Make relative to atlas file.
+    // ToDo: Test this for reliability
+    cgString textureFile = cgFileSystem::getDirectoryName(atlasFile.getName()) + _T("/") + childNode.getText();
+
     // Pass through to standard preparation method before we parse groups etc.
-    if ( prepareBuffer( flags, driver, childNode.getText(), shaderFile ) == false )
+    if ( prepareBuffer( flags, driver, textureFile, shaderFile ) == false )
         return false;
 
     // Attempt to parse the loaded data
@@ -495,6 +499,18 @@ cgInt16 cgBillboardBuffer::addFrame( cgInt16 groupIndex, const cgRect & pixelBou
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getSurfaceShader ()
+/// <summary>
+/// Retrieve the surface shader associated with this billboard buffer and used
+/// to supply rendering states and shader code.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgSurfaceShaderHandle cgBillboardBuffer::getSurfaceShader( ) const
+{
+    return mRenderShader;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getFrameGroupIndex ()
 /// <summary>
 /// Get the index of the frame group based on the specified name.
@@ -671,7 +687,7 @@ int cgBillboardBuffer::billboardDepthCompare( const void *arg1, const void *arg2
 /// front order.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgBillboardBuffer::renderSorted( cgCameraNode * camera, cgInt32 billboardBegin /* = 0 */, cgInt32 billboardCount /* = -1 */, bool precise /* = true */ )
+void cgBillboardBuffer::renderSorted( cgCameraNode * camera, cgMatrix * localTransform, cgInt32 billboardBegin /* = 0 */, cgInt32 billboardCount /* = -1 */, bool precise /* = true */ )
 {
     // Validate requirements
     if ( camera == CG_NULL )
@@ -712,6 +728,17 @@ void cgBillboardBuffer::renderSorted( cgCameraNode * camera, cgInt32 billboardBe
     if ( !restoreBuffers() )
         return;
 
+    // Compute the sort origin (usually camera position). For local space billboards, we 
+    // need to back transform the camera position into the space of the emitter.
+    cgVector3 sortOrigin = camera->getPosition();
+    if ( localTransform )
+    {
+        cgMatrix inverseTransform;
+        cgMatrix::inverse( inverseTransform, *localTransform );
+        cgVector3::transformCoord( sortOrigin, sortOrigin, inverseTransform );
+        
+    } // End if LocalBillboards
+
     // Build list of billboard depth info to be sorted.
     cgInt32 finalCount = 0;
     DepthSortInfo * depthInfo = new DepthSortInfo[ billboardCount ];
@@ -725,7 +752,7 @@ void cgBillboardBuffer::renderSorted( cgCameraNode * camera, cgInt32 billboardBe
 
         // Valid billboard!
         depthInfo[ finalCount ].billboardId = i;
-        depthInfo[ finalCount ].depth = cgVector3::lengthSq( billboard->getPosition() - camera->getPosition() );
+        depthInfo[ finalCount ].depth = cgVector3::lengthSq( billboard->getPosition() - sortOrigin );
         finalCount++;
 
     } // Next Billboard
@@ -1107,7 +1134,6 @@ void cgBillboard::setColor( cgUInt32 color )
 {
     // Store new color value
     mColor = color;
-
 }
 
 //-----------------------------------------------------------------------------
@@ -1186,6 +1212,7 @@ cgBillboard3D::cgBillboard3D( )
     mScale      = cgVector2( 1, 1 );
     mRotation   = 0;
     mDirection  = cgVector3( 0, 0, 0 );
+    mHDRScale   = 1.0f;
 }
 
 //-----------------------------------------------------------------------------
@@ -1231,6 +1258,17 @@ void cgBillboard3D::setScale( cgFloat x, cgFloat y )
 void cgBillboard3D::setRotation( cgFloat degrees )
 {
     mRotation = degrees;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setHDRScale ()
+/// <summary>
+/// Set the intensity scalar to apply when HDR rendering is enabled.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgBillboard3D::setHDRScale( cgFloat scale )
+{
+    mHDRScale = scale;
 }
 
 //-----------------------------------------------------------------------------
@@ -1287,6 +1325,8 @@ bool cgBillboard3D::update( )
             vertices[i].angle = CGEToRadian( mRotation );
             // * scale - The amount to scale the billboard relative to the billboard's final orientation
             vertices[i].scale = mScale;
+            // * hdrScale - The intesity scalar to apply when HDR rendering is enabled.
+            vertices[i].hdrScale = mHDRScale;
             // * direction - The optional axis to which a billboard can be locked
             vertices[i].direction = mDirection;
 

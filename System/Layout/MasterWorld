@@ -196,7 +196,8 @@ CREATE TABLE [Nodes] (
   [EditorColor] integer, 
   [PhysicsModel] smallint DEFAULT (0),
   [SimulationQuality] smallint DEFAULT (0),
-  [UpdateRate] smallint DEFAULT (0));
+  [UpdateRate] smallint DEFAULT (0),
+  [Visible] tinyint DEFAULT(1));
 CREATE INDEX [Nodes_CellIdIndex] ON [Nodes] ([CellId]);
 CREATE INDEX [Nodes_LevelIndex] ON [Nodes] ([Level]);
 CREATE TRIGGER [Nodes_OnDelete]

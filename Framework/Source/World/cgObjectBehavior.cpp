@@ -225,6 +225,19 @@ const cgScriptHandle & cgObjectBehavior::getScript( ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getScriptObject ()
+/// <summary>
+/// Retrieve the script object referencing the specific instance of the
+/// behavior class associated with this behavior if scripted 
+/// (see cgObjectBehavior::isScripted()).
+/// </summary>
+//-----------------------------------------------------------------------------
+cgScriptObject * cgObjectBehavior::getScriptObject( )
+{
+    return mScriptObject;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getLoadOrder ()
 /// <summary>
 /// Retrieve the interger value that indicates the sorted order in which this 
@@ -277,7 +290,7 @@ void cgObjectBehavior::setUserId( cgUInt32 identifier )
 /// object, usually through a call to setParentObject()
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgObjectBehavior::onDetach( )
+void cgObjectBehavior::onDetach( cgObjectNode * pNode )
 {
     // Notify the script that we're detaching
     if ( mScriptObject )
@@ -286,6 +299,7 @@ void cgObjectBehavior::onDetach( )
         try
         {
             cgScriptArgument::Array ScriptArgs;
+            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("ObjectNode@+"), pNode ) );
             mScriptObject->executeMethodVoid( _T("onDetach"), ScriptArgs, true );
 
         } // End try to execute
@@ -306,7 +320,7 @@ void cgObjectBehavior::onDetach( )
 /// object, usually through a call to setParentObject()
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgObjectBehavior::onAttach( )
+void cgObjectBehavior::onAttach( cgObjectNode * pNode )
 {
     // Notify the script that we're attaching
     if ( mScriptObject )
@@ -315,6 +329,7 @@ void cgObjectBehavior::onAttach( )
         try
         {
             cgScriptArgument::Array ScriptArgs;
+            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("ObjectNode@+"), pNode ) );
             mScriptObject->executeMethodVoid( _T("onAttach"), ScriptArgs, true );
 
         } // End try to execute
@@ -358,14 +373,14 @@ void cgObjectBehavior::setParentObject( cgObjectNode * pParentObject )
 
     // Notify of detachment
     if ( mParentObject )
-        onDetach(); 
+        onDetach( mParentObject ); 
 
     // Store new parent.
     mParentObject = pParentObject;
 
     // Notify of attachment
     if ( mParentObject )
-        onAttach();
+        onAttach( mParentObject );
 
     // Notify the script (if any) that we're now attached to a new object
     if ( mParentObject && mScriptObject )
@@ -398,16 +413,16 @@ bool cgObjectBehavior::initialize( cgResourceManager * pResources, const cgStrin
     if ( pResources->loadScript( &mScript, strScript, _T(""), strInstance, 0, cgDebugSource() ) == false )
         return false;
 
-    // Ask the script to create the IScriptedObjectBehavior object
-    // via the (non-optional) 'createBehaviorScript' function.
+    // Create the scripted behavior object.
     cgScript * pScript = mScript.getResource(true);
     if ( pScript != CG_NULL )
     {
         try
         {
-            cgScriptArgument::Array ScriptArgs;
-            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("ObjectBehavior@+"), (void*)this ) );
-            mScriptObject = pScript->executeFunctionObject( _T("IScriptedObjectBehavior"), _T("createBehaviorScript"), ScriptArgs );
+            // Attempt to create the IScriptedObjectBehavior 
+            // object whose name matches the name of the file.
+            cgString strObjectType = cgFileSystem::getFileName(strScript, true);
+            mScriptObject = pScript->createObjectInstance( strObjectType );
 
             // Collect handles to any supplied update methods.
             if ( mScriptObject )

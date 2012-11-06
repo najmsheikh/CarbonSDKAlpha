@@ -343,7 +343,7 @@ void cgObjectNode::update( cgFloat timeDelta )
 {
     // Has any time elapsed? Passing a delta time of 0 
     // may cause problems.
-    if ( timeDelta > 0 )
+    if ( timeDelta > 0 && (!mParentScene || mParentScene->isUpdatingEnabled()) )
     {
         // We don't process anything by default, simply pass through to the behaviors
         BehaviorArray::iterator itBehavior;
@@ -1225,6 +1225,24 @@ bool cgObjectNode::getSubElementCategories( cgObjectSubElementCategory::Map & ca
         
     // Any sub-elements remaining?
     return (!categoriesOut.empty());
+}
+
+//-----------------------------------------------------------------------------
+//  Name : supportsSubElement () (Virtual)
+/// <summary>
+/// Determine if the specified object sub element type is supported by this
+/// object.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgObjectNode::supportsSubElement( const cgUID & Category, const cgUID & Identifier ) const
+{
+    // We do not support collision shapes at all if we are not set to
+    // use a physics model that supports them.
+    if ( mPhysicsModel == cgPhysicsModel::None && Category == OSECID_CollisionShapes )
+        return false;
+
+    // Ask the referenced object if it supports.
+    return mReferencedObject->supportsSubElement( Category, Identifier );
 }
 
 //-----------------------------------------------------------------------------
@@ -2260,8 +2278,12 @@ bool cgObjectNode::onNodeLoading( const cgUID & objectType, cgWorldQuery * nodeD
     // Attached to associated parent cell initially.
     mParentCell = parentCell;
 
-    // Retrieve the object referenced by this node.
-    cgUInt32 objectRefId = 0;
+    // Retrieve the object referenced by this node as well as the 
+    // reference identifier for the /original/ source node from which
+    // we are loading (may not be the same as our current reference id
+    // in cases where, for instance, objects are being spawned at runtime).
+    cgUInt32 objectRefId = 0, sourceNodeRefId = 0;
+    nodeData->getColumn( _T("RefId"), sourceNodeRefId );
     nodeData->getColumn( _T("ObjectId"), objectRefId );
 
     // Load the object for us to reference if specified.
@@ -2290,6 +2312,7 @@ bool cgObjectNode::onNodeLoading( const cgUID & objectType, cgWorldQuery * nodeD
     nodeData->getColumn( _T("SimulationQuality"), (cgInt32&)mSimulationQuality );
     nodeData->getColumn( _T("RenderClassId"), mRenderClassId );
     nodeData->getColumn( _T("UpdateRate"), (cgInt32&)mUpdateRate );
+    nodeData->getColumn( _T("Visible"), mShowNode );
 
     // Update local members
     setName( name );
@@ -2367,7 +2390,7 @@ bool cgObjectNode::onNodeLoading( const cgUID & objectType, cgWorldQuery * nodeD
 
     // Load node custom properties (if any)
     prepareQueries();
-    mNodeLoadCustomProperties.bindParameter( 1, mReferenceId );
+    mNodeLoadCustomProperties.bindParameter( 1, sourceNodeRefId );
     if ( !mNodeLoadCustomProperties.step() )
     {
         // Log any error.
@@ -2401,7 +2424,7 @@ bool cgObjectNode::onNodeLoading( const cgUID & objectType, cgWorldQuery * nodeD
     mNodeLoadCustomProperties.reset();
 
     // Load node behaviors (if any)
-    mNodeLoadBehaviors.bindParameter( 1, mReferenceId );
+    mNodeLoadBehaviors.bindParameter( 1, sourceNodeRefId );
     if ( !mNodeLoadBehaviors.step() )
     {
         // Log any error.
@@ -2435,8 +2458,11 @@ bool cgObjectNode::onNodeLoading( const cgUID & objectType, cgWorldQuery * nodeD
             newBehavior->setLoadOrder( loadOrder );
             mNodeLoadBehaviors.getColumn( _T("Script"), scriptFile );
             newBehavior->initialize( mParentScene->getResourceManager(), scriptFile, _T("") );
-            newBehavior->setParentObject( this );
             mBehaviors.push_back( newBehavior );
+
+            // Note: We don't call 'setParentObject()' on the behavior here. Instead
+            // this is performed during the 'onNodeInit()' method in order to ensure
+            // that all child objects have been loaded first.
 
         } // End if scripted
         else
@@ -2504,6 +2530,10 @@ bool cgObjectNode::onNodeInit( const cgUInt32IndexMap & nodeReferenceRemap )
         
     } // End if re-attach
     mCustomProperties->removeProperty( _T("Core::NodeInitData::TargetId") );
+
+    // Trigger behavior 'onAttach'
+    for ( size_t i = 0; i < mBehaviors.size(); ++i )
+        mBehaviors[i]->setParentObject( this );
 
     // Success!
     return true;
@@ -2751,8 +2781,9 @@ bool cgObjectNode::sandboxRender( cgUInt32 flags, cgCameraNode * camera, cgVisib
     if ( !mParentScene )
         return false;
 
-    // If the object is hidden, or marked as invisible, signal "do not draw" by returning false.
-    if ( !mShowNode )
+    // If the object is hidden, or marked as invisible, signal "do not draw" by returning false
+    // when in preview mode.
+    if ( cgGetSandboxMode() != cgSandboxMode::Enabled && !mShowNode )
         return false;
 
     // Pass on this message to any referenced object.
@@ -3374,12 +3405,21 @@ bool cgObjectNode::isRenderable( ) const
 //  Name : showNode ()
 /// <summary>
 /// Allows the application to independently control the visibility status
-/// of a node irrespective of whether or not it is currently occluded.
+/// of a node irrespective of whether or not it is currently occluded. 
+/// Optionally, the children of this node can also be updated.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgObjectNode::showNode( bool visible /* = true */ )
+void cgObjectNode::showNode( bool visible /* = true */, bool updateChildren /* = false */ )
 {
     mShowNode = visible;
+
+    // Pass on to children if requested.
+    if ( updateChildren )
+    {
+        for ( cgObjectNodeList::iterator itNode = mChildren.begin(); itNode != mChildren.end(); ++itNode )
+            (*itNode)->showNode( visible, updateChildren );
+    
+    } // End if update children
 }
 
 //-----------------------------------------------------------------------------
@@ -4072,6 +4112,7 @@ bool cgObjectNode::setCell( cgSceneCell * cell, bool constructing )
             mNodeInsert.bindParameter( 43, (cgUInt32)mPhysicsModel );
             mNodeInsert.bindParameter( 44, (cgUInt32)mSimulationQuality );
             mNodeInsert.bindParameter( 45, (cgUInt32)mUpdateRate );
+            mNodeInsert.bindParameter( 46, mShowNode );
             if ( !mNodeInsert.step( true ) )
             {
                 cgString error;
@@ -4154,7 +4195,7 @@ void cgObjectNode::prepareQueries()
         // Prepare the SQL statements as necessary.
         if ( !mNodeInsert.isPrepared() )
         {
-            cgString statement = _T("INSERT INTO 'Nodes' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44,?45)");
+            cgString statement = _T("INSERT INTO 'Nodes' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44,?45,?46)");
             mNodeInsert.prepare( world, statement, true );
         
         } // End if !prepared
@@ -4686,8 +4727,13 @@ void cgObjectNode::onResolvePendingUpdates( cgUInt32 updates )
 //-----------------------------------------------------------------------------
 void cgObjectNode::onAnimationTransformUpdated( const cgTransform & transform )
 {
-    // Replace the current local (parent relative) transform
-    mLocalTransform = transform;
+    // Replace the current local (parent relative) transform. Incoming
+    // transformation is assumed to be relative to the parent's *actual*
+    // transform, not its pivot frame.
+    if ( mParentNode )
+        mLocalTransform = transform * mParentNode->mOffsetTransform;
+    else
+        mLocalTransform = transform;
     
     // Defer computation of further details until process is complete.
     // These same updates need to flood through our children too.
@@ -5148,6 +5194,19 @@ bool cgObjectNode::canAdjustPivot( ) const
 {
     // Default is to allow pivot adjustment.
     return true;
+}
+
+//-----------------------------------------------------------------------------
+// Name : allowSandboxUpdate ( )
+/// <summary>
+/// Return true if the node should have its update method called even when
+/// not running a preview in sandbox mode.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgObjectNode::allowSandboxUpdate( ) const
+{
+    // Default is to disallow updates.
+    return false;
 }
 
 //-----------------------------------------------------------------------------

@@ -72,6 +72,7 @@ public:
     // Public Virtual Methods (Overrides cgWorldObject)
     //-------------------------------------------------------------------------
     virtual bool                getSubElementCategories     ( cgObjectSubElementCategory::Map & categories ) const;
+    virtual bool                supportsSubElement          ( const cgUID & Category, const cgUID & Identifier ) const;
     virtual void                applyObjectRescale          ( cgFloat scale );
 
     //-------------------------------------------------------------------------

@@ -32,6 +32,7 @@
 #include <Interface/cgUIForm.h>
 #include <Interface/cgUITypes.h>
 #include <Interface/cgTextEngine.h>
+#include <Input/cgInputDriver.h>
 #include <Resources/cgResourceManager.h>
 #include <Rendering/cgBillboardBuffer.h>
 #include <Rendering/cgRenderDriver.h>
@@ -1010,6 +1011,10 @@ bool cgUIManager::processMessage( cgMessage * pMessage )
 {
     cgUILayer                 * pLayer;
     LayerList::reverse_iterator itLayer;
+
+    // Ignore messages when in direct processing mode.
+    if ( cgInputDriver::getInstance()->getMouseMode() == cgMouseHandlerMode::Direct )
+        return false;
 
     // What type of message is this?
     switch ( pMessage->messageId )

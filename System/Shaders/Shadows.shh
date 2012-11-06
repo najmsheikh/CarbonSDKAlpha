@@ -639,6 +639,180 @@ __shadercall float evsm( float2 shadowMapUV, float linearDepth, script LightingP
 }
 
 //-----------------------------------------------------------------------------
+// Name : sampleShadowMap3x3()
+// Desc : Samples the shadow map texture over a 3x3 area. 
+//-----------------------------------------------------------------------------
+__shadercall float sampleShadowMap3x3( float2 coords, float receiverDepth, script LightingParameters params )
+{
+	<?
+    float4 quadrant;
+
+    // Snap the coordinates to the center of the texel
+    float2 snappedCoords = ( floor( coords * _shadowTextureSize.xy ) + float2( 0.5, 0.5 ) ) * _shadowTextureSize.zw;
+	?>
+	
+    // If hardware pcf is available, just use it and return.
+    if ( params.compare )
+    {
+		<?
+        quadrant.x = sample2DCmpLevel0( sShadowTex, sShadowCmp, snappedCoords + float2( -0.5, -0.5 ) * _shadowTextureSize.zw, receiverDepth ).x;
+        quadrant.y = sample2DCmpLevel0( sShadowTex, sShadowCmp, snappedCoords + float2(  0.5, -0.5 ) * _shadowTextureSize.zw, receiverDepth ).x;
+        quadrant.z = sample2DCmpLevel0( sShadowTex, sShadowCmp, snappedCoords + float2( -0.5,  0.5 ) * _shadowTextureSize.zw, receiverDepth ).x;
+        quadrant.w = sample2DCmpLevel0( sShadowTex, sShadowCmp, snappedCoords + float2(  0.5,  0.5 ) * _shadowTextureSize.zw, receiverDepth ).x;
+        ?>
+	}    
+	else if ( params.gather )
+	{
+		<?
+        quadrant.x = dot( float4( 0.25, 0.25, 0.25, 0.25 ), receiverDepth.xxxx < sample2DGather( sShadowTex, sShadow, snappedCoords + float2( -0.5, -0.5 ) * _shadowTextureSize.zw ).argb );
+        quadrant.y = dot( float4( 0.25, 0.25, 0.25, 0.25 ), receiverDepth.xxxx < sample2DGather( sShadowTex, sShadow, snappedCoords + float2(  0.5, -0.5 ) * _shadowTextureSize.zw ).argb );
+        quadrant.z = dot( float4( 0.25, 0.25, 0.25, 0.25 ), receiverDepth.xxxx < sample2DGather( sShadowTex, sShadow, snappedCoords + float2( -0.5,  0.5 ) * _shadowTextureSize.zw ).argb );
+        quadrant.w = dot( float4( 0.25, 0.25, 0.25, 0.25 ), receiverDepth.xxxx < sample2DGather( sShadowTex, sShadow, snappedCoords + float2(  0.5,  0.5 ) * _shadowTextureSize.zw ).argb );
+        ?>
+	}
+	else
+	{
+		<?    
+        float r00 = receiverDepth < sample2DLevel( sShadowTex, sShadow, snappedCoords + float2( -1.0, -1.0 ) * _shadowTextureSize.zw, 0 ).x;
+        float r01 = receiverDepth < sample2DLevel( sShadowTex, sShadow, snappedCoords + float2(  0.0, -1.0 ) * _shadowTextureSize.zw, 0 ).x;
+        float r02 = receiverDepth < sample2DLevel( sShadowTex, sShadow, snappedCoords + float2(  1.0, -1.0 ) * _shadowTextureSize.zw, 0 ).x;
+        float r10 = receiverDepth < sample2DLevel( sShadowTex, sShadow, snappedCoords + float2( -1.0,  0.0 ) * _shadowTextureSize.zw, 0 ).x;
+        float r11 = receiverDepth < sample2DLevel( sShadowTex, sShadow, snappedCoords + float2(  0.0,  0.0 ) * _shadowTextureSize.zw, 0 ).x;
+        float r12 = receiverDepth < sample2DLevel( sShadowTex, sShadow, snappedCoords + float2(  1.0,  0.0 ) * _shadowTextureSize.zw, 0 ).x;
+        float r20 = receiverDepth < sample2DLevel( sShadowTex, sShadow, snappedCoords + float2( -1.0,  1.0 ) * _shadowTextureSize.zw, 0 ).x;
+        float r21 = receiverDepth < sample2DLevel( sShadowTex, sShadow, snappedCoords + float2(  0.0,  1.0 ) * _shadowTextureSize.zw, 0 ).x;
+        float r22 = receiverDepth < sample2DLevel( sShadowTex, sShadow, snappedCoords + float2(  1.0,  1.0 ) * _shadowTextureSize.zw, 0 ).x;
+
+        // Classify results into four quadrants (upper left, upper right, lower left, lower right)
+        quadrant.x = (r00 + r01 + r10 + r11);
+        quadrant.y = (r01 + r02 + r11 + r12);
+        quadrant.z = (r10 + r11 + r20 + r21);
+        quadrant.w = (r11 + r12 + r21 + r22);
+        quadrant  *= 0.25f;
+        ?>
+	}
+  
+	<?
+    // Compute the bilinear filtering weights
+    float4 subTexelDist, bilinearWeights;
+    subTexelDist.xy = frac( coords * _shadowTextureSize.xy );
+    subTexelDist.zw = 1.0f - subTexelDist.xy;
+    bilinearWeights = subTexelDist.zxzx * subTexelDist.wwyy;
+
+    // Linearly filter the results 
+    return dot( quadrant, bilinearWeights.xyzw );
+    ?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : sampleShadowMap5x5()
+// Desc : Samples the shadow map texture over a 5x5 area. 
+//-----------------------------------------------------------------------------
+__shadercall float sampleShadowMap5x5( float2 coords, float receiverDepth, script LightingParameters params )
+{
+	<?
+	// Use 3x3 sampling in the four quadrants
+	float4 quadrant;
+	quadrant.x = sampleShadowMap3x3( coords + float2( -1.0, -1.0 ) * _shadowTextureSize.zw, receiverDepth, $params );
+	quadrant.y = sampleShadowMap3x3( coords + float2(  1.0, -1.0 ) * _shadowTextureSize.zw, receiverDepth, $params );
+	quadrant.z = sampleShadowMap3x3( coords + float2( -1.0,  1.0 ) * _shadowTextureSize.zw, receiverDepth, $params );
+	quadrant.w = sampleShadowMap3x3( coords + float2(  1.0,  1.0 ) * _shadowTextureSize.zw, receiverDepth, $params );
+
+	// Return average
+	return dot( quadrant, float4( 0.25, 0.25, 0.25, 0.25 ) );
+	?>
+}
+
+//-----------------------------------------------------------------------------
+// Name : initializeShadowKernel ()
+// Desc : Loads a constant array with pre-computed offsets and weights
+//-----------------------------------------------------------------------------
+int initializeShadowKernel( int pixelRadius, float distanceFactor )
+{
+    float fx, fy, weight, weightSum = 0;
+    Vector3[] kernel;
+
+    // Allocate memory for our sampling data
+    int totalSamples = pixelRadius * pixelRadius;
+    kernel.resize( totalSamples );
+
+	int halfRadius = pixelRadius / 2;
+
+	int index = 0;
+    for ( int y = -halfRadius; y <= halfRadius; y++ )
+    {
+		for ( int x = -halfRadius; x <= halfRadius; x++ )
+		{
+			kernel[index].x = float( x );
+			kernel[index].y = float( y );
+			if ( distanceFactor <= 0.0f )
+				kernel[index].z = 1.0f / totalSamples;
+			else
+				kernel[index].z = exp( -((x * x) + (y * y)) / (2.0f * (distanceFactor * distanceFactor)) );
+				
+			weightSum += kernel[index].z;
+			index++;
+		}
+	}
+   
+	// For gaussians, normalize the weights
+	if ( distanceFactor > 0.0f )
+	{
+		for ( int i = 0; i < totalSamples; i++ )
+		{
+			kernel[ i ].z /= weightSum;
+		}
+	}
+
+	// Open constant array definition
+	<?
+	float3 shadowKernel[ $totalSamples ] = {
+	?>
+
+	// Fill the float3 array
+	for ( int i = 0; i < totalSamples; i++ )
+	{
+		fx     = kernel[ i ].x;
+		fy     = kernel[ i ].y;
+		weight = kernel[ i ].z;
+
+        // Comma separate constant array values
+        if ( i != 0 )
+            <?,?>
+
+        // Output element
+		<?float3( $fx, $fy, $weight )?>
+	
+    } // Next element
+
+	// Close constant array definition
+	<?
+	};
+	?>
+	
+	// Return number of samples to take
+	return totalSamples;	
+}
+
+//-----------------------------------------------------------------------------
+// Name : sampleShadowMapBox()
+// Desc : NxN PCF shadow sampling in a box shape (box or gaussian filtered).
+// Note : Does 2x2 linear samples per lookup
+//-----------------------------------------------------------------------------
+__shadercall float sampleShadowMapBox( float2 coords, float receiverDepth, script LightingParameters params )
+{
+	<?float shadow = 0;?>
+	int numSamples = initializeShadowKernel( params.primaryTaps, params.sigma );
+    for ( int i = 0; i < numSamples; i++ )
+    {
+		<?shadow += shadowMapCompare( coords + shadowKernel[$i].xy * _shadowTextureSize.zw, receiverDepth, float4(0,0,0,0), $params, $(false) ) * shadowKernel[$i].z;?>
+
+    } // Next i
+
+    <?return shadow;?>
+}
+
+//-----------------------------------------------------------------------------
 // Name : computeShadow()
 // Desc : Computes a shadowing term based on the information in a shadow map.
 //-----------------------------------------------------------------------------
@@ -714,7 +888,7 @@ __shadercall void computeShadow( inout LightingData lighting, SurfaceData surfac
 			if ( !isPenumbra )
 			{
 				// Take a single tap
-				lighting.shadow = shadowMapCompare( shadowMapCoords.xy, shadowMapCoords.z - 0.0000f, float4(0,0,0,0), $params, $false );	
+				lighting.shadow = shadowMapCompare( shadowMapCoords.xy, shadowMapCoords.z, float4(0,0,0,0), $params, $false );	
 
 				// Apply attenuation 
 				attenuateShadow( lighting.shadow, surface.linearZ, $(params.lightType == LightType::Directional) );
@@ -729,7 +903,23 @@ __shadercall void computeShadow( inout LightingData lighting, SurfaceData surfac
 		
 		// Run the full algorithm
 		if ( params.PCF )
-			<?lighting.shadow = pcfHalton( shadowMapCoords.xy, shadowMapCoords.z, _shadowRadii.y, $(params.primaryTaps), $params );?>
+		{
+			// TEMPORARY: WILL BE HANDLED BY SHADOWQUALITY SETTINGS ON CPU
+			if ( params.shadingQuality == ShadingQuality::Poor )
+			{
+				params.primaryTaps = 1;
+				params.sigma       = 0.0f;
+				<?lighting.shadow = sampleShadowMapBox( shadowMapCoords.xy, shadowMapCoords.z, $params );?>
+			}
+			else if ( params.shadingQuality == ShadingQuality::Low )
+			{
+				<?lighting.shadow = sampleShadowMap3x3( shadowMapCoords.xy, shadowMapCoords.z, $params );?>
+			}
+			else
+			{
+				<?lighting.shadow = pcfHalton( shadowMapCoords.xy, shadowMapCoords.z, _shadowRadii.y, $(params.primaryTaps), $params );?>
+			}
+		}
 		else if ( params.PCSS )
 			<?lighting.shadow = pcss( shadowMapCoords.xy, shadowMapCoords.z, linearDepth, surface.screenCoords, $params );?>
 		else if ( params.VSM )
@@ -772,4 +962,16 @@ void setupShadowGlobals( LightingParameters params )
 	}
 }
 
+
 #endif // !_SHADOWS_SHH_
+
+
+
+
+
+
+
+
+
+
+

@@ -92,6 +92,7 @@ public:
     // Public Virtual Methods (Overrides cgWorldObject)
     //---------------------------------------------------------------------
     virtual bool                getSubElementCategories ( cgObjectSubElementCategory::Map & categories ) const;
+    virtual bool                supportsSubElement      ( const cgUID & Category, const cgUID & Identifier ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldComponent)
@@ -122,7 +123,6 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    cgAnimationSetHandleArray   mAnimationSets;
 
     //-------------------------------------------------------------------------
     // Protected Static Variables
@@ -130,9 +130,7 @@ protected:
     // Cached database queries.
     static cgWorldQuery     mInsertActor;
     static cgWorldQuery     mUpdateOpen;
-    static cgWorldQuery     mInsertSetReference;
     static cgWorldQuery     mLoadActor;
-    static cgWorldQuery     mLoadSetReferences;
 };
 
 //-----------------------------------------------------------------------------

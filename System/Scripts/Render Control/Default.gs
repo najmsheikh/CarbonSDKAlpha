@@ -72,6 +72,7 @@ class StandardRenderControl : IScriptedRenderControl
 	private bool                mDrawMotionBlur;
 	private bool                mDrawSSAO;
 	private bool                mDrawILR;
+	private bool				mDrawAnamorphic;
 
 	private bool                mDrawHDR;
 	private bool                mHDRGlare;
@@ -82,6 +83,8 @@ class StandardRenderControl : IScriptedRenderControl
 	private DepthType           mDepthType;
 	private int                 mSurfaceNormalType;
 	private int                 mShadingQuality;
+	private int                 mPostProcessQuality;
+	private int                 mAntiAliasingQuality;
 
 	private ColorValue          mClearColor;
 	private BufferFormat        mLightingBufferFormat; 
@@ -189,6 +192,7 @@ class StandardRenderControl : IScriptedRenderControl
 		mDrawSSAO          = false;
 		mDrawHDR           = false;
 		mDrawILR           = false;
+		mDrawAnamorphic    = false;
 		mHDRGlare          = false;
 		mHDRDepthOfField   = false;
 		mHDRMotionBlur     = false;
@@ -598,7 +602,7 @@ class StandardRenderControl : IScriptedRenderControl
 
 		// Create the depth buffer downsample chain 
 		int numDepthLevels = 2;
-		if ( mShadingQuality == ShadingQuality::LowQuality )
+		if ( mShadingQuality == ShadingQuality::Low )
 			numDepthLevels = 2;
 
 		mDepthChain0.setSource( activeView, mDepthBuffer, numDepthLevels, "DepthChain0" );
@@ -735,9 +739,10 @@ class StandardRenderControl : IScriptedRenderControl
 			mDrawSky            = false;
 			mDrawFog            = false;
 			mDrawGlare          = false;
+			mDrawMotionBlur     = false;
 			mDrawDepthOfField   = false;
 			mDrawSSAO           = false;
-			mDrawMotionBlur     = false;
+			mDrawILR            = false;
 			mApplyShadows       = false;
 			mAntialiasing       = AntialiasingMethod::None;
 
@@ -746,13 +751,46 @@ class StandardRenderControl : IScriptedRenderControl
 		{
 			// Select features based on currently selected shading quality
 			RenderDriver @ renderDriver = mScene.getRenderDriver();
-			mShadingQuality = renderDriver.getSystemState( SystemState::ShadingQuality );
-			if ( mShadingQuality == ShadingQuality::LowQuality )
+			mShadingQuality      = renderDriver.getSystemState( SystemState::ShadingQuality );
+			mPostProcessQuality  = renderDriver.getSystemState( SystemState::PostProcessQuality );
+			mAntiAliasingQuality = renderDriver.getSystemState( SystemState::AntiAliasingQuality );
+
+			// Setup shading quality			
+			if ( mShadingQuality <= ShadingQuality::Medium )
 			{
 				mFullSpecularColor  = false;
-
 				mDrawHDR            = false;
-				mDrawGlare          = true;
+			}
+			else
+			{
+				mFullSpecularColor  = true;
+				mDrawHDR            = true; 
+			}
+
+			// Setup antialiasing quality
+			if ( mAntiAliasingQuality == AntiAliasingQuality::Poor )
+			{
+				mAntialiasing = AntialiasingMethod::None;
+			}
+			else if ( mAntiAliasingQuality <= AntiAliasingQuality::Low )
+			{
+				mAntialiasing = AntialiasingMethod::FXAA;
+			}
+			else if( mAntiAliasingQuality == AntiAliasingQuality::Medium )
+			{
+				mAntialiasing = AntialiasingMethod::FXAA;
+			}
+			else
+			{
+				//mAntialiasing = AntialiasingMethod::FXAA_T2x;
+                mAntialiasing = AntialiasingMethod::FXAA;
+			}
+
+			// Setup post-processing quality
+			if ( mPostProcessQuality == PostProcessQuality::Poor )
+			{
+				mDrawGlare          = false;
+				mDrawAnamorphic     = false;
 				mDrawDepthOfField   = false;
 				mDrawSSAO           = false;
 				mDrawMotionBlur     = false;
@@ -762,47 +800,65 @@ class StandardRenderControl : IScriptedRenderControl
 				mHDRDepthOfField    = mDrawHDR && false;
 				mHDRMotionBlur      = mDrawHDR && false;
 				mHDRILR             = mDrawILR && false;
-
-				mAntialiasing       = AntialiasingMethod::None;
 			}
-			else if( mShadingQuality == ShadingQuality::MediumQuality )
+			else if ( mPostProcessQuality == PostProcessQuality::Low )
 			{
-				mFullSpecularColor     = false;
-
-				mDrawHDR               = true; 
+				mDrawGlare          = true;
+				mDrawAnamorphic     = false;
+				mDrawDepthOfField   = false;
+				mDrawSSAO           = false;
+				mDrawMotionBlur     = false;
+				mDrawILR            = false;
+				
+				mHDRGlare           = mDrawHDR && false;
+				mHDRDepthOfField    = mDrawHDR && false;
+				mHDRMotionBlur      = mDrawHDR && false;
+				mHDRILR             = mDrawILR && false;
+			}
+			else if( mPostProcessQuality == PostProcessQuality::Medium )
+			{
 				mDrawGlare             = true;
+				mDrawAnamorphic        = false;
 				mDrawDepthOfField      = false;
 				mDrawMotionBlur        = true;
 				mDrawSSAO			   = false;
-				mDrawILR               = true;
+				mDrawILR               = false;
 				
-			    mHDRGlare              = mDrawHDR && true;
+			    mHDRGlare              = mDrawHDR && false;
 				mHDRDepthOfField       = mDrawHDR && false;
 				mHDRMotionBlur         = mDrawHDR && false;				
 				mHDRILR                = mDrawILR && false;
+			}
+			else if( mPostProcessQuality == PostProcessQuality::High )
+			{
+				mDrawGlare             = true;
+				mDrawAnamorphic        = true;
+				mDrawDepthOfField      = false;
+				mDrawMotionBlur        = true;
+				mDrawSSAO			   = true;
+				mDrawILR               = true;
 				
-				mAntialiasing          = AntialiasingMethod::FXAA;
+			    mHDRGlare              = mDrawHDR && true;
+				mHDRDepthOfField       = mDrawHDR && true;
+				mHDRMotionBlur         = mDrawHDR && true;				
+				mHDRILR                = mDrawILR && false;
 			}
 			else
 			{
-				mFullSpecularColor     = true;
-
-				mDrawHDR               = true; 
 				mDrawGlare             = true;
+				mDrawAnamorphic        = true;
 				mDrawDepthOfField      = false;
 				mDrawMotionBlur        = true;
-				mDrawSSAO			   = false;
+				mDrawSSAO			   = true;
 				mDrawILR               = true;
 				
 			    mHDRGlare              = mDrawHDR && true;
 				mHDRDepthOfField       = mDrawHDR && true;
 				mHDRMotionBlur         = mDrawHDR && true;				
 				mHDRILR                = mDrawILR && true;
-				
-				mAntialiasing          = AntialiasingMethod::FXAA_T2x;
 			}
 
-            // Antialiasing should currently be disabled whilst rendering in editor.
+            // Disable features not supported whilst rendering in editor.
             if ( mContext == SceneRenderContext::SandboxRender )
             {
                 mAntialiasing     = AntialiasingMethod::None;
@@ -1231,7 +1287,7 @@ class StandardRenderControl : IScriptedRenderControl
 			mGBuffer1Sampler.apply( 1, mGBuffer1 );
 			
 			// Set specular color buffer (Higher quality modes only)
-			if ( mShadingQuality > ShadingQuality::LowQuality )
+			if ( mShadingQuality > ShadingQuality::Low )
 				mGBuffer2Sampler.apply( 2, mGBuffer2 );
 			
 			// Set the depth buffer
@@ -1253,7 +1309,7 @@ class StandardRenderControl : IScriptedRenderControl
 			mGBuffer1Sampler.apply( 1, mGBuffer1 );
 			
 			// Set specular color buffer (Higher quality modes only)
-			if ( mShadingQuality > ShadingQuality::LowQuality )
+			if ( mShadingQuality > ShadingQuality::Low )
 				mGBuffer2Sampler.apply( 2, mGBuffer2 );
 			
 			// Set the depth buffer
@@ -1293,7 +1349,7 @@ class StandardRenderControl : IScriptedRenderControl
         RenderTargetHandle destination = mLDRScratch1;
         
 		bool specularReflectanceColor  = mFullSpecularColor;
-		bool specularLightingColor     = false; //mShadingQuality > ShadingQuality::LowQuality;
+		bool specularLightingColor     = false; //mShadingQuality > ShadingQuality::Low;
 
 		// Execute the composite pass
 		mImageProcessor.compositeLighting( mGBuffer1, mGBuffer2, mLighting, mLightingScratch, mLDRScratch0, destination, specularReflectanceColor, specularLightingColor, mDrawHDR, mDrawHDR );
@@ -1334,32 +1390,38 @@ class StandardRenderControl : IScriptedRenderControl
 	//-----------------------------------------------------------------------------
 	void glare( RenderDriver @ renderDriver )
 	{
+        array<GlareStepDesc> steps;
+
 		// Set the glare parameters
 		if ( mHDRGlare )
 		{
 			mGlare.setBrightThreshold( 0.25f, 0.9f );
 			mGlare.setGlareAmount( 0.045f );
+
+			steps.resize( 4 );		
+			steps[ 0 ] = GlareStepDesc( 2, 0.40f, 1, 2, 2.0f, 0.0f, 30.0f );			
+			steps[ 1 ] = GlareStepDesc( 3, 0.50f, 1, 2, 2.0f, 0.0f, 30.0f );			
+			steps[ 2 ] = GlareStepDesc( 4, 0.60f, 2, 2, 2.0f, 0.0f, 30.0f );			
+			steps[ 3 ] = GlareStepDesc( 5, 0.30f, 2, 3, 2.0f, 0.0f, 0.001f );			
 		}
 		else
 		{
-			mGlare.setBrightThreshold( 0.85f, 0.95f );
-			mGlare.setGlareAmount( 2.5f );
+			mGlare.setBrightThreshold( 0.25f, 0.9f );
+			mGlare.setGlareAmount( 0.8f );
+
+	        steps.resize( 2 );		
+			steps[ 0 ] = GlareStepDesc( 2, 0.95f, 2, 2, 2.0f, 0.0f, 30.0f );			
+			steps[ 1 ] = GlareStepDesc( 3, 0.65f, 2, 2, 2.0f, 0.0f, 30.0f );			
 		}
 
         // Set the downsampling/blurring steps
-        array<GlareStepDesc> steps;
-        steps.resize( 4 );		
-		steps[ 0 ] = GlareStepDesc( 2, 0.40, 1, 2, 2.0, 0.0, 30 );			
-		steps[ 1 ] = GlareStepDesc( 3, 0.50, 1, 2, 2.0, 0.0, 30 );			
-		steps[ 2 ] = GlareStepDesc( 4, 0.60, 2, 2, 2.0, 0.0, 30 );			
-		steps[ 3 ] = GlareStepDesc( 5, 0.30, 2, 3, 2.0, 0.0, 0.001 );			
         mGlare.setGlareSteps( steps );
 		
 		// Should we attempt to reduce flickering due to aliasing?
 		bool reduceFlicker = true;
 
-		// Set anamorphic flare data (#passes, radius, intensity, color, edgeScale, edgeBias)		
-		mGlare.setAnamorphicData( 5, 5, 0.4, Vector3( 0.55, 0.55, 1.0 ), 0.75, 0.65 );
+		// Set anamorphic flare data (#passes, radius, intensity, color, edgeScale, edgeBias)
+		mGlare.setAnamorphicData( mDrawAnamorphic ? 5 : 0, 5, 0.05f, Vector3( 0.55f, 0.55f, 1.0f ), 0.75f, 0.65f );
 		
 		// If HDR glare
 		if ( mHDRGlare )
@@ -1384,14 +1446,14 @@ class StandardRenderControl : IScriptedRenderControl
 	void ilr( RenderDriver @ renderDriver )
 	{
 		// Set the ILR parameters
-		mGlare.setILRBrightThreshold( 0.95 );
+		mGlare.setILRBrightThreshold( 0.95f );
 		mGlare.setILRDepthRange( 1.00f, 3.0f );
 		mGlare.setILRHighResData( 15, 2, 7, 3.0f );
 		mGlare.setILRLowResData( 15, 2, 7, 3.0f );
-		mGlare.setILRContrast( 0.5 );
+		mGlare.setILRContrast( 0.5f );
 
 		// Set overall intensity
-		float intensity = mHDRILR ? 0.15 : 2.5f;
+		float intensity = mHDRILR ? 0.025f : 2.5f;
 
 		// Define individual ILR lens elements
         array<ILRElement> elements;
@@ -1438,10 +1500,12 @@ class StandardRenderControl : IScriptedRenderControl
         mToneMapper.setLuminanceRange( 0.005f, 50000.0f );
 		
 		// Set the tone mapping controls
-        mToneMapper.setToneMapMethod( ToneMapMethod::Exponential ); //Photographic PhotographicWhitePoint Filmic FilmicHable Exponential
-        mToneMapper.setKeyAdjust( 1.0f, 0.0f );       
+        mToneMapper.setToneMapMethod( ToneMapMethod::FilmicHable ); //Photographic PhotographicWhitePoint Filmic FilmicHable Exponential
+
+		// If LDR glare is being used, lower the key value to compensate for the loss of information and to reduce oversaturation        
+        mToneMapper.setKeyAdjust( mHDRGlare ? 1.0f : 0.5f, 0.0f );       
         mToneMapper.setWhitePointAdjust( 1.0f, 0.0f ); 
-		mToneMapper.setLuminanceAdaptation( 0.75, 1.25, 1 ); // cones, rods, rod sensitivity
+		mToneMapper.setLuminanceAdaptation( 0.75f, 1.25f, 1.0f ); // cones, rods, rod sensitivity
 
 		// Set the luminance computation update rate (times per second) 
         mToneMapper.setLuminanceSampleRate( 15.0f );
@@ -1549,17 +1613,15 @@ class StandardRenderControl : IScriptedRenderControl
 
 		// Set the required buffers
         RenderTargetHandle sourceColor, sourceColorLow, scratchLow, velocity, destination;
+		sourceColor = mCurrentSceneTarget;
+		destination = sourceColor; 
 		if ( mHDRMotionBlur )
 		{
-			sourceColor    = (mCurrentSceneTarget == mLightingChain0.getLevel(0)) ? mLightingChain0.getLevel(0) : mLightingChain1.getLevel(0);
-			destination    = sourceColor; 
 			sourceColorLow = mLightingChain0.getLevel(1);
 			scratchLow     = mLightingChain1.getLevel(1);
 		}
 		else
 		{
-			sourceColor    = (mCurrentSceneTarget == mLDRScratch0) ? mLDRScratch0 : mLDRScratch1;
-			destination    = sourceColor;
 			sourceColorLow = mLDRChain0.getLevel(1);
 			scratchLow     = mLDRChain1.getLevel(1);
 		}
@@ -1670,20 +1732,30 @@ class StandardRenderControl : IScriptedRenderControl
 	//-----------------------------------------------------------------------------
 	void particles( CameraNode @ activeCamera, RenderDriver @ renderDriver )
 	{
-        VisibilitySet @ cameraVis = activeCamera.getVisibilitySet();
-        ObjectRenderQueue @ queue = ObjectRenderQueue( mScene );
+        //mImageProcessor.processColorImage( mCurrentSceneTarget, ImageOperation::SetColorRGBA, ColorValue(0,0,0,0) );
 
-        // Notify system that we are performing the "depth" pass. 
-        if ( mScene.beginRenderPass( "particles" ) )
-        {
-            queue.begin( cameraVis );
-            queue.renderClass( "Transparent" );
-            queue.end( true );
+        // Output to current scene target
+		if ( renderDriver.beginTargetRender( mCurrentSceneTarget ) )
+		{
+            VisibilitySet @ cameraVis = activeCamera.getVisibilitySet();
+            ObjectRenderQueue @ queue = ObjectRenderQueue( mScene );
 
-            // We have finished this render pass.
-            mScene.endRenderPass( );
+            // Draw effect geometry
+            if ( mScene.beginRenderPass( "particles" ) )
+            {
+                queue.begin( cameraVis );
+                queue.renderClass( "Effects" );
+                queue.end( true );
 
-        } // End if beginRenderPass()
+                // We have finished this render pass.
+                mScene.endRenderPass( );
+
+            } // End if beginRenderPass()
+
+			// End rendering to specified target.
+			renderDriver.endTargetRender();
+		
+        } // End if beginTargetRender()
 
     }
 

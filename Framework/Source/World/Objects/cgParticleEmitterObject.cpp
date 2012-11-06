@@ -38,6 +38,8 @@
 // Static Member Definitions
 //-----------------------------------------------------------------------------
 cgWorldQuery cgParticleEmitterObject::mInsertEmitter;
+cgWorldQuery cgParticleEmitterObject::mInsertEmitterLayer;
+cgWorldQuery cgParticleEmitterObject::mDeleteEmitterLayer;
 cgWorldQuery cgParticleEmitterObject::mUpdateConeAngles;
 cgWorldQuery cgParticleEmitterObject::mUpdateEmissionRadii;
 cgWorldQuery cgParticleEmitterObject::mUpdateParticleCounts;
@@ -45,6 +47,7 @@ cgWorldQuery cgParticleEmitterObject::mUpdateReleaseProperties;
 cgWorldQuery cgParticleEmitterObject::mUpdateRenderingProperties;
 cgWorldQuery cgParticleEmitterObject::mUpdateParticleProperties;
 cgWorldQuery cgParticleEmitterObject::mLoadEmitter;
+cgWorldQuery cgParticleEmitterObject::mLoadEmitterLayers;
 
 //-----------------------------------------------------------------------------
 //  Name : cgParticleEmitterObject () (Constructor)
@@ -54,63 +57,6 @@ cgWorldQuery cgParticleEmitterObject::mLoadEmitter;
 //-----------------------------------------------------------------------------
 cgParticleEmitterObject::cgParticleEmitterObject( cgUInt32 nReferenceId, cgWorld * pWorld ) : cgWorldObject( nReferenceId, pWorld )
 {
-    // Default emitter properties
-    mProperties.innerCone                  = 0;
-    mProperties.outerCone                  = 50;
-    mProperties.emissionRadius             = 0;
-    mProperties.deadZoneRadius             = 0;
-    mProperties.maxSimultaneousParticles   = 0;
-    mProperties.initialParticles           = 0;
-    mProperties.maxFiredParticles          = 0;
-    mProperties.birthFrequency             = 60;
-    mProperties.textureFile                = _T("sys://Textures/Fire.xml");
-    mProperties.shaderSource               = _T("sys://Shaders/ParticleScreenBlend.sh");
-    mProperties.sortedRender               = false;
-    mProperties.emitterDirection           = cgVector3(0,0,0);
-    mProperties.randomizeRotation          = true;
-    mProperties.fireAmount                 = 0;
-    mProperties.fireDelay                  = 0;
-    mProperties.fireDelayOffset            = 0;
-    
-    // Default particle properties
-    mProperties.speed.min                  = 2.5f;
-    mProperties.speed.max                  = 3.0f;
-    mProperties.mass.min                   = 10.0f;
-    mProperties.mass.max                   = 10.0f;
-    mProperties.angularSpeed.min           = -150.0f;
-    mProperties.angularSpeed.max           = 150.0f;
-    mProperties.baseScale.min              = 1.0f;
-    mProperties.baseScale.max              = 1.0f;
-    mProperties.lifetime.min               = 0.8f;
-    mProperties.lifetime.max               = 1.0f;
-    mProperties.airResistance              = 0.001f;
-    mProperties.baseSize                   = cgSizeF(1.5f,1.5f);
-
-    // Default scale curves
-    cgVector2 vPoint( 0.0f, 0.6f ), vOffset;
-    vOffset = cgVector2(0.25f,0.70f) - vPoint;
-    mProperties.scaleXCurve.setSplinePoint( 0, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
-    vPoint = cgVector2( 1.0f, 1.0f );
-    vOffset = vPoint - cgVector2(0.75f,0.90f);
-    mProperties.scaleXCurve.setSplinePoint( 1, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
-    mProperties.scaleYCurve = mProperties.scaleXCurve;
-    
-    // Default color curves
-    mProperties.colorRCurve.setDescription( cgBezierSpline2::Maximum );
-    mProperties.colorGCurve.setDescription( cgBezierSpline2::Maximum );
-    mProperties.colorBCurve.setDescription( cgBezierSpline2::Maximum );
-
-    // Default alpha curve
-    mProperties.colorACurve.setDescription( cgBezierSpline2::Maximum );
-    vPoint = cgVector2(0.25f, 1.0f);
-    vOffset = cgVector2(0.3f, 1.0f) - vPoint;
-    mProperties.colorACurve.insertPoint( 1, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
-    vPoint = cgVector2(0.7f, 0.7f);
-    vOffset = cgVector2(0.83728f, 0.43456f) - vPoint;
-    mProperties.colorACurve.insertPoint( 2, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
-    vPoint = cgVector2(1.0f, 0.0f);
-    vOffset = vPoint - cgVector2(0.83728f, 0.43456f);
-    mProperties.colorACurve.setSplinePoint( 3, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -123,8 +69,7 @@ cgParticleEmitterObject::cgParticleEmitterObject( cgUInt32 nReferenceId, cgWorld
 {
     // Duplicate values from object to clone.
     cgParticleEmitterObject * pObject = (cgParticleEmitterObject*)pInit;
-    mScriptFile = pObject->mScriptFile;
-    mProperties = pObject->mProperties;
+    mLayers = pObject->mLayers;
 }
 
 //-----------------------------------------------------------------------------
@@ -149,6 +94,9 @@ void cgParticleEmitterObject::dispose( bool bDisposeBase )
 {
     // We are in the process of disposing?
     mDisposing = true;
+
+    // Clean up layers
+    mLayers.clear();
 
     // Call base class implementation
     if ( bDisposeBase == true )
@@ -189,11 +137,8 @@ cgWorldObject * cgParticleEmitterObject::allocateClone( const cgUID & type, cgUI
 //-----------------------------------------------------------------------------
 cgBoundingBox cgParticleEmitterObject::getLocalBoundingBox( )
 {
-    cgBoundingBox Bounds;
-
-    // Compute bounding box for emitter
-    cgToDo( "Particles", "Compute bounding box" );
-    return Bounds;
+    cgToDo( "Particles", "Compute maximum bounding box? Also override node's method to get ACTUAL bounding box." );
+    return cgBoundingBox( -FLT_MAX, -FLT_MAX, -FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX );
 }
 
 //-----------------------------------------------------------------------------
@@ -209,7 +154,73 @@ bool cgParticleEmitterObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssu
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
         return false;
 
-    return false;
+    // Retrieve useful values
+    float fZoomFactor  = pCamera->estimateZoomFactor( ViewportSize, pIssuer->getPosition( false ), 2.5f );
+    float fTolerance   = 2.0f * fZoomFactor;
+    
+    // Compute vertices for the tip and base of the cone
+    cgVector3 Points[10];
+    const cgParticleEmitterProperties & properties = getLayerProperties( 0 );
+    float fSize   = fZoomFactor * 25.0f * cosf(CGEToRadian(properties.outerCone* 0.5f));
+    float fRadius = tanf(CGEToRadian(properties.outerCone * 0.5f)) * fSize;
+    Points[0] = cgVector3( 0, 0, 0 );
+    for ( size_t i = 0; i < 8; ++i )
+    {
+        // Build vertex
+        Points[i+1].x = (sinf( (CGE_TWO_PI / 8.0f) * (float)i ) * fRadius);
+        Points[i+1].y = (cosf( (CGE_TWO_PI / 8.0f) * (float)i ) * fRadius);
+        Points[i+1].z = fSize;
+    
+    } // Next Base Vertex
+    
+    // Compute indices that will allow us to test each triangle of the cone.
+    cgUInt32 Indices[24];
+    Indices[0]  = 0; Indices[1]  = 1; Indices[2]  = 2;
+    Indices[3]  = 0; Indices[4]  = 2; Indices[5]  = 3;
+    Indices[6]  = 0; Indices[7]  = 3; Indices[8]  = 4;
+    Indices[9]  = 0; Indices[10] = 4; Indices[11] = 5;
+    Indices[12] = 0; Indices[13] = 5; Indices[14] = 6;
+    Indices[15] = 0; Indices[16] = 6; Indices[17] = 7;
+    Indices[18] = 0; Indices[19] = 7; Indices[20] = 8;
+    Indices[21] = 0; Indices[22] = 8; Indices[23] = 1;
+
+    // Test the triangles. Use a Bi-Directional test so that we don't
+    // have to test the base of the cone.
+    bool    bIntersect = false;
+    cgFloat t, tMin = FLT_MAX;
+    for ( size_t i = 0; i < 8; ++i )
+    {
+        // Compute plane for the triangle
+        cgPlane Plane;
+        const cgVector3 & v1 = Points[Indices[(i*3)+0]];
+        const cgVector3 & v2 = Points[Indices[(i*3)+1]];
+        const cgVector3 & v3 = Points[Indices[(i*3)+2]];
+        cgPlane::fromPoints( Plane, v1, v2, v3 );
+
+        // Ray intersects the triangle plane?
+        if ( cgCollision::rayIntersectPlane( vOrigin, vDir, Plane, t, true, false ) )
+        {
+            // Check if it intersects the actual triangle (within a tolerance)
+            if ( cgCollision::pointInTriangle( vOrigin + (vDir * t), v1, v2, v3, (cgVector3&)Plane, fTolerance ) )
+            {
+                // Closest hit?
+                if ( t < tMin )
+                {
+                    tMin = t;
+                    bIntersect = true;
+                
+                } // End if closest
+
+            } // End if intersects triangle
+        
+        } // End if intersects plane
+
+    } // Next Triangle
+
+    // Intersection occurred?
+    if ( bIntersect )
+        fDistance = tMin;
+    return bIntersect;
 }
 
 //-----------------------------------------------------------------------------
@@ -223,6 +234,10 @@ void cgParticleEmitterObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCam
 {
     // No post-clear operation.
     if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
+
+    // Must have at least one layer.
+    if ( !getLayerCount() )
         return;
 
     // Configuration
@@ -252,8 +267,9 @@ void cgParticleEmitterObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCam
         Points[i].color = nColor;
 
     // Compute vertices for the tip and base of the cone
-    cgFloat fSize      = fZoomFactor * 25.0f * cosf(CGEToRadian(mProperties.outerCone * 0.5f));
-    cgFloat fRadius    = tanf(CGEToRadian(mProperties.outerCone * 0.5f)) * fSize;
+    const cgParticleEmitterProperties & properties = getLayerProperties( 0 );
+    cgFloat fSize      = fZoomFactor * 25.0f * cosf(CGEToRadian(properties.outerCone * 0.5f));
+    cgFloat fRadius    = tanf(CGEToRadian(properties.outerCone * 0.5f)) * fSize;
     Points[0].position = cgVector3( 0, 0, 0 );
     for ( cgInt i = 0; i < 8; ++i )
     {
@@ -317,7 +333,7 @@ void cgParticleEmitterObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCam
             if ( (bSelected || (pTarget && pTarget->isSelected())) && !pIssuer->isMergedAsGroup() )
             {
                 // Inner cone first
-                fRadius = tanf(CGEToRadian(mProperties.innerCone * 0.5f)) * fRange;
+                fRadius = tanf(CGEToRadian(properties.innerCone * 0.5f)) * fRange;
                 nColor  = 0xFF99CCE5;
                 
                 // Generate line strip circle 
@@ -350,9 +366,9 @@ void cgParticleEmitterObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCam
                 pDriver->drawIndexedPrimitiveUP( cgPrimitiveType::LineList, 0, 29, 4, Indices, cgBufferFormat::Index32, Points );
 
                 // Outer cone next if the cones aren't identical
-                if ( mProperties.outerCone > mProperties.innerCone )
+                if ( properties.outerCone > properties.innerCone )
                 {
-                    fRadius = tanf(CGEToRadian(mProperties.outerCone * 0.5f)) * fRange;
+                    fRadius = tanf(CGEToRadian(properties.outerCone * 0.5f)) * fRange;
                     nColor  = 0xFF4C6672;
 
                     // Generate line strip circle 
@@ -419,12 +435,19 @@ bool cgParticleEmitterObject::isRenderable() const
 //-----------------------------------------------------------------------------
 bool cgParticleEmitterObject::render( cgCameraNode * pCamera, cgVisibilitySet * pVisData, cgObjectNode * pIssuer )
 {
-    cgParticleEmitter * pEmitter = ((cgParticleEmitterNode*)pIssuer)->getEmitter();
-    if ( !pEmitter )
-        return false;
-
-    // Render the emitter.
-    pEmitter->render( pCamera );
+    // Render all emitters in order.
+    cgParticleEmitterNode * pEmitterNode = static_cast<cgParticleEmitterNode*>(pIssuer);
+    for ( size_t i = 0; i < mLayers.size(); ++i )
+    {
+        cgParticleEmitter * pEmitter = pEmitterNode->getLayerEmitter( i );
+        if ( pEmitter )
+        {
+            pEmitter->setEmitterMatrix( pIssuer->getWorldTransform(false) );
+            pEmitter->render( pCamera );
+        
+        } // End if emitter
+    
+    } // Next layer
     
     // Drawn
     return true;
@@ -539,6 +562,72 @@ cgString cgParticleEmitterObject::getDatabaseTable( ) const
 //-----------------------------------------------------------------------------
 bool cgParticleEmitterObject::onComponentCreated( cgComponentCreatedEventArgs * e )
 {
+    // Create a default emitter layer.
+    mLayers.resize( 1 );
+    mLayers[0].databaseId = 0;
+    mLayers[0].initialEmission = true;
+    cgParticleEmitterProperties & properties = mLayers[0].properties;
+
+    // Default emitter properties
+    properties.emitterType                 = cgParticleEmitterType::Billboards;
+    properties.innerCone                   = 0;
+    properties.outerCone                   = 50;
+    properties.emissionRadius              = 0;
+    properties.deadZoneRadius              = 0;
+    properties.maxSimultaneousParticles    = 0;
+    properties.initialParticles            = 0;
+    properties.maxFiredParticles           = 0;
+    properties.birthFrequency              = 60;
+    properties.particleTexture             = _T("sys://Textures/Fire.xml");
+    properties.sortedRender                = false;
+    properties.emitterDirection            = cgVector3(0,0,0);
+    properties.randomizeRotation           = true;
+    properties.fireAmount                  = 0;
+    properties.fireDelay                   = 0;
+    properties.fireDelayOffset             = 0;
+    properties.blendMethod                 = cgParticleBlendMethod::Additive;
+    
+    // Default particle properties
+    properties.speed.min                   = 2.5f;
+    properties.speed.max                   = 3.0f;
+    properties.mass.min                    = 10.0f;
+    properties.mass.max                    = 10.0f;
+    properties.angularSpeed.min            = -150.0f;
+    properties.angularSpeed.max            = 150.0f;
+    properties.baseScale.min               = 1.0f;
+    properties.baseScale.max               = 1.0f;
+    properties.lifetime.min                = 0.8f;
+    properties.lifetime.max                = 1.0f;
+    properties.airResistance               = 0.001f;
+    properties.baseSize                    = cgSizeF(1.5f,1.5f);
+    properties.hdrScale                    = 10.0f;
+
+    // Default scale curves
+    cgVector2 vPoint( 0.0f, 0.6f ), vOffset;
+    vOffset = cgVector2(0.25f,0.70f) - vPoint;
+    properties.scaleXCurve.setSplinePoint( 0, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
+    vPoint = cgVector2( 1.0f, 1.0f );
+    vOffset = vPoint - cgVector2(0.75f,0.90f);
+    properties.scaleXCurve.setSplinePoint( 1, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
+    properties.scaleYCurve = properties.scaleXCurve;
+    
+    // Default color curves
+    properties.colorRCurve.setDescription( cgBezierSpline2::Maximum );
+    properties.colorGCurve.setDescription( cgBezierSpline2::Maximum );
+    properties.colorBCurve.setDescription( cgBezierSpline2::Maximum );
+    
+    // Default alpha curve
+    properties.colorACurve.setDescription( cgBezierSpline2::Maximum );
+    vPoint = cgVector2(0.25f, 1.0f);
+    vOffset = cgVector2(0.3f, 1.0f) - vPoint;
+    properties.colorACurve.insertPoint( 1, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
+    vPoint = cgVector2(0.7f, 0.7f);
+    vOffset = cgVector2(0.83728f, 0.43456f) - vPoint;
+    properties.colorACurve.insertPoint( 2, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
+    vPoint = cgVector2(1.0f, 0.0f);
+    vOffset = vPoint - cgVector2(0.83728f, 0.43456f);
+    properties.colorACurve.setSplinePoint( 3, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
+
     // Insert the new object.
     if ( !insertComponentData() )
         return false;
@@ -560,130 +649,11 @@ bool cgParticleEmitterObject::insertComponentData( )
         // Open a new transaction to allow us to roll-back on failure.
         mWorld->beginTransaction( _T("ParticleEmitterObject::insertComponentData") );
 
-        // Update database.
+        // Insert the emitter object properties.
         prepareQueries();
-        mInsertEmitter.bindParameter( 1, mReferenceId );
-        mInsertEmitter.bindParameter( 2, 0 ); // ToDo: Type
-        mInsertEmitter.bindParameter( 3, mScriptFile );
-        mInsertEmitter.bindParameter( 4, mProperties.innerCone );
-        mInsertEmitter.bindParameter( 5, mProperties.outerCone );
-        mInsertEmitter.bindParameter( 6, mProperties.emissionRadius );
-        mInsertEmitter.bindParameter( 7, mProperties.deadZoneRadius );
-        mInsertEmitter.bindParameter( 8, mProperties.maxSimultaneousParticles );
-        mInsertEmitter.bindParameter( 9, mProperties.initialParticles );
-        mInsertEmitter.bindParameter( 10, mProperties.maxFiredParticles );
-        mInsertEmitter.bindParameter( 11, mProperties.birthFrequency );
-        mInsertEmitter.bindParameter( 12, mProperties.textureFile );
-        mInsertEmitter.bindParameter( 13, mProperties.shaderSource );
-        mInsertEmitter.bindParameter( 14, mProperties.sortedRender );
-        mInsertEmitter.bindParameter( 15, mProperties.emitterDirection.x );
-        mInsertEmitter.bindParameter( 16, mProperties.emitterDirection.y );
-        mInsertEmitter.bindParameter( 17, mProperties.emitterDirection.z );
-        mInsertEmitter.bindParameter( 18, mProperties.randomizeRotation );
-        mInsertEmitter.bindParameter( 19, mProperties.fireAmount );
-        mInsertEmitter.bindParameter( 20, mProperties.fireDelay );
-        mInsertEmitter.bindParameter( 21, mProperties.fireDelayOffset );
-        mInsertEmitter.bindParameter( 22, mProperties.baseSize.width );
-        mInsertEmitter.bindParameter( 23, mProperties.baseSize.height );
-        mInsertEmitter.bindParameter( 24, mProperties.lifetime.min );
-        mInsertEmitter.bindParameter( 25, mProperties.lifetime.max );
-        mInsertEmitter.bindParameter( 26, mProperties.speed.min );
-        mInsertEmitter.bindParameter( 27, mProperties.speed.max );
-        mInsertEmitter.bindParameter( 28, mProperties.mass.min );
-        mInsertEmitter.bindParameter( 29, mProperties.mass.max );
-        mInsertEmitter.bindParameter( 30, mProperties.airResistance );
-        mInsertEmitter.bindParameter( 31, mProperties.angularSpeed.min );
-        mInsertEmitter.bindParameter( 32, mProperties.angularSpeed.max );
-        mInsertEmitter.bindParameter( 33, mProperties.baseScale.min );
-        mInsertEmitter.bindParameter( 34, mProperties.baseScale.max );
 
-        // Curves
-        cgUInt32 nCurveType = (cgUInt32)mProperties.scaleXCurve.getDescription();
-        mInsertEmitter.bindParameter( 35, nCurveType  );
-        if ( nCurveType == cgBezierSpline2::Custom )
-        {
-            mInsertEmitter.bindParameter( 36, mProperties.scaleXCurve.getPointCount() );
-            mInsertEmitter.bindParameter( 37, &mProperties.scaleXCurve.getSplinePoints()[0], mProperties.scaleXCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
-        
-        } // End if custom
-        else
-        {
-            mInsertEmitter.bindParameter( 36, 0 );
-            mInsertEmitter.bindParameter( 37, CG_NULL, 0 );
-        
-        } // End if described
-        nCurveType = (cgUInt32)mProperties.scaleYCurve.getDescription();
-        mInsertEmitter.bindParameter( 38, nCurveType  );
-        if ( nCurveType == cgBezierSpline2::Custom )
-        {
-            mInsertEmitter.bindParameter( 39, mProperties.scaleYCurve.getPointCount() );
-            mInsertEmitter.bindParameter( 40, &mProperties.scaleYCurve.getSplinePoints()[0], mProperties.scaleYCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
-        
-        } // End if custom
-        else
-        {
-            mInsertEmitter.bindParameter( 39, 0 );
-            mInsertEmitter.bindParameter( 40, CG_NULL, 0 );
-        
-        } // End if described
-        nCurveType = (cgUInt32)mProperties.colorRCurve.getDescription();
-        mInsertEmitter.bindParameter( 41, nCurveType  );
-        if ( nCurveType == cgBezierSpline2::Custom )
-        {
-            mInsertEmitter.bindParameter( 42, mProperties.colorRCurve.getPointCount() );
-            mInsertEmitter.bindParameter( 43, &mProperties.colorRCurve.getSplinePoints()[0], mProperties.colorRCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
-        
-        } // End if custom
-        else
-        {
-            mInsertEmitter.bindParameter( 42, 0 );
-            mInsertEmitter.bindParameter( 43, CG_NULL, 0 );
-        
-        } // End if described
-        nCurveType = (cgUInt32)mProperties.colorGCurve.getDescription();
-        mInsertEmitter.bindParameter( 44, nCurveType  );
-        if ( nCurveType == cgBezierSpline2::Custom )
-        {
-            mInsertEmitter.bindParameter( 45, mProperties.colorGCurve.getPointCount() );
-            mInsertEmitter.bindParameter( 46, &mProperties.colorGCurve.getSplinePoints()[0], mProperties.colorGCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
-        
-        } // End if custom
-        else
-        {
-            mInsertEmitter.bindParameter( 45, 0 );
-            mInsertEmitter.bindParameter( 46, CG_NULL, 0 );
-        
-        } // End if described
-        nCurveType = (cgUInt32)mProperties.colorBCurve.getDescription();
-        mInsertEmitter.bindParameter( 47, nCurveType  );
-        if ( nCurveType == cgBezierSpline2::Custom )
-        {
-            mInsertEmitter.bindParameter( 48, mProperties.colorBCurve.getPointCount() );
-            mInsertEmitter.bindParameter( 49, &mProperties.colorBCurve.getSplinePoints()[0], mProperties.colorBCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
-        
-        } // End if custom
-        else
-        {
-            mInsertEmitter.bindParameter( 48, 0 );
-            mInsertEmitter.bindParameter( 49, CG_NULL, 0 );
-        
-        } // End if described
-        nCurveType = (cgUInt32)mProperties.colorACurve.getDescription();
-        mInsertEmitter.bindParameter( 50, nCurveType  );
-        if ( nCurveType == cgBezierSpline2::Custom )
-        {
-            mInsertEmitter.bindParameter( 51, mProperties.colorACurve.getPointCount() );
-            mInsertEmitter.bindParameter( 52, &mProperties.colorACurve.getSplinePoints()[0], mProperties.colorACurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
-        
-        } // End if custom
-        else
-        {
-            mInsertEmitter.bindParameter( 51, 0 );
-            mInsertEmitter.bindParameter( 52, CG_NULL, 0 );
-        
-        } // End if described
-        
-        mInsertEmitter.bindParameter( 53, mSoftRefCount );
+        mInsertEmitter.bindParameter( 1, mReferenceId );
+        mInsertEmitter.bindParameter( 2, mSoftRefCount );
 
         // Execute
         if ( mInsertEmitter.step( true ) == false )
@@ -695,6 +665,154 @@ bool cgParticleEmitterObject::insertComponentData( )
             return false;
         
         } // End if failed
+
+        // Insert emitter layers.
+        for ( size_t i = 0; i < mLayers.size(); ++i )
+        {
+            cgParticleEmitterProperties & properties = mLayers[i].properties;
+            cgUInt32 blendMethod = (cgUInt32)properties.blendMethod;
+            mInsertEmitterLayer.bindParameter( 1, mReferenceId );
+            mInsertEmitterLayer.bindParameter( 2, (cgUInt32)i ); // LayerOrder
+            mInsertEmitterLayer.bindParameter( 3, (cgUInt32)properties.emitterType );
+            mInsertEmitterLayer.bindParameter( 4, cgString::Empty ); // ToDo: ScriptFile
+            mInsertEmitterLayer.bindParameter( 5, properties.innerCone );
+            mInsertEmitterLayer.bindParameter( 6, properties.outerCone );
+            mInsertEmitterLayer.bindParameter( 7, properties.emissionRadius );
+            mInsertEmitterLayer.bindParameter( 8, properties.deadZoneRadius );
+            mInsertEmitterLayer.bindParameter( 9, properties.maxSimultaneousParticles );
+            mInsertEmitterLayer.bindParameter( 10, properties.initialParticles );
+            mInsertEmitterLayer.bindParameter( 11, properties.maxFiredParticles );
+            mInsertEmitterLayer.bindParameter( 12, properties.birthFrequency );
+            mInsertEmitterLayer.bindParameter( 13, properties.particleTexture );
+            mInsertEmitterLayer.bindParameter( 14, properties.particleShader );
+            mInsertEmitterLayer.bindParameter( 15, properties.sortedRender );
+            mInsertEmitterLayer.bindParameter( 16, blendMethod );
+            mInsertEmitterLayer.bindParameter( 17, properties.emitterDirection.x );
+            mInsertEmitterLayer.bindParameter( 18, properties.emitterDirection.y );
+            mInsertEmitterLayer.bindParameter( 19, properties.emitterDirection.z );
+            mInsertEmitterLayer.bindParameter( 20, properties.randomizeRotation );
+            mInsertEmitterLayer.bindParameter( 21, properties.fireAmount );
+            mInsertEmitterLayer.bindParameter( 22, properties.fireDelay );
+            mInsertEmitterLayer.bindParameter( 23, properties.fireDelayOffset );
+            mInsertEmitterLayer.bindParameter( 24, properties.baseSize.width );
+            mInsertEmitterLayer.bindParameter( 25, properties.baseSize.height );
+            mInsertEmitterLayer.bindParameter( 26, properties.lifetime.min );
+            mInsertEmitterLayer.bindParameter( 27, properties.lifetime.max );
+            mInsertEmitterLayer.bindParameter( 28, properties.speed.min );
+            mInsertEmitterLayer.bindParameter( 29, properties.speed.max );
+            mInsertEmitterLayer.bindParameter( 30, properties.mass.min );
+            mInsertEmitterLayer.bindParameter( 31, properties.mass.max );
+            mInsertEmitterLayer.bindParameter( 32, properties.airResistance );
+            mInsertEmitterLayer.bindParameter( 33, properties.angularSpeed.min );
+            mInsertEmitterLayer.bindParameter( 34, properties.angularSpeed.max );
+            mInsertEmitterLayer.bindParameter( 35, properties.baseScale.min );
+            mInsertEmitterLayer.bindParameter( 36, properties.baseScale.max );
+            mInsertEmitterLayer.bindParameter( 37, properties.hdrScale );
+
+            // Curves
+            cgUInt32 nCurveType = (cgUInt32)properties.scaleXCurve.getDescription();
+            mInsertEmitterLayer.bindParameter( 38, nCurveType  );
+            if ( nCurveType == cgBezierSpline2::Custom )
+            {
+                mInsertEmitterLayer.bindParameter( 39, properties.scaleXCurve.getPointCount() );
+                mInsertEmitterLayer.bindParameter( 40, &properties.scaleXCurve.getSplinePoints()[0], properties.scaleXCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+            
+            } // End if custom
+            else
+            {
+                mInsertEmitterLayer.bindParameter( 39, 0 );
+                mInsertEmitterLayer.bindParameter( 40, CG_NULL, 0 );
+            
+            } // End if described
+            nCurveType = (cgUInt32)properties.scaleYCurve.getDescription();
+            mInsertEmitterLayer.bindParameter( 41, nCurveType  );
+            if ( nCurveType == cgBezierSpline2::Custom )
+            {
+                mInsertEmitterLayer.bindParameter( 42, properties.scaleYCurve.getPointCount() );
+                mInsertEmitterLayer.bindParameter( 43, &properties.scaleYCurve.getSplinePoints()[0], properties.scaleYCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+            
+            } // End if custom
+            else
+            {
+                mInsertEmitterLayer.bindParameter( 42, 0 );
+                mInsertEmitterLayer.bindParameter( 43, CG_NULL, 0 );
+            
+            } // End if described
+            nCurveType = (cgUInt32)properties.colorRCurve.getDescription();
+            mInsertEmitterLayer.bindParameter( 44, nCurveType  );
+            if ( nCurveType == cgBezierSpline2::Custom )
+            {
+                mInsertEmitterLayer.bindParameter( 45, properties.colorRCurve.getPointCount() );
+                mInsertEmitterLayer.bindParameter( 46, &properties.colorRCurve.getSplinePoints()[0], properties.colorRCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+            
+            } // End if custom
+            else
+            {
+                mInsertEmitterLayer.bindParameter( 45, 0 );
+                mInsertEmitterLayer.bindParameter( 46, CG_NULL, 0 );
+            
+            } // End if described
+            nCurveType = (cgUInt32)properties.colorGCurve.getDescription();
+            mInsertEmitterLayer.bindParameter( 47, nCurveType  );
+            if ( nCurveType == cgBezierSpline2::Custom )
+            {
+                mInsertEmitterLayer.bindParameter( 48, properties.colorGCurve.getPointCount() );
+                mInsertEmitterLayer.bindParameter( 49, &properties.colorGCurve.getSplinePoints()[0], properties.colorGCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+            
+            } // End if custom
+            else
+            {
+                mInsertEmitterLayer.bindParameter( 48, 0 );
+                mInsertEmitterLayer.bindParameter( 49, CG_NULL, 0 );
+            
+            } // End if described
+            nCurveType = (cgUInt32)properties.colorBCurve.getDescription();
+            mInsertEmitterLayer.bindParameter( 50, nCurveType  );
+            if ( nCurveType == cgBezierSpline2::Custom )
+            {
+                mInsertEmitterLayer.bindParameter( 51, properties.colorBCurve.getPointCount() );
+                mInsertEmitterLayer.bindParameter( 52, &properties.colorBCurve.getSplinePoints()[0], properties.colorBCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+            
+            } // End if custom
+            else
+            {
+                mInsertEmitterLayer.bindParameter( 51, 0 );
+                mInsertEmitterLayer.bindParameter( 52, CG_NULL, 0 );
+            
+            } // End if described
+            nCurveType = (cgUInt32)properties.colorACurve.getDescription();
+            mInsertEmitterLayer.bindParameter( 53, nCurveType  );
+            if ( nCurveType == cgBezierSpline2::Custom )
+            {
+                mInsertEmitterLayer.bindParameter( 54, properties.colorACurve.getPointCount() );
+                mInsertEmitterLayer.bindParameter( 55, &properties.colorACurve.getSplinePoints()[0], properties.colorACurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+            
+            } // End if custom
+            else
+            {
+                mInsertEmitterLayer.bindParameter( 54, 0 );
+                mInsertEmitterLayer.bindParameter( 55, CG_NULL, 0 );
+            
+            } // End if described
+            
+            // Final properties
+            mInsertEmitterLayer.bindParameter( 56, mLayers[i].initialEmission );
+
+            // Execute
+            if ( !mInsertEmitterLayer.step( true ) )
+            {
+                cgString strError;
+                mInsertEmitterLayer.getLastError( strError );
+                cgAppLog::write( cgAppLog::Error, _T("Failed to insert layer data for particle emitter object '0x%x' into database. Error: %s\n"), mReferenceId, strError.c_str() );
+                mWorld->rollbackTransaction( _T("ParticleEmitterObject::insertComponentData") );
+                return false;
+            
+            } // End if failed
+
+            // Record the database ID for the layer.
+            mLayers[i].databaseId = mInsertEmitterLayer.getLastInsertId();
+
+        } // Next layer
 
         // Commit changes
         mWorld->commitTransaction( _T("ParticleEmitterObject::insertComponentData") );
@@ -735,178 +853,213 @@ bool cgParticleEmitterObject::onComponentLoading( cgComponentLoadingEventArgs * 
     // Allow component class to access the data we just retrieved.
     e->componentData = &mLoadEmitter;
 
-    // Update our local members
-    mLoadEmitter.getColumn( _T("ScriptFile"), mScriptFile );
-    mLoadEmitter.getColumn( _T("InnerCone"), mProperties.innerCone );
-    mLoadEmitter.getColumn( _T("OuterCone"), mProperties.outerCone );
-    mLoadEmitter.getColumn( _T("EmissionRadius"), mProperties.emissionRadius );
-    mLoadEmitter.getColumn( _T("DeadZoneRadius"), mProperties.deadZoneRadius );
-    mLoadEmitter.getColumn( _T("MaxSimultaneousParticles"), mProperties.maxSimultaneousParticles );
-    mLoadEmitter.getColumn( _T("InitialParticles"), mProperties.initialParticles );
-    mLoadEmitter.getColumn( _T("MaxFiredParticles"), mProperties.maxFiredParticles );
-    mLoadEmitter.getColumn( _T("BirthFrequency"), mProperties.birthFrequency );
-    mLoadEmitter.getColumn( _T("TextureFile"), mProperties.textureFile );
-    mLoadEmitter.getColumn( _T("ShaderSource"), mProperties.shaderSource );
-    mLoadEmitter.getColumn( _T("SortedRender"), mProperties.sortedRender );
-    mLoadEmitter.getColumn( _T("FixedEmitDirX"), mProperties.emitterDirection.x );
-    mLoadEmitter.getColumn( _T("FixedEmitDirY"), mProperties.emitterDirection.y );
-    mLoadEmitter.getColumn( _T("FixedEmitDirZ"), mProperties.emitterDirection.z );
-    mLoadEmitter.getColumn( _T("RandomizeRotation"), mProperties.randomizeRotation );
-    mLoadEmitter.getColumn( _T("FireAmount"), mProperties.fireAmount );
-    mLoadEmitter.getColumn( _T("FireDelay"), mProperties.fireDelay );
-    mLoadEmitter.getColumn( _T("FireDelayOffset"), mProperties.fireDelayOffset );
-    mLoadEmitter.getColumn( _T("BaseSizeX"), mProperties.baseSize.width );
-    mLoadEmitter.getColumn( _T("BaseSizeY"), mProperties.baseSize.height );
-    mLoadEmitter.getColumn( _T("MinLifetime"), mProperties.lifetime.min );
-    mLoadEmitter.getColumn( _T("MaxLifetime"), mProperties.lifetime.max );
-    mLoadEmitter.getColumn( _T("MinSpeed"), mProperties.speed.min );
-    mLoadEmitter.getColumn( _T("MaxSpeed"), mProperties.speed.max );
-    mLoadEmitter.getColumn( _T("MinMass"), mProperties.mass.min );
-    mLoadEmitter.getColumn( _T("MaxMass"), mProperties.mass.max );
-    mLoadEmitter.getColumn( _T("AirResistance"), mProperties.airResistance );
-    mLoadEmitter.getColumn( _T("MinAngularSpeed"), mProperties.angularSpeed.min );
-    mLoadEmitter.getColumn( _T("MaxAngularSpeed"), mProperties.angularSpeed.max );
-    mLoadEmitter.getColumn( _T("MinBaseScale"), mProperties.baseScale.min );
-    mLoadEmitter.getColumn( _T("MaxBaseScale"), mProperties.baseScale.max );
-    
-    // Retrieve curve data. ScaleX Curve first.
-    cgUInt32 nCurveType;
-    mLoadEmitter.getColumn( _T("ScaleXCurveType"), nCurveType );
-    if ( nCurveType == cgBezierSpline2::Custom )
+    // Load layers associated with this emitter.
+    mLoadEmitterLayers.bindParameter( 1, e->sourceRefId );
+    if ( !mLoadEmitterLayers.step( ) )
     {
-        cgUInt32 nPointCount, nSize;
-        cgBezierSpline2::SplinePoint * pPointData = CG_NULL;
-        mLoadEmitter.getColumn( _T("ScaleXCurveSize"), nPointCount );
-        mLoadEmitter.getColumn( _T("ScaleXCurve"), (void**)&pPointData, nSize );
-        if ( pPointData )
+        // Log any error.
+        cgString strError;
+        if ( !mLoadEmitterLayers.getLastError( strError ) )
+            cgAppLog::write( cgAppLog::Error, _T("Failed to retrieve layer data for particle emitter object '0x%x'. World database has potentially become corrupt.\n"), mReferenceId );
+        else
+            cgAppLog::write( cgAppLog::Error, _T("Failed to retrieve layer data for particle emitter object '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+
+        // Release any pending read operation.
+        mLoadEmitter.reset();
+        mLoadEmitterLayers.reset();
+        return false;
+
+    } // End if failed
+    for ( ; mLoadEmitterLayers.nextRow(); )
+    {
+        mLayers.resize( mLayers.size() + 1 );
+        Layer & layer = mLayers.back();
+        cgParticleEmitterProperties & properties = layer.properties;
+
+        // Update our local members
+        cgUInt32 blendMethod, emitterType;
+        mLoadEmitterLayers.getColumn( _T("LayerId"), layer.databaseId );
+        mLoadEmitterLayers.getColumn( _T("Type"), emitterType );
+        mLoadEmitterLayers.getColumn( _T("InnerCone"), properties.innerCone );
+        mLoadEmitterLayers.getColumn( _T("OuterCone"), properties.outerCone );
+        mLoadEmitterLayers.getColumn( _T("EmissionRadius"), properties.emissionRadius );
+        mLoadEmitterLayers.getColumn( _T("DeadZoneRadius"), properties.deadZoneRadius );
+        mLoadEmitterLayers.getColumn( _T("MaxSimultaneousParticles"), properties.maxSimultaneousParticles );
+        mLoadEmitterLayers.getColumn( _T("InitialParticles"), properties.initialParticles );
+        mLoadEmitterLayers.getColumn( _T("MaxFiredParticles"), properties.maxFiredParticles );
+        mLoadEmitterLayers.getColumn( _T("BirthFrequency"), properties.birthFrequency );
+        mLoadEmitterLayers.getColumn( _T("ParticleTexture"), properties.particleTexture );
+        mLoadEmitterLayers.getColumn( _T("ParticleShader"), properties.particleShader );
+        mLoadEmitterLayers.getColumn( _T("SortedRender"), properties.sortedRender );
+        mLoadEmitterLayers.getColumn( _T("BlendMethod"), blendMethod );
+        mLoadEmitterLayers.getColumn( _T("FixedEmitDirX"), properties.emitterDirection.x );
+        mLoadEmitterLayers.getColumn( _T("FixedEmitDirY"), properties.emitterDirection.y );
+        mLoadEmitterLayers.getColumn( _T("FixedEmitDirZ"), properties.emitterDirection.z );
+        mLoadEmitterLayers.getColumn( _T("RandomizeRotation"), properties.randomizeRotation );
+        mLoadEmitterLayers.getColumn( _T("FireAmount"), properties.fireAmount );
+        mLoadEmitterLayers.getColumn( _T("FireDelay"), properties.fireDelay );
+        mLoadEmitterLayers.getColumn( _T("FireDelayOffset"), properties.fireDelayOffset );
+        mLoadEmitterLayers.getColumn( _T("BaseSizeX"), properties.baseSize.width );
+        mLoadEmitterLayers.getColumn( _T("BaseSizeY"), properties.baseSize.height );
+        mLoadEmitterLayers.getColumn( _T("MinLifetime"), properties.lifetime.min );
+        mLoadEmitterLayers.getColumn( _T("MaxLifetime"), properties.lifetime.max );
+        mLoadEmitterLayers.getColumn( _T("MinSpeed"), properties.speed.min );
+        mLoadEmitterLayers.getColumn( _T("MaxSpeed"), properties.speed.max );
+        mLoadEmitterLayers.getColumn( _T("MinMass"), properties.mass.min );
+        mLoadEmitterLayers.getColumn( _T("MaxMass"), properties.mass.max );
+        mLoadEmitterLayers.getColumn( _T("AirResistance"), properties.airResistance );
+        mLoadEmitterLayers.getColumn( _T("MinAngularSpeed"), properties.angularSpeed.min );
+        mLoadEmitterLayers.getColumn( _T("MaxAngularSpeed"), properties.angularSpeed.max );
+        mLoadEmitterLayers.getColumn( _T("MinBaseScale"), properties.baseScale.min );
+        mLoadEmitterLayers.getColumn( _T("MaxBaseScale"), properties.baseScale.max );
+        mLoadEmitterLayers.getColumn( _T("HDRScalar"), properties.hdrScale );
+        mLoadEmitterLayers.getColumn( _T("EmissionEnabled"), layer.initialEmission );
+
+        // Set enumerations
+        properties.blendMethod = (cgParticleBlendMethod::Base)blendMethod;
+        properties.emitterType = (cgParticleEmitterType::Base)emitterType;
+        
+        // Retrieve curve data. ScaleX Curve first.
+        cgUInt32 nCurveType;
+        mLoadEmitterLayers.getColumn( _T("ScaleXCurveType"), nCurveType );
+        if ( nCurveType == cgBezierSpline2::Custom )
         {
-            mProperties.scaleXCurve.clear();
-            for ( cgUInt32 nPoint = 0; nPoint < nPointCount; ++nPoint )
-                mProperties.scaleXCurve.addPoint( pPointData[nPoint] );
+            cgUInt32 nPointCount, nSize;
+            cgBezierSpline2::SplinePoint * pPointData = CG_NULL;
+            mLoadEmitterLayers.getColumn( _T("ScaleXCurveSize"), nPointCount );
+            mLoadEmitterLayers.getColumn( _T("ScaleXCurve"), (void**)&pPointData, nSize );
+            if ( pPointData )
+            {
+                properties.scaleXCurve.clear();
+                for ( cgUInt32 nPoint = 0; nPoint < nPointCount; ++nPoint )
+                    properties.scaleXCurve.addPoint( pPointData[nPoint] );
 
-        } // End if valid point data
+            } // End if valid point data
 
-    } // End if custom
-    else
-    {
-        mProperties.scaleXCurve.setDescription( (cgBezierSpline2::SplineDescription)nCurveType );
-
-    } // End if described
-
-    // ScaleY Curve
-    mLoadEmitter.getColumn( _T("ScaleYCurveType"), nCurveType );
-    if ( nCurveType == cgBezierSpline2::Custom )
-    {
-        cgUInt32 nPointCount, nSize;
-        cgBezierSpline2::SplinePoint * pPointData = CG_NULL;
-        mLoadEmitter.getColumn( _T("ScaleYCurveSize"), nPointCount );
-        mLoadEmitter.getColumn( _T("ScaleYCurve"), (void**)&pPointData, nSize );
-        if ( pPointData )
+        } // End if custom
+        else
         {
-            mProperties.scaleYCurve.clear();
-            for ( cgUInt32 nPoint = 0; nPoint < nPointCount; ++nPoint )
-                mProperties.scaleYCurve.addPoint( pPointData[nPoint] );
+            properties.scaleXCurve.setDescription( (cgBezierSpline2::SplineDescription)nCurveType );
 
-        } // End if valid point data
+        } // End if described
 
-    } // End if custom
-    else
-    {
-        mProperties.scaleYCurve.setDescription( (cgBezierSpline2::SplineDescription)nCurveType );
-
-    } // End if described
-
-    // ColorR Curve
-    mLoadEmitter.getColumn( _T("ColorRCurveType"), nCurveType );
-    if ( nCurveType == cgBezierSpline2::Custom )
-    {
-        cgUInt32 nPointCount, nSize;
-        cgBezierSpline2::SplinePoint * pPointData = CG_NULL;
-        mLoadEmitter.getColumn( _T("ColorRCurveSize"), nPointCount );
-        mLoadEmitter.getColumn( _T("ColorRCurve"), (void**)&pPointData, nSize );
-        if ( pPointData )
+        // ScaleY Curve
+        mLoadEmitterLayers.getColumn( _T("ScaleYCurveType"), nCurveType );
+        if ( nCurveType == cgBezierSpline2::Custom )
         {
-            mProperties.colorRCurve.clear();
-            for ( cgUInt32 nPoint = 0; nPoint < nPointCount; ++nPoint )
-                mProperties.colorRCurve.addPoint( pPointData[nPoint] );
+            cgUInt32 nPointCount, nSize;
+            cgBezierSpline2::SplinePoint * pPointData = CG_NULL;
+            mLoadEmitterLayers.getColumn( _T("ScaleYCurveSize"), nPointCount );
+            mLoadEmitterLayers.getColumn( _T("ScaleYCurve"), (void**)&pPointData, nSize );
+            if ( pPointData )
+            {
+                properties.scaleYCurve.clear();
+                for ( cgUInt32 nPoint = 0; nPoint < nPointCount; ++nPoint )
+                    properties.scaleYCurve.addPoint( pPointData[nPoint] );
 
-        } // End if valid point data
+            } // End if valid point data
 
-    } // End if custom
-    else
-    {
-        mProperties.colorRCurve.setDescription( (cgBezierSpline2::SplineDescription)nCurveType );
-
-    } // End if described
-
-    // ColorG Curve
-    mLoadEmitter.getColumn( _T("ColorGCurveType"), nCurveType );
-    if ( nCurveType == cgBezierSpline2::Custom )
-    {
-        cgUInt32 nPointCount, nSize;
-        cgBezierSpline2::SplinePoint * pPointData = CG_NULL;
-        mLoadEmitter.getColumn( _T("ColorGCurveSize"), nPointCount );
-        mLoadEmitter.getColumn( _T("ColorGCurve"), (void**)&pPointData, nSize );
-        if ( pPointData )
+        } // End if custom
+        else
         {
-            mProperties.colorGCurve.clear();
-            for ( cgUInt32 nPoint = 0; nPoint < nPointCount; ++nPoint )
-                mProperties.colorGCurve.addPoint( pPointData[nPoint] );
+            properties.scaleYCurve.setDescription( (cgBezierSpline2::SplineDescription)nCurveType );
 
-        } // End if valid point data
+        } // End if described
 
-    } // End if custom
-    else
-    {
-        mProperties.colorGCurve.setDescription( (cgBezierSpline2::SplineDescription)nCurveType );
-
-    } // End if described
-
-    // ColorB Curve
-    mLoadEmitter.getColumn( _T("ColorBCurveType"), nCurveType );
-    if ( nCurveType == cgBezierSpline2::Custom )
-    {
-        cgUInt32 nPointCount, nSize;
-        cgBezierSpline2::SplinePoint * pPointData = CG_NULL;
-        mLoadEmitter.getColumn( _T("ColorBCurveSize"), nPointCount );
-        mLoadEmitter.getColumn( _T("ColorBCurve"), (void**)&pPointData, nSize );
-        if ( pPointData )
+        // ColorR Curve
+        mLoadEmitterLayers.getColumn( _T("ColorRCurveType"), nCurveType );
+        if ( nCurveType == cgBezierSpline2::Custom )
         {
-            mProperties.colorBCurve.clear();
-            for ( cgUInt32 nPoint = 0; nPoint < nPointCount; ++nPoint )
-                mProperties.colorBCurve.addPoint( pPointData[nPoint] );
+            cgUInt32 nPointCount, nSize;
+            cgBezierSpline2::SplinePoint * pPointData = CG_NULL;
+            mLoadEmitterLayers.getColumn( _T("ColorRCurveSize"), nPointCount );
+            mLoadEmitterLayers.getColumn( _T("ColorRCurve"), (void**)&pPointData, nSize );
+            if ( pPointData )
+            {
+                properties.colorRCurve.clear();
+                for ( cgUInt32 nPoint = 0; nPoint < nPointCount; ++nPoint )
+                    properties.colorRCurve.addPoint( pPointData[nPoint] );
 
-        } // End if valid point data
+            } // End if valid point data
 
-    } // End if custom
-    else
-    {
-        mProperties.colorBCurve.setDescription( (cgBezierSpline2::SplineDescription)nCurveType );
-
-    } // End if described
-
-    // ColorA Curve
-    mLoadEmitter.getColumn( _T("ColorACurveType"), nCurveType );
-    if ( nCurveType == cgBezierSpline2::Custom )
-    {
-        cgUInt32 nPointCount, nSize;
-        cgBezierSpline2::SplinePoint * pPointData = CG_NULL;
-        mLoadEmitter.getColumn( _T("ColorACurveSize"), nPointCount );
-        mLoadEmitter.getColumn( _T("ColorACurve"), (void**)&pPointData, nSize );
-        if ( pPointData )
+        } // End if custom
+        else
         {
-            mProperties.colorACurve.clear();
-            for ( cgUInt32 nPoint = 0; nPoint < nPointCount; ++nPoint )
-                mProperties.colorACurve.addPoint( pPointData[nPoint] );
+            properties.colorRCurve.setDescription( (cgBezierSpline2::SplineDescription)nCurveType );
 
-        } // End if valid point data
+        } // End if described
 
-    } // End if custom
-    else
-    {
-        mProperties.colorACurve.setDescription( (cgBezierSpline2::SplineDescription)nCurveType );
+        // ColorG Curve
+        mLoadEmitterLayers.getColumn( _T("ColorGCurveType"), nCurveType );
+        if ( nCurveType == cgBezierSpline2::Custom )
+        {
+            cgUInt32 nPointCount, nSize;
+            cgBezierSpline2::SplinePoint * pPointData = CG_NULL;
+            mLoadEmitterLayers.getColumn( _T("ColorGCurveSize"), nPointCount );
+            mLoadEmitterLayers.getColumn( _T("ColorGCurve"), (void**)&pPointData, nSize );
+            if ( pPointData )
+            {
+                properties.colorGCurve.clear();
+                for ( cgUInt32 nPoint = 0; nPoint < nPointCount; ++nPoint )
+                    properties.colorGCurve.addPoint( pPointData[nPoint] );
 
-    } // End if described
+            } // End if valid point data
+
+        } // End if custom
+        else
+        {
+            properties.colorGCurve.setDescription( (cgBezierSpline2::SplineDescription)nCurveType );
+
+        } // End if described
+
+        // ColorB Curve
+        mLoadEmitterLayers.getColumn( _T("ColorBCurveType"), nCurveType );
+        if ( nCurveType == cgBezierSpline2::Custom )
+        {
+            cgUInt32 nPointCount, nSize;
+            cgBezierSpline2::SplinePoint * pPointData = CG_NULL;
+            mLoadEmitterLayers.getColumn( _T("ColorBCurveSize"), nPointCount );
+            mLoadEmitterLayers.getColumn( _T("ColorBCurve"), (void**)&pPointData, nSize );
+            if ( pPointData )
+            {
+                properties.colorBCurve.clear();
+                for ( cgUInt32 nPoint = 0; nPoint < nPointCount; ++nPoint )
+                    properties.colorBCurve.addPoint( pPointData[nPoint] );
+
+            } // End if valid point data
+
+        } // End if custom
+        else
+        {
+            properties.colorBCurve.setDescription( (cgBezierSpline2::SplineDescription)nCurveType );
+
+        } // End if described
+
+        // ColorA Curve
+        mLoadEmitterLayers.getColumn( _T("ColorACurveType"), nCurveType );
+        if ( nCurveType == cgBezierSpline2::Custom )
+        {
+            cgUInt32 nPointCount, nSize;
+            cgBezierSpline2::SplinePoint * pPointData = CG_NULL;
+            mLoadEmitterLayers.getColumn( _T("ColorACurveSize"), nPointCount );
+            mLoadEmitterLayers.getColumn( _T("ColorACurve"), (void**)&pPointData, nSize );
+            if ( pPointData )
+            {
+                properties.colorACurve.clear();
+                for ( cgUInt32 nPoint = 0; nPoint < nPointCount; ++nPoint )
+                    properties.colorACurve.addPoint( pPointData[nPoint] );
+
+            } // End if valid point data
+
+        } // End if custom
+        else
+        {
+            properties.colorACurve.setDescription( (cgBezierSpline2::SplineDescription)nCurveType );
+
+        } // End if described
+
+    } // Next layer
+    mLoadEmitterLayers.reset();
 
     // Call base class implementation to read remaining data.
     if ( !cgWorldObject::onComponentLoading( e ) )
@@ -937,52 +1090,57 @@ void cgParticleEmitterObject::prepareQueries()
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         if ( !mInsertEmitter.isPrepared() )
-            mInsertEmitter.prepare( mWorld, _T("INSERT INTO 'Objects::ParticleEmitter' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,")
-                                                _T("?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44,?45,?46,?47,")
-                                                _T("?48,?49,?50,?51,?52,?53)"), true );
+            mInsertEmitter.prepare( mWorld, _T("INSERT INTO 'Objects::ParticleEmitter' VALUES(?1,?2)"), true );
+        if ( !mInsertEmitterLayer.isPrepared() )
+            mInsertEmitterLayer.prepare( mWorld, _T("INSERT INTO 'Objects::ParticleEmitter::Layers' VALUES(NULL,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,")
+                                                 _T("?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44,?45,")
+                                                 _T("?46,?47,?48,?49,?50,?51,?52,?53,?54,?55,?56)"), true );
+        if ( !mDeleteEmitterLayer.isPrepared() )
+            mDeleteEmitterLayer.prepare( mWorld, _T("DELETE FROM 'Objects::ParticleEmitter::Layers' WHERE LayerId=?1"), true );
         if ( !mUpdateConeAngles.isPrepared() )
-            mUpdateConeAngles.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter' SET OuterCone=?1, InnerCone=?2 WHERE RefId=?3"), true );
+            mUpdateConeAngles.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET OuterCone=?1, InnerCone=?2 WHERE LayerId=?3"), true );
         if ( !mUpdateEmissionRadii.isPrepared() )
-            mUpdateEmissionRadii.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter' SET EmissionRadius=?1, DeadZoneRadius=?2 WHERE RefId=?3"), true );
+            mUpdateEmissionRadii.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET EmissionRadius=?1, DeadZoneRadius=?2 WHERE LayerId=?3"), true );
         if ( !mUpdateParticleCounts.isPrepared() )
-            mUpdateParticleCounts.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter' SET MaxSimultaneousParticles=?1 WHERE RefId=?2"), true );
+            mUpdateParticleCounts.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET MaxSimultaneousParticles=?1 WHERE LayerId=?2"), true );
         if ( !mUpdateReleaseProperties.isPrepared() )
-            mUpdateReleaseProperties.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter' SET BirthFrequency=?1, RandomizeRotation=?2 WHERE RefId=?3"), true );
+            mUpdateReleaseProperties.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET BirthFrequency=?1, RandomizeRotation=?2, EmissionEnabled=?3 WHERE LayerId=?4"), true );
         if ( !mUpdateRenderingProperties.isPrepared() )
-            mUpdateRenderingProperties.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter' SET SortedRender=?1 WHERE RefId=?2"), true );
+            mUpdateRenderingProperties.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET SortedRender=?1, BlendMethod=?2, HDRScalar=?3 WHERE LayerId=?4"), true );
         if ( !mUpdateParticleProperties.isPrepared() )
-            mUpdateParticleProperties.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter' SET MinSpeed=?1, MaxSpeed=?2, MinMass=?3, MaxMass=?4, MinAngularSpeed=?5,")
-                                                           _T("MaxAngularSpeed=?6, MinBaseScale=?7, MaxBaseScale=?8, MinLifetime=?9, MaxLifetime=?10, BaseSizeX=?11,")
-                                                           _T("BaseSizeY=?12, AirResistance=?13 WHERE RefId=?14"), true );
+            mUpdateParticleProperties.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET MinSpeed=?1, MaxSpeed=?2, MinMass=?3, MaxMass=?4, MinAngularSpeed=?5,")
+                                                       _T("MaxAngularSpeed=?6, MinBaseScale=?7, MaxBaseScale=?8, MinLifetime=?9, MaxLifetime=?10, BaseSizeX=?11,")
+                                                       _T("BaseSizeY=?12, AirResistance=?13, ParticleTexture=?14 WHERE LayerId=?15"), true );
     } // End if sandbox
 
     // Read queries
     if ( !mLoadEmitter.isPrepared() )
         mLoadEmitter.prepare( mWorld, _T("SELECT * FROM 'Objects::ParticleEmitter' WHERE RefId=?1"), true );
+    if ( !mLoadEmitterLayers.isPrepared() )
+        mLoadEmitterLayers.prepare( mWorld, _T("SELECT * FROM 'Objects::ParticleEmitter::Layers' WHERE EmitterId=?1 ORDER BY LayerOrder ASC"), true );
 }
 
 //-----------------------------------------------------------------------------
-//  Name : getProperties()
+//  Name : getLayerCount()
 /// <summary>
-/// Retrieve the configuration structure that describes how this emitter should
-/// be initialized and updated.
+/// Retrieve the total number of emitter layers that have been defined.
 /// </summary>
 //-----------------------------------------------------------------------------
-const cgParticleEmitterProperties & cgParticleEmitterObject::getProperties( ) const
+cgUInt32 cgParticleEmitterObject::getLayerCount( ) const
 {
-    return mProperties;
+    return (cgUInt32)mLayers.size();
 }
 
 //-----------------------------------------------------------------------------
-//  Name : getScriptFile()
+//  Name : getLayerProperties()
 /// <summary>
-/// Retrieve the file name of the particle emitter update script that has been 
-/// assigned to this emitter (if any).
+/// Retrieve the configuration structure that describes how the specified
+/// emitter layer should be initialized and updated.
 /// </summary>
 //-----------------------------------------------------------------------------
-const cgString & cgParticleEmitterObject::getScriptFile( ) const
+const cgParticleEmitterProperties & cgParticleEmitterObject::getLayerProperties( cgUInt32 layerIndex ) const
 {
-    return mScriptFile;
+    return mLayers[layerIndex].properties;
 }
 
 //-----------------------------------------------------------------------------
@@ -991,9 +1149,9 @@ const cgString & cgParticleEmitterObject::getScriptFile( ) const
 /// Get the inner cone (Theta) angle of the emitter in degrees.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgFloat cgParticleEmitterObject::getInnerCone( ) const
+cgFloat cgParticleEmitterObject::getInnerCone( cgUInt32 layerIndex ) const
 {
-    return mProperties.innerCone;
+    return mLayers[layerIndex].properties.innerCone;
 }
 
 //-----------------------------------------------------------------------------
@@ -1002,9 +1160,9 @@ cgFloat cgParticleEmitterObject::getInnerCone( ) const
 /// Get the outer cone (Phi) angle of the emitter in degrees.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgFloat cgParticleEmitterObject::getOuterCone( ) const
+cgFloat cgParticleEmitterObject::getOuterCone( cgUInt32 layerIndex ) const
 {
-    return mProperties.outerCone;
+    return mLayers[layerIndex].properties.outerCone;
 }
 
 //-----------------------------------------------------------------------------
@@ -1014,9 +1172,9 @@ cgFloat cgParticleEmitterObject::getOuterCone( ) const
 /// released.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgFloat cgParticleEmitterObject::getEmissionRadius( ) const
+cgFloat cgParticleEmitterObject::getEmissionRadius( cgUInt32 layerIndex ) const
 {
-    return mProperties.emissionRadius;
+    return mLayers[layerIndex].properties.emissionRadius;
 }
 
 //-----------------------------------------------------------------------------
@@ -1026,9 +1184,9 @@ cgFloat cgParticleEmitterObject::getEmissionRadius( ) const
 /// released.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgFloat cgParticleEmitterObject::getDeadZoneRadius( ) const
+cgFloat cgParticleEmitterObject::getDeadZoneRadius( cgUInt32 layerIndex ) const
 {
-    return mProperties.deadZoneRadius;
+    return mLayers[layerIndex].properties.deadZoneRadius;
 }
 
 //-----------------------------------------------------------------------------
@@ -1038,9 +1196,9 @@ cgFloat cgParticleEmitterObject::getDeadZoneRadius( ) const
 /// for this emitter.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgUInt32 cgParticleEmitterObject::getMaxSimultaneousParticles( ) const
+cgUInt32 cgParticleEmitterObject::getMaxSimultaneousParticles( cgUInt32 layerIndex ) const
 {
-    return mProperties.maxSimultaneousParticles;
+    return mLayers[layerIndex].properties.maxSimultaneousParticles;
 }
 
 //-----------------------------------------------------------------------------
@@ -1050,9 +1208,21 @@ cgUInt32 cgParticleEmitterObject::getMaxSimultaneousParticles( ) const
 /// second.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgFloat cgParticleEmitterObject::getBirthFrequency( ) const
+cgFloat cgParticleEmitterObject::getBirthFrequency( cgUInt32 layerIndex ) const
 {
-    return mProperties.birthFrequency;
+    return mLayers[layerIndex].properties.birthFrequency;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getHDRScale ()
+/// <summary>
+/// Get the amount to scale particle color values when HDR rendering is
+/// enabled.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloat cgParticleEmitterObject::getHDRScale( cgUInt32 layerIndex ) const
+{
+    return mLayers[layerIndex].properties.hdrScale;
 }
 
 //-----------------------------------------------------------------------------
@@ -1063,9 +1233,9 @@ cgFloat cgParticleEmitterObject::getBirthFrequency( ) const
 /// default to a rotation angle of 0 degrees.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgParticleEmitterObject::getRandomizedRotation( ) const
+bool cgParticleEmitterObject::getRandomizedRotation( cgUInt32 layerIndex ) const
 {
-    return mProperties.randomizeRotation;
+    return mLayers[layerIndex].properties.randomizeRotation;
 }
 
 //-----------------------------------------------------------------------------
@@ -1076,9 +1246,9 @@ bool cgParticleEmitterObject::getRandomizedRotation( ) const
 /// rendering.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgParticleEmitterObject::getSortedRender( ) const
+bool cgParticleEmitterObject::getSortedRender( cgUInt32 layerIndex ) const
 {
-    return mProperties.sortedRender;
+    return mLayers[layerIndex].properties.sortedRender;
 }
 
 //-----------------------------------------------------------------------------
@@ -1088,9 +1258,21 @@ bool cgParticleEmitterObject::getSortedRender( ) const
 /// assigned during its creation.
 /// </summary>
 //-----------------------------------------------------------------------------
-const cgRangeF & cgParticleEmitterObject::getParticleSpeed( ) const
+const cgRangeF & cgParticleEmitterObject::getParticleSpeed( cgUInt32 layerIndex ) const
 {
-    return mProperties.speed;
+    return mLayers[layerIndex].properties.speed;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getParticleTexture ()
+/// <summary>
+/// Get the name of the particle texture (or texture atlas) to map to the
+/// billboards representing this emitters particles.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgString & cgParticleEmitterObject::getParticleTexture( cgUInt32 layerIndex ) const
+{
+    return mLayers[layerIndex].properties.particleTexture;
 }
 
 //-----------------------------------------------------------------------------
@@ -1100,9 +1282,9 @@ const cgRangeF & cgParticleEmitterObject::getParticleSpeed( ) const
 /// during its creation.
 /// </summary>
 //-----------------------------------------------------------------------------
-const cgRangeF & cgParticleEmitterObject::getParticleMass( ) const
+const cgRangeF & cgParticleEmitterObject::getParticleMass( cgUInt32 layerIndex ) const
 {
-    return mProperties.mass;
+    return mLayers[layerIndex].properties.mass;
 }
 
 //-----------------------------------------------------------------------------
@@ -1112,9 +1294,9 @@ const cgRangeF & cgParticleEmitterObject::getParticleMass( ) const
 /// can be assigned during its creation in degrees per second.
 /// </summary>
 //-----------------------------------------------------------------------------
-const cgRangeF & cgParticleEmitterObject::getParticleAngularSpeed( ) const
+const cgRangeF & cgParticleEmitterObject::getParticleAngularSpeed( cgUInt32 layerIndex ) const
 {
-    return mProperties.angularSpeed;
+    return mLayers[layerIndex].properties.angularSpeed;
 }
 
 //-----------------------------------------------------------------------------
@@ -1125,9 +1307,9 @@ const cgRangeF & cgParticleEmitterObject::getParticleAngularSpeed( ) const
 /// size matches that configured via the 'setParticleSize()' method.
 /// </summary>
 //-----------------------------------------------------------------------------
-const cgRangeF & cgParticleEmitterObject::getParticleBaseScale( ) const
+const cgRangeF & cgParticleEmitterObject::getParticleBaseScale( cgUInt32 layerIndex ) const
 {
-    return mProperties.baseScale;
+    return mLayers[layerIndex].properties.baseScale;
 }
 
 //-----------------------------------------------------------------------------
@@ -1137,9 +1319,9 @@ const cgRangeF & cgParticleEmitterObject::getParticleBaseScale( ) const
 /// can be assigned during its creation in seconds.
 /// </summary>
 //-----------------------------------------------------------------------------
-const cgRangeF & cgParticleEmitterObject::getParticleLifetime( ) const
+const cgRangeF & cgParticleEmitterObject::getParticleLifetime( cgUInt32 layerIndex ) const
 {
-    return mProperties.lifetime;
+    return mLayers[layerIndex].properties.lifetime;
 }
 
 //-----------------------------------------------------------------------------
@@ -1148,9 +1330,9 @@ const cgRangeF & cgParticleEmitterObject::getParticleLifetime( ) const
 /// Get the configured initial size (pre-scale) of each particle in meters.
 /// </summary>
 //-----------------------------------------------------------------------------
-const cgSizeF  & cgParticleEmitterObject::getParticleSize( ) const
+const cgSizeF  & cgParticleEmitterObject::getParticleSize( cgUInt32 layerIndex ) const
 {
-    return mProperties.baseSize;
+    return mLayers[layerIndex].properties.baseSize;
 }
 
 //-----------------------------------------------------------------------------
@@ -1160,9 +1342,34 @@ const cgSizeF  & cgParticleEmitterObject::getParticleSize( ) const
 /// each particle during simulation.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgFloat cgParticleEmitterObject::getParticleAirResistance( ) const
+cgFloat cgParticleEmitterObject::getParticleAirResistance( cgUInt32 layerIndex ) const
 {
-    return mProperties.airResistance;
+    return mLayers[layerIndex].properties.airResistance;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getParticleBlendMethod ()
+/// <summary>
+/// Get the technique used to blend the particles with the currently assigned
+/// render target (i.e., additive, screen, linear, etc.)
+/// </summary>
+//-----------------------------------------------------------------------------
+cgParticleBlendMethod::Base cgParticleEmitterObject::getParticleBlendMethod( cgUInt32 layerIndex ) const
+{
+    return mLayers[layerIndex].properties.blendMethod;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getInitialEnabledState ()
+/// <summary>
+/// Determine if the specified layer will begin to emit particles immediately
+/// upon initial creation. If this value is set to false, the emitter for this
+/// layer will need to be enabled manually before particles will be released.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgParticleEmitterObject::getInitialEnabledState( cgUInt32 layerIndex ) const
+{
+    return mLayers[layerIndex].initialEmission;
 }
 
 //-----------------------------------------------------------------------------
@@ -1171,19 +1378,21 @@ cgFloat cgParticleEmitterObject::getParticleAirResistance( ) const
 /// Set the inner cone (Theta) angle of the emitter in degrees.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setInnerCone( cgFloat fValue )
+void cgParticleEmitterObject::setInnerCone( cgUInt32 layerIndex, cgFloat fValue )
 {
+    Layer & layer = mLayers[layerIndex];
+
     // Is this a no-op?
-    if ( mProperties.innerCone == fValue )
+    if ( layer.properties.innerCone == fValue )
         return;
 
     // Update world database
     if ( shouldSerialize() )
     {
         prepareQueries();
-        mUpdateConeAngles.bindParameter( 1, mProperties.outerCone );
+        mUpdateConeAngles.bindParameter( 1, layer.properties.outerCone );
         mUpdateConeAngles.bindParameter( 2, fValue );
-        mUpdateConeAngles.bindParameter( 3, mReferenceId );
+        mUpdateConeAngles.bindParameter( 3, layer.databaseId );
         
         // Execute
         if ( !mUpdateConeAngles.step( true ) )
@@ -1198,15 +1407,15 @@ void cgParticleEmitterObject::setInnerCone( cgFloat fValue )
     } // End if serialize
 
     // Update internal value.
-    mProperties.innerCone = fabsf(fValue);
+    layer.properties.innerCone = fabsf(fValue);
     
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("InnerCone");
     onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
 
     // Make sure outer cone is at LEAST as large as the inner cone
-    if ( mProperties.innerCone > mProperties.outerCone )
-        setOuterCone( mProperties.innerCone );
+    if ( layer.properties.innerCone > layer.properties.outerCone )
+        setOuterCone( layerIndex, layer.properties.innerCone );
 }
 
 //-----------------------------------------------------------------------------
@@ -1215,10 +1424,12 @@ void cgParticleEmitterObject::setInnerCone( cgFloat fValue )
 /// Set the outer cone (Phi) angle of the emitter in degrees.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setOuterCone( cgFloat fValue )
+void cgParticleEmitterObject::setOuterCone( cgUInt32 layerIndex, cgFloat fValue )
 {
+    Layer & layer = mLayers[layerIndex];
+
     // Is this a no-op?
-    if ( mProperties.outerCone == fValue )
+    if ( layer.properties.outerCone == fValue )
         return;
 
     // Update world database
@@ -1226,8 +1437,8 @@ void cgParticleEmitterObject::setOuterCone( cgFloat fValue )
     {
         prepareQueries();
         mUpdateConeAngles.bindParameter( 1, fValue );
-        mUpdateConeAngles.bindParameter( 2, mProperties.innerCone );
-        mUpdateConeAngles.bindParameter( 3, mReferenceId );
+        mUpdateConeAngles.bindParameter( 2, layer.properties.innerCone );
+        mUpdateConeAngles.bindParameter( 3, layer.databaseId );
         
         // Execute
         if ( !mUpdateConeAngles.step( true ) )
@@ -1242,15 +1453,15 @@ void cgParticleEmitterObject::setOuterCone( cgFloat fValue )
     } // End if serialize
 
     // Store the new emitter cone size
-    mProperties.outerCone = fabsf(fValue);
+    layer.properties.outerCone = fabsf(fValue);
 
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("OuterCone");
     onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
 
     // Make sure inner cone at MOST fits inside the outer cone
-    if ( mProperties.innerCone > mProperties.outerCone )
-        setInnerCone( mProperties.outerCone );
+    if ( layer.properties.innerCone > layer.properties.outerCone )
+        setInnerCone( layerIndex, layer.properties.outerCone );
 }
 
 //-----------------------------------------------------------------------------
@@ -1260,19 +1471,21 @@ void cgParticleEmitterObject::setOuterCone( cgFloat fValue )
 /// released.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setDeadZoneRadius( cgFloat fValue )
+void cgParticleEmitterObject::setDeadZoneRadius( cgUInt32 layerIndex, cgFloat fValue )
 {
+    Layer & layer = mLayers[layerIndex];
+
     // Is this a no-op?
-    if ( mProperties.deadZoneRadius == fValue )
+    if ( layer.properties.deadZoneRadius == fValue )
         return;
 
     // Update world database
     if ( shouldSerialize() )
     {
         prepareQueries();
-        mUpdateEmissionRadii.bindParameter( 1, mProperties.emissionRadius );
+        mUpdateEmissionRadii.bindParameter( 1, layer.properties.emissionRadius );
         mUpdateEmissionRadii.bindParameter( 2, fValue );
-        mUpdateEmissionRadii.bindParameter( 3, mReferenceId );
+        mUpdateEmissionRadii.bindParameter( 3, layer.databaseId );
         
         // Execute
         if ( !mUpdateEmissionRadii.step( true ) )
@@ -1287,15 +1500,15 @@ void cgParticleEmitterObject::setDeadZoneRadius( cgFloat fValue )
     } // End if serialize
 
     // Update internal value.
-    mProperties.deadZoneRadius = fabsf(fValue);
+    layer.properties.deadZoneRadius = fabsf(fValue);
     
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("DeadZoneRadius");
     onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
 
     // Make sure outer radius is at LEAST as large as the inner radius
-    if ( mProperties.deadZoneRadius > mProperties.emissionRadius )
-        setEmissionRadius( mProperties.deadZoneRadius );
+    if ( layer.properties.deadZoneRadius > layer.properties.emissionRadius )
+        setEmissionRadius( layerIndex, layer.properties.deadZoneRadius );
 }
 
 //-----------------------------------------------------------------------------
@@ -1305,10 +1518,12 @@ void cgParticleEmitterObject::setDeadZoneRadius( cgFloat fValue )
 /// released.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setEmissionRadius( cgFloat fValue )
+void cgParticleEmitterObject::setEmissionRadius( cgUInt32 layerIndex, cgFloat fValue )
 {
+    Layer & layer = mLayers[layerIndex];
+
     // Is this a no-op?
-    if ( mProperties.emissionRadius == fValue )
+    if ( layer.properties.emissionRadius == fValue )
         return;
 
     // Update world database
@@ -1316,8 +1531,8 @@ void cgParticleEmitterObject::setEmissionRadius( cgFloat fValue )
     {
         prepareQueries();
         mUpdateEmissionRadii.bindParameter( 1, fValue );
-        mUpdateEmissionRadii.bindParameter( 2, mProperties.deadZoneRadius );
-        mUpdateEmissionRadii.bindParameter( 3, mReferenceId );
+        mUpdateEmissionRadii.bindParameter( 2, layer.properties.deadZoneRadius );
+        mUpdateEmissionRadii.bindParameter( 3, layer.databaseId );
         
         // Execute
         if ( !mUpdateEmissionRadii.step( true ) )
@@ -1332,15 +1547,15 @@ void cgParticleEmitterObject::setEmissionRadius( cgFloat fValue )
     } // End if serialize
 
     // Update local member
-    mProperties.emissionRadius = fabsf(fValue);
+    layer.properties.emissionRadius = fabsf(fValue);
 
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("EmissionRadius");
     onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
 
     // Make sure inner radius at MOST fits inside the outer radius
-    if ( mProperties.deadZoneRadius > mProperties.emissionRadius )
-        setDeadZoneRadius( mProperties.emissionRadius );
+    if ( layer.properties.deadZoneRadius > layer.properties.emissionRadius )
+        setDeadZoneRadius( layerIndex, layer.properties.emissionRadius );
 }
 
 //-----------------------------------------------------------------------------
@@ -1352,10 +1567,12 @@ void cgParticleEmitterObject::setEmissionRadius( cgFloat fValue )
 /// particle lifetime and rate of emission.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setMaxSimultaneousParticles( cgUInt32 nAmount )
+void cgParticleEmitterObject::setMaxSimultaneousParticles( cgUInt32 layerIndex, cgUInt32 nAmount )
 {
+    Layer & layer = mLayers[layerIndex];
+
     // Is this a no-op?
-    if ( mProperties.maxSimultaneousParticles == nAmount )
+    if ( layer.properties.maxSimultaneousParticles == nAmount )
         return;
 
     // Update world database
@@ -1363,7 +1580,7 @@ void cgParticleEmitterObject::setMaxSimultaneousParticles( cgUInt32 nAmount )
     {
         prepareQueries();
         mUpdateParticleCounts.bindParameter( 1, nAmount );
-        mUpdateParticleCounts.bindParameter( 2, mReferenceId );
+        mUpdateParticleCounts.bindParameter( 2, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleCounts.step( true ) )
@@ -1378,7 +1595,7 @@ void cgParticleEmitterObject::setMaxSimultaneousParticles( cgUInt32 nAmount )
     } // End if serialize
 
     // Update local member
-    mProperties.maxSimultaneousParticles = nAmount;
+    layer.properties.maxSimultaneousParticles = nAmount;
 
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("MaxSimultaneousParticles");
@@ -1392,10 +1609,12 @@ void cgParticleEmitterObject::setMaxSimultaneousParticles( cgUInt32 nAmount )
 /// second.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setBirthFrequency( cgFloat fValue )
+void cgParticleEmitterObject::setBirthFrequency( cgUInt32 layerIndex, cgFloat fValue )
 {
+    Layer & layer = mLayers[layerIndex];
+
     // Is this a no-op?
-    if ( mProperties.birthFrequency == fValue )
+    if ( layer.properties.birthFrequency == fValue )
         return;
 
     // Update world database
@@ -1403,8 +1622,9 @@ void cgParticleEmitterObject::setBirthFrequency( cgFloat fValue )
     {
         prepareQueries();
         mUpdateReleaseProperties.bindParameter( 1, fValue );
-        mUpdateReleaseProperties.bindParameter( 2, mProperties.randomizeRotation );
-        mUpdateReleaseProperties.bindParameter( 3, mReferenceId );
+        mUpdateReleaseProperties.bindParameter( 2, layer.properties.randomizeRotation );
+        mUpdateReleaseProperties.bindParameter( 3, layer.initialEmission );
+        mUpdateReleaseProperties.bindParameter( 4, layer.databaseId );
         
         // Execute
         if ( !mUpdateReleaseProperties.step( true ) )
@@ -1419,7 +1639,7 @@ void cgParticleEmitterObject::setBirthFrequency( cgFloat fValue )
     } // End if serialize
 
     // Update local member
-    mProperties.birthFrequency = fabsf(fValue);
+    layer.properties.birthFrequency = fabsf(fValue);
 
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("BirthFrequency");
@@ -1434,19 +1654,22 @@ void cgParticleEmitterObject::setBirthFrequency( cgFloat fValue )
 /// default to a rotation angle of 0 degrees.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::enableRandomizedRotation( bool bValue )
+void cgParticleEmitterObject::enableRandomizedRotation( cgUInt32 layerIndex, bool bValue )
 {
+    Layer & layer = mLayers[layerIndex];
+
     // Is this a no-op?
-    if ( mProperties.randomizeRotation == bValue )
+    if ( layer.properties.randomizeRotation == bValue )
         return;
 
     // Update world database
     if ( shouldSerialize() )
     {
         prepareQueries();
-        mUpdateReleaseProperties.bindParameter( 1, mProperties.birthFrequency );
+        mUpdateReleaseProperties.bindParameter( 1, layer.properties.birthFrequency );
         mUpdateReleaseProperties.bindParameter( 2, bValue );
-        mUpdateReleaseProperties.bindParameter( 3, mReferenceId );
+        mUpdateReleaseProperties.bindParameter( 3, layer.initialEmission );
+        mUpdateReleaseProperties.bindParameter( 4, layer.databaseId );
         
         // Execute
         if ( !mUpdateReleaseProperties.step( true ) )
@@ -1461,7 +1684,7 @@ void cgParticleEmitterObject::enableRandomizedRotation( bool bValue )
     } // End if serialize
 
     // Update local member
-    mProperties.randomizeRotation = bValue;
+    layer.properties.randomizeRotation = bValue;
 
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("RandomizeRotation");
@@ -1476,10 +1699,12 @@ void cgParticleEmitterObject::enableRandomizedRotation( bool bValue )
 /// rendering.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::enableSortedRender( bool bValue )
+void cgParticleEmitterObject::enableSortedRender( cgUInt32 layerIndex, bool bValue )
 {
+    Layer & layer = mLayers[layerIndex];
+
     // Is this a no-op?
-    if ( mProperties.sortedRender == bValue )
+    if ( layer.properties.sortedRender == bValue )
         return;
 
     // Update world database
@@ -1487,7 +1712,9 @@ void cgParticleEmitterObject::enableSortedRender( bool bValue )
     {
         prepareQueries();
         mUpdateRenderingProperties.bindParameter( 1, bValue );
-        mUpdateRenderingProperties.bindParameter( 2, mReferenceId );
+        mUpdateRenderingProperties.bindParameter( 2, (cgUInt8)layer.properties.blendMethod );
+        mUpdateRenderingProperties.bindParameter( 3, layer.properties.hdrScale );
+        mUpdateRenderingProperties.bindParameter( 4, layer.databaseId );
         
         // Execute
         if ( !mUpdateRenderingProperties.step( true ) )
@@ -1502,7 +1729,7 @@ void cgParticleEmitterObject::enableSortedRender( bool bValue )
     } // End if serialize
 
     // Update local member
-    mProperties.sortedRender = bValue;
+    layer.properties.sortedRender = bValue;
 
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("SortedRender");
@@ -1510,48 +1737,39 @@ void cgParticleEmitterObject::enableSortedRender( bool bValue )
 }
 
 //-----------------------------------------------------------------------------
-//  Name : setParticleSpeed ()
+//  Name : setParticleTexture ()
 /// <summary>
-/// Set the range of initial speed values that a particle can be assigned 
-/// during its creation.
+/// Set the name of the particle texture (or texture atlas) to map to the
+/// billboards representing this emitters particles.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setParticleSpeed( cgFloat fMin, cgFloat fMax )
+void cgParticleEmitterObject::setParticleTexture( cgUInt32 layerIndex, const cgString & textureFile )
 {
-    setParticleSpeed( cgRangeF( fMin, fMax ) );
-}
+    Layer & layer = mLayers[layerIndex];
 
-//-----------------------------------------------------------------------------
-//  Name : setParticleSpeed ()
-/// <summary>
-/// Set the range of initial speed values that a particle can be assigned 
-/// during its creation.
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setParticleSpeed( const cgRangeF & Range )
-{
     // Is this a no-op?
-    if ( mProperties.speed == Range )
+    if ( layer.properties.particleTexture == textureFile )
         return;
 
     // Update world database
     if ( shouldSerialize() )
     {
         prepareQueries();
-        mUpdateParticleProperties.bindParameter( 1, Range.min );
-        mUpdateParticleProperties.bindParameter( 2, Range.max );
-        mUpdateParticleProperties.bindParameter( 3, mProperties.mass.min );
-        mUpdateParticleProperties.bindParameter( 4, mProperties.mass.max );
-        mUpdateParticleProperties.bindParameter( 5, mProperties.angularSpeed.min );
-        mUpdateParticleProperties.bindParameter( 6, mProperties.angularSpeed.max );
-        mUpdateParticleProperties.bindParameter( 7, mProperties.baseScale.min );
-        mUpdateParticleProperties.bindParameter( 8, mProperties.baseScale.max );
-        mUpdateParticleProperties.bindParameter( 9, mProperties.lifetime.min );
-        mUpdateParticleProperties.bindParameter( 10, mProperties.lifetime.max );
-        mUpdateParticleProperties.bindParameter( 11, mProperties.baseSize.width );
-        mUpdateParticleProperties.bindParameter( 12, mProperties.baseSize.height );
-        mUpdateParticleProperties.bindParameter( 13, mProperties.airResistance );
-        mUpdateParticleProperties.bindParameter( 14, mReferenceId );
+        mUpdateParticleProperties.bindParameter( 1, layer.properties.speed.min );
+        mUpdateParticleProperties.bindParameter( 2, layer.properties.speed.max );
+        mUpdateParticleProperties.bindParameter( 3, layer.properties.mass.min );
+        mUpdateParticleProperties.bindParameter( 4, layer.properties.mass.max );
+        mUpdateParticleProperties.bindParameter( 5, layer.properties.angularSpeed.min );
+        mUpdateParticleProperties.bindParameter( 6, layer.properties.angularSpeed.max );
+        mUpdateParticleProperties.bindParameter( 7, layer.properties.baseScale.min );
+        mUpdateParticleProperties.bindParameter( 8, layer.properties.baseScale.max );
+        mUpdateParticleProperties.bindParameter( 9, layer.properties.lifetime.min );
+        mUpdateParticleProperties.bindParameter( 10, layer.properties.lifetime.max );
+        mUpdateParticleProperties.bindParameter( 11, layer.properties.baseSize.width );
+        mUpdateParticleProperties.bindParameter( 12, layer.properties.baseSize.height );
+        mUpdateParticleProperties.bindParameter( 13, layer.properties.airResistance );
+        mUpdateParticleProperties.bindParameter( 14, textureFile );
+        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleProperties.step( true ) )
@@ -1566,7 +1784,74 @@ void cgParticleEmitterObject::setParticleSpeed( const cgRangeF & Range )
     } // End if serialize
 
     // Update local member
-    mProperties.speed = Range;
+    layer.properties.particleTexture = textureFile;
+
+    // Notify listeners that object data has changed.
+    static const cgString strContext = _T("ParticleTexture");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setParticleSpeed ()
+/// <summary>
+/// Set the range of initial speed values that a particle can be assigned 
+/// during its creation.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::setParticleSpeed( cgUInt32 layerIndex, cgFloat fMin, cgFloat fMax )
+{
+    setParticleSpeed( layerIndex, cgRangeF( fMin, fMax ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setParticleSpeed ()
+/// <summary>
+/// Set the range of initial speed values that a particle can be assigned 
+/// during its creation.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::setParticleSpeed( cgUInt32 layerIndex, const cgRangeF & Range )
+{
+    Layer & layer = mLayers[layerIndex];
+
+    // Is this a no-op?
+    if ( layer.properties.speed == Range )
+        return;
+
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateParticleProperties.bindParameter( 1, Range.min );
+        mUpdateParticleProperties.bindParameter( 2, Range.max );
+        mUpdateParticleProperties.bindParameter( 3, layer.properties.mass.min );
+        mUpdateParticleProperties.bindParameter( 4, layer.properties.mass.max );
+        mUpdateParticleProperties.bindParameter( 5, layer.properties.angularSpeed.min );
+        mUpdateParticleProperties.bindParameter( 6, layer.properties.angularSpeed.max );
+        mUpdateParticleProperties.bindParameter( 7, layer.properties.baseScale.min );
+        mUpdateParticleProperties.bindParameter( 8, layer.properties.baseScale.max );
+        mUpdateParticleProperties.bindParameter( 9, layer.properties.lifetime.min );
+        mUpdateParticleProperties.bindParameter( 10, layer.properties.lifetime.max );
+        mUpdateParticleProperties.bindParameter( 11, layer.properties.baseSize.width );
+        mUpdateParticleProperties.bindParameter( 12, layer.properties.baseSize.height );
+        mUpdateParticleProperties.bindParameter( 13, layer.properties.airResistance );
+        mUpdateParticleProperties.bindParameter( 14, layer.properties.particleTexture );
+        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
+        
+        // Execute
+        if ( !mUpdateParticleProperties.step( true ) )
+        {
+            cgString strError;
+            mUpdateParticleProperties.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update particle properties for particle emitter '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
+    // Update local member
+    layer.properties.speed = Range;
 
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("ParticleSpeed");
@@ -1580,9 +1865,9 @@ void cgParticleEmitterObject::setParticleSpeed( const cgRangeF & Range )
 /// creation.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setParticleMass( cgFloat fMin, cgFloat fMax )
+void cgParticleEmitterObject::setParticleMass( cgUInt32 layerIndex, cgFloat fMin, cgFloat fMax )
 {
-    setParticleMass( cgRangeF( fMin, fMax ) );
+    setParticleMass( layerIndex, cgRangeF( fMin, fMax ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -1592,30 +1877,33 @@ void cgParticleEmitterObject::setParticleMass( cgFloat fMin, cgFloat fMax )
 /// creation.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setParticleMass( const cgRangeF & Range )
+void cgParticleEmitterObject::setParticleMass( cgUInt32 layerIndex, const cgRangeF & Range )
 {
+    Layer & layer = mLayers[layerIndex];
+
     // Is this a no-op?
-    if ( mProperties.mass == Range )
+    if ( layer.properties.mass == Range )
         return;
 
     // Update world database
     if ( shouldSerialize() )
     {
         prepareQueries();
-        mUpdateParticleProperties.bindParameter( 1, mProperties.speed.min );
-        mUpdateParticleProperties.bindParameter( 2, mProperties.speed.max );
+        mUpdateParticleProperties.bindParameter( 1, layer.properties.speed.min );
+        mUpdateParticleProperties.bindParameter( 2, layer.properties.speed.max );
         mUpdateParticleProperties.bindParameter( 3, Range.min );
         mUpdateParticleProperties.bindParameter( 4, Range.max );
-        mUpdateParticleProperties.bindParameter( 5, mProperties.angularSpeed.min );
-        mUpdateParticleProperties.bindParameter( 6, mProperties.angularSpeed.max );
-        mUpdateParticleProperties.bindParameter( 7, mProperties.baseScale.min );
-        mUpdateParticleProperties.bindParameter( 8, mProperties.baseScale.max );
-        mUpdateParticleProperties.bindParameter( 9, mProperties.lifetime.min );
-        mUpdateParticleProperties.bindParameter( 10, mProperties.lifetime.max );
-        mUpdateParticleProperties.bindParameter( 11, mProperties.baseSize.width );
-        mUpdateParticleProperties.bindParameter( 12, mProperties.baseSize.height );
-        mUpdateParticleProperties.bindParameter( 13, mProperties.airResistance );
-        mUpdateParticleProperties.bindParameter( 14, mReferenceId );
+        mUpdateParticleProperties.bindParameter( 5, layer.properties.angularSpeed.min );
+        mUpdateParticleProperties.bindParameter( 6, layer.properties.angularSpeed.max );
+        mUpdateParticleProperties.bindParameter( 7, layer.properties.baseScale.min );
+        mUpdateParticleProperties.bindParameter( 8, layer.properties.baseScale.max );
+        mUpdateParticleProperties.bindParameter( 9, layer.properties.lifetime.min );
+        mUpdateParticleProperties.bindParameter( 10, layer.properties.lifetime.max );
+        mUpdateParticleProperties.bindParameter( 11, layer.properties.baseSize.width );
+        mUpdateParticleProperties.bindParameter( 12, layer.properties.baseSize.height );
+        mUpdateParticleProperties.bindParameter( 13, layer.properties.airResistance );
+        mUpdateParticleProperties.bindParameter( 14, layer.properties.particleTexture );
+        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleProperties.step( true ) )
@@ -1630,7 +1918,7 @@ void cgParticleEmitterObject::setParticleMass( const cgRangeF & Range )
     } // End if serialize
 
     // Update local member
-    mProperties.mass = Range;
+    layer.properties.mass = Range;
 
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("ParticleMass");
@@ -1644,9 +1932,9 @@ void cgParticleEmitterObject::setParticleMass( const cgRangeF & Range )
 /// assigned during its creation in degrees per second.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setParticleAngularSpeed( cgFloat fMin, cgFloat fMax )
+void cgParticleEmitterObject::setParticleAngularSpeed( cgUInt32 layerIndex, cgFloat fMin, cgFloat fMax )
 {
-    setParticleAngularSpeed( cgRangeF( fMin, fMax ) );
+    setParticleAngularSpeed( layerIndex, cgRangeF( fMin, fMax ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -1656,30 +1944,33 @@ void cgParticleEmitterObject::setParticleAngularSpeed( cgFloat fMin, cgFloat fMa
 /// assigned during its creation in degrees per second.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setParticleAngularSpeed( const cgRangeF & Range )
+void cgParticleEmitterObject::setParticleAngularSpeed( cgUInt32 layerIndex, const cgRangeF & Range )
 {
+    Layer & layer = mLayers[layerIndex];
+
     // Is this a no-op?
-    if ( mProperties.angularSpeed == Range )
+    if ( layer.properties.angularSpeed == Range )
         return;
 
     // Update world database
     if ( shouldSerialize() )
     {
         prepareQueries();
-        mUpdateParticleProperties.bindParameter( 1, mProperties.speed.min );
-        mUpdateParticleProperties.bindParameter( 2, mProperties.speed.max );
-        mUpdateParticleProperties.bindParameter( 3, mProperties.mass.min );
-        mUpdateParticleProperties.bindParameter( 4, mProperties.mass.max );
+        mUpdateParticleProperties.bindParameter( 1, layer.properties.speed.min );
+        mUpdateParticleProperties.bindParameter( 2, layer.properties.speed.max );
+        mUpdateParticleProperties.bindParameter( 3, layer.properties.mass.min );
+        mUpdateParticleProperties.bindParameter( 4, layer.properties.mass.max );
         mUpdateParticleProperties.bindParameter( 5, Range.min );
         mUpdateParticleProperties.bindParameter( 6, Range.max );
-        mUpdateParticleProperties.bindParameter( 7, mProperties.baseScale.min );
-        mUpdateParticleProperties.bindParameter( 8, mProperties.baseScale.max );
-        mUpdateParticleProperties.bindParameter( 9, mProperties.lifetime.min );
-        mUpdateParticleProperties.bindParameter( 10, mProperties.lifetime.max );
-        mUpdateParticleProperties.bindParameter( 11, mProperties.baseSize.width );
-        mUpdateParticleProperties.bindParameter( 12, mProperties.baseSize.height );
-        mUpdateParticleProperties.bindParameter( 13, mProperties.airResistance );
-        mUpdateParticleProperties.bindParameter( 14, mReferenceId );
+        mUpdateParticleProperties.bindParameter( 7, layer.properties.baseScale.min );
+        mUpdateParticleProperties.bindParameter( 8, layer.properties.baseScale.max );
+        mUpdateParticleProperties.bindParameter( 9, layer.properties.lifetime.min );
+        mUpdateParticleProperties.bindParameter( 10, layer.properties.lifetime.max );
+        mUpdateParticleProperties.bindParameter( 11, layer.properties.baseSize.width );
+        mUpdateParticleProperties.bindParameter( 12, layer.properties.baseSize.height );
+        mUpdateParticleProperties.bindParameter( 13, layer.properties.airResistance );
+        mUpdateParticleProperties.bindParameter( 14, layer.properties.particleTexture );
+        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleProperties.step( true ) )
@@ -1694,7 +1985,7 @@ void cgParticleEmitterObject::setParticleAngularSpeed( const cgRangeF & Range )
     } // End if serialize
 
     // Update local member
-    mProperties.angularSpeed = Range;
+    layer.properties.angularSpeed = Range;
 
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("ParticleAngularSpeed");
@@ -1709,9 +2000,9 @@ void cgParticleEmitterObject::setParticleAngularSpeed( const cgRangeF & Range )
 /// configured via the 'setParticleSize()' method.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setParticleBaseScale( cgFloat fMin, cgFloat fMax )
+void cgParticleEmitterObject::setParticleBaseScale( cgUInt32 layerIndex, cgFloat fMin, cgFloat fMax )
 {
-    setParticleBaseScale( cgRangeF( fMin, fMax ) );
+    setParticleBaseScale( layerIndex, cgRangeF( fMin, fMax ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -1722,30 +2013,33 @@ void cgParticleEmitterObject::setParticleBaseScale( cgFloat fMin, cgFloat fMax )
 /// configured via the 'setParticleSize()' method.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setParticleBaseScale( const cgRangeF & Range )
+void cgParticleEmitterObject::setParticleBaseScale( cgUInt32 layerIndex, const cgRangeF & Range )
 {
+    Layer & layer = mLayers[layerIndex];
+
     // Is this a no-op?
-    if ( mProperties.baseScale == Range )
+    if ( layer.properties.baseScale == Range )
         return;
 
     // Update world database
     if ( shouldSerialize() )
     {
         prepareQueries();
-        mUpdateParticleProperties.bindParameter( 1, mProperties.speed.min );
-        mUpdateParticleProperties.bindParameter( 2, mProperties.speed.max );
-        mUpdateParticleProperties.bindParameter( 3, mProperties.mass.min );
-        mUpdateParticleProperties.bindParameter( 4, mProperties.mass.max );
-        mUpdateParticleProperties.bindParameter( 5, mProperties.angularSpeed.min );
-        mUpdateParticleProperties.bindParameter( 6, mProperties.angularSpeed.max );
+        mUpdateParticleProperties.bindParameter( 1, layer.properties.speed.min );
+        mUpdateParticleProperties.bindParameter( 2, layer.properties.speed.max );
+        mUpdateParticleProperties.bindParameter( 3, layer.properties.mass.min );
+        mUpdateParticleProperties.bindParameter( 4, layer.properties.mass.max );
+        mUpdateParticleProperties.bindParameter( 5, layer.properties.angularSpeed.min );
+        mUpdateParticleProperties.bindParameter( 6, layer.properties.angularSpeed.max );
         mUpdateParticleProperties.bindParameter( 7, Range.min );
         mUpdateParticleProperties.bindParameter( 8, Range.max );
-        mUpdateParticleProperties.bindParameter( 9, mProperties.lifetime.min );
-        mUpdateParticleProperties.bindParameter( 10, mProperties.lifetime.max );
-        mUpdateParticleProperties.bindParameter( 11, mProperties.baseSize.width );
-        mUpdateParticleProperties.bindParameter( 12, mProperties.baseSize.height );
-        mUpdateParticleProperties.bindParameter( 13, mProperties.airResistance );
-        mUpdateParticleProperties.bindParameter( 14, mReferenceId );
+        mUpdateParticleProperties.bindParameter( 9, layer.properties.lifetime.min );
+        mUpdateParticleProperties.bindParameter( 10, layer.properties.lifetime.max );
+        mUpdateParticleProperties.bindParameter( 11, layer.properties.baseSize.width );
+        mUpdateParticleProperties.bindParameter( 12, layer.properties.baseSize.height );
+        mUpdateParticleProperties.bindParameter( 13, layer.properties.airResistance );
+        mUpdateParticleProperties.bindParameter( 14, layer.properties.particleTexture );
+        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleProperties.step( true ) )
@@ -1760,7 +2054,7 @@ void cgParticleEmitterObject::setParticleBaseScale( const cgRangeF & Range )
     } // End if serialize
 
     // Update local member
-    mProperties.baseScale = Range;
+    layer.properties.baseScale = Range;
 
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("ParticleBaseScale");
@@ -1774,9 +2068,9 @@ void cgParticleEmitterObject::setParticleBaseScale( const cgRangeF & Range )
 /// assigned during its creation in seconds.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setParticleLifetime( cgFloat fMin, cgFloat fMax )
+void cgParticleEmitterObject::setParticleLifetime( cgUInt32 layerIndex, cgFloat fMin, cgFloat fMax )
 {
-    setParticleLifetime( cgRangeF( fMin, fMax ) );
+    setParticleLifetime( layerIndex, cgRangeF( fMin, fMax ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -1786,30 +2080,33 @@ void cgParticleEmitterObject::setParticleLifetime( cgFloat fMin, cgFloat fMax )
 /// assigned during its creation in seconds.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setParticleLifetime( const cgRangeF & Range )
+void cgParticleEmitterObject::setParticleLifetime( cgUInt32 layerIndex, const cgRangeF & Range )
 {
+    Layer & layer = mLayers[layerIndex];
+
     // Is this a no-op?
-    if ( mProperties.lifetime == Range )
+    if ( layer.properties.lifetime == Range )
         return;
 
     // Update world database
     if ( shouldSerialize() )
     {
         prepareQueries();
-        mUpdateParticleProperties.bindParameter( 1, mProperties.speed.min );
-        mUpdateParticleProperties.bindParameter( 2, mProperties.speed.max );
-        mUpdateParticleProperties.bindParameter( 3, mProperties.mass.min );
-        mUpdateParticleProperties.bindParameter( 4, mProperties.mass.max );
-        mUpdateParticleProperties.bindParameter( 5, mProperties.angularSpeed.min );
-        mUpdateParticleProperties.bindParameter( 6, mProperties.angularSpeed.max );
-        mUpdateParticleProperties.bindParameter( 7, mProperties.baseScale.min );
-        mUpdateParticleProperties.bindParameter( 8, mProperties.baseScale.max );
+        mUpdateParticleProperties.bindParameter( 1, layer.properties.speed.min );
+        mUpdateParticleProperties.bindParameter( 2, layer.properties.speed.max );
+        mUpdateParticleProperties.bindParameter( 3, layer.properties.mass.min );
+        mUpdateParticleProperties.bindParameter( 4, layer.properties.mass.max );
+        mUpdateParticleProperties.bindParameter( 5, layer.properties.angularSpeed.min );
+        mUpdateParticleProperties.bindParameter( 6, layer.properties.angularSpeed.max );
+        mUpdateParticleProperties.bindParameter( 7, layer.properties.baseScale.min );
+        mUpdateParticleProperties.bindParameter( 8, layer.properties.baseScale.max );
         mUpdateParticleProperties.bindParameter( 9, Range.min );
         mUpdateParticleProperties.bindParameter( 10, Range.max );
-        mUpdateParticleProperties.bindParameter( 11, mProperties.baseSize.width );
-        mUpdateParticleProperties.bindParameter( 12, mProperties.baseSize.height );
-        mUpdateParticleProperties.bindParameter( 13, mProperties.airResistance );
-        mUpdateParticleProperties.bindParameter( 14, mReferenceId );
+        mUpdateParticleProperties.bindParameter( 11, layer.properties.baseSize.width );
+        mUpdateParticleProperties.bindParameter( 12, layer.properties.baseSize.height );
+        mUpdateParticleProperties.bindParameter( 13, layer.properties.airResistance );
+        mUpdateParticleProperties.bindParameter( 14, layer.properties.particleTexture );
+        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleProperties.step( true ) )
@@ -1824,7 +2121,7 @@ void cgParticleEmitterObject::setParticleLifetime( const cgRangeF & Range )
     } // End if serialize
 
     // Update local member
-    mProperties.lifetime = Range;
+    layer.properties.lifetime = Range;
 
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("ParticleLifetime");
@@ -1837,9 +2134,9 @@ void cgParticleEmitterObject::setParticleLifetime( const cgRangeF & Range )
 /// Set the initial size (pre-scale) of each particle in meters.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setParticleSize( cgFloat fWidth, cgFloat fHeight )
+void cgParticleEmitterObject::setParticleSize( cgUInt32 layerIndex, cgFloat fWidth, cgFloat fHeight )
 {
-    setParticleSize( cgSizeF( fWidth, fHeight ) );
+    setParticleSize( layerIndex, cgSizeF( fWidth, fHeight ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -1848,30 +2145,33 @@ void cgParticleEmitterObject::setParticleSize( cgFloat fWidth, cgFloat fHeight )
 /// Set the initial size (pre-scale) of each particle in meters.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setParticleSize( const cgSizeF & Size )
+void cgParticleEmitterObject::setParticleSize( cgUInt32 layerIndex, const cgSizeF & Size )
 {
+    Layer & layer = mLayers[layerIndex];
+
     // Is this a no-op?
-    if ( mProperties.baseSize == Size )
+    if ( layer.properties.baseSize == Size )
         return;
 
     // Update world database
     if ( shouldSerialize() )
     {
         prepareQueries();
-        mUpdateParticleProperties.bindParameter( 1, mProperties.speed.min );
-        mUpdateParticleProperties.bindParameter( 2, mProperties.speed.max );
-        mUpdateParticleProperties.bindParameter( 3, mProperties.mass.min );
-        mUpdateParticleProperties.bindParameter( 4, mProperties.mass.max );
-        mUpdateParticleProperties.bindParameter( 5, mProperties.angularSpeed.min );
-        mUpdateParticleProperties.bindParameter( 6, mProperties.angularSpeed.max );
-        mUpdateParticleProperties.bindParameter( 7, mProperties.baseScale.min );
-        mUpdateParticleProperties.bindParameter( 8, mProperties.baseScale.max );
-        mUpdateParticleProperties.bindParameter( 9, mProperties.lifetime.min );
-        mUpdateParticleProperties.bindParameter( 10, mProperties.lifetime.max );
+        mUpdateParticleProperties.bindParameter( 1, layer.properties.speed.min );
+        mUpdateParticleProperties.bindParameter( 2, layer.properties.speed.max );
+        mUpdateParticleProperties.bindParameter( 3, layer.properties.mass.min );
+        mUpdateParticleProperties.bindParameter( 4, layer.properties.mass.max );
+        mUpdateParticleProperties.bindParameter( 5, layer.properties.angularSpeed.min );
+        mUpdateParticleProperties.bindParameter( 6, layer.properties.angularSpeed.max );
+        mUpdateParticleProperties.bindParameter( 7, layer.properties.baseScale.min );
+        mUpdateParticleProperties.bindParameter( 8, layer.properties.baseScale.max );
+        mUpdateParticleProperties.bindParameter( 9, layer.properties.lifetime.min );
+        mUpdateParticleProperties.bindParameter( 10, layer.properties.lifetime.max );
         mUpdateParticleProperties.bindParameter( 11, Size.width );
         mUpdateParticleProperties.bindParameter( 12, Size.height );
-        mUpdateParticleProperties.bindParameter( 13, mProperties.airResistance );
-        mUpdateParticleProperties.bindParameter( 14, mReferenceId );
+        mUpdateParticleProperties.bindParameter( 13, layer.properties.airResistance );
+        mUpdateParticleProperties.bindParameter( 14, layer.properties.particleTexture );
+        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleProperties.step( true ) )
@@ -1886,7 +2186,7 @@ void cgParticleEmitterObject::setParticleSize( const cgSizeF & Size )
     } // End if serialize
 
     // Update local member
-    mProperties.baseSize = Size;
+    layer.properties.baseSize = Size;
 
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("ParticleBaseSize");
@@ -1900,30 +2200,33 @@ void cgParticleEmitterObject::setParticleSize( const cgSizeF & Size )
 /// during simulation.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterObject::setParticleAirResistance( cgFloat fValue )
+void cgParticleEmitterObject::setParticleAirResistance( cgUInt32 layerIndex, cgFloat fValue )
 {
+    Layer & layer = mLayers[layerIndex];
+
     // Is this a no-op?
-    if ( mProperties.airResistance == fValue )
+    if ( layer.properties.airResistance == fValue )
         return;
 
     // Update world database
     if ( shouldSerialize() )
     {
         prepareQueries();
-        mUpdateParticleProperties.bindParameter( 1, mProperties.speed.min );
-        mUpdateParticleProperties.bindParameter( 2, mProperties.speed.max );
-        mUpdateParticleProperties.bindParameter( 3, mProperties.mass.min );
-        mUpdateParticleProperties.bindParameter( 4, mProperties.mass.max );
-        mUpdateParticleProperties.bindParameter( 5, mProperties.angularSpeed.min );
-        mUpdateParticleProperties.bindParameter( 6, mProperties.angularSpeed.max );
-        mUpdateParticleProperties.bindParameter( 7, mProperties.baseScale.min );
-        mUpdateParticleProperties.bindParameter( 8, mProperties.baseScale.max );
-        mUpdateParticleProperties.bindParameter( 9, mProperties.lifetime.min );
-        mUpdateParticleProperties.bindParameter( 10, mProperties.lifetime.max );
-        mUpdateParticleProperties.bindParameter( 11, mProperties.baseSize.width );
-        mUpdateParticleProperties.bindParameter( 12, mProperties.baseSize.height );
+        mUpdateParticleProperties.bindParameter( 1, layer.properties.speed.min );
+        mUpdateParticleProperties.bindParameter( 2, layer.properties.speed.max );
+        mUpdateParticleProperties.bindParameter( 3, layer.properties.mass.min );
+        mUpdateParticleProperties.bindParameter( 4, layer.properties.mass.max );
+        mUpdateParticleProperties.bindParameter( 5, layer.properties.angularSpeed.min );
+        mUpdateParticleProperties.bindParameter( 6, layer.properties.angularSpeed.max );
+        mUpdateParticleProperties.bindParameter( 7, layer.properties.baseScale.min );
+        mUpdateParticleProperties.bindParameter( 8, layer.properties.baseScale.max );
+        mUpdateParticleProperties.bindParameter( 9, layer.properties.lifetime.min );
+        mUpdateParticleProperties.bindParameter( 10, layer.properties.lifetime.max );
+        mUpdateParticleProperties.bindParameter( 11, layer.properties.baseSize.width );
+        mUpdateParticleProperties.bindParameter( 12, layer.properties.baseSize.height );
         mUpdateParticleProperties.bindParameter( 13, fValue );
-        mUpdateParticleProperties.bindParameter( 14, mReferenceId );
+        mUpdateParticleProperties.bindParameter( 14, layer.properties.particleTexture );
+        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleProperties.step( true ) )
@@ -1938,10 +2241,144 @@ void cgParticleEmitterObject::setParticleAirResistance( cgFloat fValue )
     } // End if serialize
 
     // Update local member
-    mProperties.airResistance = fValue;
+    layer.properties.airResistance = fValue;
 
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("ParticleAirResistance");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setHDRScale ()
+/// <summary>
+/// Set the amount to scale particle color values when HDR rendering is
+/// enabled.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::setHDRScale( cgUInt32 layerIndex, cgFloat scale )
+{
+    Layer & layer = mLayers[layerIndex];
+
+    // Is this a no-op?
+    if ( layer.properties.hdrScale == scale )
+        return;
+
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateRenderingProperties.bindParameter( 1, layer.properties.sortedRender );
+        mUpdateRenderingProperties.bindParameter( 2, (cgUInt8)layer.properties.blendMethod );
+        mUpdateRenderingProperties.bindParameter( 3, scale );
+        mUpdateRenderingProperties.bindParameter( 4, layer.databaseId );
+        
+        // Execute
+        if ( !mUpdateRenderingProperties.step( true ) )
+        {
+            cgString strError;
+            mUpdateRenderingProperties.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update rendering properties for particle emitter '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
+    // Update local member
+    layer.properties.hdrScale = scale;
+
+    // Notify listeners that object data has changed.
+    static const cgString strContext = _T("HDRScale");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setParticleBlendMethod ()
+/// <summary>
+/// Set the technique used to blend the particles with the currently assigned
+/// render target (i.e., additive, screen, linear, etc.)
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::setParticleBlendMethod( cgUInt32 layerIndex, cgParticleBlendMethod::Base method )
+{
+    Layer & layer = mLayers[layerIndex];
+
+    // Is this a no-op?
+    if ( layer.properties.blendMethod == method )
+        return;
+
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateRenderingProperties.bindParameter( 1, layer.properties.sortedRender );
+        mUpdateRenderingProperties.bindParameter( 2, (cgUInt8)method );
+        mUpdateRenderingProperties.bindParameter( 3, layer.properties.hdrScale );
+        mUpdateRenderingProperties.bindParameter( 4, layer.databaseId );
+        
+        // Execute
+        if ( !mUpdateRenderingProperties.step( true ) )
+        {
+            cgString strError;
+            mUpdateRenderingProperties.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update rendering properties for particle emitter '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
+    // Update local member
+    layer.properties.blendMethod = method;
+
+    // Notify listeners that object data has changed.
+    static const cgString strContext = _T("ParticleBlendMethod");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setInitialEnabledState ()
+/// <summary>
+/// Set the default emission state of the specified layer which will determine
+/// if the emitter will begin to emit particles immediately upon initial 
+/// creation. If this value is set to false, the emitter for this layer will 
+/// need to be enabled manually before particles will be released.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::setInitialEnabledState( cgUInt32 layerIndex, bool enabled )
+{
+    Layer & layer = mLayers[layerIndex];
+
+    // Is this a no-op?
+    if ( layer.initialEmission == enabled )
+        return;
+
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateReleaseProperties.bindParameter( 1, layer.properties.birthFrequency );
+        mUpdateReleaseProperties.bindParameter( 2, layer.properties.randomizeRotation );
+        mUpdateReleaseProperties.bindParameter( 3, enabled );
+        mUpdateReleaseProperties.bindParameter( 4, layer.databaseId );
+        
+        // Execute
+        if ( !mUpdateReleaseProperties.step( true ) )
+        {
+            cgString strError;
+            mUpdateReleaseProperties.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update particle release properties for particle emitter '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
+    // Update local member
+    layer.initialEmission = enabled;
+
+    // Notify listeners that object data has changed.
+    static const cgString strContext = _T("InitialEnabledState");
     onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
 }
 
@@ -1957,16 +2394,15 @@ void cgParticleEmitterObject::setParticleAirResistance( cgFloat fValue )
 cgParticleEmitterNode::cgParticleEmitterNode( cgUInt32 nReferenceId, cgScene * pScene ) : cgObjectNode( nReferenceId, pScene )
 {
     // Initialize members to sensible defaults
-    mEmitter = CG_NULL;
-
+    
     // Default the node color
     mColor = 0xFFAEBACB;
 
     // Default update rate to 'always' by default.
     mUpdateRate = cgUpdateRate::Always;
 
-    // Automaticaly assign to the 'Transparent' render class.
-    mRenderClassId = pScene->getRenderClassId( _T("Transparent") );
+    // Automaticaly assign to the 'Effects' render class.
+    mRenderClassId = pScene->getRenderClassId( _T("Effects") );
 
     // Set default instance identifier
     mInstanceIdentifier = cgString::format( _T("Emitter%X"), nReferenceId );
@@ -1981,7 +2417,6 @@ cgParticleEmitterNode::cgParticleEmitterNode( cgUInt32 nReferenceId, cgScene * p
 cgParticleEmitterNode::cgParticleEmitterNode( cgUInt32 nReferenceId, cgScene * pScene, cgObjectNode * pInit, cgCloneMethod::Base InitMethod, const cgTransform & InitTransform ) : cgObjectNode( nReferenceId, pScene, pInit, InitMethod, InitTransform )
 {
     // Initialize members to sensible defaults
-    mEmitter = CG_NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -2007,10 +2442,13 @@ void cgParticleEmitterNode::dispose( bool bDisposeBase )
     // We are in the process of disposing?
     mDisposing = true;
 
-    // Release particle manager.
-    if ( mEmitter )
-        mEmitter->scriptSafeDispose();
-    mEmitter = CG_NULL;
+    // Release particle manager(s).
+    for ( size_t i = 0; i < mEmitters.size(); ++i )
+    {
+        if ( mEmitters[i] )
+            mEmitters[i]->scriptSafeDispose();
+    } // Next emitter
+    mEmitters.clear();
 
     // Call base class implementation
     if ( bDisposeBase == true )
@@ -2051,9 +2489,89 @@ cgObjectNode * cgParticleEmitterNode::allocateClone( const cgUID & type, cgUInt3
 //-----------------------------------------------------------------------------
 void cgParticleEmitterNode::onComponentModified( cgComponentModifiedEventArgs * e )
 {
-    // Update emitter properties.
-    if ( mEmitter )
-        mEmitter->setEmitterProperties( getProperties() );
+    // Add / remove layers.
+    size_t oldLayerCount = mEmitters.size();
+    size_t newLayerCount = getLayerCount();
+    if ( newLayerCount < oldLayerCount )
+    {
+        // Destroy un-used emitters
+        for ( size_t i = newLayerCount; i < mEmitters.size(); ++i )
+        {
+            if ( mEmitters[i] )
+                mEmitters[i]->scriptSafeDispose();
+
+        } // Next emitter
+        mEmitters.resize( newLayerCount );
+    
+    } // End if fewer layers
+    else if ( newLayerCount > mEmitters.size() )
+    {
+        // Add and initialize new layers!
+        mEmitters.resize(newLayerCount);
+        for ( size_t i = oldLayerCount; i < newLayerCount; ++i )
+        {
+            mEmitters[i] = new cgParticleEmitter();
+            if ( !mEmitters[i]->initialize( cgString::Empty, getLayerProperties(i), mParentScene->getRenderDriver() ) )
+            {
+                cgAppLog::write( cgAppLog::Warning, _T("Failed to initialize internal emitter manager for layer %i of particle emitter object '0x%x'.\n"), i + 1, mReferenceId );
+                mEmitters[i]->scriptSafeDispose();
+                mEmitters[i] = CG_NULL;
+            
+            } // End if failed
+            else
+            {
+                // Initially enabled?
+                mEmitters[i]->enableEmission( getInitialEnabledState(i) );
+            
+            } // End if succeeded
+
+        } // Next layer
+
+    } // End if more layers
+
+    // Update existing emitters
+    size_t updateCount = min(oldLayerCount,newLayerCount);
+    for ( size_t i = 0; i < updateCount; ++i )
+    {
+        if ( !mEmitters[i] )
+        {
+            mEmitters[i] = new cgParticleEmitter();
+            if ( !mEmitters[i]->initialize( cgString::Empty, getLayerProperties(i), mParentScene->getRenderDriver() ) )
+            {
+                cgAppLog::write( cgAppLog::Warning, _T("Failed to initialize internal emitter manager for layer %i of particle emitter object '0x%x'.\n"), i + 1, mReferenceId );
+                mEmitters[i]->scriptSafeDispose();
+                mEmitters[i] = CG_NULL;
+            
+            } // End if failed
+            else
+            {
+                // Initially enabled?
+                mEmitters[i]->enableEmission( getInitialEnabledState(i) );
+            
+            } // End if success
+
+        } // End if not allocated
+        else
+        {
+            if ( !mEmitters[i]->setEmitterProperties( getLayerProperties(i) ) )
+            {
+                cgAppLog::write( cgAppLog::Warning, _T("Failed to update internal emitter manager for layer %i of particle emitter object '0x%x'.\n"), i + 1, mReferenceId );
+                mEmitters[i]->scriptSafeDispose();
+                mEmitters[i] = CG_NULL;
+            
+            } // End if failed
+            else
+            {
+                // Update the enabled state to match the default state
+                // only when in sandbox mode.
+                if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
+                    mEmitters[i]->enableEmission( getInitialEnabledState(i) );
+            
+            } // End if succeeded
+
+        } // End if already allocated
+
+    } // Next layer
 
     // Call base class implementation last
     cgObjectNode::onComponentModified( e );
@@ -2072,15 +2590,26 @@ bool cgParticleEmitterNode::onNodeCreated( const cgUID & ObjectType, cgCloneMeth
     if ( !cgObjectNode::onNodeCreated( ObjectType, CloneMethod ) )
         return false;
 
-    // Create the emitter manager and initialize it.
-    mEmitter = new cgParticleEmitter();
-    if ( !mEmitter->initialize( getScriptFile(), getProperties(), mParentScene->getRenderDriver() ) )
+    // Create an emitter manager for each layer and initialize it.
+    mEmitters.resize(getLayerCount());
+    for ( cgUInt32 i = 0; i < getLayerCount(); ++i )
     {
-        cgAppLog::write( cgAppLog::Warning, _T("Failed to initialize internal emitter manager for particle emitter object '0x%x'.\n"), mReferenceId );
-        mEmitter->scriptSafeDispose();
-        mEmitter = CG_NULL;
-    
-    } // End if failed
+        mEmitters[i] = new cgParticleEmitter();
+        if ( !mEmitters[i]->initialize( cgString::Empty, getLayerProperties(i), mParentScene->getRenderDriver() ) )
+        {
+            cgAppLog::write( cgAppLog::Warning, _T("Failed to initialize internal emitter manager for layer %i of particle emitter object '0x%x'.\n"), i + 1, mReferenceId );
+            mEmitters[i]->scriptSafeDispose();
+            mEmitters[i] = CG_NULL;
+        
+        } // End if failed
+        else
+        {
+            // Initially enabled?
+            mEmitters[i]->enableEmission( getInitialEnabledState(i) );
+        
+        } // End if succeeded
+
+    } // Next layer
 
     // Success!
     return true;
@@ -2099,15 +2628,26 @@ bool cgParticleEmitterNode::onNodeLoading( const cgUID & ObjectType, cgWorldQuer
     if ( !cgObjectNode::onNodeLoading( ObjectType, pNodeData, pParentCell, CloneMethod ) )
         return false;
 
-    // Create the emitter manager and initialize it.
-    mEmitter = new cgParticleEmitter();
-    if ( !mEmitter->initialize( getScriptFile(), getProperties(), mParentScene->getRenderDriver() ) )
+    // Create an emitter manager for each layer and initialize it.
+    mEmitters.resize(getLayerCount());
+    for ( cgUInt32 i = 0; i < getLayerCount(); ++i )
     {
-        cgAppLog::write( cgAppLog::Warning, _T("Failed to initialize internal emitter manager for particle emitter object '0x%x'.\n"), mReferenceId );
-        mEmitter->scriptSafeDispose();
-        mEmitter = CG_NULL;
-    
-    } // End if failed
+        mEmitters[i] = new cgParticleEmitter();
+        if ( !mEmitters[i]->initialize( cgString::Empty, getLayerProperties(i), mParentScene->getRenderDriver() ) )
+        {
+            cgAppLog::write( cgAppLog::Warning, _T("Failed to initialize internal emitter manager for layer %i of particle emitter object '0x%x'.\n"), i + 1, mReferenceId );
+            mEmitters[i]->scriptSafeDispose();
+            mEmitters[i] = CG_NULL;
+        
+        } // End if failed
+        else
+        {
+            // Initially enabled?
+            mEmitters[i]->enableEmission( getInitialEnabledState(i) );
+        
+        } // End if succeeded
+
+    } // Next layer
 
     // Success!
     return true;
@@ -2156,15 +2696,15 @@ bool cgParticleEmitterNode::registerVisibility( cgVisibilitySet * pSet, cgUInt32
 }
 
 //-----------------------------------------------------------------------------
-//  Name : getEmitter ()
+//  Name : getLayerEmitter ()
 /// <summary>
 /// Retrieve the internal system particle emitter that manages the particle
-/// data and oversees the update process.
+/// data and oversees the update process for the specified layer.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgParticleEmitter * cgParticleEmitterNode::getEmitter( ) const
+cgParticleEmitter * cgParticleEmitterNode::getLayerEmitter( cgUInt32 layerIndex ) const
 {
-    return mEmitter;
+    return mEmitters[layerIndex];
 }
 
 //-----------------------------------------------------------------------------
@@ -2176,15 +2716,63 @@ cgParticleEmitter * cgParticleEmitterNode::getEmitter( ) const
 //-----------------------------------------------------------------------------
 void cgParticleEmitterNode::update( cgFloat fElapsedTime )
 {
-    // Call base class implementation first to allow
-    // the node itself to update / move, etc.
+    // Call base class implementation first to allow the node itself 
+    // to update / move, etc.
     cgObjectNode::update( fElapsedTime );
 
-    // Now allow the emitter to update.
-    if ( mEmitter )
+    // Now allow the emitters to update.
+    for ( size_t i = 0; i < mEmitters.size(); ++i )
     {
-        mEmitter->setEmitterMatrix( getWorldTransform(false) );
-        mEmitter->update( fElapsedTime, cgVector3(0,0,0), false );
+        if ( mEmitters[i] )
+        {
+            mEmitters[i]->setEmitterMatrix( getWorldTransform(false) );
+            mEmitters[i]->update( fElapsedTime, cgVector3(0,0,0), false );
+        
+        } // End if valid
+    
+    } // Next emitter
+}
 
-    } // End if valid emitter
+//-----------------------------------------------------------------------------
+// Name : allowSandboxUpdate ( )
+/// <summary>
+/// Return true if the node should have its update method called even when
+/// not running a preview in sandbox mode.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgParticleEmitterNode::allowSandboxUpdate( ) const
+{
+    // Allow the emitter's 'update' method to be called
+    // irrespective of whether or not we're in sandbox 
+    // preview mode so that we can see a visual representation
+    // of the emitter's configured properties within the editor.
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : enableLayerEmission ()
+/// <summary>
+/// Enable or disable the emission of new particles for the specified layer. 
+/// Any existing particles that are alive will still be updated until the end
+/// of their lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterNode::enableLayerEmission( cgUInt32 layerIndex, bool enable )
+{
+    if ( layerIndex < mEmitters.size() && mEmitters[layerIndex] )
+        mEmitters[layerIndex]->enableEmission( enable );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isLayerEmissionEnabled ()
+/// <summary>
+/// Determine if the emission of new particles is currently enabled for the
+/// specified layer.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgParticleEmitterNode::isLayerEmissionEnabled( cgUInt32 layerIndex ) const
+{
+    if ( layerIndex >= mEmitters.size() || !mEmitters[layerIndex] )
+        return false;
+    return mEmitters[layerIndex]->isEmissionEnabled();
 }

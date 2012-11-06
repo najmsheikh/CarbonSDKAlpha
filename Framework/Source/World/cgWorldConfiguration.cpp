@@ -167,7 +167,8 @@ bool cgWorldConfiguration::newConfiguration( cgWorldType::Base type )
 
     // Insert default render classes
     if ( !insertRenderClass( _T("Default"), _T("Default render class. Usually reserved for standard, non-special effect related objects such as meshes.") ) ||
-         !insertRenderClass( _T("Transparent"), _T("Transparent / translucent meshes and special effect related objects such as particle emitters and billboards.") ) )
+         !insertRenderClass( _T("Transparent"), _T("Transparent / translucent meshes.") ) ||
+         !insertRenderClass( _T("Effects"), _T("Special effect related objects such as particle emitters and billboards.") ) )
         return false;
 
     // Populate our local object type lists with the list of types registered

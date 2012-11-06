@@ -885,6 +885,8 @@ bool cgRenderDriver::initShaderSystem()
 		 !(mSystemExportVars.materialFlags = (cgInt32*)mSystemExports->getAddressOfMember( _T("materialFlags") )) ||
 		 !(mSystemExportVars.lightFlags = (cgInt32*)mSystemExports->getAddressOfMember( _T("lightFlags") )) ||
          !(mSystemExportVars.shadingQuality = (cgInt32*)mSystemExports->getAddressOfMember( _T("shadingQuality") )) ||
+		 !(mSystemExportVars.postProcessQuality = (cgInt32*)mSystemExports->getAddressOfMember( _T("postProcessQuality") )) ||
+		 !(mSystemExportVars.antiAliasingQuality = (cgInt32*)mSystemExports->getAddressOfMember( _T("antiAliasingQuality") )) ||
 		 !(mSystemExportVars.outputEncodingType = (cgInt32*)mSystemExports->getAddressOfMember( _T("outputEncodingType") )) ||
          !(mSystemExportVars.fogModel = (cgInt32*)mSystemExports->getAddressOfMember( _T("fogModel") )) ||
 		 !(mSystemExportVars.orthographicCamera = (bool*)mSystemExports->getAddressOfMember( _T("orthographicCamera") )) ||
@@ -1246,6 +1248,12 @@ bool cgRenderDriver::setSystemState( cgSystemState::Base State, cgInt32 Value )
         case cgSystemState::ShadingQuality:
             *mSystemExportVars.shadingQuality = Value;
             break;
+		case cgSystemState::PostProcessQuality:
+			*mSystemExportVars.postProcessQuality = Value;
+			break;
+		case cgSystemState::AntiAliasingQuality:
+			*mSystemExportVars.antiAliasingQuality = Value;
+			break;
         case cgSystemState::OutputEncodingType:
             *mSystemExportVars.outputEncodingType = Value;
             break;
@@ -1632,6 +1640,12 @@ cgInt32 cgRenderDriver::getSystemState( cgSystemState::Base State )
         case cgSystemState::ShadingQuality:
             Value = *mSystemExportVars.shadingQuality;
             break;
+		case cgSystemState::PostProcessQuality:
+			Value = *mSystemExportVars.postProcessQuality;
+			break;
+		case cgSystemState::AntiAliasingQuality:
+			Value = *mSystemExportVars.antiAliasingQuality;
+			break;
 		case cgSystemState::OutputEncodingType:
             Value = *mSystemExportVars.outputEncodingType;
             break;

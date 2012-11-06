@@ -359,7 +359,10 @@ protected:
     cgConstantBufferHandle      mObjectConstants;
     cgConstantBufferHandle      mWorldConstants;
     cgConstantBufferHandle      mVertexBlendingConstants;
-    cgConstantBufferHandle      mVertexBlendingITConstants;
+
+    // Internal vertex textures & samplers
+    cgTextureHandle             mVertexBlendingTexture;
+    cgSamplerStateHandle        mVertexBlendingSampler;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

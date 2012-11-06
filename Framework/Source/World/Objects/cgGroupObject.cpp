@@ -426,7 +426,7 @@ bool cgGroupNode::queryReferenceType( const cgUID & type ) const
 cgBoundingBox cgGroupNode::getLocalBoundingBox( )
 {
     cgTransform InverseGroupTransform;
-    cgTransform::inverse( InverseGroupTransform, getWorldTransform() );
+    cgTransform::inverse( InverseGroupTransform, getWorldTransform(false) );
 
     // Reset cached bounding box
     mBounds.reset();

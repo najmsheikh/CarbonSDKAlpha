@@ -683,7 +683,7 @@ bool cgDX9RenderDriver::postInit()
         ImageDesc.dynamic   = true;
         if ( !mResourceManager->createTexture( &mVertexBlendingTexture, ImageDesc, cgResourceFlags::ForceNew, _T("Core::Textures::VertexBlending"), cgDebugSource() ) )
         {
-            cgAppLog::write( cgAppLog::Error, _T("Failed to create vertex blending matrix texture buffer on the selected device.\n") );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to create vertex blending matrix buffer texture on the selected device.\n") );
             return false;
 
         } // End if failed
@@ -3222,7 +3222,7 @@ bool cgDX9RenderDriver::setVertexBlendData( const cgMatrix pMatrices[], const cg
 
                 // Pack matrix data into the texture.
                 cgUInt32 nPitch;
-                cgVector4 * pRows = (cgVector4*)pTexture->lock( nPitch, cgLockFlags::Discard );
+                cgVector4 * pRows = (cgVector4*)pTexture->lock( nPitch, cgLockFlags::WriteOnly | cgLockFlags::Discard );
                 for ( cgUInt32 i = 0; i < MatrixCount; ++i )
                 {
                     const cgMatrix & m = pMatrices[i];

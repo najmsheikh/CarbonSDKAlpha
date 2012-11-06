@@ -213,6 +213,17 @@ void cgObjectSubElement::setSelected( bool bSelected )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getParentObject ()
+/// <summary>
+/// Retrieve a reference to the object to which this sub-element belongs.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgWorldObject * cgObjectSubElement::getParentObject( ) const
+{
+    return mParentObject;
+}
+
+//-----------------------------------------------------------------------------
 // Name : clone ()
 /// <summary>
 /// Make a duplicate of this object sub-element.

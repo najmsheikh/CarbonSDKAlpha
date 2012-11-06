@@ -129,555 +129,580 @@ class AntialiasingShader : ISurfaceShader
     ///////////////////////////////////////////////////////////////////////////
     // Pixel Shaders
     ///////////////////////////////////////////////////////////////////////////
-	<?common
+	//-------------------------------------------------------------------------
+	// Name : initializeFXAA()
+	// Desc : Sets up the fxaa pre-processor values for shader compilation
+	//-------------------------------------------------------------------------
+    void initializeFXAA( int qualityLevel )
+    {
+		// Set up the fxaa quality preset
+		switch ( qualityLevel )
+		{
+			case AntiAliasingQuality::Poor:
+				<?global #define FXAA_QUALITY__PRESET 10?>
+			break;
+			case AntiAliasingQuality::Low:
+				<?global #define FXAA_QUALITY__PRESET 12?>
+			break;
+			case AntiAliasingQuality::Medium:
+				<?global #define FXAA_QUALITY__PRESET 20?>
+			break;
+			case AntiAliasingQuality::High:
+				<?global #define FXAA_QUALITY__PRESET 29?>
+			break;
+			default:
+				<?global #define FXAA_QUALITY__PRESET 39?>
+			break;
+		}
 
-		#define   FXAA_PC      1
-        #ifdef DX9C
-		#define   FXAA_HLSL_3  1
-        #endif
-        #ifdef DX11
-		#define   FXAA_HLSL_4  1
-        #endif
-		#define	  FXAA_QUALITY__PRESET 39
-
-		/*============================================================================
-
-									 INTEGRATION KNOBS
-
-		============================================================================*/
-		//
-		// FXAA_PS3 and FXAA_360 choose the console algorithm (FXAA3 CONSOLE).
-		// FXAA_360_OPT is a prototype for the new optimized 360 version.
-		//
-		// 1 = Use API.
-		// 0 = Don't use API.
-		//
-		/*--------------------------------------------------------------------------*/
-		#ifndef FXAA_PS3
-			#define FXAA_PS3 0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#ifndef FXAA_360
-			#define FXAA_360 0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#ifndef FXAA_360_OPT
-			#define FXAA_360_OPT 0
-		#endif
-		/*==========================================================================*/
-		#ifndef FXAA_PC
-			//
-			// FXAA Quality
-			// The high quality PC algorithm.
-			//
-			#define FXAA_PC 0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#ifndef FXAA_PC_CONSOLE
-			//
-			// The console algorithm for PC is included
-			// for developers targeting really low spec machines.
-			// Likely better to just run FXAA_PC, and use a really low preset.
-			//
-			#define FXAA_PC_CONSOLE 0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#ifndef FXAA_GLSL_120
-			#define FXAA_GLSL_120 0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#ifndef FXAA_GLSL_130
-			#define FXAA_GLSL_130 0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#ifndef FXAA_HLSL_3
-			#define FXAA_HLSL_3 0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#ifndef FXAA_HLSL_4
-			#define FXAA_HLSL_4 0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#ifndef FXAA_HLSL_5
-			#define FXAA_HLSL_5 0
-		#endif
-		/*==========================================================================*/
-		#ifndef FXAA_GREEN_AS_LUMA
-			//
-			// For those using non-linear color,
-			// and either not able to get luma in alpha, or not wanting to,
-			// this enables FXAA to run using green as a proxy for luma.
-			// So with this enabled, no need to pack luma in alpha.
-			//
-			// This will turn off AA on anything which lacks some amount of green.
-			// Pure red and blue or combination of only R and B, will get no AA.
-			//
-			// Might want to lower the settings for both,
-			//    fxaaConsoleEdgeThresholdMin
-			//    fxaaQualityEdgeThresholdMin
-			// In order to insure AA does not get turned off on colors 
-			// which contain a minor amount of green.
-			//
-			// 1 = On.
-			// 0 = Off.
-			//
-			#define FXAA_GREEN_AS_LUMA 0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#ifndef FXAA_EARLY_EXIT
-			//
-			// Controls algorithm's early exit path.
-			// On PS3 turning this ON adds 2 cycles to the shader.
-			// On 360 turning this OFF adds 10ths of a millisecond to the shader.
-			// Turning this off on console will result in a more blurry image.
-			// So this defaults to on.
-			//
-			// 1 = On.
-			// 0 = Off.
-			//
-			#define FXAA_EARLY_EXIT 1
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#ifndef FXAA_DISCARD
-			//
-			// Only valid for PC OpenGL currently.
-			// Probably will not work when FXAA_GREEN_AS_LUMA = 1.
-			//
-			// 1 = Use discard on pixels which don't need AA.
-			//     For APIs which enable concurrent TEX+ROP from same surface.
-			// 0 = Return unchanged color on pixels which don't need AA.
-			//
-			#define FXAA_DISCARD 0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#ifndef FXAA_FAST_PIXEL_OFFSET
-			//
-			// Used for GLSL 120 only.
-			//
-			// 1 = GL API supports fast pixel offsets
-			// 0 = do not use fast pixel offsets
-			//
-			#ifdef GL_EXT_gpu_shader4
-				#define FXAA_FAST_PIXEL_OFFSET 1
+		<?global
+			#define   FXAA_PC      1
+			#ifdef DX9C
+			#define   FXAA_HLSL_3  1
 			#endif
-			#ifdef GL_NV_gpu_shader5
-				#define FXAA_FAST_PIXEL_OFFSET 1
+			#ifdef DX11
+			#define   FXAA_HLSL_4  1
 			#endif
-			#ifdef GL_ARB_gpu_shader5
-				#define FXAA_FAST_PIXEL_OFFSET 1
+			
+			/*============================================================================
+
+										 INTEGRATION KNOBS
+
+			============================================================================*/
+			//
+			// FXAA_PS3 and FXAA_360 choose the console algorithm (FXAA3 CONSOLE).
+			// FXAA_360_OPT is a prototype for the new optimized 360 version.
+			//
+			// 1 = Use API.
+			// 0 = Don't use API.
+			//
+			/*--------------------------------------------------------------------------*/
+			#ifndef FXAA_PS3
+				#define FXAA_PS3 0
 			#endif
+			/*--------------------------------------------------------------------------*/
+			#ifndef FXAA_360
+				#define FXAA_360 0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#ifndef FXAA_360_OPT
+				#define FXAA_360_OPT 0
+			#endif
+			/*==========================================================================*/
+			#ifndef FXAA_PC
+				//
+				// FXAA Quality
+				// The high quality PC algorithm.
+				//
+				#define FXAA_PC 0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#ifndef FXAA_PC_CONSOLE
+				//
+				// The console algorithm for PC is included
+				// for developers targeting really low spec machines.
+				// Likely better to just run FXAA_PC, and use a really low preset.
+				//
+				#define FXAA_PC_CONSOLE 0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#ifndef FXAA_GLSL_120
+				#define FXAA_GLSL_120 0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#ifndef FXAA_GLSL_130
+				#define FXAA_GLSL_130 0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#ifndef FXAA_HLSL_3
+				#define FXAA_HLSL_3 0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#ifndef FXAA_HLSL_4
+				#define FXAA_HLSL_4 0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#ifndef FXAA_HLSL_5
+				#define FXAA_HLSL_5 0
+			#endif
+			/*==========================================================================*/
+			#ifndef FXAA_GREEN_AS_LUMA
+				//
+				// For those using non-linear color,
+				// and either not able to get luma in alpha, or not wanting to,
+				// this enables FXAA to run using green as a proxy for luma.
+				// So with this enabled, no need to pack luma in alpha.
+				//
+				// This will turn off AA on anything which lacks some amount of green.
+				// Pure red and blue or combination of only R and B, will get no AA.
+				//
+				// Might want to lower the settings for both,
+				//    fxaaConsoleEdgeThresholdMin
+				//    fxaaQualityEdgeThresholdMin
+				// In order to insure AA does not get turned off on colors 
+				// which contain a minor amount of green.
+				//
+				// 1 = On.
+				// 0 = Off.
+				//
+				#define FXAA_GREEN_AS_LUMA 0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#ifndef FXAA_EARLY_EXIT
+				//
+				// Controls algorithm's early exit path.
+				// On PS3 turning this ON adds 2 cycles to the shader.
+				// On 360 turning this OFF adds 10ths of a millisecond to the shader.
+				// Turning this off on console will result in a more blurry image.
+				// So this defaults to on.
+				//
+				// 1 = On.
+				// 0 = Off.
+				//
+				#define FXAA_EARLY_EXIT 1
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#ifndef FXAA_DISCARD
+				//
+				// Only valid for PC OpenGL currently.
+				// Probably will not work when FXAA_GREEN_AS_LUMA = 1.
+				//
+				// 1 = Use discard on pixels which don't need AA.
+				//     For APIs which enable concurrent TEX+ROP from same surface.
+				// 0 = Return unchanged color on pixels which don't need AA.
+				//
+				#define FXAA_DISCARD 0
+			#endif
+			/*--------------------------------------------------------------------------*/
 			#ifndef FXAA_FAST_PIXEL_OFFSET
-				#define FXAA_FAST_PIXEL_OFFSET 0
+				//
+				// Used for GLSL 120 only.
+				//
+				// 1 = GL API supports fast pixel offsets
+				// 0 = do not use fast pixel offsets
+				//
+				#ifdef GL_EXT_gpu_shader4
+					#define FXAA_FAST_PIXEL_OFFSET 1
+				#endif
+				#ifdef GL_NV_gpu_shader5
+					#define FXAA_FAST_PIXEL_OFFSET 1
+				#endif
+				#ifdef GL_ARB_gpu_shader5
+					#define FXAA_FAST_PIXEL_OFFSET 1
+				#endif
+				#ifndef FXAA_FAST_PIXEL_OFFSET
+					#define FXAA_FAST_PIXEL_OFFSET 0
+				#endif
 			#endif
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#ifndef FXAA_GATHER4_ALPHA
-			//
-			// 1 = API supports gather4 on alpha channel.
-			// 0 = API does not support gather4 on alpha channel.
-			//
-			#if (FXAA_HLSL_5 == 1)
-				#define FXAA_GATHER4_ALPHA 1
-			#endif
-			#ifdef GL_ARB_gpu_shader5
-				#define FXAA_GATHER4_ALPHA 1
-			#endif
-			#ifdef GL_NV_gpu_shader5
-				#define FXAA_GATHER4_ALPHA 1
-			#endif
+			/*--------------------------------------------------------------------------*/
 			#ifndef FXAA_GATHER4_ALPHA
-				#define FXAA_GATHER4_ALPHA 0
+				//
+				// 1 = API supports gather4 on alpha channel.
+				// 0 = API does not support gather4 on alpha channel.
+				//
+				#if (FXAA_HLSL_5 == 1)
+					#define FXAA_GATHER4_ALPHA 1
+				#endif
+				#ifdef GL_ARB_gpu_shader5
+					#define FXAA_GATHER4_ALPHA 1
+				#endif
+				#ifdef GL_NV_gpu_shader5
+					#define FXAA_GATHER4_ALPHA 1
+				#endif
+				#ifndef FXAA_GATHER4_ALPHA
+					#define FXAA_GATHER4_ALPHA 0
+				#endif
 			#endif
-		#endif
 
-		/*============================================================================
-							  FXAA CONSOLE PS3 - TUNING KNOBS
-		============================================================================*/
-		#ifndef FXAA_CONSOLE__PS3_EDGE_SHARPNESS
-			//
-			// Consoles the sharpness of edges on PS3 only.
-			// Non-PS3 tuning is done with shader input.
-			//
-			// Due to the PS3 being ALU bound,
-			// there are only two safe values here: 4 and 8.
-			// These options use the shaders ability to a free *|/ by 2|4|8.
-			//
-			// 8.0 is sharper
-			// 4.0 is softer
-			// 2.0 is really soft (good for vector graphics inputs)
-			//
-			#if 1
-				#define FXAA_CONSOLE__PS3_EDGE_SHARPNESS 8.0
+			/*============================================================================
+								  FXAA CONSOLE PS3 - TUNING KNOBS
+			============================================================================*/
+			#ifndef FXAA_CONSOLE__PS3_EDGE_SHARPNESS
+				//
+				// Consoles the sharpness of edges on PS3 only.
+				// Non-PS3 tuning is done with shader input.
+				//
+				// Due to the PS3 being ALU bound,
+				// there are only two safe values here: 4 and 8.
+				// These options use the shaders ability to a free *|/ by 2|4|8.
+				//
+				// 8.0 is sharper
+				// 4.0 is softer
+				// 2.0 is really soft (good for vector graphics inputs)
+				//
+				#if 1
+					#define FXAA_CONSOLE__PS3_EDGE_SHARPNESS 8.0
+				#endif
+				#if 0
+					#define FXAA_CONSOLE__PS3_EDGE_SHARPNESS 4.0
+				#endif
+				#if 0
+					#define FXAA_CONSOLE__PS3_EDGE_SHARPNESS 2.0
+				#endif
 			#endif
-			#if 0
-				#define FXAA_CONSOLE__PS3_EDGE_SHARPNESS 4.0
+			/*--------------------------------------------------------------------------*/
+			#ifndef FXAA_CONSOLE__PS3_EDGE_THRESHOLD
+				//
+				// Only effects PS3.
+				// Non-PS3 tuning is done with shader input.
+				//
+				// The minimum amount of local contrast required to apply algorithm.
+				// The console setting has a different mapping than the quality setting.
+				//
+				// This only applies when FXAA_EARLY_EXIT is 1.
+				//
+				// Due to the PS3 being ALU bound,
+				// there are only two safe values here: 0.25 and 0.125.
+				// These options use the shaders ability to a free *|/ by 2|4|8.
+				//
+				// 0.125 leaves less aliasing, but is softer
+				// 0.25 leaves more aliasing, and is sharper
+				//
+				#if 1
+					#define FXAA_CONSOLE__PS3_EDGE_THRESHOLD 0.125
+				#else
+					#define FXAA_CONSOLE__PS3_EDGE_THRESHOLD 0.25
+				#endif
 			#endif
-			#if 0
-				#define FXAA_CONSOLE__PS3_EDGE_SHARPNESS 2.0
+
+			/*============================================================================
+									FXAA QUALITY - TUNING KNOBS
+			------------------------------------------------------------------------------
+			NOTE the other tuning knobs are now in the shader function inputs!
+			============================================================================*/
+			#ifndef FXAA_QUALITY__PRESET
+				//
+				// Choose the quality preset.
+				// This needs to be compiled into the shader as it effects code.
+				// Best option to include multiple presets is to 
+				// in each shader define the preset, then include this file.
+				// 
+				// OPTIONS
+				// -----------------------------------------------------------------------
+				// 10 to 15 - default medium dither (10=fastest, 15=highest quality)
+				// 20 to 29 - less dither, more expensive (20=fastest, 29=highest quality)
+				// 39       - no dither, very expensive 
+				//
+				// NOTES
+				// -----------------------------------------------------------------------
+				// 12 = slightly faster then FXAA 3.9 and higher edge quality (default)
+				// 13 = about same speed as FXAA 3.9 and better than 12
+				// 23 = closest to FXAA 3.9 visually and performance wise
+				//  _ = the lowest digit is directly related to performance
+				// _  = the highest digit is directly related to style
+				// 
+				#define FXAA_QUALITY__PRESET 12
 			#endif
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#ifndef FXAA_CONSOLE__PS3_EDGE_THRESHOLD
-			//
-			// Only effects PS3.
-			// Non-PS3 tuning is done with shader input.
-			//
-			// The minimum amount of local contrast required to apply algorithm.
-			// The console setting has a different mapping than the quality setting.
-			//
-			// This only applies when FXAA_EARLY_EXIT is 1.
-			//
-			// Due to the PS3 being ALU bound,
-			// there are only two safe values here: 0.25 and 0.125.
-			// These options use the shaders ability to a free *|/ by 2|4|8.
-			//
-			// 0.125 leaves less aliasing, but is softer
-			// 0.25 leaves more aliasing, and is sharper
-			//
-			#if 1
-				#define FXAA_CONSOLE__PS3_EDGE_THRESHOLD 0.125
+
+
+			/*============================================================================
+
+									   FXAA QUALITY - PRESETS
+
+			============================================================================*/
+
+			/*============================================================================
+								 FXAA QUALITY - MEDIUM DITHER PRESETS
+			============================================================================*/
+			#if (FXAA_QUALITY__PRESET == 10)
+				#define FXAA_QUALITY__PS 3
+				#define FXAA_QUALITY__P0 1.5
+				#define FXAA_QUALITY__P1 3.0
+				#define FXAA_QUALITY__P2 12.0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_QUALITY__PRESET == 11)
+				#define FXAA_QUALITY__PS 4
+				#define FXAA_QUALITY__P0 1.0
+				#define FXAA_QUALITY__P1 1.5
+				#define FXAA_QUALITY__P2 3.0
+				#define FXAA_QUALITY__P3 12.0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_QUALITY__PRESET == 12)
+				#define FXAA_QUALITY__PS 5
+				#define FXAA_QUALITY__P0 1.0
+				#define FXAA_QUALITY__P1 1.5
+				#define FXAA_QUALITY__P2 2.0
+				#define FXAA_QUALITY__P3 4.0
+				#define FXAA_QUALITY__P4 12.0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_QUALITY__PRESET == 13)
+				#define FXAA_QUALITY__PS 6
+				#define FXAA_QUALITY__P0 1.0
+				#define FXAA_QUALITY__P1 1.5
+				#define FXAA_QUALITY__P2 2.0
+				#define FXAA_QUALITY__P3 2.0
+				#define FXAA_QUALITY__P4 4.0
+				#define FXAA_QUALITY__P5 12.0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_QUALITY__PRESET == 14)
+				#define FXAA_QUALITY__PS 7
+				#define FXAA_QUALITY__P0 1.0
+				#define FXAA_QUALITY__P1 1.5
+				#define FXAA_QUALITY__P2 2.0
+				#define FXAA_QUALITY__P3 2.0
+				#define FXAA_QUALITY__P4 2.0
+				#define FXAA_QUALITY__P5 4.0
+				#define FXAA_QUALITY__P6 12.0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_QUALITY__PRESET == 15)
+				#define FXAA_QUALITY__PS 8
+				#define FXAA_QUALITY__P0 1.0
+				#define FXAA_QUALITY__P1 1.5
+				#define FXAA_QUALITY__P2 2.0
+				#define FXAA_QUALITY__P3 2.0
+				#define FXAA_QUALITY__P4 2.0
+				#define FXAA_QUALITY__P5 2.0
+				#define FXAA_QUALITY__P6 4.0
+				#define FXAA_QUALITY__P7 12.0
+			#endif
+
+			/*============================================================================
+								 FXAA QUALITY - LOW DITHER PRESETS
+			============================================================================*/
+			#if (FXAA_QUALITY__PRESET == 20)
+				#define FXAA_QUALITY__PS 3
+				#define FXAA_QUALITY__P0 1.5
+				#define FXAA_QUALITY__P1 2.0
+				#define FXAA_QUALITY__P2 8.0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_QUALITY__PRESET == 21)
+				#define FXAA_QUALITY__PS 4
+				#define FXAA_QUALITY__P0 1.0
+				#define FXAA_QUALITY__P1 1.5
+				#define FXAA_QUALITY__P2 2.0
+				#define FXAA_QUALITY__P3 8.0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_QUALITY__PRESET == 22)
+				#define FXAA_QUALITY__PS 5
+				#define FXAA_QUALITY__P0 1.0
+				#define FXAA_QUALITY__P1 1.5
+				#define FXAA_QUALITY__P2 2.0
+				#define FXAA_QUALITY__P3 2.0
+				#define FXAA_QUALITY__P4 8.0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_QUALITY__PRESET == 23)
+				#define FXAA_QUALITY__PS 6
+				#define FXAA_QUALITY__P0 1.0
+				#define FXAA_QUALITY__P1 1.5
+				#define FXAA_QUALITY__P2 2.0
+				#define FXAA_QUALITY__P3 2.0
+				#define FXAA_QUALITY__P4 2.0
+				#define FXAA_QUALITY__P5 8.0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_QUALITY__PRESET == 24)
+				#define FXAA_QUALITY__PS 7
+				#define FXAA_QUALITY__P0 1.0
+				#define FXAA_QUALITY__P1 1.5
+				#define FXAA_QUALITY__P2 2.0
+				#define FXAA_QUALITY__P3 2.0
+				#define FXAA_QUALITY__P4 2.0
+				#define FXAA_QUALITY__P5 3.0
+				#define FXAA_QUALITY__P6 8.0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_QUALITY__PRESET == 25)
+				#define FXAA_QUALITY__PS 8
+				#define FXAA_QUALITY__P0 1.0
+				#define FXAA_QUALITY__P1 1.5
+				#define FXAA_QUALITY__P2 2.0
+				#define FXAA_QUALITY__P3 2.0
+				#define FXAA_QUALITY__P4 2.0
+				#define FXAA_QUALITY__P5 2.0
+				#define FXAA_QUALITY__P6 4.0
+				#define FXAA_QUALITY__P7 8.0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_QUALITY__PRESET == 26)
+				#define FXAA_QUALITY__PS 9
+				#define FXAA_QUALITY__P0 1.0
+				#define FXAA_QUALITY__P1 1.5
+				#define FXAA_QUALITY__P2 2.0
+				#define FXAA_QUALITY__P3 2.0
+				#define FXAA_QUALITY__P4 2.0
+				#define FXAA_QUALITY__P5 2.0
+				#define FXAA_QUALITY__P6 2.0
+				#define FXAA_QUALITY__P7 4.0
+				#define FXAA_QUALITY__P8 8.0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_QUALITY__PRESET == 27)
+				#define FXAA_QUALITY__PS 10
+				#define FXAA_QUALITY__P0 1.0
+				#define FXAA_QUALITY__P1 1.5
+				#define FXAA_QUALITY__P2 2.0
+				#define FXAA_QUALITY__P3 2.0
+				#define FXAA_QUALITY__P4 2.0
+				#define FXAA_QUALITY__P5 2.0
+				#define FXAA_QUALITY__P6 2.0
+				#define FXAA_QUALITY__P7 2.0
+				#define FXAA_QUALITY__P8 4.0
+				#define FXAA_QUALITY__P9 8.0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_QUALITY__PRESET == 28)
+				#define FXAA_QUALITY__PS 11
+				#define FXAA_QUALITY__P0 1.0
+				#define FXAA_QUALITY__P1 1.5
+				#define FXAA_QUALITY__P2 2.0
+				#define FXAA_QUALITY__P3 2.0
+				#define FXAA_QUALITY__P4 2.0
+				#define FXAA_QUALITY__P5 2.0
+				#define FXAA_QUALITY__P6 2.0
+				#define FXAA_QUALITY__P7 2.0
+				#define FXAA_QUALITY__P8 2.0
+				#define FXAA_QUALITY__P9 4.0
+				#define FXAA_QUALITY__P10 8.0
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_QUALITY__PRESET == 29)
+				#define FXAA_QUALITY__PS 12
+				#define FXAA_QUALITY__P0 1.0
+				#define FXAA_QUALITY__P1 1.5
+				#define FXAA_QUALITY__P2 2.0
+				#define FXAA_QUALITY__P3 2.0
+				#define FXAA_QUALITY__P4 2.0
+				#define FXAA_QUALITY__P5 2.0
+				#define FXAA_QUALITY__P6 2.0
+				#define FXAA_QUALITY__P7 2.0
+				#define FXAA_QUALITY__P8 2.0
+				#define FXAA_QUALITY__P9 2.0
+				#define FXAA_QUALITY__P10 4.0
+				#define FXAA_QUALITY__P11 8.0
+			#endif
+
+			/*============================================================================
+								 FXAA QUALITY - EXTREME QUALITY
+			============================================================================*/
+			#if (FXAA_QUALITY__PRESET == 39)
+				#define FXAA_QUALITY__PS 12
+				#define FXAA_QUALITY__P0 1.0
+				#define FXAA_QUALITY__P1 1.0
+				#define FXAA_QUALITY__P2 1.0
+				#define FXAA_QUALITY__P3 1.0
+				#define FXAA_QUALITY__P4 1.0
+				#define FXAA_QUALITY__P5 1.5
+				#define FXAA_QUALITY__P6 2.0
+				#define FXAA_QUALITY__P7 2.0
+				#define FXAA_QUALITY__P8 2.0
+				#define FXAA_QUALITY__P9 2.0
+				#define FXAA_QUALITY__P10 4.0
+				#define FXAA_QUALITY__P11 8.0
+			#endif
+
+			/*============================================================================
+
+											API PORTING
+
+			============================================================================*/
+			#if (FXAA_GLSL_120 == 1) || (FXAA_GLSL_130 == 1)
+				#define FxaaBool bool
+				#define FxaaDiscard discard
+				#define FxaaFloat float
+				#define FxaaFloat2 vec2
+				#define FxaaFloat3 vec3
+				#define FxaaFloat4 vec4
+				#define FxaaHalf float
+				#define FxaaHalf2 vec2
+				#define FxaaHalf3 vec3
+				#define FxaaHalf4 vec4
+				#define FxaaInt2 ivec2
+				#define FxaaSat(x) clamp(x, 0.0, 1.0)
+				#define FxaaTex sampler2D
 			#else
-				#define FXAA_CONSOLE__PS3_EDGE_THRESHOLD 0.25
+				#define FxaaBool bool
+				#define FxaaDiscard clip(-1)
+				#define FxaaFloat float
+				#define FxaaFloat2 float2
+				#define FxaaFloat3 float3
+				#define FxaaFloat4 float4
+				#define FxaaHalf half
+				#define FxaaHalf2 half2
+				#define FxaaHalf3 half3
+				#define FxaaHalf4 half4
+				#define FxaaSat(x) saturate(x)
 			#endif
-		#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_GLSL_120 == 1)
+				// Requires,
+				//  #version 120
+				// And at least,
+				//  #extension GL_EXT_gpu_shader4 : enable
+				//  (or set FXAA_FAST_PIXEL_OFFSET 1 to work like DX9)
+				#define FxaaTexTop(t, p) texture2DLod(t, p, 0.0)
+				#if (FXAA_FAST_PIXEL_OFFSET == 1)
+					#define FxaaTexOff(t, p, o, r) texture2DLodOffset(t, p, 0.0, o)
+				#else
+					#define FxaaTexOff(t, p, o, r) texture2DLod(t, p + (o * r), 0.0)
+				#endif
+				#if (FXAA_GATHER4_ALPHA == 1)
+					// use #extension GL_ARB_gpu_shader5 : enable
+					#define FxaaTexAlpha4(t, p) textureGather(t, p, 3)
+					#define FxaaTexOffAlpha4(t, p, o) textureGatherOffset(t, p, o, 3)
+					#define FxaaTexGreen4(t, p) textureGather(t, p, 1)
+					#define FxaaTexOffGreen4(t, p, o) textureGatherOffset(t, p, o, 1)
+				#endif
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_GLSL_130 == 1)
+				// Requires "#version 130" or better
+				#define FxaaTexTop(t, p) textureLod(t, p, 0.0)
+				#define FxaaTexOff(t, p, o, r) textureLodOffset(t, p, 0.0, o)
+				#if (FXAA_GATHER4_ALPHA == 1)
+					// use #extension GL_ARB_gpu_shader5 : enable
+					#define FxaaTexAlpha4(t, p) textureGather(t, p, 3)
+					#define FxaaTexOffAlpha4(t, p, o) textureGatherOffset(t, p, o, 3)
+					#define FxaaTexGreen4(t, p) textureGather(t, p, 1)
+					#define FxaaTexOffGreen4(t, p, o) textureGatherOffset(t, p, o, 1)
+				#endif
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_HLSL_3 == 1) || (FXAA_360 == 1) || (FXAA_PS3 == 1)
+				#define FxaaInt2 float2
+				#define FxaaTex sampler2D
+				#define FxaaTexTop(t, p) tex2Dlod(t, float4(p, 0.0, 0.0))
+				#define FxaaTexOff(t, p, o, r) tex2Dlod(t, float4(p + (o * r), 0, 0))
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_HLSL_4 == 1)
+				#define FxaaInt2 int2
+				struct FxaaTex { SamplerState smpl; Texture2D tex; };
+				#define FxaaTexTop(t, p) t.tex.SampleLevel(t.smpl, p, 0.0)
+				#define FxaaTexOff(t, p, o, r) t.tex.SampleLevel(t.smpl, p, 0.0, o)
+			#endif
+			/*--------------------------------------------------------------------------*/
+			#if (FXAA_HLSL_5 == 1)
+				#define FxaaInt2 int2
+				struct FxaaTex { SamplerState smpl; Texture2D tex; };
+				#define FxaaTexTop(t, p) t.tex.SampleLevel(t.smpl, p, 0.0)
+				#define FxaaTexOff(t, p, o, r) t.tex.SampleLevel(t.smpl, p, 0.0, o)
+				#define FxaaTexAlpha4(t, p) t.tex.GatherAlpha(t.smpl, p)
+				#define FxaaTexOffAlpha4(t, p, o) t.tex.GatherAlpha(t.smpl, p, o)
+				#define FxaaTexGreen4(t, p) t.tex.GatherGreen(t.smpl, p)
+				#define FxaaTexOffGreen4(t, p, o) t.tex.GatherGreen(t.smpl, p, o)
+			#endif
 
-		/*============================================================================
-								FXAA QUALITY - TUNING KNOBS
-		------------------------------------------------------------------------------
-		NOTE the other tuning knobs are now in the shader function inputs!
-		============================================================================*/
-		#ifndef FXAA_QUALITY__PRESET
-			//
-			// Choose the quality preset.
-			// This needs to be compiled into the shader as it effects code.
-			// Best option to include multiple presets is to 
-			// in each shader define the preset, then include this file.
-			// 
-			// OPTIONS
-			// -----------------------------------------------------------------------
-			// 10 to 15 - default medium dither (10=fastest, 15=highest quality)
-			// 20 to 29 - less dither, more expensive (20=fastest, 29=highest quality)
-			// 39       - no dither, very expensive 
-			//
-			// NOTES
-			// -----------------------------------------------------------------------
-			// 12 = slightly faster then FXAA 3.9 and higher edge quality (default)
-			// 13 = about same speed as FXAA 3.9 and better than 12
-			// 23 = closest to FXAA 3.9 visually and performance wise
-			//  _ = the lowest digit is directly related to performance
-			// _  = the highest digit is directly related to style
-			// 
-			#define FXAA_QUALITY__PRESET 12
-		#endif
 
-
-		/*============================================================================
-
-								   FXAA QUALITY - PRESETS
-
-		============================================================================*/
-
-		/*============================================================================
-							 FXAA QUALITY - MEDIUM DITHER PRESETS
-		============================================================================*/
-		#if (FXAA_QUALITY__PRESET == 10)
-			#define FXAA_QUALITY__PS 3
-			#define FXAA_QUALITY__P0 1.5
-			#define FXAA_QUALITY__P1 3.0
-			#define FXAA_QUALITY__P2 12.0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_QUALITY__PRESET == 11)
-			#define FXAA_QUALITY__PS 4
-			#define FXAA_QUALITY__P0 1.0
-			#define FXAA_QUALITY__P1 1.5
-			#define FXAA_QUALITY__P2 3.0
-			#define FXAA_QUALITY__P3 12.0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_QUALITY__PRESET == 12)
-			#define FXAA_QUALITY__PS 5
-			#define FXAA_QUALITY__P0 1.0
-			#define FXAA_QUALITY__P1 1.5
-			#define FXAA_QUALITY__P2 2.0
-			#define FXAA_QUALITY__P3 4.0
-			#define FXAA_QUALITY__P4 12.0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_QUALITY__PRESET == 13)
-			#define FXAA_QUALITY__PS 6
-			#define FXAA_QUALITY__P0 1.0
-			#define FXAA_QUALITY__P1 1.5
-			#define FXAA_QUALITY__P2 2.0
-			#define FXAA_QUALITY__P3 2.0
-			#define FXAA_QUALITY__P4 4.0
-			#define FXAA_QUALITY__P5 12.0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_QUALITY__PRESET == 14)
-			#define FXAA_QUALITY__PS 7
-			#define FXAA_QUALITY__P0 1.0
-			#define FXAA_QUALITY__P1 1.5
-			#define FXAA_QUALITY__P2 2.0
-			#define FXAA_QUALITY__P3 2.0
-			#define FXAA_QUALITY__P4 2.0
-			#define FXAA_QUALITY__P5 4.0
-			#define FXAA_QUALITY__P6 12.0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_QUALITY__PRESET == 15)
-			#define FXAA_QUALITY__PS 8
-			#define FXAA_QUALITY__P0 1.0
-			#define FXAA_QUALITY__P1 1.5
-			#define FXAA_QUALITY__P2 2.0
-			#define FXAA_QUALITY__P3 2.0
-			#define FXAA_QUALITY__P4 2.0
-			#define FXAA_QUALITY__P5 2.0
-			#define FXAA_QUALITY__P6 4.0
-			#define FXAA_QUALITY__P7 12.0
-		#endif
-
-		/*============================================================================
-							 FXAA QUALITY - LOW DITHER PRESETS
-		============================================================================*/
-		#if (FXAA_QUALITY__PRESET == 20)
-			#define FXAA_QUALITY__PS 3
-			#define FXAA_QUALITY__P0 1.5
-			#define FXAA_QUALITY__P1 2.0
-			#define FXAA_QUALITY__P2 8.0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_QUALITY__PRESET == 21)
-			#define FXAA_QUALITY__PS 4
-			#define FXAA_QUALITY__P0 1.0
-			#define FXAA_QUALITY__P1 1.5
-			#define FXAA_QUALITY__P2 2.0
-			#define FXAA_QUALITY__P3 8.0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_QUALITY__PRESET == 22)
-			#define FXAA_QUALITY__PS 5
-			#define FXAA_QUALITY__P0 1.0
-			#define FXAA_QUALITY__P1 1.5
-			#define FXAA_QUALITY__P2 2.0
-			#define FXAA_QUALITY__P3 2.0
-			#define FXAA_QUALITY__P4 8.0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_QUALITY__PRESET == 23)
-			#define FXAA_QUALITY__PS 6
-			#define FXAA_QUALITY__P0 1.0
-			#define FXAA_QUALITY__P1 1.5
-			#define FXAA_QUALITY__P2 2.0
-			#define FXAA_QUALITY__P3 2.0
-			#define FXAA_QUALITY__P4 2.0
-			#define FXAA_QUALITY__P5 8.0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_QUALITY__PRESET == 24)
-			#define FXAA_QUALITY__PS 7
-			#define FXAA_QUALITY__P0 1.0
-			#define FXAA_QUALITY__P1 1.5
-			#define FXAA_QUALITY__P2 2.0
-			#define FXAA_QUALITY__P3 2.0
-			#define FXAA_QUALITY__P4 2.0
-			#define FXAA_QUALITY__P5 3.0
-			#define FXAA_QUALITY__P6 8.0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_QUALITY__PRESET == 25)
-			#define FXAA_QUALITY__PS 8
-			#define FXAA_QUALITY__P0 1.0
-			#define FXAA_QUALITY__P1 1.5
-			#define FXAA_QUALITY__P2 2.0
-			#define FXAA_QUALITY__P3 2.0
-			#define FXAA_QUALITY__P4 2.0
-			#define FXAA_QUALITY__P5 2.0
-			#define FXAA_QUALITY__P6 4.0
-			#define FXAA_QUALITY__P7 8.0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_QUALITY__PRESET == 26)
-			#define FXAA_QUALITY__PS 9
-			#define FXAA_QUALITY__P0 1.0
-			#define FXAA_QUALITY__P1 1.5
-			#define FXAA_QUALITY__P2 2.0
-			#define FXAA_QUALITY__P3 2.0
-			#define FXAA_QUALITY__P4 2.0
-			#define FXAA_QUALITY__P5 2.0
-			#define FXAA_QUALITY__P6 2.0
-			#define FXAA_QUALITY__P7 4.0
-			#define FXAA_QUALITY__P8 8.0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_QUALITY__PRESET == 27)
-			#define FXAA_QUALITY__PS 10
-			#define FXAA_QUALITY__P0 1.0
-			#define FXAA_QUALITY__P1 1.5
-			#define FXAA_QUALITY__P2 2.0
-			#define FXAA_QUALITY__P3 2.0
-			#define FXAA_QUALITY__P4 2.0
-			#define FXAA_QUALITY__P5 2.0
-			#define FXAA_QUALITY__P6 2.0
-			#define FXAA_QUALITY__P7 2.0
-			#define FXAA_QUALITY__P8 4.0
-			#define FXAA_QUALITY__P9 8.0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_QUALITY__PRESET == 28)
-			#define FXAA_QUALITY__PS 11
-			#define FXAA_QUALITY__P0 1.0
-			#define FXAA_QUALITY__P1 1.5
-			#define FXAA_QUALITY__P2 2.0
-			#define FXAA_QUALITY__P3 2.0
-			#define FXAA_QUALITY__P4 2.0
-			#define FXAA_QUALITY__P5 2.0
-			#define FXAA_QUALITY__P6 2.0
-			#define FXAA_QUALITY__P7 2.0
-			#define FXAA_QUALITY__P8 2.0
-			#define FXAA_QUALITY__P9 4.0
-			#define FXAA_QUALITY__P10 8.0
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_QUALITY__PRESET == 29)
-			#define FXAA_QUALITY__PS 12
-			#define FXAA_QUALITY__P0 1.0
-			#define FXAA_QUALITY__P1 1.5
-			#define FXAA_QUALITY__P2 2.0
-			#define FXAA_QUALITY__P3 2.0
-			#define FXAA_QUALITY__P4 2.0
-			#define FXAA_QUALITY__P5 2.0
-			#define FXAA_QUALITY__P6 2.0
-			#define FXAA_QUALITY__P7 2.0
-			#define FXAA_QUALITY__P8 2.0
-			#define FXAA_QUALITY__P9 2.0
-			#define FXAA_QUALITY__P10 4.0
-			#define FXAA_QUALITY__P11 8.0
-		#endif
-
-		/*============================================================================
-							 FXAA QUALITY - EXTREME QUALITY
-		============================================================================*/
-		#if (FXAA_QUALITY__PRESET == 39)
-			#define FXAA_QUALITY__PS 12
-			#define FXAA_QUALITY__P0 1.0
-			#define FXAA_QUALITY__P1 1.0
-			#define FXAA_QUALITY__P2 1.0
-			#define FXAA_QUALITY__P3 1.0
-			#define FXAA_QUALITY__P4 1.0
-			#define FXAA_QUALITY__P5 1.5
-			#define FXAA_QUALITY__P6 2.0
-			#define FXAA_QUALITY__P7 2.0
-			#define FXAA_QUALITY__P8 2.0
-			#define FXAA_QUALITY__P9 2.0
-			#define FXAA_QUALITY__P10 4.0
-			#define FXAA_QUALITY__P11 8.0
-		#endif
-
-		/*============================================================================
-
-										API PORTING
-
-		============================================================================*/
-		#if (FXAA_GLSL_120 == 1) || (FXAA_GLSL_130 == 1)
-			#define FxaaBool bool
-			#define FxaaDiscard discard
-			#define FxaaFloat float
-			#define FxaaFloat2 vec2
-			#define FxaaFloat3 vec3
-			#define FxaaFloat4 vec4
-			#define FxaaHalf float
-			#define FxaaHalf2 vec2
-			#define FxaaHalf3 vec3
-			#define FxaaHalf4 vec4
-			#define FxaaInt2 ivec2
-			#define FxaaSat(x) clamp(x, 0.0, 1.0)
-			#define FxaaTex sampler2D
-		#else
-			#define FxaaBool bool
-			#define FxaaDiscard clip(-1)
-			#define FxaaFloat float
-			#define FxaaFloat2 float2
-			#define FxaaFloat3 float3
-			#define FxaaFloat4 float4
-			#define FxaaHalf half
-			#define FxaaHalf2 half2
-			#define FxaaHalf3 half3
-			#define FxaaHalf4 half4
-			#define FxaaSat(x) saturate(x)
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_GLSL_120 == 1)
-			// Requires,
-			//  #version 120
-			// And at least,
-			//  #extension GL_EXT_gpu_shader4 : enable
-			//  (or set FXAA_FAST_PIXEL_OFFSET 1 to work like DX9)
-			#define FxaaTexTop(t, p) texture2DLod(t, p, 0.0)
-			#if (FXAA_FAST_PIXEL_OFFSET == 1)
-				#define FxaaTexOff(t, p, o, r) texture2DLodOffset(t, p, 0.0, o)
+			/*============================================================================
+							   GREEN AS LUMA OPTION SUPPORT FUNCTION
+			============================================================================*/
+			#if (FXAA_GREEN_AS_LUMA == 0)
+				FxaaFloat FxaaLuma(FxaaFloat4 rgba) { return rgba.w; }
 			#else
-				#define FxaaTexOff(t, p, o, r) texture2DLod(t, p + (o * r), 0.0)
-			#endif
-			#if (FXAA_GATHER4_ALPHA == 1)
-				// use #extension GL_ARB_gpu_shader5 : enable
-				#define FxaaTexAlpha4(t, p) textureGather(t, p, 3)
-				#define FxaaTexOffAlpha4(t, p, o) textureGatherOffset(t, p, o, 3)
-				#define FxaaTexGreen4(t, p) textureGather(t, p, 1)
-				#define FxaaTexOffGreen4(t, p, o) textureGatherOffset(t, p, o, 1)
-			#endif
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_GLSL_130 == 1)
-			// Requires "#version 130" or better
-			#define FxaaTexTop(t, p) textureLod(t, p, 0.0)
-			#define FxaaTexOff(t, p, o, r) textureLodOffset(t, p, 0.0, o)
-			#if (FXAA_GATHER4_ALPHA == 1)
-				// use #extension GL_ARB_gpu_shader5 : enable
-				#define FxaaTexAlpha4(t, p) textureGather(t, p, 3)
-				#define FxaaTexOffAlpha4(t, p, o) textureGatherOffset(t, p, o, 3)
-				#define FxaaTexGreen4(t, p) textureGather(t, p, 1)
-				#define FxaaTexOffGreen4(t, p, o) textureGatherOffset(t, p, o, 1)
-			#endif
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_HLSL_3 == 1) || (FXAA_360 == 1) || (FXAA_PS3 == 1)
-			#define FxaaInt2 float2
-			#define FxaaTex sampler2D
-			#define FxaaTexTop(t, p) tex2Dlod(t, float4(p, 0.0, 0.0))
-			#define FxaaTexOff(t, p, o, r) tex2Dlod(t, float4(p + (o * r), 0, 0))
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_HLSL_4 == 1)
-			#define FxaaInt2 int2
-			struct FxaaTex { SamplerState smpl; Texture2D tex; };
-			#define FxaaTexTop(t, p) t.tex.SampleLevel(t.smpl, p, 0.0)
-			#define FxaaTexOff(t, p, o, r) t.tex.SampleLevel(t.smpl, p, 0.0, o)
-		#endif
-		/*--------------------------------------------------------------------------*/
-		#if (FXAA_HLSL_5 == 1)
-			#define FxaaInt2 int2
-			struct FxaaTex { SamplerState smpl; Texture2D tex; };
-			#define FxaaTexTop(t, p) t.tex.SampleLevel(t.smpl, p, 0.0)
-			#define FxaaTexOff(t, p, o, r) t.tex.SampleLevel(t.smpl, p, 0.0, o)
-			#define FxaaTexAlpha4(t, p) t.tex.GatherAlpha(t.smpl, p)
-			#define FxaaTexOffAlpha4(t, p, o) t.tex.GatherAlpha(t.smpl, p, o)
-			#define FxaaTexGreen4(t, p) t.tex.GatherGreen(t.smpl, p)
-			#define FxaaTexOffGreen4(t, p, o) t.tex.GatherGreen(t.smpl, p, o)
-		#endif
+				FxaaFloat FxaaLuma(FxaaFloat4 rgba) { return rgba.y; }
+			#endif    
 
-
-		/*============================================================================
-						   GREEN AS LUMA OPTION SUPPORT FUNCTION
-		============================================================================*/
-		#if (FXAA_GREEN_AS_LUMA == 0)
-			FxaaFloat FxaaLuma(FxaaFloat4 rgba) { return rgba.w; }
-		#else
-			FxaaFloat FxaaLuma(FxaaFloat4 rgba) { return rgba.y; }
-		#endif    
-
-	?>
-
+		?>
+		
+	} // End initializeFXAA function
 
 	/*============================================================================
 								 FXAA3 QUALITY - PC
@@ -1051,7 +1076,7 @@ class AntialiasingShader : ISurfaceShader
 	// Name : psFXAA (Pixel Shader)
 	// Desc : Runs the FXAA pixel shader by Timothy Lotte (version 3.11)
 	//-----------------------------------------------------------------------------
-    bool fxaa( bool reverseToneMap )
+    bool fxaa( int qualityLevel, bool reverseToneMap )
     {
         /////////////////////////////////////////////
         // Definitions
@@ -1075,9 +1100,12 @@ class AntialiasingShader : ISurfaceShader
         /////////////////////////////////////////////
         // Shader Code
         /////////////////////////////////////////////
-		<?
 
-        // Compute texture coordinates
+		// Run the fxaa initialization function
+	    initializeFXAA( qualityLevel );
+
+		<?
+	    // Compute texture coordinates
         float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
 		
 		// Prepare the required data
@@ -1119,7 +1147,7 @@ class AntialiasingShader : ISurfaceShader
 		{
 			<?
 			float vignetteBias  = 0.65f;
-			float vignetteScale = 0.45f;
+			float vignetteScale = 0.75f;
 			float2 clipCoords   = texCoords * 2.0f - 1.0f;
 			float  sqLength     = dot( clipCoords, clipCoords );
 			color.rgb *= saturate( 1.0f - (sqLength - vignetteBias) * vignetteScale );

@@ -137,7 +137,7 @@ bool cgScriptPreprocessor::process( cgInputStream Stream, const DefinitionMap & 
     // Load the top level script.
     aSourceFiles.clear();
     mDefinitions = Defines;
-    if ( loadScriptSection( pModule, Stream, aSourceFiles ) == false )
+    if ( !loadScriptSection( pModule, Stream, aSourceFiles, false ) )
     {
         if ( mEngine->Release() == 0 )
             mEngine = CG_NULL;
@@ -170,7 +170,7 @@ bool cgScriptPreprocessor::process( cgInputStream Stream, const DefinitionMap & 
             strShaderGlobals.append( "String __shsyscmnvs(){ return System.SystemCommon(0);}\n" );
             strShaderGlobals.append( "String __shsyscmnps(){ return System.SystemCommon(1);}\n" );
             pModule->AddScriptSection( "__ShaderScriptGlobals", strShaderGlobals.c_str(), strShaderGlobals.size(), 0 );
-            if ( loadScriptSection( pModule, SysDefStream, aSourceFiles ) == false )
+            if ( !loadScriptSection( pModule, SysDefStream, aSourceFiles, false ) )
             {
                 if ( mEngine->Release() == 0 )
                     mEngine = CG_NULL;
@@ -197,7 +197,7 @@ bool cgScriptPreprocessor::process( cgInputStream Stream, const DefinitionMap & 
 /// add to the specified module
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgScriptPreprocessor::loadScriptSection( asIScriptModule * pModule, cgInputStream & Stream, cgScript::SourceFileArray & aSourceFiles )
+bool cgScriptPreprocessor::loadScriptSection( asIScriptModule * pModule, cgInputStream & Stream, cgScript::SourceFileArray & aSourceFiles, bool bIncludeOnce )
 {
     STRING_CONVERT;  // For string conversion macro
     size_t           nCodeLength;
@@ -288,6 +288,14 @@ bool cgScriptPreprocessor::loadScriptSection( asIScriptModule * pModule, cgInput
         memcpy( Info.hash, Hash, 20 );
     
     } // End if insert new
+    else
+    {
+        // If the user specified the include_once directive, skip this
+        // file since it matched one that was already loaded.
+        if ( bIncludeOnce )
+            return true;
+
+    } // End if match existing
     
     // Process the script to include all necessary headers, etc.
     if ( processScriptSection( pModule, strScript, Stream.getName(), aSourceFiles ) == false )
@@ -478,6 +486,7 @@ bool cgScriptPreprocessor::parsePreprocessorDirective( TokenData & t, std::strin
     STRING_CONVERT;
     std::string strToken;
     size_t nDirectiveStart = t.tokenStart;
+    bool bIncludeOnce = false;
 
     // Reset position to just following the '#' character
     // in case the tokenizer pushed us past the directive label.
@@ -809,7 +818,7 @@ bool cgScriptPreprocessor::parsePreprocessorDirective( TokenData & t, std::strin
         } // End if !identifier
 
     } // End if '#undef'
-    else if ( strToken == "include" )
+    else if ( (bIncludeOnce = (strToken == "include_once")) || strToken == "include" )
     {
         // Retrieve word identifier.
         if ( !getNextToken( t, strScript, true ) )
@@ -825,7 +834,7 @@ bool cgScriptPreprocessor::parsePreprocessorDirective( TokenData & t, std::strin
             strInclude.assign( &strScript[t.tokenStart + 1], t.tokenLength - 2 );
 
             // Include referenced headers.
-            std::string strParentScript( "\"" + std::string(stringConvertT2CA(strSectionName.c_str())) + "\"" );
+            std::string strParentScript( "\""  + std::string(stringConvertT2CA(strSectionName.c_str())) + "\"" );
             cgString strParentPath = cgFileSystem::getDirectoryName( strSectionName );
             if ( strParentPath.empty() == false )
                 strParentPath += _T("/");
@@ -835,7 +844,7 @@ bool cgScriptPreprocessor::parsePreprocessorDirective( TokenData & t, std::strin
             cgString strFile = stringConvertA2CT(strInclude.c_str());
             if ( strFile.find( _T("://") ) == cgString::npos )
                 strFile = strParentPath + strFile;
-            
+
             // All child scripts have '_PARENTSCRIPT' defined. First capture any previously
             // defined entry so that it can be restored once the included file has been processed.
             std::string strPrevParentScript;
@@ -848,7 +857,7 @@ bool cgScriptPreprocessor::parsePreprocessorDirective( TokenData & t, std::strin
             mDefinitions[ "_PARENTSCRIPT" ] = strParentScript;
 
             // Load the file
-            if ( !loadScriptSection( pModule, cgInputStream( strFile ), aSourceFiles ) )
+            if ( !loadScriptSection( pModule, cgInputStream( strFile ), aSourceFiles, bIncludeOnce ) )
                 return false;
 
             // Restore previous parent script macro (or remove if it didn't exist)

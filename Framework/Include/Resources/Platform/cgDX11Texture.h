@@ -733,9 +733,9 @@ bool cgDX11Texture<_BaseClass>::createTexture( )
                 desc.MipLevels      = mInfo.mipLevels;
                 desc.ArraySize      = 1;
                 desc.Format         = resourceFormat;
-                desc.Usage          = D3D11_USAGE_DEFAULT;
+                desc.Usage          = (mInfo.dynamic) ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
                 desc.BindFlags      = D3D11_BIND_SHADER_RESOURCE;
-                desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+                desc.CPUAccessFlags = (mInfo.dynamic) ? D3D11_CPU_ACCESS_WRITE : 0;
                 desc.MiscFlags      = 0;
                 
                 cgToDo( "DX11", "Support automatic mip generation!" );
@@ -770,9 +770,9 @@ bool cgDX11Texture<_BaseClass>::createTexture( )
                 desc.Format         = resourceFormat;
                 desc.SampleDesc.Count   = 1;
                 desc.SampleDesc.Quality = 0;
-                desc.Usage          = D3D11_USAGE_DEFAULT;
+                desc.Usage          = (mInfo.dynamic) ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
                 desc.BindFlags      = D3D11_BIND_SHADER_RESOURCE;
-                desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+                desc.CPUAccessFlags = (mInfo.dynamic) ? D3D11_CPU_ACCESS_WRITE : 0;
                 desc.MiscFlags      = 0;
                 
                 cgToDo( "DX11", "Support automatic mip generation!" );
@@ -783,6 +783,7 @@ bool cgDX11Texture<_BaseClass>::createTexture( )
                 if ( mInfo.type == cgBufferType::RenderTarget )
                 {
                     desc.BindFlags |= D3D11_BIND_RENDER_TARGET;
+                    desc.Usage = D3D11_USAGE_DEFAULT;
                     desc.CPUAccessFlags = 0;
                 
                 } // End if RenderTarget
@@ -790,6 +791,7 @@ bool cgDX11Texture<_BaseClass>::createTexture( )
                 {
                     desc.BindFlags |= D3D11_BIND_RENDER_TARGET;
                     desc.MiscFlags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
+                    desc.Usage = D3D11_USAGE_DEFAULT;
                     desc.CPUAccessFlags = 0;
                     desc.ArraySize  = 6;
                     
@@ -804,6 +806,7 @@ bool cgDX11Texture<_BaseClass>::createTexture( )
                           mInfo.type == cgBufferType::ShadowMap )
                 {
                     desc.BindFlags |= D3D11_BIND_DEPTH_STENCIL;
+                    desc.Usage = D3D11_USAGE_DEFAULT;
                     desc.CPUAccessFlags = 0;
                 
                 } // End if DepthStencil | ShadowMap
@@ -829,9 +832,9 @@ bool cgDX11Texture<_BaseClass>::createTexture( )
                 desc.Depth          = mInfo.depth;
                 desc.MipLevels      = mInfo.mipLevels;
                 desc.Format         = resourceFormat;
-                desc.Usage          = D3D11_USAGE_DEFAULT;
+                desc.Usage          = (mInfo.dynamic) ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
                 desc.BindFlags      = D3D11_BIND_SHADER_RESOURCE;
-                desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+                desc.CPUAccessFlags = (mInfo.dynamic) ? D3D11_CPU_ACCESS_WRITE : 0;
                 desc.MiscFlags      = 0;
                 
                 cgToDo( "DX11", "Support automatic mip generation!" );

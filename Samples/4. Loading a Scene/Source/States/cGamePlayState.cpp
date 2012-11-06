@@ -22,14 +22,6 @@
 //-----------------------------------------------------------------------------
 #include "States/cGamePlayState.h"
 
-// CGE Includes
-#include <cgBase.h>
-#include <Rendering/cgRenderDriver.h>
-#include <Input/cgInputDriver.h>
-#include <World/cgWorld.h>
-#include <World/cgScene.h>
-#include <World/Objects/cgCameraObject.h>
-
 //-----------------------------------------------------------------------------
 // Name : cGamePlayState () (Constructor)
 /// <summary> cGamePlayState Class Constructor </summary>

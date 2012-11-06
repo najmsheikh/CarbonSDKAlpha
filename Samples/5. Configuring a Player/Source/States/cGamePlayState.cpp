@@ -22,20 +22,6 @@
 //-----------------------------------------------------------------------------
 #include "States/cGamePlayState.h"
 
-// CGE Includes
-#include <cgBase.h>
-#include <Rendering/cgRenderDriver.h>
-#include <Input/cgInputDriver.h>
-#include <World/cgWorld.h>
-#include <World/cgScene.h>
-#include <World/cgObjectBehavior.h>
-#include <World/Objects/cgCameraObject.h>
-#include <World/Objects/cgDummyObject.h>
-#include <Physics/Controllers/cgCharacterController.h>
-#include <Interface/cgUIManager.h>
-#include <Math/cgMathUtility.h>
-#include <Math/cgMathTypes.h>
-
 //-----------------------------------------------------------------------------
 // Name : cGamePlayState () (Constructor)
 /// <summary> cGamePlayState Class Constructor </summary>
@@ -328,10 +314,10 @@ bool cGamePlayState::loadScene( )
     mCamera->setParent( mPlayer );
     
     // Assign necessary "input" behavior to the player object. In this case 
-    // we assign the 'PlayerInput.gs' behavior to the player which provides
+    // we assign the 'Player.gs' behavior to the player which provides
     // keyboard and mouse input to control the player and its child camera.
     cgObjectBehavior * pBehavior = new cgObjectBehavior( );
-    pBehavior->initialize( mScene->getResourceManager(), _T("Scripts/Behaviors/PlayerInput.gs"), _T("") );
+    pBehavior->initialize( mScene->getResourceManager(), _T("Scripts/Behaviors/Player.gs"), _T("") );
     mPlayer->addBehavior( pBehavior );
     
     // Set up the scene ready for rendering

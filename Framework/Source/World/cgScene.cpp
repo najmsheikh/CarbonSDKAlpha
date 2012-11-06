@@ -2484,6 +2484,7 @@ void cgScene::update( )
 {
     cgFloat  timeDelta   = cgTimer::getInstance()->getTimeElapsed();
     cgDouble currentTime = cgTimer::getInstance()->getTime();
+    bool     fullSandbox = (cgGetSandboxMode() == cgSandboxMode::Enabled);
 
     // Begin profiling scene update method.
     cgProfiler * profiler = cgProfiler::getInstance();
@@ -2504,20 +2505,17 @@ void cgScene::update( )
 
     // Allow scene nodes to update. First iterate through the 'Always Update' list.
     cgObjectNodeList::iterator itNode;
-    if ( mUpdatingEnabled )
+    cgObjectNodeList * bucketNodes = &mUpdateBuckets[ cgUpdateRate::Always ].nodes;
+    for ( itNode = bucketNodes->begin(); itNode != bucketNodes->end(); )
     {
-        cgObjectNodeList * bucketNodes = &mUpdateBuckets[ cgUpdateRate::Always ].nodes;
-        for ( itNode = bucketNodes->begin(); itNode != bucketNodes->end(); )
-        {
-            // Increment as we go as the 'update' call may delete the node
-            cgObjectNode * node = *itNode++;
-            
-            // Trigger the node's update process
+        // Increment as we go as the 'update' call may delete the node
+        cgObjectNode * node = *itNode++;
+        
+        // Trigger the node's update process
+        if ( mUpdatingEnabled || (fullSandbox && node->allowSandboxUpdate()) )
             node->update( timeDelta );    
 
-        } // Next scene node
-
-    } // End if updates enabled
+    } // Next scene node
 
     // Now iterate through all other update rate buckets
     for ( cgUInt32 i = cgUpdateRate::FPS1; i < cgUpdateRate::Count; ++i )
@@ -2538,21 +2536,18 @@ void cgScene::update( )
             // Step through the list and update unless updates are disabled.
             // Still allow schedule / housekeeping to update so that times don't
             // get wildly out of control.
-            if ( mUpdatingEnabled )
+            cgObjectNodeList * bucketNodes = &mUpdateBuckets[i].nodes;
+            for ( itNode = bucketNodes->begin(); itNode != bucketNodes->end(); )
             {
-                cgObjectNodeList * bucketNodes = &mUpdateBuckets[i].nodes;
-                for ( itNode = bucketNodes->begin(); itNode != bucketNodes->end(); )
-                {
-                    // Increment as we go as the 'update' call may delete the node
-                    cgObjectNode * node = *itNode++;
-                    
-                    // Trigger the node's update process
+                // Increment as we go as the 'update' call may delete the node
+                cgObjectNode * node = *itNode++;
+                
+                // Trigger the node's update process
+                if ( mUpdatingEnabled || (fullSandbox && node->allowSandboxUpdate()) )
                     node->update( finalDelta );
 
-                } // Next scene object
+            } // Next scene object
             
-            } // End if allow updates
-
             // Just for housekeeping purposes, record the last time an update was run
             bucket->lastUpdateTime = currentTime;
 

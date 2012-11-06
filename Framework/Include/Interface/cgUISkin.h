@@ -112,7 +112,7 @@ private:
     // Private Methods
     //-------------------------------------------------------------------------
     bool                    parseSkinDefinition     ( const cgXMLNode & node, const cgString & definitionFile );
-    void                    parseCursor             ( const cgXMLNode & node, cgUICursorDesc & desc );
+    void                    parseCursor             ( const cgXMLNode & node, const cgString & baseDirectory, cgUICursorDesc & desc );
     void                    parseForm               ( const cgXMLNode & node );
     void                    parseControls           ( const cgXMLNode & node, cgUISkinElement::Map & elements, ControlConfig & config );
     bool                    parseElement            ( const cgXMLNode & node, cgUISkinElement & elementDesc );

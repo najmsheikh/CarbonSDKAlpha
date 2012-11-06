@@ -63,6 +63,7 @@ class LightingParameters
 	int   shadowMethod;
 	int   primaryTaps;
 	int   secondaryTaps;
+	float sigma;
 
 	bool  PCF;
 	bool  PCSS;
@@ -126,16 +127,16 @@ LightingParameters initializeLightingSystem( int lightType, int lightFlags, int 
 	params.lightType             = lightType;
 	params.lightFlags            = lightFlags;
 	params.diffuseEnabled        = testFlagAny(lightFlags, LightFlags::ComputeDiffuse);
-	params.specularEnabled       = testFlagAny(lightFlags, LightFlags::ComputeSpecular);
+	params.specularEnabled       = testFlagAny(lightFlags, LightFlags::ComputeSpecular) && (shadingQuality >= ShadingQuality::Low);
 	params.ambientEnabled        = testFlagAny(lightFlags, LightFlags::ComputeAmbient);
 	params.applyReflectance      = !testFlagAll(renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting));        
 	params.useSSAO               = testFlagAny(lightFlags, LightFlags::UseSSAO); 
 	params.trilighting           = testFlagAny(lightFlags, LightFlags::Trilighting);
-	params.approximateRoughness  = (shadingQuality >= ShadingQuality::HighQuality) && USE_ORENNAYER;
-    params.normalizeSpecular     = (shadingQuality >= ShadingQuality::MediumQuality && SPECULAR_NORMALIZE_SCALE > 0.0);
-	params.visibilityTerm        = (shadingQuality >= ShadingQuality::MediumQuality && MAX_MICROFACET_VISIBILITY > 0.0);
-	params.fresnelTerm           = (shadingQuality >= ShadingQuality::MediumQuality) && !testFlagAll(renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting));
-	params.lightTransmission     = (shadingQuality >= ShadingQuality::MediumQuality);
+	params.approximateRoughness  = (shadingQuality >= ShadingQuality::High) && USE_ORENNAYER;
+    params.normalizeSpecular     = (shadingQuality >= ShadingQuality::Medium && SPECULAR_NORMALIZE_SCALE > 0.0);
+	params.visibilityTerm        = (shadingQuality >= ShadingQuality::Medium && MAX_MICROFACET_VISIBILITY > 0.0);
+	params.fresnelTerm           = (shadingQuality >= ShadingQuality::Medium) && !testFlagAll(renderFlags, uint(RenderFlags::DeferredRendering) | uint(RenderFlags::DeferredLighting));
+	params.lightTransmission     = (shadingQuality >= ShadingQuality::Medium);
 	params.performClipping       = !testFlagAny(renderFlags, RenderFlags::DeferredRendering);
 
     // Forcibly disable attenuation masks for IBL and projector lights (they should be built into the color texture) 
@@ -534,7 +535,7 @@ __shadercall half3 computeAttenuation( float distanceToLight, half3 lightDirecti
                 
                 // Note: You can choose the more expensive power based spot cone falloff function,
                 //       rather than simple linear interpolation if desired (see Config.shh).
-                if ( params.shadingQuality == ShadingQuality::LowQuality )
+                if ( params.shadingQuality == ShadingQuality::Low )
                     <?result *= saturate( rho * _lightSpotTerms.x + _lightSpotTerms.y );?>
                 else
                     <?result *= pow( saturate( rho * _lightSpotTerms.x + _lightSpotTerms.y ), _lightSpotTerms.z );?>

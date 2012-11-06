@@ -57,6 +57,8 @@ namespace cgSystemState
     {
         // Renderer
         ShadingQuality = 0,
+		PostProcessQuality,
+		AntiAliasingQuality,
         OrthographicCamera,
         OutputEncodingType,
         FogModel,

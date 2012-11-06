@@ -1,67 +1,76 @@
 --Table: Objects::ParticleEmitter -- {89D6C65E-9C1E-4028-A9DA-22F2DA5D303F}
 
 CREATE TABLE [Objects::ParticleEmitter] (
-  [RefId] integer NOT NULL PRIMARY KEY,
-  [Type] smallint DEFAULT 0,
-  [ScriptFile] path,
-  [InnerCone] real,
-  [OuterCone] real,
-  [EmissionRadius] real,
-  [DeadZoneRadius] real,
-  [MaxSimultaneousParticles] integer,
-  [InitialParticles] integer,
-  [MaxFiredParticles] integer,
-  [BirthFrequency] real,
-  [TextureFile] path,
-  [ShaderSource] path,
-  [SortedRender] tinyint DEFAULT 0,
-  [FixedEmitDirX] real DEFAULT 0,
-  [FixedEmitDirY] real DEFAULT 0,
-  [FixedEmitDirZ] real DEFAULT 0,
-  [RandomizeRotation] tinyint,
-  [FireAmount] integer,
-  [FireDelay] real,
-  [FireDelayOffset] real,
-  
-  [BaseSizeX] real,
-  [BaseSizeY] real,
-  [MinLifetime] real,
-  [MaxLifetime] real,
-  [MinSpeed] real,
-  [MaxSpeed] real,
-  [MinMass] real,
-  [MaxMass] real,
-  [AirResistance] real,
-  [MinAngularSpeed] real,
-  [MaxAngularSpeed] real,
-  [MinBaseScale] real,
-  [MaxBaseScale] real,
-
-  [ScaleXCurveType] SMALLINT DEFAULT (3), 
-  [ScaleXCurveSize] SMALLINT DEFAULT (0), 
-  [ScaleXCurve] BLOB,
-  [ScaleYCurveType] SMALLINT DEFAULT (3), 
-  [ScaleYCurveSize] SMALLINT DEFAULT (0), 
-  [ScaleYCurve] BLOB,
-
-  [ColorRCurveType] SMALLINT DEFAULT (3), 
-  [ColorRCurveSize] SMALLINT DEFAULT (0), 
-  [ColorRCurve] BLOB,
-  [ColorGCurveType] SMALLINT DEFAULT (3), 
-  [ColorGCurveSize] SMALLINT DEFAULT (0), 
-  [ColorGCurve] BLOB,
-  [ColorBCurveType] SMALLINT DEFAULT (3), 
-  [ColorBCurveSize] SMALLINT DEFAULT (0), 
-  [ColorBCurve] BLOB,
-  [ColorACurveType] SMALLINT DEFAULT (3), 
-  [ColorACurveSize] SMALLINT DEFAULT (0), 
-  [ColorACurve] BLOB,
-  
+  [RefId] integer NOT NULL PRIMARY KEY, 
   [RefCount] integer DEFAULT 0);
 
 CREATE TRIGGER [Objects::ParticleEmitter_OnDelete]
-  BEFORE DELETE
-  ON [Objects::ParticleEmitter]
-  BEGIN
-    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
-  END;
+BEFORE DELETE
+ON [Objects::ParticleEmitter]
+BEGIN
+  DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;    
+  DELETE FROM [Objects::ParticleEmitter::Layers] WHERE EmitterId=old.RefId;
+END;
+
+--Table: Objects::ParticleEmitter::Layers
+
+CREATE TABLE [Objects::ParticleEmitter::Layers] (
+  [LayerId] integer NOT NULL PRIMARY KEY, 
+  [EmitterId] integer, 
+  [LayerOrder] smallint DEFAULT 0, 
+  [Type] smallint DEFAULT 0, 
+  [ScriptFile] path, 
+  [InnerCone] real, 
+  [OuterCone] real, 
+  [EmissionRadius] real, 
+  [DeadZoneRadius] real, 
+  [MaxSimultaneousParticles] INTEGER, 
+  [InitialParticles] integer, 
+  [MaxFiredParticles] integer, 
+  [BirthFrequency] real, 
+  [ParticleTexture] path, 
+  [ParticleShader] path, 
+  [SortedRender] tinyint DEFAULT 0, 
+  [BlendMethod] smallint DEFAULT 0, 
+  [FixedEmitDirX] real DEFAULT 0, 
+  [FixedEmitDirY] real DEFAULT 0, 
+  [FixedEmitDirZ] real DEFAULT 0, 
+  [RandomizeRotation] tinyint, 
+  [FireAmount] integer, 
+  [FireDelay] real, 
+  [FireDelayOffset] real, 
+  [BaseSizeX] real, 
+  [BaseSizeY] real, 
+  [MinLifetime] real, 
+  [MaxLifetime] real, 
+  [MinSpeed] real, 
+  [MaxSpeed] real, 
+  [MinMass] real, 
+  [MaxMass] real, 
+  [AirResistance] REAL, 
+  [MinAngularSpeed] real, 
+  [MaxAngularSpeed] real, 
+  [MinBaseScale] real, 
+  [MaxBaseScale] real,
+  [HDRScalar] real DEFAULT 1,
+  [ScaleXCurveType] SMALLINT DEFAULT 3, 
+  [ScaleXCurveSize] SMALLINT DEFAULT 0, 
+  [ScaleXCurve] BLOB, 
+  [ScaleYCurveType] SMALLINT DEFAULT 3, 
+  [ScaleYCurveSize] SMALLINT DEFAULT 0, 
+  [ScaleYCurve] BLOB, 
+  [ColorRCurveType] SMALLINT DEFAULT 3, 
+  [ColorRCurveSize] SMALLINT DEFAULT 0, 
+  [ColorRCurve] BLOB, 
+  [ColorGCurveType] SMALLINT DEFAULT 3, 
+  [ColorGCurveSize] SMALLINT DEFAULT 0, 
+  [ColorGCurve] BLOB, 
+  [ColorBCurveType] SMALLINT DEFAULT 3, 
+  [ColorBCurveSize] SMALLINT DEFAULT 0, 
+  [ColorBCurve] BLOB, 
+  [ColorACurveType] SMALLINT DEFAULT 3, 
+  [ColorACurveSize] SMALLINT DEFAULT 0, 
+  [ColorACurve] BLOB,
+  [EmissionEnabled] tinyint DEFAULT 1);
+
+CREATE INDEX [Objects::ParticleEmitter::Layers_OrderedEmitterLayer] ON [Objects::ParticleEmitter::Layers] ([EmitterId], [LayerOrder]);

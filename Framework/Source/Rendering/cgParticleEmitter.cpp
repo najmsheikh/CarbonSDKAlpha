@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 #include <Rendering/cgParticleEmitter.h>
 #include <Rendering/cgRenderDriver.h>
+#include <Resources/cgSurfaceShader.h>
 #include <Math/cgMathUtility.h>
 #include <System/cgStringUtility.h>
 
@@ -130,6 +131,7 @@ cgParticleEmitter::cgParticleEmitter()
     mGravity             = cgVector3( 0.0f, 0.0f, 0.0f );
     mGlobalForce         = cgVector3( 0.0f, 0.0f, 0.0f );
     mTotalReleased       = 0;
+    mEnabled             = true;
     
     // Clear necessary structure elements
     cgMatrix::identity( mTransform );
@@ -179,6 +181,7 @@ void cgParticleEmitter::dispose( bool bDisposeBase )
     mDeadParticles       = CG_NULL;
     mActiveParticleCount = 0;
     mBillboardBuffer     = CG_NULL;
+    mEnabled             = true;
     
     // Clear structures
     mProperties.colorRCurve.setDescription( cgBezierSpline2::Maximum );
@@ -187,8 +190,8 @@ void cgParticleEmitter::dispose( bool bDisposeBase )
     mProperties.colorACurve.setDescription( cgBezierSpline2::Maximum );
     mProperties.scaleXCurve.setDescription( cgBezierSpline2::Maximum );
     mProperties.scaleYCurve.setDescription( cgBezierSpline2::Maximum );
-    mProperties.shaderSource.clear();
-    mProperties.textureFile.clear();
+    mProperties.particleShader.clear();
+    mProperties.particleTexture.clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -240,110 +243,6 @@ bool cgParticleEmitter::initialize( cgInputStream ScriptStream, const cgParticle
 
     // For non-frequency mode, initial elapsed time should be set to the required offset to allow correct timing
     mTimeElapsed = mProperties.fireDelayOffset;
-    
-    /*// Load in the base emitter and particle properties from the particle definition script
-    GetPrivateProfileString( _T("Emitter"), _T("innerCone"), _T("0"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.innerCone;
-    GetPrivateProfileString( _T("Emitter"), _T("OuterCone"), _T("30"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.outerCone;
-    GetPrivateProfileString( _T("Emitter"), _T("BaseRadius"), _T("0"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.BaseRadius;
-    GetPrivateProfileString( _T("Emitter"), _T("NullRadius"), _T("0"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.NullRadius;
-    GetPrivateProfileString( _T("Emitter"), _T("Frequency"), _T("20"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.birthFrequency;
-    GetPrivateProfileString( _T("Emitter"), _T("MaxParticles"), _T("20"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.maxSimultaneousParticles;
-    GetPrivateProfileString( _T("Emitter"), _T("DepthSorted"), _T("0"), Buffer, 511, mScriptFile.c_str() );
-    mProperties.sortedRender = cgStringUtility::ParseBool( Buffer );
-    GetPrivateProfileString( _T("Emitter"), _T("EmitterDir"), _T("0.0,0.0,0.0"), Buffer, 511, mScriptFile.c_str() );
-    cgStringUtility::TryParse( Buffer, mProperties.emitterDirection );
-    GetPrivateProfileString( _T("Emitter"), _T("InternalForce"), _T("0.0,0.0,0.0"), Buffer, 511, mScriptFile.c_str() );
-    cgStringUtility::TryParse( Buffer, mProperties.vecInternalForce );
-    GetPrivateProfileString( _T("Emitter"), _T("InitRandomAngle"), _T("0"), Buffer, 511, mScriptFile.c_str() );
-    mProperties.InitRandomAngle = cgStringUtility::ParseBool( Buffer );
-    GetPrivateProfileString( _T("Emitter"), _T("FireOnce"), _T("0"), Buffer, 511, mScriptFile.c_str() );
-    mProperties.bFireOnce = cgStringUtility::ParseBool( Buffer );
-    GetPrivateProfileString( _T("Emitter"), _T("FireAmount"), _T("0"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.fireAmount;
-    GetPrivateProfileString( _T("Emitter"), _T("FireDelay"), _T("0.0"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.fireDelay;
-    GetPrivateProfileString( _T("Emitter"), _T("FireDelayOffset"), _T("0.0"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.fireDelayOffset;
-    
-    
-    
-    // Retrieve particle properties
-    GetPrivateProfileString( _T("Particles"), _T("MinVelocity"), _T("30"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.MinVelocity;
-    GetPrivateProfileString( _T("Particles"), _T("MaxVelocity"), _T("30"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.MaxVelocity;
-    GetPrivateProfileString( _T("Particles"), _T("MinMass"), _T("0"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.MinMass;
-    GetPrivateProfileString( _T("Particles"), _T("MaxMass"), _T("0"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.MaxMass;
-    GetPrivateProfileString( _T("Particles"), _T("AirResistance"), _T("0.001"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.airResistance;
-    GetPrivateProfileString( _T("Particles"), _T("MinAngularVelocity"), _T("0"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.MinAngularVelocity;
-    GetPrivateProfileString( _T("Particles"), _T("MaxAngularVelocity"), _T("0"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.MaxAngularVelocity;
-    GetPrivateProfileString( _T("Particles"), _T("MaxAge"), _T("5"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.fMaxAge;
-    GetPrivateProfileString( _T("Particles"), _T("BaseWidth"), _T("5"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.baseSize.width;
-    GetPrivateProfileString( _T("Particles"), _T("BaseHeight"), _T("5"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.baseSize.height;
-    GetPrivateProfileString( _T("Particles"), _T("MinBaseScale"), _T("1"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.MinBaseScale;
-    GetPrivateProfileString( _T("Particles"), _T("MaxBaseScale"), _T("1"), Buffer, 511, mScriptFile.c_str() );
-    cgStringParser( Buffer ) >> mProperties.MaxBaseScale;
-    GetPrivateProfileString( _T("Materials"), _T("TextureFile"), _T(""), Buffer, 511, mScriptFile.c_str() );
-    mProperties.textureFile = Buffer;
-    GetPrivateProfileString( _T("Materials"), _T("EffectFile"), _T(""), Buffer, 511, mScriptFile.c_str() );
-    mProperties.strEffectFile = Buffer;
-
-    // Read color keyframes if any
-    nKeyCount = GetPrivateProfileInt( _T("ColorKeys"), _T("KeyCount"), 0, mScriptFile.c_str() );
-    for ( i = 0; i < nKeyCount; ++i )
-    {
-        ParticleColorKey Key;
-
-        // Retrieve the 'time' for this particular callback (remember this is a scalar between 0 and 1 over particle lifespan)
-        cgString strKeyName = cgString::Format( _T("Key[%i].Time"), i );
-        GetPrivateProfileString( _T("ColorKeys"), strKeyName.c_str(), _T("0.0"), Buffer, 511, mScriptFile.c_str() );
-        cgStringParser( Buffer ) >> Key.fTime;
-
-        // Retrieve the 'color' for this particular callback
-        strKeyName = cgString::Format( _T("Key[%i].Color"), i );
-        GetPrivateProfileString( _T("ColorKeys"), strKeyName.c_str(), _T("1.0,1.0,1.0,1.0"), Buffer, 511, mScriptFile.c_str() );
-        cgStringUtility::TryParse( Buffer, Key.Color );
-
-        // Add to color keyframes list
-        mProperties.ColorKeys.push_back( Key );
-
-    } // Next Color Key
-
-    // Get any scale keys
-    nKeyCount = GetPrivateProfileInt( _T("ScaleKeys"), _T("KeyCount"), 0, mScriptFile.c_str() );
-    for ( i = 0; i < nKeyCount; ++i )
-    {
-        ParticleScaleKey Key;
-
-        // Retrieve the 'time' for this particular callback (remember this is a scalar between 0 and 1 over particle lifespan)
-        cgString strKeyName = cgString::Format( _T("Key[%i].Time"), i );
-        GetPrivateProfileString( _T("ScaleKeys"), strKeyName.c_str(), _T("0.0"), Buffer, 511, mScriptFile.c_str() );
-        cgStringParser( Buffer ) >> Key.fTime;
-
-        // Retrieve the 'scale' for this particular callback
-        strKeyName = cgString::Format( _T("Key[%i].Scale"), i );
-        GetPrivateProfileString( _T("ScaleKeys"), strKeyName.c_str(), _T("1.0,1.0"), Buffer, 511, mScriptFile.c_str() );
-        cgStringUtility::TryParse( Buffer, Key.vScale );
-
-        // Add to scale keyframes list
-        mProperties.ScaleKeys.push_back( Key );
-
-    } // Next Scale Key*/
 
     // Allocate billboard items.
     mBillboardBuffer = new cgBillboardBuffer();
@@ -357,9 +256,12 @@ bool cgParticleEmitter::initialize( cgInputStream ScriptStream, const cgParticle
         nFlags |= cgBillboardBuffer::SupportSorting;
 
     // Prepare the billboard buffer
-    if ( mProperties.textureFile.endsWith( _T(".xml") ) )
+    cgString strShader = mProperties.particleShader;
+    if ( strShader.empty() )
+        strShader = _T("sys://Shaders/Particles.sh");
+    if ( mProperties.particleTexture.endsWith( _T(".xml") ) )
     {
-        if ( !mBillboardBuffer->prepareBufferFromAtlas( nFlags, mRenderDriver, mProperties.textureFile, mProperties.shaderSource ) )
+        if ( !mBillboardBuffer->prepareBufferFromAtlas( nFlags, mRenderDriver, mProperties.particleTexture, strShader ) )
         {
             dispose(false);
             return false;
@@ -369,7 +271,7 @@ bool cgParticleEmitter::initialize( cgInputStream ScriptStream, const cgParticle
     } // End if atlas
     else
     {
-        if ( !mBillboardBuffer->prepareBuffer( nFlags, mRenderDriver, mProperties.textureFile, mProperties.shaderSource ) )
+        if ( !mBillboardBuffer->prepareBuffer( nFlags, mRenderDriver, mProperties.particleTexture, strShader ) )
         {
             dispose(false);
             return false;
@@ -377,6 +279,11 @@ bool cgParticleEmitter::initialize( cgInputStream ScriptStream, const cgParticle
         } // End if failed
 
     } // End if !atlas
+
+    // Set the blending method to the billboard buffer.
+    cgSurfaceShaderHandle hShader = mBillboardBuffer->getSurfaceShader();
+    if ( hShader.isValid() )
+        hShader->setInt( _T("blendMethod"), (cgInt32)Properties.blendMethod );
 
     // Allocate and add all billboards to the buffer
     for ( cgUInt32 i = 0; i < mMaxParticles; ++i )
@@ -482,128 +389,17 @@ void cgParticleEmitter::update( cgFloat fTimeElapsed, const cgVector3 & vecWorld
         
         } // End if
 
-        /*// ******************************************************************
-        // * COLOR KEYS
-        // ******************************************************************
-        if ( mProperties.ColorKeys.empty() == false )
-        {
-            ParticleColorKey * pKey1 = CG_NULL, * pKey2 = CG_NULL;
-
-            for ( j = (cgInt32)pParticle->mLastColorKeyIndex; j < (cgInt32)(mProperties.ColorKeys.size() - 1); ++j )
-            {
-                ParticleColorKey * pKey     = &mProperties.ColorKeys[j];
-                ParticleColorKey * pNextKey = &mProperties.ColorKeys[j + 1];
-
-                // Do these keys  bound the requested time ?
-                if ( fParticleAge >= pKey->fTime && fParticleAge <= pNextKey->fTime )
-                {
-                    // Update last index
-                    pParticle->mLastColorKeyIndex = (cgUInt16)j;
-
-                    // Store the two bounding keys
-                    pKey1 = pKey;
-                    pKey2 = pNextKey;
-                    break;
-
-                } // End if found keys
-
-            } // Next color Key
-
-            // Make sure we found keys
-            if ( pKey1 && pKey2 ) 
-            {
-                // Calculate interpolation
-                cgFloat fInterpVal  = fParticleAge - pKey1->fTime;
-                fInterpVal /= (pKey2->fTime - pKey1->fTime);
-
-                // Interpolate!
-                cgColorValue FinalColor;
-                D3DXColorLerp( &FinalColor, (cgColorValue*)&pKey1->Color, (cgColorValue*)&pKey2->Color, fInterpVal );
-                pParticle->mColor = FinalColor;
-
-            } // End if keys were found
-            else
-            {
-                // Inform cache that it should no longer search unless cache is invalidated
-                pParticle->mLastColorKeyIndex = (cgUInt16)(mProperties.ColorKeys.size() - 1);
-
-                // Color is the same as the last color key found
-                pParticle->mColor = mProperties.ColorKeys[ pParticle->mLastColorKeyIndex ].Color;
-
-            } // End if no keys found
-
-        } // End if any color keys
-
-        // ******************************************************************
-        // * SCALE KEYS
-        // ******************************************************************
-        if ( mProperties.ScaleKeys.empty() == false )
-        {
-            ParticleScaleKey * pKey1 = CG_NULL, * pKey2 = CG_NULL;
-            for ( j = (cgInt32)pParticle->mLastScaleKeyIndex; j < (cgInt32)mProperties.ScaleKeys.size() - 1; ++j )
-            {
-                ParticleScaleKey * pKey     = &mProperties.ScaleKeys[j];
-                ParticleScaleKey * pNextKey = &mProperties.ScaleKeys[j + 1];
-
-                // Do these keys  bound the requested time ?
-                if ( fParticleAge >= pKey->fTime && fParticleAge <= pNextKey->fTime )
-                {
-                    // Update last index
-                    pParticle->mLastScaleKeyIndex = (cgUInt16)j;
-
-                    // Store the two bounding keys
-                    pKey1 = pKey;
-                    pKey2 = pNextKey;
-                    break;
-
-                } // End if found keys
-
-            } // Next Scale Key
-
-            // Make sure we found keys
-            if ( pKey1 && pKey2 ) 
-            {
-                // Calculate interpolation
-                cgFloat fInterpVal  = fParticleAge - pKey1->fTime;
-                fInterpVal /= (pKey2->fTime - pKey1->fTime);
-
-                // Interpolate!
-                pParticle->mScale = pKey1->vScale + ((pKey2->vScale - pKey1->vScale) * fInterpVal);
-
-            } // End if keys were found
-            else
-            {
-                // Inform cache that it should no longer search unless cache is invalidated
-                pParticle->mLastScaleKeyIndex = (cgUInt16)(mProperties.ScaleKeys.size() - 1);
-
-                // Scale is the same as the last Scale key found
-                pParticle->mScale = mProperties.ScaleKeys[ pParticle->mLastScaleKeyIndex ].vScale;
-
-            } // End if no keys found
-
-            // Multiply scale by velocity if requested
-            if ( bVelocityScale == true )
-                pParticle->mScale.y *= fVelocity;
-
-        } // End if any Scale keys
-        else
-        {
-            // Set scale to velocity if requested
-            if ( bVelocityScale == true )
-                pParticle->mScale.y = fVelocity;
-
-        } // End if no scale keys*/
-
         // ******************************************************************
         // * COLOR CURVES
         // ******************************************************************
-        const bool bApproximateSample = false;
+        const bool bApproximateSample = true;
         cgColorValue NewColor;
         NewColor.r = mProperties.colorRCurve.evaluateForX( fParticleAge, bApproximateSample );
         NewColor.g = mProperties.colorGCurve.evaluateForX( fParticleAge, bApproximateSample );
         NewColor.b = mProperties.colorBCurve.evaluateForX( fParticleAge, bApproximateSample );
         NewColor.a = mProperties.colorACurve.evaluateForX( fParticleAge, bApproximateSample );
-        pParticle->mColor = NewColor;
+        pParticle->setColor( NewColor );
+        pParticle->setHDRScale( mProperties.hdrScale );
 
         // ******************************************************************
         // * SCALE CURVES
@@ -624,133 +420,162 @@ void cgParticleEmitter::update( cgFloat fTimeElapsed, const cgVector3 & vecWorld
     if ( particlesSpent( false ) )
         return;
 
-    // Determine how many new particles to release in this frame
-    if ( mProperties.fireAmount == 0 )
+    // Is emission enabled?
+    if ( mEnabled )
     {
-        // Calculate how many new particles to fire based on frequency.
-        mReleaseCount += (mProperties.birthFrequency * fTimeElapsed);
-        nCount = (cgInt32)mReleaseCount;
-        mReleaseCount -= (cgFloat)nCount;
-
-    } // End if frequency mode
-    else
-    {
-        // Calculate how many particles to fire based on fire delay
-        nCount = 0;
-        mTimeElapsed += fTimeElapsed;
-        if ( mTimeElapsed >= mProperties.fireDelay )
+        // Determine how many new particles to release in this frame
+        if ( mProperties.fireAmount == 0 )
         {
-            nCount = mProperties.fireAmount;
-            mTimeElapsed -= mProperties.fireDelay;
-        
-        } // End if we've reached our release delay
-    
-    } // End if fire delay mode
+            // Calculate how many new particles to fire based on frequency.
+            mReleaseCount += (mProperties.birthFrequency * fTimeElapsed);
+            nCount = (cgInt32)mReleaseCount;
+            mReleaseCount -= (cgFloat)nCount;
 
-    // Fire the specified number of particles
-    for ( i = 0; i < nCount; ++i )
-    {
-        // No spare particles?
-        if ( mActiveParticleCount == mMaxParticles )
-        {
-            // TODO : Find the OLDEST particle
-
-            // Pull one from the beginning of the active list (/generally/ these are the oldest particles)
-            bActiveParticle = true;
-            pParticle       = mActiveParticles[0];
-        
-        } // End if using active particle
+        } // End if frequency mode
         else
         {
-            // Pull one from the end of the dead list
-            bActiveParticle = false;
-            pParticle       = mDeadParticles[ (mMaxParticles - 1) - mActiveParticleCount ];
-
-        } // End if using dead particle
-
-        // Reset this particle
-        cgFloat fBaseScale = cgMathUtility::randomFloat( mProperties.baseScale.min, mProperties.baseScale.max );
-        pParticle->setSize( mProperties.baseSize.width * fBaseScale, mProperties.baseSize.height * fBaseScale );
-        pParticle->setPosition( 0, 0, 0 );
-        pParticle->mAge               = 0.0f;
-        pParticle->mRotation          = 0.0f;
-        pParticle->mAngularVelocity   = 0.0f;
-        pParticle->mVelocity        = cgVector3( 0, 0, 0 );
-        pParticle->mLastColorKeyIndex = 0;
-        pParticle->mLastScaleKeyIndex = 0;
-
-        // Calculate initial scale
-        pParticle->setScale( mProperties.scaleXCurve.evaluateForX(0,true), mProperties.scaleXCurve.evaluateForX(0,true) );
-        
-        // Calculate initial color
-        cgColorValue NewColor;
-        NewColor.r = mProperties.colorRCurve.evaluateForX( 0, true );
-        NewColor.g = mProperties.colorGCurve.evaluateForX( 0, true );
-        NewColor.b = mProperties.colorBCurve.evaluateForX( 0, true );
-        NewColor.a = mProperties.colorACurve.evaluateForX( 0, true );
-        pParticle->setColor( NewColor );
-
-        // Trigger the birth event
-        if ( onParticleBirth( pParticle ) == false )
-        {
-            if ( bActiveParticle == true )
+            // Calculate how many particles to fire based on fire delay
+            nCount = 0;
+            mTimeElapsed += fTimeElapsed;
+            if ( mTimeElapsed >= mProperties.fireDelay )
             {
-                // Flag as dead, and remove from active particles list
-                pParticle->setVisible( false );
-                if ( i < (signed)mActiveParticleCount - 1 )
-                    memmove( &mActiveParticles[i], &mActiveParticles[i+1], ((mActiveParticleCount - 1) - i) * sizeof(cgParticle*) );
-                mActiveParticleCount--;
-
-                // Add to the end of the dead particles list
-                mDeadParticles[ (mMaxParticles - 1) - mActiveParticleCount ] = pParticle;
-
-                // Update to allow it to be removed from consideration
-                pParticle->update();
-
-            } // End if particle was an active one
-
-            // Force the particle's age to be greater than its maximum age 
-            // so that anyone who calls 'isAlive()' on the particle after this
-            // point will know that it's dead.
-            pParticle->mAge = pParticle->mMaximumAge + 1;
-
-            // Skip the creation
-            continue;
-
-        } // End if cancelled the creation
-
-        // A new particle was released
-        mTotalReleased = 0;
+                nCount = mProperties.fireAmount;
+                mTimeElapsed -= mProperties.fireDelay;
+            
+            } // End if we've reached our release delay
         
-        // Update the optional direction vector that can be used to lock 
-        // the billboard to a specific axis. This vector is based on the
-        // specified world velocity (i.e. camera moving through the world)
-        // relative to the particle's position and velocity.
-        vecAxis = pParticle->mVelocity - vecWorldVelocity;
-        fVelocity = cgVector3::length( vecAxis );
-        if ( fVelocity > 0 )
+        } // End if fire delay mode
+
+        // Fire the specified number of particles
+        for ( i = 0; i < nCount; ++i )
         {
-            vecAxis /= fVelocity;
-            pParticle->setDirection( vecAxis );
-        
-        } // End if
+            // No spare particles?
+            if ( mActiveParticleCount == mMaxParticles )
+            {
+                // TODO : Find the OLDEST particle
 
-        // Multiply scale by velocity if requested
-        if ( bVelocityScale == true )
-            pParticle->mScale.y *= fVelocity;
-        
-        // Set as visible and add to active list if it wasn't already
-        if ( bActiveParticle == false )
-        {
-            pParticle->setVisible( true );
-            mActiveParticles[ mActiveParticleCount++ ] = pParticle;
-        
-        } // End if not from active list
+                // Pull one from the beginning of the active list (/generally/ these are the oldest particles)
+                bActiveParticle = true;
+                pParticle       = mActiveParticles[0];
+            
+            } // End if using active particle
+            else
+            {
+                // Pull one from the end of the dead list
+                bActiveParticle = false;
+                pParticle       = mDeadParticles[ (mMaxParticles - 1) - mActiveParticleCount ];
 
-        // Update the newly created particle
-        pParticle->update();
-    
-    } // Next new particle
+            } // End if using dead particle
+
+            // Reset this particle
+            cgFloat fBaseScale = cgMathUtility::randomFloat( mProperties.baseScale.min, mProperties.baseScale.max );
+            pParticle->setSize( mProperties.baseSize.width * fBaseScale, mProperties.baseSize.height * fBaseScale );
+            pParticle->setPosition( 0, 0, 0 );
+            pParticle->mAge               = 0.0f;
+            pParticle->mRotation          = 0.0f;
+            pParticle->mAngularVelocity   = 0.0f;
+            pParticle->mVelocity        = cgVector3( 0, 0, 0 );
+            pParticle->mLastColorKeyIndex = 0;
+            pParticle->mLastScaleKeyIndex = 0;
+
+            // Calculate initial scale
+            pParticle->setScale( mProperties.scaleXCurve.evaluateForX(0,true), mProperties.scaleXCurve.evaluateForX(0,true) );
+            
+            // Calculate initial color
+            cgColorValue NewColor;
+            NewColor.r = mProperties.colorRCurve.evaluateForX( 0, true );
+            NewColor.g = mProperties.colorGCurve.evaluateForX( 0, true );
+            NewColor.b = mProperties.colorBCurve.evaluateForX( 0, true );
+            NewColor.a = mProperties.colorACurve.evaluateForX( 0, true );
+            pParticle->setColor( NewColor );
+            pParticle->setHDRScale( mProperties.hdrScale );
+
+            // Trigger the birth event
+            if ( onParticleBirth( pParticle ) == false )
+            {
+                if ( bActiveParticle == true )
+                {
+                    // Flag as dead, and remove from active particles list
+                    pParticle->setVisible( false );
+                    if ( i < (signed)mActiveParticleCount - 1 )
+                        memmove( &mActiveParticles[i], &mActiveParticles[i+1], ((mActiveParticleCount - 1) - i) * sizeof(cgParticle*) );
+                    mActiveParticleCount--;
+
+                    // Add to the end of the dead particles list
+                    mDeadParticles[ (mMaxParticles - 1) - mActiveParticleCount ] = pParticle;
+
+                    // Update to allow it to be removed from consideration
+                    pParticle->update();
+
+                } // End if particle was an active one
+
+                // Force the particle's age to be greater than its maximum age 
+                // so that anyone who calls 'isAlive()' on the particle after this
+                // point will know that it's dead.
+                pParticle->mAge = pParticle->mMaximumAge + 1;
+
+                // Skip the creation
+                continue;
+
+            } // End if cancelled the creation
+
+            // A new particle was released
+            mTotalReleased = 0;
+            
+            // Update the optional direction vector that can be used to lock 
+            // the billboard to a specific axis. This vector is based on the
+            // specified world velocity (i.e. camera moving through the world)
+            // relative to the particle's position and velocity.
+            vecAxis = pParticle->mVelocity - vecWorldVelocity;
+            fVelocity = cgVector3::length( vecAxis );
+            if ( fVelocity > 0 )
+            {
+                vecAxis /= fVelocity;
+                pParticle->setDirection( vecAxis );
+            
+            } // End if
+
+            // Multiply scale by velocity if requested
+            if ( bVelocityScale == true )
+                pParticle->mScale.y *= fVelocity;
+            
+            // Set as visible and add to active list if it wasn't already
+            if ( bActiveParticle == false )
+            {
+                pParticle->setVisible( true );
+                mActiveParticles[ mActiveParticleCount++ ] = pParticle;
+            
+            } // End if not from active list
+
+            // Update the newly created particle
+            pParticle->update();
+        
+        } // Next new particle
+
+    } // End if emission enabled
+}
+
+//-----------------------------------------------------------------------------
+//  Name : enableEmission ()
+/// <summary>
+/// Enable or disable the emission of new particles. Any existing particles
+/// that are alive will still be updated until the end of their lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitter::enableEmission( bool enable )
+{
+    mEnabled = enable;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isEmissionEnabled ()
+/// <summary>
+/// Determine if the emission of new particles is currently enabled.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgParticleEmitter::isEmissionEnabled( ) const
+{
+    return mEnabled;
 }
 
 //-----------------------------------------------------------------------------
@@ -762,17 +587,27 @@ void cgParticleEmitter::update( cgFloat fTimeElapsed, const cgVector3 & vecWorld
 void cgParticleEmitter::render( cgCameraNode * pCamera )
 {
     // Validate requirements
-    if ( mBillboardBuffer == CG_NULL )
+    if ( !mBillboardBuffer )
         return;
 
-    // Ensure we use identity world transform
-    mRenderDriver->setWorldTransform( CG_NULL );
+    // Ensure we use the correct world transform dependant
+    // on the type of emitter.
+    if ( mProperties.emitterType == cgParticleEmitterType::Billboards )
+        mRenderDriver->setWorldTransform( CG_NULL );
+    else if ( mProperties.emitterType == cgParticleEmitterType::LocalBillboards )
+        mRenderDriver->setWorldTransform( &mTransform );
     
     // Render the entire billboard buffer.
-    if ( mProperties.sortedRender == false )
+    if ( !mProperties.sortedRender )
         mBillboardBuffer->render( );
     else
-        mBillboardBuffer->renderSorted( pCamera );
+    {
+        cgMatrix * transformMatrix = CG_NULL;
+        if ( mProperties.emitterType == cgParticleEmitterType::LocalBillboards )
+            transformMatrix = &mTransform;
+        mBillboardBuffer->renderSorted( pCamera, transformMatrix );
+    
+    } // End if sorted
 }
 
 //-----------------------------------------------------------------------------
@@ -832,9 +667,10 @@ const cgVector3 & cgParticleEmitter::getEmitterDirection( ) const
 //-----------------------------------------------------------------------------
 cgVector3 cgParticleEmitter::generateConeDirection( cgFloat fInnerAngle, cgFloat fOuterAngle ) const
 {
-    cgVector3 vecUp        = (cgVector3&)mTransform._21;
-    cgVector3 vecRight     = (cgVector3&)mTransform._11;
-    cgVector3 vecLook      = (cgVector3&)mTransform._31;
+    const bool localSpace  = (mProperties.emitterType == cgParticleEmitterType::LocalBillboards);
+    cgVector3 vecUp        = (localSpace) ? cgVector3(0,1,0) : (cgVector3&)mTransform._21;
+    cgVector3 vecRight     = (localSpace) ? cgVector3(1,0,0) : (cgVector3&)mTransform._11;
+    cgVector3 vecLook      = (localSpace) ? cgVector3(0,0,1) : (cgVector3&)mTransform._31;
     cgVector3 vecDirection = vecLook;
 
     // A fixed emitter direction supplied?
@@ -881,11 +717,11 @@ cgVector3 cgParticleEmitter::generateConeDirection( cgFloat fInnerAngle, cgFloat
 //-----------------------------------------------------------------------------
 cgVector3 cgParticleEmitter::generateOrigin( cgFloat fDeadZoneRadius, cgFloat fEmissionRadius ) const
 {
-    cgMatrix mtxTransform;
+    const bool localSpace = (mProperties.emitterType == cgParticleEmitterType::LocalBillboards);
 
-    // If we're not using an emission radius, simply return the emitter's world space pos
+    // If we're not using an emission radius, simply return the emitter's local / world space pos
     if ( fEmissionRadius < CGE_EPSILON_1MM )
-        return getEmitterPosition();
+        return (localSpace) ? cgVector3(0,0,0) : getEmitterPosition();
 
     // Pick a random point along the emitters radius
     cgFloat fLength = fDeadZoneRadius + (((cgFloat)rand() / (cgFloat)RAND_MAX) * (fEmissionRadius - fDeadZoneRadius));
@@ -897,11 +733,13 @@ cgVector3 cgParticleEmitter::generateOrigin( cgFloat fDeadZoneRadius, cgFloat fE
     cgVector3 vecPosition = cgVector3( 0.0f, fLength, 0.0f );
 
     // Rotate about the 'polar' up vector
+    cgMatrix mtxTransform;
     cgMatrix::rotationZ( mtxTransform, CGEToRadian( fPolar ) );
     cgVector3::transformCoord( vecPosition, vecPosition, mtxTransform );
 
-    // Now transform this into a world space origin
-    cgVector3::transformCoord( vecPosition, vecPosition, getEmitterMatrix() );
+    // Now transform this into a world space origin if required.
+    if ( !localSpace )
+        cgVector3::transformCoord( vecPosition, vecPosition, getEmitterMatrix() );
 
     // Return the position
     return vecPosition;
@@ -1033,11 +871,11 @@ bool cgParticleEmitter::setEmitterProperties( const cgParticleEmitterProperties 
 
     // If the texture, shader or flags were altered, a new billboard buffer is required.
     bool bNewBuffer = false;
-    if ( mProperties.textureFile != Properties.textureFile || mProperties.shaderSource != Properties.shaderSource ||
+    if ( mProperties.particleTexture != Properties.particleTexture || mProperties.particleShader != Properties.particleShader ||
          mProperties.sortedRender != Properties.sortedRender )
          bNewBuffer = true;
 
-    // A new buffer is also required if the number of maximum number of simultaneous particles has been altered.
+    // A new buffer is also required if the maximum number of simultaneous particles has been altered.
     if ( mMaxParticles != nNewMaxParticles )
         bNewBuffer = true;
 
@@ -1053,11 +891,16 @@ bool cgParticleEmitter::setEmitterProperties( const cgParticleEmitterProperties 
         if ( mProperties.sortedRender == true )
             nFlags |= cgBillboardBuffer::SupportSorting;
 
+        // Select the correct shader.
+        cgString strShader = Properties.particleShader;
+        if ( strShader.empty() )
+            strShader = _T("sys://Shaders/Particles.sh");
+
         // Atlas or not?
-        if ( Properties.textureFile.endsWith( _T(".xml") ) )
+        if ( Properties.particleTexture.endsWith( _T(".xml") ) )
         {
             pNewBuffer = new cgBillboardBuffer();
-            if ( !pNewBuffer->prepareBufferFromAtlas( nFlags, mRenderDriver, Properties.textureFile, Properties.shaderSource ) )
+            if ( !pNewBuffer->prepareBufferFromAtlas( nFlags, mRenderDriver, Properties.particleTexture, strShader ) )
             {
                 delete pNewBuffer;
                 return false;
@@ -1068,7 +911,7 @@ bool cgParticleEmitter::setEmitterProperties( const cgParticleEmitterProperties 
         else
         {
             pNewBuffer = new cgBillboardBuffer();
-            if ( !pNewBuffer->prepareBuffer( nFlags, mRenderDriver, Properties.textureFile, Properties.shaderSource ) )
+            if ( !pNewBuffer->prepareBuffer( nFlags, mRenderDriver, Properties.particleTexture, strShader ) )
             {
                 delete pNewBuffer;
                 return false;
@@ -1085,6 +928,11 @@ bool cgParticleEmitter::setEmitterProperties( const cgParticleEmitterProperties 
         mBillboardBuffer = pNewBuffer;
 
     } // End if new buffer required
+
+    // Set the blending method to the billboard buffer.
+    cgSurfaceShaderHandle hShader = mBillboardBuffer->getSurfaceShader();
+    if ( hShader.isValid() )
+        hShader->setInt( _T("blendMethod"), (cgInt32)Properties.blendMethod );
 
     // If the maximum number of simultaneous particles was altered
     // we also need to resize our internal particle containers.
@@ -1162,6 +1010,7 @@ bool cgParticleEmitter::setEmitterProperties( const cgParticleEmitterProperties 
             mParticles[i]->update();
             
         } // Next particle
+        mBillboardBuffer->endPrepare();
 
     } // End if had new buffer
 

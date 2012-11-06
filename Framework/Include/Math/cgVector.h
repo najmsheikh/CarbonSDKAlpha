@@ -29,6 +29,7 @@
 
 // Windows platform includes
 #define WIN32_LEAN_AND_MEAN
+#include <d3d9.h>	// Win8 SDK required
 #include <d3dx9.h>
 #undef WIN32_LEAN_AND_MEAN
 

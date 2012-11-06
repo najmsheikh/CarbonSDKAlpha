@@ -144,13 +144,15 @@ private:
 //-----------------------------------------------------------------------------
 class CGE_API cgAppState : public cgReference
 {
-public:
+    DECLARE_DERIVED_SCRIPTOBJECT( cgAppState, cgReference, "AppState" )
+
     //-------------------------------------------------------------------------
     // Friend List
     //-------------------------------------------------------------------------
     friend class cgAppStateManager;
     friend class cgAppTransitionState;
 
+public:
     //-------------------------------------------------------------------------
     // Public Structures, Enumerations & Typedefs
     //-------------------------------------------------------------------------
@@ -189,6 +191,7 @@ public:
     // Constructors & Destructors
     //-------------------------------------------------------------------------
              cgAppState( const cgString & stateId );
+             cgAppState( const cgString & stateId, const cgInputStream & scriptStream, cgResourceManager * resourceManager );
     virtual ~cgAppState( );
 
     //-------------------------------------------------------------------------
@@ -206,7 +209,7 @@ public:
     // Public Virtual Methods
     //-------------------------------------------------------------------------
     // State Activation
-    virtual bool            initialize              ( ) { return true; }
+    virtual bool            initialize              ( );
     virtual bool            begin                   ( );
     virtual void            end                     ( );
 
@@ -246,6 +249,23 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Structures, Enumerations & Typedefs
     //-------------------------------------------------------------------------
+    struct CGE_API MethodHandles
+    {
+        // Public methods
+        cgScriptFunctionHandle  begin;
+        cgScriptFunctionHandle  end;
+        cgScriptFunctionHandle  initialize;
+        cgScriptFunctionHandle  update;
+        cgScriptFunctionHandle  render;
+        cgScriptFunctionHandle  suspend;
+        cgScriptFunctionHandle  resume;
+        
+        // Constructor
+        MethodHandles() :
+            begin(CG_NULL), end(CG_NULL), initialize(CG_NULL), update(CG_NULL),
+            render(CG_NULL), suspend(CG_NULL), resume(CG_NULL) {}
+    };
+
     CGE_MAP_DECLARE(cgString, EventActionDesc, EventActionMap)
 
     //-------------------------------------------------------------------------
@@ -260,6 +280,13 @@ protected:
     cgAppTransitionState  * mOutgoingTransition;    // The transition state (if any) that is being used to link us to a new state.
     cgAppTransitionState  * mIncomingTransition;    // The transition state (if any) that is being used to link us to a previous state.
     bool                    mBegun;                 // Has the state already been begun?
+    
+    // Scripted state
+    cgInputStream           mScriptStream;          // Stream from which a script will be loaded.
+    cgResourceManager     * mResourceManager;       // Manager through which script is loaded.
+    cgScriptHandle          mScript;                // Base state script.
+    cgScriptObject        * mScriptObject;          // Reference to the scripted state object (owned exclusively by the script).
+    MethodHandles           mScriptMethods;         // Cached handles to the script callback methods.
 };
 
 //-----------------------------------------------------------------------------

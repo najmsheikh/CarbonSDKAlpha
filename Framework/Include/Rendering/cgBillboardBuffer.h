@@ -104,7 +104,7 @@ public:
     cgInt16                 addFrame                ( cgInt16 groupIndex, const cgRect & pixelBounds, const cgString & frameName );
     bool                    endPrepare              ( );
     void                    render                  ( cgInt32 billboardBegin = 0, cgInt32 billboardCount = -1, bool precise = true );
-    void                    renderSorted            ( cgCameraNode * camera, cgInt32 billboardBegin = 0, cgInt32 billboardCount = -1, bool precise = true );
+    void                    renderSorted            ( cgCameraNode * camera, cgMatrix * localTransform, cgInt32 billboardBegin = 0, cgInt32 billboardCount = -1, bool precise = true );
     void                    billboardUpdated        ( cgInt32 billboardId );
     cgBillboard           * getBillboard            ( cgInt32 billboardId );
     cgUInt32                getBillboardCount       ( ) const { return (cgUInt32)mBillboards.size(); }
@@ -112,6 +112,7 @@ public:
     const FrameDesc       * getFrameData            ( cgInt16 groupIndex, cgInt16 frameIndex ) const;
     cgInt16                 getFrameGroupIndex      ( const cgString & groupName ) const;
     cgInt16                 getFrameIndex           ( cgInt16 groupIndex, const cgString & frameName ) const;
+    cgSurfaceShaderHandle   getSurfaceShader        ( ) const;
     void                    setDirty                ( bool dirty ) { mBufferDirty = dirty; }
     void                    onDeviceLost            ( );
     void                    onDeviceReset           ( );
@@ -280,12 +281,14 @@ public:
     //-------------------------------------------------------------------------
     void                setScale        ( const cgVector2 & scale );
     void                setScale        ( cgFloat x, cgFloat y );
-    const cgVector2 & getScale        ( ) const { return mScale; }
+    const cgVector2   & getScale        ( ) const { return mScale; }
     void                setRotation     ( cgFloat degrees );
     cgFloat             getRotation     ( ) const { return mRotation; }
     void                setDirection    ( const cgVector3 & direction );
     void                setDirection    ( cgFloat x, cgFloat y, cgFloat z );
-    const cgVector3 & getDirection    ( ) const { return mDirection; }
+    const cgVector3   & getDirection    ( ) const { return mDirection; }
+    void                setHDRScale     ( cgFloat scale );
+    cgFloat             getHDRScale     ( ) const { return mHDRScale; }
     
 protected:
     //-------------------------------------------------------------------------
@@ -294,6 +297,8 @@ protected:
     cgVector2           mScale;         // The scaling factor to apply to the billboard
     cgFloat             mRotation;      // Rotation angle in degrees
     cgVector3           mDirection;     // Optional axis to which a billboard's orientation can be aligned
+    cgFloat             mHDRScale;      // Intensity scalar for HDR rendering.
+
 };
 
 #endif // !_CGE_CGBILLBOARDBUFFER_H_

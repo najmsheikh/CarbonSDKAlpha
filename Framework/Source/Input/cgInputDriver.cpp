@@ -301,11 +301,21 @@ cgInputDriver::InitConfig cgInputDriver::getConfig( ) const
 void cgInputDriver::setMouseMode( cgMouseHandlerMode::Base Mode )
 {
     // Is this a no-op?
+    if ( mMouseMode == Mode )
+        return;
+
+    // Update value
     mMouseMode = Mode;
 
-    // De-activate cursor clipping if switching out of direct mode.
+    // De-activate cursor clipping if switching out of direct mode
+    // and restore the last known cursor position.
     if ( Mode != cgMouseHandlerMode::Direct )
+    {
         ::ClipCursor( CG_NULL );
+        cgPoint ptScreen = mFocusWnd->clientToScreen( mMousePosition );
+        ::SetCursorPos( ptScreen.x, ptScreen.y );
+    
+    } // End if to cursor
 }
 
 //-----------------------------------------------------------------------------
@@ -521,8 +531,10 @@ void cgInputDriver::poll(  )
                 ::GetCursorPos( (POINT*)&ptClient );
                 ptClient = mFocusWnd->screenToClient( ptClient );
 
-                // Just store the current position of the cursor in client space
-                mMousePosition = ptClient;
+                // Store the current position of the cursor in client space 
+                // when in cursor mode.
+                if ( mMouseMode == cgMouseHandlerMode::Cursor )
+                    mMousePosition = ptClient;
 
                 // If we're in direct mouse mode, we should clip (restrict) the
                 // cursor to the interior of the window.

@@ -236,9 +236,11 @@ class SystemExports
 		////////////////////////////////////////////
 		// Renderer
 		////////////////////////////////////////////
+		shadingQuality              = ShadingQuality::Ultra;
+		postProcessQuality          = PostProcessQuality::Ultra;
+		antiAliasingQuality         = AntiAliasingQuality::Ultra;
 		outputEncodingType          = OutputEncodingType::NoEncode;
 		fogModel                    = FogModel::None;
-		shadingQuality              = ShadingQuality::HighQuality;
 		orthographicCamera          = false;
 		hdrLighting                 = false;
 		viewSpaceLighting           = false;
@@ -323,6 +325,7 @@ class SystemExports
             #elif defined(DX10) || defined(DX11)
                 strCommon.append(
                     "#define POSITIONT POSITION\n"
+                    "#define Sampler2D SamplerState\n" // Vertex texture fetch
 				);
 
             #endif
@@ -454,6 +457,8 @@ class SystemExports
 	// Renderer
 	////////////////////////////////////////////
     int           shadingQuality;
+    int           postProcessQuality;
+    int           antiAliasingQuality;
 	int           outputEncodingType;
     int           fogModel;
 	bool          orthographicCamera;

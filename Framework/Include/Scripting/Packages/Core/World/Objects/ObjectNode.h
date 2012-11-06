@@ -72,7 +72,7 @@ namespace ObjectNode
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void scaleLocal( float, float, float )", asMETHODPR(type, scaleLocal, ( cgFloat, cgFloat, cgFloat ), void), asCALL_THISCALL) );
 
         // Visibility
-        BINDSUCCESS( engine->registerObjectMethod(typeName, "void showNode( bool )", asMETHODPR(type,showNode,( bool ), void), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "void showNode( bool, bool )", asMETHODPR(type,showNode,( bool, bool ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "bool isRenderable( ) const", asMETHODPR(type,isRenderable,() const,bool  ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "bool isShadowCaster( ) const", asMETHODPR(type,isShadowCaster,() const,bool  ), asCALL_THISCALL) );
 
@@ -110,6 +110,14 @@ namespace ObjectNode
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void applyImpulse( const Vector3 &in, const Vector3 &in )", asMETHODPR(type,applyImpulse,( const cgVector3&, const cgVector3& ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void applyTorque( const Vector3 &in )", asMETHODPR(type,applyTorque,( const cgVector3& ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void applyTorqueImpulse( const Vector3 &in )", asMETHODPR(type,applyTorqueImpulse,( const cgVector3& ), void), asCALL_THISCALL) );
+
+        // Behaviors
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "int getBehaviorCount( ) const", asMETHODPR(type,getBehaviorCount,( ) const, cgInt32), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "ObjectBehavior@+ getBehavior( int )", asMETHODPR(type,getBehavior,( cgInt32 ), cgObjectBehavior*), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "IScriptedObjectBehavior@ getScriptedBehavior( int )", asFUNCTIONPR(getScriptedBehavior,( cgInt32, type* ), asIScriptObject*), asCALL_CDECL_OBJLAST ) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "int addBehavior( ObjectBehavior@+ )", asMETHODPR(type,addBehavior,( cgObjectBehavior* ), cgInt32), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "bool removeBehavior( ObjectBehavior@+, bool )", asMETHODPR(type,removeBehavior,( cgObjectBehavior*, bool ), bool), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "bool removeBehavior( int, bool )", asMETHODPR(type,removeBehavior,( cgInt32, bool ), bool), asCALL_THISCALL) );
         
         // Event Handlers
         // ToDo: BINDSUCCESS ( engine->registerObjectMethod(typeName, "bool onNodeCreated( )", asMETHODPR(type,onNodeCreated,( ), bool), asCALL_THISCALL) );
@@ -119,6 +127,27 @@ namespace ObjectNode
         BINDSUCCESS ( engine->registerObjectMethod(typeName, "void onResolvePendingUpdates( uint )", asMETHODPR(type,onResolvePendingUpdates,( cgUInt32 ), void), asCALL_THISCALL) );
 
     } // End Method registerNodeMethods<>
+
+    //-------------------------------------------------------------------------
+    // Name : getScriptedBehavior ()
+    // Desc : Wrapper function that returns a reference to the script based
+    //        'IScriptedObjectBehavior' interface rather than the C++ side 
+    //        'cgScriptObject' that is returned by the 'cgObjectBehavior' 
+    //        native method of the same name.
+    //-------------------------------------------------------------------------
+    template <class type>
+    asIScriptObject * getScriptedBehavior( cgInt32 index, type* thisPointer )
+    {
+        cgObjectBehavior * behavior = thisPointer->getBehavior(index);
+        cgScriptObject * object = behavior->getScriptObject();
+        if ( object && object->getInternalObject() )
+        {
+            object->getInternalObject()->AddRef();
+            return object->getInternalObject();
+        
+        } // End if valid
+        return CG_NULL;
+    }
 
     // Package descriptor
     class Package : public cgScriptPackage

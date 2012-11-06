@@ -43,6 +43,7 @@
 #include <Rendering/cgSampler.h>
 #include <World/Objects/cgCameraObject.h>
 #include <World/Objects/cgLightObject.h>
+#include <Math/cgMathUtility.h>
 #include <D3D11.h>
 #include <dxerr.h>
 
@@ -149,7 +150,8 @@ void cgDX11RenderDriver::releaseOwnedResources()
     mObjectConstants.close(true);
     mWorldConstants.close(true);
     mVertexBlendingConstants.close(true);
-    mVertexBlendingITConstants.close(true);
+    mVertexBlendingTexture.close( true );
+    mVertexBlendingSampler.close( true );
 
     // Release internal vertex buffer caches.
     UserPointerVerticesMap::iterator itVertices;
@@ -696,6 +698,49 @@ bool cgDX11RenderDriver::postInit()
     cgAssert( mObjectConstants->getDesc().length == sizeof(_cbObject) );
     cgAssert( mWorldConstants->getDesc().length == sizeof(_cbWorld) );
     cgAssert( mVertexBlendingConstants->getDesc().length == sizeof(_cbVertexBlending) );
+
+    /*cgDX9Settings::Settings * pSettings = mD3DSettings.getSettings();
+    if (FAILED(mD3D->CheckDeviceFormat(pSettings->adapterOrdinal, pSettings->DeviceType, pSettings->displayMode.format,
+                                         D3DUSAGE_QUERY_VERTEXTEXTURE, D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F)))
+    {   
+        MessageBox(NULL, L"D3DFMT_A32B32G32R32F cannot be used for vertex textures.", L"Failed", MB_OK | MB_ICONERROR);   
+        return false;
+    }*/
+
+    // Create a texture large enough to contain vertex blending matrices
+    // for reading via vertex texture fetch.
+    if ( mConfig.useVTFBlending )
+    {
+        cgImageInfo ImageDesc;
+        ImageDesc.width     = cgMathUtility::nextPowerOfTwo( cgDX11RenderingCapabilities::MaxVBTSlotsVTF * 3 ) * 2;
+        ImageDesc.height    = 1;
+        ImageDesc.mipLevels = 1;
+        ImageDesc.format    = cgBufferFormat::R32G32B32A32_Float;
+        ImageDesc.pool      = cgMemoryPool::Default;
+        ImageDesc.type      = cgBufferType::Texture2D;
+        ImageDesc.dynamic   = true;
+        if ( !mResourceManager->createTexture( &mVertexBlendingTexture, ImageDesc, cgResourceFlags::ForceNew, _T("Core::Textures::VertexBlending"), cgDebugSource() ) )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to create vertex blending matrix buffer texture on the selected device.\n") );
+            return false;
+
+        } // End if failed
+
+        // Create the sampler state.
+        cgSamplerStateDesc SamplerDesc;
+        SamplerDesc.addressU = cgAddressingMode::Clamp;
+        SamplerDesc.addressV = cgAddressingMode::Clamp;
+        SamplerDesc.minificationFilter  = cgFilterMethod::Point;
+        SamplerDesc.magnificationFilter = cgFilterMethod::Point;
+        SamplerDesc.mipmapFilter        = cgFilterMethod::None;
+        if ( !mResourceManager->createSamplerState( &mVertexBlendingSampler, SamplerDesc, cgResourceFlags::ForceNew, cgDebugSource() ) )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to create vertex blending sampler states on the selected device.\n") );
+            return false;
+
+        } // End if failed
+
+    } // End if useVTFBlending
 
     // Create initial 'default' render target data stack entry.
     if ( !beginTargetRender( mDeviceFrameBuffer, mDeviceDepthStencilTarget ) )
@@ -2514,7 +2559,6 @@ bool cgDX11RenderDriver::beginFrame( bool bClearTarget, cgUInt32 nTargetColor )
     setConstantBufferAuto( mObjectConstants );
     setConstantBufferAuto( mWorldConstants );
     setConstantBufferAuto( mVertexBlendingConstants );
-    setConstantBufferAuto( mVertexBlendingITConstants );
 
     // Call base class implementation
     return cgRenderDriver::beginFrame( bClearTarget, nTargetColor );
@@ -3636,49 +3680,52 @@ bool cgDX11RenderDriver::setVertexBlendData( const cgMatrix pMatrices[], const c
     else
     {
         // Populate the VTF texture.
-        /*if ( MatrixCount )
+        if ( MatrixCount )
         {
-            cgDX9Texture<cgTexture> * pTexture = (cgDX9Texture<cgTexture>*)mVertexBlendingTexture.getResource(true);
+            cgDX11Texture<cgTexture> * pTexture = (cgDX11Texture<cgTexture>*)mVertexBlendingTexture.getResource(true);
             if ( pTexture )
             {
                 cgUInt32 nMatrixBlockSize = cgMathUtility::nextPowerOfTwo( mCaps->getMaxBlendTransforms() * 3 );
 
                 // Pack matrix data into the texture.
                 cgUInt32 nPitch;
-                cgVector4 * pRows = (cgVector4*)pTexture->lock( nPitch, cgLockFlags::Discard );
+                cgVector4 * pRows = (cgVector4*)pTexture->lock( nPitch, cgLockFlags::WriteOnly | cgLockFlags::Discard );
                 for ( cgUInt32 i = 0; i < MatrixCount; ++i )
                 {
                     const cgMatrix & m = pMatrices[i];
                     pRows[i*4]   = cgVector4( m._11, m._12, m._13, m._41 );
                     pRows[i*4+1] = cgVector4( m._21, m._22, m._23, m._42 );
                     pRows[i*4+2] = cgVector4( m._31, m._32, m._33, m._43 );
-
+                    
                     const cgMatrix & mit  = (pITMatrices) ? pITMatrices[i] : pMatrices[i];
                     pRows[i*4+nMatrixBlockSize]   = cgVector4( mit._11, mit._12, mit._13, mit._41 );
                     pRows[i*4+nMatrixBlockSize+1] = cgVector4( mit._21, mit._22, mit._23, mit._42 );
                     pRows[i*4+nMatrixBlockSize+2] = cgVector4( mit._31, mit._32, mit._33, mit._43 );
-
+                
                 } // Next matrix
                 pTexture->unlock(0);
 
                 // Apply the texture to the device for use with vertex texture fetch
-                LPDIRECT3DBASETEXTURE9 pD3DTexture = pTexture->getD3DTexture();
-                mD3DDevice->SetTexture( D3DVERTEXTEXTURESAMPLER0, pD3DTexture );
-                if ( pD3DTexture )
-                    pD3DTexture->Release();
+                ID3D11ShaderResourceView * pD3DView = pTexture->getD3DShaderView();
+                mD3DDeviceContext->VSSetShaderResources( 0, 1, &pD3DView );
+                if ( pD3DView )
+                    pD3DView->Release();
 
                 // Setup VTF sampler states.
-                mD3DDevice->SetSamplerState(D3DVERTEXTEXTURESAMPLER0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP );
-                mD3DDevice->SetSamplerState(D3DVERTEXTEXTURESAMPLER0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP );
-                mD3DDevice->SetSamplerState(D3DVERTEXTEXTURESAMPLER0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-                mD3DDevice->SetSamplerState(D3DVERTEXTEXTURESAMPLER0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-                mD3DDevice->SetSamplerState(D3DVERTEXTEXTURESAMPLER0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+                cgDX11SamplerState * pState = (cgDX11SamplerState*)mVertexBlendingSampler.getResource(true);
+                ID3D11SamplerState * pBlock = pState->getD3DStateBlock( );
+                if ( pBlock )
+                {
+                    mD3DDeviceContext->VSSetSamplers( 0, 1, &pBlock );
+                    pBlock->Release();
+                
+                } // End if valid
 
                 cgToDo( "Carbon General", "Output specific warning on failure." );
-
+            
             } // End if valid
 
-        } // End if matrices supplied*/
+        } // End if matrices supplied
 
     } // End if VTF
 

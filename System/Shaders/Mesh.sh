@@ -26,10 +26,12 @@ const String drawGBufferDSShader                = "drawGBufferDS";
 ///////////////////////////////////////////////////////////////////////////////
 // Global Functions
 ///////////////////////////////////////////////////////////////////////////////
+#ifndef _PARENTSCRIPT
 ISurfaceShader @ createSurfaceShader( SurfaceShader @ owner, RenderDriver @ driver, ResourceManager @ resources )
 {
     return MeshShader( owner, driver, resources );
 }
+#endif // !_PARENTSCRIPT
 
 ///////////////////////////////////////////////////////////////////////////////
 // Class Definitions
@@ -359,7 +361,7 @@ class MeshShader : ISurfaceShader
 		bool manualSRGBLinearize = testFlagAny( materialFlags, MaterialFlags::DecodeSRGB );
 		bool surfaceFresnel      = testFlagAny( materialFlags, MaterialFlags::SurfaceFresnel );
 		bool isMetal             = testFlagAny( materialFlags, MaterialFlags::Metal );
-		bool computeRoughness    = (shadingQuality >= ShadingQuality::HighQuality);
+		bool computeRoughness    = (shadingQuality >= ShadingQuality::High);
 		
 		<?float rlen;?>
 
@@ -756,7 +758,7 @@ class MeshShader : ISurfaceShader
     // Vertex Shaders
     ///////////////////////////////////////////////////////////////////////////
     //-------------------------------------------------------------------------
-    // Name : TransformDepth() (Vertex Shader)
+    // Name : transformDepth() (Vertex Shader)
     // Desc : Outputs vertex data needed for depth and related passes.
     //-------------------------------------------------------------------------
 	bool transformDepth( int maxBlendIndex, bool useVTFBlending, int depthOutputType, int normalOutputType, int lightType, int materialFlags, int renderFlags )
@@ -1673,7 +1675,7 @@ class MeshShader : ISurfaceShader
         } // End if has opacity
 
 		// Apply a Fresnel term based on surface orientation with respect to the camera.
-		if ( shadingQuality > ShadingQuality::LowQuality )
+		if ( shadingQuality > ShadingQuality::Low )
 		{
 			<?
 			half3 n = normalize( normal );

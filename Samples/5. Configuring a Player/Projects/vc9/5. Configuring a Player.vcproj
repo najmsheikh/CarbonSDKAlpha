@@ -17,7 +17,7 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
+			Name="Debug (DX9 Only)|Win32"
 			OutputDirectory="$(SolutionDir)..\..\..\Bin\"
 			IntermediateDirectory="$(ProjectDir)Compiled\$(ConfigurationName)"
 			ConfigurationType="1"
@@ -91,7 +91,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
+			Name="Publish (DX9 Only)|Win32"
 			OutputDirectory="$(SolutionDir)..\..\..\Bin\"
 			IntermediateDirectory="$(ProjectDir)Compiled\$(ConfigurationName)"
 			ConfigurationType="1"
@@ -174,7 +174,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release (No LTCG)|Win32"
+			Name="Release (DX9 Only)|Win32"
 			OutputDirectory="$(SolutionDir)..\..\..\Bin\"
 			IntermediateDirectory="$(ProjectDir)Compiled\$(ConfigurationName)"
 			ConfigurationType="1"
@@ -257,7 +257,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug (With DX11)|Win32"
+			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)..\..\..\Bin\"
 			IntermediateDirectory="$(ProjectDir)Compiled\$(ConfigurationName)"
 			ConfigurationType="1"
@@ -331,7 +331,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release (With DX11)|Win32"
+			Name="Publish|Win32"
 			OutputDirectory="$(SolutionDir)..\..\..\Bin\"
 			IntermediateDirectory="$(ProjectDir)Compiled\$(ConfigurationName)"
 			ConfigurationType="1"
@@ -414,7 +414,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release (With DX11) (No LTCG)|Win32"
+			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)..\..\..\Bin\"
 			IntermediateDirectory="$(ProjectDir)Compiled\$(ConfigurationName)"
 			ConfigurationType="1"

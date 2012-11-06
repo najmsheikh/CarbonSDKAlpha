@@ -39,10 +39,29 @@ enum APIMode
 
 enum ShadingQuality
 {
-	LowQuality    = 0,
-	MediumQuality = 1,
-	HighQuality   = 2,
-	UltraQuality  = 3
+	Poor     = 0,
+	Low      = 1,
+	Medium   = 2,
+	High     = 3,
+	Ultra    = 4
+};
+
+enum PostProcessQuality
+{
+	Poor     = 0,
+	Low      = 1,
+	Medium   = 2,
+	High     = 3,
+	Ultra    = 4
+};
+
+enum AntiAliasingQuality
+{
+	Poor     = 0,
+	Low      = 1,
+	Medium   = 2,
+	High     = 3,
+	Ultra    = 4
 };
 
 enum LightType

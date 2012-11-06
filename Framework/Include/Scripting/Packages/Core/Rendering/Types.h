@@ -258,6 +258,8 @@ namespace Types
 
             // Register Values
             BINDSUCCESS( engine->registerEnumValue( typeName, "ShadingQuality"             , cgSystemState::ShadingQuality ) );
+			BINDSUCCESS( engine->registerEnumValue( typeName, "PostProcessQuality"         , cgSystemState::PostProcessQuality ) );
+			BINDSUCCESS( engine->registerEnumValue( typeName, "AntiAliasingQuality"        , cgSystemState::AntiAliasingQuality ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "OrthographicCamera"         , cgSystemState::OrthographicCamera ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "OutputEncodingType"         , cgSystemState::OutputEncodingType ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "FogModel"                   , cgSystemState::FogModel ) );

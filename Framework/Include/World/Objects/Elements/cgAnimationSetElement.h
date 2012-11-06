@@ -36,7 +36,7 @@
 //-----------------------------------------------------------------------------
 // Globally Unique Type Id(s)
 //-----------------------------------------------------------------------------
-// {FDE03341-7209-44c9-8A73-D8B71ABEDA74}
+// {FDE03341-7209-44C9-8A73-D8B71ABEDA74}
 const cgUID RTID_AnimationSetElement = { 0xFDE03341, 0x7209, 0x44C9, {0x8A, 0x73, 0xD8, 0xB7, 0x1A, 0xBE, 0xDA, 0x74}};
 
 //-----------------------------------------------------------------------------
@@ -77,13 +77,17 @@ public:
     // Public Methods
     //-------------------------------------------------------------------------
     void                        setAnimationSet         ( cgAnimationSetHandle animationSet );
-    cgAnimationSetHandle        getAnimationSet         ( ) const;
+    const cgAnimationSetHandle& getAnimationSet         ( ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgObjectSubElement)
     //-------------------------------------------------------------------------
     virtual const cgUID       & getElementCategory      ( ) const;
     virtual cgString            getDisplayName          ( ) const;
+    virtual cgString            getDatabaseTable        ( ) const;
+    virtual bool                onComponentCreated      ( cgComponentCreatedEventArgs * e );
+    virtual bool                onComponentLoading      ( cgComponentLoadingEventArgs * e );
+    virtual void                onComponentDeleted      ( );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
@@ -98,9 +102,23 @@ public:
 
 protected:
     //-------------------------------------------------------------------------
+    // Protected Methods
+    //-------------------------------------------------------------------------
+    bool                        insertComponentData     ( );
+    void                        prepareQueries          ( );
+
+    //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
     cgAnimationSetHandle    mAnimationSet;  // Handle to the animation set represented by this sub-element instance
+
+    //-------------------------------------------------------------------------
+    // Protected Static Variables
+    //-------------------------------------------------------------------------
+    // Cached database queries.
+    static cgWorldQuery     mInsertAnimationSetRef;
+    static cgWorldQuery     mUpdateAnimationSetRef;
+    static cgWorldQuery     mLoadAnimationSetRef;
 };
 
 #endif // !_CGE_CGANIMATIONSETELEMENT_H_

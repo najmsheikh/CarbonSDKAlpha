@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ImageAtlas>
+  <Source>Fire.dds</Source>
+  <Group>
+    <Image x="0" y="0" width="256" height="256"/>
+	<Image x="256" y="0" width="256" height="256"/>
+	<Image x="0" y="256" width="256" height="256"/>
+	<Image x="256" y="256" width="256" height="256"/>
+  </Group>
+</ImageAtlas>

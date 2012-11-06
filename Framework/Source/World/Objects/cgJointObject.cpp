@@ -274,6 +274,22 @@ bool cgJointObject::getSubElementCategories( cgObjectSubElementCategory::Map & C
 }
 
 //-----------------------------------------------------------------------------
+//  Name : supportsSubElement () (Virtual)
+/// <summary>
+/// Determine if the specified object sub element type is supported by this
+/// world object. Derived object types should implement this to extend the
+/// allowable sub element types.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgJointObject::supportsSubElement( const cgUID & Category, const cgUID & Identifier ) const
+{
+    // Joints do not have support for sub-elements. They cannot
+    // have collision shapes associated with them because they
+    // cannot be rigid bodies.
+    return false;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : applyObjectRescale ()
 /// <summary>
 /// Apply a scale to all *local* data internal to this object. For instance,

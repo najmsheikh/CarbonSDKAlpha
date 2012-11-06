@@ -65,11 +65,7 @@ cgSkinObject::cgSkinObject( cgUInt32 nReferenceId, cgWorld * pWorld ) : cgMeshOb
 cgSkinObject::cgSkinObject( cgUInt32 nReferenceId, cgWorld * pWorld, cgWorldObject * pInit, cgCloneMethod::Base InitMethod ) : cgMeshObject( nReferenceId, pWorld, pInit, InitMethod )
 {
     // Duplicate values from object to clone.
-    cgSkinObject * pObject = (cgSkinObject*)pInit;
-    // ToDo: 9999 - Clone
-    /*m_Lighting              = pObject->m_Lighting;
-    m_CastShadows           = pObject->m_CastShadows;
-    m_ReceiveShadows        = pObject->m_ReceiveShadows;*/    
+    cgSkinObject * pObject = (cgSkinObject*)pInit;    
 }
 
 //-----------------------------------------------------------------------------
@@ -155,6 +151,49 @@ cgString cgSkinObject::getDatabaseTable( ) const
 }
 
 //-----------------------------------------------------------------------------
+// Name : setShadowStage()
+/// <summary>
+/// Set the state that describes whether or not the object will cast
+/// shadows onto surrounding objects, and during which lighting stage that
+/// should occur (if any).
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgSkinObject::setShadowStage( cgSceneProcessStage::Base stage )
+{
+    // Is this a no-op?
+    if ( mShadowStage == stage )
+        return;
+
+    // Update world database
+    if ( shouldSerialize() == true )
+    {
+        prepareQueries();
+        mUpdateProcessStages.bindParameter( 1, (cgInt32)0 );     // LightingStage
+        mUpdateProcessStages.bindParameter( 2, (cgInt32)stage ); // ShadowCastStage
+        mUpdateProcessStages.bindParameter( 3, (cgInt32)0 );     // ShadowReceiveStage
+        mUpdateProcessStages.bindParameter( 4, mReferenceId );
+        
+        // Execute
+        if ( mUpdateProcessStages.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateProcessStages.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update shadow rendering stage data for skin object '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
+    // Update value.
+    mShadowStage = stage;
+
+    // Notify listeners that property was altered
+    static const cgString strContext = _T("ShadowStage");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
+}
+
+//-----------------------------------------------------------------------------
 // Name : onComponentCreated() (Virtual)
 /// <summary>
 /// When the component is first created, it needs to be inserted fully into the
@@ -189,9 +228,9 @@ bool cgSkinObject::insertComponentData( )
         prepareQueries();
         mInsertSkin.bindParameter( 1, mReferenceId );
         mInsertSkin.bindParameter( 2, mMesh.getReferenceId() );
-        mInsertSkin.bindParameter( 3, (cgInt32)0 ); // m_Lighting
-        mInsertSkin.bindParameter( 4, (cgInt32)0 ); // m_CastShadows
-        mInsertSkin.bindParameter( 5, (cgInt32)0 ); // m_ReceiveShadows
+        mInsertSkin.bindParameter( 3, (cgInt32)0 ); // LightingStage
+        mInsertSkin.bindParameter( 4, (cgInt32)mShadowStage );
+        mInsertSkin.bindParameter( 5, (cgInt32)0 ); // ShadowReceiveStage
         mInsertSkin.bindParameter( 6, mSoftRefCount );
         
         // Execute
@@ -245,14 +284,14 @@ bool cgSkinObject::onComponentLoading( cgComponentLoadingEventArgs * e )
     e->componentData = &mLoadSkin;
 
     // ToDo: 9999
-    /*// Grab basic object properties.
-    cgUInt32 nValue = 0;
-    m_oqLoadMesh->getColumn( L"LightStage", nValue );
-    m_Lighting = (LightingStage)nValue;
-    m_oqLoadMesh->getColumn( L"ShadowCastStage", nValue );
-    m_CastShadows = (LightingStage)nValue;
-    m_oqLoadMesh->getColumn( L"ShadowReceiveStage", nValue );
-    m_ReceiveShadows = (LightingStage)nValue;*/
+    // Grab basic object properties.
+    cgUInt32 nStage = 0;
+    //mLoadSkin->getColumn( L"LightStage", nStage );
+    //m_Lighting = (LightingStage)nStage;
+    mLoadSkin.getColumn( L"ShadowCastStage", nStage );
+    mShadowStage = (cgSceneProcessStage::Base)nStage;
+    //mLoadSkin->getColumn( L"ShadowReceiveStage", nStage );
+    //m_ReceiveShadows = (LightingStage)nStage;
 
     // Load the referenced mesh data source.
     cgUInt32 nMeshRefId = 0;
@@ -417,6 +456,25 @@ bool cgSkinObject::getSubElementCategories( cgObjectSubElementCategory::Map & Ca
         
     // Any categories?
     return !Categories.empty();
+}
+
+//-----------------------------------------------------------------------------
+//  Name : supportsSubElement () (Virtual)
+/// <summary>
+/// Determine if the specified object sub element type is supported by this
+/// world object. Derived object types should implement this to extend the
+/// allowable sub element types.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgSkinObject::supportsSubElement( const cgUID & Category, const cgUID & Identifier ) const
+{
+    // Skinned meshes cannot have collision shapes at all.
+    if ( Category == OSECID_CollisionShapes )
+        return false;
+
+    // Call base class implementation next. Skip straight over the mesh
+    // object base class to the world object. This is not a bug.
+    return cgWorldObject::supportsSubElement( Category, Identifier );
 }
 
 //-----------------------------------------------------------------------------

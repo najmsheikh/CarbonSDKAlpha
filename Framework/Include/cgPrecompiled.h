@@ -16,6 +16,7 @@
 #include <World/cgWorld.h>
 
 #include <windows.h>
+#include <d3d9.h>	// Win8 SDK required
 #include <d3dx9.h>
 #include <vector>
 #include <list>

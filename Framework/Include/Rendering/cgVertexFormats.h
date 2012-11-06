@@ -294,22 +294,23 @@ public:
     //-------------------------------------------------------------------------
     cgBillboard3DVertex( ) :
         position( 0.0f, 0.0f, 0.0f ), color( 0xFFFFFFFF ), textureCoords( 0.0f, 0.0f ),
-        offset( 0.0f, 0.0f ), angle( 0.0f ), scale( 1.0f, 1.0f ), direction( 0.0f, 0.0f, 0.0f ) {};
+        offset( 0.0f, 0.0f ), angle( 0.0f ), scale( 1.0f, 1.0f ), hdrScale(1.0f), direction( 0.0f, 0.0f, 0.0f ) {};
 
-    cgBillboard3DVertex( cgFloat _x, cgFloat _y, cgFloat _z, cgUInt32 _color, cgFloat _u = 0.0f, cgFloat _v = 0.0f ) :
+    cgBillboard3DVertex( cgFloat _x, cgFloat _y, cgFloat _z, cgColorValue _color, cgFloat _u = 0.0f, cgFloat _v = 0.0f ) :
         position( _x, _y, _z ), color ( _color ), textureCoords( _u, _v ),
-        offset( 0.0f, 0.0f ), angle( 0.0f ), scale( 1.0f, 1.0f ), direction ( 0.0f, 0.0f, 0.0f ) {};
+        offset( 0.0f, 0.0f ), angle( 0.0f ), scale( 1.0f, 1.0f ), hdrScale(1.0f), direction ( 0.0f, 0.0f, 0.0f ) {};
     
     //-------------------------------------------------------------------------
     // Public Variables for This Class
     //-------------------------------------------------------------------------
-    cgVector3 position;       // Vertex position
-    cgUInt32  color;          // Tint color for the billboard
-    cgVector2 textureCoords;  // Texture coordinates
-    cgVector2 offset;         // Vertex offset descriptor in relation to the billboard center
-    cgFloat   angle;          // Rotation angle for the billboard vertex
-    cgVector2 scale;          // scale factor for the billboard
-    cgVector3 direction;      // Optional axis to which a billboard's orientation can be aligned
+    cgVector3     position;       // Vertex position
+    cgUInt32      color;          // Tint color for the billboard
+    cgVector2     textureCoords;  // Texture coordinates
+    cgVector2     offset;         // Vertex offset descriptor in relation to the billboard center
+    cgFloat       angle;          // Rotation angle for the billboard vertex
+    cgVector2     scale;          // Scale factor for the billboard
+    cgFloat       hdrScale;       // Scaling factor for the billboard intensity (HDR).
+    cgVector3     direction;      // Optional axis to which a billboard's orientation can be aligned
 
     //-------------------------------------------------------------------------
     // Public Static Constants

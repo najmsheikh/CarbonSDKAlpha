@@ -70,11 +70,17 @@ public:
     static cgWorldObject      * allocateClone           ( const cgUID & type, cgUInt32 referenceId, cgWorld * world, cgWorldObject * init, cgCloneMethod::Base initMethod );
 
     //-------------------------------------------------------------------------
+    // Public Static Functions
+    //-------------------------------------------------------------------------
+    void                        setShadowStage          ( cgSceneProcessStage::Base stage );
+
+    //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldObject)
     //-------------------------------------------------------------------------
     virtual bool                render                  ( cgCameraNode * camera, cgVisibilitySet * visibilityData, cgObjectNode * issuer );
     virtual bool                renderSubset            ( cgCameraNode * camera, cgVisibilitySet * visibilityData, cgObjectNode * issuer, const cgMaterialHandle & hMaterial );
     virtual bool                getSubElementCategories ( cgObjectSubElementCategory::Map & Categories ) const;
+    virtual bool                supportsSubElement      ( const cgUID & Category, const cgUID & Identifier ) const;
     virtual cgBoundingBox       getLocalBoundingBox     ( );
     virtual bool                pick                    ( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance );
     
@@ -169,6 +175,15 @@ public:
     // Public Virtual Methods (Overrides DisposableScriptObject)
     //-------------------------------------------------------------------------
     virtual void                dispose                 ( bool disposeBase );
+
+    //-------------------------------------------------------------------------
+    // Public Inline Methods
+    //-------------------------------------------------------------------------
+    // Object Property 'Set' Routing
+    inline void setShadowStage( cgSceneProcessStage::Base stage ) const
+    {
+        ((cgSkinObject*)mReferencedObject)->setShadowStage( stage );
+    }
 
 protected:
     //-------------------------------------------------------------------------

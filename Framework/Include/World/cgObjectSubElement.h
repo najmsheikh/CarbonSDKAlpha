@@ -82,6 +82,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
+    cgWorldObject             * getParentObject         ( ) const;
     bool                        clone                   ( cgWorldObject * object, bool internal, cgObjectSubElement *& objectSubElementOut );
     void                        setSelected             ( bool selected );
     bool                        isSelected              ( ) const;

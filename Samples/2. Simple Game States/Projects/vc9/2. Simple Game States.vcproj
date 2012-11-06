@@ -91,7 +91,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
+			Name="Publish|Win32"
 			OutputDirectory="$(SolutionDir)..\..\..\Bin\"
 			IntermediateDirectory="$(ProjectDir)Compiled\$(ConfigurationName)"
 			ConfigurationType="1"
@@ -174,7 +174,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release (No LTCG)|Win32"
+			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)..\..\..\Bin\"
 			IntermediateDirectory="$(ProjectDir)Compiled\$(ConfigurationName)"
 			ConfigurationType="1"

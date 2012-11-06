@@ -254,19 +254,23 @@ bool cgUISkin::parseSkinDefinition( const cgXMLNode & xNode, const cgString & st
         if ( xChild.isEmpty() ) throw _T("No 'Name' tag found");
         mSkinName = xChild.getText();
 
-        // Retrieve the glyph image atlas to use for the skin
+        // Retrieve the glyph image atlas to use for the skin (relative to the definition file).
         xChild = xNode.getChildNode( _T("Glyphs") );
-        mGlyphAtlas = xChild.getText();
+        // ToDo: Test that this is reliable.
+        cgString baseDirectory = cgFileSystem::getDirectoryName( strDefinitionFile );
+        if ( !xChild.isEmpty() && !xChild.getText().empty() )
+            mGlyphAtlas = baseDirectory + _T("/") + xChild.getText();
 
-        // Retrieve the texture to use for the skin
+        // Retrieve the texture to use for the skin (relative to the definition file).
         xChild = xNode.getChildNode( _T("Texture") );
         if ( xChild.isEmpty() ) throw _T("No 'Texture' tag found");
-        mTextureFile = xChild.getText();
+        // ToDo: Test that this is reliable.
+        mTextureFile = baseDirectory + _T("/") + xChild.getText();
 
         // Retrieve the cursor to use for the skin
         xChild = xNode.getChildNode( _T("Cursor") );
         if ( xChild.isEmpty() ) throw _T("No 'Cursor' tag found");
-        parseCursor( xChild, mCursorDefinition );
+        parseCursor( xChild, baseDirectory, mCursorDefinition );
 
         // Retrieve the 'form' child and parse it
         xChild = xNode.getChildNode( _T("Form") );
@@ -390,7 +394,7 @@ void cgUISkin::parseRegion( const cgXMLNode & xNode, cgPointArray & Region )
 /// Parses all chidren of the 'Cursor' node.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgUISkin::parseCursor( const cgXMLNode & xNode, cgUICursorDesc & Desc )
+void cgUISkin::parseCursor( const cgXMLNode & xNode, const cgString & strBaseDirectory, cgUICursorDesc & Desc )
 {
     cgXMLNode  xChild, xType, xFrames, xPlayback;
     cgString   strTypeName, strValue;
@@ -401,7 +405,8 @@ void cgUISkin::parseCursor( const cgXMLNode & xNode, cgUICursorDesc & Desc )
     // Retrieve the texture to use for the cursor
     xChild = xNode.getChildNode( _T("Texture") );
     if ( xChild.isEmpty() ) throw _T("No 'Texture' tag found within 'Cursor' node");
-    Desc.texture = xChild.getText();
+    // ToDo: test that this is reliable
+    Desc.texture = strBaseDirectory + _T("/") + xChild.getText();
 
      // Find all cursor types
     for ( cgUInt32 i = 0; ; )

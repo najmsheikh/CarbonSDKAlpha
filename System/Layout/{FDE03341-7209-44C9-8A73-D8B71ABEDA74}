@@ -1,0 +1,5 @@
+--Table: ObjectSubElements::AnimationSet -- {FDE03341-7209-44C9-8A73-D8B71ABEDA74}
+CREATE TABLE [ObjectSubElements::AnimationSet] (
+  [RefId] integer NOT NULL PRIMARY KEY,  
+  [DataSourceId] integer,
+  [RefCount] integer DEFAULT 0);

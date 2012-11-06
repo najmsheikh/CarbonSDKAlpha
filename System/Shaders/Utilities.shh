@@ -811,9 +811,9 @@ __shadercall matrix sampleBoneMatrix( int index, int instanceID )
     float offsetV = ((float)instanceID + 0.5f) * texelSize.y;
 
     // Sample the three matrix rows
-    float4 row0 = tex2Dlod( sVertexBlendingMatrices, float4( offsetU, offsetV, 0, 0 ) );
-    float4 row1 = tex2Dlod( sVertexBlendingMatrices, float4( offsetU + texelSize.x, offsetV, 0, 0 ) );
-    float4 row2 = tex2Dlod( sVertexBlendingMatrices, float4( offsetU + texelSize.x * 2, offsetV, 0, 0 ) );
+    float4 row0 = sample2DLevel( sVertexBlendingMatricesTex, sVertexBlendingMatrices, float2( offsetU, offsetV ), 0 );
+    float4 row1 = sample2DLevel( sVertexBlendingMatricesTex, sVertexBlendingMatrices, float2( offsetU + texelSize.x, offsetV ), 0 );
+    float4 row2 = sample2DLevel( sVertexBlendingMatricesTex, sVertexBlendingMatrices, float2( offsetU + texelSize.x * 2, offsetV), 0 );
 
     // Build the output matrix
     matrix m;
@@ -839,9 +839,9 @@ __shadercall void sampleBoneMatrices( int index, int instanceID, out matrix m, o
     float offsetV = ((float)instanceID + 0.5f) * texelSize.y;
 
     // Sample the three matrix rows
-    float4 row0 = tex2Dlod( sVertexBlendingMatrices, float4( offsetU, offsetV, 0, 0 ) );
-    float4 row1 = tex2Dlod( sVertexBlendingMatrices, float4( offsetU + texelSize.x, offsetV, 0, 0 ) );
-    float4 row2 = tex2Dlod( sVertexBlendingMatrices, float4( offsetU + texelSize.x * 2, offsetV, 0, 0 ) );
+    float4 row0 = sample2DLevel( sVertexBlendingMatricesTex, sVertexBlendingMatrices, float2( offsetU, offsetV ), 0 );
+    float4 row1 = sample2DLevel( sVertexBlendingMatricesTex, sVertexBlendingMatrices, float2( offsetU + texelSize.x, offsetV ), 0 );
+    float4 row2 = sample2DLevel( sVertexBlendingMatricesTex, sVertexBlendingMatrices, float2( offsetU + texelSize.x * 2, offsetV), 0 );
 
     // Build the output matrix
     m[0] = float4( row0.xyz, 0);
@@ -851,9 +851,9 @@ __shadercall void sampleBoneMatrices( int index, int instanceID, out matrix m, o
 
     // Sample inverse transpose
     offsetU += 256.0f * texelSize.x;
-    mit[0] = tex2Dlod( sVertexBlendingMatrices, float4( offsetU, offsetV, 0, 0 ) ).xyz;
-    mit[1] = tex2Dlod( sVertexBlendingMatrices, float4( offsetU + texelSize.x, offsetV, 0, 0 ) ).xyz;
-    mit[2] = tex2Dlod( sVertexBlendingMatrices, float4( offsetU + texelSize.x * 2, offsetV, 0, 0 ) ).xyz;
+    mit[0] = sample2DLevel( sVertexBlendingMatricesTex, sVertexBlendingMatrices, float2( offsetU, offsetV ), 0 ).xyz;
+    mit[1] = sample2DLevel( sVertexBlendingMatricesTex, sVertexBlendingMatrices, float2( offsetU + texelSize.x, offsetV ), 0 ).xyz;
+    mit[2] = sample2DLevel( sVertexBlendingMatricesTex, sVertexBlendingMatrices, float2( offsetU + texelSize.x * 2, offsetV), 0 ).xyz;
     ?>
 }
 
@@ -938,6 +938,7 @@ __shadercall void getWorldMatrix( out matrix outWorldMatrix, float4 blendWeights
             // VTF samplers
             <?global
             Sampler2D sVertexBlendingMatrices : register(s0);
+            Texture2D sVertexBlendingMatricesTex : register(t0);
             ?>
         
             /////////////////////////////////////////////
@@ -1082,6 +1083,7 @@ __shadercall void getWorldMatrixEx( out matrix outWorldMatrix, out float3x3 outW
             // VTF samplers
             <?global
             Sampler2D sVertexBlendingMatrices : register(s0);
+            Texture2D sVertexBlendingMatricesTex : register(t0);
             ?>
         
             /////////////////////////////////////////////
@@ -2410,85 +2412,134 @@ __shadercall float3 tonemapFilmicHable( float3 x )
 //----------------------------------------------------------------------------
 __shadercall float4 toneMapping( float3 hdrColor, float exposure, float white, script int toneMapper )
 {
+	<?
+	float4 ldrColor = 0;
+
+	// Compute the world luminance
+	float lw = computeLuminance( hdrColor );
+    ?>
+
+	// Select tonemapper
+	if ( toneMapper == ToneMapMethod::Photographic )
+	{
 		<?
-		float4 ldrColor = 0;
-
-		// Compute the world luminance
-		float lw = computeLuminance( hdrColor );
-        ?>
-
-		// Select tonemapper
-		if ( toneMapper == ToneMapMethod::Photographic )
-		{
-			<?
-			// Apply auto-exposure 
-			float lm = lw * exposure;
-			
-			// Compute display luminance
-			float ld = lm / (lm + 1.0);
+		// Apply auto-exposure 
+		float lm = lw * exposure;
 		
-			// Convert HDR color to LDR color
-			ldrColor.rgb = hdrColor.rgb * (ld / lw);
-			?>
-		}
-		else if ( toneMapper == ToneMapMethod::PhotographicWhitePoint )
-		{
-			<?
-			// Apply auto-exposure 
-			float lm = lw * exposure;
-			
-			// Compute white point luminance
-			float lmax        = white;
-			float recipLmaxSq = 1.0 / (lmax * lmax);
-			float lb = saturate( lm * lm * recipLmaxSq );
-
-			// Compute display luminance
-			float ld = (lm + lb) / (lm + 1.0);
+		// Compute display luminance
+		float ld = lm / (lm + 1.0);
+	
+		// Convert HDR color to LDR color
+		ldrColor.rgb = hdrColor.rgb * (ld / lw);
+		?>
+	}
+	else if ( toneMapper == ToneMapMethod::PhotographicWhitePoint )
+	{
+		<?
+		// Apply auto-exposure 
+		float lm = lw * exposure;
 		
-			// Convert HDR color to LDR color
-			ldrColor.rgb = hdrColor.rgb * (ld / lw);
-			?>
-		}
-		else if ( toneMapper == ToneMapMethod::Filmic )
-		{
-			<?
-			// Apply automatic exposure
-			hdrColor.rgb *= exposure; 
-		
-			// Run the tonemap operation
-			hdrColor.rgb = max( 0, hdrColor - 0.004 );
-			ldrColor.rgb = (hdrColor.rgb * (6.2 * hdrColor.rgb + 0.5)) / (hdrColor.rgb * (6.2 * hdrColor.rgb + 1.7) + 0.06);
-			?>
-		}
-		else if ( toneMapper == ToneMapMethod::FilmicHable )
-		{
-			<?
-			// Apply automatic exposure
-			hdrColor *= exposure; 
+		// Compute white point luminance
+		float lmax        = white;
+		float recipLmaxSq = 1.0 / (lmax * lmax);
+		float lb = saturate( lm * lm * recipLmaxSq );
 
-			float exposureBias = 2.0f;
-			float3 curr = tonemapFilmicHable( exposureBias * hdrColor );
-			ldrColor.rgb = curr;
+		// Compute display luminance
+		float ld = (lm + lb) / (lm + 1.0);
+	
+		// Convert HDR color to LDR color
+		ldrColor.rgb = hdrColor.rgb * (ld / lw);
+		?>
+	}
+	else if ( toneMapper == ToneMapMethod::Filmic )
+	{
+		<?
+		// Apply automatic exposure
+		hdrColor.rgb *= exposure; 
+	
+		// Run the tonemap operation
+		hdrColor.rgb = max( 0, hdrColor - 0.004 );
+		ldrColor.rgb = (hdrColor.rgb * (6.2 * hdrColor.rgb + 0.5)) / (hdrColor.rgb * (6.2 * hdrColor.rgb + 1.7) + 0.06);
+		?>
+	}
+	else if ( toneMapper == ToneMapMethod::FilmicHable )
+	{
+		<?
+		// Apply automatic exposure
+		hdrColor *= exposure; 
 
-			float W = 11.2f;
-			float3 currWhite = tonemapFilmicHable( W );
-			ldrColor.rgb *= 1.0f / currWhite;
-			?>
-		}
-		else if ( toneMapper == ToneMapMethod::Exponential )
-		{
-			<?
-			// Apply exposure and compute display luminance 
-			float ld = 1.0f - exp( -lw * exposure );
-			
-			// Convert HDR color to LDR color
-			ldrColor.rgb = hdrColor.rgb * ( ld / max( lw, 0.0001f ) );
-			?>
-		}
+		float exposureBias = 2.0f;
+		float3 curr = tonemapFilmicHable( exposureBias * hdrColor );
+		ldrColor.rgb = curr;
+
+		float W = 11.2f;
+		float3 currWhite = tonemapFilmicHable( W );
+		ldrColor.rgb *= 1.0f / currWhite;
+		?>
+	}
+	else if ( toneMapper == ToneMapMethod::Exponential )
+	{
+		<?
+		// Apply exposure and compute display luminance 
+		float ld = 1.0f - exp( -lw * exposure );
 		
-		// Return final result
-		<?return ldrColor;?>
+		// Convert HDR color to LDR color
+		ldrColor.rgb = hdrColor.rgb * ( ld / max( lw, 0.0001f ) );
+		?>
+	}
+	
+	// Return final result
+	<?return ldrColor;?>
 }
+
+//-----------------------------------------------------------------------------
+// Name: getTangentFrame()
+// Desc: Create a tangent frame matrix with optional random rotation applied. 
+//       Note that this is an arbitrary matrix to some extent based solely on a
+//       normal for construction. 
+//-----------------------------------------------------------------------------
+__shadercall void getTangentFrame( float3 normal, float rndAngleCosine, float rndAngleSine, out float3x3 mtx, script bool useRandomAngles )
+{
+	<?
+	// Ensure a valid up vector
+	float3 up;
+	if ( abs( normal.y ) < (1.0f - 1e-5f) )
+		up = float3( 0, 1, 0 ) - (normal * normal.y);
+	else
+		up = float3( 1, 0, 0 ) - (normal * normal.x);
+
+	// Compute binormal and tangent vectors
+	float3 binormal = normalize( Up );
+	float3 tangent  = cross( binormal, normal );		
+	?>
+
+	if ( useRandomAngles )
+	{
+		<?
+		// Fill a temporary tangent matrix
+		float3x3 tmpTS;
+		tmpTS[0] = tangent;
+		tmpTS[1] = binormal;
+		tmpTS[2] = normal;
+
+		// Randomly rotate the system (about the normal)
+		float4 csc = float4( rndAngleCosine, rndAngleSine, -rndAngleCosine, 0 ); 
+		mtx[0] = mul( csc.xyw, (float3x3)tmpTS );
+		mtx[1] = mul( csc.zxw, (float3x3)tmpTS );
+		mtx[2] = normal;
+		?>
+	}
+	else
+	{
+		<?
+		mtx[0] = tangent;
+		mtx[1] = binormal;
+		mtx[2] = normal;
+		?>	
+	}
+}
+
+
 
 
 

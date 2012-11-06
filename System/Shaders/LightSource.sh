@@ -931,7 +931,7 @@ class LightSourceShader : ISurfaceShader
         // Retrieve reflectance properties
         if ( getReflectance )
         {
-			if ( shadingQuality == ShadingQuality::LowQuality )
+			if ( shadingQuality == ShadingQuality::Low )
 			{
 				<?
 				texData                    = sample2D( sGBuffer1Tex, sGBuffer1, surface.screenCoords );

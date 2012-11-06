@@ -35,7 +35,8 @@
 //-----------------------------------------------------------------------------
 #include <Resources/Platform/cgDX9ConstantBuffer.h>
 #include <Resources/cgSurfaceShader.h>
-#include <D3DX9.h>
+#include <d3d9.h>	// Win8 SDK required
+#include <d3dx9.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 // cgDX9ConstantBuffer Member Functions

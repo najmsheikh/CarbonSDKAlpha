@@ -476,6 +476,8 @@ protected:
 
         // Renderer
         cgInt32       * shadingQuality;
+		cgInt32       * postProcessQuality;
+		cgInt32       * antiAliasingQuality;
         cgInt32       * outputEncodingType;
         cgInt32       * fogModel;
         cgInt32       * colorWrites;

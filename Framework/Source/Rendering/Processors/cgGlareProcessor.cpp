@@ -153,10 +153,10 @@ void cgGlareProcessor::dispose( bool disposeBase )
 	mAnamorphicIntensity                = 0.4f;
 	mAnamorphicPasses                   = 0;
 	mAnamorphicRadius                   = 4;
-	mAnamorphicConfig.flareColor        = cgVector3( 0.55, 0.55, 1.0 );
+	mAnamorphicConfig.flareColor        = cgVector3( 0.55f, 0.55f, 1 );
 	mAnamorphicConfig.flarePassScale    = 0;
-	mAnamorphicConfig.flareCoordScale   = 0.75;
-	mAnamorphicConfig.flareCoordBias    = 0.65;
+	mAnamorphicConfig.flareCoordScale   = 0.75f;
+	mAnamorphicConfig.flareCoordBias    = 0.65f;
 
 	// Dispose base if requested.
 	if ( disposeBase )
@@ -473,7 +473,10 @@ void cgGlareProcessor::downsampleAndBlur()
 		if ( stepIndices[ i ] != 0xFFFFFFFF )
 		{
 			// Get the current layer's weight (intensity)
-			float I = mSteps[ stepIndices[ i ] ].intensity * mGlareAmount;
+			float I = mSteps[ stepIndices[ i ] ].intensity;
+
+			// In HDR mode, adjust by overall glare amount
+			if ( mHDRGlare ) I *= mGlareAmount;
 
 			// If we are adding a prior image to the current image
 			if ( nLastLayer != -1 )
@@ -501,6 +504,7 @@ void cgGlareProcessor::downsampleAndBlur()
 			}
 			else
 			{
+				// Note: In LDR mode, this can only be used to reduce layer intensity, not increase it (due to clamp of 1)
 				processColorImage( mResampleChain0->getLevel( i ), cgImageOperation::ScaleUserColorRGB, cgColorValue( I, I, I, 1.0f ) );
 			}
 
@@ -522,7 +526,10 @@ void cgGlareProcessor::downsampleAndBlur()
 	} // Next level
 
 	// Add final 
-	processColorImage( mResampleChain0->getLevel( nLastLayer ), mOperationTarget, cgImageOperation::AddRGB );
+	if ( mHDRGlare )
+		processColorImage( mResampleChain0->getLevel( nLastLayer ), mOperationTarget, cgImageOperation::AddRGB );
+	else
+		processColorImage( mResampleChain0->getLevel( nLastLayer ), mOperationTarget, cgImageOperation::ColorScaleAddRGB, cgColorValue( mGlareAmount, mGlareAmount, mGlareAmount, 1.0f ) );
 
 	// Optionally compute anamorphic flares
 	if ( mAnamorphicPasses > 0 )

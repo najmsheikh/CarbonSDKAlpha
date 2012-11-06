@@ -33,6 +33,12 @@ namespace Actor
             registerHandleBehaviors<cgActorNode>( engine );
 
             ///////////////////////////////////////////////////////////////////////
+            // Type Identifiers
+            ///////////////////////////////////////////////////////////////////////
+            BINDSUCCESS( engine->registerGlobalProperty( "const UID RTID_ActorObject", (void*)&RTID_ActorObject ) );
+            BINDSUCCESS( engine->registerGlobalProperty( "const UID RTID_ActorNode", (void*)&RTID_ActorNode ) );
+
+            ///////////////////////////////////////////////////////////////////////
             // cgActorObject (Class)
             ///////////////////////////////////////////////////////////////////////
 

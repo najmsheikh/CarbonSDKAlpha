@@ -95,7 +95,7 @@ protected:
     //-------------------------------------------------------------------------
     bool    getNextToken                ( TokenData & t, const std::string & strScript, bool skipCommentAndWS );
     bool    expandStatement             ( TokenData & t, std::string & statement );
-    bool    loadScriptSection           ( asIScriptModule * module, cgInputStream & stream, cgScript::SourceFileArray & sourceFiles );
+    bool    loadScriptSection           ( asIScriptModule * module, cgInputStream & stream, cgScript::SourceFileArray & sourceFiles, bool includeOnce );
     bool    processScriptSection        ( asIScriptModule * module, const std::string & inputCode, const cgString & sectionName, cgScript::SourceFileArray & sourceFiles );
     void    skipStatement               ( TokenData & t, const std::string & script );
     void    excludeCode                 ( TokenData & t, std::string & script );

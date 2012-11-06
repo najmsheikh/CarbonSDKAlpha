@@ -48,6 +48,8 @@ const cgUID RTID_ParticleEmitterNode = {0xA8137D6E, 0xAD08, 0x4A74, {0x80, 0x1D,
 //-----------------------------------------------------------------------------
 class cgParticleEmitterObject : public cgWorldObject
 {
+    DECLARE_DERIVED_SCRIPTOBJECT( cgParticleEmitterObject, cgWorldObject, "ParticleEmitterObject" )
+
 public:
     //-------------------------------------------------------------------------
     // Constructors & Destructors
@@ -65,48 +67,56 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    const cgParticleEmitterProperties & getProperties               ( ) const;
-    const cgString                    & getScriptFile               ( ) const;
-
+    cgUInt32                            getLayerCount               ( ) const;
+    const cgParticleEmitterProperties & getLayerProperties          ( cgUInt32 layerIndex ) const;
+    
     // Emitter properties
-    cgFloat                             getInnerCone                ( ) const;
-    cgFloat                             getOuterCone                ( ) const;
-    cgFloat                             getEmissionRadius           ( ) const;
-    cgFloat                             getDeadZoneRadius           ( ) const;
-    cgUInt32                            getMaxSimultaneousParticles ( ) const;
-    cgFloat                             getBirthFrequency           ( ) const;
-    bool                                getSortedRender             ( ) const;
-    bool                                getRandomizedRotation       ( ) const;
-    void                                setInnerCone                ( cgFloat degrees );
-    void                                setOuterCone                ( cgFloat degrees );
-    void                                setEmissionRadius           ( cgFloat radius );
-    void                                setDeadZoneRadius           ( cgFloat radius );
-    void                                setMaxSimultaneousParticles ( cgUInt32 amount );
-    void                                setBirthFrequency           ( cgFloat amount );
-    void                                enableSortedRender          ( bool enabled );
-    void                                enableRandomizedRotation    ( bool enabled );
+    cgFloat                             getInnerCone                ( cgUInt32 layerIndex ) const;
+    cgFloat                             getOuterCone                ( cgUInt32 layerIndex ) const;
+    cgFloat                             getEmissionRadius           ( cgUInt32 layerIndex ) const;
+    cgFloat                             getDeadZoneRadius           ( cgUInt32 layerIndex ) const;
+    cgUInt32                            getMaxSimultaneousParticles ( cgUInt32 layerIndex ) const;
+    cgFloat                             getBirthFrequency           ( cgUInt32 layerIndex ) const;
+    cgFloat                             getHDRScale                 ( cgUInt32 layerIndex ) const;
+    bool                                getSortedRender             ( cgUInt32 layerIndex ) const;
+    bool                                getRandomizedRotation       ( cgUInt32 layerIndex ) const;
+    bool                                getInitialEnabledState      ( cgUInt32 layerIndex ) const;
+    void                                setInnerCone                ( cgUInt32 layerIndex, cgFloat degrees );
+    void                                setOuterCone                ( cgUInt32 layerIndex, cgFloat degrees );
+    void                                setEmissionRadius           ( cgUInt32 layerIndex, cgFloat radius );
+    void                                setDeadZoneRadius           ( cgUInt32 layerIndex, cgFloat radius );
+    void                                setMaxSimultaneousParticles ( cgUInt32 layerIndex, cgUInt32 amount );
+    void                                setBirthFrequency           ( cgUInt32 layerIndex, cgFloat amount );
+    void                                setHDRScale                 ( cgUInt32 layerIndex, cgFloat scale );
+    void                                enableSortedRender          ( cgUInt32 layerIndex, bool enabled );
+    void                                enableRandomizedRotation    ( cgUInt32 layerIndex, bool enabled );
+    void                                setInitialEnabledState      ( cgUInt32 layerIndex, bool enabled );
+    void                                setParticleTexture          ( cgUInt32 layerIndex, const cgString & textureFile );
 
     // Particle properties
-    void                                setParticleSpeed            ( cgFloat minimum, cgFloat maximum );
-    void                                setParticleSpeed            ( const cgRangeF & range );
-    void                                setParticleMass             ( cgFloat minimum, cgFloat maximum );
-    void                                setParticleMass             ( const cgRangeF & range );
-    void                                setParticleAngularSpeed     ( cgFloat minimum, cgFloat maximum );
-    void                                setParticleAngularSpeed     ( const cgRangeF & range );
-    void                                setParticleBaseScale        ( cgFloat minimum, cgFloat maximum );
-    void                                setParticleBaseScale        ( const cgRangeF & range );
-    void                                setParticleLifetime         ( cgFloat minimum, cgFloat maximum );
-    void                                setParticleLifetime         ( const cgRangeF & range );
-    void                                setParticleSize             ( cgFloat fWidth, cgFloat fHeight );
-    void                                setParticleSize             ( const cgSizeF & size );
-    void                                setParticleAirResistance    ( cgFloat value );
-    const cgRangeF                    & getParticleSpeed            ( ) const;
-    const cgRangeF                    & getParticleMass             ( ) const;
-    const cgRangeF                    & getParticleAngularSpeed     ( ) const;
-    const cgRangeF                    & getParticleBaseScale        ( ) const;
-    const cgRangeF                    & getParticleLifetime         ( ) const;
-    const cgSizeF                     & getParticleSize             ( ) const;
-    cgFloat                             getParticleAirResistance    ( ) const;
+    void                                setParticleSpeed            ( cgUInt32 layerIndex, cgFloat minimum, cgFloat maximum );
+    void                                setParticleSpeed            ( cgUInt32 layerIndex, const cgRangeF & range );
+    void                                setParticleMass             ( cgUInt32 layerIndex, cgFloat minimum, cgFloat maximum );
+    void                                setParticleMass             ( cgUInt32 layerIndex, const cgRangeF & range );
+    void                                setParticleAngularSpeed     ( cgUInt32 layerIndex, cgFloat minimum, cgFloat maximum );
+    void                                setParticleAngularSpeed     ( cgUInt32 layerIndex, const cgRangeF & range );
+    void                                setParticleBaseScale        ( cgUInt32 layerIndex, cgFloat minimum, cgFloat maximum );
+    void                                setParticleBaseScale        ( cgUInt32 layerIndex, const cgRangeF & range );
+    void                                setParticleLifetime         ( cgUInt32 layerIndex, cgFloat minimum, cgFloat maximum );
+    void                                setParticleLifetime         ( cgUInt32 layerIndex, const cgRangeF & range );
+    void                                setParticleSize             ( cgUInt32 layerIndex, cgFloat width, cgFloat height );
+    void                                setParticleSize             ( cgUInt32 layerIndex, const cgSizeF & size );
+    void                                setParticleAirResistance    ( cgUInt32 layerIndex, cgFloat value );
+    void                                setParticleBlendMethod      ( cgUInt32 layerIndex, cgParticleBlendMethod::Base method );
+    const cgRangeF                    & getParticleSpeed            ( cgUInt32 layerIndex ) const;
+    const cgRangeF                    & getParticleMass             ( cgUInt32 layerIndex ) const;
+    const cgRangeF                    & getParticleAngularSpeed     ( cgUInt32 layerIndex ) const;
+    const cgRangeF                    & getParticleBaseScale        ( cgUInt32 layerIndex ) const;
+    const cgRangeF                    & getParticleLifetime         ( cgUInt32 layerIndex ) const;
+    const cgSizeF                     & getParticleSize             ( cgUInt32 layerIndex ) const;
+    cgFloat                             getParticleAirResistance    ( cgUInt32 layerIndex ) const;
+    cgParticleBlendMethod::Base         getParticleBlendMethod      ( cgUInt32 layerIndex ) const;
+    const cgString                    & getParticleTexture          ( cgUInt32 layerIndex ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldObject)
@@ -139,6 +149,17 @@ public:
 
 protected:
     //-------------------------------------------------------------------------
+    // Protected Structures
+    //-------------------------------------------------------------------------
+    struct Layer
+    {
+        cgUInt32                    databaseId;
+        cgParticleEmitterProperties properties;
+        bool                        initialEmission;    // Initial enabled state.
+    };
+    CGE_VECTOR_DECLARE( Layer, LayerArray );
+
+    //-------------------------------------------------------------------------
     // Protected Methods
     //-------------------------------------------------------------------------
     void                        prepareQueries          ( );
@@ -147,14 +168,15 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    cgString                    mScriptFile;    // Use script file to configure emitter.
-    cgParticleEmitterProperties mProperties;    // Configured emitter properties.
+    LayerArray                  mLayers;        // Configured list of emitter layers.
 
     //-------------------------------------------------------------------------
     // Protected Static Variables
     //-------------------------------------------------------------------------
     // Cached database queries.
     static cgWorldQuery     mInsertEmitter;
+    static cgWorldQuery     mInsertEmitterLayer;
+    static cgWorldQuery     mDeleteEmitterLayer;
     static cgWorldQuery     mUpdateConeAngles;
     static cgWorldQuery     mUpdateEmissionRadii;
     static cgWorldQuery     mUpdateParticleCounts;
@@ -162,6 +184,7 @@ protected:
     static cgWorldQuery     mUpdateRenderingProperties;
     static cgWorldQuery     mUpdateParticleProperties;
     static cgWorldQuery     mLoadEmitter;
+    static cgWorldQuery     mLoadEmitterLayers;
 };
 
 //-----------------------------------------------------------------------------
@@ -192,7 +215,9 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    cgParticleEmitter         * getEmitter              ( ) const;
+    cgParticleEmitter         * getLayerEmitter         ( cgUInt32 layerIndex ) const;
+    void                        enableLayerEmission     ( cgUInt32 layerIndex, bool enable );
+    bool                        isLayerEmissionEnabled  ( cgUInt32 layerIndex ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgObjectNode)
@@ -202,202 +227,243 @@ public:
     virtual bool                onNodeLoading           ( const cgUID & objectType, cgWorldQuery * nodeData, cgSceneCell * parentCell, cgCloneMethod::Base cloneMethod );
     virtual void                onComponentModified     ( cgComponentModifiedEventArgs * e );
     virtual void                update                  ( cgFloat timeDelta );
+    virtual bool                allowSandboxUpdate      ( ) const;
 
     //-------------------------------------------------------------------------
     // Public Inline Methods
     //-------------------------------------------------------------------------
     // Object Property 'Set' Routing
-    inline void setInnerCone( cgFloat value ) 
+    inline void setInitialEnabledState( cgUInt32 layerIndex, bool value ) 
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setInnerCone( value );
+        ((cgParticleEmitterObject*)mReferencedObject)->setInitialEnabledState( layerIndex, value );
     }
-    inline void setOuterCone( cgFloat value ) 
+    inline void setInnerCone( cgUInt32 layerIndex, cgFloat value ) 
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setOuterCone( value );
+        ((cgParticleEmitterObject*)mReferencedObject)->setInnerCone( layerIndex, value );
     }
-    inline void setEmissionRadius( cgFloat value ) 
+    inline void setOuterCone( cgUInt32 layerIndex, cgFloat value ) 
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setEmissionRadius( value );
+        ((cgParticleEmitterObject*)mReferencedObject)->setOuterCone( layerIndex, value );
     }
-    inline void setDeadZoneRadius( cgFloat value ) 
+    inline void setEmissionRadius( cgUInt32 layerIndex, cgFloat value ) 
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setDeadZoneRadius( value );
+        ((cgParticleEmitterObject*)mReferencedObject)->setEmissionRadius( layerIndex, value );
     }
-    inline void setMaxSimultaneousParticles( cgUInt32 amount ) 
+    inline void setDeadZoneRadius( cgUInt32 layerIndex, cgFloat value ) 
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setMaxSimultaneousParticles( amount );
+        ((cgParticleEmitterObject*)mReferencedObject)->setDeadZoneRadius( layerIndex, value );
     }
-    inline void setBirthFrequency( cgFloat value )
+    inline void setMaxSimultaneousParticles( cgUInt32 layerIndex, cgUInt32 amount ) 
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setBirthFrequency( value );
+        ((cgParticleEmitterObject*)mReferencedObject)->setMaxSimultaneousParticles( layerIndex, amount );
     }
-    inline void enableRandomizedRotation( bool value )
+    inline void setBirthFrequency( cgUInt32 layerIndex, cgFloat value )
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->enableRandomizedRotation( value );
+        ((cgParticleEmitterObject*)mReferencedObject)->setBirthFrequency( layerIndex, value );
     }
-    inline void enableSortedRender( bool value )
+    inline void setHDRScale( cgUInt32 layerIndex, cgFloat value )
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->enableSortedRender( value );
+        ((cgParticleEmitterObject*)mReferencedObject)->setHDRScale( layerIndex, value );
     }
-    inline void setParticleSpeed( cgFloat minimum, cgFloat maximum )
+    inline void enableRandomizedRotation( cgUInt32 layerIndex, bool value )
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setParticleSpeed( minimum, maximum );
+        ((cgParticleEmitterObject*)mReferencedObject)->enableRandomizedRotation( layerIndex, value );
     }
-    inline void setParticleSpeed( const cgRangeF & range )
+    inline void enableSortedRender( cgUInt32 layerIndex, bool value )
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setParticleSpeed( range );
+        ((cgParticleEmitterObject*)mReferencedObject)->enableSortedRender( layerIndex, value );
     }
-    inline void setParticleMass( cgFloat minimum, cgFloat maximum )
+    inline void setParticleSpeed( cgUInt32 layerIndex, cgFloat minimum, cgFloat maximum )
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setParticleMass( minimum, maximum );
+        ((cgParticleEmitterObject*)mReferencedObject)->setParticleSpeed( layerIndex, minimum, maximum );
     }
-    inline void setParticleMass( const cgRangeF & range )
+    inline void setParticleSpeed( cgUInt32 layerIndex, const cgRangeF & range )
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setParticleMass( range );
+        ((cgParticleEmitterObject*)mReferencedObject)->setParticleSpeed( layerIndex, range );
     }
-    inline void setParticleAngularSpeed( cgFloat minimum, cgFloat maximum )
+    inline void setParticleMass( cgUInt32 layerIndex, cgFloat minimum, cgFloat maximum )
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setParticleAngularSpeed( minimum, maximum );
+        ((cgParticleEmitterObject*)mReferencedObject)->setParticleMass( layerIndex, minimum, maximum );
     }
-    inline void setParticleAngularSpeed( const cgRangeF & range )
+    inline void setParticleMass( cgUInt32 layerIndex, const cgRangeF & range )
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setParticleAngularSpeed( range );
+        ((cgParticleEmitterObject*)mReferencedObject)->setParticleMass( layerIndex, range );
     }
-    inline void setParticleBaseScale( cgFloat minimum, cgFloat maximum )
+    inline void setParticleAngularSpeed( cgUInt32 layerIndex, cgFloat minimum, cgFloat maximum )
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setParticleBaseScale( minimum, maximum );
+        ((cgParticleEmitterObject*)mReferencedObject)->setParticleAngularSpeed( layerIndex, minimum, maximum );
     }
-    inline void setParticleBaseScale( const cgRangeF & range )
+    inline void setParticleAngularSpeed( cgUInt32 layerIndex, const cgRangeF & range )
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setParticleBaseScale( range );
+        ((cgParticleEmitterObject*)mReferencedObject)->setParticleAngularSpeed( layerIndex, range );
     }
-    inline void setParticleLifetime( cgFloat minimum, cgFloat maximum )
+    inline void setParticleBaseScale( cgUInt32 layerIndex, cgFloat minimum, cgFloat maximum )
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setParticleLifetime( minimum, maximum );
+        ((cgParticleEmitterObject*)mReferencedObject)->setParticleBaseScale( layerIndex, minimum, maximum );
     }
-    inline void setParticleLifetime( const cgRangeF & range )
+    inline void setParticleBaseScale( cgUInt32 layerIndex, const cgRangeF & range )
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setParticleLifetime( range );
+        ((cgParticleEmitterObject*)mReferencedObject)->setParticleBaseScale( layerIndex, range );
     }
-    inline void setParticleSize( cgFloat fWidth, cgFloat fHeight )
+    inline void setParticleLifetime( cgUInt32 layerIndex, cgFloat minimum, cgFloat maximum )
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setParticleSize( fWidth, fHeight );
+        ((cgParticleEmitterObject*)mReferencedObject)->setParticleLifetime( layerIndex, minimum, maximum );
     }
-    inline void setParticleSize( const cgSizeF & size )
+    inline void setParticleLifetime( cgUInt32 layerIndex, const cgRangeF & range )
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setParticleSize( size );
+        ((cgParticleEmitterObject*)mReferencedObject)->setParticleLifetime( layerIndex, range );
     }
-    inline void setParticleAirResistance( cgFloat value )
+    inline void setParticleSize( cgUInt32 layerIndex, cgFloat fWidth, cgFloat fHeight )
     {
         cgAssert( mReferencedObject != CG_NULL );
-        ((cgParticleEmitterObject*)mReferencedObject)->setParticleAirResistance( value );
+        ((cgParticleEmitterObject*)mReferencedObject)->setParticleSize( layerIndex, fWidth, fHeight );
+    }
+    inline void setParticleSize( cgUInt32 layerIndex, const cgSizeF & size )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->setParticleSize( layerIndex, size );
+    }
+    inline void setParticleAirResistance( cgUInt32 layerIndex, cgFloat value )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->setParticleAirResistance( layerIndex, value );
+    }
+    inline void setParticleBlendMethod( cgUInt32 layerIndex, cgParticleBlendMethod::Base value )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->setParticleBlendMethod( layerIndex, value );
+    }
+    inline void setParticleTexture( cgUInt32 layerIndex, const cgString & textureFile )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->setParticleTexture( layerIndex, textureFile );
     }
     
     // Object Property 'Get' Routing
-    inline const cgParticleEmitterProperties & getProperties( ) const
+    inline cgUInt32 getLayerCount( ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getProperties();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getLayerCount();
     }
-    inline const cgString & getScriptFile( ) const
+    inline const cgParticleEmitterProperties & getLayerProperties( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getScriptFile();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getLayerProperties( layerIndex );
     }
-    inline cgFloat getInnerCone( ) const
+    inline bool getInitialEnabledState( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getInnerCone();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getInitialEnabledState( layerIndex );
     }
-    inline cgFloat getOuterCone( ) const
+    inline cgFloat getInnerCone( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getOuterCone();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getInnerCone( layerIndex );
     }
-    inline cgFloat getEmissionRadius( ) const
+    inline cgFloat getOuterCone( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getEmissionRadius();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getOuterCone( layerIndex );
     }
-    inline cgFloat getDeadZoneRadius( ) const
+    inline cgFloat getEmissionRadius( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getDeadZoneRadius();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getEmissionRadius( layerIndex );
     }
-    inline cgUInt32 getMaxSimultaneousParticles( ) const
+    inline cgFloat getDeadZoneRadius( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getMaxSimultaneousParticles();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getDeadZoneRadius( layerIndex );
     }
-    inline cgFloat getBirthFrequency( ) const
+    inline cgUInt32 getMaxSimultaneousParticles( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getBirthFrequency();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getMaxSimultaneousParticles( layerIndex );
     }
-    inline bool getRandomizedRotation( ) const
+    inline cgFloat getBirthFrequency( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getRandomizedRotation();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getBirthFrequency( layerIndex );
     }
-    inline bool getSortedRender( ) const
+    inline cgFloat getHDRScale( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getSortedRender();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getHDRScale( layerIndex );
     }
-    inline const cgRangeF & getParticleSpeed( ) const
+    inline bool getRandomizedRotation( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleSpeed();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getRandomizedRotation( layerIndex );
     }
-    inline const cgRangeF & getParticleMass( ) const
+    inline bool getSortedRender( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleMass();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getSortedRender( layerIndex );
     }
-    inline const cgRangeF & getParticleAngularSpeed( ) const
+    inline const cgRangeF & getParticleSpeed( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleAngularSpeed();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleSpeed( layerIndex );
     }
-    inline const cgRangeF & getParticleBaseScale( ) const
+    inline const cgRangeF & getParticleMass( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleBaseScale();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleMass( layerIndex );
     }
-    inline const cgRangeF & getParticleLifetime( ) const
+    inline const cgRangeF & getParticleAngularSpeed( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleLifetime();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleAngularSpeed( layerIndex );
     }
-    inline const cgSizeF & getParticleSize( ) const
+    inline const cgRangeF & getParticleBaseScale( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleSize();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleBaseScale( layerIndex );
     }
-    inline cgFloat getParticleAirResistance( ) const
+    inline const cgRangeF & getParticleLifetime( cgUInt32 layerIndex ) const
     {
         cgAssert( mReferencedObject != CG_NULL );
-        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleAirResistance();
+        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleLifetime( layerIndex );
+    }
+    inline const cgSizeF & getParticleSize( cgUInt32 layerIndex ) const
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleSize( layerIndex );
+    }
+    inline cgFloat getParticleAirResistance( cgUInt32 layerIndex ) const
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleAirResistance( layerIndex );
+    }
+    inline cgParticleBlendMethod::Base getParticleBlendMethod( cgUInt32 layerIndex ) const
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleBlendMethod( layerIndex );
+    }
+    inline const cgString & getParticleTexture( cgUInt32 layerIndex ) const
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        return ((cgParticleEmitterObject*)mReferencedObject)->getParticleTexture( layerIndex );
     }
     
     //-------------------------------------------------------------------------
@@ -415,7 +481,8 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    cgParticleEmitter * mEmitter;   // The underlying particle emitter / manager for this node.
+    CGE_VECTOR_DECLARE( cgParticleEmitter*, EmitterArray );
+    EmitterArray mEmitters;   // The array of underlying particle emitters / managers for this node (one per layer).
 };
 
 #endif // !_CGE_CGPARTICLEEMITTEROBJECT_H_

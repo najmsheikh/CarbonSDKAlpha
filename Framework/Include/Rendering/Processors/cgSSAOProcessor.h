@@ -88,12 +88,16 @@ protected:
     // Constant buffers
     struct _cbSSAO
     {
-        cgVector4 textureSize;
-        cgVector4 radii;
-        cgVector4 maximumDistances;
-        cgVector4 powers;
-        cgFloat   radiusBias;
-        cgFloat   depthFalloff;
+		cgVector4 textureSize;
+		cgVector4 sampleTextureSize;
+		cgVector4 planeBias; 
+		cgVector2 sampleScreenToViewScale;
+		cgVector2 sampleScreenToViewBias;
+		cgVector2 sampleFocalLength;
+		cgFloat   worldRadius;
+		cgFloat   intensity;
+		cgFloat   maxMipLevel;
+		cgFloat   mipBias;
     };
     
     //-------------------------------------------------------------------------

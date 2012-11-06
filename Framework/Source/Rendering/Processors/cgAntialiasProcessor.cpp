@@ -196,7 +196,7 @@ bool cgAntialiasProcessor::executeFXAA( const cgTextureHandle & source, const cg
 
 	// Select shaders
 	if ( !mAntialiasShader->selectVertexShader( _T("transform") ) ||
-		 !mAntialiasShader->selectPixelShader( _T("fxaa"), reverseToneMap ) )
+		!mAntialiasShader->selectPixelShader( _T("fxaa"), mDriver->getSystemState(cgSystemState::AntiAliasingQuality), reverseToneMap ) )
 		return false;
 
 	// Composite the low res blurred results with the original source texture

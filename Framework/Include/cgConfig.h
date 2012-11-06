@@ -85,7 +85,7 @@
 // Engine versioning information
 #define CGE_ENGINE_VERSION      0
 #define CGE_ENGINE_SUBVERSION   8
-#define CGE_ENGINE_REVISION     6
+#define CGE_ENGINE_REVISION     7
 
 //-----------------------------------------------------------------------------
 // World Configuration
@@ -98,6 +98,6 @@
 #define CGE_WORLD_SUBVERSION    0   
 
 // Current world database revision number
-#define CGE_WORLD_REVISION      1
+#define CGE_WORLD_REVISION      2
 
 #endif // !_CGE_CGCONFIG_H_
