@@ -1,0 +1,15 @@
+--Table: SceneElements::Sky -- {290340C3-D200-4AFD-AA4E-BEB67717D0D8}
+
+CREATE TABLE [SceneElements::Sky] (
+  [RefId] integer NOT NULL PRIMARY KEY,  
+  [Type] smallint DEFAULT 0,  
+  [BaseSamplerId] integer,
+  [BaseHDRScalar] REAL DEFAULT 1, 
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER [SceneElements::Sky_OnDelete]
+  BEFORE DELETE
+  ON [SceneElements::Sky]
+  BEGIN
+    DELETE FROM [Scenes::Elements] WHERE ElementId=old.RefId;
+  END

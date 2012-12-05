@@ -83,8 +83,8 @@ public:
     bool                        createForm              ( const cgString & name );
     cgUIManager               * getUIManager            ( ) const { return mUIManager; }
     cgUIControlLayer          * getControlLayer         ( ) const { return mUILayer; }
-    cgScript                  * getFormScript           ( ) const { return mFormScriptRes; }
-    cgScriptObject            * getFormScriptObject     ( ) const { return mFormScriptObject; }
+    cgScript                  * getScript               ( ) const { return mFormScriptRes; }
+    cgScriptObject            * getScriptObject         ( ) const { return mFormScriptObject; }
     void                        setAcceptButton         ( cgButtonControl * button );
     cgButtonControl           * getAcceptButton         ( ) const;
     void                        setCancelButton         ( cgButtonControl * button );

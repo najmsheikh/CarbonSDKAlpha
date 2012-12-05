@@ -111,7 +111,7 @@ namespace Types
             ///////////////////////////////////////////////////////////////////////
             BINDSUCCESS( engine->registerEnumValue( "TransformSource", "Standard", cgTransformSource::Standard ) );
             BINDSUCCESS( engine->registerEnumValue( "TransformSource", "Dynamics", cgTransformSource::Dynamics ) );
-
+            BINDSUCCESS( engine->registerEnumValue( "TransformSource", "Navigation", cgTransformSource::Navigation ) );
         }
 
     }; // End Class : Package

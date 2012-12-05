@@ -44,6 +44,7 @@ cgWorldQuery cgSampler::mUpdateFilterMethods;
 cgWorldQuery cgSampler::mUpdateLODDetails;
 cgWorldQuery cgSampler::mUpdateMaxAnisotropy;
 cgWorldQuery cgSampler::mUpdateBorderColor;
+cgWorldQuery cgSampler::mUpdateStrength;
 cgWorldQuery cgSampler::mLoadSampler;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -720,7 +721,30 @@ cgFloat cgSampler::getStrength( ) const
 //-----------------------------------------------------------------------------
 void cgSampler::setStrength( cgFloat strength )
 {
-    // ToDo: 9999 - Update database.
+    // No-op?
+    if ( strength == mStrength )
+        return;
+
+    // Update database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateStrength.bindParameter( 1, strength );
+        mUpdateStrength.bindParameter( 4, mReferenceId );
+    
+        // Process!
+        if ( mUpdateStrength.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateStrength.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update strength for sampler '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+
+        } // End if failed
+
+    } // End if should serialize
+
+    // Update local member
     mStrength = strength;
 }
 
@@ -732,7 +756,95 @@ void cgSampler::setStrength( cgFloat strength )
 //-----------------------------------------------------------------------------
 void cgSampler::setStates( const cgSamplerStateDesc & States )
 {
-    // ToDo: 9999 - Update database.
+    // Update database
+    if ( shouldSerialize() )
+    {
+        // Begin a transaction so that we can roll back on failure.
+        mWorld->beginTransaction( _T("Sampler::setStates") );
+
+        try
+        {
+            // Update addressing modes.
+            prepareQueries();
+            mUpdateAddressModes.bindParameter( 1, States.addressU );
+            mUpdateAddressModes.bindParameter( 2, States.addressV );
+            mUpdateAddressModes.bindParameter( 3, States.addressW );
+            mUpdateAddressModes.bindParameter( 4, mReferenceId );
+            if ( !mUpdateAddressModes.step( true ) )
+            {
+                cgString strError;
+                mUpdateAddressModes.getLastError( strError );
+                throw strError;
+
+            } // End if failed
+
+            // Update border color
+            mUpdateBorderColor.bindParameter( 1, States.borderColor.r );
+            mUpdateBorderColor.bindParameter( 2, States.borderColor.g );
+            mUpdateBorderColor.bindParameter( 3, States.borderColor.b );
+            mUpdateBorderColor.bindParameter( 4, States.borderColor.a );
+            mUpdateBorderColor.bindParameter( 5, mReferenceId );
+            if ( !mUpdateBorderColor.step( true ) )
+            {
+                cgString strError;
+                mUpdateBorderColor.getLastError( strError );
+                throw strError;
+
+            } // End if failed
+
+            // Update filter methods
+            mUpdateFilterMethods.bindParameter( 1, States.minificationFilter );
+            mUpdateFilterMethods.bindParameter( 2, States.magnificationFilter );
+            mUpdateFilterMethods.bindParameter( 3, States.mipmapFilter );
+            mUpdateFilterMethods.bindParameter( 4, mReferenceId );
+            if ( !mUpdateFilterMethods.step( true ) )
+            {
+                cgString strError;
+                mUpdateFilterMethods.getLastError( strError );
+                throw strError;
+
+            } // End if failed
+
+            // Update LOD values
+            mUpdateLODDetails.bindParameter( 1, States.mipmapLODBias );
+            mUpdateLODDetails.bindParameter( 2, States.minimumMipmapLOD );
+            mUpdateLODDetails.bindParameter( 3, States.maximumMipmapLOD );
+            mUpdateLODDetails.bindParameter( 4, mReferenceId );
+            if ( !mUpdateLODDetails.step( true ) )
+            {
+                cgString strError;
+                mUpdateLODDetails.getLastError( strError );
+                throw strError;
+
+            } // End if failed
+
+            // Update anisotropy values
+            mUpdateMaxAnisotropy.bindParameter( 1, States.maximumAnisotropy );
+            mUpdateMaxAnisotropy.bindParameter( 2, mReferenceId );
+            if ( !mUpdateMaxAnisotropy.step( true ) )
+            {
+                cgString strError;
+                mUpdateMaxAnisotropy.getLastError( strError );
+                throw strError;
+
+            } // End if failed
+
+        } // End try
+
+        catch ( const cgString & e )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update state data for sampler '0x%x'. Error: %s\n"), mReferenceId, e.c_str() );
+            mWorld->rollbackTransaction( _T("Sampler::setStates") );
+            return;
+
+        } // End catch
+
+        // Commit!
+        mWorld->commitTransaction( _T("Sampler::setStates") );
+
+    } // End if should serialize
+
+    // Update local member
     mStateDesc = States;
 
     // State object needs to be re-generated
@@ -751,7 +863,28 @@ void cgSampler::setAddressU( cgAddressingMode::Base Value )
     if ( Value == mStateDesc.addressU )
         return;
 
-    // ToDo: 9999 - Update database
+    // Update database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateAddressModes.bindParameter( 1, (cgInt32)Value );
+        mUpdateAddressModes.bindParameter( 2, mStateDesc.addressV );
+        mUpdateAddressModes.bindParameter( 3, mStateDesc.addressW );
+        mUpdateAddressModes.bindParameter( 4, mReferenceId );
+    
+        // Process!
+        if ( mUpdateAddressModes.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateAddressModes.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update state data for sampler '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+
+        } // End if failed
+
+    } // End if should serialize
+
+    // Update local member
     mStateDesc.addressU = (cgInt32)Value;
 
     // State object needs to be re-generated
@@ -770,7 +903,28 @@ void cgSampler::setAddressV( cgAddressingMode::Base Value )
     if ( Value == mStateDesc.addressV )
         return;
 
-    // ToDo: 9999 - Update database
+    // Update database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateAddressModes.bindParameter( 1, mStateDesc.addressU );
+        mUpdateAddressModes.bindParameter( 2, (cgInt32)Value );
+        mUpdateAddressModes.bindParameter( 3, mStateDesc.addressW );
+        mUpdateAddressModes.bindParameter( 4, mReferenceId );
+    
+        // Process!
+        if ( mUpdateAddressModes.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateAddressModes.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update state data for sampler '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+
+        } // End if failed
+
+    } // End if should serialize
+
+    // Update local member
     mStateDesc.addressV = (cgInt32)Value;
 
     // State object needs to be re-generated
@@ -789,7 +943,28 @@ void cgSampler::setAddressW( cgAddressingMode::Base Value )
     if ( Value == mStateDesc.addressW )
         return;
 
-    // ToDo: 9999 - Update database
+    // Update database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateAddressModes.bindParameter( 1, mStateDesc.addressU );
+        mUpdateAddressModes.bindParameter( 2, mStateDesc.addressV );
+        mUpdateAddressModes.bindParameter( 3, (cgInt32)Value );
+        mUpdateAddressModes.bindParameter( 4, mReferenceId );
+    
+        // Process!
+        if ( mUpdateAddressModes.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateAddressModes.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update state data for sampler '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+
+        } // End if failed
+
+    } // End if should serialize
+
+    // Update local member
     mStateDesc.addressW = (cgInt32)Value;
 
     // State object needs to be re-generated
@@ -808,7 +983,29 @@ void cgSampler::setBorderColor( const cgColorValue & Value )
     if ( Value == mStateDesc.borderColor )
         return;
 
-    // ToDo: 9999 - Update database
+    // Update database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateBorderColor.bindParameter( 1, Value.r );
+        mUpdateBorderColor.bindParameter( 2, Value.g );
+        mUpdateBorderColor.bindParameter( 3, Value.b );
+        mUpdateBorderColor.bindParameter( 4, Value.a );
+        mUpdateBorderColor.bindParameter( 5, mReferenceId );
+    
+        // Process!
+        if ( mUpdateBorderColor.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateBorderColor.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update state data for sampler '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+
+        } // End if failed
+
+    } // End if should serialize
+
+    // Update local member
     mStateDesc.borderColor = Value;
 
     // State object needs to be re-generated
@@ -827,7 +1024,28 @@ void cgSampler::setMagnificationFilter( cgFilterMethod::Base Value )
     if ( Value == mStateDesc.magnificationFilter )
         return;
 
-    // ToDo: 9999 - Update database
+    // Update database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateFilterMethods.bindParameter( 1, mStateDesc.minificationFilter );
+        mUpdateFilterMethods.bindParameter( 2, (cgInt32)Value );
+        mUpdateFilterMethods.bindParameter( 3, mStateDesc.mipmapFilter );
+        mUpdateFilterMethods.bindParameter( 4, mReferenceId );
+    
+        // Process!
+        if ( mUpdateFilterMethods.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateFilterMethods.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update state data for sampler '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+
+        } // End if failed
+
+    } // End if should serialize
+
+    // Update local member
     mStateDesc.magnificationFilter = (cgInt32)Value;
 
     // State object needs to be re-generated
@@ -846,7 +1064,28 @@ void cgSampler::setMinificationFilter( cgFilterMethod::Base Value )
     if ( Value == mStateDesc.minificationFilter )
         return;
 
-    // ToDo: 9999 - Update database
+    // Update database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateFilterMethods.bindParameter( 1, (cgInt32)Value );
+        mUpdateFilterMethods.bindParameter( 2, mStateDesc.magnificationFilter );
+        mUpdateFilterMethods.bindParameter( 3, mStateDesc.mipmapFilter );
+        mUpdateFilterMethods.bindParameter( 4, mReferenceId );
+    
+        // Process!
+        if ( mUpdateFilterMethods.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateFilterMethods.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update state data for sampler '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+
+        } // End if failed
+
+    } // End if should serialize
+
+    // Update local member
     mStateDesc.minificationFilter = (cgInt32)Value;
 
     // State object needs to be re-generated
@@ -865,7 +1104,28 @@ void cgSampler::setMipmapFilter( cgFilterMethod::Base Value )
     if ( Value == mStateDesc.mipmapFilter )
         return;
 
-    // ToDo: 9999 - Update database
+    // Update database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateFilterMethods.bindParameter( 1, mStateDesc.minificationFilter );
+        mUpdateFilterMethods.bindParameter( 2, mStateDesc.magnificationFilter );
+        mUpdateFilterMethods.bindParameter( 3, (cgInt32)Value );
+        mUpdateFilterMethods.bindParameter( 4, mReferenceId );
+    
+        // Process!
+        if ( mUpdateFilterMethods.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateFilterMethods.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update state data for sampler '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+
+        } // End if failed
+
+    } // End if should serialize
+
+    // Update local member
     mStateDesc.mipmapFilter = (cgInt32)Value;
 
     // State object needs to be re-generated
@@ -884,7 +1144,28 @@ void cgSampler::setMipmapLODBias( cgFloat Value )
     if ( Value == mStateDesc.mipmapLODBias )
         return;
 
-    // ToDo: 9999 - Update database
+    // Update database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateLODDetails.bindParameter( 1, Value );
+        mUpdateLODDetails.bindParameter( 2, mStateDesc.minimumMipmapLOD );
+        mUpdateLODDetails.bindParameter( 3, mStateDesc.maximumMipmapLOD );
+        mUpdateLODDetails.bindParameter( 4, mReferenceId );
+    
+        // Process!
+        if ( mUpdateLODDetails.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateLODDetails.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update state data for sampler '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+
+        } // End if failed
+
+    } // End if should serialize
+
+    // Update local member
     mStateDesc.mipmapLODBias = Value;
 
     // State object needs to be re-generated
@@ -903,7 +1184,26 @@ void cgSampler::setMaximumAnisotropy( cgInt32 Value )
     if ( Value == mStateDesc.maximumAnisotropy )
         return;
 
-    // ToDo: 9999 - Update database
+    // Update database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateMaxAnisotropy.bindParameter( 1, Value );
+        mUpdateMaxAnisotropy.bindParameter( 2, mReferenceId );
+    
+        // Process!
+        if ( mUpdateMaxAnisotropy.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateMaxAnisotropy.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update state data for sampler '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+
+        } // End if failed
+
+    } // End if should serialize
+
+    // Update local member
     mStateDesc.maximumAnisotropy = Value;
 
     // State object needs to be re-generated
@@ -923,7 +1223,28 @@ void cgSampler::setMaximumMipmapLOD( cgFloat Value )
     if ( Value == mStateDesc.maximumMipmapLOD )
         return;
 
-    // ToDo: 9999 - Update database
+    // Update database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateLODDetails.bindParameter( 1, mStateDesc.mipmapLODBias );
+        mUpdateLODDetails.bindParameter( 2, mStateDesc.minimumMipmapLOD );
+        mUpdateLODDetails.bindParameter( 3, Value );
+        mUpdateLODDetails.bindParameter( 4, mReferenceId );
+    
+        // Process!
+        if ( mUpdateLODDetails.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateLODDetails.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update state data for sampler '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+
+        } // End if failed
+
+    } // End if should serialize
+
+    // Update local member
     mStateDesc.maximumMipmapLOD = Value;
 
     // State object needs to be re-generated
@@ -943,7 +1264,28 @@ void cgSampler::setMinimumMipmapLOD( cgFloat Value )
     if ( Value == mStateDesc.minimumMipmapLOD )
         return;
 
-    // ToDo: 9999 - Update database
+    // Update database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateLODDetails.bindParameter( 1, mStateDesc.mipmapLODBias );
+        mUpdateLODDetails.bindParameter( 2, Value );
+        mUpdateLODDetails.bindParameter( 3, mStateDesc.maximumMipmapLOD );
+        mUpdateLODDetails.bindParameter( 4, mReferenceId );
+    
+        // Process!
+        if ( mUpdateLODDetails.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateLODDetails.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update state data for sampler '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+
+        } // End if failed
+
+    } // End if should serialize
+
+    // Update local member
     mStateDesc.minimumMipmapLOD = Value;
 
     // State object needs to be re-generated
@@ -1136,8 +1478,8 @@ bool cgSampler::onComponentLoading( cgComponentLoadingEventArgs * e )
     // Update our local members
     mLoadSampler.getColumn( _T("Name")          , mName );
     mLoadSampler.getColumn( _T("AddressU")      , mStateDesc.addressU );
-    mLoadSampler.getColumn( _T("SddressV")      , mStateDesc.addressV );
-    mLoadSampler.getColumn( _T("SddressW")      , mStateDesc.addressW );
+    mLoadSampler.getColumn( _T("AddressV")      , mStateDesc.addressV );
+    mLoadSampler.getColumn( _T("AddressW")      , mStateDesc.addressW );
     mLoadSampler.getColumn( _T("MinFilter")     , mStateDesc.minificationFilter );
     mLoadSampler.getColumn( _T("MagFilter")     , mStateDesc.magnificationFilter );
     mLoadSampler.getColumn( _T("MipFilter")     , mStateDesc.mipmapFilter );
@@ -1207,6 +1549,8 @@ void cgSampler::prepareQueries()
             mUpdateMaxAnisotropy.prepare( mWorld, _T("UPDATE 'Samplers' SET MaxAnisotropy=?1 WHERE RefId=?2"), true );
         if ( mUpdateBorderColor.isPrepared() == false )
             mUpdateBorderColor.prepare( mWorld, _T("UPDATE 'Samplers' SET BorderColorR=?1,BorderColorG=?2,BorderColorB=?3,BorderColorA=?4 WHERE RefId=?5"), true );
+        if ( mUpdateStrength.isPrepared() == false )
+            mUpdateStrength.prepare( mWorld, _T("UPDATE 'Samplers' SET Strength=?1 WHERE RefId=?2"), true );
     
     } // End if sandbox
 

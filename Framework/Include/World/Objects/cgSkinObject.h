@@ -78,11 +78,12 @@ public:
     // Public Virtual Methods (Overrides cgWorldObject)
     //-------------------------------------------------------------------------
     virtual bool                render                  ( cgCameraNode * camera, cgVisibilitySet * visibilityData, cgObjectNode * issuer );
-    virtual bool                renderSubset            ( cgCameraNode * camera, cgVisibilitySet * visibilityData, cgObjectNode * issuer, const cgMaterialHandle & hMaterial );
-    virtual bool                getSubElementCategories ( cgObjectSubElementCategory::Map & Categories ) const;
-    virtual bool                supportsSubElement      ( const cgUID & Category, const cgUID & Identifier ) const;
+    virtual bool                renderSubset            ( cgCameraNode * camera, cgVisibilitySet * visibilityData, cgObjectNode * issuer, const cgMaterialHandle & material );
+    virtual void                sandboxRender           ( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer );
+    virtual bool                getSubElementCategories ( cgObjectSubElementCategory::Map & categories ) const;
+    virtual bool                supportsSubElement      ( const cgUID & category, const cgUID & identifier ) const;
     virtual cgBoundingBox       getLocalBoundingBox     ( );
-    virtual bool                pick                    ( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance );
+    virtual bool                pick                    ( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldComponent)

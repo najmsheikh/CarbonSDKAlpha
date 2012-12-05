@@ -160,6 +160,11 @@ public:
     static cgTransform& rotationAxis                ( cgTransform & out, cgFloat angle, const cgVector3 & axis );
     static cgTransform& translation                 ( cgTransform & out, cgFloat x, cgFloat y, cgFloat z );
     static cgTransform& translation                 ( cgTransform & out, const cgVector3 & v );
+
+    //-------------------------------------------------------------------------
+	// Public Static Variables
+	//-------------------------------------------------------------------------
+    static const cgTransform Identity;
     
 protected:
     //-------------------------------------------------------------------------

@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 #include <cgBase.h>
 #include <System/cgReference.h>
+#include <Scripting/cgScriptInterop.h>
 
 //-----------------------------------------------------------------------------
 // Forward Declarations
@@ -52,15 +53,17 @@ const cgUID RTID_AppTransitionState = {0x88398CC0, 0x4649, 0x45FE, {0x83, 0xA9, 
 /// and from states and general state management.
 /// </summary>
 //-----------------------------------------------------------------------------
-class CGE_API cgAppStateManager
+class CGE_API cgAppStateManager : public cgScriptInterop::DisposableScriptObject
 {
-public:
+    DECLARE_SCRIPTOBJECT( cgAppStateManager, "AppStateManager" )
+
     //-------------------------------------------------------------------------
     // Friend List
     //-------------------------------------------------------------------------
     friend class cgAppState;
     friend class cgAppTransitionState;
 
+public:
     //-------------------------------------------------------------------------
     // Public Structures, Enumerations & Typedefs
     //-------------------------------------------------------------------------
@@ -102,6 +105,11 @@ public:
     void            update              ( );
     void            render              ( );
     void            stop                ( );
+
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods (Overrides DisposableScriptObject)
+    //-------------------------------------------------------------------------
+    virtual void    dispose             ( bool disposeBase );
 
 private:
     //-------------------------------------------------------------------------
@@ -204,6 +212,7 @@ public:
     cgAppState            * getRootState            ( );
     cgAppState            * getTerminalState        ( );
     const cgString        & getStateId              ( ) const;
+    void                    raiseEvent              ( const cgString & eventName );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods
@@ -220,7 +229,7 @@ public:
     // State Event Management
     virtual void            suspend                 ( );
     virtual void            resume                  ( );
-    virtual void            raiseEvent              ( const cgString & eventName, bool force = false );
+    virtual void            raiseEvent              ( const cgString & eventName, bool force );
     virtual bool            registerEventAction     ( const cgString & eventName, const EventActionDesc & description );
     virtual void            unregisterEventAction   ( const cgString & eventName );
 
@@ -298,6 +307,8 @@ protected:
 //-----------------------------------------------------------------------------
 class CGE_API cgAppTransitionState : public cgAppState
 {
+    DECLARE_DERIVED_SCRIPTOBJECT( cgAppTransitionState, cgAppState, "AppTransitionState" )
+
 public:
     //-------------------------------------------------------------------------
     // Friend List

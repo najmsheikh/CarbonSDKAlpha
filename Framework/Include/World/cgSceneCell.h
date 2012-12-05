@@ -25,7 +25,7 @@
 #define _CGE_CGSCENECELL_H_
 
 //-----------------------------------------------------------------------------
-// cgSceneTree Header Includes
+// cgSceneCell Header Includes
 //-----------------------------------------------------------------------------
 #include <cgBase.h>
 #include <World/cgWorldQuery.h>
@@ -39,6 +39,7 @@
 class cgScene;
 class cgObjectNode;
 class cgWorld;
+class cgNavigationTile;
 
 //-----------------------------------------------------------------------------
 // Main Class Declarations
@@ -84,6 +85,11 @@ public:
 
 protected:
     //-------------------------------------------------------------------------
+    // Protected Typedefs, Structures and Enumerations
+    //-------------------------------------------------------------------------
+    CGE_VECTOR_DECLARE(cgNavigationTile*,NavigationTileArray)
+
+    //-------------------------------------------------------------------------
     // Protected Methods
     //-------------------------------------------------------------------------
     void            prepareQueries      ( cgWorld * world );
@@ -91,12 +97,13 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    cgUInt32            mCellId;        // The identifier of the cell as it exists in the database.
-    cgScene           * mParentScene;   // The parent scene that owns this cell.
-    cgInt16             mCellOffsetX;   // Grid based X offset for the cell as it exists in the scene.
-    cgInt16             mCellOffsetY;   // Grid based Y offset for the cell as it exists in the scene.
-    cgInt16             mCellOffsetZ;   // Grid based Z offset for the cell as it exists in the scene.
-    cgObjectNodeSet     mNodes;         // List of all active nodes that exist in this cell.
+    cgUInt32            mCellId;            // The identifier of the cell as it exists in the database.
+    cgScene           * mParentScene;       // The parent scene that owns this cell.
+    cgInt16             mCellOffsetX;       // Grid based X offset for the cell as it exists in the scene.
+    cgInt16             mCellOffsetY;       // Grid based Y offset for the cell as it exists in the scene.
+    cgInt16             mCellOffsetZ;       // Grid based Z offset for the cell as it exists in the scene.
+    cgObjectNodeSet     mNodes;             // List of all active nodes that exist in this cell.
+    NavigationTileArray mNavigationTiles;   // Array containing all navigation tiles for this scene cell (one per agent radius)
 
     //-------------------------------------------------------------------------
     // Protected Static Variables

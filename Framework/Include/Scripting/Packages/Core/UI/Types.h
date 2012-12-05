@@ -29,6 +29,7 @@ namespace Types
             BINDSUCCESS( engine->registerEnum( "HorizontalAlignment" ) );
             BINDSUCCESS( engine->registerEnum( "VerticalAlignment" ) );
             BINDSUCCESS( engine->registerEnum( "TextTruncationMode" ) );
+            BINDSUCCESS( engine->registerEnum( "TextFlags" ) );
             BINDSUCCESS( engine->registerEnum( "FormStyle" ) );
             BINDSUCCESS( engine->registerEnum( "UILayerType" ) );
             BINDSUCCESS( engine->registerEnum( "DockMode" ) );
@@ -96,6 +97,17 @@ namespace Types
             BINDSUCCESS( engine->registerEnumValue( "DockMode", "Top"   , cgDockMode::Top ) );
             BINDSUCCESS( engine->registerEnumValue( "DockMode", "Bottom", cgDockMode::Bottom ) );
             BINDSUCCESS( engine->registerEnumValue( "DockMode", "Fill"  , cgDockMode::Fill ) );
+
+            ///////////////////////////////////////////////////////////////////////
+            // cgTextFlags (Enum)
+            ///////////////////////////////////////////////////////////////////////
+            BINDSUCCESS( engine->registerEnumValue( "TextFlags", "ClipRectangle"  , cgTextFlags::ClipRectangle ) );
+            BINDSUCCESS( engine->registerEnumValue( "TextFlags", "Multiline"      , cgTextFlags::Multiline ) );
+            BINDSUCCESS( engine->registerEnumValue( "TextFlags", "AlightCenter"   , cgTextFlags::AlignCenter ) );
+            BINDSUCCESS( engine->registerEnumValue( "TextFlags", "AlignRight"     , cgTextFlags::AlignRight ) );
+            BINDSUCCESS( engine->registerEnumValue( "TextFlags", "VAlignCenter"   , cgTextFlags::VAlignCenter ) );
+            BINDSUCCESS( engine->registerEnumValue( "TextFlags", "VAlignBottom"   , cgTextFlags::VAlignBottom ) );
+            BINDSUCCESS( engine->registerEnumValue( "TextFlags", "AllowFormatCode", cgTextFlags::AllowFormatCode ) );
 
             ///////////////////////////////////////////////////////////////////////
             // cgUIFormProperties (struct)

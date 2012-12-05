@@ -773,8 +773,12 @@ public:
         if ( difference ) return difference;
 
         // Check parameter contents
-        difference = memcmp( &key2.parameterData[0], &parameterData[0], paramSize * sizeof(cgUInt32) );
-        if ( difference ) return difference;
+        if ( paramSize )
+        {
+            difference = memcmp( &key2.parameterData[0], &parameterData[0], paramSize * sizeof(cgUInt32) );
+            if ( difference ) return difference;
+        
+        } // End if has parameters
 
         // Finally, check source hashes.
         for ( size_t i = 0; i < sourceSize; ++i )

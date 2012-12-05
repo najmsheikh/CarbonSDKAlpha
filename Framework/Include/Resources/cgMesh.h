@@ -274,7 +274,8 @@ public:
     bool                    endPrepare          ( bool hardwareCopy = true, bool weld = true, bool optimize = true );
 
     // Mesh queries
-    bool                    pick                ( const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, const cgVector3 & wireTolerance, cgFloat & distanceOut );
+    bool                    pick                ( const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgFloat & distanceOut );
+    bool                    pick                ( cgCameraNode * pCamera, const cgSize & ViewportSize, const cgTransform & ObjectTransform, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance );
     bool                    pickFace            ( const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgVector3 & intersectionOut, cgUInt32 & intersectedFaceOut, cgMaterialHandle & intersectedMaterialOut );
 
     // Material management methods
@@ -458,7 +459,7 @@ protected:
     bool                    weldVertices                ( cgUInt32Array * vertexRemap = CG_NULL );
     void                    renderMeshData              ( cgRenderDriver * driver, cgMeshDrawMode::Base mode, const cgMaterialHandle * material, cgUInt32 faceStart, cgUInt32 faceCount, cgUInt32 vertexStart, cgUInt32 vertexCount );
     bool                    restoreBuffers              ( );
-    bool                    pickMeshSubset              ( cgUInt32 dataGroupId, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, const cgVector3 & wireTolerance, cgFloat & distanceOut, cgUInt32 & intersectedFaceOut, cgMaterialHandle & intersectedMaterialOut );
+    bool                    pickMeshSubset              ( cgUInt32 dataGroupId, cgCameraNode * pCamera, const cgSize & ViewportSize, const cgTransform & ObjectTransform, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut, cgUInt32 & intersectedFaceOut, cgMaterialHandle & intersectedMaterialOut );
     bool                    sortMeshData                ( bool optimize, bool buildHardwareBuffers );
     
     //-------------------------------------------------------------------------

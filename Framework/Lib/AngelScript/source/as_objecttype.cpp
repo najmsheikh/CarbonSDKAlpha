@@ -123,9 +123,10 @@ void RegisterObjectTypeGCBehaviours(asCScriptEngine *engine)
 
 asCObjectType::asCObjectType() 
 {
-	this->engine = 0; 
+	engine = 0; 
+	module = 0;
 	refCount.set(0); 
-	derivedFrom  = 0;
+	derivedFrom = 0;
 
 	acceptValueSubType = true;
 	acceptRefSubType = true;
@@ -137,6 +138,7 @@ asCObjectType::asCObjectType()
 asCObjectType::asCObjectType(asCScriptEngine *engine) 
 {
 	this->engine = engine; 
+	module = 0;
 	refCount.set(0); 
 	derivedFrom  = 0;
 
@@ -157,6 +159,21 @@ int asCObjectType::Release() const
 {
 	gcFlag = false;
 	return refCount.atomicDec();
+}
+
+void asCObjectType::Orphan(asCModule *mod)
+{
+	if( mod && mod == module )
+	{
+		module = 0;
+		if( flags & asOBJ_SCRIPT_OBJECT )
+		{
+			// Tell the GC that this type exists so it can resolve potential circular references
+			engine->gc.AddScriptObjectToGC(this, &engine->objectTypeBehaviours);
+		}
+	}
+
+	Release();
 }
 
 void *asCObjectType::SetUserData(void *data, asPWORD type)

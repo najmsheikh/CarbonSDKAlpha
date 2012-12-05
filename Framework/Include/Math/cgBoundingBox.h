@@ -52,6 +52,7 @@ public:
     cgVector3       getCenter           ( ) const;
     cgVector3       getExtents          ( ) const;
     cgPlane         getPlane            ( cgVolumePlane::Side side ) const;
+    void            getPlanePoints      ( cgVolumePlane::Side side, cgVector3 pointsOut[] ) const;
     cgBoundingBox & calculateFromPolygon( const cgVector3 vertices[], cgUInt32 vertexCount, cgUInt32 vertexStride, bool reset = true );
     cgBoundingBox & addPoint            ( const cgVector3 & point );
     bool            intersect           ( const cgBoundingBox & bounds ) const;

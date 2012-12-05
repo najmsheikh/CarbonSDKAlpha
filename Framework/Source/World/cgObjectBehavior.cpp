@@ -417,44 +417,33 @@ bool cgObjectBehavior::initialize( cgResourceManager * pResources, const cgStrin
     cgScript * pScript = mScript.getResource(true);
     if ( pScript != CG_NULL )
     {
-        try
+        // Attempt to create the IScriptedObjectBehavior 
+        // object whose name matches the name of the file.
+        cgString strObjectType = cgFileSystem::getFileName(strScript, true);
+        mScriptObject = pScript->createObjectInstance( strObjectType );
+
+        // Collect handles to any supplied update methods.
+        if ( mScriptObject )
         {
-            // Attempt to create the IScriptedObjectBehavior 
-            // object whose name matches the name of the file.
-            cgString strObjectType = cgFileSystem::getFileName(strScript, true);
-            mScriptObject = pScript->createObjectInstance( strObjectType );
+            mScriptMethods.onUpdate            = mScriptObject->getMethodHandle( _T("void onUpdate(float)") );
+            mScriptMethods.onPrePhysicsStep    = mScriptObject->getMethodHandle( _T("void onPrePhysicsStep(float)") );
+            mScriptMethods.onPostPhysicsStep   = mScriptObject->getMethodHandle( _T("void onPostPhysicsStep(float)") );
+            mScriptMethods.onMouseMove         = mScriptObject->getMethodHandle( _T("void onMouseMove(const Point&, const Vector2&)") );
+            mScriptMethods.onMouseButtonDown   = mScriptObject->getMethodHandle( _T("void onMouseButtonDown(int, const Point&)") );
+            mScriptMethods.onMouseButtonUp     = mScriptObject->getMethodHandle( _T("void onMouseButtonUp(int, const Point&)") );
+            mScriptMethods.onMouseWheelScroll  = mScriptObject->getMethodHandle( _T("void onMouseWheelScroll(int, const Point&)") );
+            mScriptMethods.onKeyDown           = mScriptObject->getMethodHandle( _T("void onKeyDown(int, uint)") );
+            mScriptMethods.onKeyUp             = mScriptObject->getMethodHandle( _T("void onKeyUp(int, uint)") );
+            mScriptMethods.onKeyPressed        = mScriptObject->getMethodHandle( _T("void onKeyPressed(int, uint)") );
 
-            // Collect handles to any supplied update methods.
-            if ( mScriptObject )
-            {
-                mScriptMethods.onUpdate            = mScriptObject->getMethodHandle( _T("void onUpdate(float)") );
-                mScriptMethods.onPrePhysicsStep    = mScriptObject->getMethodHandle( _T("void onPrePhysicsStep(float)") );
-                mScriptMethods.onPostPhysicsStep   = mScriptObject->getMethodHandle( _T("void onPostPhysicsStep(float)") );
-                mScriptMethods.onMouseMove         = mScriptObject->getMethodHandle( _T("void onMouseMove(const Point&, const Vector2&)") );
-                mScriptMethods.onMouseButtonDown   = mScriptObject->getMethodHandle( _T("void onMouseButtonDown(int, const Point&)") );
-                mScriptMethods.onMouseButtonUp     = mScriptObject->getMethodHandle( _T("void onMouseButtonUp(int, const Point&)") );
-                mScriptMethods.onMouseWheelScroll  = mScriptObject->getMethodHandle( _T("void onMouseWheelScroll(int, const Point&)") );
-                mScriptMethods.onKeyDown           = mScriptObject->getMethodHandle( _T("void onKeyDown(int, uint)") );
-                mScriptMethods.onKeyUp             = mScriptObject->getMethodHandle( _T("void onKeyUp(int, uint)") );
-                mScriptMethods.onKeyPressed        = mScriptObject->getMethodHandle( _T("void onKeyPressed(int, uint)") );
-
-                // Record which events are available.
-                mScriptMethods.hasPhysicsEvents    = mScriptMethods.onPrePhysicsStep || mScriptMethods.onPostPhysicsStep;
-                mScriptMethods.hasInputEvents      = mScriptMethods.onMouseMove || mScriptMethods.onMouseButtonDown ||
-                                                      mScriptMethods.onMouseButtonUp || mScriptMethods.onMouseWheelScroll ||
-                                                      mScriptMethods.onKeyDown || mScriptMethods.onKeyUp ||
-                                                      mScriptMethods.onKeyPressed;
-            
-            } // End if valid object
-
-        } // End try to execute
-
-        catch ( cgScriptInterop::Exceptions::ExecuteException & e )
-        {
-            cgAppLog::write( cgAppLog::Error, _T("Failed to execute createBehaviorScript() function in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
-            return false;
-
-        } // End catch exception
+            // Record which events are available.
+            mScriptMethods.hasPhysicsEvents    = mScriptMethods.onPrePhysicsStep || mScriptMethods.onPostPhysicsStep;
+            mScriptMethods.hasInputEvents      = mScriptMethods.onMouseMove || mScriptMethods.onMouseButtonDown ||
+                                                  mScriptMethods.onMouseButtonUp || mScriptMethods.onMouseWheelScroll ||
+                                                  mScriptMethods.onKeyDown || mScriptMethods.onKeyUp ||
+                                                  mScriptMethods.onKeyPressed;
+        
+        } // End if valid object
 
     } // End if valid.
 

@@ -90,6 +90,8 @@ public:
     void                        apply                   ( );
     void                        clear                   ( );
     bool                        isEmpty                 ( ) const;
+    bool                        isObjectVisible         ( cgObjectNode * object ) const;
+    bool                        isLightVisible          ( cgObjectNode * light ) const;
     cgUInt32                    getResultId             ( ) const;
     void                        addVisibleObject        ( cgObjectNode * object );
     void                        addVisibleLight         ( cgObjectNode * light );

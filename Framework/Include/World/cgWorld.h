@@ -138,6 +138,7 @@ public:
     // Public Methods
     //-------------------------------------------------------------------------
     bool                        open                        ( const cgInputStream & stream );
+    void                        close                       ( );
     bool                        create                      ( cgWorldType::Base type );
     bool                        save                        ( const cgString & fileName );
     cgUInt32                    createScene                 ( const cgSceneDescriptor & description );
@@ -149,8 +150,10 @@ public:
     cgWorldObject             * createObject                ( bool internalObject, const cgUID & typeIdentifier, cgCloneMethod::Base initMethod, cgWorldObject * init );
     cgObjectSubElement        * createObjectSubElement      ( bool internalElement, const cgUID & typeIdentifier, cgWorldObject * object );
     cgObjectSubElement        * createObjectSubElement      ( bool internalElement, const cgUID & typeIdentifier, cgWorldObject * object, cgObjectSubElement * init );
+    cgSceneElement            * createSceneElement          ( bool internalElement, const cgUID & typeIdentifier, cgScene * scene );
     cgWorldObject             * loadObject                  ( const cgUID & typeIdentifier, cgUInt32 objectRefId, cgCloneMethod::Base cloneMethod );
     cgObjectSubElement        * loadObjectSubElement        ( const cgUID & typeIdentifier, cgUInt32 objectSubElementRefId, cgWorldObject * object, cgCloneMethod::Base cloneMethod );
+    cgSceneElement            * loadSceneElement            ( const cgUID & typeIdentifier, cgUInt32 sceneElementRefId, cgScene * scene );
     cgUInt32                    generateRefId               ( bool internalReference );
     cgWorldConfiguration      * getConfiguration            ( ) const;
     cgUInt32                    getSceneCount               ( ) const;
@@ -158,6 +161,8 @@ public:
     const cgSceneDescriptor   * getSceneDescriptorById      ( cgUInt32 sceneId ) const;
     const cgSceneDescriptor   * getSceneDescriptorByName    ( const cgString & sceneName ) const;
     bool                        updateSceneDescriptorById   ( cgUInt32 sceneId, const cgSceneDescriptor & sceneDescriptor );
+    cgUInt32                    getLoadedSceneCount         ( ) const;
+    cgScene                   * getLoadedScene              ( cgUInt32 index ) const;
     cgScene                   * getLoadedSceneByName        ( const cgString & sceneName ) const;
     cgScene                   * getLoadedSceneById          ( cgUInt32 sceneId ) const;
     cgRenderDriver            * getRenderDriver             ( ) const;
@@ -192,6 +197,7 @@ protected:
     // Protected Structures, Typedefs and Enumerations
     //-------------------------------------------------------------------------
     CGE_UNORDEREDMAP_DECLARE(cgUInt32, cgScene*, SceneMap)
+    CGE_VECTOR_DECLARE      (cgScene*, SceneArray)
     CGE_UNORDEREDSET_DECLARE(cgUID, ComponentTypeTableSet)
 
     //-------------------------------------------------------------------------
@@ -218,7 +224,8 @@ protected:
     // Protected Variables
     //-------------------------------------------------------------------------
     cgWorldConfiguration          * mConfiguration;             // Maintains and manages updates for all world configuration tables.
-    SceneMap                        mActiveScenes;              // Map containing all loaded scenes, keyed on name.
+    SceneMap                        mActiveSceneIdMap;          // Map containing all loaded scenes, keyed on name.
+    SceneArray                      mActiveScenes;              // Array of all loaded scenes.
 
     // File database management.
     cgInputStream                   mDatabaseStream;            // The stream of the database to which we are connected.

@@ -427,7 +427,7 @@ bool cgDX9VertexShader::createShader( )
 
             } // End if file
 
-        } // End if !compiled
+        } // End if no bytecode yet
 
         // If we have compiled byte code, just load it.
         if ( mCompiled && !mByteCode.empty() )

@@ -195,6 +195,7 @@
 #include <World\cgScene.h>
 #include <World\cgSceneCell.h>
 #include <World\cgSceneController.h>
+#include <World\cgSceneElement.h>
 #include <World\cgSpatialTree.h>
 #include <World\cgVisibilitySet.h>
 #include <World\cgWorld.h>
@@ -204,6 +205,8 @@
 #include <World\cgWorldQuery.h>
 #include <World\cgWorldResourceComponent.h>
 #include <World\cgWorldTypes.h>
+#include <World\Elements\cgSkyElement.h>
+#include <World\Elements\cgNavigationMeshElement.h>
 #include <World\Lighting\cgLightingManager.h>
 #include <World\Lighting\cgLightingTypes.h>
 #include <World\Lighting\cgRadianceGrid.h>

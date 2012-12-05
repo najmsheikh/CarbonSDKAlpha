@@ -103,14 +103,14 @@ bool cGamePlayState::begin( )
     // Load the main form that will display the options for
     // spawning objects (hidden initially).
     cgUIManager * interfaceManager = cgUIManager::getInstance();
-    if ( !(mForm = interfaceManager->loadForm( _T("Scripts/Forms/7. Spawning Objects.frm"), _T("spawningForm") ) ) )
+    if ( !(mForm = interfaceManager->loadForm( _T("appdir://Scripts/7. Spawning Objects/SpawnObjects.frm"), _T("spawningForm") ) ) )
         return false;
     mForm->setVisible(false);
 
     // Pass the active scene to the form script so that it knows into 
     // which scene objects should be spawned.
     cgScriptArgument::Array arguments;
-    cgScriptObject * formScript = mForm->getFormScriptObject();
+    cgScriptObject * formScript = mForm->getScriptObject();
     arguments.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("Scene@+"), (void*)mScene ) );
     formScript->executeMethodVoid( _T("setScene"), arguments, true );
     

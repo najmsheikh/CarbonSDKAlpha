@@ -1966,8 +1966,8 @@ bool cgInputStream::computeSHA1( cgUInt32 Hash[] )
 //-----------------------------------------------------------------------------
 size_t cgInputStream::read( void * pBuffer, size_t BufferSize )
 {
-    // File must be open.
-    if ( !isOpen() )
+    // File must be open and output must be valid.
+    if ( !isOpen() || !pBuffer || !BufferSize )
         return 0;
 
     // Compute offset / size values

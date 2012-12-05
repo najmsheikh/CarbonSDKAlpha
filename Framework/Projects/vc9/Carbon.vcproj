@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Newton"
+				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
 				PreprocessorDefinitions="_NEWTON_USE_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="2"
@@ -119,7 +119,7 @@
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="false"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Newton;..\..\Lib\STLPort5.2"
+				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
 				PreprocessorDefinitions="_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="1"
@@ -147,7 +147,7 @@
 				Name="VCLibrarianTool"
 				AdditionalOptions="/ignore:4006 /ignore:4221"
 				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
-				AdditionalLibraryDirectories="../../Lib/STLPort5.2"
+				AdditionalLibraryDirectories=""
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -193,7 +193,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Newton"
+				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
 				PreprocessorDefinitions="_NEWTON_USE_LIB;WIN32;_DEBUG;_LIB;CGE_DLL_EXPORTS;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="2"
@@ -267,10 +267,10 @@
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="true"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Newton;..\..\Lib\STLPort5.2"
+				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
 				PreprocessorDefinitions="_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;CGE_DLL_EXPORTS"
 				StringPooling="true"
-				ExceptionHandling="1"
+				ExceptionHandling="2"
 				RuntimeLibrary="2"
 				StructMemberAlignment="0"
 				BufferSecurityCheck="false"
@@ -296,7 +296,7 @@
 				AdditionalOptions="/ignore:4006 /ignore:4221"
 				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
 				OutputFile="$(OutDir)\$(ProjectName)Exports.lib"
-				AdditionalLibraryDirectories="../../Lib/STLPort5.2"
+				AdditionalLibraryDirectories=""
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -344,7 +344,7 @@
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="false"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Newton;..\..\Lib\STLPort5.2"
+				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
 				PreprocessorDefinitions="_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="1"
@@ -373,7 +373,7 @@
 				Name="VCLibrarianTool"
 				AdditionalOptions="/ignore:4006 /ignore:4221"
 				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
-				AdditionalLibraryDirectories="../../Lib/STLPort5.2"
+				AdditionalLibraryDirectories=""
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -419,7 +419,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Newton"
+				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
 				PreprocessorDefinitions="CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="2"
@@ -495,7 +495,7 @@
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="false"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Newton;..\..\Lib\STLPort5.2"
+				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
 				PreprocessorDefinitions="CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="1"
@@ -524,7 +524,7 @@
 				Name="VCLibrarianTool"
 				AdditionalOptions="/ignore:4006 /ignore:4221"
 				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib d3d11.lib d3dx11.lib dxgi.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
-				AdditionalLibraryDirectories="../../Lib/STLPort5.2"
+				AdditionalLibraryDirectories=""
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -572,7 +572,7 @@
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="false"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Newton;..\..\Lib\STLPort5.2"
+				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
 				PreprocessorDefinitions="CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="1"
@@ -600,7 +600,7 @@
 				Name="VCLibrarianTool"
 				AdditionalOptions="/ignore:4006 /ignore:4221"
 				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib d3d11.lib d3dx11.lib dxgi.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
-				AdditionalLibraryDirectories="../../Lib/STLPort5.2"
+				AdditionalLibraryDirectories=""
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -900,6 +900,10 @@
 				</File>
 				<File
 					RelativePath="..\..\Source\Math\cgMathUtility.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Math\cgMatrix.cpp"
 					>
 				</File>
 				<File
@@ -1323,6 +1327,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Source\World\cgSceneElement.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Source\World\cgSpatialTree.cpp"
 					>
 				</File>
@@ -1514,6 +1522,18 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Elements"
+					>
+					<File
+						RelativePath="..\..\Source\World\Elements\cgNavigationMeshElement.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\World\Elements\cgSkyElement.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Scripting"
@@ -1540,6 +1560,10 @@
 					<Filter
 						Name="Include"
 						>
+						<File
+							RelativePath="..\..\Lib\AngelScript\include\angelscript.h"
+							>
+						</File>
 						<File
 							RelativePath="..\..\Lib\AngelScript\source\as_array.h"
 							>
@@ -1654,6 +1678,10 @@
 						</File>
 						<File
 							RelativePath="..\..\Lib\AngelScript\source\as_string_util.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Lib\AngelScript\source\as_symboltable.h"
 							>
 						</File>
 						<File
@@ -3871,6 +3899,1534 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Navigation"
+				>
+				<File
+					RelativePath="..\..\Source\Navigation\cgNavigationAgent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Navigation\cgNavigationHandler.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Navigation\cgNavigationMesh.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Navigation\cgNavigationTile.cpp"
+					>
+				</File>
+				<Filter
+					Name="Recast"
+					>
+					<File
+						RelativePath="..\..\Lib\Recast\Source\Recast.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\Recast\Source\RecastAlloc.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\Recast\Source\RecastArea.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\Recast\Source\RecastContour.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\Recast\Source\RecastFilter.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\Recast\Source\RecastLayers.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\Recast\Source\RecastMesh.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\Recast\Source\RecastMeshDetail.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\Recast\Source\RecastRasterization.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\Recast\Source\RecastRegion.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+				</Filter>
+				<Filter
+					Name="Detour"
+					>
+					<File
+						RelativePath="..\..\Lib\Detour\Source\DetourAlloc.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\Detour\Source\DetourCommon.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\Detour\Source\DetourNavMesh.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\Detour\Source\DetourNavMeshBuilder.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\Detour\Source\DetourNavMeshQuery.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\Detour\Source\DetourNode.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+				</Filter>
+				<Filter
+					Name="DetourCrowd"
+					>
+					<File
+						RelativePath="..\..\Lib\DetourCrowd\Source\DetourCrowd.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\DetourCrowd\Source\DetourLocalBoundary.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\DetourCrowd\Source\DetourObstacleAvoidance.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\DetourCrowd\Source\DetourPathCorridor.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\DetourCrowd\Source\DetourPathQueue.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\Lib\DetourCrowd\Source\DetourProximityGrid.cpp"
+						>
+						<FileConfiguration
+							Name="Debug (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseExports|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (DX9 Only)|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Publish|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -4405,6 +5961,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Include\World\cgSceneElement.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Include\World\cgSpatialTree.h"
 					>
 				</File>
@@ -4600,6 +6160,18 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Elements"
+					>
+					<File
+						RelativePath="..\..\Include\World\Elements\cgNavigationMeshElement.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Include\World\Elements\cgSkyElement.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Scripting"
@@ -4660,6 +6232,10 @@
 						</File>
 						<File
 							RelativePath="..\..\Include\Scripting\Packages\Core\Resources.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Include\Scripting\Packages\Core\States.h"
 							>
 						</File>
 						<File
@@ -5046,6 +6622,10 @@
 							Name="World"
 							>
 							<File
+								RelativePath="..\..\Include\Scripting\Packages\Core\World\Elements.h"
+								>
+							</File>
+							<File
 								RelativePath="..\..\Include\Scripting\Packages\Core\World\Landscape.h"
 								>
 							</File>
@@ -5086,6 +6666,10 @@
 								</File>
 								<File
 									RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Camera.h"
+									>
+								</File>
+								<File
+									RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Dummy.h"
 									>
 								</File>
 								<File
@@ -5134,6 +6718,18 @@
 								>
 								<File
 									RelativePath="..\..\Include\Scripting\Packages\Core\World\Visibility\VisibilitySet.h"
+									>
+								</File>
+							</Filter>
+							<Filter
+								Name="Elements"
+								>
+								<File
+									RelativePath="..\..\Include\Scripting\Packages\Core\World\Elements\SceneElement.h"
+									>
+								</File>
+								<File
+									RelativePath="..\..\Include\Scripting\Packages\Core\World\Elements\SkyElement.h"
 									>
 								</File>
 							</Filter>
@@ -5254,6 +6850,10 @@
 								>
 							</File>
 							<File
+								RelativePath="..\..\Include\Scripting\Packages\Core\Physics\Controllers.h"
+								>
+							</File>
+							<File
 								RelativePath="..\..\Include\Scripting\Packages\Core\Physics\Joints.h"
 								>
 							</File>
@@ -5289,6 +6889,34 @@
 									>
 								</File>
 							</Filter>
+							<Filter
+								Name="Controllers"
+								>
+								<File
+									RelativePath="..\..\Include\Scripting\Packages\Core\Physics\Controllers\CharacterController.h"
+									>
+								</File>
+								<File
+									RelativePath="..\..\Include\Scripting\Packages\Core\Physics\Controllers\PhysicsController.h"
+									>
+								</File>
+							</Filter>
+						</Filter>
+						<Filter
+							Name="States"
+							>
+							<File
+								RelativePath="..\..\Include\Scripting\Packages\Core\States\AppState.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Include\Scripting\Packages\Core\States\AppStateManager.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Include\Scripting\Packages\Core\States\AppTransitionState.h"
+								>
+							</File>
 						</Filter>
 					</Filter>
 				</Filter>
@@ -5578,6 +7206,30 @@
 				</File>
 				<File
 					RelativePath="..\..\Include\Animation\cgAnimationTypes.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Navigation"
+				>
+				<File
+					RelativePath="..\..\Include\Navigation\cgNavigationAgent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\Navigation\cgNavigationHandler.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\Navigation\cgNavigationMesh.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\Navigation\cgNavigationTile.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\Navigation\cgNavigationTypes.h"
 					>
 				</File>
 			</Filter>

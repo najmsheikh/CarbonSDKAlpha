@@ -30,7 +30,9 @@
 //-----------------------------------------------------------------------------
 #include <World/cgWorldConfiguration.h>
 #include <World/cgWorld.h>
+#include <World/cgObjectSubElement.h>
 #include <World/cgScene.h>
+#include <World/cgSceneElement.h>
 #include <System/cgStringUtility.h>
 
 cgToDo( "Carbon General", "Consider creation of new world that is not database driven?" )
@@ -42,8 +44,10 @@ cgToDo( "Carbon General", "Consider creation of new world that is not database d
 cgWorldQuery cgWorldConfiguration::mIncrementNextRefId;
 cgWorldQuery cgWorldConfiguration::mGetObjectType;
 cgWorldQuery cgWorldConfiguration::mGetObjectSubElementType;
+cgWorldQuery cgWorldConfiguration::mGetSceneElementType;
 cgWorldQuery cgWorldConfiguration::mInsertObjectType;
 cgWorldQuery cgWorldConfiguration::mInsertObjectSubElementType;
+cgWorldQuery cgWorldConfiguration::mInsertSceneElementType;
 cgWorldQuery cgWorldConfiguration::mInsertMaterialProperty;
 cgWorldQuery cgWorldConfiguration::mInsertRenderClass;
 cgWorldQuery cgWorldConfiguration::mInsertScene;
@@ -101,6 +105,8 @@ void cgWorldConfiguration::prepareQueries()
             mInsertObjectType.prepare( mWorld, _T("INSERT INTO 'ObjectTypes' VALUES(NULL,?1,?2,?3)"), true );
         if ( !mInsertObjectSubElementType.isPrepared() )
             mInsertObjectSubElementType.prepare( mWorld, _T("INSERT INTO 'ObjectSubElementTypes' VALUES(NULL,?1,?2,?3)"), true );
+        if ( !mInsertSceneElementType.isPrepared() )
+            mInsertSceneElementType.prepare( mWorld, _T("INSERT INTO 'SceneElementTypes' VALUES(NULL,?1,?2,?3)"), true );
         if ( !mInsertMaterialProperty.isPrepared() )
             mInsertMaterialProperty.prepare( mWorld, _T("INSERT INTO 'Configuration::MaterialProperties' VALUES(NULL,?1,?2,?3,?4)"), true );
         if ( !mInsertRenderClass.isPrepared() )
@@ -114,8 +120,10 @@ void cgWorldConfiguration::prepareQueries()
     // Read queries
     if ( !mGetObjectType.isPrepared() )
         mGetObjectType.prepare( mWorld, _T("SELECT * FROM 'ObjectTypes' WHERE Identifier=?1 LIMIT 1"), true );
-    if ( !mGetObjectType.isPrepared() )
-        mGetObjectType.prepare( mWorld, _T("SELECT * FROM 'ObjectSubElementTypes' WHERE Identifier=?1 LIMIT 1") );
+    if ( !mGetObjectSubElementType.isPrepared() )
+        mGetObjectSubElementType.prepare( mWorld, _T("SELECT * FROM 'ObjectSubElementTypes' WHERE Identifier=?1 LIMIT 1") );
+    if ( !mGetSceneElementType.isPrepared() )
+        mGetSceneElementType.prepare( mWorld, _T("SELECT * FROM 'SceneElementTypes' WHERE Identifier=?1 LIMIT 1") );
 }
 
 //-----------------------------------------------------------------------------
@@ -175,6 +183,7 @@ bool cgWorldConfiguration::newConfiguration( cgWorldType::Base type )
     // by the application at start-up.
     mObjectTypes = cgWorldObject::getRegisteredTypes();
     mObjectSubElementTypes = cgObjectSubElement::getRegisteredTypes();
+    mSceneElementTypes = cgSceneElement::getRegisteredTypes();
 
     // Success!
     return true;
@@ -271,6 +280,10 @@ cgConfigResult::Base cgWorldConfiguration::loadConfiguration( cgUInt32 minSuppor
 
     // Build local object sub-element type table.
     if ( !loadObjectSubElementTypeTable( ) )
+        return cgConfigResult::Error;
+
+    // Build local scene element type table.
+    if ( !loadSceneElementTypeTable( ) )
         return cgConfigResult::Error;
 
     // Build a list of scene descriptors from the database.
@@ -414,6 +427,75 @@ bool cgWorldConfiguration::loadObjectSubElementTypeTable( )
 
             // Add to the 'local->global' type identifier look up table.
             mObjectSubElementTypeLUT[ typeDescription.localIdentifier ] = typeDescription.globalIdentifier;
+
+            // Mark component's type table as existing.
+            mWorld->componentTablesCreated( typeDescription.globalIdentifier );
+            
+        } // Next Result
+        query.reset();
+
+    } // End if success
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : loadSceneElementTypeTable () (Protected)
+/// <summary>
+/// Build the local scene element type table by combining the list of known 
+/// registered element types defined by the application, and those defined
+/// within the database. This new type list is specific to the opened
+/// world.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgWorldConfiguration::loadSceneElementTypeTable( )
+{
+    // Populate our local element type list with the list of types registered
+    // by the application at start-up.
+    mSceneElementTypes = cgSceneElement::getRegisteredTypes();
+
+    // Query scene element types defined within the database.
+    cgString error;
+    cgWorldQuery query( mWorld, _T("SELECT * FROM SceneElementTypes") );
+    if ( query.getLastError( error ) == true )
+    {
+        cgAppLog::write( cgAppLog::Error, _T("Failed to query world database for defined scene element types. Error: %s.\n"), error.c_str() );
+        return false;
+    
+    } // End if failed.
+
+    // Execute the query.
+    if ( query.step() == true )
+    {
+        // Retrieve results.
+        while( query.nextRow() )
+        {
+            cgUID    globalIdentifier;
+            cgString identifierString, name;
+
+            // Retrieve the global type identifier string associated with this entry
+            // and convert it into an actual cgUID that we can use.
+            query.getColumn( _T("Identifier"), identifierString );
+            query.getColumn( _T("Name"), name );
+            cgStringUtility::tryParse( identifierString, globalIdentifier );
+            
+            // Find this entry in our local type table if it exists.
+            cgSceneElementTypeDesc::Map::iterator itType = mSceneElementTypes.find( globalIdentifier );
+            if ( itType == mSceneElementTypes.end() )
+            {
+                cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("The world database defined an unknown scene element type '%s' (%s). Elements of this type will be ignored during import.\n"), identifierString.c_str(), name.c_str() );
+                continue;
+
+            } // End if not found
+
+            // Populate the remaining fields of our local scene element type structure.
+            cgSceneElementTypeDesc & typeDescription = itType->second;
+            query.getColumn( _T("SceneElementTypeId"), typeDescription.localIdentifier );
+            typeDescription.name = name;
+
+            // Add to the 'local->global' type identifier look up table.
+            mSceneElementTypeLUT[ typeDescription.localIdentifier ] = typeDescription.globalIdentifier;
 
             // Mark component's type table as existing.
             mWorld->componentTablesCreated( typeDescription.globalIdentifier );
@@ -923,6 +1005,55 @@ bool cgWorldConfiguration::insertObjectSubElementType( const cgUID & typeIdentif
 }
 
 //-----------------------------------------------------------------------------
+// Name : insertSceneElementType () (Protected)
+/// <summary>
+/// Insert the specified scene element type into the world configuration 
+/// table(s).
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgWorldConfiguration::insertSceneElementType( const cgUID & typeIdentifier, const cgString & databaseTable )
+{
+    // Find the data associated with the underlying element type for this identifier.
+    cgSceneElementTypeDesc::Map::iterator itType = mSceneElementTypes.find( typeIdentifier );
+    if ( itType == mSceneElementTypes.end() )
+    {
+        cgAppLog::write( cgAppLog::Error, _T("Attempted to create a new world database type entry for a scene element type that has not been registered by the application.\n") );
+        return false;
+    
+    } // End if not previously inserted
+
+    // Already exists in the database?
+    if ( itType->second.localIdentifier > 0 )
+        return true;
+            
+    // Insert information about this type into the database.
+    prepareQueries();
+    cgString identifierString = cgStringUtility::toString(typeIdentifier,_T("B"));
+    mInsertSceneElementType.bindParameter( 1, identifierString );
+    mInsertSceneElementType.bindParameter( 2, itType->second.name );
+    mInsertSceneElementType.bindParameter( 3, databaseTable );
+    if ( !mInsertSceneElementType.step( true ) )
+    {
+        cgString strError;
+        if ( mInsertSceneElementType.getLastError( strError ) )
+            cgAppLog::write( cgAppLog::Error, _T("Failed to insert defined scene element type data '%s' into world database. Error: %s.\n"), identifierString.c_str(), strError.c_str() );
+        else
+            cgAppLog::write( cgAppLog::Error, _T("Failed to insert defined scene element type data '%s' into world database.\n"), identifierString.c_str() );
+        return false;
+    
+    } // End if failed
+    
+    // Retrieve last inserted identifier. This is the database 'local' type identifier for this element type.
+    itType->second.localIdentifier = mInsertSceneElementType.getLastInsertId();
+
+    // Add to the 'local->global' type identifier look up table.
+    mSceneElementTypeLUT[ itType->second.localIdentifier ] = typeIdentifier;
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getSceneCount ()
 /// <summary>
 /// Retrieve the total number of scenes contained within the loaded
@@ -1119,7 +1250,7 @@ const cgWorldObjectTypeDesc * cgWorldConfiguration::getObjectType( const cgUID &
 //-----------------------------------------------------------------------------
 const cgWorldObjectTypeDesc * cgWorldConfiguration::getObjectTypeByLocalId( cgUInt32 localIdentifier ) const
 {
-    ObjectTypeLUT::const_iterator itType = mObjectTypeLUT.find( localIdentifier );
+    ComponentTypeLUT::const_iterator itType = mObjectTypeLUT.find( localIdentifier );
     if ( itType == mObjectTypeLUT.end() )
         return CG_NULL;
     return getObjectType( itType->second );
@@ -1149,10 +1280,40 @@ const cgObjectSubElementTypeDesc * cgWorldConfiguration::getObjectSubElementType
 //-----------------------------------------------------------------------------
 const cgObjectSubElementTypeDesc * cgWorldConfiguration::getObjectSubElementTypeByLocalId( cgUInt32 localIdentifier ) const
 {
-    ObjectTypeLUT::const_iterator itType = mObjectSubElementTypeLUT.find( localIdentifier );
+    ComponentTypeLUT::const_iterator itType = mObjectSubElementTypeLUT.find( localIdentifier );
     if ( itType == mObjectSubElementTypeLUT.end() )
         return CG_NULL;
     return getObjectSubElementType( itType->second );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getSceneElementType ()
+/// <summary>
+/// Retrieve details for the specified scene element type based on its global
+/// identifier.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgSceneElementTypeDesc * cgWorldConfiguration::getSceneElementType( const cgUID & globalIdentifier ) const
+{
+    cgSceneElementTypeDesc::Map::const_iterator itType = mSceneElementTypes.find( globalIdentifier );
+    if ( itType == mSceneElementTypes.end() )
+        return CG_NULL;
+    return &itType->second;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getSceneElementTypeByLocalId ()
+/// <summary>
+/// Retrieve details for the specified scene element type based on its local 
+/// (database) identifier.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgSceneElementTypeDesc * cgWorldConfiguration::getSceneElementTypeByLocalId( cgUInt32 localIdentifier ) const
+{
+    ComponentTypeLUT::const_iterator itType = mSceneElementTypeLUT.find( localIdentifier );
+    if ( itType == mSceneElementTypeLUT.end() )
+        return CG_NULL;
+    return getSceneElementType( itType->second );
 }
 
 //-----------------------------------------------------------------------------

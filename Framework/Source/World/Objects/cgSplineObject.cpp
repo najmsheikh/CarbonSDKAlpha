@@ -29,6 +29,7 @@
 // cgSplineObject Module Includes
 //-----------------------------------------------------------------------------
 #include <World/Objects/cgSplineObject.h>
+#include <World/Objects/cgCameraObject.h>
 #include <World/cgScene.h>
 #include <Rendering/cgRenderDriver.h>
 #include <Math/cgCollision.h>
@@ -128,7 +129,7 @@ cgBoundingBox cgSplineObject::getLocalBoundingBox( )
 /// intersected and also compute the object space intersection distance. 
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgSplineObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance )
+bool cgSplineObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance )
 {
     // Only valid in sandbox mode.
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
@@ -137,7 +138,7 @@ bool cgSplineObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const
     // Early out with a simple AABB test.
     cgFloat t;
     cgBoundingBox Bounds = pIssuer->getLocalBoundingBox();
-    Bounds.inflate( vWireTolerance );
+    Bounds.inflate( pCamera->estimatePickTolerance( ViewportSize, fWireTolerance, Bounds.getCenter(), pIssuer->getWorldTransform(false) ) );
     if ( Bounds.intersect( vOrigin, vDir, t, false ) == false )
         return false;
 
@@ -163,6 +164,7 @@ bool cgSplineObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const
     // if the ray passes close to one of them.
     bool bHit = false;
     cgFloat fClosestDistance = FLT_MAX;
+    cgVector3 vWireTolerance;
     for ( cgInt32 nEdge = 0; nEdge < nPoint - 1; ++nEdge )
     {
         // Retrieve the two vertices that form this edge
@@ -192,6 +194,7 @@ bool cgSplineObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const
         if ( fDistance < fClosestDistance )
         {
             cgVector3 vClosestPoint = cgMathUtility::closestPointOnLineSegment( vIntersect, v1, v2 );
+            vWireTolerance = pCamera->estimatePickTolerance( ViewportSize, fWireTolerance, vClosestPoint, pIssuer->getWorldTransform(false) );
             if ( fabsf(vIntersect.x - vClosestPoint.x) <= vWireTolerance.x &&
                  fabsf(vIntersect.y - vClosestPoint.y) <= vWireTolerance.y &&
                  fabsf(vIntersect.z - vClosestPoint.z) <= vWireTolerance.z )

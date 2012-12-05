@@ -34,9 +34,15 @@ namespace TexturePool
 
             // Variable 32 / 64 bit registrations.
             if ( sizeof(size_t) == 4 )
-                BINDSUCCESS( engine->registerObjectMethod( "TexturePool", "uint GetMemoryConsumption( ) const", asMETHODPR(cgTexturePool,getMemoryConsumption,( ) const, size_t), asCALL_THISCALL) );
+            {
+                BINDSUCCESS( engine->registerObjectMethod( "TexturePool", "uint getMemoryConsumption( ) const", asMETHODPR(cgTexturePool,getMemoryConsumption,( ) const, size_t), asCALL_THISCALL) );
+            
+            } // End if 32bit
             else
-                BINDSUCCESS( engine->registerObjectMethod( "TexturePool", "uint64 GetMemoryConsumption( ) const", asMETHODPR(cgTexturePool,getMemoryConsumption,( ) const, size_t), asCALL_THISCALL) );
+            {
+                BINDSUCCESS( engine->registerObjectMethod( "TexturePool", "uint64 getMemoryConsumption( ) const", asMETHODPR(cgTexturePool,getMemoryConsumption,( ) const, size_t), asCALL_THISCALL) );
+
+            } // End if 64bit
 
         }
 

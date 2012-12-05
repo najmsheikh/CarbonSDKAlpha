@@ -37,6 +37,11 @@ namespace AtmosphericsProcessor
             Core::Rendering::ImageProcessor::registerProcessorMethods<cgAtmosphericsProcessor>( engine, "AtmosphericsProcessor" );
 
             // Register the object methods
+            BINDSUCCESS( engine->registerObjectMethod( "AtmosphericsProcessor", "void drawSky( SkyElement@+, bool )", asMETHODPR(cgAtmosphericsProcessor, drawSky, ( cgSkyElement*, bool ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "AtmosphericsProcessor", "void drawSky( SkyElement@+, bool, const RenderTargetHandle &in )", asMETHODPR(cgAtmosphericsProcessor, drawSky, ( cgSkyElement*, bool, const cgRenderTargetHandle&), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "AtmosphericsProcessor", "void drawSkyColor( ColorValue, bool )", asMETHODPR(cgAtmosphericsProcessor, drawSkyColor, ( cgColorValue, bool ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "AtmosphericsProcessor", "void drawSkyColor( ColorValue, bool, const RenderTargetHandle &in )", asMETHODPR(cgAtmosphericsProcessor, drawSkyColor, ( cgColorValue, bool, const cgRenderTargetHandle&), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "AtmosphericsProcessor", "void drawSkyBox( const TextureHandle &in, bool )", asMETHODPR(cgAtmosphericsProcessor, drawSkyBox, (const cgTextureHandle&, bool ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AtmosphericsProcessor", "void drawSkyBox( const TextureHandle &in, bool, const RenderTargetHandle &in )", asMETHODPR(cgAtmosphericsProcessor, drawSkyBox, (const cgTextureHandle&, bool, const cgRenderTargetHandle&), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AtmosphericsProcessor", "void drawFog( FogModel, const TextureHandle &in, DepthType, const RenderTargetHandle &in )", asMETHODPR(cgAtmosphericsProcessor, drawFog, (cgFogModel::Base, const cgTextureHandle&, cgDepthType::Base, const cgRenderTargetHandle&), void), asCALL_THISCALL) );
         }

@@ -148,7 +148,7 @@ cgBoundingBox cgParticleEmitterObject::getLocalBoundingBox( )
 /// intersected and also compute the object space intersection distance. 
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgParticleEmitterObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance )
+bool cgParticleEmitterObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance )
 {
     // Only valid in sandbox mode.
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
@@ -162,7 +162,7 @@ bool cgParticleEmitterObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssu
     cgVector3 Points[10];
     const cgParticleEmitterProperties & properties = getLayerProperties( 0 );
     float fSize   = fZoomFactor * 25.0f * cosf(CGEToRadian(properties.outerCone* 0.5f));
-    float fRadius = tanf(CGEToRadian(properties.outerCone * 0.5f)) * fSize;
+    float fRadius = tanf(CGEToRadian(std::max<cgFloat>(0.5f,properties.outerCone) * 0.5f)) * fSize;
     Points[0] = cgVector3( 0, 0, 0 );
     for ( size_t i = 0; i < 8; ++i )
     {
@@ -562,71 +562,76 @@ cgString cgParticleEmitterObject::getDatabaseTable( ) const
 //-----------------------------------------------------------------------------
 bool cgParticleEmitterObject::onComponentCreated( cgComponentCreatedEventArgs * e )
 {
-    // Create a default emitter layer.
-    mLayers.resize( 1 );
-    mLayers[0].databaseId = 0;
-    mLayers[0].initialEmission = true;
-    cgParticleEmitterProperties & properties = mLayers[0].properties;
+    // Provide defaults if this is a new object (not cloned).
+    if ( e->cloneMethod == cgCloneMethod::None )
+    {
+        // Create a default emitter layer.
+        mLayers.resize( 1 );
+        mLayers[0].databaseId = 0;
+        mLayers[0].initialEmission = true;
+        cgParticleEmitterProperties & properties = mLayers[0].properties;
 
-    // Default emitter properties
-    properties.emitterType                 = cgParticleEmitterType::Billboards;
-    properties.innerCone                   = 0;
-    properties.outerCone                   = 50;
-    properties.emissionRadius              = 0;
-    properties.deadZoneRadius              = 0;
-    properties.maxSimultaneousParticles    = 0;
-    properties.initialParticles            = 0;
-    properties.maxFiredParticles           = 0;
-    properties.birthFrequency              = 60;
-    properties.particleTexture             = _T("sys://Textures/Fire.xml");
-    properties.sortedRender                = false;
-    properties.emitterDirection            = cgVector3(0,0,0);
-    properties.randomizeRotation           = true;
-    properties.fireAmount                  = 0;
-    properties.fireDelay                   = 0;
-    properties.fireDelayOffset             = 0;
-    properties.blendMethod                 = cgParticleBlendMethod::Additive;
-    
-    // Default particle properties
-    properties.speed.min                   = 2.5f;
-    properties.speed.max                   = 3.0f;
-    properties.mass.min                    = 10.0f;
-    properties.mass.max                    = 10.0f;
-    properties.angularSpeed.min            = -150.0f;
-    properties.angularSpeed.max            = 150.0f;
-    properties.baseScale.min               = 1.0f;
-    properties.baseScale.max               = 1.0f;
-    properties.lifetime.min                = 0.8f;
-    properties.lifetime.max                = 1.0f;
-    properties.airResistance               = 0.001f;
-    properties.baseSize                    = cgSizeF(1.5f,1.5f);
-    properties.hdrScale                    = 10.0f;
+        // Default emitter properties
+        properties.emitterType                 = cgParticleEmitterType::Billboards;
+        properties.innerCone                   = 0;
+        properties.outerCone                   = 50;
+        properties.emissionRadius              = 0;
+        properties.deadZoneRadius              = 0;
+        properties.maxSimultaneousParticles    = 0;
+        properties.initialParticles            = 0;
+        properties.maxFiredParticles           = 0;
+        properties.birthFrequency              = 60;
+        properties.particleTexture             = _T("sys://Textures/Fire.xml");
+        properties.sortedRender                = false;
+        properties.emitterDirection            = cgVector3(0,0,0);
+        properties.randomizeRotation           = true;
+        properties.fireAmount                  = 0;
+        properties.fireDelay                   = 0;
+        properties.fireDelayOffset             = 0;
+        properties.blendMethod                 = cgParticleBlendMethod::Additive;
+        
+        // Default particle properties
+        properties.speed.min                   = 2.5f;
+        properties.speed.max                   = 3.0f;
+        properties.mass.min                    = 10.0f;
+        properties.mass.max                    = 10.0f;
+        properties.angularSpeed.min            = -150.0f;
+        properties.angularSpeed.max            = 150.0f;
+        properties.baseScale.min               = 1.0f;
+        properties.baseScale.max               = 1.0f;
+        properties.lifetime.min                = 0.8f;
+        properties.lifetime.max                = 1.0f;
+        properties.airResistance               = 0.001f;
+        properties.baseSize                    = cgSizeF(1.5f,1.5f);
+        properties.hdrScale                    = 10.0f;
 
-    // Default scale curves
-    cgVector2 vPoint( 0.0f, 0.6f ), vOffset;
-    vOffset = cgVector2(0.25f,0.70f) - vPoint;
-    properties.scaleXCurve.setSplinePoint( 0, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
-    vPoint = cgVector2( 1.0f, 1.0f );
-    vOffset = vPoint - cgVector2(0.75f,0.90f);
-    properties.scaleXCurve.setSplinePoint( 1, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
-    properties.scaleYCurve = properties.scaleXCurve;
-    
-    // Default color curves
-    properties.colorRCurve.setDescription( cgBezierSpline2::Maximum );
-    properties.colorGCurve.setDescription( cgBezierSpline2::Maximum );
-    properties.colorBCurve.setDescription( cgBezierSpline2::Maximum );
-    
-    // Default alpha curve
-    properties.colorACurve.setDescription( cgBezierSpline2::Maximum );
-    vPoint = cgVector2(0.25f, 1.0f);
-    vOffset = cgVector2(0.3f, 1.0f) - vPoint;
-    properties.colorACurve.insertPoint( 1, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
-    vPoint = cgVector2(0.7f, 0.7f);
-    vOffset = cgVector2(0.83728f, 0.43456f) - vPoint;
-    properties.colorACurve.insertPoint( 2, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
-    vPoint = cgVector2(1.0f, 0.0f);
-    vOffset = vPoint - cgVector2(0.83728f, 0.43456f);
-    properties.colorACurve.setSplinePoint( 3, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
+        // Default scale curves
+        cgVector2 vPoint( 0.0f, 0.6f ), vOffset;
+        vOffset = cgVector2(0.25f,0.70f) - vPoint;
+        properties.scaleXCurve.setSplinePoint( 0, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
+        vPoint = cgVector2( 1.0f, 1.0f );
+        vOffset = vPoint - cgVector2(0.75f,0.90f);
+        properties.scaleXCurve.setSplinePoint( 1, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
+        properties.scaleYCurve = properties.scaleXCurve;
+        
+        // Default color curves
+        properties.colorRCurve.setDescription( cgBezierSpline2::Maximum );
+        properties.colorGCurve.setDescription( cgBezierSpline2::Maximum );
+        properties.colorBCurve.setDescription( cgBezierSpline2::Maximum );
+        
+        // Default alpha curve
+        properties.colorACurve.setDescription( cgBezierSpline2::Maximum );
+        vPoint = cgVector2(0.25f, 1.0f);
+        vOffset = cgVector2(0.3f, 1.0f) - vPoint;
+        properties.colorACurve.insertPoint( 1, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
+        vPoint = cgVector2(0.7f, 0.7f);
+        vOffset = cgVector2(0.83728f, 0.43456f) - vPoint;
+        properties.colorACurve.insertPoint( 2, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
+        vPoint = cgVector2(1.0f, 0.0f);
+        vOffset = vPoint - cgVector2(0.83728f, 0.43456f);
+        properties.colorACurve.setSplinePoint( 3, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
+
+    } // End if new object
 
     // Insert the new object.
     if ( !insertComponentData() )

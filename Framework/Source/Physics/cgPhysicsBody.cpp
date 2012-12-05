@@ -113,7 +113,7 @@ void cgPhysicsBody::dispose( bool bDisposeBase )
     if ( bDisposeBase == true )
         cgPhysicsEntity::dispose( true );
     else
-        mDisposed = true;
+        mDisposing = false;
 }
 
 //-----------------------------------------------------------------------------

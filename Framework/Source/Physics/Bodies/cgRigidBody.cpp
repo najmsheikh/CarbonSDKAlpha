@@ -45,13 +45,13 @@
 /// Constructor for this class.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgRigidBody::cgRigidBody( cgPhysicsWorld * pWorld, cgPhysicsShape * pShape, const ConstructData & Data ) : cgPhysicsBody( pWorld, pShape )
+cgRigidBody::cgRigidBody( cgPhysicsWorld * pWorld, cgPhysicsShape * pShape, const cgRigidBodyCreateParams & Params ) : cgPhysicsBody( pWorld, pShape )
 {
     // Initialize variables to sensible defaults
     mCollisionModifier = CG_NULL;
 
     // Build the body
-    initialize( pWorld, Data, CG_NULL );
+    initialize( pWorld, Params, CG_NULL );
 }
 
 //-----------------------------------------------------------------------------
@@ -60,13 +60,13 @@ cgRigidBody::cgRigidBody( cgPhysicsWorld * pWorld, cgPhysicsShape * pShape, cons
 /// Constructor for this class.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgRigidBody::cgRigidBody( cgPhysicsWorld * pWorld, cgPhysicsShape * pShape, const ConstructData & Data, cgPhysicsBody * pInitBody ) : cgPhysicsBody( pWorld, pShape )
+cgRigidBody::cgRigidBody( cgPhysicsWorld * pWorld, cgPhysicsShape * pShape, const cgRigidBodyCreateParams & Params, cgPhysicsBody * pInitBody ) : cgPhysicsBody( pWorld, pShape )
 {
     // Initialize variables to sensible defaults
     mCollisionModifier = CG_NULL;
 
     // Build the body
-    initialize( pWorld, Data, pInitBody );
+    initialize( pWorld, Params, pInitBody );
 }
 
 //-----------------------------------------------------------------------------
@@ -130,12 +130,12 @@ bool cgRigidBody::queryReferenceType( const cgUID & type ) const
 /// Initialize the rigid body based on the supplied constructiondata.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgRigidBody::initialize( cgPhysicsWorld * pWorld, const ConstructData & Data, cgPhysicsBody * pInitBody )
+void cgRigidBody::initialize( cgPhysicsWorld * pWorld, const cgRigidBodyCreateParams & Params, cgPhysicsBody * pInitBody )
 {
     // Decompose the input transform into its core components.
     // We'll need to 'sanitize' it by removing shear scale.
     cgVector3 vScale, vShear;
-    Data.initialTransform.decompose( vScale, vShear, mEntityRotation, mEntityPosition );
+    Params.initialTransform.decompose( vScale, vShear, mEntityRotation, mEntityPosition );
     mPrevEntityRotation = mEntityRotation;
     mPrevEntityPosition = mEntityPosition;
 
@@ -182,7 +182,7 @@ void cgRigidBody::initialize( cgPhysicsWorld * pWorld, const ConstructData & Dat
 
     // Enable body motion if requested.
     cgVector3 vOrigin;
-    if ( Data.model == cgPhysicsModel::RigidDynamic )
+    if ( Params.model == cgPhysicsModel::RigidDynamic )
     {
         // We need to set the proper center of mass and inertia matrix for this body.
         // It can be computed from the shape itself so do so now. The inertia is
@@ -193,7 +193,7 @@ void cgRigidBody::initialize( cgPhysicsWorld * pWorld, const ConstructData & Dat
 	    // Set the body mass matrix.
         // Note: The inertia value calculated by the above function does not include the mass.
 	    // Therefore it needs to be multiplied by the mass of the body before it is used.
-	    NewtonBodySetMassMatrix( mBody, Data.mass, Data.mass * mInertia.x, Data.mass * mInertia.y, Data.mass * mInertia.z );
+	    NewtonBodySetMassMatrix( mBody, Params.mass, Params.mass * mInertia.x, Params.mass * mInertia.y, Params.mass * mInertia.z );
 
         // Set the body origin
 	    NewtonBodySetCentreOfMass( mBody, vOrigin );
@@ -216,7 +216,7 @@ void cgRigidBody::initialize( cgPhysicsWorld * pWorld, const ConstructData & Dat
         } // End if init from body
 
         // Enable CCD if requested.
-        if ( Data.quality == cgSimulationQuality::CCD )
+        if ( Params.quality == cgSimulationQuality::CCD )
             enableContinuousCollision( true );
 
     } // End if !Static motion

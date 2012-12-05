@@ -34,6 +34,7 @@ class cgWorldObject;
 class cgScene;
 class cgObjectNode;
 class cgObjectSubElement;
+class cgSceneElement;
 class cgTransform;
 
 //-----------------------------------------------------------------------------
@@ -231,7 +232,8 @@ namespace cgTransformSource
     {
         Standard            = 0,
         Dynamics            = 1,
-        TransformResolve    = 2
+        Navigation          = 2,
+        TransformResolve    = 3
     };
 
 }; // End Namespace : cgTransformSource
@@ -368,5 +370,31 @@ struct cgObjectSubElementTypeDesc
     AllocCloneFunc  elementAllocClone;
 
 }; // End Struct cgObjectSubElementTypeDesc
+
+// Structure responsible for storing information about registered scene element types.
+struct cgSceneElementTypeDesc
+{
+    //-------------------------------------------------------------------------
+    // Public Typedefs, Structures and Enumerations
+    //-------------------------------------------------------------------------
+    // Function pointers
+    typedef cgSceneElement * (*AllocNewFunc)( const cgUID &, cgUInt32, cgScene * );
+    
+    // Containers
+    CGE_UNORDEREDMAP_DECLARE(cgUID, cgSceneElementTypeDesc, Map)
+
+    //-------------------------------------------------------------------------
+    // Public Variables
+    //-------------------------------------------------------------------------
+    /// <summary>Friendly name of the type used for debug purposes only.</summary>
+    cgString        name;
+    /// <summary>Globally unique identifier for this scene element type.</summary>
+    cgUID           globalIdentifier;
+    /// <summary>Integer identifier of the type as it exists in the database.</summary>
+    cgUInt32        localIdentifier;
+    /// <summary>Allocation function for the creation of a new scene element.</summary>
+    AllocNewFunc    elementAllocNew;
+
+}; // End Struct cgSceneElementTypeDesc
 
 #endif // !_CGE_CGWORLDTYPES_H_

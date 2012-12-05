@@ -149,7 +149,7 @@ void cgPhysicsWorld::update( cgFloat fTimeElapsed )
     mStepAccumulator += fTimeElapsed;
     
     // Allow the world to step the simulation at a rate of 60fps by default.
-    // ToDo: 6767 - Configurable maximum steps (0 = unlimited, warning)!
+    // ToDo: 6767 - Configurable rate and maximum steps (0 = unlimited, warning)!
     cgDouble fRate     = 1.0 / 60.0;
     cgInt    nMaxSteps = 10; //(cgInt)ceil( mStepAccumulator / fRate );
     for ( cgInt i = 0; i < nMaxSteps && mStepAccumulator >= fRate; ++i, mStepAccumulator -= fRate )

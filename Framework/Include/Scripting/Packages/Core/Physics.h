@@ -6,6 +6,7 @@
 // Child packages
 #include "Physics/Joints.h"
 #include "Physics/Bodies.h"
+#include "Physics/Controllers.h"
 #include "Physics/PhysicsEntity.h"
 #include "Physics/PhysicsWorld.h"
 
@@ -21,6 +22,7 @@ namespace Physics
         BEGIN_SCRIPT_PACKAGE( "Core.Physics" )
             DECLARE_PACKAGE_CHILD( Joints )
             DECLARE_PACKAGE_CHILD( Bodies )
+            DECLARE_PACKAGE_CHILD( Controllers )
             DECLARE_PACKAGE_CHILD( PhysicsEntity )
             DECLARE_PACKAGE_CHILD( PhysicsWorld )
         END_SCRIPT_PACKAGE( )

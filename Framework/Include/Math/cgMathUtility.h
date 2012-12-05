@@ -87,9 +87,13 @@ namespace cgMathUtility
         if (val == 0)
             return 1;
         val--;
-        for ( cgInt i = 1; i < 32; i <<= 1)
-            val = val | val >> i;
-        return val+1; 
+        val |= val >> 1;
+	    val |= val >> 2;
+	    val |= val >> 4;
+	    val |= val >> 8;
+	    val |= val >> 16;
+	    val++;
+        return val; 
     }
     
     inline cgUInt32 closestPowerOfTwo( cgUInt32 val )
@@ -99,7 +103,13 @@ namespace cgMathUtility
 
     inline cgUInt32 log2( cgUInt32 val )
 	{
-		return (cgUInt32)( ( log( (cgDouble)val ) / log( 2.0 ) ) + 0.5f );
+		//return (cgUInt32)( ( log( (cgDouble)val ) / log( 2.0 ) ) + 0.5f );
+        cgUInt32 r = (val > 0xffff) << 4; val >>= r;
+	    cgUInt32 shift = (val > 0xff) << 3; val >>= shift; r |= shift;
+	    shift = (val > 0xf) << 2; val >>= shift; r |= shift;
+	    shift = (val > 0x3) << 1; val >>= shift; r |= shift;
+	    r |= (val >> 1);
+	    return r;
 	}
 
 	inline cgFloat log2f( cgUInt32 val )

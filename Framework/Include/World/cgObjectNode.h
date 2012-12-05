@@ -33,6 +33,7 @@
 #include <World/cgWorldQuery.h>
 #include <World/cgWorldComponent.h>
 #include <Physics/cgPhysicsBody.h>
+#include <Navigation/cgNavigationAgent.h>
 #include <System/cgPropertyContainer.h>
 #include <Math/cgBoundingBox.h>
 #include <Math/cgTransform.h>
@@ -46,6 +47,7 @@ class cgSpatialTreeNode;
 class cgCameraNode;
 class cgGroupNode;
 class cgObjectBehavior;
+class cgNavigationAgent;
 class cgPhysicsController; // ToDo: Remove if controllers go away :)
 class cgVisibilitySet;
 class cgTargetNode;
@@ -104,7 +106,7 @@ public:
 /// a scene.
 /// </summary>
 //-----------------------------------------------------------------------------
-class CGE_API cgObjectNode : public cgAnimationTarget, public cgWorldComponentEventListener, public cgPhysicsBodyEventListener
+class CGE_API cgObjectNode : public cgAnimationTarget, public cgWorldComponentEventListener, public cgPhysicsBodyEventListener, public cgNavigationAgentEventListener
 {
     DECLARE_DERIVED_SCRIPTOBJECT( cgObjectNode, cgAnimationTarget, "ObjectNode" )
 
@@ -134,7 +136,6 @@ public:
     bool                            clone                   ( cgCloneMethod::Base method, cgScene * scene, bool internalNode, cgObjectNode *& nodeOut, const cgTransform & initTransform );
     
     // Properties
-    const cgString                & getName                 ( ) const;
     bool                            setName                 ( const cgString & name );
     const cgString                & getObjectClass          ( ) const;
     const cgString                & getRenderClass          ( ) const;
@@ -205,6 +206,7 @@ public:
     cgFloat                         getInputChannelState    ( const cgString & channel, cgFloat default ) const;
 	cgFloat                         getInputChannelState    ( cgInt16 handle, cgFloat default ) const;
     cgPhysicsBody                 * getPhysicsBody          ( ) const;
+    cgNavigationAgent             * getNavigationAgent      ( ) const;
 
     // Behaviors
     cgInt32                         addBehavior             ( cgObjectBehavior * behavior );
@@ -229,6 +231,11 @@ public:
     void                            setAngularVelocity      ( const cgVector3 & velocity );
     cgVector3                       getAngularVelocity      ( ) const;
 
+    // Navigation
+    bool                            enableNavigation        ( const cgNavigationAgentCreateParams * params );
+    bool                            navigateTo              ( const cgVector3 & position );
+    bool                            isNavigationAgent       ( ) const;
+
     // Sandbox Integration
     bool                            isParentSelected        ( bool immediateOnly = false ) const;
     
@@ -236,6 +243,7 @@ public:
     // Public Virtual Methods
     //-------------------------------------------------------------------------
     // Properties
+    virtual cgString                getName                 ( ) const;
     virtual cgBoundingBox           getLocalBoundingBox     ( );
     virtual cgFloat                 getObjectSize           ( );
 
@@ -310,6 +318,7 @@ public:
     virtual bool                    canScale                ( ) const;
     virtual bool                    canRotate               ( ) const;
     virtual bool                    canDelete               ( ) const;
+    virtual bool                    canClone                ( ) const;
 
     // Sandbox Integration
     virtual bool                    pick                    ( cgCameraNode * camera, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut, cgObjectNode *& closestNodeOut );
@@ -334,6 +343,11 @@ public:
     // Public Virtual Methods (Overrides cgPhysicsBodyEventListener)
     //-------------------------------------------------------------------------
     virtual void                    onPhysicsBodyTransformed    ( cgPhysicsBody * sender, cgPhysicsBodyTransformedEventArgs * e );
+    
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods (Overrides cgNavigationAgentEventListener)
+    //-------------------------------------------------------------------------
+    virtual void                    onNavigationAgentReposition ( cgNavigationAgent * sender, cgNavigationAgentRepositionEventArgs * e );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
@@ -475,6 +489,9 @@ protected:
     cgPhysicsModel::Base        mPhysicsModel;              // The type of physics integration to apply for this node.
     cgPhysicsBody             * mPhysicsBody;               // Physics body handler for this node (if any).
     cgSimulationQuality::Base   mSimulationQuality;         // Quality of the physics simulation (i.e. continuous?)
+
+    // Navigation
+    cgNavigationAgent         * mNavigationAgent;           // Underlying navigation agent, used for pathfinding when a navigation mode is selected.
 
     // Cached responses
     cgBoundingBox               mWorldBounds;               // Cached version of the underlying object's bounding box, transformed to world space.

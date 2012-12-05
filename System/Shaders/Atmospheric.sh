@@ -59,6 +59,14 @@ class AtmosphericShader : ISurfaceShader
     ?>
 
     ///////////////////////////////////////////////////////////////////////////
+    // Custom Constant Buffer Declarations
+    ///////////////////////////////////////////////////////////////////////////
+	<?cbuffer cbSkyData : register(b13), globaloffset(c180)
+		float   hdrScale;
+        float4  baseColor;
+	?>
+
+    ///////////////////////////////////////////////////////////////////////////
 	// Constructors & Destructors
 	///////////////////////////////////////////////////////////////////////////
     //-------------------------------------------------------------------------
@@ -144,7 +152,7 @@ class AtmosphericShader : ISurfaceShader
 	// ToDo : Temporary ILR alpha output. Should come from texture. HDR should
 	//        also be provided via texture (perhaps just lookup a different sampler?). 
 	//-----------------------------------------------------------------------------
-    bool drawSkyBox( bool decodeSRGB )
+    bool drawSkyBox( bool decodeSRGB, bool hdrLighting )
     {
         /////////////////////////////////////////////
         // Definitions
@@ -157,26 +165,69 @@ class AtmosphericShader : ISurfaceShader
 
         // Define shader outputs.
         <?out
-            float4 skyColor : SV_TARGET0;
+            float4 data0 : SV_TARGET0;
         ?>
 
         // Constant buffer usage.
         <?cbufferrefs
             _cbScene;
+            cbSkyData;
         ?>
 
         /////////////////////////////////////////////
         // Shader Code
         /////////////////////////////////////////////
-		<?skyColor = sampleCube( sSkyBoxTex, sSkyBox, eyeDir );?>	
+		<?data0 = sampleCube( sSkyBoxTex, sSkyBox, eyeDir );?>	
 
 		if ( decodeSRGB )
-			<?skyColor.rgb = pow( skyColor.rgb, 2.2 );?>  // ToDo: 6767 - Get intensity from CF!
+			<?data0.rgb = SRGBToLinear( data0.rgb );?>
 
-		<?	
-			//skyColor  *= _skyIntensity; ToDo: 6767 - Get intensity from CF
-			skyColor.a = dot( skyColor.rgb, float3( 0.2125, 0.7154, 0.0721 ) );
-		?>
+		if ( hdrLighting )
+            <?data0.rgb *= hdrScale;?>
+
+		<?data0.a = dot( data0.rgb, float3( 0.2125, 0.7154, 0.0721 ) );?>
+
+        // Valid shader
+        return true;
+    }
+
+    //-----------------------------------------------------------------------------
+	// Name : drawSkyColor()
+	// Desc : Fill sky using a simple color
+	//-----------------------------------------------------------------------------
+    bool drawSkyColor( bool decodeSRGB, bool hdrLighting )
+    {
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Define shader inputs.
+        <?in
+            float4 screenPosition : SV_POSITION;
+        ?>
+
+        // Define shader outputs.
+        <?out
+            float4 data0 : SV_TARGET0;
+        ?>
+
+        // Constant buffer usage.
+        <?cbufferrefs
+            _cbScene;
+            cbSkyData;
+        ?>
+
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+		<?data0 = baseColor;?>	
+
+		if ( decodeSRGB )
+			<?data0.rgb = SRGBToLinear( data0.rgb );?>
+
+        if ( hdrLighting )
+            <?data0.rgb *= hdrScale;?>
+
+		<?data0.a = dot( data0.rgb, float3( 0.2125, 0.7154, 0.0721 ) );?>
 
         // Valid shader
         return true;

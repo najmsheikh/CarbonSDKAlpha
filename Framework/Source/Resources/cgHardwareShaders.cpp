@@ -368,16 +368,21 @@ bool cgVertexShader::readCompiledShader( cgInputStream stream )
 
         // Parameter data.
         cgUInt16 nLength = stream.readUInt16();
-        Identifier.parameterData.resize( nLength / 4 );
-        stream.read( &Identifier.parameterData[0], nLength );
+        if ( nLength > 0 )
+        {
+            Identifier.parameterData.resize( nLength / 4 );
+            stream.read( &Identifier.parameterData[0], nLength );
+        
+        } // End if has parameters
 
         // Read the shader input signature hash
         stream.read( Identifier.inputSignatureHash, 5 * sizeof(cgUInt32) );
-        
+
         // Read the compiled shader data
         mByteCode.resize( stream.readUInt32() );
-        stream.read( &mByteCode[0], mByteCode.size() );
-        
+        if ( !mByteCode.empty() )
+            stream.read( &mByteCode[0], mByteCode.size() );
+
         cgToDo( "Carbon General", "Ensure shader identifiers match if one was supplied?" );
         mIdentifier = Identifier;
 
@@ -803,15 +808,20 @@ bool cgPixelShader::readCompiledShader( cgInputStream stream )
 
         // Parameter data.
         cgUInt16 nLength = stream.readUInt16();
-        Identifier.parameterData.resize( nLength / 4 );
-        stream.read( &Identifier.parameterData[0], nLength );
+        if ( nLength > 0 )
+        {
+            Identifier.parameterData.resize( nLength / 4 );
+            stream.read( &Identifier.parameterData[0], nLength );
+        
+        } // End if has parameters
 
         // Read the shader input signature hash
         stream.read( Identifier.inputSignatureHash, 5 * sizeof(cgUInt32) );
         
         // Read the compiled shader data
         mByteCode.resize( stream.readUInt32() );
-        stream.read( &mByteCode[0], mByteCode.size() );
+        if ( !mByteCode.empty() )
+            stream.read( &mByteCode[0], mByteCode.size() );
         
         cgToDo( "Carbon General", "Ensure shader identifiers match if one was supplied?" );
         mIdentifier = Identifier;

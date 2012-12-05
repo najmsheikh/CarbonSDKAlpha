@@ -36,6 +36,7 @@
 #include <Rendering/cgRenderingCapabilities.h>
 #include <System/cgStringUtility.h>
 #include <System/cgExceptions.h>
+#include <World/Objects/cgCameraObject.h>
 #include <World/cgObjectNode.h>
 #include <World/cgWorldQuery.h>
 #include <Math/cgMathUtility.h>
@@ -880,9 +881,13 @@ bool cgMesh::loadMesh( cgUInt32 nSourceRefId, cgResourceManager * pManager /* = 
             pPalette->setMaterial( hMaterial );
             
             // Assign bones
-            cgUInt32Array aBones( nBoneCount );
-            memcpy( &aBones[0], pBones, nBoneDataSize );
-            pPalette->assignBones( aBones );
+            if ( nBoneCount )
+            {
+                cgUInt32Array aBones( nBoneCount );
+                memcpy( &aBones[0], pBones, nBoneDataSize );
+                pPalette->assignBones( aBones );
+            
+            } // End if has bones
             
             // Add to palette list
             mBonePalettes.push_back( pPalette );
@@ -6099,7 +6104,44 @@ void cgMesh::buildOptimizedIndexBuffer( const MeshSubset * pSubset, cgUInt32 * p
 /// intersected at all and also compute the intersection distance. 
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgMesh::pick( const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance )
+bool cgMesh::pick( const cgVector3 & vOrigin, const cgVector3 & vDir, cgFloat & fDistance )
+{
+    // Mesh must be prepared for picking to be supported.
+    if ( mPrepareStatus != cgMeshStatus::Prepared )
+        return false;
+
+    // Reset parameters as required
+    fDistance = FLT_MAX;
+    
+    // First, test for broadphase intersection against our bounding box
+    if ( mBoundingBox.isPopulated() == true )
+    {
+        if ( !mBoundingBox.intersect( vOrigin, vDir, fDistance, false ) )
+            return false;
+        
+    } // End if bounds generated
+
+    // Now test the physical mesh data.
+    cgUInt32 nFace;
+    cgMaterialHandle hMaterial;
+    cgFloat fLocalDistance = FLT_MAX;
+    if ( pickMeshSubset( 0xFFFFFFFF, CG_NULL, cgSize(), cgTransform::Identity, vOrigin, vDir, false, 0, fLocalDistance, nFace, hMaterial ) == false )
+        return false;
+
+    // Intersected!
+    fDistance = fLocalDistance;
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+// Name : pick ( )
+/// <summary>
+/// Given the specified object space ray, determine if the mesh data is 
+/// intersected at all and also compute the intersection distance. This 
+/// overload supports both wireframe and solid picking.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgMesh::pick( cgCameraNode * pCamera, const cgSize & ViewportSize, const cgTransform & ObjectTransform, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance )
 {
     // Mesh must be prepared for picking to be supported.
     if ( mPrepareStatus != cgMeshStatus::Prepared )
@@ -6121,7 +6163,7 @@ bool cgMesh::pick( const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWire
         else
         {
             cgBoundingBox WireBounds = mBoundingBox;
-            WireBounds.inflate( vWireTolerance );
+            WireBounds.inflate( pCamera->estimatePickTolerance( ViewportSize, fWireTolerance, WireBounds.getCenter(), ObjectTransform ) );
             if ( !WireBounds.intersect( vOrigin, vDir, fDistance, false ) )
                 return false;
         
@@ -6133,7 +6175,7 @@ bool cgMesh::pick( const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWire
     cgUInt32 nFace;
     cgMaterialHandle hMaterial;
     cgFloat fLocalDistance = FLT_MAX;
-    if ( pickMeshSubset( 0xFFFFFFFF, vOrigin, vDir, bWireframe, vWireTolerance, fLocalDistance, nFace, hMaterial ) == false )
+    if ( pickMeshSubset( 0xFFFFFFFF, pCamera, ViewportSize, ObjectTransform, vOrigin, vDir, bWireframe, fWireTolerance, fLocalDistance, nFace, hMaterial ) == false )
         return false;
 
     // Intersected!
@@ -6164,7 +6206,7 @@ bool cgMesh::pickFace( const cgVector3 & vOrigin, const cgVector3 & vDir, cgVect
     } // End if bounds generated
 
     // Now test the physical mesh data.
-    if ( pickMeshSubset( 0xFFFFFFFF, vOrigin, vDir, false, cgVector3(0,0,0), fLocalDistance, nFace, hMaterial ) == false )
+    if ( pickMeshSubset( 0xFFFFFFFF, CG_NULL, cgSize(), cgTransform::Identity, vOrigin, vDir, false, 0, fLocalDistance, nFace, hMaterial ) == false )
         return false;
 
     // Compute the final intersection point and return.
@@ -6179,7 +6221,7 @@ bool cgMesh::pickFace( const cgVector3 & vOrigin, const cgVector3 & vDir, cgVect
 /// a ray for picking etc.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgMesh::pickMeshSubset( cgUInt32 nDataGroupId, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance, cgUInt32 & nFace, cgMaterialHandle & hMaterial )
+bool cgMesh::pickMeshSubset( cgUInt32 nDataGroupId, cgCameraNode * pCamera, const cgSize & ViewportSize, const cgTransform & ObjectTransform, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance, cgUInt32 & nFace, cgMaterialHandle & hMaterial )
 {
     cgFloat          t, fClosestDistance = FLT_MAX;
     cgUInt32         nClosestFace = 0;
@@ -6286,8 +6328,13 @@ bool cgMesh::pickMeshSubset( cgUInt32 nDataGroupId, const cgVector3 & vOrigin, c
     } // End if solid picking
     else
     {
+        // If there is no camera, we can't test.
+        if ( !pCamera )
+            return false;
+
         // In wireframe mode, we must test the geometry edges.
         cgPlane TrianglePlane;
+        cgVector3 vWireTolerance;
         cgUInt32 nFaceCount = getFaceCount();
         for ( cgUInt32 nTestFace = 0; nTestFace < nFaceCount; ++nTestFace )
         {
@@ -6332,6 +6379,9 @@ bool cgMesh::pickMeshSubset( cgUInt32 nDataGroupId, const cgVector3 & vOrigin, c
                     {
                         // Compute intersection point
                         const cgVector3 vEdgeIntersect = e1 + ((e2-e1) * t);
+
+                        // Compute the correct wireframe tolerance to use at the edge.
+                        vWireTolerance = pCamera->estimatePickTolerance( ViewportSize, fWireTolerance, vEdgeIntersect, ObjectTransform );
 
                         // Test to see if the cursor hit location (on the plane) is close to the edge.
                         if ( fabsf( vIntersect.x - vEdgeIntersect.x ) <= vWireTolerance.x &&

@@ -830,7 +830,7 @@ bool cgRenderDriver::postInit()
 	mSampler2D0->setStates( SamplerDesc );
 	mSampler2D1->setStates( SamplerDesc );
 
-	// Create a disabled depth state for screen rendering
+    // Create a disabled depth state for screen rendering
     DepthStencilDesc = cgDepthStencilStateDesc();
     DepthStencilDesc.depthEnable      = false;
     DepthStencilDesc.depthWriteEnable = false;
@@ -964,7 +964,8 @@ bool cgRenderDriver::initShaderSystem()
     mDriverShader = mDriverShaderHandle.getResource(true);
 
     // In sandbox mode, the sandbox surface shader is available for additional rendering tasks.
-    if ( cgGetSandboxMode() != cgSandboxMode::Disabled )
+    // TODO: Uncomment the following
+    //if ( cgGetSandboxMode() != cgSandboxMode::Disabled )
     {
         if ( !mResourceManager->createSurfaceShader( &mSandboxShader, _T("sys://Shaders/SandboxElements.sh"), 0, cgDebugSource() ) )
         {

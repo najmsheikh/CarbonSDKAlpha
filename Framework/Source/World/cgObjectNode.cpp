@@ -36,6 +36,7 @@
 #include <World/Objects/cgSpatialTreeObject.h>
 #include <World/Objects/cgGroupObject.h>
 #include <World/Objects/cgTargetObject.h>
+#include <World/Elements/cgNavigationMeshElement.h>
 #include <Physics/cgPhysicsController.h> // ToDo: Remove if no longer needed
 #include <Physics/Bodies/cgRigidBody.h>
 #include <Physics/Shapes/cgNullShape.h>
@@ -117,6 +118,7 @@ cgObjectNode::cgObjectNode( cgUInt32 referenceId, cgScene * scene ) : cgAnimatio
     mSelectionId        = -1;
     mNodeLevel          = 0;
     mPhysicsBody        = CG_NULL;
+    mNavigationAgent    = CG_NULL;
     mRenderClassId      = 1;        // Automatically assign to the 'default' render class.
     mCustomProperties   = new cgPropertyContainer();
 
@@ -134,7 +136,7 @@ cgObjectNode::cgObjectNode( cgUInt32 referenceId, cgScene * scene, cgObjectNode 
 {
     // Ensure this is a valid operation
     if ( !init || !init->queryReferenceType( this->getReferenceType() ) )
-        throw cgExceptions::ResultException( _T("Unable to clone. Specified node is of incompatible type."), cgDebugSource() );
+        throw cgExceptions::ResultException( _T("Unable to clone. Specified node is of an incompatible type."), cgDebugSource() );
 
     // Initialize variables to sensible defaults
     mReferencedObject   = CG_NULL;
@@ -162,13 +164,12 @@ cgObjectNode::cgObjectNode( cgUInt32 referenceId, cgScene * scene, cgObjectNode 
     mColor              = init->mColor;
     mCustomProperties   = new cgPropertyContainer(*init->mCustomProperties);
     mPhysicsBody        = CG_NULL;
+    mNavigationAgent    = CG_NULL;
     mRenderClassId      = init->mRenderClassId;
 
     // Cached data.
     mWorldPivotTransform = init->mWorldPivotTransform;
     mWorldBounds         = init->mWorldBounds;
-
-    // ToDo: 9999 - clone target?
 
     // What cloning method is being employed?
     if ( initMethod == cgCloneMethod::Copy || initMethod == cgCloneMethod::DataInstance )
@@ -187,12 +188,29 @@ cgObjectNode::cgObjectNode( cgUInt32 referenceId, cgScene * scene, cgObjectNode 
     
     } // End if ObjectInstance
 
+    // Clone target.
+    if ( mParentScene && init->getTargetMethod() != cgNodeTargetMethod::NoTarget )
+    {
+        if ( (mTargetNode = (cgTargetNode*)mParentScene->createObjectNode( isInternalReference(), RTID_TargetObject, false ) ) )
+        {
+            cgTransform targetTransform;
+            cgTransform::inverse( targetTransform, init->getWorldTransform() );
+            cgTransform::multiply( targetTransform, init->getTargetNode()->getWorldTransform(), targetTransform );
+            cgTransform::multiply( targetTransform, targetTransform, initTransform );
+            mTargetNode->setWorldTransform( targetTransform );
+            mTargetNode->setTargetingNode( this );
+            mTargetNode->setMode( init->getTargetMethod() );
+        
+        } // End if created
+    
+    } // End if has targeting method
+
     // Add us as a reference to this object (don't increment true DB based
     // reference count if this is an internal node).
     mReferencedObject->addReference( this, isInternalReference() );
     
     // Listen for any changes made to the object
-    mReferencedObject->registerEventListener( (cgWorldComponentEventListener*)this );
+    mReferencedObject->registerEventListener( static_cast<cgWorldComponentEventListener*>(this) );
 }
 
 //-----------------------------------------------------------------------------
@@ -272,15 +290,23 @@ void cgObjectNode::dispose( bool disposeBase )
     // Destroy any physics body reference.
     if ( mPhysicsBody )
     {
-        mPhysicsBody->unregisterEventListener( (cgPhysicsBodyEventListener*)this );
+        mPhysicsBody->unregisterEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
         mPhysicsBody->removeReference( this );
     
     } // End if valid body
+
+    // Destroy any navigation agent reference.
+    if ( mNavigationAgent )
+    {
+        mNavigationAgent->unregisterEventListener( static_cast<cgNavigationAgentEventListener*>(this) );
+        mNavigationAgent->removeReference( this );
+    
+    } // End if valid agent
     
     // Disconnect from our referenced object.
     if ( mReferencedObject )
     {
-        mReferencedObject->unregisterEventListener( (cgWorldComponentEventListener*)this );
+        mReferencedObject->unregisterEventListener( static_cast<cgWorldComponentEventListener*>(this) );
         mReferencedObject->removeReference( this, true );
     
     } // End if valid object
@@ -305,6 +331,7 @@ void cgObjectNode::dispose( bool disposeBase )
     mParentTree        = CG_NULL;
     mPhysicsController = CG_NULL;
     mPhysicsBody       = CG_NULL;
+    mNavigationAgent   = CG_NULL;
 
     // Dispose base class if requested.
     if ( disposeBase )
@@ -741,12 +768,12 @@ cgPhysicsBody * cgObjectNode::getPhysicsBody( ) const
 }
 
 //-----------------------------------------------------------------------------
-//  Name : getName()
+//  Name : getName() (Virtual)
 /// <summary>
 /// Retrieve the name of this instance of the specified object node.
 /// </summary>
 //-----------------------------------------------------------------------------
-const cgString & cgObjectNode::getName( ) const
+cgString cgObjectNode::getName( ) const
 {
     return mName;
 }
@@ -815,7 +842,16 @@ bool cgObjectNode::setName( const cgString & name )
 
         // Notify scene listeners.
         if ( mParentScene )
+        {
+            // Notify that the node name has changed.
             mParentScene->onNodeNameChange( &cgNodeUpdatedEventArgs( mParentScene, this ) );
+
+            // If we have a target node, notify that its name changed too
+            // (target node's name is based on its attached node).
+            if ( mTargetNode )
+                mParentScene->onNodeNameChange( &cgNodeUpdatedEventArgs( mParentScene, mTargetNode ) );
+        
+        } // End if in scene.
 
     } // End if allow name change
 
@@ -1083,6 +1119,118 @@ void cgObjectNode::setPhysicsModel( cgPhysicsModel::Base model )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : enableNavigation ()
+/// <summary>
+/// Allow this object node to act as a navigation agent, such that it can
+/// autonomously navigate through the scene using the 'navigateTo()'
+/// method. Specify 'NULL' to the 'params' argument to disable navigation
+/// for this node.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgObjectNode::enableNavigation( const cgNavigationAgentCreateParams * params )
+{
+    // Remove any prior navigation agent.
+    if ( mNavigationAgent )
+    {
+        mNavigationAgent->unregisterEventListener( static_cast<cgNavigationAgentEventListener*>(this) );
+        mNavigationAgent->removeReference( this );
+        mNavigationAgent = CG_NULL;
+    
+    } // End if exists
+
+    // If new parameters are specified, create a new agent.
+    if ( params )
+    {
+        // Retrieve the list of navigation meshes currently defined
+        // within the parent scene, and find one with properties that
+        // most closely match the requested agent parameters.
+        cgFloat bestDifference = FLT_MAX;
+        cgNavigationMeshElement * element = CG_NULL;
+        const cgSceneElementArray & elements = mParentScene->getSceneElementsByType( RTID_NavigationMeshElement );
+        for ( size_t i = 0; i < elements.size(); ++i )
+        {
+            // Closest match to radius so far?
+            cgFloat difference = fabsf( params->agentRadius - ((cgNavigationMeshElement*)elements[i])->getParameters().agentRadius );
+            if ( difference < bestDifference )
+            {
+                bestDifference = difference;
+                element = (cgNavigationMeshElement*)elements[i];
+            
+            } // End if better
+
+        } // Next element
+
+        // If no navigation mesh element was found, display a warning.
+        if ( !element )
+        {
+            cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("No appropriate navigation mesh was found while attempting to enable navigation for object node '0x%x'.\n"), mReferenceId );
+            return false;
+        
+        } // End if no element
+
+        // Create an agent for this node.
+        mNavigationAgent = element->createAgent( *params, getPosition() );
+        if ( !mNavigationAgent )
+        {
+            cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("Failed to create navigation agent while attempting to enable navigation for object node '0x%x'. Check supplied parameters.\n"), mReferenceId );
+            return false;
+
+        } // End if failed
+
+        // Take ownership of the new agent and listen for events.
+        mNavigationAgent->addReference( this );
+        mNavigationAgent->registerEventListener( static_cast<cgNavigationAgentEventListener*>(this) );
+
+        // Success!
+        return true;
+
+    } // End if new agent
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : navigateTo ()
+/// <summary>
+/// When navigation is enabled for this node, use this method to request the
+/// object to autonomously navigate to the specified world space position if
+/// possible.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgObjectNode::navigateTo( const cgVector3 & position )
+{
+    if ( !mNavigationAgent )
+        return false;
+    return mNavigationAgent->setMoveTarget( position, false );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getNavigationAgent()
+/// <summary>
+/// Retrieve the navigation agent used to represent this object node during
+/// scene navigation / pathfinding.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgNavigationAgent * cgObjectNode::getNavigationAgent( ) const
+{
+    return mNavigationAgent;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isNavigationAgent ()
+/// <summary>
+/// Returns true if navigation has been enabled for this object node, allowing
+/// it to autonomously navigate through the scene using the 'navigateTo()'
+/// method.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgObjectNode::isNavigationAgent( ) const
+{
+    return (mNavigationAgent != CG_NULL);
+}
+
+//-----------------------------------------------------------------------------
 //  Name : applyForce ()
 /// <summary>
 /// Apply a force directly to the center of mass of the body.
@@ -1162,7 +1310,12 @@ void cgObjectNode::applyTorqueImpulse( const cgVector3 & torqueImpulse )
 //-----------------------------------------------------------------------------
 cgVector3 cgObjectNode::getVelocity( ) const
 {
-    return ( mPhysicsBody ) ? mPhysicsBody->getVelocity() : cgVector3(0,0,0);
+    if ( mPhysicsBody )
+        return mPhysicsBody->getVelocity();
+    else if ( mNavigationAgent )
+        return mNavigationAgent->getActualVelocity();
+    else
+        return cgVector3(0,0,0);
 }
 
 //-----------------------------------------------------------------------------
@@ -2218,7 +2371,7 @@ bool cgObjectNode::onNodeCreated( const cgUID & objectType, cgCloneMethod::Base 
         mReferencedObject->addReference( this, isInternalReference() );
 
         // Listen for any changes made to the object
-        mReferencedObject->registerEventListener( (cgWorldComponentEventListener*)this );
+        mReferencedObject->registerEventListener( static_cast<cgWorldComponentEventListener*>(this) );
         
         // ToDo: 9999
         /*// Make a temporary copy of the event to avoid possibility of
@@ -2298,7 +2451,7 @@ bool cgObjectNode::onNodeLoading( const cgUID & objectType, cgWorldQuery * nodeD
         mReferencedObject->addReference( this, true );
 
         // Listen for any changes made to the object
-        mReferencedObject->registerEventListener( (cgWorldComponentEventListener*)this );
+        mReferencedObject->registerEventListener( static_cast<cgWorldComponentEventListener*>(this) );
 
     } // End if valid identifier
 
@@ -2550,7 +2703,7 @@ bool cgObjectNode::onNodeDeleted( )
 {
     // Stop listening for any changes made to the object
     if ( mReferencedObject )
-        mReferencedObject->unregisterEventListener( (cgWorldComponentEventListener*)this );
+        mReferencedObject->unregisterEventListener( static_cast<cgWorldComponentEventListener*>(this) );
 
     // ToDo: 9999 - The exception behavior for the following is less than ideal
     // if spatial tree removal succeeded for instance, but cell removal failed.
@@ -2733,18 +2886,9 @@ bool cgObjectNode::pick( cgCameraNode * camera, const cgSize & viewportSize, con
     // Direction needs to be normalized in case node matrix contained scale
     cgVector3::normalize( objectRayDirection, objectRayDirection );
 
-    // Because we may need to perform a wireframe pick (the wireframe bool
-    // only /forces/ wireframe, but objects may always need to perform wire
-    // picking), we must also adjust the wireframe tolerance to take into account node scale.
-    cgVector3 objectWireTolerance;
-    cgVector3 axisScale = getScale();
-    objectWireTolerance.x = wireTolerance / axisScale.x;
-    objectWireTolerance.y = wireTolerance / axisScale.y;
-    objectWireTolerance.z = wireTolerance / axisScale.z;
-
     // Pass through to object
     cgFloat t = FLT_MAX;
-    if ( !mReferencedObject->pick( camera, this, viewportSize, objectRayOrigin, objectRayDirection, wireframe, objectWireTolerance, t ) )
+    if ( !mReferencedObject->pick( camera, this, viewportSize, objectRayOrigin, objectRayDirection, wireframe, wireTolerance, t ) )
         return hitDetected;
 
     // Compute final object space intersection point.
@@ -2789,6 +2933,10 @@ bool cgObjectNode::sandboxRender( cgUInt32 flags, cgCameraNode * camera, cgVisib
     // Pass on this message to any referenced object.
     if ( mReferencedObject )
         mReferencedObject->sandboxRender( flags, camera, visibilityData, gridPlane, this );
+
+    // If we have a target, and that target is not itself visible, make sure it gets rendered.
+    if ( mTargetNode && !visibilityData->isObjectVisible( mTargetNode ) )
+        mTargetNode->sandboxRender( flags, camera, visibilityData, gridPlane );
 
     // Derived class should draw this object
     return true;
@@ -4955,13 +5103,19 @@ void cgObjectNode::setSelected( bool selected, bool updateDependents /* = true *
 //-----------------------------------------------------------------------------
 // Name : clone ()
 /// <summary>
-/// Make a duplicate of this node and optionally its referenced object and data.
+/// Make a duplicate of this node and optionally its referenced object and 
+/// data. This method will return false if the clone could not be created,
+/// or cloning of nodes of this type is disallowed (see canClone()).
 /// </summary>
 //-----------------------------------------------------------------------------
 bool cgObjectNode::clone( cgCloneMethod::Base method, cgScene * scene, bool internalNode, cgObjectNode *& nodeOut, const cgTransform & initTransform )
 {
     // Be polite and clear output variables
     nodeOut = CG_NULL;
+
+    // Can be cloned?
+    if ( !canClone() )
+        return false;
 
     // Clones are always 'internal' when not in full sandbox mode.
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
@@ -5040,7 +5194,7 @@ void cgObjectNode::setTargetMethod( cgNodeTargetMethod::Base method )
         // All other modes assume that a target has been created
         // so do this next.
         if ( mParentScene )
-            mTargetNode = (cgTargetNode*)mParentScene->createObjectNode( false, RTID_TargetObject, false );
+            mTargetNode = (cgTargetNode*)mParentScene->createObjectNode( isInternalReference(), RTID_TargetObject, false );
         if ( !mTargetNode )
             return;
 
@@ -5197,6 +5351,18 @@ bool cgObjectNode::canAdjustPivot( ) const
 }
 
 //-----------------------------------------------------------------------------
+// Name : canClone ( )
+/// <summary>
+/// Determine if node's of this type can be cloned.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgObjectNode::canClone( ) const
+{
+    // Default is to allow cloning.
+    return true;
+}
+
+//-----------------------------------------------------------------------------
 // Name : allowSandboxUpdate ( )
 /// <summary>
 /// Return true if the node should have its update method called even when
@@ -5316,6 +5482,59 @@ void cgObjectNode::onPhysicsBodyTransformed( cgPhysicsBody * sender, cgPhysicsBo
 }
 
 //-----------------------------------------------------------------------------
+// Name : onNavigationAgentReposition ( )
+/// <summary>
+/// Triggered whenever the navigation agent designed represent this object
+/// during scene navigation is repositioned as a result of its update process.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgObjectNode::onNavigationAgentReposition ( cgNavigationAgent * sender, cgNavigationAgentRepositionEventArgs * e )
+{
+    // Ignore updates that were not due to navigation update, and did not 
+    // originate from our local physics body.
+    if ( !e->navigationUpdate || sender != mNavigationAgent )
+        return;
+
+    // Switch to standard transformation method.
+    cgTransformMethod::Base oldMethod = getTransformMethod();
+    setTransformMethod( cgTransformMethod::Standard );
+
+    // Generate orientation.
+    cgTransform newTransform = getCellTransform();
+    cgVector3 velocity = mNavigationAgent->getDesiredVelocity();
+    cgFloat length = cgVector3::length( velocity );
+    if ( !_isnan(length) && length > 0.001f )
+    {
+        // Retrieve the current orientation.
+        cgQuaternion oldOrientation = newTransform.orientation();
+
+        // Compute new orientation
+        cgVector3 y( 0, 1, 0 ), x, z;
+        z = velocity / length; // Normalize
+        cgVector3::cross( x, y, z );
+        newTransform.setOrientation( x, y, z );
+
+        // Smoothly interpolate.
+        cgQuaternion newOrientation = newTransform.orientation();
+        cgQuaternion::slerp( newOrientation, oldOrientation, newOrientation, cgTimer::getInstance()->getTimeElapsed() * 10 );
+        newTransform.setOrientation( newOrientation );
+
+    } // End if has direction
+
+    // Compute the new cell relative position
+    if ( mParentCell )
+        newTransform.setPosition( e->newPosition - mParentCell->getWorldOrigin() );
+    else
+        newTransform.setPosition( e->newPosition );
+
+    // Set back to node.
+    setCellTransform( newTransform, cgTransformSource::Navigation );
+
+    // Restore old transformation method.
+    setTransformMethod( oldMethod );
+}
+
+//-----------------------------------------------------------------------------
 // Name : buildPhysicsBody ( ) (Virtual, Protected)
 /// <summary>
 /// Construct the internal physics body designed to represent this node.
@@ -5348,7 +5567,7 @@ void cgObjectNode::buildPhysicsBody( )
             cgToDoAssert( "Physics", "Compound shape!" );
             if ( mPhysicsBody )
             {
-                mPhysicsBody->unregisterEventListener( (cgPhysicsBodyEventListener*)this );
+                mPhysicsBody->unregisterEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
                 mPhysicsBody->removeReference( this );
             
             } // End if exists
@@ -5372,22 +5591,22 @@ void cgObjectNode::buildPhysicsBody( )
         } // End if single shape
 
         // Configure new rigid body.
-        cgRigidBody::ConstructData cd;
-        cd.model            = mPhysicsModel;
-        cd.initialTransform = getWorldTransform(false);
-        cd.quality          = mSimulationQuality;
-        cd.mass             = 0;
+        cgRigidBodyCreateParams cp;
+        cp.model            = mPhysicsModel;
+        cp.initialTransform = getWorldTransform(false);
+        cp.quality          = mSimulationQuality;
+        cp.mass             = 0;
 
         // Compute final mass from the object-space 'base' mass that is 
         // scaled by this node's scaling transform component.
         if ( mPhysicsModel == cgPhysicsModel::RigidDynamic )
         {
-            cd.mass = getBaseMass();
+            cp.mass = getBaseMass();
             cgFloat massTransformAmount = getMassTransformAmount();
             cgVector3 scale = getWorldTransform(false).localScale();
-            cd.mass *= 1.0f + (scale.x - 1.0f) * massTransformAmount;
-            cd.mass *= 1.0f + (scale.y - 1.0f) * massTransformAmount;
-            cd.mass *= 1.0f + (scale.z - 1.0f) * massTransformAmount;
+            cp.mass *= 1.0f + (scale.x - 1.0f) * massTransformAmount;
+            cp.mass *= 1.0f + (scale.y - 1.0f) * massTransformAmount;
+            cp.mass *= 1.0f + (scale.z - 1.0f) * massTransformAmount;
         
         } // End if dynamic
 
@@ -5396,12 +5615,12 @@ void cgObjectNode::buildPhysicsBody( )
         // Construct a new rigid body object. Copy any necessary
         // simulation details from the existing rigid body such as
         // current velocity, torque, etc.
-        cgRigidBody * rigidBody = new cgRigidBody( mParentScene->getPhysicsWorld(), primaryShape, cd, mPhysicsBody );
+        cgRigidBody * rigidBody = new cgRigidBody( mParentScene->getPhysicsWorld(), primaryShape, cp, mPhysicsBody );
 
         // Release the previous physics body (if any).
         if ( mPhysicsBody )
         {
-            mPhysicsBody->unregisterEventListener( (cgPhysicsBodyEventListener*)this );
+            mPhysicsBody->unregisterEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
             mPhysicsBody->removeReference( this );
         
         } // End if exists
@@ -5411,7 +5630,7 @@ void cgObjectNode::buildPhysicsBody( )
         mPhysicsBody->addReference( this );
 
         // Listen for events
-        mPhysicsBody->registerEventListener( (cgPhysicsBodyEventListener*)this );
+        mPhysicsBody->registerEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
 
     } // End if rigid body
     else
@@ -5419,7 +5638,7 @@ void cgObjectNode::buildPhysicsBody( )
         // Release the previous physics body (if any).
         if ( mPhysicsBody )
         {
-            mPhysicsBody->unregisterEventListener( (cgPhysicsBodyEventListener*)this );
+            mPhysicsBody->unregisterEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
             mPhysicsBody->removeReference( this );
         
         } // End if exists

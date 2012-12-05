@@ -2,6 +2,7 @@
 
 // Required headers
 #include <Scripting/cgScriptPackage.h>
+#include <Math/cgMathUtility.h>
 
 // Child packages
 #include "Math/Color.h"
@@ -57,6 +58,32 @@ namespace Math
             BINDSUCCESS( engine->registerGlobalFunction("float pow( float, float )", asFUNCTION(powf), asCALL_CDECL) );
             BINDSUCCESS( engine->registerGlobalFunction("float ceil( float )", asFUNCTION(ceilf), asCALL_CDECL) );
             BINDSUCCESS( engine->registerGlobalFunction("float floor( float )", asFUNCTION(floorf), asCALL_CDECL) );
+            BINDSUCCESS( engine->registerGlobalFunction("float smooth( float, float, float )", asFUNCTION(cgMathUtility::smooth), asCALL_CDECL) );
+
+            // Constants
+            // ToDo: Add as defines to script pre-processor rather than using global properties at some point.
+            static const cgDouble pi = CGE_PI;
+            static const cgDouble two_pi = CGE_TWO_PI;
+            static const cgDouble recip_pi = CGE_RECIP_PI;
+            static const cgDouble epsilon_1m = CGE_EPSILON_1M;
+            static const cgDouble epsilon_1cm = CGE_EPSILON_1CM;
+            static const cgDouble epsilon_1mm = CGE_EPSILON_1MM;
+            static const cgDouble epsilon_1um = CGE_EPSILON_1UM;
+            static const cgDouble epsilon_1nm = CGE_EPSILON_1NM;
+            static const cgDouble epsilon_single = CGE_EPSILON_SINGLE;
+            static const cgDouble epsilon_double = CGE_EPSILON_DOUBLE;
+            static const cgDouble epsilon = CGE_EPSILON;
+            BINDSUCCESS( engine->registerGlobalProperty("const double CGE_EPSILON", (void*)&epsilon ) );
+            BINDSUCCESS( engine->registerGlobalProperty("const double CGE_EPSILON_1M", (void*)&epsilon_1m ) );
+            BINDSUCCESS( engine->registerGlobalProperty("const double CGE_EPSILON_1CM", (void*)&epsilon_1cm ) );
+            BINDSUCCESS( engine->registerGlobalProperty("const double CGE_EPSILON_1MM", (void*)&epsilon_1mm ) );
+            BINDSUCCESS( engine->registerGlobalProperty("const double CGE_EPSILON_1UM", (void*)&epsilon_1um ) );
+            BINDSUCCESS( engine->registerGlobalProperty("const double CGE_EPSILON_1NM", (void*)&epsilon_1nm ) );
+            BINDSUCCESS( engine->registerGlobalProperty("const double CGE_EPSILON_SINGLE", (void*)&epsilon_single ) );
+            BINDSUCCESS( engine->registerGlobalProperty("const double CGE_EPSILON_DOUBLE", (void*)&epsilon_double ) );
+            BINDSUCCESS( engine->registerGlobalProperty("const double CGE_PI", (void*)&pi ) );
+            BINDSUCCESS( engine->registerGlobalProperty("const double CGE_TWO_PI", (void*)&two_pi ) );
+            BINDSUCCESS( engine->registerGlobalProperty("const double CGE_RECIP_PI", (void*)&recip_pi ) );
         }
 
     }; // End Class : Package

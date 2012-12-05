@@ -121,7 +121,7 @@ public:
     virtual void                    applyObjectRescale      ( cgFloat scale );
 
     // Sandbox Integration
-    virtual bool                    pick                    ( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, const cgVector3 & wireTolerance, cgFloat & distanceOut );
+    virtual bool                    pick                    ( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldComponent)

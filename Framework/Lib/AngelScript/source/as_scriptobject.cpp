@@ -44,8 +44,8 @@ asIScriptObject *ScriptObjectFactory(const asCObjectType *objType, asCScriptEngi
 	int r = 0;
 	bool isNested = false;
 
-	// TODO: optimize: There should be a pool for the context so it doesn't 
-	//                 have to be allocated just for creating the script object
+	// TODO: runtime optimize: There should be a pool for the context so it doesn't 
+	//                         have to be allocated just for creating the script object
 
 	// TODO: It must be possible for the application to debug the creation of the object too
 
@@ -267,8 +267,6 @@ void asCScriptObject::Destruct()
 
 asCScriptObject::~asCScriptObject()
 {
-	objType->Release();
-
 	// The engine pointer should be available from the objectType
 	asCScriptEngine *engine = objType->engine;
 
@@ -287,6 +285,8 @@ asCScriptObject::~asCScriptObject()
 			}
 		}
 	}
+
+	objType->Release();
 }
 
 asIScriptEngine *asCScriptObject::GetEngine() const
@@ -630,10 +630,13 @@ void asCScriptObject::CopyObject(void *src, void *dst, asCObjectType *objType, a
 
 void asCScriptObject::CopyHandle(asPWORD *src, asPWORD *dst, asCObjectType *objType, asCScriptEngine *engine)
 {
-	if( *dst )
+	// asOBJ_NOCOUNT doesn't have addref or release behaviours
+	asASSERT( (objType->flags & asOBJ_NOCOUNT) || (objType->beh.release && objType->beh.addref) );
+
+	if( *dst && objType->beh.release )
 		engine->CallObjectMethod(*(void**)dst, objType->beh.release);
 	*dst = *src;
-	if( *dst )
+	if( *dst && objType->beh.addref )
 		engine->CallObjectMethod(*(void**)dst, objType->beh.addref);
 }
 

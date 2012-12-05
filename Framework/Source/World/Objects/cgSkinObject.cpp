@@ -29,6 +29,8 @@
 #include <World/Objects/cgBoneObject.h>
 #include <World/cgScene.h>
 #include <Resources/cgResourceManager.h>
+#include <Resources/cgConstantBuffer.h>
+#include <Resources/cgSurfaceShader.h>
 #include <Resources/cgMesh.h>
 #include <Rendering/cgRenderDriver.h>
 
@@ -728,6 +730,115 @@ bool cgSkinObject::renderSubset( cgCameraNode * pCamera, cgVisibilitySet * pVisD
 }
 
 //-----------------------------------------------------------------------------
+//  Name : sandboxRender ( ) (Virtual)
+/// <summary>
+/// Allow the object to render its 'sandbox' representation -- that is the
+/// representation to be displayed within an editing environment.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgSkinObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+{
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
+
+    // Sandbox render is only necessary in wireframe mode unless the
+    // node is hidden. Standard scene rendering behavior applies in other modes.
+    if ( pIssuer->isRenderable() && !(flags & cgSandboxRenderFlags::Wireframe) )
+    {
+        cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
+        return;
+    
+    } // End if !wireframe
+
+    // Get access to required systems.
+    cgRenderDriver    * pDriver    = cgRenderDriver::getInstance();
+    cgResourceManager * pResources = cgResourceManager::getInstance();
+
+    // Retrieve the underlying mesh resource if available
+    cgMesh * pMesh = mMesh.getResource(true);
+    if ( !pMesh || !pMesh->isLoaded() )
+    {
+        cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
+        return;
+    
+    } // End if no mesh
+
+    // Has skinning data?
+    cgSkinBindData * pBindData = pMesh->getSkinBindData();
+    const cgMesh::BonePaletteArray & Palettes = pMesh->getBonePalettes();
+    if ( !pBindData || Palettes.empty() )
+    {
+        // Use standard mesh rendering (don't skip over mesh base).
+        cgMeshObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
+        return;
+    
+    } // End if no skin data
+
+    // Build an array containing all of the bones that are required
+    // by the binding data in the skinned mesh.
+    const cgSkinBindData::BoneArray & BindList = pBindData->getBones();
+    const cgSkinNode::BoneInstanceMap & BoneNodes = ((cgSkinNode*)pIssuer)->mBoneInstanceIdentifiers;
+    cgObjectNodeArray aBones( BindList.size(), CG_NULL );
+    for ( size_t i = 0; i < BindList.size(); ++i )
+    {
+        // Get the requested bone.
+        cgSkinNode::BoneInstanceMap::const_iterator itBone = BoneNodes.find( BindList[i]->boneIdentifier );
+        if ( itBone == BoneNodes.end() )
+            continue;
+
+        // Assign the bone with this identifier.
+        cgBoneNode * pBone = (cgBoneNode*)cgReferenceManager::getReference( itBone->second );
+        aBones[i] = pBone;
+        
+    } // Next Influence
+
+    // Setup constants.
+    cgColorValue Color = (pIssuer->isSelected() == false) ? pIssuer->getNodeColor() : cgColorValue( 0xFFFFFFFF );
+    cgConstantBuffer * pConstants = pDriver->getSandboxConstantBuffer().getResource( true );
+    pConstants->setVector( _T("diffuseReflectance"), (cgVector4&)Color );
+    //pDriver->setConstantBufferAuto( pIssuer->getRenderTransformBuffer() );
+    pDriver->setConstantBufferAuto( pDriver->getSandboxConstantBuffer() );
+    pDriver->setWorldTransform( CG_NULL );
+    
+    // Execute technique.
+    cgSurfaceShader * pShader = pDriver->getSandboxSurfaceShader().getResource(true);
+    if ( pShader->beginTechnique( _T("drawWireframeMesh") ) )
+    {
+        while ( pShader->executeTechniquePass( ) == cgTechniqueResult::Continue )
+        {
+            // Process each palette in the skin.
+            for ( size_t i = 0; i < Palettes.size(); ++i )
+            {
+                // Apply the bone palette.
+                cgBonePalette * pPalette = Palettes[i];
+                pPalette->apply( aBones, pMesh->getSkinBindData(), false, pDriver );
+
+                // Have the currently assigned surface shader re-select its states and or shaders based on
+                // the modifications that were made by the palette apply method (primarily 'MaxBlendIndex')
+                cgToDo( "Carbon General", "Only re-commit if the max blend index changes?" );
+                pShader->commitChanges();
+
+                // Draw!
+                pMesh->drawSubset( pPalette->getMaterial(), pPalette->getDataGroup(), cgMeshDrawMode::Simple );
+
+            } // Next Palette
+        
+        } // Next pass
+        pShader->endTechnique();
+    
+    } // End if success
+
+    // Disable vertex blending
+    pDriver->setVertexBlendData( CG_NULL, CG_NULL, 0, -1 );
+    cgToDo( "Carbon General", "Only re-commit if the max blend index changes?" );
+    pShader->commitChanges( );
+
+    // Call base class implementation last (skipping mesh, straight to world object -- this is not a bug).
+    cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getLocalBoundingBox ()
 /// <summary>
 /// Retrieve the bounding box of this object.
@@ -748,7 +859,7 @@ cgBoundingBox cgSkinObject::getLocalBoundingBox( )
 /// intersected and also compute the object space intersection distance. 
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgSkinObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance )
+bool cgSkinObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance )
 {
     // ToDo: Picking is temporarily disabled.
     return false;

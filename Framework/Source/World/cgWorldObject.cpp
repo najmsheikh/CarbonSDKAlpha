@@ -237,7 +237,7 @@ bool cgWorldObject::renderSubset( cgCameraNode * pCamera, cgVisibilitySet * pVis
 /// intersected and also compute the object space intersection distance. 
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgWorldObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance )
+bool cgWorldObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance )
 {
     // Nothing in base implementation.
     return false;
@@ -258,7 +258,7 @@ void cgWorldObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVis
     if ( pIssuer->isSelected() && !pIssuer->isMergedAsGroup() )
     {
         cgScene * pScene = pIssuer->getScene();
-        const cgUID & ActiveCategoryId = pScene->getActiveElementType();
+        const cgUID & ActiveCategoryId = pScene->getActiveObjectElementType();
         ElementCategoryMap::iterator itCategory = mSubElementCategories.find( ActiveCategoryId );
         if ( itCategory != mSubElementCategories.end() )
         {

@@ -586,7 +586,7 @@ cgBoundingBox cgHemisphereLightObject::getLocalBoundingBox( )
 /// intersected and also compute the object space intersection distance. 
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgHemisphereLightObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance )
+bool cgHemisphereLightObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance )
 {
     // Only valid in sandbox mode.
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )

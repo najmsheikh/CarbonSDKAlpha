@@ -133,7 +133,7 @@ namespace UIControl
     //-----------------------------------------------------------------------------
     void registerEventHandler( cgUInt32 messageId, const cgString & handler, asIScriptObject * nativeScriptObject, cgUIControl* thisPointer )
     {
-        cgScriptObject * scriptObject = new cgScriptObject( thisPointer->getRootForm()->getFormScript(), nativeScriptObject );
+        cgScriptObject * scriptObject = new cgScriptObject( thisPointer->getRootForm()->getScript(), nativeScriptObject );
         thisPointer->registerEventHandler( messageId, handler, scriptObject );
         scriptObject->release();
     }

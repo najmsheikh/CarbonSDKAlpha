@@ -570,7 +570,7 @@ bool cgCollisionShapeElement::pick( cgCameraNode * pCamera, cgObjectNode * pIssu
         cgVector3::normalize( vObjectDir, vObjectDir );
 
         // Pick mesh!
-        if ( pMesh->pick( vObjectOrigin, vObjectDir, false, cgVector3(0,0,0), fDistance ) )
+        if ( pMesh->pick( vObjectOrigin, vObjectDir, fDistance ) )
         {
             // Intersects mesh.
             // Compute final object space intersection point.

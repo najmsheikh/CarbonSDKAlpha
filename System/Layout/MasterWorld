@@ -98,18 +98,6 @@ BEGIN
   DELETE FROM [Scenes::MaterialUsage] WHERE MaterialId=old.RefId;
 END;
 
---Table: Scenes::MaterialUsage
-
-CREATE TABLE [Scenes::MaterialUsage] (
-  [MaterialUsageId] integer PRIMARY KEY AUTOINCREMENT, 
-  [MaterialType] TINYINT(1), 
-  [MaterialId] integer, 
-  [SceneId] integer);
-CREATE INDEX [Scenes::MaterialUsage_MaterialIndex] ON [Scenes::MaterialUsage] ([MaterialId]);
-CREATE INDEX [Scenes::MaterialUsage_SceneIndex] ON [Scenes::MaterialUsage] ([SceneId]);
-CREATE INDEX [Scenes::MaterialUsage_UsageMatch] ON [Scenes::MaterialUsage] ([MaterialId], [SceneId]);
-
-
 --Table: Cells
 
 CREATE TABLE [Cells] (
@@ -256,6 +244,14 @@ CREATE TABLE [ObjectTypes] (
   [Name] varchar(64),
   [DataTable] varchar(128));
 
+--Table: SceneElementTypes
+
+CREATE TABLE [SceneElementTypes] (
+  [SceneElementTypeId] integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  [Identifier] varchar(64),
+  [Name] varchar(64),
+  [DataTable] varchar(128));
+
 --Table: Samplers
 
 CREATE TABLE [Samplers] (
@@ -279,6 +275,25 @@ CREATE TABLE [Samplers] (
   [ComparisonFunc] SMALLINT,
   [Strength] REAL DEFAULT(1),
   [RefCount] integer DEFAULT (0));
+
+--Table: Scenes::MaterialUsage
+
+CREATE TABLE [Scenes::MaterialUsage] (
+  [MaterialUsageId] integer PRIMARY KEY AUTOINCREMENT, 
+  [MaterialType] TINYINT(1), 
+  [MaterialId] integer, 
+  [SceneId] integer);
+CREATE INDEX [Scenes::MaterialUsage_MaterialIndex] ON [Scenes::MaterialUsage] ([MaterialId]);
+CREATE INDEX [Scenes::MaterialUsage_SceneIndex] ON [Scenes::MaterialUsage] ([SceneId]);
+CREATE INDEX [Scenes::MaterialUsage_UsageMatch] ON [Scenes::MaterialUsage] ([MaterialId], [SceneId]);
+
+--Table: Scenes::Elements
+
+CREATE TABLE [Scenes::Elements] (  
+  [ElementId] integer PRIMARY KEY, 
+  [ElementTypeId] integer,   
+  [SceneId] integer);
+CREATE INDEX [Scenes::Elements_SceneIndex] ON [Scenes::Elements] ([SceneId]);
 
 --Table: Scenes
 
@@ -306,9 +321,9 @@ BEFORE DELETE
 ON [Scenes]
 BEGIN
   DELETE FROM [Scenes::MaterialUsage] WHERE SceneId=old.SceneId;  
+  DELETE FROM [Scenes::Elements] WHERE SceneId=old.SceneId;
   DELETE FROM [Landscapes] WHERE LandscapeId=old.LandscapeId;
 END;
-
 
 --Table: ShadowFrustums
 

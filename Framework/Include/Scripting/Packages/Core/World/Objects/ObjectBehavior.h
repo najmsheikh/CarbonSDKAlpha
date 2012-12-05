@@ -34,6 +34,7 @@ namespace ObjectBehavior
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void objectHit( ObjectNode @+, const Vector3 &in, const Vector3 &in )", asMETHODPR(type,objectHit,( cgObjectNode*, const cgVector3&, const cgVector3& ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "bool supportsInputChannels( ) const", asMETHODPR(type,supportsInputChannels,( ) const, bool), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "IScriptedObjectBehavior@ getScriptObject( )", asFUNCTIONPR(getScriptObject,( type* ), asIScriptObject*), asCALL_CDECL_OBJLAST ) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "bool initialize( ResourceManager@+, const String &in, const String &in )", asMETHODPR(type,initialize,( cgResourceManager*, const cgString&, const cgString& ), bool), asCALL_THISCALL ) );
 
     } // End Method registerObjectBehaviorMethods<>
 
@@ -84,9 +85,12 @@ namespace ObjectBehavior
 
             // Register the reference/object handle support for the objects.
             registerHandleBehaviors<cgObjectBehavior>( engine );
-            
+
             // Register the object methods for the base class (template method in header)
             registerObjectBehaviorMethods<cgObjectBehavior>( engine, "ObjectBehavior" );
+
+            // Register the object behaviors
+            BINDSUCCESS( engine->registerObjectBehavior( "ObjectBehavior", asBEHAVE_FACTORY, "ObjectBehavior @ f( )", asFUNCTIONPR(objectBehaviorFactory, ( ), cgObjectBehavior*), asCALL_CDECL) );
 
             ///////////////////////////////////////////////////////////////////////
             // IScriptedObjectBehavior (Interface)
@@ -107,6 +111,17 @@ namespace ObjectBehavior
             BINDSUCCESS( engine->RegisterInterfaceMethod( "IScriptedObjectBehavior", "void onHitByObject( ObjectNode@+, const Vector3 &in, const Vector3 &in )" ) );
             BINDSUCCESS( engine->RegisterInterfaceMethod( "IScriptedObjectBehavior", "void onObjectHit( ObjectNode@+, const Vector3 &in, const Vector3 &in )" ) );*/
 
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : objectBehaviorFactory () (Static)
+        /// <summary>
+        /// Construct a new instance of the cgObjectBehavior class.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static cgObjectBehavior * objectBehaviorFactory( )
+        {
+            return new cgObjectBehavior();
         }
 
     }; // End Class : Package

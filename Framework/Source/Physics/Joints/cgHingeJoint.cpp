@@ -169,7 +169,9 @@ cgTransform cgHingeJoint::getPivotTransform( bool original ) const
     } // End if original
     else
     {
-        cgTransform out = mLocalPivotFrame0 * mBody0->getTransform();
+        cgMatrix m0;
+        NewtonBodyGetMatrix( mBody0->getInternalBody(), m0 );
+        cgTransform out = mLocalPivotFrame0 * m0;
         out.position() *= mWorld->fromPhysicsScale();
         return out;
     
@@ -233,7 +235,7 @@ cgVector3 cgHingeJoint::getAxis( ) const
 {
     cgVector3 axisOut;
     const cgTransform & t0 = mBody0->getTransform();
-    return t0.transformNormal( axisOut, mLocalPivotFrame0.xAxis() );
+    return t0.transformNormal( axisOut, mLocalPivotFrame0.xUnitAxis() );
 }
 
 //-----------------------------------------------------------------------------

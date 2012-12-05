@@ -29,6 +29,7 @@
 //-----------------------------------------------------------------------------
 // Forward Declarations
 //-----------------------------------------------------------------------------
+class cgSkyElement;
 
 //-----------------------------------------------------------------------------
 // Main Class Definitions
@@ -54,6 +55,10 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
+    void            drawSky                 ( cgSkyElement * properties, bool decodeSRGB );
+    void            drawSky                 ( cgSkyElement * properties, bool decodeSRGB, const cgRenderTargetHandle & destination );
+    void            drawSkyColor            ( cgColorValue color, bool decodeSRGB );
+    void            drawSkyColor            ( cgColorValue color, bool decodeSRGB, const cgRenderTargetHandle & destination );
     void            drawSkyBox              ( const cgTextureHandle & skyCubeTexture, bool decodeSRGB );
     void            drawSkyBox              ( const cgTextureHandle & skyCubeTexture, bool decodeSRGB, const cgRenderTargetHandle & destination );
     void            drawFog                 ( cgFogModel::Base model, const cgTextureHandle & depthTexture, cgDepthType::Base depthType );
@@ -71,9 +76,21 @@ public:
 
 protected:
     //-------------------------------------------------------------------------
+    // Protected Structurs
+    //-------------------------------------------------------------------------
+    struct _cbSkyData
+    {
+        float           hdrScale;
+        cgColorValue    baseColor;
+    };
+
+    //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
     cgSurfaceShaderHandle   mAtmosphericsShader;
+    cgInt32                 mSkySamplerRegister;
+    cgConstantBufferHandle  mSkyConstants;
+    _cbSkyData              mSkyConfig;
     cgSampler             * mSkyBoxSampler;
     cgSampler             * mDepthSampler;
     

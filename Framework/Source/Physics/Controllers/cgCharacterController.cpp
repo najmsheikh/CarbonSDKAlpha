@@ -292,14 +292,14 @@ bool cgCharacterController::initialize(  )
     // Design a simple *dynamic* rigid body that maintains the
     // details of this object as it exists in the physics world.
     // This allows other dynamics rigid bodies to collide with us.
-    cgRigidBody::ConstructData Construct;
-    Construct.model             = cgPhysicsModel::RigidDynamic;
-    Construct.quality           = cgSimulationQuality::Default;
-    Construct.initialTransform  = objectTransform;
-    Construct.mass              = mCharacterMass;
+    cgRigidBodyCreateParams cp;
+    cp.model             = cgPhysicsModel::RigidDynamic;
+    cp.quality           = cgSimulationQuality::Default;
+    cp.initialTransform  = objectTransform;
+    cp.mass              = mCharacterMass;
 
     // Create the body.
-    mBody = new cgRigidBody( mWorld, mDynamicsSensorShape, Construct );
+    mBody = new cgRigidBody( mWorld, mDynamicsSensorShape, cp );
     mBody->addReference( CG_NULL );
 
     // Never allow the body to sleep

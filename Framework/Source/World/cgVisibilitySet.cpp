@@ -961,3 +961,25 @@ bool cgVisibilitySet::isEmpty( ) const
              && mTreeLeaves.empty() && mAssociatedGroups.empty() 
              && mRenderClasses.empty() );
 }
+
+//-----------------------------------------------------------------------------
+//  Name : isObjectVisible ()
+/// <summary>
+/// Determine if the specified object is contained in this visibility set.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgVisibilitySet::isObjectVisible( cgObjectNode * object ) const
+{
+    return (mObjectNodeLUT.find( object ) != mObjectNodeLUT.end());
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isLightVisible ()
+/// <summary>
+/// Determine if the specified light is contained in this visibility set.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgVisibilitySet::isLightVisible( cgObjectNode * light ) const
+{
+    return (mLightLUT.find( light ) != mLightLUT.end());
+}

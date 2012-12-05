@@ -48,9 +48,10 @@ const cgUID RTID_WorldComponent = {0xE9B38216, 0x67A4, 0x424D, {0xAB, 0xF4, 0xD1
 //-----------------------------------------------------------------------------
 struct CGE_API cgComponentCreatedEventArgs
 {
-    cgComponentCreatedEventArgs( cgUInt32 _componentTypeId ) :
-        componentTypeId(_componentTypeId) {}
-    cgUInt32 componentTypeId;
+    cgComponentCreatedEventArgs( cgUInt32 _componentTypeId, cgCloneMethod::Base _cloneMethod ) :
+        componentTypeId(_componentTypeId), cloneMethod(_cloneMethod) {}
+    cgUInt32            componentTypeId;
+    cgCloneMethod::Base cloneMethod;
 };
 
 struct CGE_API cgComponentLoadingEventArgs

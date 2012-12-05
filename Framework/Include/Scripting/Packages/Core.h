@@ -13,6 +13,7 @@
 #include "Core/Input.h"
 #include "Core/Resources.h"
 #include "Core/UI.h"
+#include "Core/States.h"
 
 // Parent hierarchy
 namespace cgScriptPackages {
@@ -44,6 +45,7 @@ namespace Core {
             DECLARE_PACKAGE_CHILD( Physics )
             DECLARE_PACKAGE_CHILD( World )
             DECLARE_PACKAGE_CHILD( UI )
+            DECLARE_PACKAGE_CHILD( States )
         END_SCRIPT_PACKAGE( )
 
         // Type declarations

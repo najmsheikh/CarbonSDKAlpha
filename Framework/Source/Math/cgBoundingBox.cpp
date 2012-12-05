@@ -164,32 +164,84 @@ cgPlane cgBoundingBox::getPlane( cgVolumePlane::Side Side ) const
     {
         case cgVolumePlane::Top:
             BoundsPlane.b = 1;
-            BoundsPlane.d = -cgVector3::dot( max, (cgVector3&)BoundsPlane );
+            BoundsPlane.d = -max.y;
             break;
         case cgVolumePlane::Right:
             BoundsPlane.a = 1;
-            BoundsPlane.d = -cgVector3::dot( max, (cgVector3&)BoundsPlane );
+            BoundsPlane.d = -max.x;
             break;
         case cgVolumePlane::Far:
             BoundsPlane.c = 1;
-            BoundsPlane.d = -cgVector3::dot( max, (cgVector3&)BoundsPlane );
+            BoundsPlane.d = -max.z;
             break;
         case cgVolumePlane::Bottom:
             BoundsPlane.b = -1;
-            BoundsPlane.d = -cgVector3::dot( min, (cgVector3&)BoundsPlane );
+            BoundsPlane.d = min.y;
             break;
         case cgVolumePlane::Left:
             BoundsPlane.a = -1;
-            BoundsPlane.d = -cgVector3::dot( min, (cgVector3&)BoundsPlane );
+            BoundsPlane.d = min.x;
             break;
         case cgVolumePlane::Near:
             BoundsPlane.c = -1;
-            BoundsPlane.d = -cgVector3::dot( min, (cgVector3&)BoundsPlane );
+            BoundsPlane.d = min.z;
             break;
     } // End Side Switch
 
     // Return the plane
     return BoundsPlane;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getPlanePoints ()
+/// <summary>
+/// Retrieves the four points that form the boundary of the specified side of 
+/// the bounding box
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgBoundingBox::getPlanePoints( cgVolumePlane::Side Side, cgVector3 PointsOut[] ) const
+{
+    // Select the requested side
+    switch ( Side )
+    {
+        case cgVolumePlane::Top:
+            PointsOut[0].x = min.x; PointsOut[0].y = max.y; PointsOut[0].z = min.z;
+            PointsOut[1].x = min.x; PointsOut[1].y = max.y; PointsOut[1].z = max.z;
+            PointsOut[2].x = max.x; PointsOut[2].y = max.y; PointsOut[2].z = max.z;
+            PointsOut[3].x = max.x; PointsOut[3].y = max.y; PointsOut[3].z = min.z;
+            break;
+        case cgVolumePlane::Right:
+            PointsOut[0].x = max.x; PointsOut[0].y = min.y; PointsOut[0].z = min.z;
+            PointsOut[1].x = max.x; PointsOut[1].y = max.y; PointsOut[1].z = min.z;
+            PointsOut[2].x = max.x; PointsOut[2].y = max.y; PointsOut[2].z = max.z;
+            PointsOut[3].x = max.x; PointsOut[3].y = min.y; PointsOut[3].z = max.z;
+            break;
+        case cgVolumePlane::Far:
+            PointsOut[0].x = max.x; PointsOut[0].y = min.y; PointsOut[0].z = max.z;
+            PointsOut[1].x = max.x; PointsOut[1].y = max.y; PointsOut[1].z = max.z;
+            PointsOut[2].x = min.x; PointsOut[2].y = max.y; PointsOut[2].z = max.z;
+            PointsOut[3].x = min.x; PointsOut[3].y = min.y; PointsOut[3].z = max.z;
+            break;
+        case cgVolumePlane::Bottom:
+            PointsOut[0].x = min.x; PointsOut[0].y = min.y; PointsOut[0].z = max.z;
+            PointsOut[1].x = min.x; PointsOut[1].y = min.y; PointsOut[1].z = min.z;
+            PointsOut[2].x = max.x; PointsOut[2].y = min.y; PointsOut[2].z = min.z;
+            PointsOut[3].x = max.x; PointsOut[3].y = min.y; PointsOut[3].z = max.z;
+            break;
+        case cgVolumePlane::Left:
+            PointsOut[0].x = min.x; PointsOut[0].y = min.y; PointsOut[0].z = max.z;
+            PointsOut[1].x = min.x; PointsOut[1].y = max.y; PointsOut[1].z = max.z;
+            PointsOut[2].x = min.x; PointsOut[2].y = max.y; PointsOut[2].z = min.z;
+            PointsOut[3].x = min.x; PointsOut[3].y = min.y; PointsOut[3].z = min.z;
+            break;
+        case cgVolumePlane::Near:
+            PointsOut[0].x = min.x; PointsOut[0].y = min.y; PointsOut[0].z = min.z;
+            PointsOut[1].x = min.x; PointsOut[1].y = max.y; PointsOut[1].z = min.z;
+            PointsOut[2].x = max.x; PointsOut[2].y = max.y; PointsOut[2].z = min.z;
+            PointsOut[3].x = max.x; PointsOut[3].y = min.y; PointsOut[3].z = min.z;
+            break;
+
+    } // End Side Switch
 }
 
 //-----------------------------------------------------------------------------

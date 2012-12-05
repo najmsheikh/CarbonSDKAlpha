@@ -38,6 +38,10 @@ namespace Scene
             Core::System::References::Reference::registerReferenceMethods<cgScene>( engine, "Scene" );
 
             // ToDo: 9999 - Completely redo this.
+
+            // Requires array type for several methods in this interface
+            BINDSUCCESS( engine->registerObjectType( "SceneElement@[]", sizeof(std::vector<cgSceneElement*>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
+            STDVectorHelper<cgSceneElement*>::registerMethods( engine, "SceneElement@[]", "SceneElement@" );
             
             // Register the object methods
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "const String & getName( ) const", asMETHODPR(cgScene,getName,() const, const cgString &), asCALL_THISCALL) );
@@ -61,6 +65,9 @@ namespace Scene
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "ObjectNode@+ pickClosestNode( const Size &in, const Vector3 &in, const Vector3 &in, Vector3 &inout )", asMETHODPR(cgScene,pickClosestNode,( const cgSize&, const cgVector3&, const cgVector3&, cgVector3& ), cgObjectNode*), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "PhysicsWorld@+ getPhysicsWorld( ) const", asMETHODPR(cgScene,getPhysicsWorld,( ) const, cgPhysicsWorld*), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "ObjectNode@+ loadObjectNode( uint, CloneMethod, bool )", asMETHODPR(cgScene,loadObjectNode,( cgUInt32, cgCloneMethod::Base, bool ), cgObjectNode*), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Scene", "const array<SceneElement@> & getSceneElementsByType( const UID &in ) const", asMETHODPR(cgScene,getSceneElementsByType,( const cgUID& ) const, const cgSceneElementArray& ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Scene", "ObjectNode@+ createObjectNode( bool, const UID &in, bool )", asMETHODPR(cgScene,createObjectNode,( bool, const cgUID&, bool ), cgObjectNode* ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Scene", "ObjectNode@+ createObjectNode( bool, const UID &in, bool, CloneMethod, ObjectNode@+, const Transform &in )", asMETHODPR(cgScene,createObjectNode,( bool, const cgUID&, bool, cgCloneMethod::Base, cgObjectNode*, const cgTransform& ), cgObjectNode* ), asCALL_THISCALL) );
         }
 
     }; // End Class : Package

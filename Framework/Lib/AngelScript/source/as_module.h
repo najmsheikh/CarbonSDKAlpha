@@ -40,6 +40,7 @@
 #define AS_MODULE_H
 
 #include "as_config.h"
+#include "as_symboltable.h"
 #include "as_atomic.h"
 #include "as_string.h"
 #include "as_array.h"
@@ -72,6 +73,7 @@ struct sObjectTypePair
 	asCObjectType *b;
 };
 
+
 // TODO: import: Remove function imports. When I have implemented function 
 //               pointers the function imports should be deprecated.
 
@@ -97,6 +99,7 @@ public:
 	virtual asIScriptEngine *GetEngine() const;
 	virtual void             SetName(const char *name);
 	virtual const char      *GetName() const;
+	// TODO: interface: Should have a method Discard(); which will replace the engine's DiscardModule() method
 
 	// Compilation
 	virtual int     AddScriptSection(const char *name, const char *code, size_t codeLength, int lineOffset);
@@ -161,8 +164,8 @@ public:
 	virtual int         UnbindAllImportedFunctions();
 
 	// Bytecode Saving/Loading
-	virtual int SaveByteCode(asIBinaryStream *out) const;
-	virtual int LoadByteCode(asIBinaryStream *in);
+	virtual int SaveByteCode(asIBinaryStream *out, bool stripDebugInfo) const;
+	virtual int LoadByteCode(asIBinaryStream *in, bool *wasDebugInfoStripped);
 
 	// User data
 	virtual void *SetUserData(void *data);
@@ -188,19 +191,17 @@ public:
 
 	void JITCompile();
 
-	int  AddScriptFunction(int sectionIdx, int id, const char *name, const asCDataType &returnType, asCDataType *params, asETypeModifiers *inOutFlags, asCString **defaultArgs, int paramCount, bool isInterface, asCObjectType *objType = 0, bool isConstMethod = false, bool isGlobalFunction = false, bool isPrivate = false, bool isFinal = false, bool isOverride = false, bool isShared = false, asSNameSpace *ns = 0);
+#ifndef AS_NO_COMPILER
+	int  AddScriptFunction(int sectionIdx, int id, const asCString &name, const asCDataType &returnType, const asCArray<asCDataType> &params, const asCArray<asETypeModifiers> &inOutFlags, const asCArray<asCString *> &defaultArgs, bool isInterface, asCObjectType *objType = 0, bool isConstMethod = false, bool isGlobalFunction = false, bool isPrivate = false, bool isFinal = false, bool isOverride = false, bool isShared = false, asSNameSpace *ns = 0);
 	int  AddScriptFunction(asCScriptFunction *func);
-	int  AddImportedFunction(int id, const char *name, const asCDataType &returnType, asCDataType *params, asETypeModifiers *inOutFlags, int paramCount, const asCString &moduleName);
-	int  AddFuncDef(const char *name, asSNameSpace *ns);
+	int  AddImportedFunction(int id, const asCString &name, const asCDataType &returnType, const asCArray<asCDataType> &params, const asCArray<asETypeModifiers> &inOutFlags, const asCArray<asCString *> &defaultArgs, asSNameSpace *ns, const asCString &moduleName);
+	int  AddFuncDef(const asCString &name, asSNameSpace *ns);
+#endif
 
-	int  GetNextImportedFunctionId();
-
+	int                GetNextImportedFunctionId();
 	asCScriptFunction *GetImportedFunction(int funcId) const;
-
-	asCObjectType *GetObjectType(const char *type, asSNameSpace *ns);
-
+	asCObjectType     *GetObjectType(const char *type, asSNameSpace *ns);
 	asCGlobalProperty *AllocateGlobalProperty(const char *name, const asCDataType &dt, asSNameSpace *ns);
-
 
 	asCString name;
 
@@ -211,15 +212,15 @@ public:
 	asSNameSpace    *defaultNamespace;
 
 	// This array holds all functions, class members, factories, etc that were compiled with the module
-	asCArray<asCScriptFunction *>  scriptFunctions;
+	asCArray<asCScriptFunction *>     scriptFunctions;
 	// This array holds global functions declared in the module
-	asCArray<asCScriptFunction *>  globalFunctions;
+	asCSymbolTable<asCScriptFunction> globalFunctions;
 	// This array holds imported functions in the module
-	asCArray<sBindInfo *>          bindInformations;
+	asCArray<sBindInfo *>             bindInformations;
 
 	// This array holds the global variables declared in the script
-	asCArray<asCGlobalProperty *>  scriptGlobals;
-	bool                           isGlobalVarInitialized;
+	asCSymbolTable<asCGlobalProperty> scriptGlobals;
+	bool                              isGlobalVarInitialized;
 
 	// This array holds class and interface types
 	asCArray<asCObjectType*>       classTypes;

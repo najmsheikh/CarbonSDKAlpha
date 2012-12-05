@@ -10,8 +10,8 @@
 //                                                                           //
 // Name : cgMatrix.h                                                         //
 //                                                                           //
-// Desc : Header file providing core matrix math type type definitions and   //
-//        inline functionality.                                              //
+// Desc : Header file providing core matrix math type definitions and inline //
+//        functionality.                                                     //
 //                                                                           //
 //---------------------------------------------------------------------------//
 //        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
@@ -362,6 +362,11 @@ public:
         };
         float m[4][4];
     };
+
+    //-------------------------------------------------------------------------
+    // Public Static Members
+    //-------------------------------------------------------------------------
+    static const cgMatrix Identity;
 };
 
 //-----------------------------------------------------------------------------

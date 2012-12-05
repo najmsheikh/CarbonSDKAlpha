@@ -67,6 +67,12 @@ namespace Group
             registerHandleBehaviors<cgGroupNode>( engine );
 
             ///////////////////////////////////////////////////////////////////////
+            // Type Identifiers
+            ///////////////////////////////////////////////////////////////////////
+            BINDSUCCESS( engine->registerGlobalProperty( "const UID RTID_GroupObject", (void*)&RTID_GroupObject ) );
+            BINDSUCCESS( engine->registerGlobalProperty( "const UID RTID_GroupNode", (void*)&RTID_GroupNode ) );
+
+            ///////////////////////////////////////////////////////////////////////
             // cgGroupObject (Class)
             ///////////////////////////////////////////////////////////////////////
 

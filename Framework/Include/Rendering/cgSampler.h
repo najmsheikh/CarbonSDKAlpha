@@ -155,6 +155,7 @@ protected:
     static cgWorldQuery mUpdateLODDetails;
     static cgWorldQuery mUpdateMaxAnisotropy;
     static cgWorldQuery mUpdateBorderColor;
+    static cgWorldQuery mUpdateStrength;
     static cgWorldQuery mLoadSampler;
 };
 

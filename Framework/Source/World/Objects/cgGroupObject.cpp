@@ -322,7 +322,7 @@ void cgGroupObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVis
 
     // Always draw the computed AABB if the group is open
     if ( isOpen() )
-        pDriver->drawOOBB( pIssuer->getLocalBoundingBox( ), 2.5f, pIssuer->getWorldTransform(false), (pIssuer->isSelected()) ? 0xFFFFFFFF : 0xFFFF7FB2 );
+        pDriver->drawOOBB( pIssuer->getLocalBoundingBox( ), 0.25f, pIssuer->getWorldTransform(false), (pIssuer->isSelected()) ? 0xFFFFFFFF : 0xFFFF7FB2 );
 
     // Call base class implementation last.
     cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );

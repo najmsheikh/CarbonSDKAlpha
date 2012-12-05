@@ -38,8 +38,6 @@
 #include <Resources/cgConstantBuffer.h>
 #include <Resources/cgMesh.h>
 
-// ToDo: 6767 -- needs database updates.
-
 //-----------------------------------------------------------------------------
 // Static Member Definitions
 //-----------------------------------------------------------------------------
@@ -48,6 +46,7 @@ cgWorldQuery cgHingeJointObject::mLoadJoint;
 cgWorldQuery cgHingeJointObject::mUpdateLimits;
 cgWorldQuery cgHingeJointNode::mInsertInstanceData;
 cgWorldQuery cgHingeJointNode::mDeleteInstanceData;
+cgWorldQuery cgHingeJointNode::mUpdateInstanceData;
 cgWorldQuery cgHingeJointNode::mLoadInstanceData;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -255,7 +254,7 @@ cgRangeF cgHingeJointObject::getLimits( ) const
 /// intersected and also compute the object space intersection distance. 
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgHingeJointObject::pick( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, const cgVector3 & wireTolerance, cgFloat & distance )
+bool cgHingeJointObject::pick( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distance )
 {
     // Only valid in sandbox mode.
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
@@ -287,7 +286,7 @@ bool cgHingeJointObject::pick( cgCameraNode * camera, cgObjectNode * issuer, con
     cgVector3::normalize( meshRayDirection, meshRayDirection );
 
     // Pass through
-    bool result = mesh->pick( meshRayOrigin, meshRayDirection, wireframe, wireTolerance, distance );
+    bool result = mesh->pick( camera, viewportSize, issuer->getWorldTransform(false), meshRayOrigin, meshRayDirection, wireframe, wireTolerance, distance );
 
     // Scale distance back out
     if ( result )
@@ -678,8 +677,12 @@ cgHingeJointNode::cgHingeJointNode( cgUInt32 nReferenceId, cgScene * pScene, cgO
 
     // Duplicate data
     cgHingeJointNode * hingeJoint = (cgHingeJointNode*)pInit;
-    mBody0RefId = hingeJoint->mBody0RefId;
-    mBody1RefId = hingeJoint->mBody1RefId;
+    
+    // ToDo: Note: Duplicating connected body references is disabled for the moment.
+    // This will be necessary eventually when hierarchies can be reconstructed during
+    // cloning, but for now it is potentially unwanted behavior.
+    //mBody0RefId = hingeJoint->mBody0RefId;
+    //mBody1RefId = hingeJoint->mBody1RefId;
 }
 
 //-----------------------------------------------------------------------------
@@ -705,6 +708,16 @@ void cgHingeJointNode::dispose( bool bDisposeBase )
 {
     // We are in the process of disposing?
     mDisposing = true;
+
+    // Unregister any active event listeners
+    cgObjectNode * body0Node = getBody0Node();
+    cgObjectNode * body1Node = getBody1Node();
+    cgPhysicsBody * body0 = (body0Node) ? body0Node->getPhysicsBody() : CG_NULL;
+    cgPhysicsBody * body1 = (body1Node) ? body1Node->getPhysicsBody() : CG_NULL;
+    if ( body0 )
+        body0->unregisterEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
+    if ( body1 )
+        body1->unregisterEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
 
     // Release internal references.
     if ( mJoint )
@@ -847,11 +860,9 @@ void cgHingeJointNode::rebuildJoint( )
             mJoint->setLimits( getLimits().min, getLimits().max );
             mJoint->enableBodyCollision( isBodyCollisionEnabled() );
 
-            // Listen for changes (unregister first just in case we had previously registered).
+            // Listen for changes
             cgPhysicsBodyEventListener * listener = static_cast<cgPhysicsBodyEventListener*>(this);
-            body0->unregisterEventListener( listener );
             body0->registerEventListener( listener );
-            body1->unregisterEventListener( listener );
             body1->registerEventListener( listener );
         
         } // End if has physics bodies
@@ -993,7 +1004,31 @@ void cgHingeJointNode::setBody0( cgUInt32 nodeReferenceId )
     if ( mBody0RefId == nodeReferenceId )
         return;
 
+    // Update references.
+    if ( shouldSerialize() )
+    {
+        // Insert entry
+        prepareQueries();
+        mUpdateInstanceData.bindParameter( 1, nodeReferenceId );
+        mUpdateInstanceData.bindParameter( 2, mBody1RefId );
+        mUpdateInstanceData.bindParameter( 3, mReferenceId );
+        if ( !mUpdateInstanceData.step( true ) )
+        {
+            cgString error;
+            mUpdateInstanceData.getLastError( error );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update instance data for hinge joint node '0x%x'. Error: %s"), mReferenceId, error.c_str() );
+            return;
 
+        } // End if failed
+
+    } // End if serialize
+
+    // Unregister any prior event listeners.
+    cgObjectNode * body0Node = getBody0Node();
+    cgPhysicsBody * body0 = (body0Node) ? body0Node->getPhysicsBody() : CG_NULL;
+    if ( body0 )
+        body0->unregisterEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
+    
     // Update local member
     mBody0RefId = nodeReferenceId;
 
@@ -1040,7 +1075,31 @@ void cgHingeJointNode::setBody1( cgUInt32 nodeReferenceId )
     // Do nothing if this is a no-op.
     if ( mBody1RefId == nodeReferenceId )
         return;
+    
+    // Update references.
+    if ( shouldSerialize() )
+    {
+        // Insert entry
+        prepareQueries();
+        mUpdateInstanceData.bindParameter( 1, mBody0RefId );
+        mUpdateInstanceData.bindParameter( 2, nodeReferenceId );
+        mUpdateInstanceData.bindParameter( 3, mReferenceId );
+        if ( !mUpdateInstanceData.step( true ) )
+        {
+            cgString error;
+            mUpdateInstanceData.getLastError( error );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update instance data for hinge joint node '0x%x'. Error: %s"), mReferenceId, error.c_str() );
+            return;
 
+        } // End if failed
+
+    } // End if serialize
+
+    // Unregister any prior event listeners.
+    cgObjectNode * body1Node = getBody1Node();
+    cgPhysicsBody * body1 = (body1Node) ? body1Node->getPhysicsBody() : CG_NULL;
+    if ( body1 )
+        body1->unregisterEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
 
     // Update local member
     mBody1RefId = nodeReferenceId;
@@ -1116,6 +1175,16 @@ bool cgHingeJointNode::onNodeDeleted( )
 //-----------------------------------------------------------------------------
 void cgHingeJointNode::onComponentModified( cgComponentModifiedEventArgs * e )
 {
+    // Unregister any prior event listeners.
+    cgObjectNode * body0Node = getBody0Node();
+    cgObjectNode * body1Node = getBody1Node();
+    cgPhysicsBody * body0 = (body0Node) ? body0Node->getPhysicsBody() : CG_NULL;
+    cgPhysicsBody * body1 = (body1Node) ? body1Node->getPhysicsBody() : CG_NULL;
+    if ( body0 )
+        body0->unregisterEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
+    if ( body1 )
+        body1->unregisterEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
+
     // Rebuild the joint whenever a property is modified (whatever it is)
     rebuildJoint();
 
@@ -1138,6 +1207,8 @@ void cgHingeJointNode::prepareQueries()
         // Prepare the SQL statements as necessary.
         if ( !mInsertInstanceData.isPrepared() )
             mInsertInstanceData.prepare( pWorld, _T("INSERT INTO 'Objects::HingeJoint::InstanceData' VALUES(NULL,?1,?2,?3,?4)"), true );
+        if ( !mUpdateInstanceData.isPrepared() )
+            mUpdateInstanceData.prepare( pWorld, _T("UPDATE 'Objects::HingeJoint::InstanceData' SET Body0Id=?1, Body1Id=?2 WHERE NodeRefId=?3"), true );
         if ( !mDeleteInstanceData.isPrepared() )
             mDeleteInstanceData.prepare( pWorld, _T("DELETE FROM 'Objects::HingeJoint::InstanceData' WHERE NodeRefId=?1"), true );
 

@@ -114,6 +114,15 @@ struct CGE_API cgNodeParentChangeEventArgs : public cgSceneEventArgs
 
 }; // End Struct cgNodeParentChangeEventArgs
 
+struct CGE_API cgSceneElementEventArgs : public cgSceneEventArgs
+{
+    cgSceneElementEventArgs( cgScene * _scene, cgSceneElement * _element ) :
+        cgSceneEventArgs( _scene ),
+        element ( _element ) {}
+    cgSceneElement * element;
+
+}; // End Struct cgSceneElementEventArgs
+
 struct CGE_API cgSelectionSetEventArgs : public cgSceneEventArgs
 {
     cgSelectionSetEventArgs( cgScene * _scene, cgSelectionSet * _set ) :
@@ -175,6 +184,8 @@ public:
     virtual void    onNodeNameChange        ( cgNodeUpdatedEventArgs * e ) {};
     virtual void    onNodeParentChange      ( cgNodeParentChangeEventArgs * e ) {};
     virtual void    onNodesDeleted          ( cgNodesUpdatedEventArgs * e ) {};
+    virtual void    onSceneElementAdded     ( cgSceneElementEventArgs * e ) {};
+    virtual void    onSceneElementDeleted   ( cgSceneElementEventArgs * e ) {};
     virtual void    onSelectionUpdated      ( cgSelectionUpdatedEventArgs * e ) {};
     virtual void    onSelectionCleared      ( cgSceneEventArgs * e ) {};
     virtual void    onModifySelection       ( cgSceneEventArgs * e ) {};
@@ -274,160 +285,167 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    const cgString            & getName                 ( ) const;
-    cgUInt32                    getSceneId              ( ) const;
-    cgWorld                   * getParentWorld          ( ) const;
-    bool                        load                    ( );
-    bool                        reload                  ( );
-    void                        unload                  ( );
-    bool                        isLoading               ( ) const;
-    cgUInt32                    getRenderClassId        ( const cgString & className ) const;
+    const cgString            & getName                     ( ) const;
+    cgUInt32                    getSceneId                  ( ) const;
+    cgWorld                   * getParentWorld              ( ) const;
+    bool                        load                        ( );
+    bool                        reload                      ( );
+    void                        unload                      ( );
+    bool                        isLoading                   ( ) const;
+    cgUInt32                    getRenderClassId            ( const cgString & className ) const;
     const cgFilterExpression::IdentifierArray & getMaterialPropertyIdentifiers( ) const;
 
     // update Process
-    void                        enableUpdates           ( bool enabled );
-    bool                        isUpdatingEnabled       ( ) const;
-    void                        update                  ( );
-    void                        queueNodeUpdates        ( cgObjectNode * node );
-    void                        resolvedNodeUpdates     ( cgObjectNode * node );
-    void                        resolvePendingUpdates   ( );
+    void                        enableUpdates               ( bool enabled );
+    bool                        isUpdatingEnabled           ( ) const;
+    void                        update                      ( );
+    void                        queueNodeUpdates            ( cgObjectNode * node );
+    void                        resolvedNodeUpdates         ( cgObjectNode * node );
+    void                        resolvePendingUpdates       ( );
 
     // Scene Dynamics
-    void                        enableDynamics          ( bool enabled );
-    bool                        isDynamicsEnabled       ( ) const;
+    void                        enableDynamics              ( bool enabled );
+    bool                        isDynamicsEnabled           ( ) const;
     
     // Scene Database
-    cgObjectNode              * createObjectNode        ( bool internalNode, const cgUID & objectTypeIdentifier, bool autoAssignName );
-    cgObjectNode              * createObjectNode        ( bool internalNode, const cgUID & objectTypeIdentifier, bool autoAssignName, cgCloneMethod::Base cloneMethod, cgObjectNode * nodeInit, const cgTransform & initTransform );
-    cgObjectNode              * loadObjectNode          ( cgUInt32 referenceId, cgCloneMethod::Base cloneMethod, bool loadChildren );
-    void                        unloadObjectNode        ( cgObjectNode * node );
-    void                        unloadObjectNodes       ( cgObjectNodeMap & nodes );
-    void                        addRootNode             ( cgObjectNode * node );
-    void                        removeRootNode          ( cgObjectNode * node );
-    cgObjectNode              * getObjectNodeById       ( cgUInt32 referenceId ) const;
-    cgObjectNodeMap           & getObjectNodes          ( );
-    const cgObjectNodeMap     & getObjectNodes          ( ) const;
-    cgObjectNodeMap           & getRootObjectNodes      ( );
-    const cgObjectNodeMap     & getRootObjectNodes      ( ) const;
-    const cgSceneCellMap      & getSceneCells           ( ) const;
+    cgObjectNode              * createObjectNode            ( bool internalNode, const cgUID & objectTypeIdentifier, bool autoAssignName );
+    cgObjectNode              * createObjectNode            ( bool internalNode, const cgUID & objectTypeIdentifier, bool autoAssignName, cgCloneMethod::Base cloneMethod, cgObjectNode * nodeInit, const cgTransform & initTransform );
+    cgObjectNode              * loadObjectNode              ( cgUInt32 referenceId, cgCloneMethod::Base cloneMethod, bool loadChildren );
+    void                        unloadObjectNode            ( cgObjectNode * node );
+    void                        unloadObjectNodes           ( cgObjectNodeMap & nodes );
+    cgSceneElement            * createSceneElement          ( bool internalElement, const cgUID & elementTypeIdentifier );
+    void                        unloadSceneElement          ( cgSceneElement * element );
+    void                        addRootNode                 ( cgObjectNode * node );
+    void                        removeRootNode              ( cgObjectNode * node );
+    cgObjectNode              * getObjectNodeById           ( cgUInt32 referenceId ) const;
+    cgObjectNodeMap           & getObjectNodes              ( );
+    const cgObjectNodeMap     & getObjectNodes              ( ) const;
+    cgObjectNodeMap           & getRootObjectNodes          ( );
+    const cgObjectNodeMap     & getRootObjectNodes          ( ) const;
+    const cgSceneCellMap      & getSceneCells               ( ) const;
+    const cgSceneElementArray & getSceneElements            ( ) const;
+    const cgSceneElementArray & getSceneElementsByType      ( const cgUID & type ) const;
     // ToDo: 9999 - Reintroduce?
-    /*bool                        getObjectsByType        ( cgUID objectType, cgSceneObjectList **objects );
-    bool                        getObjectsByDistance    ( cgSceneObjectList & objectList, const cgVector3 & position, cgFloat distance );
-    bool                        getObjectsInBounds      ( cgSceneObjectList & objectList, const cgBoundingBox & bounds );*/
-    void                        setObjectUpdateRate     ( cgObjectNode * node, cgUpdateRate::Base rate );
-    void                        addController           ( cgSceneController * controller );
-    bool                        setActiveCamera         ( cgCameraNode * camera );
-    cgCameraNode              * getActiveCamera         ( ) const;
-    cgLandscape               * importLandscape         ( const cgLandscapeImportParams & params );
+    /*bool                        getObjectsByType            ( cgUID objectType, cgSceneObjectList **objects );
+    bool                        getObjectsByDistance        ( cgSceneObjectList & objectList, const cgVector3 & position, cgFloat distance );
+    bool                        getObjectsInBounds          ( cgSceneObjectList & objectList, const cgBoundingBox & bounds );*/
+    void                        setObjectUpdateRate         ( cgObjectNode * node, cgUpdateRate::Base rate );
+    void                        addController               ( cgSceneController * controller );
+    bool                        setActiveCamera             ( cgCameraNode * camera );
+    cgCameraNode              * getActiveCamera             ( ) const;
+    cgLandscape               * importLandscape             ( const cgLandscapeImportParams & params );
     
     // Cell Management
-    const cgVector3           & getCellSize             ( ) const;
-    void                        updateObjectOwnership   ( cgObjectNode * node );
-    void                        computeVisibility       ( const cgFrustum & frustum, cgVisibilitySet * visibilityData, cgUInt32 flags );
-    void                        computeVisibility       ( const cgBoundingBox & Bounds, cgVisibilitySet * visibilityData, cgUInt32 flags );
+    const cgVector3           & getCellSize                 ( ) const;
+    void                        updateObjectOwnership       ( cgObjectNode * node );
+    void                        computeVisibility           ( const cgFrustum & frustum, cgVisibilitySet * visibilityData, cgUInt32 flags );
+    void                        computeVisibility           ( const cgBoundingBox & Bounds, cgVisibilitySet * visibilityData, cgUInt32 flags );
     
     // Scene Components
-    cgPhysicsWorld            * getPhysicsWorld         ( ) const;
-    const cgSceneDescriptor   * getSceneDescriptor      ( ) const;
-    cgRenderDriver            * getRenderDriver         ( ) const;
-    cgResourceManager         * getResourceManager      ( ) const;
-    cgLandscape               * getLandscape            ( ) const;
-    cgLightingManager         * getLightingManager      ( ) const; 
+    cgPhysicsWorld            * getPhysicsWorld             ( ) const;
+    const cgSceneDescriptor   * getSceneDescriptor          ( ) const;
+    cgRenderDriver            * getRenderDriver             ( ) const;
+    cgResourceManager         * getResourceManager          ( ) const;
+    cgLandscape               * getLandscape                ( ) const;
+    cgLightingManager         * getLightingManager          ( ) const; 
 
     // Scene Rendering
-    void                        render                  ( );
-    void                        sandboxRender           ( cgUInt32 flags, const cgPlane & gridPlane );
-    bool                        beginRenderPass         ( const cgString & passName );
-    void                        endRenderPass           ( );
+    void                        render                      ( );
+    void                        sandboxRender               ( cgUInt32 flags, const cgPlane & gridPlane );
+    bool                        beginRenderPass             ( const cgString & passName );
+    void                        endRenderPass               ( );
     
     // Sandbox: General
-    bool                        resetScene              ( );
-    void                        enableSceneWrites       ( bool enable );
-    bool                        isSceneWritingEnabled   ( ) const;
-    void                        setDirty                ( bool dirty );
-    bool                        isDirty                 ( ) const;
-    cgString                    makeUniqueName          ( const cgString & name );
-    cgString                    makeUniqueName          ( const cgString & name, cgUInt32 suffixNumber );
-    NameUsageMap              & getNameUsage            ( );
-    cgUnitType::Base            getDistanceDisplayUnits ( ) const;
-    void                        applySceneRescale       ( cgFloat scale );
+    bool                        resetScene                  ( );
+    void                        enableSceneWrites           ( bool enable );
+    bool                        isSceneWritingEnabled       ( ) const;
+    void                        setDirty                    ( bool dirty );
+    bool                        isDirty                     ( ) const;
+    cgString                    makeUniqueName              ( const cgString & name );
+    cgString                    makeUniqueName              ( const cgString & name, cgUInt32 suffixNumber );
+    NameUsageMap              & getNameUsage                ( );
+    cgUnitType::Base            getDistanceDisplayUnits     ( ) const;
+    void                        applySceneRescale           ( cgFloat scale );
 
     // Sandbox: Materials
-    void                        addSceneMaterial        ( cgMaterial * material );
-    void                        removeSceneMaterial     ( cgMaterial * material );
-    const SceneMaterialMap    & getSceneMaterials       ( ) const;
-    bool                        isActiveMaterial        ( cgMaterial * material ) const;
+    void                        addSceneMaterial            ( cgMaterial * material );
+    void                        removeSceneMaterial         ( cgMaterial * material );
+    const SceneMaterialMap    & getSceneMaterials           ( ) const;
+    bool                        isActiveMaterial            ( cgMaterial * material ) const;
 
     // Sandbox: Selection management.
-    void                        setActiveElementType    ( const cgUID & typeIdentifier );
-    const cgUID               & getActiveElementType    ( ) const;
-    const SelectionSetMap     & getSelectionSets        ( ) const;
-    bool                        getSelectedAABB         ( cgBoundingBox & boundsOut, cgFloat growAmount );
-    bool                        getSelectedPivot        ( cgVector3 & pivotOut ) const;
-    bool                        getObjectNodesPivot     ( const cgObjectNodeMap & nodes, cgVector3 & pivotOut ) const;
-    void                        selectAllNodes          ( );
-    void                        selectSimilarNodes      ( cgObjectNodeMap & nodes, bool replaceSelection );
-    bool                        selectNodes             ( cgObjectNodeMap & nodes, bool replaceSelection );
-    void                        clearSelection          ( );
-    cgObjectNodeMap           & getSelectedNodes        ( );
-    cgObjectNodeMap           & getSelectedNodesOrdered ( );
-    cgInt32                     getNextSelectionId      ( );
-    void                        deleteSelected          ( );
-    bool                        deleteObjectNode        ( cgObjectNode * node );
-    bool                        deleteObjectNodes       ( cgObjectNodeMap & nodes );
-    cgObjectNode              * pickClosestNode         ( const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgVector3 & intersectionOut );
-    cgObjectNode              * pickClosestNode         ( const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgVector3 & intersectionOut );
-    void                        groupSelected           ( bool asActor );
-    cgGroupNode               * groupObjectNodes        ( cgObjectNodeMap & nodes, bool asActor );
-    void                        ungroupSelected         ( );
-    void                        openSelectedGroups      ( );
-    void                        closeSelectedGroups     ( );
-    bool                        canGroupSelected        ( ) const;
-    bool                        canGroupObjectNodes     ( const cgObjectNodeMap & nodes ) const;
-    bool                        canUngroupSelected      ( ) const;
-    bool                        canOpenSelectedGroups   ( ) const;
-    bool                        canCloseSelectedGroups  ( ) const;
-    bool                        detachSelected          ( );
-    bool                        createSelectionSet      ( const cgString & name, bool internalSet, bool overwrite );
-    bool                        removeSelectionSet      ( const cgString & name );
-    bool                        applySelectionSet       ( const cgString & name, bool clearCurrent );
-    bool                        cloneSelected           ( cgCloneMethod::Base method, cgObjectNodeMap & nodes, bool internalNode );
-    bool                        cloneSelected           ( cgCloneMethod::Base method, cgObjectNodeMap & nodes, bool internalNode, cgUInt32 cloneCount, const cgTransform & transformDelta, cgOperationSpace::Base transformSpace );
-    void                        applyMaterialToSelected ( cgMaterial * material );
-    void                        resetSelectedScale      ( );
-    void                        resetSelectedOrientation( );
-    void                        resetSelectedPivot      ( );
+    void                        setActiveObjectElementType  ( const cgUID & typeIdentifier );
+    const cgUID               & getActiveObjectElementType  ( ) const;
+    const SelectionSetMap     & getSelectionSets            ( ) const;
+    bool                        getSelectedAABB             ( cgBoundingBox & boundsOut, cgFloat growAmount );
+    bool                        getSelectedPivot            ( cgVector3 & pivotOut ) const;
+    bool                        getObjectNodesPivot         ( const cgObjectNodeMap & nodes, cgVector3 & pivotOut ) const;
+    void                        selectAllNodes              ( );
+    void                        selectSimilarNodes          ( cgObjectNodeMap & nodes, bool replaceSelection );
+    bool                        selectNodes                 ( cgObjectNodeMap & nodes, bool replaceSelection );
+    void                        clearSelection              ( );
+    cgObjectNodeMap           & getSelectedNodes            ( );
+    cgObjectNodeMap           & getSelectedNodesOrdered     ( );
+    cgInt32                     getNextSelectionId          ( );
+    void                        deleteSelected              ( );
+    bool                        deleteObjectNode            ( cgObjectNode * node );
+    bool                        deleteObjectNodes           ( cgObjectNodeMap & nodes );
+    bool                        deleteSceneElement          ( cgSceneElement * element );
+    cgObjectNode              * pickClosestNode             ( const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgVector3 & intersectionOut );
+    cgObjectNode              * pickClosestNode             ( const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgVector3 & intersectionOut );
+    void                        groupSelected               ( bool asActor );
+    cgGroupNode               * groupObjectNodes            ( cgObjectNodeMap & nodes, bool asActor );
+    void                        ungroupSelected             ( );
+    void                        openSelectedGroups          ( );
+    void                        closeSelectedGroups         ( );
+    bool                        canGroupSelected            ( ) const;
+    bool                        canGroupObjectNodes         ( const cgObjectNodeMap & nodes ) const;
+    bool                        canUngroupSelected          ( ) const;
+    bool                        canOpenSelectedGroups       ( ) const;
+    bool                        canCloseSelectedGroups      ( ) const;
+    bool                        detachSelected              ( );
+    bool                        createSelectionSet          ( const cgString & name, bool internalSet, bool overwrite );
+    bool                        removeSelectionSet          ( const cgString & name );
+    bool                        applySelectionSet           ( const cgString & name, bool clearCurrent );
+    bool                        cloneSelected               ( cgCloneMethod::Base method, cgObjectNodeMap & nodes, bool internalNode );
+    bool                        cloneSelected               ( cgCloneMethod::Base method, cgObjectNodeMap & nodes, bool internalNode, cgUInt32 cloneCount, const cgTransform & transformDelta, cgOperationSpace::Base transformSpace );
+    void                        applyMaterialToSelected     ( cgMaterial * material );
+    void                        resetSelectedScale          ( );
+    void                        resetSelectedOrientation    ( );
+    void                        resetSelectedPivot          ( );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
     // Sandbox Event Dispatchers
-    virtual void                onSceneDirtyChange      ( cgSceneEventArgs * e );
-    virtual void                onNodeAdded             ( cgNodeUpdatedEventArgs * e );
-    virtual void                onNodeNameChange        ( cgNodeUpdatedEventArgs * e );
-    virtual void                onNodeParentChange      ( cgNodeParentChangeEventArgs * e );
-    virtual void                onNodeDeleted           ( cgNodeUpdatedEventArgs * e );
-    virtual void                onNodesDeleted          ( cgNodesUpdatedEventArgs * e );
-    virtual void                onModifySelection       ( cgSceneEventArgs * e );
-    virtual void                onSelectionUpdated      ( cgSelectionUpdatedEventArgs * e );
-    virtual void                onSelectionCleared      ( cgSceneEventArgs * e );
-    virtual void                onDeleteSelection       ( cgSceneEventArgs * e );
-    virtual void                onSelectionSetAdded     ( cgSelectionSetEventArgs * e );
-    virtual void                onSelectionSetRemoved   ( cgSelectionSetEventArgs * e );
-    virtual void                onMaterialAdded         ( cgSceneMaterialEventArgs * e );
-    virtual void                onMaterialRemoved       ( cgSceneMaterialEventArgs * e );
+    virtual void                onSceneDirtyChange          ( cgSceneEventArgs * e );
+    virtual void                onNodeAdded                 ( cgNodeUpdatedEventArgs * e );
+    virtual void                onNodeNameChange            ( cgNodeUpdatedEventArgs * e );
+    virtual void                onNodeParentChange          ( cgNodeParentChangeEventArgs * e );
+    virtual void                onNodeDeleted               ( cgNodeUpdatedEventArgs * e );
+    virtual void                onNodesDeleted              ( cgNodesUpdatedEventArgs * e );
+    virtual void                onSceneElementAdded         ( cgSceneElementEventArgs * e );
+    virtual void                onSceneElementDeleted       ( cgSceneElementEventArgs * e );
+    virtual void                onModifySelection           ( cgSceneEventArgs * e );
+    virtual void                onSelectionUpdated          ( cgSelectionUpdatedEventArgs * e );
+    virtual void                onSelectionCleared          ( cgSceneEventArgs * e );
+    virtual void                onDeleteSelection           ( cgSceneEventArgs * e );
+    virtual void                onSelectionSetAdded         ( cgSelectionSetEventArgs * e );
+    virtual void                onSelectionSetRemoved       ( cgSelectionSetEventArgs * e );
+    virtual void                onMaterialAdded             ( cgSceneMaterialEventArgs * e );
+    virtual void                onMaterialRemoved           ( cgSceneMaterialEventArgs * e );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
     //-------------------------------------------------------------------------
-    virtual const cgUID       & getReferenceType        ( ) const { return RTID_Scene; }
-    virtual bool                queryReferenceType      ( const cgUID & type ) const;
-    virtual bool                processMessage          ( cgMessage * message );
+    virtual const cgUID       & getReferenceType            ( ) const { return RTID_Scene; }
+    virtual bool                queryReferenceType          ( const cgUID & type ) const;
+    virtual bool                processMessage              ( cgMessage * message );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
     //-------------------------------------------------------------------------
-    virtual void                dispose                 ( bool disposeBase );
+    virtual void                dispose                     ( bool disposeBase );
 
 protected:
     //-------------------------------------------------------------------------
@@ -448,35 +466,39 @@ protected:
     CGE_VECTOR_DECLARE      (cgSceneController*, ControllerArray)
     CGE_UNORDEREDMAP_DECLARE(cgUID, cgObjectNodeMap, ObjectNodeTypeMap)
     CGE_UNORDEREDMAP_DECLARE(cgString, cgObjectNode*, ObjectNodeNamedMap)
+    CGE_UNORDEREDMAP_DECLARE(cgUID, cgSceneElementArray, SceneElementTypeMap)
 
     //-------------------------------------------------------------------------
     // Protected Methods
     //-------------------------------------------------------------------------
-    void                        prepareQueries          ( );
-    bool                        reloadRenderControl     ( bool reloadScript );
-    cgObjectNode              * loadObjectNode          ( cgUInt32 rootReferenceId, cgUInt32 referenceId, cgWorldQuery * nodeData, cgCloneMethod::Base cloneMethod, cgSceneCell * parentCell, cgObjectNode * parentNode, cgObjectNodeMap & loadedNodes, bool loadChildren );
+    void                        prepareQueries              ( );
+    bool                        reloadRenderControl         ( bool reloadScript );
+    cgObjectNode              * loadObjectNode              ( cgUInt32 rootReferenceId, cgUInt32 referenceId, cgWorldQuery * nodeData, cgCloneMethod::Base cloneMethod, cgSceneCell * parentCell, cgObjectNode * parentNode, cgObjectNodeMap & loadedNodes, bool loadChildren );
+    bool                        loadSceneElements           ( );
 
     // Cell Management
-    bool                        loadAllCells            ( );
+    bool                        loadAllCells                ( );
     
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    cgWorld               * mWorld;                 // Cached pointer to the parent world object.
-    cgSceneDescriptor       mSceneDescriptor;       // The descriptor structure for this scene
-    cgScriptHandle          mRenderScript;          // Script based render control logic.
-    cgScriptObject        * mScriptObject;          // Reference to the scripted render control object (owned exclusively by the script).
-    bool                    mIsLoading;             // Is the scene in the process of loading?
+    cgWorld               * mWorld;                     // Cached pointer to the parent world object.
+    cgSceneDescriptor       mSceneDescriptor;           // The descriptor structure for this scene
+    cgScriptHandle          mRenderScript;              // Script based render control logic.
+    cgScriptObject        * mScriptObject;              // Reference to the scripted render control object (owned exclusively by the script).
+    bool                    mIsLoading;                 // Is the scene in the process of loading?
     
     // Additional Scene Components
-    cgPhysicsWorld        * mPhysicsWorld;          // The physics world responsible for handling the dynamics portion of the scene update.
-    cgLandscape           * mLandscape;             // Each 'exterior world' can have an expansive terrain/landscape to represent the primary game environment.
-    cgLightingManager     * mLightingManager;       // Support class to manage the lighting system
+    cgPhysicsWorld        * mPhysicsWorld;              // The physics world responsible for handling the dynamics portion of the scene update.
+    cgLandscape           * mLandscape;                 // Each 'exterior world' can have an expansive terrain/landscape to represent the primary game environment.
+    cgLightingManager     * mLightingManager;           // Support class to manage the lighting system
+    cgSceneElementArray     mElements;                  // List of scene elements currently loaded and resident in memory.
+    SceneElementTypeMap     mElementTypes;              // List of scene elements categorized by type.
 
     // Object nodes
-    cgObjectNodeMap         mObjectNodes;           // Physical scene nodes being managed (in the order in which they were added).
-    cgObjectNodeMap         mRootNodes;             // List of nodes that exist at the root level of the hierarchy.
-    cgCameraNode          * mActiveCamera;          // The currently active camera node
+    cgObjectNodeMap         mObjectNodes;               // Physical scene nodes being managed (in the order in which they were added).
+    cgObjectNodeMap         mRootNodes;                 // List of nodes that exist at the root level of the hierarchy.
+    cgCameraNode          * mActiveCamera;              // The currently active camera node
 
     // Object Update Processing
     UpdateBucket            mUpdateBuckets[cgUpdateRate::Count];
@@ -484,43 +506,45 @@ protected:
     bool                    mUpdatingEnabled;
 
     // Controllers
-    ControllerArray         mSceneControllers;      // List of applied scene controllers that may manipulate scene data.
+    ControllerArray         mSceneControllers;          // List of applied scene controllers that may manipulate scene data.
 
     // Script callback cache
-    cgScriptArgument::Array mOnSceneRenderArgs;     // Cached argument list for script 'onSceneRender()' method.
-    cgScriptFunctionHandle  mOnSceneRenderMethod;   // Cached handle for script 'onSceneRender()' method.
+    cgScriptArgument::Array mOnSceneRenderArgs;         // Cached argument list for script 'onSceneRender()' method.
+    cgScriptFunctionHandle  mOnSceneRenderMethod;       // Cached handle for script 'onSceneRender()' method.
 
     // Rendering Related
-    bool                    mPassBegun;             // Was a rendering pass begun?
+    bool                    mPassBegun;                 // Was a rendering pass begun?
     
     // Cell Management
-    cgSceneCellMap          mCells;                 // All defined cells, organized by 3D grid reference.
-    cgObjectNodeSet         mRootSpatialTrees;      // Set containing all root level scene spatial trees.
-    cgObjectNodeSet         mOrphanNodes;           // List of all nodes that did not make it into a spatial tree during update.
+    cgSceneCellMap          mCells;                     // All defined cells, organized by 3D grid reference.
+    cgObjectNodeSet         mRootSpatialTrees;          // Set containing all root level scene spatial trees.
+    cgObjectNodeSet         mOrphanNodes;               // List of all nodes that did not make it into a spatial tree during update.
 
     // Dynamics Related
-    bool                    mDynamicsEnabled;       // Is dynamics processing (physics) enabled?
+    bool                    mDynamicsEnabled;           // Is dynamics processing (physics) enabled?
 
     // Sandbox: General
-    bool                    mIsDirty;               // Has the scene been modified since it was last serialized?
-    bool                    mSceneWritesEnabled;    // Nodes are allowed to update their transformation states and owner cells?
-    NameUsageMap            mNameUsage;             // A list of node names currently in use within the scene (used for optimizing name selection).
+    bool                    mIsDirty;                   // Has the scene been modified since it was last serialized?
+    bool                    mSceneWritesEnabled;        // Nodes are allowed to update their transformation states and owner cells?
+    NameUsageMap            mNameUsage;                 // A list of node names currently in use within the scene (used for optimizing name selection).
 
     // Sandbox: Materials
-    SceneMaterialMap        mActiveMaterials;       // List of materials that are active within this scene and will be visible in the material editor.
+    SceneMaterialMap        mActiveMaterials;           // List of materials that are active within this scene and will be visible in the material editor.
 
     // Sandbox: Selection Management
-    cgObjectNodeMap         mSelectedNodes;         // Collection of currently selected nodes indexed by reference identifier.
-    cgObjectNodeMap         mSelectedNodesOrdered;  // Collection of currently selected nodes in the order in which they were selected.
-    cgInt32                 mNextSelectionId;       // The next identifier that will be issued when a node is selected.
-    SelectionSetMap         mSelectionSets;         // Collection of named selection sets (lists of nodes to be selected as a group).
-    cgUID                   mActiveElementType;     // The sandbox environment is manipulating the specified element type (i.e. object sub-element category).
+    cgObjectNodeMap         mSelectedNodes;             // Collection of currently selected nodes indexed by reference identifier.
+    cgObjectNodeMap         mSelectedNodesOrdered;      // Collection of currently selected nodes in the order in which they were selected.
+    cgInt32                 mNextSelectionId;           // The next identifier that will be issued when a node is selected.
+    SelectionSetMap         mSelectionSets;             // Collection of named selection sets (lists of nodes to be selected as a group).
+    cgUID                   mActiveObjectElementType;   // The sandbox environment is manipulating the specified element type (i.e. object sub-element category).
 
     //-------------------------------------------------------------------------
     // Protected Static Variables
     //-------------------------------------------------------------------------
     static cgWorldQuery     mInsertMaterialUsage;
     static cgWorldQuery     mDeleteMaterialUsage;
+    static cgWorldQuery     mInsertElementUsage;
+    static cgWorldQuery     mDeleteElementUsage;
     static cgWorldQuery     mLoadObjectNodes;
     static cgWorldQuery     mLoadChildObjectNodes;
 };

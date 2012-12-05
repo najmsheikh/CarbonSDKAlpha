@@ -8,6 +8,7 @@
 #include "World/WorldComponent.h"
 #include "World/World.h"
 #include "World/Scene.h"
+#include "World/Elements.h"
 #include "World/Objects.h"
 #include "World/Lighting.h"
 #include "World/Visibility.h"
@@ -27,6 +28,7 @@ namespace World
             DECLARE_PACKAGE_CHILD( WorldComponent )
             DECLARE_PACKAGE_CHILD( World )
             DECLARE_PACKAGE_CHILD( Scene )
+            DECLARE_PACKAGE_CHILD( Elements )
             DECLARE_PACKAGE_CHILD( Objects )
             DECLARE_PACKAGE_CHILD( Lighting )
             DECLARE_PACKAGE_CHILD( Visibility )

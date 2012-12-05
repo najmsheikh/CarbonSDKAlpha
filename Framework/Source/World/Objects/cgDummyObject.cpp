@@ -28,6 +28,7 @@
 // cgDummyObject Module Includes
 //-----------------------------------------------------------------------------
 #include <World/Objects/cgDummyObject.h>
+#include <World/Objects/cgCameraObject.h>
 #include <World/cgScene.h>
 #include <Rendering/cgRenderDriver.h>
 #include <Math/cgCollision.h>
@@ -122,7 +123,7 @@ cgBoundingBox cgDummyObject::getLocalBoundingBox( )
 /// intersected and also compute the object space intersection distance. 
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgDummyObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance )
+bool cgDummyObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance )
 {
     // Only valid in sandbox mode.
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
@@ -131,11 +132,82 @@ bool cgDummyObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const 
     // Early out with a simple AABB test.
     cgFloat t;
     cgBoundingBox Bounds = pIssuer->getLocalBoundingBox();
-    Bounds.inflate( vWireTolerance );
+    /*Bounds.inflate( vWireTolerance );
     if ( Bounds.intersect( vOrigin, vDir, t, false ) == false )
-        return false;
-    
+        return false;*/
+
     // Check for intersection against each of the 6 planes of the box
+    bool bHit = false;
+    cgVector3 vPoints[4], vWireTolerance;
+    cgFloat fClosestDistance = FLT_MAX;
+    for ( size_t i = 0; i < 6; ++i )
+    {
+        cgPlane Plane = Bounds.getPlane( (cgVolumePlane::Side)i );
+        
+        // Determine if (and where) the ray intersects the box plane
+        if ( !cgCollision::rayIntersectPlane( vOrigin, vDir, Plane, t, true, false ) )
+            continue;
+
+        // Compute the plane intersection point and the four corner points of the plane.
+        const cgVector3 vIntersect = vOrigin + (vDir * t);
+        Bounds.getPlanePoints( (cgVolumePlane::Side)i, vPoints );
+
+        // Test each edge in the box side in order to determine if the ray
+        // passes close to the edge (could optimize this by skipping any
+        // edges which have already been tested in adjacent triangles).
+        for ( size_t nEdge = 0; nEdge < 4; ++nEdge )
+        {
+            // Retrieve the two vertices that form this edge
+            const cgVector3 & e1 = vPoints[nEdge];
+            const cgVector3 & e2 = vPoints[(nEdge+1)%4];
+
+            // Test a ray, formed by the edge itself, to see if it intersects
+            // a plane passing through the cursor position. This intersection
+            // point can then be tested to see if it came close to the original
+            // /plane/ intersection point.
+            cgVector3 vNormal;
+            cgVector3::normalize( vNormal, (e1-e2) );
+            if ( cgCollision::rayIntersectPlane( e1, e2-e1, vNormal, vIntersect, t ) )
+            {
+                // Compute intersection point
+                const cgVector3 vEdgeIntersect = e1 + ((e2-e1) * t);
+
+                // Compute the correct wireframe tolerance to use at the edge.
+                vWireTolerance = pCamera->estimatePickTolerance( ViewportSize, fWireTolerance, vEdgeIntersect, pIssuer->getWorldTransform(false) );
+
+                // Test to see if the cursor hit location (on the plane) is close to the edge.
+                if ( fabsf( vIntersect.x - vEdgeIntersect.x ) <= vWireTolerance.x &&
+                     fabsf( vIntersect.y - vEdgeIntersect.y ) <= vWireTolerance.y &&
+                     fabsf( vIntersect.z - vEdgeIntersect.z ) <= vWireTolerance.z )
+                {
+                    t = cgVector3::length( vEdgeIntersect - vOrigin );
+
+                    // Is this the closest intersection so far?
+                    if ( t < fClosestDistance )
+                    {
+                        fClosestDistance = t;
+                        bHit             = true;
+
+                    } // End if closest so far
+
+                } // End if vectors match
+
+            } // End if edge hit cursor plane
+
+        } // Next Edge
+    
+    } // Next Plane
+
+    // Hit registered?
+    if ( bHit )
+        fDistance = fClosestDistance;
+    else
+        return false;
+
+    // Intersection occurred
+    return true;
+    
+    /*// Check for intersection against each of the 6 planes of the box
     for ( size_t i = 0; i < 6; ++i )
     {
         cgPlane Plane = Bounds.getPlane( (cgVolumePlane::Side)i );
@@ -161,6 +233,7 @@ bool cgDummyObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const 
              ((fabsf(Plane.b) < 1e-3f) && (fabsf(vPos.y) < vWireTolerance.y)) ||
              ((fabsf(Plane.c) < 1e-3f) && (fabsf(vPos.z) < vWireTolerance.z)) )
         {
+
             fDistance = t;
             return true;
 
@@ -169,7 +242,7 @@ bool cgDummyObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const 
     } // Next Plane
 
     // No intersection with us
-    return false;
+    return false;*/
 }
 
 //-----------------------------------------------------------------------------

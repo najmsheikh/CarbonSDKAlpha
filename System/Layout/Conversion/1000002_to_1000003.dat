@@ -1,0 +1,35 @@
+-- *************************************************************
+--  Master world database conversion from v1.0.2 to v1.0.3
+-- *************************************************************
+--  Added support for registerable scene element types
+-- *************************************************************
+
+-- New SceneElementTypes table
+CREATE TABLE [SceneElementTypes] (
+  [SceneElementTypeId] integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  [Identifier] varchar(64),
+  [Name] varchar(64),
+  [DataTable] varchar(128));
+
+-- New Scenes::Elements table
+
+CREATE TABLE [Scenes::Elements] (  
+  [ElementId] integer PRIMARY KEY, 
+  [ElementTypeId] integer,   
+  [SceneId] integer);
+CREATE INDEX [Scenes::Elements_SceneIndex] ON [Scenes::Elements] ([SceneId]);
+
+-- Replace the old 'Scenes' trigger which now needs to delete 
+-- from the elements table added above.
+DROP TRIGGER IF EXISTS [Scenes_OnDelete];
+CREATE TRIGGER [Scenes_OnDelete]
+  BEFORE DELETE
+  ON [Scenes]
+  BEGIN
+    DELETE FROM [Scenes::MaterialUsage] WHERE SceneId=old.SceneId;  
+    DELETE FROM [Scenes::Elements] WHERE SceneId=old.SceneId;
+    DELETE FROM [Landscapes] WHERE LandscapeId=old.LandscapeId;
+  END;
+
+-- Update version number to 1.0.3
+UPDATE [Configuration] SET Version=1,Subversion=0,Revision=3 WHERE Type='Primary';

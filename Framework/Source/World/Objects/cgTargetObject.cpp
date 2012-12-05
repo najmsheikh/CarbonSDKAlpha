@@ -148,7 +148,7 @@ cgBoundingBox cgTargetObject::getLocalBoundingBox( )
 /// intersected and also compute the object space intersection distance. 
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgTargetObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance )
+bool cgTargetObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance )
 {
     // Only valid in sandbox mode.
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
@@ -160,12 +160,8 @@ bool cgTargetObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const
 
     // Targets are picked as if they were solid boxes.
     cgBoundingBox Bounds( -fSize, -fSize, -fSize, fSize, fSize, fSize );
-    Bounds.inflate( vWireTolerance );
-    if ( Bounds.intersect( vOrigin, vDir, fDistance, false ) )
-        return true;
-
-    // No intersection with us.
-    return false;
+    Bounds.inflate( pCamera->estimatePickTolerance( ViewportSize, fWireTolerance, Bounds.getCenter(), pIssuer->getWorldTransform(false) ) );
+    return Bounds.intersect( vOrigin, vDir, fDistance, false );
 }
 
 //-----------------------------------------------------------------------------
@@ -776,6 +772,32 @@ bool cgTargetNode::canDelete( ) const
 }
 
 //-----------------------------------------------------------------------------
+// Name : canClone ( )
+/// <summary>
+/// Determine if node's of this type can be cloned.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgTargetNode::canClone( ) const
+{
+    // Target nodes cannot be cloned explicitly unless they
+    // are no longer attached to a targeting node.
+    return (!mTargetingNode);
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getName() (Virtual)
+/// <summary>
+/// Retrieve the name of this instance of the specified object node.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgString cgTargetNode::getName( ) const
+{
+    if ( !mTargetingNode )
+        return cgString::Empty;
+    return mTargetingNode->getName() + _T(".Target");
+}
+
+//-----------------------------------------------------------------------------
 // Name : validateAttachment ( ) (Virtual)
 /// <summary>
 /// Allows nodes to describe whether or not a particular attachment of
@@ -843,10 +865,14 @@ bool cgTargetNode::setTargetingNode( cgObjectNode * pNode )
     // Update value.
     mTargetingNode = pNode;
 
-    // If we longer have a targeting node, this target should be deleted
-    // from the scene.
+    // If we no longer have a targeting node, this target should be 
+    // deleted from the scene. Otherwise, trigger the scene's node
+    // name change notification (name of target is based on targeting
+    // node's name).
     if ( !mTargetingNode && mParentScene )
         mParentScene->deleteObjectNode( this );
+    else if ( mParentScene )
+        mParentScene->onNodeNameChange( &cgNodeUpdatedEventArgs( mParentScene, this ) );
 
     // Success!
     return true;

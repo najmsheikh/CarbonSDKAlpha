@@ -58,20 +58,18 @@ cgAppStateManager::cgAppStateManager()
 cgAppStateManager::~cgAppStateManager()
 {
     // Release allocated memory
-    cleanup();
+    dispose( false );
 }
 
 //-----------------------------------------------------------------------------
-//  Name : cleanup ()
+//  Name : dispose () (Virtual)
 /// <summary>
-/// Release any resources allocated by this object.
+/// Release any memory, references or resources allocated by this object.
 /// </summary>
+/// <copydetails cref="cgScriptInterop::DisposableScriptObject::dispose()" />
 //-----------------------------------------------------------------------------
-void cgAppStateManager::cleanup()
+void cgAppStateManager::dispose( bool bDisposeBase )
 {
-    cgAppState * pState;
-    StateMap::iterator itState;
-
     // End all currently running states
     stop();
 
@@ -80,13 +78,11 @@ void cgAppStateManager::cleanup()
     mStateHistory = CG_NULL;
 
     // Destroy any registered states
+    StateMap::iterator itState;
     for ( itState = mRegisteredStates.begin(); itState != mRegisteredStates.end(); ++itState )
     {
         StateDesc & Desc = itState->second;
-        
-        // Retrieve the state and delete it
-        pState = Desc.state;
-        if ( pState ) delete pState;
+        delete Desc.state;
 
     } // Next registered state
 
@@ -743,34 +739,43 @@ bool cgAppState::initialize()
         cgScript * script = mScript.getResource(true);
         if ( script )
         {
-            try
-            {
-                // Attempt to create the IScriptedAppState
-                // object whose name matches the name of the file.
-                cgString objectType = cgFileSystem::getFileName(mScriptStream.getName(), true);
-                mScriptObject = script->createObjectInstance( objectType );
+            // Attempt to create the IScriptedAppState
+            // object whose name matches the name of the file.
+            cgString objectType = cgFileSystem::getFileName(mScriptStream.getName(), true);
+            mScriptObject = script->createObjectInstance( objectType );
 
-                // Collect handles to any supplied methods.
-                if ( mScriptObject )
+            // Collect handles to any supplied methods.
+            if ( mScriptObject )
+            {
+                mScriptMethods.initialize = mScriptObject->getMethodHandle( _T("bool initialize( AppState@+ )") );
+                mScriptMethods.begin      = mScriptObject->getMethodHandle( _T("bool begin()") );
+                mScriptMethods.end        = mScriptObject->getMethodHandle( _T("void end()") );
+                mScriptMethods.update     = mScriptObject->getMethodHandle( _T("void update()") );
+                mScriptMethods.render     = mScriptObject->getMethodHandle( _T("void render()") );
+                mScriptMethods.suspend    = mScriptObject->getMethodHandle( _T("void suspend()") );
+                mScriptMethods.resume     = mScriptObject->getMethodHandle( _T("void resume()") );
+
+                // Attempt to call the 'initialize' method (optional).
+                if ( mScriptMethods.initialize )
                 {
-                    mScriptMethods.initialize = mScriptObject->getMethodHandle( _T("bool initialize()") );
-                    mScriptMethods.begin      = mScriptObject->getMethodHandle( _T("bool begin(float)") );
-                    mScriptMethods.end        = mScriptObject->getMethodHandle( _T("void end()") );
-                    mScriptMethods.update     = mScriptObject->getMethodHandle( _T("void update()") );
-                    mScriptMethods.render     = mScriptObject->getMethodHandle( _T("void render()") );
-                    mScriptMethods.suspend    = mScriptObject->getMethodHandle( _T("void suspend()") );
-                    mScriptMethods.resume     = mScriptObject->getMethodHandle( _T("void resume()") );
-                    
-                } // End if valid object
+                    try
+                    {
+                        cgScriptArgument::Array scriptArgs;
+                        scriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("AppState@+"), this ) );
+                        mScriptObject->executeMethod( mScriptMethods.initialize, scriptArgs );
+            
+                    } // End try to execute
 
-            } // End try to execute
+                    catch ( cgScriptInterop::Exceptions::ExecuteException & e )
+                    {
+                        cgAppLog::write( cgAppLog::Error, _T("Failed to execute initialize() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+                        return false;
 
-            catch ( cgScriptInterop::Exceptions::ExecuteException & e )
-            {
-                cgAppLog::write( cgAppLog::Error, _T("Failed to execute createBehaviorScript() function in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
-                return false;
-
-            } // End catch exception
+                    } // End catch exception
+                
+                } // End if defines method
+                
+            } // End if valid object
 
         } // End if valid.
 
@@ -996,7 +1001,20 @@ void cgAppState::resume( )
 /// Note : States which are not currently active may not raise events.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgAppState::raiseEvent( const cgString & strEventName, bool bForce /* = false */ )
+void cgAppState::raiseEvent( const cgString & strEventName )
+{
+    raiseEvent( strEventName, false );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : raiseEvent () (Virtual)
+/// <summary>
+/// Called by the derived class (or potentially a child class) whenever
+/// an event has occured.
+/// Note : States which are not currently active may not raise events.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgAppState::raiseEvent( const cgString & strEventName, bool bForce )
 {
     // States that are not active are blocked from raising events by default.
     // This helps to automatically prevent inactive states from messing

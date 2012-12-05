@@ -57,6 +57,16 @@ asCGarbageCollector::asCGarbageCollector()
 	isProcessing    = false;
 }
 
+asCGarbageCollector::~asCGarbageCollector()
+{
+	// This local typedef is done to workaround a compiler error on
+	// MSVC6 when using the typedef declared in the class definition
+	typedef asSMapNode_t node_t;
+	for( asUINT n = 0; n < freeNodes.GetLength(); n++ )
+		asDELETE(freeNodes[n], node_t);
+	freeNodes.SetLength(0);
+}
+
 void asCGarbageCollector::AddScriptObjectToGC(void *obj, asCObjectType *objType)
 {
 	if( obj == 0 || objType == 0 )
@@ -75,24 +85,31 @@ void asCGarbageCollector::AddScriptObjectToGC(void *obj, asCObjectType *objType)
 	if( engine->ep.autoGarbageCollect && gcNewObjects.GetLength() )
 	{
 		// If the GC is already processing in another thread, then don't try this again
-		// TODO: What if it is already processing in this thread?
 		if( TRYENTERCRITICALSECTION(gcCollecting) )
 		{
-			// TODO: The number of iterations should be dynamic, and increase 
-			//       if the number of objects in the garbage collector grows high
-
-			// Run one step of DetectGarbage
-			if( gcOldObjects.GetLength() )
+			// Skip this if the GC is already running in this thread
+			if( !isProcessing )
 			{
-				IdentifyGarbageWithCyclicRefs();
-				DestroyOldGarbage();
-			}
+				isProcessing = true;
 
-			// Run a few steps of DestroyGarbage
-			int iter = (int)gcNewObjects.GetLength();
-			if( iter > 10 ) iter = 10;
-			while( iter-- > 0 )
-				DestroyNewGarbage();
+				// TODO: The number of iterations should be dynamic, and increase 
+				//       if the number of objects in the garbage collector grows high
+
+				// Run one step of DetectGarbage
+				if( gcOldObjects.GetLength() )
+				{
+					IdentifyGarbageWithCyclicRefs();
+					DestroyOldGarbage();
+				}
+
+				// Run a few steps of DestroyGarbage
+				int iter = (int)gcNewObjects.GetLength();
+				if( iter > 10 ) iter = 10;
+				while( iter-- > 0 )
+					DestroyNewGarbage();
+
+				isProcessing = false;
+			}
 
 			LEAVECRITICALSECTION(gcCollecting);
 		}
@@ -111,7 +128,11 @@ int asCGarbageCollector::GarbageCollect(asDWORD flags)
 	if( TRYENTERCRITICALSECTION(gcCollecting) )
 	{
 		// If the GC is already processing in this thread, then don't enter here again
-		if( isProcessing ) return 1;
+		if( isProcessing ) 
+		{	
+			LEAVECRITICALSECTION(gcCollecting);
+			return 1;
+		}
 
 		isProcessing = true;
 
@@ -530,7 +551,7 @@ int asCGarbageCollector::IdentifyGarbageWithCyclicRefs()
 
 				engine->CallObjectMethod(obj, it.type->beh.release);
 
-				gcMap.Erase(cursor);
+				ReturnNode(gcMap.Remove(cursor));
 
 				return 1;
 			}
@@ -569,7 +590,8 @@ int asCGarbageCollector::IdentifyGarbageWithCyclicRefs()
 				if( refCount > 1 )
 				{
 					asSIntTypePair it = {refCount-1, gcObj.type};
-					gcMap.Insert(gcObj.obj, it);
+
+					gcMap.Insert(GetNode(gcObj.obj, it));
 
 					// Increment the object's reference counter when putting it in the map
 					engine->CallObjectMethod(gcObj.obj, gcObj.type->beh.addref);
@@ -684,7 +706,7 @@ int asCGarbageCollector::IdentifyGarbageWithCyclicRefs()
 				if( gcMap.MoveTo(&cursor, gcObj) )
 				{
 					type = gcMap.GetValue(cursor).type;
-					gcMap.Erase(cursor);
+					ReturnNode(gcMap.Remove(cursor));
 
 					// We need to decrease the reference count again as we remove the object from the map
 					engine->CallObjectMethod(gcObj, type->beh.release);
@@ -787,6 +809,24 @@ int asCGarbageCollector::IdentifyGarbageWithCyclicRefs()
 
 	// Shouldn't reach this point
 	UNREACHABLE_RETURN;
+}
+
+asCGarbageCollector::asSMapNode_t *asCGarbageCollector::GetNode(void *obj, asSIntTypePair it)
+{
+	asSMapNode_t *node;
+	if( freeNodes.GetLength() )
+		node = freeNodes.PopLast();
+	else
+		node = asNEW(asSMapNode_t);
+
+	node->Init(obj, it);
+	return node;
+}
+
+void asCGarbageCollector::ReturnNode(asSMapNode_t *node)
+{
+	if( node )
+		freeNodes.PushLast(node);
 }
 
 void asCGarbageCollector::GCEnumCallback(void *reference)

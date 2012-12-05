@@ -98,7 +98,6 @@ class StandardRenderControl : IScriptedRenderControl
 	
     // Custom textures
 	private TextureHandle       mNormalsFitTexture;         // Normals fitting texture to improve lighting quality
-	private TextureHandle       mSkyboxTexture;             // Skybox texture
 	private TextureHandle       mRotationTexture;           // Random rotations for lighting (32x32)
 
 	// Samplers necessary for binding targets / textures as input.
@@ -363,8 +362,6 @@ class StandardRenderControl : IScriptedRenderControl
         // Load custom textures necessary as input to various passes (film grain, vignette, etc.)
         if ( !resources.loadTexture( mNormalsFitTexture, "sys://Textures/NormalsFittingTexture.dds", 0, DebugSource() ) )
              return false;
-        if ( !resources.loadTexture( mSkyboxTexture, "sys://Textures/Skybox_Night.dds", 0, DebugSource() ) )
-             return false;
         if ( !resources.loadTexture( mRotationTexture, "sys://Textures/RandomPoints.dds", 0, DebugSource() ) )
              return false;
 
@@ -442,9 +439,9 @@ class StandardRenderControl : IScriptedRenderControl
 		if ( mDeferredLighting ) compositeLighting( activeCamera, renderDriver );
         profiler.endProcess( );
 
-		// Draw the sky
+		// Draw the sky, or fill with solid color
         profiler.beginProcess( "Sky" );
-		if ( mDrawSky ) sky( renderDriver );
+        sky( renderDriver );
         profiler.endProcess( );
 
 		// Apply fog
@@ -1372,7 +1369,26 @@ class StandardRenderControl : IScriptedRenderControl
 	//-----------------------------------------------------------------------------
 	void sky( RenderDriver @ renderDriver )
 	{
-		mAtmospherics.drawSkyBox( mSkyboxTexture, mDrawHDR, mCurrentSceneTarget );
+        if ( mDrawSky )
+        {
+            // Get the scene element that describes the approach to use for sky rendering.
+            array<SceneElement@> skyElements = mScene.getSceneElementsByType( RTID_SkyElement );
+            if ( skyElements.length() == 0 )
+            {
+                mAtmospherics.drawSkyColor( ColorValue( 0xFF7D7D7D ), mDrawHDR, mCurrentSceneTarget );
+                return;
+            
+            } // End if no element
+
+            // Draw the sky
+            mAtmospherics.drawSky( cast<SkyElement>(skyElements[0]), mDrawHDR, mCurrentSceneTarget );
+        
+        } // End if draw
+        else
+        {
+            mAtmospherics.drawSkyColor( ColorValue( 0xFF7D7D7D ), mDrawHDR, mCurrentSceneTarget );
+
+        } // End if fill
 	}
 
 	//-----------------------------------------------------------------------------

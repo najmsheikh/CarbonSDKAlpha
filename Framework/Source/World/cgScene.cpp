@@ -32,6 +32,7 @@
 #include <World/cgSceneCell.h>
 #include <World/cgObjectNode.h>
 #include <World/cgLandscape.h>
+#include <World/cgSceneElement.h>
 #include <World/Lighting/cgLightingManager.h>
 #include <World/Objects/cgSpatialTreeObject.h>
 #include <World/Objects/cgCameraObject.h>
@@ -74,7 +75,9 @@ using namespace cgExceptions;
 // Static Member Definitions
 //-----------------------------------------------------------------------------
 cgWorldQuery cgScene::mInsertMaterialUsage;
+cgWorldQuery cgScene::mInsertElementUsage;
 cgWorldQuery cgScene::mDeleteMaterialUsage;
+cgWorldQuery cgScene::mDeleteElementUsage;
 
 ///////////////////////////////////////////////////////////////////////////////
 // cgSceneDescriptor Member Definitions
@@ -114,26 +117,26 @@ cgSceneDescriptor::cgSceneDescriptor( )
 cgScene::cgScene( cgWorld * world, const cgSceneDescriptor * description )  : cgReference( cgReferenceManager::generateInternalRefId( ) )
 {
     // Initialize variables to sensible defaults
-    mPhysicsWorld         = CG_NULL;
-    mActiveCamera         = CG_NULL;
-    mScriptObject         = CG_NULL;
-    mLandscape            = CG_NULL;
-    mPassBegun            = false;
-    mIsLoading            = false;
-    mIsDirty              = false;
-    mDynamicsEnabled      = true;
-    mUpdatingEnabled      = true;
-    mSceneWritesEnabled   = true;
-    mNextSelectionId      = 0;
-    mActiveElementType    = cgUID::Empty;
-    mOnSceneRenderMethod  = CG_NULL;
+    mPhysicsWorld               = CG_NULL;
+    mActiveCamera               = CG_NULL;
+    mScriptObject               = CG_NULL;
+    mLandscape                  = CG_NULL;
+    mPassBegun                  = false;
+    mIsLoading                  = false;
+    mIsDirty                    = false;
+    mDynamicsEnabled            = true;
+    mUpdatingEnabled            = true;
+    mSceneWritesEnabled         = true;
+    mNextSelectionId            = 0;
+    mActiveObjectElementType    = cgUID::Empty;
+    mOnSceneRenderMethod        = CG_NULL;
 
     // Allocate the lighting manager on the heap
-    mLightingManager      = new cgLightingManager( this );
+    mLightingManager            = new cgLightingManager( this );
 
     // Store required values
-    mWorld                = world;
-    mSceneDescriptor      = *description;
+    mWorld                      = world;
+    mSceneDescriptor            = *description;
 
     // Reset the update rate structures
     for ( cgUInt32 i = 0; i < cgUpdateRate::Count; ++i )
@@ -244,15 +247,21 @@ void cgScene::dispose( bool disposeBase )
     for ( itCell = mCells.begin(); itCell != mCells.end(); ++itCell )
         itCell->second->scriptSafeDispose();
 
+    // Disconnect from / remove any active scene elements (without deleting from the DB).
+    for ( size_t i = 0; i < mElements.size(); ++i )
+        mElements[i]->removeReference(this, true);
+    mElements.clear();
+    mElementTypes.clear();
+
     // Clear variables
-    mPhysicsWorld         = CG_NULL;
-    mActiveCamera         = CG_NULL;
-    mLandscape            = CG_NULL;
-    mActiveElementType    = cgUID::Empty;
-    mDynamicsEnabled      = true;
-    mUpdatingEnabled      = true;
-    mSceneWritesEnabled   = true;
-    mOnSceneRenderMethod  = CG_NULL;
+    mPhysicsWorld               = CG_NULL;
+    mActiveCamera               = CG_NULL;
+    mLandscape                  = CG_NULL;
+    mActiveObjectElementType    = cgUID::Empty;
+    mDynamicsEnabled            = true;
+    mUpdatingEnabled            = true;
+    mSceneWritesEnabled         = true;
+    mOnSceneRenderMethod        = CG_NULL;
 
     // Clear containers
     mRootSpatialTrees.clear();
@@ -447,11 +456,11 @@ bool cgScene::reload( )
 /// scene class constructor.
 /// <para>
 /// This method cannot be called directly. Instead, the application
-/// should load a new scene via the <see cref="cgWorld::LoadScene()" /> 
+/// should load a new scene via the <see cref="cgWorld::loadScene()" /> 
 /// method.</para>
 /// </remarks>
 /// <seealso cref="cgScene()"/>
-/// <seealso cref="cgWorld::LoadScene()"/>
+/// <seealso cref="cgWorld::loadScene()"/>
 //-----------------------------------------------------------------------------
 bool cgScene::load( )
 {
@@ -618,6 +627,8 @@ bool cgScene::load( )
         // Load the data associated with this scene (if not internal).
         if ( sceneId && !loadAllCells( ) )
             throw ResultException( cgString::format( _T("Unable to load initial scene cell data for scene id %i. World database has potentially become corrupt."), sceneId ), cgDebugSource() );
+        if ( sceneId && !loadSceneElements( ) )
+            throw ResultException( cgString::format( _T("Unable to load scene element data for scene id %i. World database has potentially become corrupt."), sceneId ), cgDebugSource() );
 
     } // End try
 
@@ -812,6 +823,82 @@ bool cgScene::loadAllCells( )
                 throw ResultException( cgString::format( _T("Unable to load cell data for scene %x because at least one if its nodes reported a failure during initialization. Refer to any previous errors for more information.\n"), getSceneId() ), cgDebugSource() );
         
         } // Next node
+
+    } // End try
+
+    catch ( const ResultException & e )
+    {
+        cgAppLog::write( cgAppLog::Error, _T("%s\n"), e.toString().c_str() );
+        return false;
+    
+    } // End catch
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+// Name : loadSceneElements() (Protected)
+/// <summary>
+/// Load the scene element data from the world database.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgScene::loadSceneElements( )
+{
+    // Begin loading the scene data
+    try
+    {
+        cgWorldConfiguration * config = mWorld->getConfiguration();
+
+        // Retrieve the elements associated with this scene if not an internal scene.
+        cgUInt32 sceneId = getSceneId();
+        if ( sceneId != 0 )
+        {
+            // Select all elements for this scene
+            cgString queryString = cgString::format( _T("SELECT * FROM 'Scenes::Elements' WHERE SceneId=%i"), sceneId );
+            cgWorldQuery elementQuery( mWorld, queryString );
+            if ( elementQuery.step() == false )
+            {
+                cgString strError;
+                if ( elementQuery.getLastError( strError ) == false )
+                    throw ResultException( cgString::format( _T("Unable to retrieve element data for scene id %i. World database has potentially become corrupt."), sceneId ), cgDebugSource() );
+                else
+                    throw ResultException( cgString::format( _T("Unable to retrieve element data for scene id %i. Error: %s"), sceneId, strError.c_str() ), cgDebugSource() );
+            
+            } // End if failed
+
+            // Process all elements
+            for ( ; elementQuery.nextRow(); )
+            {
+                cgUInt32 elementId, elementTypeId;
+                elementQuery.getColumn( _T("ElementId"), elementId );
+                elementQuery.getColumn( _T("ElementTypeId"), elementTypeId );
+
+                // Find the element in the type table
+                const cgSceneElementTypeDesc * elementTypeDesc = mWorld->getConfiguration()->getSceneElementTypeByLocalId( elementTypeId );
+                if ( !elementTypeDesc )
+                {
+                    // Silent fail. The element type was not recognized, but the user was notified 
+                    // about this during the initial world configuration import stage.
+                    continue;
+
+                } // End if unknown type
+                
+                // Load the identified element.
+                cgSceneElement * element = mWorld->loadSceneElement( elementTypeDesc->globalIdentifier, elementId, this );
+                if ( !element )
+                    continue;
+
+                // Reconnect scene's reference to the element (do not increment ref count in database).
+                element->addReference( this, true );
+
+                // Add to the list of elements currently resident.
+                mElements.push_back( element );
+                mElementTypes[element->getReferenceType()].push_back( element );
+
+            } // Next Element
+
+        } // End if !internal scene
 
     } // End try
 
@@ -1576,6 +1663,39 @@ void cgScene::unloadObjectNodes( cgObjectNodeMap & nodes )
 }
 
 //-----------------------------------------------------------------------------
+// Name : unloadSceneElement ()
+/// <summary>
+/// Call in order to remove the scene element from the in-memory scene
+/// but /not/ from the scene database.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScene::unloadSceneElement( cgSceneElement * element )
+{
+    // Validate.
+    if ( !element )
+        return;
+
+    // Remove from the scene type table first.
+    cgSceneElementArray & elements = mElementTypes[element->getReferenceType()];
+    cgSceneElementArray::iterator itElement = std::find( elements.begin(), elements.end(), element );
+    if ( itElement != elements.end() )
+        elements.erase( itElement );
+
+    // Remove from main element list and release
+    itElement = std::find( mElements.begin(), mElements.end(), element );
+    if ( itElement != mElements.end() )
+    {
+        // Remove from the internal element array
+        mElements.erase( itElement );
+
+        // Disconnect from the element without causing it to be deleted
+        // from the world database (if applicable).
+        element->removeReference( this, true );
+
+    } // End if found.
+}
+
+//-----------------------------------------------------------------------------
 // Name : importLandscape()
 /// <summary>
 /// Generate a new scene landscape based on the import parameters specified.
@@ -1616,6 +1736,57 @@ cgLandscape * cgScene::importLandscape( const cgLandscapeImportParams & params )
     
     // Success!
     return mLandscape;
+}
+
+//-----------------------------------------------------------------------------
+// Name : createSceneElement()
+/// <summary>
+/// Create a new scene element of the specified type and add it to the scene's
+/// child element database.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgSceneElement * cgScene::createSceneElement( bool internalElement, const cgUID & elementTypeIdentifier )
+{
+    // If the engine is not in sandbox mode, or the scene is internal, all new elements are internal.
+    if ( (cgGetSandboxMode() != cgSandboxMode::Enabled) || !getSceneId() )
+        internalElement = true;
+
+    // Ask our parent world to create an element of this type.
+    // Initial data will be serialized to the database.
+    cgSceneElement * element = mWorld->createSceneElement( internalElement, elementTypeIdentifier, this );
+    if ( !element )
+        return CG_NULL;
+
+    // Add usage information to the database if not an internal element / scene.
+    if ( !internalElement )
+    {
+        prepareQueries();
+        mInsertElementUsage.bindParameter( 1, element->getReferenceId() );
+        mInsertElementUsage.bindParameter( 2, element->getLocalTypeId() );
+        mInsertElementUsage.bindParameter( 3, getSceneId() );
+        mInsertElementUsage.step( true );
+
+        // ToDo: 9999 - Error Check
+    
+    } // End if !internal
+
+    // Add this scene as holding a full live (and serialized) reference 
+    // to the element.
+    element->addReference( this, internalElement );
+
+    // Add to the list of elements currently resident.
+    mElements.push_back( element );
+    mElementTypes[ element->getReferenceType() ].push_back( element );
+
+    // Scene is now dirty.
+    if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
+        setDirty( true );
+
+    // Notify whoever is interested that the scene was modified
+    onSceneElementAdded( &cgSceneElementEventArgs( this, element ) );
+
+    // Success!
+    return element;
 }
 
 //-----------------------------------------------------------------------------
@@ -2332,6 +2503,32 @@ const cgSceneCellMap & cgScene::getSceneCells( ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getSceneElements ()
+/// <summary>
+/// Retrieve a complete list of all allocated scene elements.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgSceneElementArray & cgScene::getSceneElements( ) const
+{
+    return mElements;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getSceneElementsByType ()
+/// <summary>
+/// Retrieve a list of all allocated scene elements of the specified type.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgSceneElementArray & cgScene::getSceneElementsByType( const cgUID & type ) const
+{
+    static const cgSceneElementArray empty;
+    SceneElementTypeMap::const_iterator itElements = mElementTypes.find( type );
+    if ( itElements != mElementTypes.end() )
+        return itElements->second;
+    return empty;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getCellSize ()
 /// <summary>
 /// Retrieve the specified size of each individual cell used for scene
@@ -2498,6 +2695,14 @@ void cgScene::update( )
             controller->update( timeDelta );
     
     } // Next Controller
+
+    // Allow scene elements to update first.
+    if ( mUpdatingEnabled )
+    {
+        for ( size_t i = 0; i < mElements.size(); ++i )
+            mElements[i]->update( timeDelta );
+    
+    } // End if trigger updates
     
     // Allow the physics world to update if enabled.
     if ( mPhysicsWorld && mDynamicsEnabled )
@@ -2840,6 +3045,10 @@ void cgScene::sandboxRender( cgUInt32 flags, const cgPlane & gridPlane )
     for ( size_t i = 0; i < visibleLights.size(); ++i )
         visibleLights[i]->sandboxRender( flags, mActiveCamera, visibilityData, gridPlane );
 
+    // Allow scene elements to draw last.
+    for ( size_t i = 0; i < mElements.size(); ++i )
+        mElements[i]->sandboxRender( flags, mActiveCamera );
+
     // End sandbox render pass.
     endRenderPass( );
 
@@ -2889,7 +3098,7 @@ void cgScene::endRenderPass( )
 }
 
 //-----------------------------------------------------------------------------
-// Name : setActiveElementType( )
+// Name : setActiveObjectElementType( )
 /// <summary>
 /// The sandbox environment is manipulating the specified element type 
 /// (i.e. object sub-element category). This property can be queried by objects
@@ -2897,22 +3106,22 @@ void cgScene::endRenderPass( )
 /// 'active' element type. Set to 'cgUID::Empty' to disable this.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgScene::setActiveElementType( const cgUID & typeIdentifier )
+void cgScene::setActiveObjectElementType( const cgUID & typeIdentifier )
 {
-    mActiveElementType = typeIdentifier;
+    mActiveObjectElementType = typeIdentifier;
 }
 
 //-----------------------------------------------------------------------------
-// Name : getActiveElementType( )
+// Name : getActiveObjectElementType( )
 /// <summary>
 /// Get the unique identifier of the element type / category which the 
 /// application / sandbox environment considers 'active'. An identifier of 
 /// cgUID::Empty means that standard top level nodes are considered 'active'.
 /// </summary>
 //-----------------------------------------------------------------------------
-const cgUID & cgScene::getActiveElementType( ) const
+const cgUID & cgScene::getActiveObjectElementType( ) const
 {
-    return mActiveElementType;
+    return mActiveObjectElementType;
 }
 
 //-----------------------------------------------------------------------------
@@ -3317,6 +3526,11 @@ bool cgScene::cloneSelected( cgCloneMethod::Base method, cgObjectNodeMap & nodes
                 
                 // Add to the output list of cloned nodes
                 nodes[ index++ ] = newNode;
+
+                // If the new node has a target node, this was cloned too
+                // so add it to the list.
+                if ( newNode->getTargetNode() )
+                    nodes[ index++ ] = (cgObjectNode*)newNode->getTargetNode();
             
                 // Offset current matrix by delta transform
                 // Apply first delta offset.
@@ -3582,6 +3796,68 @@ void cgScene::deleteSelected( )
 }
 
 //-----------------------------------------------------------------------------
+// Name : deleteSceneElement ( )
+/// <summary>
+/// Remove the specified material from the scene's material ownership list.
+/// If the scene was the last live item reference that material, and if it
+/// held the last 'soft' reference it will be deleted from the database.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgScene::deleteSceneElement( cgSceneElement * element )
+{
+    // Reflect through to 'unloadSceneElement' if we are not in full sandbox mode.
+    if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
+    {
+        unloadSceneElement( element );
+        return true;
+    
+    } // End if !sandbox
+
+    if ( element )
+    {
+        // Remove from the scene type table first.
+        cgSceneElementArray & elements = mElementTypes[ element->getReferenceType() ];
+        cgSceneElementArray::iterator itElement = std::find( elements.begin(), elements.end(), element );
+        if ( itElement != elements.end() )
+            elements.erase( itElement );
+
+        // Remove from main scene list.
+        itElement = std::find( mElements.begin(), mElements.end(), element );
+        if ( itElement != mElements.end() )
+        {
+            // Remove usage information from the database if not an internal element / scene.
+            if ( !element->isInternalReference() && getSceneId() != 0 )
+            {
+                prepareQueries();
+                mDeleteElementUsage.bindParameter( 1, element->getReferenceId() );
+                mDeleteElementUsage.step( true );
+
+                // ToDo: 9999 - Error Check
+            
+            } // End if !internal
+
+            // Remove from the main list
+            mElements.erase( itElement );
+
+            // Notify whoever is interested that the scene was modified
+            onSceneElementDeleted( &cgSceneElementEventArgs( this, element ) );
+
+            // Remove this scene's ownership reference and allow it to be
+            // entirely deleted from the database (not a disconnect).
+            element->removeReference( this, element->isInternalReference() );
+
+            // Scene is now dirty
+            setDirty( true );
+
+        } // End if active
+    
+    } // End if valid
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
 // Name : deleteObjectNode ()
 /// <summary>
 /// Call in order to delete a single specified node from the scene database.
@@ -3733,19 +4009,35 @@ bool cgScene::deleteObjectNodes( cgObjectNodeMap & nodes )
     cgObjectNodeMap processedNodes( nodes );
 
     // Iterate through each node to remove
-    cgObjectNodeMap::iterator itNode;
-    for ( itNode = processedNodes.begin(); itNode != processedNodes.end(); ++itNode )
+    cgObjectNodeMap::iterator itNode, itCurrent;
+    for ( itNode = processedNodes.begin(); itNode != processedNodes.end(); )
     {
+        // Backup current iterator and then move on before processing.
+        // This ensures that we can remove items from the node map
+        // as necessary.
+        itCurrent = itNode;
+        ++itNode;
+
         // Skip if the node was deleted elsewhere. For instance, a deleted
         // node might also destroy its target object automatically or a group
         // may destroy itself when there are no more child objects.
-        if ( !cgReferenceManager::isValidReference( itNode->second ) )
+        if ( !cgReferenceManager::isValidReference( itCurrent->second ) )
+        {
+            // Remove from processed node list.
+            itNode = processedNodes.erase( itCurrent );
             continue;
+
+        } // End if invalid
         
         // Skip if it cannot be deleted
-        cgObjectNode * node = itNode->second;
+        cgObjectNode * node = itCurrent->second;
         if ( !node->canDelete() )
+        {
+            // Remove from processed node list.
+            itNode = processedNodes.erase( itCurrent );
             continue;
+        
+        } // End if cannot delete
 
         // Allow the node to resolve any final pending updates in order
         // to fully serialize its data into its final state, or to update
@@ -3763,6 +4055,7 @@ bool cgScene::deleteObjectNodes( cgObjectNodeMap & nodes )
             if ( !node->onNodeDeleted( ) )
             {
                 mWorld->rollbackTransaction( _T("deleteObjectNodesInner") );
+                itNode = processedNodes.erase( itCurrent );
                 continue;
             
             } // End if failed
@@ -3777,7 +4070,11 @@ bool cgScene::deleteObjectNodes( cgObjectNodeMap & nodes )
             // and should be removed from the database or perform
             // any necessary clean up.
             if ( !node->onNodeDeleted( ) )
+            {
+                itNode = processedNodes.erase( itCurrent );
                 continue;
+            
+            } // End if failed
             
         } // End if internal
 
@@ -3847,23 +4144,28 @@ bool cgScene::deleteObjectNodes( cgObjectNodeMap & nodes )
         // Remove from the scene. Will automatically be removed
         // from name usage map when node is disposed.
         mObjectNodes.erase( node->getReferenceId() );
-
-        // Now dispose of the node from memory.
-        node->scriptSafeDispose();
-        node = CG_NULL;
-            
+    
     } // Next Node
 
     // Commit changes
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
         mWorld->commitTransaction( _T("deleteObjectNodes") );
 
-    // Scene has been modified
-    if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
-        setDirty( true );
+    // Anything removed?
+    if ( !processedNodes.empty() )
+    {
+        // Scene has been modified
+        if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
+            setDirty( true );
 
-    // Notify whoever is listening that the specified nodes were removed.
-    onNodesDeleted( &cgNodesUpdatedEventArgs( this, &processedNodes ) );
+        // Notify whoever is listening that the specified nodes were removed.
+        onNodesDeleted( &cgNodesUpdatedEventArgs( this, &processedNodes ) );
+
+        // Now dispose of the nodes from memory.
+        for ( itNode = processedNodes.begin(); itNode != processedNodes.end(); ++itNode )
+            itNode->second->scriptSafeDispose();
+
+    } // End if items removed
 
     // Success!
     return true;
@@ -4573,7 +4875,6 @@ void cgScene::addSceneMaterial( cgMaterial * material )
         {
             material->addReference( CG_NULL, false );
             mActiveMaterials[ material->getReferenceId() ] = material;
-            cgAppLog::write( cgAppLog::Debug, _T("%i materials created.\n"), mActiveMaterials.size() );
 
             // Add usage information to the database if not an internal scene.
             if ( getSceneId() != 0 )
@@ -4689,6 +4990,10 @@ void cgScene::prepareQueries()
             mInsertMaterialUsage.prepare( mWorld, _T("INSERT INTO 'Scenes::MaterialUsage' VALUES(NULL,?1,?2,?3)"), true );
         if ( mDeleteMaterialUsage.isPrepared() == false )
             mDeleteMaterialUsage.prepare( mWorld, _T("DELETE FROM 'Scenes::MaterialUsage' WHERE MaterialId=?1 AND SceneId=?2"), true );
+        if ( mInsertElementUsage.isPrepared() == false )
+            mInsertElementUsage.prepare( mWorld, _T("INSERT INTO 'Scenes::Elements' VALUES(?1,?2,?3)"), true );
+        if ( mDeleteElementUsage.isPrepared() == false )
+            mDeleteElementUsage.prepare( mWorld, _T("DELETE FROM 'Scenes::Elements' WHERE ElementId=?1"), true );
     
     } // End if sandbox
 }
@@ -4801,6 +5106,40 @@ void cgScene::onNodeParentChange( cgNodeParentChangeEventArgs * e )
     EventListenerList listeners = mEventListeners;
     for ( itListener = listeners.begin(); itListener != listeners.end(); ++itListener )
         ((cgSceneEventListener*)(*itListener))->onNodeParentChange( e );
+}
+
+//-----------------------------------------------------------------------------
+// Name : onSceneElementAdded () (Virtual)
+/// <summary>
+/// Can be overriden or called by derived class in order to trigger the event
+/// with matching name. All listeners will subsequently be notified.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScene::onSceneElementAdded( cgSceneElementEventArgs * e )
+{
+    // Trigger 'onSceneElementAdded' of all listeners (duplicate list in case
+    // it is altered in response to event).
+    EventListenerList::iterator itListener;
+    EventListenerList listeners = mEventListeners;
+    for ( itListener = listeners.begin(); itListener != listeners.end(); ++itListener )
+        ((cgSceneEventListener*)(*itListener))->onSceneElementAdded( e );
+}
+
+//-----------------------------------------------------------------------------
+// Name : onSceneElementDeleted () (Virtual)
+/// <summary>
+/// Can be overriden or called by derived class in order to trigger the event
+/// with matching name. All listeners will subsequently be notified.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScene::onSceneElementDeleted( cgSceneElementEventArgs * e )
+{
+    // Trigger 'onSceneElementDeleted' of all listeners (duplicate list in case
+    // it is altered in response to event).
+    EventListenerList::iterator itListener;
+    EventListenerList listeners = mEventListeners;
+    for ( itListener = listeners.begin(); itListener != listeners.end(); ++itListener )
+        ((cgSceneEventListener*)(*itListener))->onSceneElementDeleted( e );
 }
 
 //-----------------------------------------------------------------------------

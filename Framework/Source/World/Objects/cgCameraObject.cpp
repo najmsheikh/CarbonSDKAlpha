@@ -1076,6 +1076,29 @@ cgFloat cgCameraNode::estimateZoomFactor( const cgSize & ViewportSize, const cgV
 }
 
 //-----------------------------------------------------------------------------
+// Name : estimatePickTolerance ()
+/// <summary>
+/// Estimate the distance (along each axis) from the specified object space 
+/// point to use as a tolerance for picking.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgVector3 cgCameraNode::estimatePickTolerance( const cgSize & ViewportSize, cgFloat WireTolerance, const cgVector3 & Pos, const cgTransform & ObjectTransform )
+{
+    // Scale tolerance based on estimated world space zoom factor.
+    cgVector3 v;
+    ObjectTransform.transformCoord( v, Pos );
+    WireTolerance *= estimateZoomFactor( ViewportSize, v );
+
+    // Convert into object space tolerance.
+    cgVector3 ObjectWireTolerance;
+    cgVector3 vAxisScale = ObjectTransform.localScale();
+    ObjectWireTolerance.x = WireTolerance / vAxisScale.x;
+    ObjectWireTolerance.y = WireTolerance / vAxisScale.y;
+    ObjectWireTolerance.z = WireTolerance / vAxisScale.z;
+    return ObjectWireTolerance;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : estimateZoomFactor ()
 /// <summary>
 /// Given the current viewport type and projection mode, estimate the "zoom"

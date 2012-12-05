@@ -66,6 +66,9 @@ struct asSDeferredParam
 	asSExprContext *origExpr;
 };
 
+// TODO: refactor: asSExprContext should have indicators to inform where the value is, 
+//                 i.e. if the reference to an object is pushed on the stack or not, etc
+
 struct asSExprContext
 {
 	asSExprContext(asCScriptEngine *engine) : bc(engine) 
@@ -105,9 +108,9 @@ struct asSExprContext
 	asCTypeInfo type;
 	int  property_get;
 	int  property_set;
-	bool property_const; // If the object that is being accessed through property accessor is read-only
+	bool property_const;  // If the object that is being accessed through property accessor is read-only
 	bool property_handle; // If the property accessor is called on an object stored in a handle
-	bool property_ref; // If the property accessor is called on a reference
+	bool property_ref;    // If the property accessor is called on a reference
 	asSExprContext *property_arg;
 	asCArray<asSDeferredParam> deferredParams;
 	asCScriptNode  *exprNode;
@@ -116,10 +119,10 @@ struct asSExprContext
 
 struct asSOverloadCandidate
 {
-    asSOverloadCandidate() : funcId(0), cost(0) {}
-    asSOverloadCandidate(int _id, asUINT _cost ) : funcId(_id), cost(_cost) {}
-    int funcId;
-    asUINT cost;
+	asSOverloadCandidate() : funcId(0), cost(0) {}
+	asSOverloadCandidate(int _id, asUINT _cost ) : funcId(_id), cost(_cost) {}
+	int funcId;
+	asUINT cost;
 };
 
 enum EImplicitConv
@@ -148,7 +151,7 @@ public:
 	asCCompiler(asCScriptEngine *engine);
 	~asCCompiler();
 
-	int CompileFunction(asCBuilder *builder, asCScriptCode *script, sExplicitSignature *signature, asCScriptNode *func, asCScriptFunction *outFunc);
+	int CompileFunction(asCBuilder *builder, asCScriptCode *script, asCArray<asCString> &parameterNames, asCScriptNode *func, asCScriptFunction *outFunc);
 	int CompileDefaultConstructor(asCBuilder *builder, asCScriptCode *script, asCScriptNode *node, asCScriptFunction *outFunc);
 	int CompileFactory(asCBuilder *builder, asCScriptCode *script, asCScriptFunction *outFunc);
 	int CompileGlobalVariable(asCBuilder *builder, asCScriptCode *script, asCScriptNode *expr, sGlobalVariableDescription *gvar, asCScriptFunction *outFunc);
@@ -202,7 +205,7 @@ protected:
 	int  CompileArgumentList(asCScriptNode *node, asCArray<asSExprContext *> &args);
 	int  CompileDefaultArgs(asCScriptNode *node, asCArray<asSExprContext*> &args, asCScriptFunction *func);
 	asUINT MatchFunctions(asCArray<int> &funcs, asCArray<asSExprContext*> &args, asCScriptNode *node, const char *name, asCObjectType *objectType = NULL, bool isConstMethod = false, bool silent = false, bool allowObjectConstruct = true, const asCString &scope = "");
-	int  CompileVariableAccess(const asCString &name, const asCString &scope, asSExprContext *ctx, asCScriptNode *errNode, bool isOptional = false, bool noFunction = false, asCObjectType *objType = 0);
+	int  CompileVariableAccess(const asCString &name, const asCString &scope, asSExprContext *ctx, asCScriptNode *errNode, bool isOptional = false, bool noFunction = false, bool noGlobal = false, asCObjectType *objType = 0);
 
 	// Helper functions
 	void ProcessPropertyGetAccessor(asSExprContext *ctx, asCScriptNode *node);
@@ -238,6 +241,7 @@ protected:
 	void PushVariableOnStack(asSExprContext *ctx, bool asReference);
 	void DestroyVariables(asCByteCode *bc);
 	asSNameSpace *DetermineNameSpace(const asCString &scope);
+	int  SetupParametersAndReturnVariable(asCArray<asCString> &parameterNames, asCScriptNode *func);
 
 	// Returns the cost of the conversion (the sum of the EConvCost performed)
 	asUINT ImplicitConversion(asSExprContext *ctx, const asCDataType &to, asCScriptNode *node, EImplicitConv convType, bool generateCode = true, bool allowObjectConstruct = true);
@@ -254,9 +258,9 @@ protected:
 	asUINT ProcessStringConstant(asCString &str, asCScriptNode *node, bool processEscapeSequences = true);
 	void ProcessHeredocStringConstant(asCString &str, asCScriptNode *node);
 	int  GetPrecedence(asCScriptNode *op);
-	void Error(const char *msg, asCScriptNode *node);
-	void Warning(const char *msg, asCScriptNode *node);
-	void Information(const char *msg, asCScriptNode *node);
+	void Error(const asCString &msg, asCScriptNode *node);
+	void Warning(const asCString &msg, asCScriptNode *node);
+	void Information(const asCString &msg, asCScriptNode *node);
 	void PrintMatchingFuncs(asCArray<int> &funcs, asCScriptNode *node);
 	void AddVariableScope(bool isBreakScope = false, bool isContinueScope = false);
 	void RemoveVariableScope();
@@ -289,11 +293,25 @@ protected:
 	void ReleaseTemporaryVariable(int offset, asCByteCode *bc);
 	bool IsVariableOnHeap(int offset);
 
+	// This ordered array indicates the type of each variable
 	asCArray<asCDataType> variableAllocations;
+
+	// This ordered array indicates which variables are temporaries or not
 	asCArray<bool>        variableIsTemporary;
+
+	// This unordered array gives the offsets of all temporary variables, whether currently allocated or not
+	asCArray<int>         tempVariableOffsets;
+
+	// This ordered array indicated if the variable is on the heap or not
 	asCArray<bool>        variableIsOnHeap;
+
+	// This unordered array gives the indexes of the currently unused variables
 	asCArray<int>         freeVariables;
-	asCArray<int>         tempVariables;
+
+	// This array holds the offsets of the currently allocated temporary variables
+	asCArray<int>         tempVariables; 
+
+	// This array holds the indices of variables that must not be used in an allocation
 	asCArray<int>         reservedVariables;
 
 	bool isCompilingDefaultArg;

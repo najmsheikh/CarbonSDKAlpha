@@ -41,6 +41,7 @@
 #include "as_builder.h"
 #include "as_context.h"
 #include "as_texts.h"
+#include "as_debug.h"
 
 BEGIN_AS_NAMESPACE
 
@@ -187,6 +188,8 @@ int asCModule::Build()
 #ifdef AS_NO_COMPILER
 	return asNOT_SUPPORTED;
 #else
+	TimeIt("asCModule::Build");
+
 	// Only one thread may build at one time
 	// TODO: It should be possible to have multiple threads perform compilations
 	int r = engine->RequestBuild();
@@ -260,10 +263,7 @@ int asCModule::GetFunctionIdByIndex(asUINT index) const
 // interface
 asIScriptFunction *asCModule::GetFunctionByIndex(asUINT index) const
 {
-	if( index >= globalFunctions.GetLength() )
-		return 0;
-
-	return globalFunctions[index];
+	return const_cast<asCScriptFunction*>(globalFunctions.Get(index));
 }
 
 // internal
@@ -273,21 +273,23 @@ int asCModule::CallInit(asIScriptContext *myCtx)
 		return asERROR;
 
 	// Each global variable needs to be cleared individually
-	asUINT n;
-	for( n = 0; n < scriptGlobals.GetLength(); n++ )
+	asCSymbolTableIterator<asCGlobalProperty> it = scriptGlobals.List();
+	while( it )
 	{
-		if( scriptGlobals[n] )
-		{
-			memset(scriptGlobals[n]->GetAddressOfValue(), 0, sizeof(asDWORD)*scriptGlobals[n]->type.GetSizeOnStackDWords());
-		}
+		asCGlobalProperty *desc = *it;
+		memset(desc->GetAddressOfValue(), 0, sizeof(asDWORD)*desc->type.GetSizeOnStackDWords());
+		it++;
 	}
 
 	// Call the init function for each of the global variables
 	asIScriptContext *ctx = myCtx;
 	int r = asEXECUTION_FINISHED;
-	for( n = 0; n < scriptGlobals.GetLength() && r == asEXECUTION_FINISHED; n++ )
+	it = scriptGlobals.List();
+	while( it && r == asEXECUTION_FINISHED )
 	{
-		if( scriptGlobals[n]->GetInitFunc() )
+		asCGlobalProperty *desc = *it;
+		it++;
+		if( desc->GetInitFunc() )
 		{
 			if( ctx == 0 )
 			{
@@ -296,15 +298,15 @@ int asCModule::CallInit(asIScriptContext *myCtx)
 					break;
 			}
 
-			r = ctx->Prepare(scriptGlobals[n]->GetInitFunc());
+			r = ctx->Prepare(desc->GetInitFunc());
 			if( r >= 0 )
 			{
 				r = ctx->Execute();
 				if( r != asEXECUTION_FINISHED )
 				{
 					asCString msg;
-					msg.Format(TXT_FAILED_TO_INITIALIZE_s, scriptGlobals[n]->name.AddressOf());
-					asCScriptFunction *func = scriptGlobals[n]->GetInitFunc();
+					msg.Format(TXT_FAILED_TO_INITIALIZE_s, desc->name.AddressOf());
+					asCScriptFunction *func = desc->GetInitFunc();
 
 					engine->WriteMessage(func->scriptSectionIdx >= 0 ? engine->scriptSectionNames[func->scriptSectionIdx]->AddressOf() : "",
 										 func->GetLineNumber(0) & 0xFFFFF, 
@@ -319,7 +321,7 @@ int asCModule::CallInit(asIScriptContext *myCtx)
 						msg.Format(TXT_EXCEPTION_s_IN_s, ctx->GetExceptionString(), function->GetDeclaration());
 
 						engine->WriteMessage(function->GetScriptSectionName(), 
-						                     ctx->GetExceptionLineNumber(), 
+											 ctx->GetExceptionLineNumber(), 
 											 0,
 											 asMSGTYPE_INFORMATION,
 											 msg.AddressOf());
@@ -352,14 +354,15 @@ void asCModule::CallExit()
 {
 	if( !isGlobalVarInitialized ) return;
 
-	for( size_t n = 0; n < scriptGlobals.GetLength(); n++ )
+	asCSymbolTableIterator<asCGlobalProperty> it = scriptGlobals.List();
+	while( it )
 	{
-		if( scriptGlobals[n]->type.IsObject() )
+		if( (*it)->type.IsObject() )
 		{
-			void **obj = (void**)scriptGlobals[n]->GetAddressOfValue();
+			void **obj = (void**)(*it)->GetAddressOfValue();
 			if( *obj )
 			{
-				asCObjectType *ot = scriptGlobals[n]->type.GetObjectType();
+				asCObjectType *ot = (*it)->type.GetObjectType();
 
 				if( ot->flags & asOBJ_REF )
 				{
@@ -379,6 +382,7 @@ void asCModule::CallExit()
 				*obj = 0;
 			}
 		}
+		it++;
 	}
 
 	isGlobalVarInitialized = false;
@@ -392,29 +396,25 @@ void asCModule::InternalReset()
 	size_t n;
 
 	// Release all global functions
-	for( n = 0; n < globalFunctions.GetLength(); n++ )
-	{
-		if( globalFunctions[n] )
-			globalFunctions[n]->Release();
-	}
-	globalFunctions.SetLength(0);
+	asCSymbolTable<asCScriptFunction>::iterator funcIt = globalFunctions.List();
+	for( ; funcIt; funcIt++ )
+		(*funcIt)->Release();
+	globalFunctions.Clear();
 
 	// First release all compiled functions
 	for( n = 0; n < scriptFunctions.GetLength(); n++ )
-	{
 		if( scriptFunctions[n] )
-		{
-			// Remove the module reference in the functions
-			scriptFunctions[n]->module = 0;
-			scriptFunctions[n]->Release();
-		}
-	}
+			scriptFunctions[n]->Orphan(this);
 	scriptFunctions.SetLength(0);
 
 	// Release the global properties declared in the module
-	for( n = 0; n < scriptGlobals.GetLength(); n++ )
-		scriptGlobals[n]->Release();
-	scriptGlobals.SetLength(0);
+	asCSymbolTableIterator<asCGlobalProperty> globIt = scriptGlobals.List();
+	while( globIt )
+	{
+		(*globIt)->Orphan(this);
+		globIt++;
+	}
+	scriptGlobals.Clear();
 
 	UnbindAllImportedFunctions();
 
@@ -435,7 +435,7 @@ void asCModule::InternalReset()
 
 	// Free declared types, including classes, typedefs, and enums
 	for( n = 0; n < classTypes.GetLength(); n++ )
-		classTypes[n]->Release();
+		classTypes[n]->Orphan(this);
 	classTypes.SetLength(0);
 	for( n = 0; n < enumTypes.GetLength(); n++ )
 		enumTypes[n]->Release();
@@ -483,23 +483,12 @@ int asCModule::GetFunctionIdByName(const char *name) const
 // interface
 asIScriptFunction *asCModule::GetFunctionByName(const char *name) const
 {
-	asIScriptFunction *func = 0;
-	for( size_t n = 0; n < globalFunctions.GetLength(); n++ )
-	{
-		if( globalFunctions[n]->name == name &&
-			globalFunctions[n]->nameSpace == defaultNamespace )
-		{
-			if( func == 0 )
-				func = globalFunctions[n];
-			else
-			{
-				// Multiple functions with the same name
-				return 0;
-			}
-		}
-	}
+	const asCArray<unsigned int> &idxs = globalFunctions.GetIndexes(defaultNamespace, name);
+	if( idxs.GetLength() != 1 )
+		return 0;
 
-	return func;
+	const asIScriptFunction *func = globalFunctions.Get(idxs[0]);
+	return const_cast<asIScriptFunction*>(func);
 }
 
 // interface
@@ -553,7 +542,7 @@ int asCModule::GetImportedFunctionIndexByDecl(const char *decl) const
 // interface
 asUINT asCModule::GetFunctionCount() const
 {
-	return (asUINT)globalFunctions.GetLength();
+	return (asUINT)globalFunctions.GetSize();
 }
 
 #ifdef AS_DEPRECATED
@@ -625,21 +614,21 @@ asIScriptFunction *asCModule::GetFunctionByDecl(const char *decl) const
 	// Use the defaultNamespace implicitly unless an explicit namespace has been provided
 	asSNameSpace *ns = func.nameSpace == engine->nameSpaces[0] ? defaultNamespace : func.nameSpace;
 
-	// TODO: optimize: Improve linear search
 	// Search script functions for matching interface
 	asIScriptFunction *f = 0;
-	for( size_t n = 0; n < globalFunctions.GetLength(); ++n )
+	const asCArray<unsigned int> &idxs = globalFunctions.GetIndexes(ns, func.name);
+	for( unsigned int n = 0; n < idxs.GetLength(); n++ )
 	{
-		if( globalFunctions[n]->objectType  == 0 && 
-			func.name                       == globalFunctions[n]->name && 
-			func.returnType                 == globalFunctions[n]->returnType &&
-			func.parameterTypes.GetLength() == globalFunctions[n]->parameterTypes.GetLength() &&
-			ns                              == globalFunctions[n]->nameSpace )
+		const asCScriptFunction *funcPtr = globalFunctions.Get(idxs[n]);
+		if( funcPtr->objectType == 0 &&
+			func.returnType                 == funcPtr->returnType &&
+			func.parameterTypes.GetLength() == funcPtr->parameterTypes.GetLength()
+			)
 		{
 			bool match = true;
 			for( size_t p = 0; p < func.parameterTypes.GetLength(); ++p )
 			{
-				if( func.parameterTypes[p] != globalFunctions[n]->parameterTypes[p] )
+				if( func.parameterTypes[p] != funcPtr->parameterTypes[p] )
 				{
 					match = false;
 					break;
@@ -649,7 +638,7 @@ asIScriptFunction *asCModule::GetFunctionByDecl(const char *decl) const
 			if( match )
 			{
 				if( f == 0 )
-					f = globalFunctions[n];
+					f = const_cast<asCScriptFunction*>(funcPtr);
 				else
 					// Multiple functions
 					return 0;
@@ -663,23 +652,14 @@ asIScriptFunction *asCModule::GetFunctionByDecl(const char *decl) const
 // interface
 asUINT asCModule::GetGlobalVarCount() const
 {
-	return (asUINT)scriptGlobals.GetLength();
+	return (asUINT)scriptGlobals.GetSize();
 }
 
 // interface
 int asCModule::GetGlobalVarIndexByName(const char *name) const
 {
 	// Find the global var id
-	int id = -1;
-	for( size_t n = 0; n < scriptGlobals.GetLength(); n++ )
-	{
-		if( scriptGlobals[n]->name == name &&
-			scriptGlobals[n]->nameSpace == defaultNamespace )
-		{
-			id = (int)n;
-			break;
-		}
-	}
+	int id = scriptGlobals.GetFirstIndex(defaultNamespace, name);
 
 	if( id == -1 ) return asNO_GLOBAL_VAR;
 
@@ -689,11 +669,11 @@ int asCModule::GetGlobalVarIndexByName(const char *name) const
 // interface
 int asCModule::RemoveGlobalVar(asUINT index)
 {
-	if( index >= scriptGlobals.GetLength() )
+	asCGlobalProperty *prop = scriptGlobals.Get(index);
+	if( !prop )
 		return asINVALID_ARG;
-
-	scriptGlobals[index]->Release();
-	scriptGlobals.RemoveIndex(index);
+	prop->Orphan(this);
+	scriptGlobals.Erase(index);
 
 	return 0;
 }
@@ -708,46 +688,34 @@ int asCModule::GetGlobalVarIndexByDecl(const char *decl) const
 	asCDataType dt;
 	bld.ParseVariableDeclaration(decl, defaultNamespace, name, nameSpace, dt);
 
-	// TODO: optimize: Improve linear search
 	// Search global variables for a match
-	int id = -1;
-	for( size_t n = 0; n < scriptGlobals.GetLength(); ++n )
-	{
-		if( name      == scriptGlobals[n]->name && 
-			nameSpace == scriptGlobals[n]->nameSpace &&
-			dt        == scriptGlobals[n]->type )
-		{
-			id = (int)n;
-			break;
-		}
-	}
+	int id = scriptGlobals.GetFirstIndex(nameSpace, name, asCCompGlobPropType(dt));
+	if( id != -1 )
+		return id;
 
-	if( id == -1 ) return asNO_GLOBAL_VAR;
-
-	return id;
+	return asNO_GLOBAL_VAR;
 }
 
 // interface
 void *asCModule::GetAddressOfGlobalVar(asUINT index)
 {
-	if( index >= scriptGlobals.GetLength() )
+	asCGlobalProperty *prop = scriptGlobals.Get(index);
+	if( !prop ) 
 		return 0;
 
 	// For object variables it's necessary to dereference the pointer to get the address of the value
-	if( scriptGlobals[index]->type.IsObject() && 
-		!scriptGlobals[index]->type.IsObjectHandle() )
-		return *(void**)(scriptGlobals[index]->GetAddressOfValue());
+	if( prop->type.IsObject() &&
+		!prop->type.IsObjectHandle() )
+		return *(void**)(prop->GetAddressOfValue());
 
-	return (void*)(scriptGlobals[index]->GetAddressOfValue());
+	return (void*)(prop->GetAddressOfValue());
 }
 
 // interface
 const char *asCModule::GetGlobalVarDeclaration(asUINT index, bool includeNamespace) const
 {
-	if( index >= scriptGlobals.GetLength() )
-		return 0;
-
-	asCGlobalProperty *prop = scriptGlobals[index];
+	const asCGlobalProperty *prop = scriptGlobals.Get(index);
+	if (!prop) return 0;
 
 	asCString *tempString = &asCThreadManager::GetLocalData()->string;
 	*tempString = prop->type.Format();
@@ -762,10 +730,8 @@ const char *asCModule::GetGlobalVarDeclaration(asUINT index, bool includeNamespa
 // interface
 int asCModule::GetGlobalVar(asUINT index, const char **name, const char **nameSpace, int *typeId, bool *isConst) const
 {
-	if( index >= scriptGlobals.GetLength() )
-		return asINVALID_ARG;
-
-	asCGlobalProperty *prop = scriptGlobals[index];
+	const asCGlobalProperty *prop = scriptGlobals.Get(index);
+	if (!prop) return 0;
 
 	if( name )
 		*name = prop->name.AddressOf();
@@ -833,10 +799,10 @@ const char *asCModule::GetEnumByIndex(asUINT index, int *enumTypeId, const char 
 		return 0;
 
 	if( enumTypeId )
-		*enumTypeId = GetTypeIdByDecl(enumTypes[index]->name.AddressOf());
+		*enumTypeId = engine->GetTypeIdFromDataType(asCDataType::CreateObject(enumTypes[index], false));
 
 	if( nameSpace )
-		*nameSpace = enumTypes[index]->name.AddressOf();
+		*nameSpace = enumTypes[index]->nameSpace->name.AddressOf();
 
 	return enumTypes[index]->name.AddressOf();
 }
@@ -882,7 +848,7 @@ const char *asCModule::GetTypedefByIndex(asUINT index, int *typeId, const char *
 		return 0;
 
 	if( typeId )
-		*typeId = GetTypeIdByDecl(typeDefs[index]->name.AddressOf());
+		*typeId = engine->GetTypeIdFromDataType(typeDefs[index]->templateSubType); 
 
 	if( nameSpace )
 		*nameSpace = typeDefs[index]->nameSpace->name.AddressOf();
@@ -901,8 +867,9 @@ int asCModule::GetNextImportedFunctionId()
 	return FUNC_IMPORTED | (asUINT)engine->importedFunctions.GetLength();
 }
 
+#ifndef AS_NO_COMPILER
 // internal
-int asCModule::AddScriptFunction(int sectionIdx, int id, const char *name, const asCDataType &returnType, asCDataType *params, asETypeModifiers *inOutFlags, asCString **defaultArgs, int paramCount, bool isInterface, asCObjectType *objType, bool isConstMethod, bool isGlobalFunction, bool isPrivate, bool isFinal, bool isOverride, bool isShared, asSNameSpace *ns)
+int asCModule::AddScriptFunction(int sectionIdx, int id, const asCString &name, const asCDataType &returnType, const asCArray<asCDataType> &params, const asCArray<asETypeModifiers> &inOutFlags, const asCArray<asCString *> &defaultArgs, bool isInterface, asCObjectType *objType, bool isConstMethod, bool isGlobalFunction, bool isPrivate, bool isFinal, bool isOverride, bool isShared, asSNameSpace *ns)
 {
 	asASSERT(id >= 0);
 
@@ -914,26 +881,26 @@ int asCModule::AddScriptFunction(int sectionIdx, int id, const char *name, const
 	if( ns == 0 )
 		ns = engine->nameSpaces[0];
 
+	// All methods of shared objects are also shared
+	if( objType && objType->IsShared() )
+		isShared = true;
+
 	func->name             = name;
 	func->nameSpace        = ns;
 	func->id               = id;
 	func->returnType       = returnType;
 	func->scriptSectionIdx = sectionIdx;
-	for( int n = 0; n < paramCount; n++ )
-	{
-		func->parameterTypes.PushLast(params[n]);
-		func->inOutFlags.PushLast(inOutFlags[n]);
-		func->defaultArgs.PushLast(defaultArgs[n]);
-	}
-	func->objectType = objType;
-	func->isReadOnly = isConstMethod;
-	func->isPrivate  = isPrivate;
-	func->isFinal    = isFinal;
-	func->isOverride = isOverride;
-	// All methods of shared objects are also shared
-	if( objType && objType->IsShared() )
-		isShared = true;
-	func->isShared   = isShared;
+	func->parameterTypes   = params;
+	func->inOutFlags       = inOutFlags;
+	func->defaultArgs      = defaultArgs;
+	func->objectType       = objType;
+	func->isReadOnly       = isConstMethod;
+	func->isPrivate        = isPrivate;
+	func->isFinal          = isFinal;
+	func->isOverride       = isOverride;
+	func->isShared         = isShared;
+
+	asASSERT( params.GetLength() == inOutFlags.GetLength() && params.GetLength() == defaultArgs.GetLength() );
 
 	// Verify that we are not assigning either the final or override specifier(s) if we are registering a non-member function
 	asASSERT( !(!objType && isFinal) );
@@ -950,7 +917,7 @@ int asCModule::AddScriptFunction(int sectionIdx, int id, const char *name, const
 	// Add reference
 	if( isGlobalFunction )
 	{
-		globalFunctions.PushLast(func);
+		globalFunctions.Put(func);
 		func->AddRef();
 	}
 
@@ -968,7 +935,7 @@ int asCModule::AddScriptFunction(asCScriptFunction *func)
 }
 
 // internal
-int asCModule::AddImportedFunction(int id, const char *name, const asCDataType &returnType, asCDataType *params, asETypeModifiers *inOutFlags, int paramCount, const asCString &moduleName)
+int asCModule::AddImportedFunction(int id, const asCString &name, const asCDataType &returnType, const asCArray<asCDataType> &params, const asCArray<asETypeModifiers> &inOutFlags, const asCArray<asCString *> &defaultArgs, asSNameSpace *ns, const asCString &moduleName)
 {
 	asASSERT(id >= 0);
 
@@ -977,23 +944,22 @@ int asCModule::AddImportedFunction(int id, const char *name, const asCDataType &
 	if( func == 0 )
 		return asOUT_OF_MEMORY;
 
-	func->name       = name;
-	func->id         = id;
-	func->returnType = returnType;
-	for( int n = 0; n < paramCount; n++ )
-	{
-		func->parameterTypes.PushLast(params[n]);
-		func->inOutFlags.PushLast(inOutFlags[n]);
-	}
-	func->objectType = 0;
+	func->name           = name;
+	func->id             = id;
+	func->returnType     = returnType;
+	func->nameSpace      = ns;
+	func->parameterTypes = params;
+	func->inOutFlags     = inOutFlags;
+	func->defaultArgs    = defaultArgs;
+	func->objectType     = 0;
 
 	sBindInfo *info = asNEW(sBindInfo);
 	if( info == 0 )
 		return asOUT_OF_MEMORY;
 
 	info->importedFunctionSignature = func;
-	info->boundFunctionId = -1;
-	info->importFromModule = moduleName;
+	info->boundFunctionId           = -1;
+	info->importFromModule          = moduleName;
 	bindInformations.PushLast(info);
 
 	// Add the info to the array in the engine
@@ -1004,6 +970,7 @@ int asCModule::AddImportedFunction(int id, const char *name, const asCDataType &
 
 	return 0;
 }
+#endif
 
 // internal
 asCScriptFunction *asCModule::GetImportedFunction(int index) const
@@ -1172,28 +1139,32 @@ asCGlobalProperty *asCModule::AllocateGlobalProperty(const char *name, const asC
 	prop->type = dt;
 	prop->AllocateMemory();
 
+	// Make an entry in the address to variable map
+	engine->varAddressMap.Insert(prop->GetAddressOfValue(), prop);
+
 	// Store the variable in the module scope (the reference count is already set to 1)
-	scriptGlobals.PushLast(prop);
+	scriptGlobals.Put(prop);
 
 	return prop;
 }
 
 // interface
-int asCModule::SaveByteCode(asIBinaryStream *out) const
+int asCModule::SaveByteCode(asIBinaryStream *out, bool stripDebugInfo) const
 {
 #ifdef AS_NO_COMPILER
 	UNUSED_VAR(out);
+	UNUSED_VAR(stripDebugInfo);
 	return asNOT_SUPPORTED;
 #else
 	if( out == 0 ) return asINVALID_ARG;
 
-	asCWriter write(const_cast<asCModule*>(this), out, engine);
+	asCWriter write(const_cast<asCModule*>(this), out, engine, stripDebugInfo);
 	return write.Write();
 #endif
 }
 
 // interface
-int asCModule::LoadByteCode(asIBinaryStream *in)
+int asCModule::LoadByteCode(asIBinaryStream *in, bool *wasDebugInfoStripped)
 {
 	if( in == 0 ) return asINVALID_ARG;
 
@@ -1204,7 +1175,7 @@ int asCModule::LoadByteCode(asIBinaryStream *in)
 		return r;
 
 	asCReader read(this, in, engine);
-	r = read.Read();
+	r = read.Read(wasDebugInfoStripped);
 
     JITCompile();
 
@@ -1252,22 +1223,25 @@ int asCModule::CompileGlobalVar(const char *sectionName, const char *code, int l
 	if( r >= 0 && engine->ep.initGlobalVarsAfterBuild )
 	{
 		// Clear the memory 
-		asCGlobalProperty *prop = scriptGlobals[scriptGlobals.GetLength()-1];
-		memset(prop->GetAddressOfValue(), 0, sizeof(asDWORD)*prop->type.GetSizeOnStackDWords());
-
-		if( prop->GetInitFunc() )
+		asCGlobalProperty *prop = scriptGlobals.GetLast();
+		if( prop )
 		{
-			// Call the init function for the global variable
-			asIScriptContext *ctx = 0;
-			int r = engine->CreateContext(&ctx, true);
-			if( r < 0 )
-				return r;
-
-			r = ctx->Prepare(prop->GetInitFunc());
-			if( r >= 0 )
-				r = ctx->Execute();
-
-			ctx->Release();
+			memset(prop->GetAddressOfValue(), 0, sizeof(asDWORD)*prop->type.GetSizeOnStackDWords());
+	
+			if( prop->GetInitFunc() )
+			{
+				// Call the init function for the global variable
+				asIScriptContext *ctx = 0;
+				int r = engine->CreateContext(&ctx, true);
+				if( r < 0 )
+					return r;
+	
+				r = ctx->Prepare(prop->GetInitFunc());
+				if( r >= 0 )
+					r = ctx->Execute();
+	
+				ctx->Release();
+			}
 		}
 	}
 
@@ -1350,21 +1324,22 @@ int asCModule::RemoveFunction(asIScriptFunction *func)
 {
 	// Find the global function
 	asCScriptFunction *f = static_cast<asCScriptFunction*>(func);
-	int idx = globalFunctions.IndexOf(f);
+	int idx = globalFunctions.GetIndex(f);
 	if( idx >= 0 )
 	{
-		globalFunctions.RemoveIndex(idx);
+		globalFunctions.Erase(idx);
 		f->Release();
 		scriptFunctions.RemoveValue(f);
-		f->Release();
+		f->Orphan(this);
 		return 0;
 	}
 
 	return asNO_FUNCTION;
 }
 
+#ifndef AS_NO_COMPILER
 // internal
-int asCModule::AddFuncDef(const char *name, asSNameSpace *ns)
+int asCModule::AddFuncDef(const asCString &name, asSNameSpace *ns)
 {
 	asCScriptFunction *func = asNEW(asCScriptFunction)(engine, 0, asFUNC_FUNCDEF);
 	if( func == 0 )
@@ -1381,6 +1356,7 @@ int asCModule::AddFuncDef(const char *name, asSNameSpace *ns)
 
 	return (int)funcDefs.GetLength()-1;
 }
+#endif
 
 // interface
 asDWORD asCModule::SetAccessMask(asDWORD mask)

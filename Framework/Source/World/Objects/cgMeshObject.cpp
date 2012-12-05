@@ -585,7 +585,7 @@ bool cgMeshObject::createTorus( cgFloat fOuterRadius, cgFloat fInnerRadius, cgUI
 /// intersected and also compute the object space intersection distance. 
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgMeshObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance )
+bool cgMeshObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance )
 {
     // Retrieve the underlying mesh resource and pick if available
     cgMesh * pMesh = mMesh.getResource(true);
@@ -593,7 +593,7 @@ bool cgMeshObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const c
         return false;
     
     // Pass through
-    return pMesh->pick( vOrigin, vDir, bWireframe, vWireTolerance, fDistance );
+    return pMesh->pick( pCamera, ViewportSize, pIssuer->getWorldTransform(false), vOrigin, vDir, bWireframe, fWireTolerance, fDistance );
 }
 
 //-----------------------------------------------------------------------------
@@ -1642,14 +1642,14 @@ void cgMeshNode::buildPhysicsBody( )
         } // End if existing shape*/
 
         // Configure new rigid body.
-        cgRigidBody::ConstructData cd;
-        cd.model            = mPhysicsModel;
-        cd.initialTransform = getWorldTransform(false);
-        cd.quality          = cgSimulationQuality::Default;
-        cd.mass             = 0.0f;
+        cgRigidBodyCreateParams cp;
+        cp.model            = mPhysicsModel;
+        cp.initialTransform = getWorldTransform(false);
+        cp.quality          = cgSimulationQuality::Default;
+        cp.mass             = 0.0f;
 
         // Construct a new rigid body object.
-        cgRigidBody * pRigidBody = new cgRigidBody( mParentScene->getPhysicsWorld(), pShape, cd );
+        cgRigidBody * pRigidBody = new cgRigidBody( mParentScene->getPhysicsWorld(), pShape, cp );
 
         // Release the previous physics body (if any).
         if ( mPhysicsBody )

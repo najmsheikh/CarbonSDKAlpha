@@ -31,6 +31,7 @@
 #include <World/cgWorldObject.h>
 #include <World/cgObjectSubElement.h>
 #include <World/cgScene.h>
+#include <World/cgSceneElement.h>
 #include <Rendering/cgRenderDriver.h>
 #include <Resources/cgResourceManager.h>
 #include <System/cgMessageTypes.h>
@@ -104,12 +105,11 @@ void cgWorld::dispose( bool disposeBase )
         resources->ReleaseWorldComponents( this );*/
 
     // First destroy any active scenes
-    for ( SceneMap::iterator itScene = mActiveScenes.begin(); itScene != mActiveScenes.end(); ++itScene )
+    for ( size_t i = 0; i < mActiveScenes.size(); ++i )
     {
         // Delete the scene object
-        cgScene * scene = itScene->second;
-        if ( scene != CG_NULL )
-            scene->scriptSafeDispose( );
+        if ( mActiveScenes[i] )
+            mActiveScenes[i]->scriptSafeDispose( );
 
     } // Next scene
 
@@ -158,6 +158,7 @@ void cgWorld::dispose( bool disposeBase )
     mStatementRollback  = CG_NULL;
     mStreamIsTemporary  = false;
     mActiveScenes.clear();
+    mActiveSceneIdMap.clear();
     
     // Dispose of base class(es) if requested.
     if ( disposeBase )
@@ -857,6 +858,18 @@ bool cgWorld::open( const cgInputStream & stream )
 }
 
 //-----------------------------------------------------------------------------
+// Name : close ()
+/// <summary>
+/// Unload all active scenes and close our connection to the world database.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgWorld::close( )
+{
+    // Alias for standard disposal.
+    dispose( false );
+}
+
+//-----------------------------------------------------------------------------
 // Name : save ()
 /// <summary>
 /// Call in order to serialize the current world to a file.
@@ -1075,9 +1088,8 @@ bool cgWorld::save( const cgString & fileName )
     } // End if overwriting
     
     // Mark all loaded scenes as no longer being dirty.
-    SceneMap::iterator itScene;
-    for ( itScene = mActiveScenes.begin(); itScene != mActiveScenes.end(); ++itScene )
-        itScene->second->setDirty( false );
+    for ( size_t i = 0; i < mActiveScenes.size(); ++i )
+        mActiveScenes[i]->setDirty( false );
 
     // Success!
     return true;
@@ -1247,7 +1259,7 @@ cgWorldObject * cgWorld::createObject( bool internalObject, const cgUID & typeId
         } // End if !internal
 
         // Allow object to initialize / insert into database if required.
-        if ( !object->onComponentCreated( &cgComponentCreatedEventArgs( objectType->localIdentifier ) ) )
+        if ( !object->onComponentCreated( &cgComponentCreatedEventArgs( objectType->localIdentifier, initMethod ) ) )
             throw ResultException( cgString::format( _T("onComponentCreated() returned failure when creating new world object of type '%s'."), 
                                                      cgStringUtility::toString( typeIdentifier, _T("B") ).c_str() ), cgDebugSource() );
         
@@ -1357,7 +1369,7 @@ cgObjectSubElement * cgWorld::createObjectSubElement( bool internalElement, cons
         } // End if !internal
 
         // Allow object to initialize / insert into database if required.
-        if ( !element->onComponentCreated( &cgComponentCreatedEventArgs( objectSubElementType->localIdentifier ) ) )
+        if ( !element->onComponentCreated( &cgComponentCreatedEventArgs( objectSubElementType->localIdentifier, (init != CG_NULL) ? cgCloneMethod::Copy : cgCloneMethod::None ) ) )
             throw ResultException( cgString::format( _T("onComponentCreated() returned failure when creating new object sub-element of type '%s'."), 
                                                      cgStringUtility::toString( typeIdentifier, _T("B") ).c_str() ), cgDebugSource() );
         
@@ -1372,6 +1384,93 @@ cgObjectSubElement * cgWorld::createObjectSubElement( bool internalElement, cons
         cgAppLog::write( cgAppLog::Warning, _T("%s\n"), e.toString().c_str() );
         if ( !internalElement )
             rollbackTransaction( L"createObjectSubElement" );
+        if ( element )
+            element->deleteReference();
+        return CG_NULL;
+    
+    } // End catch
+    
+    // Notify whoever is interested that the scene was modified
+    // ToDo: 9999 - Do we need a notification?
+    // OnObjectAdded( gcnew ObjectUpdatedEventArgs( this, object ) );
+    
+    // Success?
+    return element;
+}
+
+//-----------------------------------------------------------------------------
+// Name : createSceneElement () (Virtual)
+/// <summary>
+/// Insert information about the specified scene element into the world 
+/// database including its type if it doesn't already exist.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgSceneElement * cgWorld::createSceneElement( bool internalElement, const cgUID & typeIdentifier, cgScene * scene )
+{
+    cgSceneElement * element = CG_NULL;
+
+    // If the engine is not in sandbox mode, all new scene elements are internal.
+    if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
+        internalElement = true;
+    
+    // Find the description associated with the underlying element type for this identifier.
+    const cgSceneElementTypeDesc * sceneElementType = mConfiguration->getSceneElementType( typeIdentifier );
+    if ( !sceneElementType ) 
+    {
+        cgString identifierString = cgStringUtility::toString( typeIdentifier, _T("B") );
+        cgAppLog::write( cgAppLog::Error, _T("Unable to create a scene element with type identifier '%s' because no matching type was registered by the application prior to opening the world database.\n"), identifierString.c_str() );
+        return CG_NULL;
+    
+    } // End if not found
+
+    // Catch Exceptions
+    try
+    {
+        // Ensure we can roll back on failure.
+        if ( !internalElement )
+            beginTransaction( _T("createSceneElement") );
+
+        // Generate a new reference identifier for this scene element.
+        cgUInt32 referenceId = generateRefId( internalElement );
+
+        // Create new instance (with relevant constructor parameters)
+        if ( sceneElementType->elementAllocNew )
+            element = sceneElementType->elementAllocNew( typeIdentifier, referenceId, scene );
+        // NB: If cloning is ever added here, update the 'onComponentCreated()' call to pass 'cgCloneMethod::Copy' where appropriate.
+        
+        // Success?
+        if ( !element )
+            throw ResultException( cgString::format( _T("Unable to create new scene element. Failed to create instance for type '%s'."), 
+                                                     cgStringUtility::toString( typeIdentifier, _T("B") ).c_str() ), cgDebugSource() );
+        
+        // Insert type into database if it does not already exist.
+        if ( !internalElement )
+        {
+            if ( !componentTablesExist(typeIdentifier) && !element->createTypeTables( typeIdentifier ) )
+                throw ResultException( cgString::format( _T("Failed to create world database type tables for defined scene element type '%s'."), 
+                                                         cgStringUtility::toString( typeIdentifier, _T("B") ).c_str() ), cgDebugSource() );
+            if ( !mConfiguration->insertSceneElementType( typeIdentifier, element->getDatabaseTable() ) )
+                throw ResultException( cgString::format( _T("Failed to create world database type description entry for defined scene element type '%s'."), 
+                                                         cgStringUtility::toString( typeIdentifier, _T("B") ).c_str() ), cgDebugSource() );
+
+        } // End if !internal
+
+        // Allow object to initialize / insert into database if required.
+        if ( !element->onComponentCreated( &cgComponentCreatedEventArgs( sceneElementType->localIdentifier, cgCloneMethod::None ) ) )
+            throw ResultException( cgString::format( _T("onComponentCreated() returned failure when creating new scene element of type '%s'."), 
+                                                     cgStringUtility::toString( typeIdentifier, _T("B") ).c_str() ), cgDebugSource() );
+        
+        // Commit the changes.
+        if ( !internalElement )
+            commitTransaction( _T("createSceneElement") );
+
+    } // End try
+
+    catch ( const ResultException & e )
+    {
+        cgAppLog::write( cgAppLog::Warning, _T("%s\n"), e.toString().c_str() );
+        if ( !internalElement )
+            rollbackTransaction( L"createSceneElement" );
         if ( element )
             element->deleteReference();
         return CG_NULL;
@@ -1572,6 +1671,82 @@ cgObjectSubElement * cgWorld::loadObjectSubElement( const cgUID & typeIdentifier
 }
 
 //-----------------------------------------------------------------------------
+// Name : loadSceneElement () (Virtual)
+/// <summary>
+/// Recreate a previously existing scene element, loading it from the database.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgSceneElement * cgWorld::loadSceneElement( const cgUID & typeIdentifier, cgUInt32 referenceId, cgScene * scene )
+{
+    cgSceneElement * newElement = CG_NULL;
+    
+    // Find the data associated with the underlying scene element type for this identifier.
+    const cgSceneElementTypeDesc * sceneElementType = mConfiguration->getSceneElementType( typeIdentifier );
+    if ( !sceneElementType )
+        return CG_NULL; // Silent fail -- user was notified during type table parsing.
+    
+    // Catch exceptions
+    try
+    {
+        // Check to see if a reference with this identifier is already resident in memory.
+        cgReference * reference = cgReferenceManager::getReference( referenceId );
+        if ( reference )
+        {
+            // *Something* was already resident in memory a matching reference identifier
+            // but we don't yet know what it is. If it's not a scene element of the requested
+            // type, clearly there is something wrong with the supplied identifier.
+            if ( !reference->queryReferenceType( typeIdentifier ) )
+            {
+                cgString requestIdentifier = cgStringUtility::toString( typeIdentifier, _T("B") );
+                cgString foundIdentifier   = cgStringUtility::toString( reference->getReferenceType(), _T("B") );
+                throw ResultException( cgString::format( _T("Unable to load requested scene element '0x%x'. A reference with the specified identifier was found to exist but its type of '%s' did not match the requested scene element type '%s'."), referenceId, foundIdentifier.c_str(), requestIdentifier.c_str() ), cgDebugSource() );
+
+            } // End if conflicted
+
+            // A *scene element* with this identifier already exists in memory. 
+            // We can just return the existing reference.
+            return (cgSceneElement*)reference;
+
+        } // End if already resident
+        else
+        {
+            // There is nothing with this reference identifier already resident in memory
+            // in any part of the engine so allocate new scene element of the requested type.
+            if ( sceneElementType->elementAllocNew )
+                newElement = sceneElementType->elementAllocNew( typeIdentifier, referenceId, scene );
+            if ( !newElement )
+            {
+                cgString identifierString = cgStringUtility::toString( typeIdentifier, _T("B") );
+                throw ResultException( cgString::format( _T("Unable to load requested scene element '0x%x'. Failed to create a physical scene element instance of type '%s'.\n"), referenceId, identifierString.c_str() ), cgDebugSource() );
+
+            } // End if failed
+
+            // Allow the object to load.
+            if ( !newElement->onComponentLoading( &cgComponentLoadingEventArgs( referenceId, sceneElementType->localIdentifier, cgCloneMethod::None, CG_NULL ) ) )
+            {
+                cgString identifierString = cgStringUtility::toString( typeIdentifier, _T("B") );
+                throw ResultException( cgString::format( _T("onComponentLoading() returned failure when loading scene element '0x%x' of type '%s'."), referenceId, identifierString.c_str() ), cgDebugSource() );
+
+            } // End if failed
+
+        } // End if not resident
+            
+        // Success!
+        return newElement;
+
+    } // End try
+
+    catch ( const ResultException & e )
+    {
+        if ( newElement )
+            newElement->deleteReference();
+        cgAppLog::write( cgAppLog::Warning, _T("%s\n"), e.toString().c_str() );
+        return CG_NULL;
+
+    } // End catch
+}
+
+//-----------------------------------------------------------------------------
 //  Name : loadScene ()
 /// <summary>
 /// Allocate and load the specified scene by identifier. This will activate
@@ -1625,7 +1800,8 @@ cgScene * cgWorld::loadScene( cgUInt32 sceneId )
     onSceneLoaded( &cgSceneLoadEventArgs( newScene ) );
 
     // Add to the active scene map
-    mActiveScenes[ sceneId ] = newScene;
+    mActiveScenes.push_back( newScene );
+    mActiveSceneIdMap[ sceneId ] = newScene;
 
     // Success!!
     return newScene;
@@ -1648,7 +1824,10 @@ void cgWorld::unloadScene( cgUInt32 sceneId )
     onSceneUnloading( &cgSceneLoadEventArgs( scene ) );
 
     // Remove from the loaded scene list
-    mActiveScenes.erase( sceneId );
+    SceneArray::iterator itScene = std::find( mActiveScenes.begin(), mActiveScenes.end(), scene );
+    if ( itScene != mActiveScenes.end() )
+        mActiveScenes.erase( itScene );
+    mActiveSceneIdMap.erase( sceneId );
 
     // Cleanup the scene but pay attention to script
     // reference count on delete.
@@ -1672,7 +1851,10 @@ void cgWorld::unloadScene( cgScene * scene )
     onSceneUnloading( &cgSceneLoadEventArgs( scene ) );
 
     // Remove from the loaded scene list
-    mActiveScenes.erase( scene->getSceneId() );
+    SceneArray::iterator itScene = std::find( mActiveScenes.begin(), mActiveScenes.end(), scene );
+    if ( itScene != mActiveScenes.end() )
+        mActiveScenes.erase( itScene );
+    mActiveSceneIdMap.erase( scene->getSceneId() );
 
     // Cleanup the scene but pay attention to script
     // reference count on delete.
@@ -1690,6 +1872,28 @@ cgUInt32 cgWorld::getSceneCount( ) const
 {
     cgAssert(mConfiguration);
     return mConfiguration->getSceneCount();
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getLoadedSceneCount ()
+/// <summary>
+/// Retrieve the total number of scenes that are currently loaded / active.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgUInt32 cgWorld::getLoadedSceneCount( ) const
+{
+    return (cgUInt32)mActiveScenes.size();
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getLoadedScene ()
+/// <summary>
+/// Retrieve a reference to the loaded scene indicated by the supplied index.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgScene * cgWorld::getLoadedScene( cgUInt32 index ) const
+{
+    return mActiveScenes[index];
 }
 
 //-----------------------------------------------------------------------------
@@ -1807,8 +2011,8 @@ cgScene * cgWorld::getLoadedSceneByName( const cgString & sceneName ) const
 cgScene * cgWorld::getLoadedSceneById( cgUInt32 sceneId ) const
 {
     // Find any loaded scene with the specified name
-    SceneMap::const_iterator itScene = mActiveScenes.find( sceneId );
-    if ( itScene == mActiveScenes.end() )
+    SceneMap::const_iterator itScene = mActiveSceneIdMap.find( sceneId );
+    if ( itScene == mActiveSceneIdMap.end() )
         return CG_NULL;
 
     // Return the scene pointer
@@ -1824,7 +2028,7 @@ cgScene * cgWorld::getLoadedSceneById( cgUInt32 sceneId ) const
 bool cgWorld::isSceneLoaded( cgUInt32 sceneId ) const
 {
     // Find any loaded scene with the specified name
-    return ( mActiveScenes.find( sceneId ) != mActiveScenes.end() );
+    return ( mActiveSceneIdMap.find( sceneId ) != mActiveSceneIdMap.end() );
 }
 
 //-----------------------------------------------------------------------------
@@ -1838,7 +2042,7 @@ void cgWorld::update( )
 {
     // Iterate through active scene's and issue allow them to update.
     SceneMap::iterator itScene;
-    for ( itScene = mActiveScenes.begin(); itScene != mActiveScenes.end();  )
+    for ( itScene = mActiveSceneIdMap.begin(); itScene != mActiveSceneIdMap.end();  )
     {
         // Increment iterator before we trigger the update in case
         // the scene gets unloaded (and the active scene list modified)

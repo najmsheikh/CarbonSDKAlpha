@@ -202,7 +202,9 @@ bool asCContext::IsNested(asUINT *nestCount) const
 		return false;
 
 	// Search for a marker on the call stack
-	for( asUINT n = 1; n <= c; n++ )
+	// This loop starts at 2 because the 0th entry is not stored in m_callStack, 
+	// and then we need to subtract one more to get the base of each frame
+	for( asUINT n = 2; n <= c; n++ )
 	{
 		const asPWORD *s = m_callStack.AddressOf() + (c - n)*CALLSTACK_FRAME_SIZE;
 		if( s && s[0] == 0 )
@@ -306,7 +308,7 @@ int asCContext::Prepare(int funcId)
 
 		funcId = m_initialFunction->GetId();
 	}
-	return Prepare(engine->GetFunctionById(funcId));
+	return Prepare(m_engine->GetFunctionById(funcId));
 }
 #endif
 
@@ -322,7 +324,7 @@ int asCContext::Prepare(asIScriptFunction *func)
 	if( func == 0 )
 	{
 		asCString str;
-		str.Format(TXT_FAILED_IN_FUNC_s_WITH_s, "Prepare", "null");
+		str.Format(TXT_FAILED_IN_FUNC_s_WITH_s_d, "Prepare", "null", asNO_FUNCTION);
 		m_engine->WriteMessage("", 0, 0, asMSGTYPE_ERROR, str.AddressOf());
 		return asNO_FUNCTION;
 	}
@@ -330,7 +332,7 @@ int asCContext::Prepare(asIScriptFunction *func)
 	if( m_status == asEXECUTION_ACTIVE || m_status == asEXECUTION_SUSPENDED )
 	{
 		asCString str;
-		str.Format(TXT_FAILED_IN_FUNC_s, "Prepare");
+		str.Format(TXT_FAILED_IN_FUNC_s_d, "Prepare", asCONTEXT_ACTIVE);
 		m_engine->WriteMessage("", 0, 0, asMSGTYPE_ERROR, str.AddressOf());
 		return asCONTEXT_ACTIVE;
 	}
@@ -1057,9 +1059,9 @@ int asCContext::Execute()
 	if( m_status != asEXECUTION_SUSPENDED && m_status != asEXECUTION_PREPARED )
 	{
 		asCString str;
-		str.Format(TXT_FAILED_IN_FUNC_s, "Execute");
+		str.Format(TXT_FAILED_IN_FUNC_s_d, "Execute", asCONTEXT_NOT_PREPARED);
 		m_engine->WriteMessage("", 0, 0, asMSGTYPE_ERROR, str.AddressOf());
-		return asERROR;
+		return asCONTEXT_NOT_PREPARED;
 	}
 
 	m_status = asEXECUTION_ACTIVE;
@@ -1151,6 +1153,13 @@ int asCContext::Execute()
 
 	while( m_status == asEXECUTION_ACTIVE )
 		ExecuteNext();
+
+	if( m_lineCallback )
+	{
+		// Call the line callback one last time before leaving 
+		// so anyone listening can catch the state change
+		CallLineCallback();
+	}
 
 	if( m_engine->ep.autoGarbageCollect )
 	{
@@ -1377,11 +1386,17 @@ int asCContext::GetLineNumber(asUINT stackLevel, int *column, const char **secti
 		bytePos -= 1;
 	}
 
+	// For nested calls it is possible that func is null
+	if( func == 0 )
+	{
+		if( column ) *column = 0;
+		if( sectionName ) *sectionName = 0;
+		return 0;
+	}
+
 	asDWORD line = func->GetLineNumber(int(bytePos - func->byteCode.AddressOf()));
 	if( column ) *column = (line >> 20);
-
 	if( sectionName ) *sectionName = func->GetScriptSectionName();
-
 	return (line & 0xFFFFF);
 }
 
@@ -2149,41 +2164,48 @@ void asCContext::ExecuteNext()
 	// Comparisons
 	case asBC_CMPd:
 		{
-			double dbl = *(double*)(l_fp - asBC_SWORDARG0(l_bc)) - *(double*)(l_fp - asBC_SWORDARG1(l_bc));
-			if( dbl == 0 )     *(int*)&m_regs.valueRegister =  0;
-			else if( dbl < 0 ) *(int*)&m_regs.valueRegister = -1;
-			else               *(int*)&m_regs.valueRegister =  1;
+			// Do a comparison of the values, rather than a subtraction  
+			// in order to get proper behaviour for infinity values.
+			double dbl1 = *(double*)(l_fp - asBC_SWORDARG0(l_bc));
+			double dbl2 = *(double*)(l_fp - asBC_SWORDARG1(l_bc));
+			if( dbl1 == dbl2 )     *(int*)&m_regs.valueRegister =  0;
+			else if( dbl1 < dbl2 ) *(int*)&m_regs.valueRegister = -1;
+			else                   *(int*)&m_regs.valueRegister =  1;
 			l_bc += 2;
 		}
 		break;
 
 	case asBC_CMPu:
 		{
-			asDWORD d = *(asDWORD*)(l_fp - asBC_SWORDARG0(l_bc));
+			asDWORD d1 = *(asDWORD*)(l_fp - asBC_SWORDARG0(l_bc));
 			asDWORD d2 = *(asDWORD*)(l_fp - asBC_SWORDARG1(l_bc));
-			if( d == d2 )     *(int*)&m_regs.valueRegister =  0;
-			else if( d < d2 ) *(int*)&m_regs.valueRegister = -1;
-			else              *(int*)&m_regs.valueRegister =  1;
+			if( d1 == d2 )     *(int*)&m_regs.valueRegister =  0;
+			else if( d1 < d2 ) *(int*)&m_regs.valueRegister = -1;
+			else               *(int*)&m_regs.valueRegister =  1;
 			l_bc += 2;
 		}
 		break;
 
 	case asBC_CMPf:
 		{
-			float f = *(float*)(l_fp - asBC_SWORDARG0(l_bc)) - *(float*)(l_fp - asBC_SWORDARG1(l_bc));
-			if( f == 0 )     *(int*)&m_regs.valueRegister =  0;
-			else if( f < 0 ) *(int*)&m_regs.valueRegister = -1;
-			else             *(int*)&m_regs.valueRegister =  1;
+			// Do a comparison of the values, rather than a subtraction  
+			// in order to get proper behaviour for infinity values.
+			float f1 = *(float*)(l_fp - asBC_SWORDARG0(l_bc));
+			float f2 = *(float*)(l_fp - asBC_SWORDARG1(l_bc));
+			if( f1 == f2 )     *(int*)&m_regs.valueRegister =  0;
+			else if( f1 < f2 ) *(int*)&m_regs.valueRegister = -1;
+			else               *(int*)&m_regs.valueRegister =  1;
 			l_bc += 2;
 		}
 		break;
 
 	case asBC_CMPi:
 		{
-			int i = *(int*)(l_fp - asBC_SWORDARG0(l_bc)) - *(int*)(l_fp - asBC_SWORDARG1(l_bc));
-			if( i == 0 )     *(int*)&m_regs.valueRegister =  0;
-			else if( i < 0 ) *(int*)&m_regs.valueRegister = -1;
-			else             *(int*)&m_regs.valueRegister =  1;
+			int i1 = *(int*)(l_fp - asBC_SWORDARG0(l_bc));
+			int i2 = *(int*)(l_fp - asBC_SWORDARG1(l_bc));
+			if( i1 == i2 )     *(int*)&m_regs.valueRegister =  0;
+			else if( i1 < i2 ) *(int*)&m_regs.valueRegister = -1;
+			else               *(int*)&m_regs.valueRegister =  1;
 			l_bc += 2;
 		}
 		break;
@@ -2192,20 +2214,24 @@ void asCContext::ExecuteNext()
 	// Comparisons with constant value
 	case asBC_CMPIi:
 		{
-			int i = *(int*)(l_fp - asBC_SWORDARG0(l_bc)) - asBC_INTARG(l_bc);
-			if( i == 0 )     *(int*)&m_regs.valueRegister =  0;
-			else if( i < 0 ) *(int*)&m_regs.valueRegister = -1;
-			else             *(int*)&m_regs.valueRegister =  1;
+			int i1 = *(int*)(l_fp - asBC_SWORDARG0(l_bc));
+			int i2 = asBC_INTARG(l_bc);
+			if( i1 == i2 )     *(int*)&m_regs.valueRegister =  0;
+			else if( i1 < i2 ) *(int*)&m_regs.valueRegister = -1;
+			else               *(int*)&m_regs.valueRegister =  1;
 			l_bc += 2;
 		}
 		break;
 
 	case asBC_CMPIf:
 		{
-			float f = *(float*)(l_fp - asBC_SWORDARG0(l_bc)) - asBC_FLOATARG(l_bc);
-			if( f == 0 )     *(int*)&m_regs.valueRegister =  0;
-			else if( f < 0 ) *(int*)&m_regs.valueRegister = -1;
-			else             *(int*)&m_regs.valueRegister =  1;
+			// Do a comparison of the values, rather than a subtraction  
+			// in order to get proper behaviour for infinity values.
+			float f1 = *(float*)(l_fp - asBC_SWORDARG0(l_bc));
+			float f2 = asBC_FLOATARG(l_bc);
+			if( f1 == f2 )     *(int*)&m_regs.valueRegister =  0;
+			else if( f1 < f2 ) *(int*)&m_regs.valueRegister = -1;
+			else               *(int*)&m_regs.valueRegister =  1;
 			l_bc += 2;
 		}
 		break;
@@ -2603,9 +2629,9 @@ void asCContext::ExecuteNext()
 		break;
 
 	case asBC_ClrVPtr:
-		// TODO: optimize: Is this instruction really necessary? 
-		//                 CallScriptFunction() can clear the null handles upon entry, just as is done for 
-		//                 all other object variables
+		// TODO: runtime optimize: Is this instruction really necessary? 
+		//                         CallScriptFunction() can clear the null handles upon entry, just as is done for 
+		//                         all other object variables
 		// Clear pointer variable
 		*(asPWORD*)(l_fp - asBC_SWORDARG0(l_bc)) = 0;
 		l_bc++;
@@ -3391,21 +3417,22 @@ void asCContext::ExecuteNext()
 
 	case asBC_CMPi64:
 		{
-			asINT64 i = *(asINT64*)(l_fp - asBC_SWORDARG0(l_bc)) - *(asINT64*)(l_fp - asBC_SWORDARG1(l_bc));
-			if( i == 0 )     *(int*)&m_regs.valueRegister =  0;
-			else if( i < 0 ) *(int*)&m_regs.valueRegister = -1;
-			else             *(int*)&m_regs.valueRegister =  1;
+			asINT64 i1 = *(asINT64*)(l_fp - asBC_SWORDARG0(l_bc));
+			asINT64 i2 = *(asINT64*)(l_fp - asBC_SWORDARG1(l_bc));
+			if( i1 == i2 )     *(int*)&m_regs.valueRegister =  0;
+			else if( i1 < i2 ) *(int*)&m_regs.valueRegister = -1;
+			else               *(int*)&m_regs.valueRegister =  1;
 			l_bc += 2;
 		}
 		break;
 
 	case asBC_CMPu64:
 		{
-			asQWORD d = *(asQWORD*)(l_fp - asBC_SWORDARG0(l_bc));
+			asQWORD d1 = *(asQWORD*)(l_fp - asBC_SWORDARG0(l_bc));
 			asQWORD d2 = *(asQWORD*)(l_fp - asBC_SWORDARG1(l_bc));
-			if( d == d2 )     *(int*)&m_regs.valueRegister =  0;
-			else if( d < d2 ) *(int*)&m_regs.valueRegister = -1;
-			else              *(int*)&m_regs.valueRegister =  1;
+			if( d1 == d2 )     *(int*)&m_regs.valueRegister =  0;
+			else if( d1 < d2 ) *(int*)&m_regs.valueRegister = -1;
+			else               *(int*)&m_regs.valueRegister =  1;
 			l_bc += 2;
 		}
 		break;
@@ -4170,9 +4197,9 @@ void asCContext::CleanStackFrame()
 	// Clean object and parameters
 	int offset = 0;
 	if( m_currentFunction->objectType )
-	{
 		offset += AS_PTR_SIZE;
-	}
+	if( m_currentFunction->DoesReturnOnStack() )
+		offset += AS_PTR_SIZE;
 	for( asUINT n = 0; n < m_currentFunction->parameterTypes.GetLength(); n++ )
 	{
 		if( m_currentFunction->parameterTypes[n].IsObject() && !m_currentFunction->parameterTypes[n].IsReference() )

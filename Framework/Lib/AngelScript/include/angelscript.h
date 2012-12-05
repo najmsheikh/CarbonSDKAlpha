@@ -58,8 +58,8 @@ BEGIN_AS_NAMESPACE
 
 // AngelScript version
 
-#define ANGELSCRIPT_VERSION        22401
-#define ANGELSCRIPT_VERSION_STRING "2.24.1"
+#define ANGELSCRIPT_VERSION        22502
+#define ANGELSCRIPT_VERSION_STRING "2.25.2"
 
 // Data types
 
@@ -145,10 +145,12 @@ enum asEObjTypeFlags
 	asOBJ_APP_CLASS_ALLINTS          = 0x8000,
 	asOBJ_APP_CLASS_ALLFLOATS        = 0x10000,
 	asOBJ_NOCOUNT                    = 0x20000,
-	asOBJ_MASK_VALID_FLAGS           = 0x3FFFF,
+	asOBJ_APP_CLASS_ALIGN8           = 0x40000,
+	asOBJ_MASK_VALID_FLAGS           = 0x7FFFF,
 	asOBJ_SCRIPT_OBJECT              = 0x80000,
 	asOBJ_SHARED                     = 0x100000,
-	asOBJ_NOINHERIT                  = 0x200000
+	asOBJ_NOINHERIT                  = 0x200000,
+	asOBJ_SCRIPT_FUNCTION            = 0x400000
 };
 
 // Behaviours
@@ -332,7 +334,7 @@ enum asEFuncType
 typedef unsigned char  asBYTE;
 typedef unsigned short asWORD;
 typedef unsigned int   asUINT;
-#if defined(_MSC_VER) && _MSC_VER <= 1200 // MSVC6 
+#if (defined(_MSC_VER) && _MSC_VER <= 1200) || defined(AS_MARMALADE) || defined(MARMALADE)
 	// size_t is not really correct, since it only guaranteed to be large enough to hold the segment size.
 	// For example, on 16bit systems the size_t may be 16bits only even if pointers are 32bit. But nobody
 	// is likely to use MSVC6 to compile for 16bit systems anymore, so this should be ok.
@@ -707,8 +709,8 @@ public:
 	virtual int         UnbindAllImportedFunctions() = 0;
 
 	// Bytecode saving and loading
-	virtual int SaveByteCode(asIBinaryStream *out) const = 0;
-	virtual int LoadByteCode(asIBinaryStream *in) = 0;
+	virtual int SaveByteCode(asIBinaryStream *out, bool stripDebugInfo = false) const = 0;
+	virtual int LoadByteCode(asIBinaryStream *in, bool *wasDebugInfoStripped = 0) = 0;
 
 	// User data
 	virtual void *SetUserData(void *data) = 0;
@@ -945,12 +947,15 @@ public:
 	virtual int              AddRef() const = 0;
 	virtual int              Release() const = 0;
 
+	// Miscellaneous
 	virtual int              GetId() const = 0;
 	virtual asEFuncType      GetFuncType() const = 0;
 	virtual const char      *GetModuleName() const = 0;
 	virtual const char      *GetScriptSectionName() const = 0;
 	virtual const char      *GetConfigGroup() const = 0;
 	virtual asDWORD          GetAccessMask() const = 0;
+
+	// Function signature
 	virtual asIObjectType   *GetObjectType() const = 0;
 	virtual const char      *GetObjectName() const = 0;
 	virtual const char      *GetName() const = 0;
@@ -961,10 +966,13 @@ public:
 	virtual bool             IsFinal() const = 0;
 	virtual bool             IsOverride() const = 0;
 	virtual bool             IsShared() const = 0;
-
 	virtual asUINT           GetParamCount() const = 0;
 	virtual int              GetParamTypeId(asUINT index, asDWORD *flags = 0) const = 0;
 	virtual int              GetReturnTypeId() const = 0;
+
+	// Type id for function pointers 
+	virtual int              GetTypeId() const = 0;
+	virtual bool             IsCompatibleWithTypeId(int typeId) const = 0;
 
 	// Debug information
 	virtual asUINT           GetVarCount() const = 0;
@@ -1227,9 +1235,9 @@ class asIJITCompiler
 {
 public:
 	virtual int  CompileFunction(asIScriptFunction *function, asJITFunction *output) = 0;
-    virtual void ReleaseJITFunction(asJITFunction func) = 0;
+	virtual void ReleaseJITFunction(asJITFunction func) = 0;
 public:
-    virtual ~asIJITCompiler() {}
+	virtual ~asIJITCompiler() {}
 };
 
 // Byte code instructions
@@ -1591,7 +1599,7 @@ const asSBCInfo asBCInfo[256] =
 	asBCINFO(GETOBJREF,	W_ARG,			0),
 	asBCINFO(GETREF,	W_ARG,			0),
 	asBCINFO(PshNull,	NO_ARG,			AS_PTR_SIZE),
-	asBCINFO(ClrVPtr,	rW_ARG,			0),
+	asBCINFO(ClrVPtr,	wW_ARG,			0),
 	asBCINFO(OBJTYPE,	PTR_ARG,		AS_PTR_SIZE),
 	asBCINFO(TYPEID,	DW_ARG,			1),
 	asBCINFO(SetV4,		wW_DW_ARG,		0),
@@ -1770,11 +1778,11 @@ const asSBCInfo asBCInfo[256] =
 	asBCINFO_DUMMY(249),
 	asBCINFO_DUMMY(250),
 
-	asBCINFO(VarDecl,	W_ARG,			0),
-	asBCINFO(Block,		INFO,			0),
-	asBCINFO(ObjInfo,	rW_DW_ARG,		0),
-	asBCINFO(LINE,		INFO,			0),
-	asBCINFO(LABEL,		INFO,			0)
+	asBCINFO(VarDecl,		W_ARG,			0),
+	asBCINFO(Block,			INFO,			0),
+	asBCINFO(ObjInfo,		rW_DW_ARG,		0),
+	asBCINFO(LINE,			INFO,			0),
+	asBCINFO(LABEL,			INFO,			0)
 };
 
 // Macros to access bytecode instruction arguments

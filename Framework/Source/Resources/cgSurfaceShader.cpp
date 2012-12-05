@@ -862,7 +862,7 @@ cgVertexShaderHandle cgSurfaceShader::getVertexShader( const cgString & strName,
     memcpy( &mIdentifier->shaderIdentifier[0], &strName[0], nNameSize * sizeof(cgTChar) );
     memcpy( &mIdentifier->shaderIdentifier[nNameSize], _T("::"), 2 * sizeof(cgTChar) );
     memcpy( &mIdentifier->shaderIdentifier[nNameSize+2], &mShaderClass[0], nClassSize * sizeof(cgTChar) );
-    
+
     // Now copy the shader argument data (always assumed to be 32bit)
     size_t nCurrent = 0;
     mIdentifier->parameterData.resize( aArgs.size() );

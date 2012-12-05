@@ -86,6 +86,10 @@
 #include <World/Objects/Elements/cgHullCollisionShapeElement.h>
 #include <World/Objects/Elements/cgAnimationSetElement.h>
 
+// Scene element types
+#include <World/Elements/cgNavigationMeshElement.h>
+#include <World/Elements/cgSkyElement.h>
+
 // Physics Controllers
 #include <Physics/Controllers/cgCharacterController.h>
 
@@ -257,7 +261,7 @@ bool cgEngineInit( const CGEConfig & Config, cgLogOutput * pOutput /* = CG_NULL 
     cgFileSystem::addPackage( _T("System.pkg") );
 
     // Register standard physics controller types
-    cgPhysicsController::registerType( _T("Core::PhysicsControllers::Character")       , cgCharacterController::allocate );
+    cgPhysicsController::registerType( _T("Core::PhysicsControllers::Character"), cgCharacterController::allocate );
 
     // Register standard object types.
     cgWorldObject::registerType( RTID_CameraObject          , _T("Camera")           , cgCameraObject::allocateNew, cgCameraObject::allocateClone, cgCameraNode::allocateNew, cgCameraNode::allocateClone );
@@ -291,6 +295,10 @@ bool cgEngineInit( const CGEConfig & Config, cgLogOutput * pOutput /* = CG_NULL 
     cgObjectSubElement::registerType( RTID_HullCollisionShapeElement    , _T("Convex Hull Collision Shape"), cgHullCollisionShapeElement::allocateNew, cgHullCollisionShapeElement::allocateClone );
     cgObjectSubElement::registerType( RTID_AnimationSetElement          , _T("Animation Set")              , cgAnimationSetElement::allocateNew, cgAnimationSetElement::allocateClone );
 
+    // Register standard scene element types
+    cgSceneElement::registerType( RTID_NavigationMeshElement, _T("Navigation Mesh"), cgNavigationMeshElement::allocateNew );
+    cgSceneElement::registerType( RTID_SkyElement           , _T("Sky")            , cgSkyElement::allocateNew );
+
     // Initialize the main script engine
     cgScriptEngine * pEngine = cgScriptEngine::getInstance();
     if ( bResult = pEngine->initialize() )
@@ -321,9 +329,14 @@ void cgEngineCleanup()
     cgAudioDriver     * pAudioDriver     = cgAudioDriver::getInstance();
     cgResourceManager * pResourceManager = cgResourceManager::getInstance();
     cgScriptEngine    * pScriptEngine    = cgScriptEngine::getInstance();
+    cgAppStateManager * pAppStates       = cgAppStateManager::getInstance();
 
     // Shutdown any pooled threads (trigger their completion events)
     cgThreadPool::shutdown( true );
+
+    // Make sure all application states are ended and destroyed.
+    if ( pAppStates )
+        pAppStates->dispose( false );
 
     // Shut down the application reference manager and messaging system.
     cgReferenceManager::shutdown( );
@@ -341,7 +354,7 @@ void cgEngineCleanup()
 
     // Ensure all resident scripts are shut down and any objects
     // they still maintain references to are released.
-    if ( pScriptEngine != CG_NULL )
+    if ( pScriptEngine )
         pScriptEngine->unloadScripts();
 
     // Destroy initial application singletons (for guaranteed destruction ordering, and cleanup PRIOR to application finish)

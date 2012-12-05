@@ -51,7 +51,7 @@ namespace Form
             BINDSUCCESS( engine->registerObjectMethod( "Form", "void setCancelButton( Button@+ )", asMETHODPR(cgUIForm,setCancelButton,( cgButtonControl* ),void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Form", "Button@+ getCancelButton( ) const", asMETHODPR(cgUIForm,getCancelButton,( ) const,cgButtonControl* ), asCALL_THISCALL) );
             // ToDo: cgScript                  * GetFormScript           ( ) const { return m_pFormScript; }
-            // ToDo: cgScriptObject            * GetFormScriptObject     ( ) const { return m_pFormScriptObject; }
+            BINDSUCCESS( engine->registerObjectMethod( "Form", "IScriptedForm @ getScriptObject( )", asFUNCTIONPR(getScriptObject,( cgUIForm* ), asIScriptObject*), asCALL_CDECL_OBJLAST ) );
 
             // Register the property methods
             BINDSUCCESS( engine->registerObjectMethod( "Form", "void set_acceptButton( Button@+ )", asMETHODPR(cgUIForm,setAcceptButton,( cgButtonControl* ),void), asCALL_THISCALL) );
@@ -70,6 +70,25 @@ namespace Form
             // Register the /required/ interface methods
             // ToDo: Are any actually required?
 
+        }
+
+        //-------------------------------------------------------------------------
+        // Name : getScriptObject ()
+        // Desc : Wrapper function that returns a reference to the script based
+        //        'IScriptedForm' interface rather than the C++ side 
+        //        'cgScriptObject' that is returned by the 'cgUIForm' 
+        //        native method of the same name.
+        //-------------------------------------------------------------------------
+        static asIScriptObject * getScriptObject( cgUIForm * thisPointer )
+        {
+            cgScriptObject * object = thisPointer->getScriptObject();
+            if ( object && object->getInternalObject() )
+            {
+                object->getInternalObject()->AddRef();
+                return object->getInternalObject();
+            
+            } // End if valid
+            return CG_NULL;
         }
 
     }; // End Class : Package

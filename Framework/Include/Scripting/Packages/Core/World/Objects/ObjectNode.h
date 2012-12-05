@@ -25,7 +25,7 @@ namespace ObjectNode
 
         // Register the object methods
         // Properties
-        BINDSUCCESS( engine->registerObjectMethod(typeName, "const String & getName( ) const", asMETHODPR(type,getName,() const,const cgString&), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "String getName( ) const", asMETHODPR(type,getName,() const,cgString), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "const String & getObjectClass( ) const", asMETHODPR(type,getObjectClass,() const,const cgString&), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "WorldObject @+ getReferencedObject( ) const", asMETHODPR(type,getReferencedObject,() const,cgWorldObject*), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "const PropertyContainer @+ getCustomProperties( ) const", asMETHODPR(type,getCustomProperties,() const, const cgPropertyContainer&), asCALL_THISCALL) );
@@ -104,18 +104,22 @@ namespace ObjectNode
         BINDSUCCESS( engine->registerObjectMethod(typeName, "PhysicsBody@+ getPhysicsBody( ) const", asMETHODPR(type,getPhysicsBody,( ) const, cgPhysicsBody*), asCALL_THISCALL) );
 
         // Physics
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "PhysicsController@+ getPhysicsController( )", asMETHODPR(type,getPhysicsController,( ), cgPhysicsController*), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "PhysicsController@+ setPhysicsController( PhysicsController@ )", asMETHODPR(type,setPhysicsController,( cgPhysicsController* ), cgPhysicsController*), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void applyForce( const Vector3 &in )", asMETHODPR(type,applyForce,( const cgVector3& ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void applyForce( const Vector3 &in, const Vector3 &in )", asMETHODPR(type,applyForce,( const cgVector3&, const cgVector3& ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void applyImpulse( const Vector3 &in )", asMETHODPR(type,applyImpulse,( const cgVector3& ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void applyImpulse( const Vector3 &in, const Vector3 &in )", asMETHODPR(type,applyImpulse,( const cgVector3&, const cgVector3& ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void applyTorque( const Vector3 &in )", asMETHODPR(type,applyTorque,( const cgVector3& ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void applyTorqueImpulse( const Vector3 &in )", asMETHODPR(type,applyTorqueImpulse,( const cgVector3& ), void), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "Vector3 getVelocity( ) const", asMETHODPR(type,getVelocity,( ) const, cgVector3), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "void setVelocity( const Vector3 &in )", asMETHODPR(type,setVelocity,( const cgVector3& ), void), asCALL_THISCALL) );
 
         // Behaviors
         BINDSUCCESS( engine->registerObjectMethod(typeName, "int getBehaviorCount( ) const", asMETHODPR(type,getBehaviorCount,( ) const, cgInt32), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "ObjectBehavior@+ getBehavior( int )", asMETHODPR(type,getBehavior,( cgInt32 ), cgObjectBehavior*), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "IScriptedObjectBehavior@ getScriptedBehavior( int )", asFUNCTIONPR(getScriptedBehavior,( cgInt32, type* ), asIScriptObject*), asCALL_CDECL_OBJLAST ) );
-        BINDSUCCESS( engine->registerObjectMethod(typeName, "int addBehavior( ObjectBehavior@+ )", asMETHODPR(type,addBehavior,( cgObjectBehavior* ), cgInt32), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "int addBehavior( ObjectBehavior@ )", asMETHODPR(type,addBehavior,( cgObjectBehavior* ), cgInt32), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "bool removeBehavior( ObjectBehavior@+, bool )", asMETHODPR(type,removeBehavior,( cgObjectBehavior*, bool ), bool), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "bool removeBehavior( int, bool )", asMETHODPR(type,removeBehavior,( cgInt32, bool ), bool), asCALL_THISCALL) );
         

@@ -40,6 +40,7 @@
 #define AS_BUILDER_H
 
 #include "as_config.h"
+#include "as_symboltable.h"
 #include "as_scriptengine.h"
 #include "as_module.h"
 #include "as_array.h"
@@ -52,42 +53,35 @@ BEGIN_AS_NAMESPACE
 
 #ifndef AS_NO_COMPILER
 
-struct sExplicitSignature
-{
-	sExplicitSignature(int argCount = 0) : argTypes(argCount), argModifiers(argCount), argNames(argCount), defaultArgs(argCount) {}
-
-	asCDataType returnType;
-	asCArray<asCDataType> argTypes;
-	asCArray<asETypeModifiers> argModifiers;
-	asCArray<asCString> argNames;
-	asCArray<asCString *> defaultArgs;
-};
-
 struct sFunctionDescription
 {
-	asCScriptCode *script;
-	asCScriptNode *node;
-	asCString name;
-	asCObjectType *objType;
-	sExplicitSignature *explicitSignature;
-	int funcId;
-	bool isExistingShared;
+	asCScriptCode       *script;
+	asCScriptNode       *node;
+	asCString            name;
+	asCObjectType       *objType;
+	asCArray<asCString>  paramNames;
+	int                  funcId;
+	bool                 isExistingShared;
 };
 
 struct sGlobalVariableDescription
 {
-	asCScriptCode *script;
-	asCScriptNode *idNode;
-	asCScriptNode *nextNode;
-	asCString name;
+	asCScriptCode     *script;
+	asCScriptNode     *idNode;
+	asCScriptNode     *nextNode;
+	asCString          name;
 	asCGlobalProperty *property;
-	asCDataType datatype;
-	int index;
-	bool isCompiled;
-	bool isPureConstant;
-	bool isEnumValue;
-	asQWORD constantValue;
+	asCDataType        datatype;
+	int                index;
+	bool               isCompiled;
+	bool               isPureConstant;
+	bool               isEnumValue;
+	asQWORD            constantValue;
 };
+
+// asCSymbolTable template specializations for sGlobalVariableDescription entries
+template<>
+void asCSymbolTable<sGlobalVariableDescription>::GetKey(const sGlobalVariableDescription *entry, asCString &key) const;
 
 struct sClassDeclaration
 {
@@ -95,19 +89,27 @@ struct sClassDeclaration
 
 	asCScriptCode *script;
 	asCScriptNode *node;
-	asCString name;
-	int validState;
+	asCString      name;
+	int            validState;
 	asCObjectType *objType;
-	bool isExistingShared;
-	bool isFinal;
+	bool           isExistingShared;
+	bool           isFinal;
 };
 
 struct sFuncDef
 {
 	asCScriptCode *script;
 	asCScriptNode *node;
-	asCString name;
-	int idx;
+	asCString      name;
+	int            idx;
+};
+
+struct sMixinClass
+{
+	asCScriptCode *script;
+	asCScriptNode *node;
+	asCString      name;
+	asSNameSpace  *ns;
 };
 
 #endif // AS_NO_COMPILER
@@ -141,9 +143,11 @@ protected:
 
 	void               Reset();
 
-	void               WriteInfo(const char *scriptname, const char *msg, int r, int c, bool preMessage);
-	void               WriteError(const char *scriptname, const char *msg, int r, int c);
-	void               WriteWarning(const char *scriptname, const char *msg, int r, int c);
+	void               WriteInfo(const asCString &scriptname, const asCString &msg, int r, int c, bool preMessage);
+	void               WriteInfo(const asCString &msg, asCScriptCode *file, asCScriptNode *node);
+	void               WriteError(const asCString &scriptname, const asCString &msg, int r, int c);
+	void               WriteError(const asCString &msg, asCScriptCode *file, asCScriptNode *node);
+	void               WriteWarning(const asCString &scriptname, const asCString &msg, int r, int c);
 
 	asCObjectProperty *GetObjectProperty(asCDataType &obj, const char *prop);
 	asCGlobalProperty *GetGlobalProperty(const char *prop, asSNameSpace *ns, bool *isCompiled, bool *isPureConstant, asQWORD *constantValue, bool *isAppProp);
@@ -155,6 +159,7 @@ protected:
 	int                ValidateDefaultArgs(asCScriptCode *script, asCScriptNode *node, asCScriptFunction *func);
 	asCString          GetCleanExpressionString(asCScriptNode *n, asCScriptCode *file);
 
+	asSNameSpace      *GetNameSpaceFromNode(asCScriptNode *node, asCScriptCode *script, asSNameSpace *implicitNs, asCScriptNode **next);
 	asCString          GetScopeFromNode(asCScriptNode *n, asCScriptCode *script, asCScriptNode **next = 0);
 
 	bool               DoesTypeExist(const char *type);
@@ -168,6 +173,7 @@ protected:
 	{
 		bool isSet;
 		asCString message;
+		asCString scriptname;
 		int r;
 		int c;
 	} preMessage;
@@ -182,8 +188,16 @@ protected:
 protected:
 	friend class asCCompiler;
 
-	int                RegisterScriptFunction(int funcID, asCScriptNode *node, asCScriptCode *file, asCObjectType *object = 0, bool isInterface = false, bool isGlobalFunction = false, asSNameSpace *ns = 0, bool isExistingShared = false);
-	int                RegisterScriptFunctionWithSignature(int funcID, asCScriptNode *node, asCScriptCode *file, asCString &name, sExplicitSignature *signature, asCObjectType *object = 0, bool isInterface = false, bool isGlobalFunction = false, bool isPrivate = false, bool isConst = false, bool isFinal = false, bool isOverride = false, bool treatAsProperty = false, asSNameSpace *ns = 0);
+	int                GetNamespaceAndNameFromNode(asCScriptNode *n, asCScriptCode *script, asSNameSpace *implicitNs, asSNameSpace *&outNs, asCString &outName);
+	int                RegisterMixinClass(asCScriptNode *node, asCScriptCode *file, asSNameSpace *ns);
+	sMixinClass       *GetMixinClass(const char *name, asSNameSpace *ns);
+	void               IncludePropertiesFromMixins(sClassDeclaration *decl);
+	void               IncludeMethodsFromMixins(sClassDeclaration *decl);
+	void               AddInterfaceToClass(sClassDeclaration *decl, asCScriptNode *errNode, asCObjectType *intf);
+	void               AddInterfaceFromMixinToClass(sClassDeclaration *decl, asCScriptNode *errNode, sMixinClass *mixin);
+
+	int                RegisterScriptFunctionFromNode(int funcID, asCScriptNode *node, asCScriptCode *file, asCObjectType *object = 0, bool isInterface = false, bool isGlobalFunction = false, asSNameSpace *ns = 0, bool isExistingShared = false, bool isMixin = false);
+	int                RegisterScriptFunction(int funcId, asCScriptNode *node, asCScriptCode *file, asCObjectType *objType, bool isInterface, bool isGlobalFunction, asSNameSpace *ns, bool isExistingShared, bool isMixin, asCString &name, asCDataType &returnType, asCArray<asCString> &parameterNames, asCArray<asCDataType> &parameterTypes, asCArray<asETypeModifiers> &inOutFlags, asCArray<asCString *> &defaultArgs, bool isConstMethod, bool isConstructor, bool isDestructor, bool isPrivate, bool isOverride, bool isFinal, bool isShared);
 	int                RegisterVirtualProperty(asCScriptNode *node, asCScriptCode *file, asCObjectType *object = 0, bool isInterface = false, bool isGlobalFunction = false, asSNameSpace *ns = 0, bool isExistingShared = false);
 	int                RegisterImportedFunction(int funcID, asCScriptNode *node, asCScriptCode *file, asSNameSpace *ns);
 	int                RegisterGlobalVar(asCScriptNode *node, asCScriptCode *file, asSNameSpace *ns);
@@ -193,8 +207,9 @@ protected:
 	int                RegisterTypedef(asCScriptNode *node, asCScriptCode *file, asSNameSpace *ns);
 	int                RegisterFuncDef(asCScriptNode *node, asCScriptCode *file, asSNameSpace *ns);
 	void               CompleteFuncDef(sFuncDef *funcDef);
+	void               CompileInterfaces();
 	void               CompileClasses();
-	void               GetParsedFunctionDetails(asCScriptNode *node, asCScriptCode *file, asCObjectType *objType, asCString &name, asCDataType &returnType, asCArray<asCDataType> &parameterTypes, asCArray<asETypeModifiers> &inOutFlags, asCArray<asCString *> &defaultArgs, bool &isConstMethod, bool &isConstructor, bool &isDestructor, bool &isPrivate, bool &isOverride, bool &isFinal, bool &isShared);
+	void               GetParsedFunctionDetails(asCScriptNode *node, asCScriptCode *file, asCObjectType *objType, asCString &name, asCDataType &returnType, asCArray<asCString> &parameterNames, asCArray<asCDataType> &parameterTypes, asCArray<asETypeModifiers> &inOutFlags, asCArray<asCString *> &defaultArgs, bool &isConstMethod, bool &isConstructor, bool &isDestructor, bool &isPrivate, bool &isOverride, bool &isFinal, bool &isShared);
 	bool               DoesMethodExist(asCObjectType *objType, int methodId, asUINT *methodIndex = 0);
 	void               AddDefaultConstructor(asCObjectType *objType, asCScriptCode *file);
 	asCObjectProperty *AddPropertyToClass(sClassDeclaration *c, const asCString &name, const asCDataType &type, bool isPrivate, asCScriptCode *file = 0, asCScriptNode *node = 0);
@@ -207,13 +222,14 @@ protected:
 	int                GetEnumValueFromObjectType(asCObjectType *objType, const char *name, asCDataType &outDt, asDWORD &outValue);
 	int                GetEnumValue(const char *name, asCDataType &outDt, asDWORD &outValue, asSNameSpace *ns);
 
-	asCArray<asCScriptCode *>              scripts;
-	asCArray<sFunctionDescription *>       functions;
-	asCArray<sGlobalVariableDescription *> globVariables;
-	asCArray<sClassDeclaration *>          classDeclarations;
-	asCArray<sClassDeclaration *>          interfaceDeclarations;
-	asCArray<sClassDeclaration *>          namedTypeDeclarations;
-	asCArray<sFuncDef *>                   funcDefs;
+	asCArray<asCScriptCode *>                  scripts;
+	asCArray<sFunctionDescription *>           functions;
+	asCSymbolTable<sGlobalVariableDescription> globVariables;
+	asCArray<sClassDeclaration *>              classDeclarations;
+	asCArray<sClassDeclaration *>              interfaceDeclarations;
+	asCArray<sClassDeclaration *>              namedTypeDeclarations;
+	asCArray<sFuncDef *>                       funcDefs;
+	asCArray<sMixinClass *>                    mixinClasses;
 #endif
 };
 

@@ -28,7 +28,7 @@
 // Profiler configuration
 //-----------------------------------------------------------------------------
 
-// Record information about time spent within render driver 'DrawPrimitive' methods.
+// Record information about time spent within render driver 'drawPrimitive' methods.
 // This information will then be available in the engine profiler interface and
 // in-engine graphing (where available).
 
@@ -85,7 +85,7 @@
 // Engine versioning information
 #define CGE_ENGINE_VERSION      0
 #define CGE_ENGINE_SUBVERSION   8
-#define CGE_ENGINE_REVISION     7
+#define CGE_ENGINE_REVISION     8
 
 //-----------------------------------------------------------------------------
 // World Configuration
@@ -98,6 +98,6 @@
 #define CGE_WORLD_SUBVERSION    0   
 
 // Current world database revision number
-#define CGE_WORLD_REVISION      2
+#define CGE_WORLD_REVISION      3
 
 #endif // !_CGE_CGCONFIG_H_

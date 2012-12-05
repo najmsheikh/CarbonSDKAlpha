@@ -61,6 +61,7 @@
 class cgWorldObject;
 class cgObjectNode;
 class cgObjectSubElement;
+class cgSceneElement;
 class cgSpatialTreeLeaf;
 
 //-----------------------------------------------------------------------------
@@ -770,6 +771,8 @@ CGE_MAP_DECLARE             ( cgUInt32, cgObjectNode*, cgObjectNodeMap )
 CGE_VECTOR_DECLARE          ( cgObjectNode*, cgObjectNodeArray )
 CGE_MAP_DECLARE             ( cgUInt32, cgObjectSubElement*, cgObjectSubElementMap )
 CGE_VECTOR_DECLARE          ( cgObjectSubElement*, cgObjectSubElementArray )
+CGE_MAP_DECLARE             ( cgUInt32, cgSceneElement*, cgSceneElementMap )
+CGE_VECTOR_DECLARE          ( cgSceneElement*, cgSceneElementArray )
 CGE_VECTOR_DECLARE          ( cgSpatialTreeLeaf*, cgSceneLeafArray )
 CGE_UNORDEREDSET_DECLARE    ( cgSpatialTreeLeaf*, cgSceneLeafSet )
 

@@ -131,7 +131,7 @@ cgBoundingBox cgBoneObject::getLocalBoundingBox( )
 /// intersected and also compute the object space intersection distance. 
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgBoneObject::pick( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, const cgVector3 & wireTolerance, cgFloat & distance )
+bool cgBoneObject::pick( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distance )
 {
     // Only valid in sandbox mode.
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
@@ -151,7 +151,7 @@ bool cgBoneObject::pick( cgCameraNode * camera, cgObjectNode * issuer, const cgS
         return false;
 
     // Pass through
-    return mesh->pick( rayOrigin, rayDirection, wireframe, wireTolerance, distance );
+    return mesh->pick( camera, viewportSize, issuer->getWorldTransform(false), rayOrigin, rayDirection, wireframe, wireTolerance, distance );
 }
 
 //-----------------------------------------------------------------------------

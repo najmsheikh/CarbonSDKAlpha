@@ -186,6 +186,7 @@ public:
     cgFloat                     estimateZoomFactor          ( const cgSize & viewportSize, const cgVector3 & position );
     cgFloat                     estimateZoomFactor          ( const cgSize & viewportSize, const cgPlane & plane, cgFloat maximumValue );
     cgFloat                     estimateZoomFactor          ( const cgSize & viewportSize, const cgVector3 & position, cgFloat maximumValue );
+    cgVector3                   estimatePickTolerance       ( const cgSize & viewportSize, cgFloat pixelTolerance, const cgVector3 & referencePosition, const cgTransform & objectTransform );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgObjectNode)

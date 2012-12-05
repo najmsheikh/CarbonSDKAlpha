@@ -279,7 +279,7 @@ public:
     //virtual void                    sandboxRender           ( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer );
     //virtual bool                    render                  ( cgCameraNode * camera, cgVisibilitySet * visibilityData, cgObjectNode * issuer );
     //virtual bool                    renderSubset            ( cgCameraNode * camera, cgVisibilitySet * visibilityData, cgObjectNode * issuer, const ResourceHandle & material );
-    //virtual bool                    pick                    ( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & origin, const cgVector3 & direction, bool wireframe, const cgVector3 & wireTolerance, cgFloat & distanceOut );
+    //virtual bool                    pick                    ( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & origin, const cgVector3 & direction, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut );
     //virtual bool                    isRenderable            ( ) const;
     //virtual bool                    isShadowCaster          ( ) const;
     

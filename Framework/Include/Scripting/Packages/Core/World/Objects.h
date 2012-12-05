@@ -10,6 +10,7 @@
 #include "Objects/Lights.h"
 #include "Objects/Group.h"
 #include "Objects/Actor.h"
+#include "Objects/Dummy.h"
 #include "Objects/ParticleEmitter.h"
 #include "Objects/ObjectBehavior.h"
 
@@ -30,6 +31,7 @@ namespace Objects
             DECLARE_PACKAGE_CHILD( Lights )
             DECLARE_PACKAGE_CHILD( Group )
             DECLARE_PACKAGE_CHILD( Actor )
+            DECLARE_PACKAGE_CHILD( Dummy )
             DECLARE_PACKAGE_CHILD( ParticleEmitter )
         END_SCRIPT_PACKAGE( )
 

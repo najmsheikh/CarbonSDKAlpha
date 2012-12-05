@@ -2636,7 +2636,7 @@ bool cgResourceManager::loadVertexShader( cgVertexShaderHandle * hResOut, const 
 #endif // CGE_DX9_RENDER_SUPPORT
 
     } // End switch renderAPI
-    
+
     // Attempt to load the on-disk shader permutation (will fail if not found).
     return loadCompiledVertexShader( hResOut, pIdentifier, strCacheFile, nFlags, _debugSource );
 }
@@ -3114,7 +3114,7 @@ cgSampler * cgResourceManager::createSampler( const cgString & strName, const cg
     cgSampler * pSampler = new cgSampler( mRenderDriver, strName, hCustomShader );
 
     // Allow sampler to initialize.
-    if ( pSampler->onComponentCreated( &cgComponentCreatedEventArgs(0) ) == false )
+    if ( pSampler->onComponentCreated( &cgComponentCreatedEventArgs(0, cgCloneMethod::None) ) == false )
     {
         pSampler->deleteReference();
         return CG_NULL;
@@ -3152,7 +3152,7 @@ cgSampler * cgResourceManager::createSampler( cgWorld * pWorld, const cgString &
     pSampler = new cgSampler( pWorld->generateRefId(false), pWorld, mRenderDriver, strName, hCustomShader );
 
     // Allow sampler to initialize.
-    if ( pSampler->onComponentCreated( &cgComponentCreatedEventArgs(0) ) == false )
+    if ( pSampler->onComponentCreated( &cgComponentCreatedEventArgs(0, cgCloneMethod::None) ) == false )
     {
         // Force immediate deletion of any created sampler. Do not pass go :)
         pSampler->deleteReference();
@@ -3208,7 +3208,7 @@ cgSampler * cgResourceManager::cloneSampler( cgWorld * pWorld, bool bInternal, c
     cgSampler * pNewSampler = new cgSampler( nDestRefId, pWorld, mRenderDriver, pInit->getSurfaceShader(), pInit );
 
     // Allow sampler to initialize its data.
-    if ( !pNewSampler->onComponentCreated( &cgComponentCreatedEventArgs(0) ) )
+    if ( !pNewSampler->onComponentCreated( &cgComponentCreatedEventArgs(0, cgCloneMethod::Copy) ) )
     {
         // Force immediate deletion of any created sampler. Do not pass go :)
         pNewSampler->deleteReference();
@@ -3273,7 +3273,7 @@ cgSampler * cgResourceManager::loadSampler( cgWorld * pWorld, const cgSurfaceSha
         cgSampler * pNewSampler = new cgSampler( nDestRefId, pWorld, mRenderDriver, hCustomShader, pExistingSampler );
 
         // Allow sampler to initialize its data.
-        if ( !pNewSampler->onComponentCreated( &cgComponentCreatedEventArgs(0) ) )
+        if ( !pNewSampler->onComponentCreated( &cgComponentCreatedEventArgs(0, cgCloneMethod::Copy) ) )
         {
             // Force immediate deletion of any created sampler. Do not pass go :)
             pNewSampler->deleteReference();
