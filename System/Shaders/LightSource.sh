@@ -240,18 +240,13 @@ class LightSourceShader : ISurfaceShader
         texData                = sample2D( sGBuffer0Tex, sGBuffer0, surface.screenCoords );
         surface.normal         = normalize( texData.xyz * 2.0 - 1.0 );
         surface.specularPower  = exp2( texData.w * $MAX_GLOSS_LEVELS );
+		surface.surfaceNormal  = surface.normal; // Default
         ?>
 
 		// Compute roughness 
 		if ( params.approximateRoughness )
 			<?surface.roughness = sqrt( 2.0f / (surface.specularPower + 2.0f) );?>
 
-		// Read surface normal if needed
-		if ( params.normalOffset )
-			<?surface.surfaceNormal = normalize( sample2D( sNormalTex, sNormal, surface.screenCoords ).rgb * 2.0f - 1.0f );?>
-		else
-			<?surface.surfaceNormal = surface.normal;?>			
-		
 		// Retrieve AO if desired
 		if ( params.useSSAO && isCompressedDepth ) 
             <?surface.ambientOcclusion = depthBufferData.y;?>
@@ -289,14 +284,32 @@ class LightSourceShader : ISurfaceShader
 				// If we need to manually linearize the color data, so so now
 				if ( testFlagAny( params.renderFlags, RenderFlags::GBufferSRGB ) )
 					<?texData = SRGBToLinear4( texData );?>
-                
-                <?
-                surface.diffuse.rgb        = texData.rgb;
-                surface.specular.rgb       = texData.aaa;
-                surface.ambientOcclusion   = 1; 
-	            surface.transmission       = 0;
-                ?>
+				<?
+				surface.diffuse.rgb        = texData.rgb;
+				surface.specular.rgb       = texData.aaa;
+				surface.transmission       = 0;
+				?>
 
+				// If we stored surface normals... (ToDo 6767: FOR NOW WE ARE ASSUMING SURFACE NORMALS IF SPEC_RGB IS OFF!)
+				if ( testFlagAny( params.renderFlags, RenderFlags::SurfaceNormals ) )
+				{
+					// Read surface normal, metal, and opacity
+					<?texData = sample2D( sGBuffer2Tex, sGBuffer2, surface.screenCoords );?>
+
+					// If we are doing normal offsets, convert back (otherwise don't bother)
+					if ( params.normalOffset )
+						<?surface.surfaceNormal = decodeNormalLambert(texData.rg);?>			
+					
+					<?						
+	                surface.transmission = texData.a;
+
+					// Apply a metalness adjustment to our reflectance
+					float metal = texData.b;
+					surface.specular.rgb = lerp( surface.specular.rgb, surface.specular.rgb * surface.diffuse.rgb, metal );	
+					surface.diffuse.rgb *= 1.0f - metal;
+					?>
+				}
+			
             } // End if specular intensity only
         
         } // End if getReflectance

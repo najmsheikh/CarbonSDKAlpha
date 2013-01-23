@@ -90,6 +90,9 @@ public:
     virtual cgPoint         screenToClient          ( const cgPoint & screenPoint ) = 0;
     virtual cgPoint         clientToScreen          ( const cgPoint & clientPoint ) = 0;
     virtual void            setTitle                ( const cgString & title ) = 0;
+    virtual void            setSize                 ( const cgSize & size ) = 0;
+    virtual void            setClientSize           ( const cgSize & size ) = 0;
+    virtual void            setFullScreenMode       ( bool fullScreen ) = 0;
 
     // Events
     virtual void            onSize                  ( const cgSize & size, bool minimized );

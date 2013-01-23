@@ -61,11 +61,21 @@ public:
     virtual cgInt32 decodePCM   ( cgByte * buffer, cgUInt32 bufferLength );
 
 private:
+
+    //-------------------------------------------------------------------------
+    // Private Static Functions
+    //-------------------------------------------------------------------------
+    static size_t   readStream  ( void *ptr, size_t size, size_t nmemb, void *datasource );
+    static cgInt    seekStream  ( void *datasource, ogg_int64_t offset, cgInt whence );
+    static cgInt    closeStream ( void *dataSource );
+    static cgInt32  tellStream  ( void *dataSource );
+
     //-------------------------------------------------------------------------
     // Private Variables
     //-------------------------------------------------------------------------
     OggVorbis_File      mVorbisFile;        // The ogg vorbis file identifier (libVorbis)
-    FILE              * mFile;              // A handle to the physical file on disk.
+    cgInputStream       mFile;              // Stream from which data is being loaded.
+    //FILE              * mFile;              // A handle to the physical file on disk.
     bool                mVorbisOpened;      // Has libVorbis opened the bitstream?
     int                 mCurrentSection;    // Section information for bitstream reading.
 };

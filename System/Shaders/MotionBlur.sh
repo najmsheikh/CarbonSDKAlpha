@@ -220,14 +220,17 @@ class MotionBlurShader : ISurfaceShader
 
 		// Compute texture coords
         float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
-		
+
 		// Sample pixel velocity
 		float2 velocity = -sample2D( sVelocityTex, sVelocity, texCoords );
 
 		// Accumulate samples along the velocity vector
 		float4 blurred = 0; 
 		for( float s = -1.0; s < 1.0; s += step )
-			blurred += sample2D( sColorTex, sColor, texCoords - velocity * s ); 
+		{
+			float4 sample = sample2D( sColorTex, sColor, texCoords - velocity * s ); 
+			blurred      += sample * sample.a;
+		}
 
 		// Average results and store speed in alpha (for blending)
 		color = blurred / blurred.a;
@@ -269,14 +272,19 @@ class MotionBlurShader : ISurfaceShader
 		// Compute texture coords
         <?float2 texCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;?>
 		
-		// We use alpha blending if the source and destination were the same target		
+		// We use alpha blending if requested (alpha mask not supported in this mode)
 		if ( useBlending )
 		{
 			<?color = float4( sample2D( sColorLowTex, sColorLow, texCoords ).rgb, compositeBlend );?>
 		}
 		else
 		{
-			<?color = lerp( sample2D( sColorTex, sColor, texCoords ), sample2D( sColorLowTex, sColorLow, texCoords ), compositeBlend );?>
+			// Do a manual combination (supports alpha masking)
+			<?
+			float4 highRes = sample2D( sColorTex, sColor, texCoords );
+			float4 lowRes  = sample2D( sColorLowTex, sColorLow, texCoords );
+			color = lerp( highRes, lowRes, compositeBlend * highRes.a );
+			?>
 		}
 
         // Valid shader

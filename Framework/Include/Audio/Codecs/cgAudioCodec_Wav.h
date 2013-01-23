@@ -27,6 +27,12 @@
 #include <cgBase.h>
 #include <Audio/cgAudioDriver.h>
 
+// Windows platform includes
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>    // Warning: Portability
+#include <mmsystem.h>    // Warning: Portability
+#undef WIN32_LEAN_AND_MEAN
+
 //-----------------------------------------------------------------------------
 // Forward Declarations
 //-----------------------------------------------------------------------------
@@ -67,12 +73,18 @@ public:
 
 private:
     //-------------------------------------------------------------------------
+    // Private Static Functions
+    //-------------------------------------------------------------------------
+    static LRESULT WINAPI ioProc( LPSTR lpmmioinfo, UINT uMsg, LPARAM lParam1, LPARAM lParam2 );
+
+    //-------------------------------------------------------------------------
     // Private Variables
     //-------------------------------------------------------------------------
     void              * mInput;         // A handle to the Multimedia IO object
     _MMCKINFO         * mChunkInfo;     // Multimedia RIFF chunk info
     _MMCKINFO         * mRIFFInfo;      // Used in opening a WAVE file
     cgAudioBufferFormat mPCMFormat;     // The format read from the file
+    cgInputStream       mFile;          // File from which data is being read.
 };
 
 #endif // !_CGE_CGAUDIOCODEC_WAV_H_

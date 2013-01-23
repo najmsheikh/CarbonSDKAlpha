@@ -124,13 +124,15 @@ void cgAnimationController::advanceTime( cgDouble fTimeElapsed, const TargetMap 
 //-----------------------------------------------------------------------------
 void cgAnimationController::updateTargets( const TargetMap & Targets )
 {
-    cgFloat      fWeightTheta = 0.0f;
-    cgVector3    vecScale, vecTranslation;
-    cgQuaternion qtRotation;
-    size_t       i;
+    cgFloat fWeightTheta = 0.0f;
     
     // Resize vectors to store enough data for each track
-    std::vector<cgTransform> TrackTransforms( mTracks.size() );
+    struct AnimationData
+    {
+        cgVector3 scale, translation;
+        cgQuaternion rotation;
+    };
+    std::vector<AnimationData> TrackTransforms( mTracks.size() );
     std::vector<cgFloat> TrackWeights( mTracks.size(), 0.0f );
 
     // Iterate through each applied animation target
@@ -147,7 +149,7 @@ void cgAnimationController::updateTargets( const TargetMap & Targets )
 
         // Iterate through each available track and determine which sets (if any)
         // contain appropriate animation data for this target.
-        for ( i = 0; i < mTracks.size(); ++i )
+        for ( size_t i = 0; i < mTracks.size(); ++i )
         {
             Track & Item = mTracks[i];
             
@@ -160,16 +162,14 @@ void cgAnimationController::updateTargets( const TargetMap & Targets )
             } // End if disabled
 
             // Retrieve track SRT data.
+            AnimationData & data = TrackTransforms[i];
             cgAnimationSet * pSet = Item.set.getResource(true);
-            if ( pSet->getSRT( Item.desc.position * (cgDouble)pSet->getFrameRate(), *itTargetId, 
-                               Item.desc.firstFrame, Item.desc.lastFrame, vecScale, qtRotation, vecTranslation ) )
+            if ( pSet->getSRT( Item.desc.position * (cgDouble)pSet->getFrameRate(), Item.desc.playbackMode, *itTargetId, 
+                               Item.desc.firstFrame, Item.desc.lastFrame, data.scale, data.rotation, data.translation ) )
             {
-                //fWeightTheta   += Item.desc.weight * Item.desc.weight;
+                // Include in final blend.
                 fWeightTheta   += Item.desc.weight;
                 TrackWeights[i] = Item.desc.weight;
-
-                // Generate the matrix from these values
-                TrackTransforms[i].compose( vecScale,cgVector3( 0, 0, 0 ), qtRotation, vecTranslation );
 
             } // End if retrieved SRT data
             else
@@ -183,22 +183,44 @@ void cgAnimationController::updateTargets( const TargetMap & Targets )
         // Generate the blended transform if any data found
         if ( fWeightTheta > CGE_EPSILON )
         {
-            cgTransform t;
-
-            // Allows us to multiply instead of divide
+            // Generate final animation data.
+            AnimationData data;
+            memset( &data, 0, sizeof(AnimationData) );
+            cgMatrix m;
+            memset( &m, 0, sizeof(cgMatrix) );
+            
+            // Normalizing reciprocal
             fWeightTheta = 1.0f / fWeightTheta;
 
-            // Check each track.
-            t.zero();
-            for ( i = 0; i < mTracks.size(); ++i )
+            // Blend each track.
+            bool firstRotation = true;
+            for ( size_t i = 0; i < mTracks.size(); ++i )
             {
                 cgFloat fWeight = TrackWeights[i];
 
                 // Track plays any part?
                 if ( fWeight > CGE_EPSILON )
-                    t += TrackTransforms[i] * (fWeight * fWeightTheta);
+                {
+                    if ( firstRotation )
+                        data.rotation = TrackTransforms[i].rotation;
+                    else
+                        cgQuaternion::slerp( data.rotation, data.rotation, TrackTransforms[i].rotation, (fWeight * fWeightTheta) );
+                    firstRotation = false;
+
+                    // NLerp
+                    //cgQuaternion::normalize( data.rotation, data.rotation + (TrackTransforms[i].rotation - data.rotation) * fWeight );
+
+                    // Weighted sum.
+                    data.translation += TrackTransforms[i].translation * (fWeight * fWeightTheta);
+                    data.scale += TrackTransforms[i].scale * (fWeight * fWeightTheta);
+                
+                } // End if applicable
                 
             } // Next playing track
+
+            // Compose final transform.
+            cgTransform t;
+            t.compose( data.scale,cgVector3( 0, 0, 0 ), data.rotation, data.translation );
 
             // Apply this to the animation target
             pTarget->onAnimationTransformUpdated( t );
@@ -247,6 +269,102 @@ void cgAnimationController::setTrackLimit( cgUInt16 nMaxTracks )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getTrackLimit ()
+/// <summary>
+/// Retrieve the maximum number of tracks that are available for blending with
+/// this animation controller. Can be altered with 'setTrackLimit()'.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgUInt16 cgAnimationController::getTrackLimit( ) const
+{
+    return (cgUInt16)mTracks.size();
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getTrackWeight ()
+/// <summary>
+/// Retrieve the blending weight of the specified track (i.e. how much it will
+/// contribute to the final controller output)
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloat cgAnimationController::getTrackWeight( cgUInt16 track ) const
+{
+    return mTracks[track].desc.weight;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getTrackSpeed ()
+/// <summary>
+/// Retrieve the playback speed of this track (1.0 is normal speed).
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloat cgAnimationController::getTrackSpeed( cgUInt16 track ) const
+{
+    return mTracks[track].desc.speed;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getTrackPosition ()
+/// <summary>
+/// Get the current position (in seconds) of the track playhead. This
+/// value is independant from the global time / position.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgDouble cgAnimationController::getTrackPosition( cgUInt16 track ) const
+{
+    return mTracks[track].desc.position;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getTrackFrameLimits ()
+/// <summary>
+/// Retrieve the frame indices that describe the boundaries within which the 
+/// animation set sampler is being limited. Frame indices of 0x7FFFFFFF 
+/// indicate that limits are disabled.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgRange cgAnimationController::getTrackFrameLimits( cgUInt16 track ) const
+{
+    return cgRange(mTracks[track].desc.firstFrame, mTracks[track].desc.lastFrame);
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getTrackPlaybackMode ()
+/// <summary>
+/// Retrieve the mode that will be used to play the animation data assigned to
+/// this track (i.e. Loop, PlayOnce, etc.)
+/// </summary>
+//-----------------------------------------------------------------------------
+cgAnimationPlaybackMode::Base cgAnimationController::getTrackPlaybackMode( cgUInt16 track ) const
+{
+    return mTracks[track].desc.playbackMode;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getTrackEnabled ()
+/// <summary>
+/// Retrieve the state that indicates whether or not the specified track is
+/// currently enabled. When disabled, the animation controller will not 
+/// process the track during animation updates.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAnimationController::getTrackEnabled( cgUInt16 track ) const
+{
+    return mTracks[track].desc.enabled;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getTrackDesc ()
+/// <summary>
+/// Retrieve all of the track playback properties in one go.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgAnimationTrackDesc & cgAnimationController::getTrackDesc( cgUInt16 track ) const
+{
+    return mTracks[track].desc;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : setTrackAnimationSet ()
 /// <summary>
 /// Place the specified animation set in the required track for playback.
@@ -264,6 +382,20 @@ bool cgAnimationController::setTrackAnimationSet( cgUInt16 nTrack, const cgAnima
 
     // Swap the animation set
     mTracks[ nTrack ].set = hSet;
+
+    // Compute the length of the animation set.
+    if ( hSet.isValid() )
+    {
+        cgRange range = mTracks[ nTrack ].set->getFrameRange();
+        cgFloat rate = mTracks[nTrack].set->getFrameRate();
+        mTracks[nTrack].desc.length = (range.max - range.min) / rate;
+    
+    } // End if has set
+    else
+    {
+        mTracks[nTrack].desc.length = 0;
+
+    } // End if no set
 
     // Build a unique set of targets identifiers from all applied animation sets.
     mValidTargetIds.clear();
@@ -361,25 +493,11 @@ bool cgAnimationController::setTrackPosition( cgUInt16 nTrack, cgDouble fPositio
 }
 
 //-----------------------------------------------------------------------------
-//  Name : getTrackPosition ()
-/// <summary>
-/// Get the current position (in seconds) of the track playhead. This
-/// value is independant from the global time / position.
-/// </summary>
-//-----------------------------------------------------------------------------
-cgDouble cgAnimationController::getTrackPosition( cgUInt16 nTrack ) const
-{
-    // Track index valid?
-    if ( nTrack >= mTracks.size() )
-        return 0;
-    return mTracks[ nTrack ].desc.position;
-}
-
-//-----------------------------------------------------------------------------
 //  Name : setTrackFrameLimits ()
 /// <summary>
-/// Indices of the frames to limit the animation set sampler to. Specify both
-/// as 0x7FFFFFFF to disable limits.
+/// Supply frame indices that describe the boundaries within which the 
+/// animation set sampler will be limited. Specify both as 0x7FFFFFFF to 
+/// disable limits.
 /// </summary>
 //-----------------------------------------------------------------------------
 bool cgAnimationController::setTrackFrameLimits( cgUInt16 nTrack, cgInt32 nMinFrame, cgInt32 nMaxFrame )
@@ -397,12 +515,74 @@ bool cgAnimationController::setTrackFrameLimits( cgUInt16 nTrack, cgInt32 nMinFr
 }
 
 //-----------------------------------------------------------------------------
+//  Name : setTrackFrameLimits ()
+/// <summary>
+/// Supply frame indices that describe the boundaries within which the 
+/// animation set sampler will be limited. Specify both as 0x7FFFFFFF to 
+/// disable limits.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAnimationController::setTrackFrameLimits( cgUInt16 nTrack, const cgRange & range )
+{
+    // Track index valid?
+    if ( nTrack >= mTracks.size() )
+        return false;
+
+    // Set the property
+    mTracks[ nTrack ].desc.firstFrame = range.min;
+    mTracks[ nTrack ].desc.lastFrame = range.max;
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setTrackPlaybackMode ()
+/// <summary>
+/// Set the mode that will be used to play the animation data assigned to this
+/// track (i.e. Loop, PlayOnce, etc.)
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAnimationController::setTrackPlaybackMode( cgUInt16 nTrack, cgAnimationPlaybackMode::Base mode )
+{
+    // Track index valid?
+    if ( nTrack >= mTracks.size() )
+        return false;
+
+    // Set the property
+    mTracks[ nTrack ].desc.playbackMode = mode;
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setTrackEnabled ()
+/// <summary>
+/// Enable or disable the specified track. When disabled, the animation 
+/// controller will not process the track during animation updates.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAnimationController::setTrackEnabled( cgUInt16 nTrack, bool enabled )
+{
+    // Track index valid?
+    if ( nTrack >= mTracks.size() )
+        return false;
+
+    // Set the property
+    mTracks[ nTrack ].desc.enabled = enabled;
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : setTrackDesc ()
 /// <summary>
 /// Set all of the track playback properties in one go.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgAnimationController::setTrackDesc( cgUInt16 nTrack, const TrackDesc & Desc )
+bool cgAnimationController::setTrackDesc( cgUInt16 nTrack, const cgAnimationTrackDesc & Desc )
 {
     // Track index valid?
     if ( nTrack >= mTracks.size() )

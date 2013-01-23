@@ -26,7 +26,6 @@
 //-----------------------------------------------------------------------------
 #include <Interface/Controls/cgImageBoxControl.h>
 #include <Interface/cgUIManager.h>
-#include <Interface/cgUIForm.h>
 
 // ToDo: Remove these comments once completed.
 // ToDo: Image box needs scrollbars for when no scale mode is used and image is larger than box.
@@ -96,12 +95,11 @@ void cgImageBoxControl::renderSecondary( )
         return;
 
     // Get access to interface manager
-    cgUIManager    * pManager = mRootForm->getUIManager();
-    cgRenderDriver * pDriver  = pManager->getRenderDriver();
+    cgRenderDriver * pDriver  = mUIManager->getRenderDriver();
 
     // Pulling from system glyph library?
     if ( mLibrary.empty() )
-        strLibrary = pManager->getSkinGlyphLibrary();
+        strLibrary = mUIManager->getSkinGlyphLibrary();
     else
         strLibrary = mLibrary;
 
@@ -109,7 +107,7 @@ void cgImageBoxControl::renderSecondary( )
     if ( mScaleMode == cgImageScaleMode::Stretch )
     {
         // Draw the specified image to fill the client area
-        pManager->drawImage( rcClient, strLibrary, mLibraryItem );
+        mUIManager->drawImage( rcClient, strLibrary, mLibraryItem );
     
     } // End if stretch to fill
     else if ( mScaleMode == cgImageScaleMode::None )
@@ -119,7 +117,7 @@ void cgImageBoxControl::renderSecondary( )
 
         // Draw at it's original size
         cgPoint ptPosition( rcClient.left, rcClient.top );
-        pManager->drawImage( ptPosition, strLibrary, mLibraryItem );
+        mUIManager->drawImage( ptPosition, strLibrary, mLibraryItem );
 
         // Turn clipping off again
         pDriver->popScissorRect( );
@@ -144,14 +142,7 @@ bool cgImageBoxControl::setImage( const cgString & strImageRef )
 {
     cgSize Size;
 
-    // Validate requirements
-    if ( !mRootForm )
-        return false;
-
     // ToDo: Should really be done with image library instead of perhaps a texture / resource handle?
-
-    // Get access to manager
-    cgUIManager * pManager = mRootForm->getUIManager();
 
     // Clear current image
     mImageReference    = _T("");
@@ -183,10 +174,10 @@ bool cgImageBoxControl::setImage( const cgString & strImageRef )
     if ( !mLibrary.empty() )
     {
         // Any library by this name?
-        if ( !pManager->isImageLibraryLoaded( mLibrary ) )
+        if ( !mUIManager->isImageLibraryLoaded( mLibrary ) )
         {
             // Attempt to load this into the library
-            if ( !pManager->addImage( mLibrary, mLibrary ) )
+            if ( !mUIManager->addImage( mLibrary, mLibrary ) )
                 return false;
 
         } // End if no image library
@@ -224,20 +215,19 @@ bool cgImageBoxControl::setImage( const cgString & strImageRef )
 cgSize cgImageBoxControl::getImageSize( ) const
 {
     cgString      strLibrary;
-    cgUIManager * pManager = mRootForm->getUIManager();
-
+    
     // No image currently set?
     if ( mImageReference.empty() )
         return cgSize(0,0);
     
     // Pulling from system glyph library?
     if ( mLibrary.empty() )
-        strLibrary = pManager->getSkinGlyphLibrary();
+        strLibrary = mUIManager->getSkinGlyphLibrary();
     else
         strLibrary = mLibrary;
 
     // Return the size of the specified image
-    return pManager->getImageSize( strLibrary, mLibraryItem );
+    return mUIManager->getImageSize( strLibrary, mLibraryItem );
 }
 
 //-----------------------------------------------------------------------------

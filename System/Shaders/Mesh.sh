@@ -56,11 +56,13 @@ class MeshShader : ISurfaceShader
     private DepthStencilStateHandle mDepthFillState;
     private DepthStencilStateHandle mDepthEqualState;
     private DepthStencilStateHandle mDepthLessEqualState;
+    private DepthStencilStateHandle mDepthStencilFillState;
 
     ///////////////////////////////////////////////////////////////
     // Blend States
     ///////////////////////////////////////////////////////////////
     private BlendStateHandle        mNoColorWritingBlendState;
+    private BlendStateHandle        mAlphaOnlyBlendState;
     private BlendStateHandle        mAdditiveBlendState;
     private BlendStateHandle        mAlphaBlendState;
     private BlendStateHandle        mOpacityBlendState;
@@ -129,6 +131,18 @@ class MeshShader : ISurfaceShader
         dsStates.depthFunction              = ComparisonFunction::Equal;
         resources.createDepthStencilState( mDepthEqualState, dsStates, 0, DebugSource() );
 
+		// Depth-stencil buffer filling 
+		dsStates.depthEnable                         = true;
+		dsStates.depthWriteEnable                    = true;
+        dsStates.depthFunction                       = ComparisonFunction::LessEqual;
+		dsStates.stencilEnable                       = true;
+		dsStates.backFace.stencilFunction            = ComparisonFunction::Always;
+		dsStates.backFace.stencilPassOperation       = StencilOperation::Replace;
+		dsStates.backFace.stencilFailOperation       = StencilOperation::Keep;
+		dsStates.backFace.stencilDepthFailOperation  = StencilOperation::Keep;
+		dsStates.frontFace                           = dsStates.backFace; 
+		resources.createDepthStencilState( mDepthStencilFillState, dsStates, 0, DebugSource() );
+
         ///////////////////////////////////////////////////////////////
         // Blend States
         ///////////////////////////////////////////////////////////////
@@ -149,6 +163,13 @@ class MeshShader : ISurfaceShader
         blStates.renderTarget0.sourceBlend      = BlendMode::Zero;
         blStates.renderTarget0.destinationBlend = BlendMode::InvSrcAlpha;
         resources.createBlendState( mOpacityBlendState, blStates, 0, DebugSource() );
+
+        // Alpha channel only state
+        blStates.renderTarget0.renderTargetWriteMask = ColorChannel::Alpha;
+        blStates.renderTarget0.blendEnable      = false;
+        blStates.renderTarget0.sourceBlend      = BlendMode::One;
+        blStates.renderTarget0.destinationBlend = BlendMode::Zero;
+        resources.createBlendState( mAlphaOnlyBlendState, blStates, 0, DebugSource() );
 
         // Disable color output
         blStates.renderTarget0.renderTargetWriteMask = 0;
@@ -198,10 +219,9 @@ class MeshShader : ISurfaceShader
 		else
 	        mDriver.setBlendState( null );
 
-        // Select shaders
-        if ( !mOwner.selectVertexShader( transformDepthShader, System.maxBlendIndex, System.useVTFBlending, System.depthType, System.surfaceNormalType, int(LightType::NoLight), System.materialFlags, System.renderFlags ) ||
-             !mOwner.selectPixelShader( drawDepthPrePassShader, System.materialFlags, System.renderFlags ) )
-
+        // Select shaders (Note: We force a world space normal computation so that a worldIT matrix gets generated and our world matrix becomes identical to the geometry pass. This fixes skinning z fighting.)
+        if ( !mOwner.selectVertexShader( transformDepthShader, System.maxBlendIndex, System.useVTFBlending, System.depthType, int(NormalType::NormalWorld), int(LightType::NoLight), System.materialFlags, System.renderFlags ) ||
+             !mOwner.selectPixelShader( drawDepthShader, System.depthType, System.materialFlags, System.renderFlags ) )
             return TechniqueResult::Abort;
 
         // We're done 
@@ -211,14 +231,26 @@ class MeshShader : ISurfaceShader
     TechniqueResult geometry( int pass, bool commitChanges )
     {
         // Set necessary states
-        // mDriver.setDepthStencilState( mDepthEqualState ); // ToDo: Add a flag to indicate a depth-stencil pre-pass took place.
-        mDriver.setDepthStencilState( mDepthFillState );
         mDriver.setBlendState( null );
         mDriver.setRasterizerState( null );
+		
+		// Update stencil buffer according to render class (Note: Assumes stencil buffer was pre-cleared to 0. This technically equates to static geometry.)
+		switch ( System.objectRenderClass )
+		{
+			case RenderClass::Dynamic:
+		        mDriver.setDepthStencilState( mDepthStencilFillState, 1 );
+			break;
+			case RenderClass::FirstPerson:
+		        mDriver.setDepthStencilState( mDepthStencilFillState, 2 );
+			break;
+			default:
+		        mDriver.setDepthStencilState( mDepthFillState );
+			break;
+		};
 
         // Select shaders
         if ( !mOwner.selectVertexShader( transformDefaultShader, System.maxBlendIndex, System.useVTFBlending, System.normalSource, System.lightTextureType, System.viewSpaceLighting, System.orthographicCamera ) ||
-             !mOwner.selectPixelShader( drawGBufferDSShader, System.depthType, System.normalSource, System.reflectionMode, System.lightTextureType, System.materialFlags, System.renderFlags, System.outputEncodingType, System.shadingQuality ) )
+             !mOwner.selectPixelShader( drawGBufferDSShader, System.surfaceNormalType, System.normalSource, System.reflectionMode, System.lightTextureType, System.materialFlags, System.renderFlags, System.outputEncodingType, System.shadingQuality ) )
             return TechniqueResult::Abort;
 
         // We're done 
@@ -241,7 +273,7 @@ class MeshShader : ISurfaceShader
 		
         // Select shaders
         if ( !mOwner.selectVertexShader( transformDepthShader, System.maxBlendIndex, System.useVTFBlending, int(DepthType::LinearZ), int(NormalType::NoNormal), System.lightType, System.materialFlags, System.renderFlags ) ||
-             !mOwner.selectPixelShader( drawDepthShader, int(DepthType::LinearZ), int(NormalType::NoNormal), System.materialFlags, System.renderFlags ) )
+             !mOwner.selectPixelShader( drawDepthShader, int(DepthType::LinearZ), System.materialFlags, System.renderFlags ) )
             return TechniqueResult::Abort;
 
         // We're done 
@@ -445,15 +477,6 @@ class MeshShader : ISurfaceShader
 		// Compute specular reflectance and gloss
 		<?float4 kS = float4( _materialSpecular.rgb, _materialGloss );?>
 
-		// Apply metallic shading before specular masking
-		if ( isMetal )
-		{
-			<?
-			kS.rgb = lerp( kS.rgb, kD.rgb * _materialMetalnessSpecular, _materialMetalnessAmount );
-			kD.rgb *= _materialMetalnessDiffuse;
-			?>
-		}
-		
 		// Do we have a full specular color texture?
 		if ( testFlagAny( materialFlags, MaterialFlags::SampleSpecularColor ) )
 		{
@@ -463,7 +486,7 @@ class MeshShader : ISurfaceShader
 			else
 				<?kS.rgb  *= sample2D( sSpecularTex, sSpecular, texCoords.xy ).rgb;?>
 		}
-		// Do we have a specular mask?
+		// Do we have a specular intensity texture?
 		else if ( testFlagAny( materialFlags, MaterialFlags::SampleSpecularMask ) )
 		{
 			// Do we have a gloss map?
@@ -480,10 +503,10 @@ class MeshShader : ISurfaceShader
 		
 		// Get the gloss
 		<?surface.gloss = kS.a;?>
-		
+
 		// Compute specular power
 		<?surface.specularPower = exp2( surface.gloss * $MAX_GLOSS_LEVELS );?>
-	
+
 		// Adjust specular power based on Toksvig factor
 		if ( computeToksvig )
 		{
@@ -499,6 +522,18 @@ class MeshShader : ISurfaceShader
 		// Compute surface roughness 
 		if ( computeRoughness )
 			<?surface.roughness = sqrt( 2.0f / (surface.specularPower + 2.0f) );?>
+
+		// Keep track of the specular intensity before any further adjustments (i.e., metal)
+		<?kS.a = dot( kS.rgb, float3(0.333,0.333,0.333) );?>
+
+		// Apply metallic shading adjustment
+		if ( isMetal )
+		{
+			<?
+			kS.rgb  = lerp( kS.rgb, kS.rgb * kD.rgb, _materialMetalnessAmount );
+			kD.rgb *= (1.0f - _materialMetalnessAmount);
+			?>
+		}
 
         // If the opacity value was not in the diffuse texture, sample it separately.
         if ( hasOpacityTexture && !opacityInDiffuse )
@@ -522,7 +557,7 @@ class MeshShader : ISurfaceShader
 		{ 
 			<?
 			float f = pow( 1.0 - saturate( dot( surface.surfaceNormal, surface.viewDirection ) ), _materialFresnelExponent );
-    		kS.rgb  = lerp( kS.rgb, float3(1.0, 1.0, 1.0), f * _materialFresnelSpecular );
+    		kS      = lerp( kS, float4(1.0, 1.0, 1.0, 1.0), f * _materialFresnelSpecular );
 			kD.rgb *= 1.0 - (f * _materialFresnelDiffuse);
 			?>
 			if ( isTranslucent )
@@ -1138,7 +1173,87 @@ class MeshShader : ISurfaceShader
     // Name  : drawDepth() (Pixel Shader)
     // Desc  : Depth render pixel shader
     //-------------------------------------------------------------------------
-    bool drawDepth( int depthOutputType, int normalOutputType, int materialFlags, int renderFlags )
+    bool drawDepth( int depthOutputType, int materialFlags, int renderFlags )
+    {
+        /////////////////////////////////////////////
+        // Setup
+        /////////////////////////////////////////////
+	    bool orthographicCamera = testFlagAny( renderFlags, RenderFlags::OrthographicCamera );
+	    bool hasOpacityTexture  = testFlagAny( materialFlags, MaterialFlags::SampleOpacityTexture );
+   		bool computeTexCoords   = hasOpacityTexture || testFlagAny( materialFlags, MaterialFlags::SampleDiffuseTexture );
+    
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Define shader inputs.
+		<?in
+			float4 screenPosition : SV_POSITION;
+			$(mapDepthTexCoordRegisters(depthOutputType, NormalType::NoNormal, hasOpacityTexture))
+		?>
+
+        // Define shader outputs.
+		<?out
+			float4 depthOut : SV_TARGET0;
+		?>
+
+        // Constant buffer usage.
+        <?cbufferrefs
+            _cbMaterial;
+            _cbCamera;
+        ?>
+
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+
+		// If this is the "null" shader, just return 0 
+        if ( depthOutputType == DepthType::None )
+        {
+			<?depthOut = 0;?>
+		
+			// Done	
+			return true;		
+        }
+        
+        // Do we have an opactity map?
+        if ( hasOpacityTexture )
+        {
+            // Note: There is no need to pay attention to the 'opacityInDiffuse' state here
+            // since we do not actually sample the diffuse texture anyway, and thus no
+            // optimization is possible. Just read from whatever opacity texture was assigned.
+			<?clip( (sample2D( sOpacityTex, sOpacity, texCoords ).a * _materialDiffuse.a) - _materialAlphaTestValue );?> 
+
+        } // End if hasOpacityTexture
+
+		// Output depth        
+		switch( getPureDepthType( depthOutputType ) )
+		{
+	        case DepthType::LinearZ:
+		        <?depthOut = setNormalizedDistance( depth, $depthOutputType );?>
+	            break;
+	        case DepthType::LinearDistance:
+				<?depthOut = setDistance( length( eyeRay ), $depthOutputType );?>
+	            break;
+	        case DepthType::NonLinearZ:
+				if ( !orthographicCamera )
+		        	<?depth = (1.0f / depth) * _projectionMatrix._43 + _projectionMatrix._33;?>
+		        <?depthOut = setNormalizedDistance( depth, $depthOutputType );?>
+	            break;
+	        default:
+				<?depthOut = 0;?>
+	            break;
+		
+        } // End switch depthOutputType
+
+        // Valid shader
+        return true;
+    }
+
+    //-------------------------------------------------------------------------
+    // Name  : drawDepthAndNormal() (Pixel Shader)
+    // Desc  : Depth and surface normal render pixel shader
+    //-------------------------------------------------------------------------
+    bool drawDepthAndNormal( int depthOutputType, int normalOutputType, int materialFlags, int renderFlags )
     {
         /////////////////////////////////////////////
         // Setup
@@ -1233,7 +1348,7 @@ class MeshShader : ISurfaceShader
     // Name  : drawDepthPrePass() (Pixel Shader)
     // Desc  : Depth render pixel shader
     //-------------------------------------------------------------------------
-    bool drawDepthPrePass( int materialFlags, int renderFlags )
+    bool drawDepthPrePass( int depthOutputType, int materialFlags, int renderFlags )
     {
         /////////////////////////////////////////////
         // Setup
@@ -1280,7 +1395,7 @@ class MeshShader : ISurfaceShader
     // Name  : drawGBufferDS() (Pixel Shader)
     // Desc  : G-Buffer render pixel shader for deferred shading
     //-------------------------------------------------------------------------
-    bool drawGBufferDS( int depthOutputType, int normalType, int reflectionType, int lightmapType, int materialFlags, int renderFlags, int outputType, int shadingQuality )
+    bool drawGBufferDS( int surfaceNormalType, int normalType, int reflectionType, int lightmapType, int materialFlags, int renderFlags, int outputType, int shadingQuality )
     {
         /////////////////////////////////////////////
         // Setup
@@ -1289,6 +1404,19 @@ class MeshShader : ISurfaceShader
 		bool depthStencilReading = testFlagAny( renderFlags, RenderFlags::DepthStencilReads );
 		bool fullSpecularColor   = testFlagAny( renderFlags, RenderFlags::SpecularColorOutput );
 	    bool orthographicCamera  = testFlagAny( renderFlags, RenderFlags::OrthographicCamera );
+
+		// If we are storing a surface normal, then we are requiring a compact g-buffer representation. 
+		// In this case, certain rules must be observed...
+		if ( surfaceNormalType != NormalType::NoNormal )
+		{
+			// We cannot store a full specular color
+			fullSpecularColor = false;
+		
+			// We do not want the surface to be treated as metallic (right now). This will be done on the fly during lighting.
+			// ToDo 6767: However, we still need the proper color for specular reflectance for pre-lit reflections. This means
+			//            we'll need to collect specular reflectance (pre-metal adjust) AND the fully adjusted specular color.
+			materialFlags &= ~uint(MaterialFlags::Metal);
+		}
 
 		// Is there pre-computed lighting we need to account for?
 		if ( (reflectionType != ReflectionMode::None) || (lightmapType != LightTextureType::None) ||
@@ -1317,13 +1445,8 @@ class MeshShader : ISurfaceShader
             float4  data0     : SV_TARGET0;
             float4  data1     : SV_TARGET1;
             float4  data2     : SV_TARGET2;
-        ?>
-		if ( fullSpecularColor || !depthStencilReading )
-		{        
-        <?out
             float4  data3     : SV_TARGET3;
         ?>
-        }
 
         /////////////////////////////////////////////
         // Shader Code
@@ -1374,8 +1497,8 @@ class MeshShader : ISurfaceShader
 		data0.xyz = surface.normal;
 		data0.w   = surface.gloss;
 		?>
-		
-		// If we are storing full specular color... (Note: we must be using depth-stencil reads for this)
+
+		// If we are storing full specular color...
 		if ( fullSpecularColor )
 		{
 			<?		
@@ -1385,43 +1508,32 @@ class MeshShader : ISurfaceShader
 			data2.a   = 0;
 			?>
 
-			// Store precompute lighting
-			// if ( precomputedLighting )
-				<?data3 = sceneLighting;?>
-
         } // End if full specular color
-		else
-		{	
-			// If we are storing specular intensity only
+		else 
+		{
+			// Store diffuse color and specular intensity (metalness will be used to adjust for specular color later on)
 			<?data1 = float4( surface.diffuseSRGB, dot( surface.specularSRGB, float3( 0.2125, 0.7154, 0.0721 ) ) );?>
 
-			// If we are not doing depth-stencil reads, output depth to target
-			if ( !depthStencilReading )
+			// If we are storing surface normals...
+			if ( surfaceNormalType != NormalType::NoNormal )
 			{
-				// Output depth        
-				switch( getPureDepthType( depthOutputType ) )
-				{
-					case DepthType::LinearDistance:
-						<?data2 = setDistance( length( worldPos - _cameraPosition ), $depthOutputType );?>
-						break;
-					default:
-						<?data2 = setNormalizedDistance( depth, $depthOutputType );?>
-						break;
-				
-				} // End switch depthOutputType
-
-				// Store precompute lighting
-				// if ( precomputedLighting )
-					<?data3 = sceneLighting;?>
+				<?
+				// Store surface normal, metal, and opacity
+				data2.rg = encodeNormalLambert( surface.surfaceNormal );
+				data2.ba = float2( _materialMetalnessAmount, surface.transmission );
+				?>
 			}
 			else
 			{
-				// Store precompute lighting
-				// if ( precomputedLighting )
-					<?data2 = sceneLighting;?>
+				// Clear data2... 
+				<?data2 = 0;?>
 			}
-
+			
         } // End if specular intensity only
+
+		// Store precomputed lighting (currently always slot 3)
+		// if ( precomputedLighting )
+			<?data3 = sceneLighting;?>
 
         // Valid shader
         return true;
@@ -1745,7 +1857,7 @@ class MeshShader : ISurfaceShader
         // Valid shader
         return true;
     }
-
+    
     ///////////////////////////////////////////////////////////////////////////
 	// Member Functions
 	///////////////////////////////////////////////////////////////////////////

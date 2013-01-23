@@ -317,6 +317,9 @@ bool cgApplication::initInterface()
     pInterface->addFont( _T("sys://Interface/Fonts/FixedBlack.fnt") );
     pInterface->addFont( _T("sys://Interface/Fonts/FixedWhite.fnt") );
 
+    // Select the default font.
+    pInterface->setDefaultFont( _T("fixed_v01_white") );
+
     // Add all required interface skins
     pInterface->addSkin( _T("sys://Interface/Skins/Carbon_Default.xml") );
 

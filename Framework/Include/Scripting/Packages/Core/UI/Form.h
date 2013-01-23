@@ -44,8 +44,7 @@ namespace Form
             // Register the object methods
             BINDSUCCESS( engine->registerObjectMethod( "Form", "bool loadForm( InputStream, const String&in )", asMETHODPR(cgUIForm, loadForm, ( cgInputStream, const cgString& ), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Form", "bool createForm( const String&in )", asMETHODPR(cgUIForm, createForm, ( const cgString& ), bool), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Form", "UIManager@+ getUIManager( ) const", asMETHODPR(cgUIForm,getUIManager,() const,cgUIManager*), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Form", "ControlLayer@+ getControlLayer( ) const", asMETHODPR(cgUIForm,getControlLayer,() const,cgUIControlLayer*), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Form", "void close( )", asMETHODPR(cgUIForm, close, ( ), void), asCALL_THISCALL) );           
             BINDSUCCESS( engine->registerObjectMethod( "Form", "void setAcceptButton( Button@+ )", asMETHODPR(cgUIForm,setAcceptButton,( cgButtonControl* ),void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Form", "Button@+ getAcceptButton( ) const", asMETHODPR(cgUIForm,getAcceptButton,( ) const,cgButtonControl* ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Form", "void setCancelButton( Button@+ )", asMETHODPR(cgUIForm,setCancelButton,( cgButtonControl* ),void), asCALL_THISCALL) );

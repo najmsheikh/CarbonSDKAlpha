@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ImageAtlas>
+  <Source>HUDElements.dds</Source>
+  <Group>
+    <Image x="0" y="0" width="42" height="42" name="objective_indicator"/>
+	<Image x="0" y="357" width="226" height="155" name="stats_background"/>
+	<Image x="377" y="378" width="66" height="132" name="armor_bar"/>
+	<Image x="445" y="378" width="66" height="132" name="health_bar"/>
+  </Group>
+</ImageAtlas>

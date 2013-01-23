@@ -1200,8 +1200,14 @@ class AntialiasingShader : ISurfaceShader
 		clipPositionPrev.xy    /= clipPositionPrev.w;
 		clipPositionPrev.xy    *= float2( 0.5, -0.5 );
 
+		float2 velocity = clipPositionCurr.xy - clipPositionPrev.xy;
+		
+		// For first person weapons, give them a big velocity (TEMPORARY: We need a mask for this!)
+		if ( viewPosition.z < 0.5f )
+			velocity.xy = -100.0f;
+
 		// Compute relative velocity
-		color = float4( clipPositionCurr.xy - clipPositionPrev.xy, 0, 0 );
+		color = float4( velocity, 0, 0 );
 		?>
 		
 		// Success
@@ -1253,7 +1259,7 @@ class AntialiasingShader : ISurfaceShader
 
 		// Disable blending above a certain pixel velocity (reduces motion blur artifacts)
 		weight *= saturate( (resolveMaxSpeed - length(velocity) ) * 10000.0 );
-	 
+
 		// Blend
 		color = lerp( colorCurr, colorPrev, weight );
 		?>

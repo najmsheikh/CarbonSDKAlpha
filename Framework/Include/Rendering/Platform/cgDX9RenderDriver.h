@@ -88,6 +88,7 @@ public:
     virtual cgConfigResult::Base    loadConfig              ( const cgString & fileName );
     virtual cgConfigResult::Base    loadDefaultConfig       ( bool windowed = false );
     virtual bool                    saveConfig              ( const cgString & fileName );
+    virtual bool                    updateDisplayMode       ( const cgDisplayMode & mode, bool windowed );
     virtual void                    windowResized           ( cgInt32 width, cgInt32 height );
     virtual void                    releaseOwnedResources   ( );
     virtual cgSize                  getScreenSize           ( ) const;

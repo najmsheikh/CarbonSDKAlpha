@@ -82,10 +82,10 @@ public:
     bool                        createCapsule           ( cgFloat radius, cgFloat height, cgUInt32 stacks, cgUInt32 slices, bool inverted, cgMeshCreateOrigin::Base origin );
     bool                        createCone              ( cgFloat radius, cgFloat radiusTip, cgFloat height, cgUInt32 stacks, cgUInt32 slices, bool inverted, cgMeshCreateOrigin::Base origin );
     bool                        createTorus             ( cgFloat outerRadius, cgFloat innerRadius, cgUInt32 bands, cgUInt32 sides, bool inverted, cgMeshCreateOrigin::Base origin );
-    bool                        createTeapot            ( );
     bool                        pickFace                ( const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgVector3 & intersectionOut, cgUInt32 & faceOut, cgMaterialHandle & materialOut );
     bool                        setMeshMaterial         ( const cgMaterialHandle & material );
     bool                        setFaceMaterial         ( cgUInt32 faceIndex, const cgMaterialHandle & material );
+    bool                        replaceMaterial         ( const cgMaterialHandle & oldMaterial, const cgMaterialHandle & newMaterial );
     void                        setShadowStage          ( cgSceneProcessStage::Base stage );
     cgSceneProcessStage::Base   getShadowStage          ( ) const;
     
@@ -175,7 +175,11 @@ public:
     // Public Inline Methods
     //-------------------------------------------------------------------------
     // Object Property 'Set' Routing
-    inline void setShadowStage( cgSceneProcessStage::Base stage ) const
+    inline void setMesh( const cgMeshHandle & mesh )
+    {
+        ((cgMeshObject*)mReferencedObject)->setMesh( mesh );
+    }
+    inline void setShadowStage( cgSceneProcessStage::Base stage )
     {
         ((cgMeshObject*)mReferencedObject)->setShadowStage( stage );
     }
@@ -190,6 +194,20 @@ public:
         return ((cgMeshObject*)mReferencedObject)->getShadowStage();
     }
 
+    // Object Function Routing
+    inline bool setMeshMaterial( const cgMaterialHandle & material )
+    {
+        return ((cgMeshObject*)mReferencedObject)->setMeshMaterial( material );
+    }
+    inline bool setFaceMaterial( cgUInt32 faceIndex, const cgMaterialHandle & material )
+    {
+        return ((cgMeshObject*)mReferencedObject)->setFaceMaterial( faceIndex, material );
+    }
+    inline bool replaceMaterial( const cgMaterialHandle & oldMaterial, const cgMaterialHandle & newMaterial )
+    {
+        return ((cgMeshObject*)mReferencedObject)->replaceMaterial( oldMaterial, newMaterial );
+    }
+
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgObjectNode)
     //-------------------------------------------------------------------------
@@ -197,6 +215,7 @@ public:
     virtual void                onComponentModified     ( cgComponentModifiedEventArgs * e );
     virtual void                onResolvePendingUpdates ( cgUInt32 updates );
     virtual bool                onNodeLoading           ( const cgUID & objectType, cgWorldQuery * nodeData, cgSceneCell * parentCell, cgCloneMethod::Base cloneMethod );
+    virtual bool                onNodeCreated           ( const cgUID & objectType, cgCloneMethod::Base cloneMethod );
     virtual cgFloat             getObjectSize           ( );
     virtual bool                setCellTransform        ( const cgTransform & transform, cgTransformSource::Base source = cgTransformSource::Standard );
     virtual bool                getSubElementCategories ( cgObjectSubElementCategory::Map & categoriesOut ) const;

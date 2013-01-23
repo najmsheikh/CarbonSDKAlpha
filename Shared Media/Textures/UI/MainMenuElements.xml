@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<ImageAtlas>
+  <Source>MainMenuElements.dds</Source>
+  <Group>
+    <Image x="0" y="0" width="2048" height="1244" name="menu_background"/>
+	<Image x="0" y="1245" width="923" height="211" name="title_text"/>
+  </Group>
+</ImageAtlas>

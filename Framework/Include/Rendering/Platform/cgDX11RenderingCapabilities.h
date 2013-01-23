@@ -35,6 +35,11 @@
 #include <Rendering/cgRenderingCapabilities.h>
 
 //-----------------------------------------------------------------------------
+// Forward Declarations
+//-----------------------------------------------------------------------------
+class cgDX11Initialize;
+
+//-----------------------------------------------------------------------------
 // Main Class Definitions
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -63,6 +68,11 @@ public:
     virtual ~cgDX11RenderingCapabilities( );
 
     //-------------------------------------------------------------------------
+    // Public Methods
+    //-------------------------------------------------------------------------
+    bool                postInit                    ( cgDX11Initialize * data, cgUInt32 fullScreenAdapter, cgUInt32 fullScreenOutput );
+
+    //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgRenderingCapabilities)
     //-------------------------------------------------------------------------
     virtual bool        enumerate					( );
@@ -72,6 +82,7 @@ public:
     virtual bool        supportsNonPow2Textures		( ) const;
 	virtual bool        supportsDepthStencilReading ( ) const;
     virtual bool        supportsShaderModel			( cgShaderModel::Base model ) const;
+    virtual bool        getDisplayModes             ( cgDisplayMode::Array & modes ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
@@ -82,6 +93,7 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Member Variables
     //-------------------------------------------------------------------------
+    cgDisplayMode::Array    mDisplayModes;      // Enumerated full screen display modes available for selection.
 };
 
 #endif // CGE_DX11_RENDER_SUPPORT

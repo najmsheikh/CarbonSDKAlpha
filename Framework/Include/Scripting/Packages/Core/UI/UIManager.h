@@ -79,6 +79,8 @@ namespace UIManager
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "Rect printText( const Rect &in, const String&in, const Point &in, uint, uint, int, int) const", asMETHODPR(cgUIManager, printText, ( const cgRect&, const cgString&, const cgPoint&, cgUInt32, cgUInt32, cgInt32, cgInt32 ), cgRect ), asCALL_THISCALL) );
             
             // Layers
+            BINDSUCCESS( engine->registerObjectMethod( "UIManager", "void addLayer( UILayer@+ )", asMETHODPR(cgUIManager, addLayer, ( cgUILayer* ), void ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "UIManager", "void removeLayer( UILayer@+, bool )", asMETHODPR(cgUIManager, removeLayer, ( cgUILayer*, bool ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "void bringLayerToFront( UILayer@+ )", asMETHODPR(cgUIManager, bringLayerToFront, ( cgUILayer* ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "void sendLayerToBack( UILayer@+ )", asMETHODPR(cgUIManager, sendLayerToBack, ( cgUILayer* ), void ), asCALL_THISCALL) );
 

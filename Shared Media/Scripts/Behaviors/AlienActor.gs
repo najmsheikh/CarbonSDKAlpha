@@ -72,11 +72,7 @@ shared class AlienActor : IScriptedObjectBehavior
 
         // Set initial animation
         if ( @mActor != null )
-        {
-            AnimationController @ controller = mActor.getAnimationController();
-            controller.setTrackAnimationSet( 0, mActor.getAnimationSetByName( "Idle" ) );
-        
-        } // End if valid
+            mActor.playAnimationSet( "Primary", "Idle" );
 	}
 
     //-------------------------------------------------------------------------
@@ -100,39 +96,33 @@ shared class AlienActor : IScriptedObjectBehavior
             return;
 
         AnimationController @ controller = mActor.getAnimationController();
-        Vector3 velocity       = mActor.getVelocity();
-        float   speed          = vec3Dot( velocity, mActor.getZAxis() ); //vec3Length( velocity );
-        float   animationSpeed = speed / 10;
+        Vector3 velocity = mActor.getVelocity();
+        float   speed    = vec3Dot( velocity, mActor.getZAxis() );
 
         // Act appropriately based on the current character state.
         switch ( mState )
         {
             case AnimationState::Idle:
+
+                // Use idle animation
+                mActor.playAnimationSet( "Primary", "Idle" );
                 
                 // Switching to move?
-                if ( speed > 0.1f )
-                {
-                    controller.setTrackAnimationSet( 0, mActor.getAnimationSetByName( "Run" ) );
-                    controller.setTrackSpeed( 0, animationSpeed );
+                if ( speed > 0.4f )
                     mState = AnimationState::Moving;
-
-                } // End if > idle speed
                 break;
 
             case AnimationState::Moving:
                 
-                // Set current playback speed.
-                controller.setTrackSpeed( 0, animationSpeed );
+                // Use walk/run animation.
+                if ( speed >= 4 )
+                    mActor.playAnimationSet( "Primary", "Run", speed / 10, 0 );
+                else
+                    mActor.playAnimationSet( "Primary", "Walk", speed / 2, 0 );
 
                 // Switching to idle?
-                if ( speed <= 0.1f )
-                {
-                    // Until blending is supported, we'll keep the same animation for now.
-                    //controller.setTrackAnimationSet( 0, mActor.getAnimationSetByName( "Idle" ) );
-                    //controller.setTrackSpeed( 0, 1.0f );
+                if ( speed <= 0.4f )
                     mState = AnimationState::Idle;
-
-                } // End if <= idle speed
                 break;
 
         } // End switch state

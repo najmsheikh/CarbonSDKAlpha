@@ -48,7 +48,7 @@ namespace cgParticleEmitterType
     enum Base
     {
         Billboards      = 0,
-        LocalBillboards = 1
+        LocalBillboards = 1,
     };
 
 } // End Namespace : cgParticleEmitterType
@@ -72,7 +72,7 @@ struct cgParticleEmitterProperties
     cgString            particleTexture;            // The base texture (or atlas) file applied to billboards.
     cgString            particleShader;             // The surface shader source file to use for rendering billboards for this emitter.
     cgParticleBlendMethod::Base blendMethod;        // Method to use when blending particles to the frame buffer.
-    
+
     bool                sortedRender;               // The particles should be rendered in a back to front order? (Warning: Performance Penalty)        
     cgVector3           emitterDirection;           // A fixed emitter direction (world space, not based on emitter Y axis) can be specified.
     bool                randomizeRotation;          // When enabled, each particle's rotation angle will be randomized upon its birth. Otherwise, all particles will default to a rotation angle of 0 degrees.
@@ -89,6 +89,8 @@ struct cgParticleEmitterProperties
     cgFloat             airResistance;
     cgSizeF             baseSize;
     cgFloat             hdrScale;
+    cgFloat             velocityScaleStrength;
+    bool                velocityAligned;            // Align the particles to their velocity vector.
 
     // Property Adjustment Keyframes
     cgBezierSpline2     scaleXCurve;

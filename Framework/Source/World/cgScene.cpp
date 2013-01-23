@@ -40,6 +40,8 @@
 #include <World/Objects/cgGroupObject.h>
 #include <World/Objects/cgActor.h>
 #include <World/Objects/cgMeshObject.h>
+#include <World/Elements/cgNavigationMeshElement.h> // ToDo: 9999 - remove this if navigation elements are stepped in an alternate fashion.
+#include <Navigation/cgNavigationHandler.h> // ToDo: 9999 - remove this if navigation elements are stepped in an alternate fashion.
 #include <Resources/cgResourceManager.h>
 #include <Resources/cgStandardMaterial.h>
 #include <Resources/cgScript.h>
@@ -52,6 +54,7 @@
 #include <System/cgMessageTypes.h>
 #include <System/cgExceptions.h>
 #include <System/cgProfiler.h>
+#include <Scripting/cgScriptEngine.h>
 #include <Math/cgMathUtility.h>
 #include <algorithm>
 
@@ -267,12 +270,16 @@ void cgScene::dispose( bool disposeBase )
     mRootSpatialTrees.clear();
     mCells.clear();
     mOrphanNodes.clear();
+    mObjectNodeTypes.clear();
     mObjectNodes.clear();
     mNameUsage.clear();
     mSelectedNodes.clear();
     mSelectedNodesOrdered.clear();
     mSelectionSets.clear();
     mActiveMaterials.clear();
+
+    // Run a full script garbage collection cycle.
+    cgScriptEngine::getInstance()->garbageCollect();
 
     // Call base class implementation as required
     if ( disposeBase )
@@ -507,6 +514,9 @@ bool cgScene::load( )
     // Initialize the physics unit conversion system.
     mPhysicsWorld->setSystemScale( 1.0f );
     mPhysicsWorld->setDefaultGravity( cgVector3(0, -15.0f, 0) );
+
+    // Listen for physics world events
+    mPhysicsWorld->registerEventListener( static_cast<cgPhysicsWorldEventListener*>(this) );
 
     // Select the correct render control definition
     // ToDo: 9999 - Get default script from world configuration.
@@ -1267,6 +1277,7 @@ cgObjectNode * cgScene::loadObjectNode( cgUInt32 rootReferenceId, cgUInt32 refer
 
     // Add the new node to main node list (contains all scene nodes)
     mObjectNodes[ newNode->getReferenceId() ] = newNode;
+    mObjectNodeTypes[ newNode->getObjectType() ].push_back( newNode );
 
     // Add to the orphan node list initially as necessary.
     if ( !newNode->getSpatialTree() )
@@ -1475,6 +1486,9 @@ void cgScene::unloadObjectNode( cgObjectNode * node )
     if ( !node )
         return;
 
+    // ToDo: temporary debug.
+    //cgAppLog::write( cgAppLog::Debug, _T("Unloading node '%s' (0x%X)\n"), node->getName().c_str(), node->getReferenceId() );
+
     // Allow the node to resolve any final pending updates in order
     // to fully serialize its data into its final state, or to update
     // its children, before removal.
@@ -1521,6 +1535,12 @@ void cgScene::unloadObjectNode( cgObjectNode * node )
         } // Next Set
 
     } // End if sandbox
+
+    // Remove from the node type table first.
+    cgObjectNodeArray & nodes = mObjectNodeTypes[node->getObjectType()];
+    cgObjectNodeArray::iterator itNode = std::find( nodes.begin(), nodes.end(), node );
+    if ( itNode != nodes.end() )
+        nodes.erase( itNode );
 
     // Remove node from orphan list if it existed there.
     mOrphanNodes.erase( node );
@@ -1893,6 +1913,7 @@ cgObjectNode * cgScene::createObjectNode( bool internalNode, const cgUID & objec
     
     // Add to main node list (contains all scene nodes)
     mObjectNodes[ newNode->getReferenceId() ] = newNode;
+    mObjectNodeTypes[ newNode->getObjectType() ].push_back( newNode );
 
     // Add to the orphan node list initially as necessary.
     if ( !newNode->getSpatialTree() )
@@ -2468,6 +2489,204 @@ const cgObjectNodeMap & cgScene::getObjectNodes( ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getObjectNodesByType ()
+/// <summary>
+/// Retrieve a list of all allocated scene object nodes of the specified type.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgObjectNodeArray & cgScene::getObjectNodesByType( const cgUID & type ) const
+{
+    static const cgObjectNodeArray empty;
+    ObjectNodeTypeMap::const_iterator itNodes = mObjectNodeTypes.find( type );
+    if ( itNodes != mObjectNodeTypes.end() )
+        return itNodes->second;
+    return empty;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getObjectNodesInBounds ()
+/// <summary>
+/// Populate the specified container with references to all allocated scene 
+/// object nodes that fall within the specified bounding sphere.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScene::getObjectNodesInBounds( const cgVector3 & center, cgFloat radius, cgObjectNodeArray & nodesOut ) const
+{
+    // Clear output container first.
+    nodesOut.clear();
+
+    // Generate a broadphase bounding box for the volume
+    cgFloat radiusSq = (radius * radius);
+    cgBoundingBox broadBounds( center - cgVector3(radius, radius, radius), center + cgVector3(radius,radius,radius) );
+    broadBounds.inflate( 0.1f );
+
+    // Iterate through active cells.
+    cgSceneCellMap::const_iterator itCell;
+    for ( itCell = mCells.begin(); itCell != mCells.end(); ++itCell )
+    {
+        cgSceneCell * cell = itCell->second;
+
+        // Get the bounding box of the cell and test to see if the
+        // supplied bounds intersects with it in some way.
+        cgBoundingBox cellBounds = cell->getBoundingBox();
+        if ( cellBounds.intersect( broadBounds ) )
+        {
+            const cgObjectNodeSet & nodes = cell->getNodes();
+
+            // Iterate through the nodes in this cell and perform 
+            // actual test to see if the origin is within the sphere.
+            cgObjectNodeSet::const_iterator itNode;
+            for ( itNode = nodes.begin(); itNode != nodes.end(); ++itNode )
+            {
+                cgObjectNode * node = *itNode;
+                if ( cgVector3::lengthSq( node->getPosition() - center ) <= radiusSq )
+                    nodesOut.push_back( node );
+
+            } // Next node
+
+        } // End if intersecting
+
+    } // Next cell
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getObjectNodesInBounds ()
+/// <summary>
+/// Populate the specified container with references to all allocated scene 
+/// object nodes that fall within the specified bounding box.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScene::getObjectNodesInBounds( const cgBoundingBox& bounds, cgObjectNodeArray & nodesOut ) const
+{
+    // Clear output container first.
+    nodesOut.clear();
+
+    // Generate a broadphase bounding box for the volume.
+    cgBoundingBox broadBounds = bounds;
+    broadBounds.inflate( 0.1f );
+
+    // Iterate through active cells.
+    cgSceneCellMap::const_iterator itCell;
+    for ( itCell = mCells.begin(); itCell != mCells.end(); ++itCell )
+    {
+        cgSceneCell * cell = itCell->second;
+
+        // Get the bounding box of the cell and test to see if the
+        // supplied bounds intersects with it in some way.
+        cgBoundingBox cellBounds = cell->getBoundingBox();
+        if ( cellBounds.intersect( broadBounds ) )
+        {
+            const cgObjectNodeSet & nodes = cell->getNodes();
+
+            // Iterate through the nodes in this cell and perform 
+            // actual test to see if the origin is within the box.
+            cgObjectNodeSet::const_iterator itNode;
+            for ( itNode = nodes.begin(); itNode != nodes.end(); ++itNode )
+            {
+                cgObjectNode * node = *itNode;
+                if ( bounds.containsPoint( node->getPosition() ) )
+                    nodesOut.push_back( node );
+
+            } // Next node
+
+        } // End if intersecting
+
+    } // Next cell
+}
+
+//-----------------------------------------------------------------------------
+//  Name : rayCastClosest()
+/// <summary>
+/// Find the closest intersected collidable scene objects along the specified
+/// ray.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgScene::rayCastClosest( const cgVector3 & from, const cgVector3 & to, cgSceneCollisionContact & closestContact )
+{
+    // Reset contact structure
+    closestContact = cgSceneCollisionContact();
+
+    // Call into physics world to get contact.
+    RayCastFilterData data;
+    data.node = CG_NULL;
+    data.userData = &closestContact;
+    mPhysicsWorld->rayCast( from, to, rayCastPreFilter, rayCastClosestFilter, &data );
+
+    // Contact found?
+    return ( closestContact.node != CG_NULL );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : rayCastAll()
+/// <summary>
+/// Collect a list of all intersected collidable scene objects along the 
+/// specified ray. The list of contacts can optionally be sorted by distance 
+/// with the closest intersection first.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgScene::rayCastAll( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgSceneCollisionContact::Array & contacts )
+{
+    // ToDo: not currently impelmented.
+    return false;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : rayCastPreFilter() (Protected, Static)
+/// <summary>
+/// Internal function that will be called by the physics system each time
+/// a new collidable body is discovered during broad phase calculations. We
+/// can use this to strip away bodies that are of no interest to us early.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgScene::rayCastPreFilter( cgPhysicsBody * body, cgPhysicsShape * shape, void * userData )
+{
+    cgObjectNode * ownerNode = CG_NULL;
+
+    // Has an owner node?
+    const cgReference::ReferenceMap & referencesTo = body->getReferenceHolders();
+    cgReference::ReferenceMap::const_iterator itRef;
+    for ( itRef = referencesTo.begin(); itRef != referencesTo.end(); ++itRef )
+    {
+        if ( itRef->second.reference && itRef->second.reference->queryReferenceType( RTID_ObjectNode ) )
+        {
+            // Pass back through to the caller / narrowphase filter
+            ownerNode = static_cast<cgObjectNode*>(itRef->second.reference);
+            ((RayCastFilterData*)userData)->node = ownerNode;
+            return true;
+        
+        } // End if is object node
+    
+    } // Next holder
+
+    // No object node was found!
+    return false;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : rayCastClosestFilter() (Protected, Static)
+/// <summary>
+/// Internal function that will be called by the physics system each time
+/// a new collidable body is actually hit during narrow phase calculations.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloat cgScene::rayCastClosestFilter( cgPhysicsBody * body, const cgVector3 & hitNormal, cgInt collisionId, void * userData, cgFloat intersectParam )
+{
+    cgSceneCollisionContact * contact = (cgSceneCollisionContact*)((RayCastFilterData*)userData)->userData;
+    if ( intersectParam < contact->intersectParam )
+    {
+        contact->node           = ((RayCastFilterData*)userData)->node;
+        contact->body           = body;
+        contact->intersectParam = intersectParam;
+        contact->contactNormal  = hitNormal;
+        contact->collisionId    = (cgInt32)collisionId;
+    
+    } // End if closer
+
+    // Find closest
+    return intersectParam;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getRootObjectNodes ()
 /// <summary>
 /// Retrieve a list of all scene object nodes that exist at the root level of
@@ -2672,6 +2891,29 @@ bool cgScene::getObjectNodesPivot( const cgObjectNodeMap & nodes, cgVector3 & pi
 }
 
 //-----------------------------------------------------------------------------
+//  Name : onPhysicsStep () (Virtual)
+/// <summary>
+/// Event triggered each time the physics world steps for a single iteration.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScene::onPhysicsStep( cgPhysicsWorld * sender, cgPhysicsWorldStepEventArgs * e )
+{
+    // Find navigation handlers.
+    SceneElementTypeMap::iterator itElement = mElementTypes.find( RTID_NavigationMeshElement );
+    if ( itElement == mElementTypes.end() )
+        return;
+
+    // Single step navigation handlers.
+    cgSceneElementArray & elements = itElement->second;
+    for ( size_t i = 0; i < elements.size(); ++i )
+    {
+        cgNavigationMeshElement * element = static_cast<cgNavigationMeshElement*>(elements[i]);
+        element->getNavigationHandler()->step( e->step );
+    
+    } // End if trigger updates
+}
+
+//-----------------------------------------------------------------------------
 //  Name : update ()
 /// <summary>
 /// Allows the scene to perform its update pass prior to rendering.
@@ -2699,8 +2941,8 @@ void cgScene::update( )
     // Allow scene elements to update first.
     if ( mUpdatingEnabled )
     {
-        for ( size_t i = 0; i < mElements.size(); ++i )
-            mElements[i]->update( timeDelta );
+        //for ( size_t i = 0; i < mElements.size(); ++i )
+            //mElements[i]->update( timeDelta );
     
     } // End if trigger updates
     
@@ -3302,7 +3544,7 @@ void cgScene::clearSelection( )
         // Retrieve the node and deselect
         cgObjectNode * node = itNode->second;
         if ( node )
-            node->setSelected( false, false );
+            node->setSelected( false, false, false );
         
     } // Next Node
     mSelectedNodes.clear();
@@ -3350,14 +3592,13 @@ bool cgScene::selectNodes( cgObjectNodeMap & nodes, bool replaceSelection )
     if ( replaceSelection )
     {
         cgObjectNodeMap::iterator itNode;
-        alteredSelection = mSelectedNodes;
         for ( itNode = mSelectedNodes.begin(); itNode != mSelectedNodes.end(); ++itNode )
         {
             cgObjectNode * node = itNode->second;
             
             // Mark as de-selected without notifying the scene.
             if ( node && !node->isDisposed() )
-                node->setSelected( false, false );
+                node->setSelected( false, false, false, alteredSelection );
 
         } // Next Node
 
@@ -3381,11 +3622,7 @@ bool cgScene::selectNodes( cgObjectNodeMap & nodes, bool replaceSelection )
             continue;
 
         // Mark as selected without notifying the scene.
-        node->setSelected( true, false );
-        node->mSelectionId = mNextSelectionId++;
-        alteredSelection[ node->getReferenceId() ] = node;
-        mSelectedNodes[ node->getReferenceId() ] = node;
-        mSelectedNodesOrdered[ node->mSelectionId ] = node;
+        node->setSelected( true, true, false, alteredSelection );
 
     } // Next Node
 
@@ -3942,6 +4179,12 @@ bool cgScene::deleteObjectNode( cgObjectNode * node )
         setDirty( true );
 
     } // End if sandbox
+
+    // Remove from the node type table first.
+    cgObjectNodeArray & nodes = mObjectNodeTypes[node->getObjectType()];
+    cgObjectNodeArray::iterator itNode = std::find( nodes.begin(), nodes.end(), node );
+    if ( itNode != nodes.end() )
+        nodes.erase( itNode );
 
     // Remove node from orphan list if it existed there.
     mOrphanNodes.erase( node );

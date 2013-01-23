@@ -470,7 +470,9 @@ bool cgActorObject::supportsSubElement( const cgUID & Category, const cgUID & Id
 cgActorNode::cgActorNode( cgUInt32 referenceId, cgScene * scene ) : cgGroupNode( referenceId, scene )
 {
     // Initialize variables to sensible defaults.
-    mController = CG_NULL;
+    mController     = CG_NULL;
+    mFadeInTime     = 0.3f;
+    mFadeOutTime    = 0.3f;
 
     // Default update rate to 'always' by default.
     mUpdateRate = cgUpdateRate::Always;
@@ -489,6 +491,11 @@ cgActorNode::cgActorNode( cgUInt32 referenceId, cgScene * scene, cgObjectNode * 
 {
     // Initialize variables to sensible defaults.
     mController = CG_NULL;
+
+    // Clone variables where necessary.
+    cgActorNode * node = (cgActorNode*)init;
+    mFadeInTime  = node->mFadeInTime;
+    mFadeOutTime = node->mFadeOutTime;
 }
 
 //-----------------------------------------------------------------------------
@@ -514,6 +521,17 @@ void cgActorNode::dispose( bool disposeBase )
 {
     // We are in the process of disposing?
     mDisposing = true;
+
+    // Stop and release all animation tracks
+    for ( AnimationTrackMap::iterator itTrack = mAnimationTracks.begin(); itTrack != mAnimationTracks.end(); ++itTrack )
+    {
+        // Loop through each item in the animation list and shut them down.
+        AnimationItemList & animations = itTrack->second;
+        for ( AnimationItemList::iterator itAnim = animations.begin(); itAnim != animations.end(); ++itAnim )
+            delete (*itAnim);
+    
+    } // Next track
+    mAnimationTracks.clear();
 
     // Release memory.
     if ( mController )
@@ -583,6 +601,7 @@ bool cgActorNode::onNodeCreated( const cgUID & objectType, cgCloneMethod::Base c
 
     // Create the animation controller and initialize it.
     mController = new cgAnimationController( );
+    mController->setTrackLimit( 20 );
 
     // Success!
     return true;
@@ -603,6 +622,7 @@ bool cgActorNode::onNodeLoading( const cgUID & objectType, cgWorldQuery * nodeDa
 
     // Create the animation controller and initialize.
     mController = new cgAnimationController( );
+    mController->setTrackLimit( 20 );
 
     // Success!
     return true;
@@ -633,6 +653,68 @@ void cgActorNode::update( cgFloat timeDelta )
     // Call base class implementation first to allow
     // the node itself to update / move, etc.
     cgObjectNode::update( timeDelta );
+
+    // Process active animation tracks and fade them where necessary.
+    for ( AnimationTrackMap::iterator itTrack = mAnimationTracks.begin(); itTrack != mAnimationTracks.end(); ++itTrack )
+    {
+        // Loop through each item in the animation list
+        AnimationItemList & animations = itTrack->second;
+        for ( AnimationItemList::iterator itItem = animations.begin(); itItem != animations.end(); )
+        {
+            AnimationItemList::iterator itCurrent = itItem;
+            AnimationItem * item = *itItem++;
+
+            // If the track is set to play once and it is complete,
+            // start fading out.
+            const cgAnimationTrackDesc & desc = mController->getTrackDesc( item->trackIndex );
+            if ( desc.playbackMode == cgAnimationPlaybackMode::PlayOnce && desc.position >= desc.length )
+                item->state = FadeOut;
+                 
+            // Not fading?
+            if ( item->state == FadeNone )
+                continue;
+
+            // Fading in or out?
+            if ( item->state == FadeIn )
+            {
+                // Increase the weight of the track
+                cgFloat newWeight = item->requestedWeight;
+                if ( mFadeInTime >= CGE_EPSILON )
+                    newWeight = std::min<cgFloat>( item->requestedWeight, mController->getTrackWeight(item->trackIndex) + (timeDelta / mFadeInTime) );
+
+                // Set the weight
+                mController->setTrackWeight( item->trackIndex, newWeight );
+
+                // Finished fading in?
+                if ( newWeight >= item->requestedWeight )
+                    item->state = FadeNone;
+
+            } // End if fading in
+            else if ( item->state == FadeOut )
+            {
+                // Decrease the weight of the track
+                cgFloat newWeight = 0.0f;
+                if ( mFadeOutTime >= CGE_EPSILON )
+                    newWeight = std::max<cgFloat>( 0.0f, mController->getTrackWeight(item->trackIndex) - (timeDelta / mFadeOutTime ) );
+
+                // Set the volume
+                mController->setTrackWeight( item->trackIndex, newWeight );
+
+                // Kill the track if we're faded out
+                if ( newWeight <= 0.0f )
+                {
+                    // Stop and release the buffer
+                    mController->setTrackAnimationSet( item->trackIndex, cgAnimationSetHandle::Null );
+                    delete item;
+                    animations.erase( itCurrent );
+
+                } // End if completely faded
+
+            } // End if fading out
+
+        } // Next animation item
+
+    } // Next animation track
 
     // Now allow the animation controller to advance.
     if ( mController )
@@ -769,4 +851,311 @@ cgAnimationController * cgActorNode::getAnimationController( ) const
 const cgActorNode::TargetMap & cgActorNode::getAnimationTargets( ) const
 {
     return mTargets;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : playAnimationSet ()
+/// <summary>
+/// Fade to and play the specified animation set.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt32 cgActorNode::playAnimationSet( const cgString & trackName, const cgString & setName )
+{
+    return playAnimationSet( trackName, setName, cgAnimationPlaybackMode::Loop, 1.0f, 0.0f, 1.0f, 0.0f );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : playAnimationSet ()
+/// <summary>
+/// Fade to and play the specified animation set at the specified playback
+/// rate.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt32 cgActorNode::playAnimationSet( const cgString & trackName, const cgString & setName, cgFloat playbackSpeed, cgFloat startTime )
+{
+    return playAnimationSet( trackName, setName, cgAnimationPlaybackMode::Loop, playbackSpeed, startTime, 1.0f, 0.0f );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : playAnimationSet ()
+/// <summary>
+/// Fade to and play the specified animation set.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt32 cgActorNode::playAnimationSet( const cgString & trackName, const cgString & setName, cgAnimationPlaybackMode::Base mode )
+{
+    return playAnimationSet( trackName, setName, mode, 1.0f, 0.0f, 1.0f, 0.0f );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : playAnimationSet ()
+/// <summary>
+/// Fade to and play the specified animation set at the specified playback
+/// rate.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt32 cgActorNode::playAnimationSet( const cgString & trackName, const cgString & setName, cgAnimationPlaybackMode::Base mode, cgFloat playbackSpeed, cgFloat startTime )
+{
+    return playAnimationSet( trackName, setName, mode, playbackSpeed, startTime, 1.0f, 0.0f );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : generateActorSnapshot () (Protected)
+/// <summary>
+/// Generate an animation set containing a snapshot of the transformations
+/// for all animation targets assigned to this actor. This animation set can
+/// be used in blending between a current and new pose as needed.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgAnimationSetHandle cgActorNode::generateActorSnapshot( )
+{
+    cgAnimationSet * animationSet = new cgAnimationSet( cgReferenceManager::generateInternalRefId(), CG_NULL );
+    TargetMap::const_iterator itTarget;
+    for ( itTarget = mTargets.begin(); itTarget != mTargets.end(); ++itTarget )
+    {
+        cgObjectNode * target = static_cast<cgObjectNode*>(itTarget->second);
+        cgTransform t = target->getLocalTransform();
+        if ( target->getParent() )
+        {
+            cgTransform inverseOffset = target->getParent()->getOffsetTransform();
+            inverseOffset.invert();
+            t *= inverseOffset;
+        
+        } // End if has parent
+        animationSet->addMatrixKey( 0, itTarget->first, t );
+        animationSet->addMatrixKey( 1, itTarget->first, t );
+    
+    } // Next target
+
+    // Add to resource manager.
+    cgAnimationSetHandle handle;
+    cgResourceManager * resources = mParentScene->getResourceManager();
+    resources->addAnimationSet( &handle, animationSet, cgResourceFlags::ForceNew, cgString::Empty, cgDebugSource() );
+    return handle;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : playAnimationSet ()
+/// <summary>
+/// Fade to and play the the specified animation set at the specified playback
+/// rate, blending with other tracks using the specified weight.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt32 cgActorNode::playAnimationSet( const cgString & trackName, const cgString & setName, cgAnimationPlaybackMode::Base mode, cgFloat playbackSpeed, cgFloat startTime, cgFloat requestedWeight, cgFloat initialWeight )
+{
+    // Get the specified animation set.
+    cgAnimationSetHandle animationSet = getAnimationSetByName( setName );
+    if ( !animationSet.isValid() )
+    {
+        // Special case snapshot pose?
+        if ( setName == _T("_ActorPoseSnapshot") )
+            animationSet = generateActorSnapshot();
+
+        if ( !animationSet.isValid() )
+            return -1;
+
+    } // End if !valid
+
+    // Determine if this animation set is already playing in this track.
+    // If it is, start fading back in automatically.
+    AnimationTrackMap::iterator itTrack = mAnimationTracks.find( trackName );
+    if ( itTrack != mAnimationTracks.end() )
+    {
+        // Search animations for this set.
+        AnimationItemList & animations = itTrack->second;
+        for ( AnimationItemList::iterator itItem = animations.begin(); itItem != animations.end(); ++itItem )
+        {
+            // Matches the requested set?
+            if ( (*itItem)->animationSet == animationSet )
+            {
+                // Set new playback speed (may have been altered).
+                mController->setTrackSpeed( (*itItem)->trackIndex, playbackSpeed );
+                mController->setTrackPlaybackMode( (*itItem)->trackIndex, mode );
+
+                // Fade back in if it is fading out, or just
+                // return immediately (fading in, or finished fading).
+                if ( (*itItem)->state == FadeOut )
+                {
+                    (*itItem)->state = FadeIn;
+
+                    // Fade the others out.
+                    for ( AnimationItemList::iterator itItem2 = animations.begin(); itItem2 != animations.end(); ++itItem2 )
+                    {
+                        if ( itItem != itItem2 )
+                            (*itItem2)->state = FadeOut;
+                    
+                    } // Next item
+                
+                } // End if restore
+                return (cgInt32)(*itItem)->trackIndex;
+            
+            } // End if matching set
+
+        } // Next item
+
+    } // End if track found
+    
+    // Fade previously playing animation out
+    stopAnimationTrack( trackName );
+
+    // Find a free track in the animation controller.
+    cgUInt16 trackIndex = 0;
+    for ( trackIndex = 0; trackIndex < mController->getTrackLimit(); ++trackIndex )
+    {
+        // Empty track?
+        if ( !mController->getTrackAnimationSet(trackIndex).isValid() )
+            break;
+    
+    } // Next available track
+
+    // Any available space?
+    if ( trackIndex == mController->getTrackLimit() )
+        return -1;
+
+    // Generate the new animation item
+    AnimationItem * newItem  = new AnimationItem();
+    newItem->animationSet    = animationSet;
+    newItem->state           = (initialWeight >= requestedWeight) ? FadeNone : FadeIn;
+    newItem->requestedWeight = requestedWeight;
+    newItem->trackIndex      = trackIndex;
+
+    // Add the new item to the track list
+    mAnimationTracks[ trackName ].push_back( newItem );
+    
+    // Start playing the specified animation set.
+    mController->setTrackAnimationSet( trackIndex, animationSet );
+    mController->setTrackPosition( trackIndex, startTime );
+    mController->setTrackWeight( trackIndex, min(initialWeight,requestedWeight) );
+    mController->setTrackSpeed( trackIndex, playbackSpeed );
+    mController->setTrackPlaybackMode( trackIndex, mode );
+    mController->setTrackFrameLimits( trackIndex, 0x7FFFFFFF, 0x7FFFFFFF );
+    
+    // Success!
+    return (cgInt32)trackIndex;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : stopAnimationTrack ()
+/// <summary>
+/// Fade out and stop the animation set in the specified track.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgActorNode::stopAnimationTrack( const cgString & trackName )
+{
+    return stopAnimationTrack( trackName, false );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : stopAnimationTrack ()
+/// <summary>
+/// Fade out and stop the animation set in the specified track. Fade time can
+/// be optionally bypassed by specifying true to the final parameter.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgActorNode::stopAnimationTrack( const cgString & trackName, bool immediately )
+{
+    // Get the specified animation track data
+    AnimationTrackMap::iterator itTrack = mAnimationTracks.find( trackName );
+    if ( itTrack == mAnimationTracks.end() )
+        return false;
+
+    // Immediate stop?
+    if ( mFadeOutTime <= CGE_EPSILON )
+        immediately = true;
+    
+    // Find any item playing or fading in and fade it out
+    bool handled = false;
+    AnimationItemList & animations = itTrack->second;
+    for ( AnimationItemList::iterator itItem = animations.begin(); itItem != animations.end(); )
+    {
+        // Progress iterator in case we delete the item.
+        AnimationItemList::iterator itCurrent = itItem;
+        ++itItem;
+
+        // Handle the item.
+        AnimationItem * item = (*itCurrent);
+        if ( immediately )
+        {
+            // Stop and release the buffer
+            mController->setTrackAnimationSet( item->trackIndex, cgAnimationSetHandle::Null );
+            animations.erase( itCurrent );
+            delete item;
+            handled = true;
+
+        } // End if immediate
+        else if ( item->state != FadeOut )
+        {
+            item->state = FadeOut;
+            handled = true;
+        
+        } // End if !fading out
+    
+    } // Next animation
+    
+    // Anything changed?
+    return handled;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isAnimationTrackPlaying ()
+/// <summary>
+/// Determine if there is an animation currently playing in the specified
+/// animation track.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgActorNode::isAnimationTrackPlaying( const cgString & trackName ) const
+{
+    return isAnimationTrackPlaying( trackName, false );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isAnimationTrackPlaying ()
+/// <summary>
+/// Determine if there is an animation currently playing in the specified
+/// animation track. Specify 'true' to the 'includeFadeOut' parameter to
+/// consider tracks that are fading out to still be 'playing'. The default
+/// is false.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgActorNode::isAnimationTrackPlaying( const cgString & trackName, bool includeFadeOut ) const
+{
+    // Get the specified ambient track data
+    AnimationTrackMap::const_iterator itTrack = mAnimationTracks.find( trackName );
+    if ( itTrack == mAnimationTracks.end() )
+        return false;
+
+    // Fading out is considered playing?
+    if ( includeFadeOut )
+    {
+        // Any animations still in the list?
+        return !itTrack->second.empty();
+
+    } // End if FadeOut=Playing
+    else
+    {
+        // There must be at least one non 'FadeOut' entry.
+        AnimationItemList::const_iterator itAnim;
+        for ( itAnim = itTrack->second.begin(); itAnim != itTrack->second.end(); ++itAnim )
+        {
+            if ( (*itAnim)->state != FadeOut )
+                return true;
+        
+        } // Next animation
+
+    } // End if FadeOut!=Playing
+
+    // Nothing playing
+    return false;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setTrackFadeTimes ()
+/// <summary>
+/// Set the time it takes to fade animation tracks in and out.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgActorNode::setTrackFadeTimes( cgFloat fadeOutTime, cgFloat fadeInTime )
+{
+    mFadeOutTime = fadeOutTime;
+    mFadeInTime  = fadeInTime;
 }

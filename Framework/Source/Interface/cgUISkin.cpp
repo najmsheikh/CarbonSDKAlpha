@@ -98,6 +98,10 @@ cgUISkin::cgUISkin( )
     mValidControlElements.push_back( _T("Button.BorderBottomRight") );
     mValidControlElements.push_back( _T("Button.Background") );
 
+    // CheckBox elements
+    mValidControlElements.push_back( _T("CheckBoxChecked") );
+    mValidControlElements.push_back( _T("CheckBoxUnchecked") );
+
     // ControlFrame elements
     mValidControlElements.push_back( _T("ControlFrame.BorderTopLeft") );
     mValidControlElements.push_back( _T("ControlFrame.BorderTopBegin") );
@@ -646,6 +650,26 @@ void cgUISkin::parseControls( const cgXMLNode & xNode, cgUISkinElement::Map & El
             } // End if Selection
 
         } // End if textBox config
+
+        // Has listbox config?
+        xControl = xConfig.getChildNode( _T("ListBox") );
+        if ( !xControl.isEmpty() )
+        {
+            // Selection config
+            xConfigKey = xControl.getChildNode( _T("Selection") );
+            if ( !xConfigKey.isEmpty() )
+            {
+                xChild = xConfigKey.getChildNode( _T("Color") );
+                if ( !xChild.isEmpty() )
+                {
+                    cgColorValue & Color = Config.listBox.selectionColor;
+                    cgStringUtility::tryParse( xChild.getText(), Color );
+                
+                } // End if found color
+
+            } // End if Selection
+
+        } // End if listBox config
 
     } // End if found configuration node
 

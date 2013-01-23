@@ -116,7 +116,10 @@ namespace cgSystemState
         Transmissive,
         Translucent,
         AlphaTest,
-        Emissive
+        Emissive,
+
+		// Objects
+		ObjectRenderClass
     };
 
 } // End Namespace : cgSystemState
@@ -437,14 +440,15 @@ namespace cgImageOperation
 	    // Color controls
 	    Exposure                    = 100,
 	    Saturation                  = 101,
-	    LevelsIn                    = 102,
-	    LevelsOut                   = 103,
-	    Gamma                       = 104,
-	    ColorRemap                  = 105,
-	    TintAndBrightness           = 106,        
-	    Grain                       = 107,
-	    Vignette                    = 108,
-	    BlueShift                   = 109,
+		Contrast                    = 102,
+	    LevelsIn                    = 103,
+	    LevelsOut                   = 104,
+	    Gamma                       = 105,
+	    ColorRemap                  = 106,
+	    TintAndBrightness           = 107,        
+	    Grain                       = 108,
+	    Vignette                    = 109,
+	    BlueShift                   = 110,
 
 	    // Depth operations
 	    LinearZToDistance           = 200,
@@ -462,7 +466,7 @@ namespace cgImageOperation
     static const cgInt ColorControlsEnd   = (cgInt)BlueShift;
     static const cgInt ColorOnlyOperationsStart = (cgInt)SetColorRGB;
     static const cgInt ColorOnlyOperationsEnd   = (cgInt)SetColorA;
-    typedef std::vector<Base> Array;
+    CGE_VECTOR_DECLARE( Base, Array )
 
 } // End Namespace : cgImageOperation
 
@@ -623,10 +627,21 @@ namespace cgAntialiasingMethod
 
 } // End Namespace : cgAntialiasingMethod
 
+namespace cgRenderClass
+{
+    enum Base
+    {    
+        Static          = 0,
+        Dynamic         = 1,
+        FirstPerson     = 2,
+    };
+
+} // End Namespace : cgObjectRenderClass
+
 //-----------------------------------------------------------------------------
 // Common Global Structures
 //-----------------------------------------------------------------------------
-struct cgViewport
+struct CGE_API cgViewport
 {
     // Binary compatibility with D3DVIEWPORT9
     union
@@ -679,7 +694,7 @@ struct CGE_API cgSamplerStateDesc
     }
 };
 
-struct cgTargetBlendStateDesc
+struct CGE_API cgTargetBlendStateDesc
 {
     bool            blendEnable;
     cgInt           sourceBlend;                // cgBlendMode
@@ -699,7 +714,7 @@ struct cgTargetBlendStateDesc
 
 };
 
-struct cgBlendStateDesc
+struct CGE_API cgBlendStateDesc
 {
     bool                    alphaToCoverageEnable;  // D3D11 Only
     bool                    independentBlendEnable; // D3D11 Only
@@ -710,7 +725,7 @@ struct cgBlendStateDesc
         alphaToCoverageEnable( false ), independentBlendEnable( false ) {}
 };
 
-struct cgRasterizerStateDesc
+struct CGE_API cgRasterizerStateDesc
 {
     cgInt           fillMode;                   // cgFillMode
     cgInt           cullMode;                   // cgCullMode
@@ -730,7 +745,7 @@ struct cgRasterizerStateDesc
         scissorTestEnable( false ), multisampleEnable( true ), antialiasedLineEnable( false ) {}
 };
 
-struct cgDepthStencilOpDesc
+struct CGE_API cgDepthStencilOpDesc
 {
     cgInt                   stencilFailOperation;       // cgStencilOperation
     cgInt                   stencilDepthFailOperation;  // cgStencilOperation
@@ -743,7 +758,7 @@ struct cgDepthStencilOpDesc
         stencilPassOperation( cgStencilOperation::Keep ), stencilFunction( cgComparisonFunction::Always ) {}
 };
 
-struct cgDepthStencilStateDesc
+struct CGE_API cgDepthStencilStateDesc
 {
     bool                    depthEnable;
     bool                    depthWriteEnable;   // D3D11 Equivalent = D3D11_DEPTH_WRITE_MASK
@@ -818,10 +833,10 @@ struct CGE_API cgMaterialTerms
 
 }; // End Struct : cgMaterialTerms
 
-struct cgBlurOpDesc
+struct CGE_API cgBlurOpDesc
 {
     // Typedefs
-    typedef std::vector<cgBlurOpDesc> Array;
+    CGE_VECTOR_DECLARE( cgBlurOpDesc, Array )
 
     // Members
     cgInt32                     passCount;
@@ -841,5 +856,22 @@ struct cgBlurOpDesc
         passCount(_passCount), pixelRadiusV(_pixelRadius), pixelRadiusH(_pixelRadius), distanceFactorV(_distanceFactor), distanceFactorH(_distanceFactor), worldRadius(0),
         inputAlpha(cgAlphaWeightMethod::None), outputAlpha(cgAlphaWeightMethod::None) {}
 };
+
+struct cgDisplayMode
+{
+    // Typedefs
+    CGE_VECTOR_DECLARE( cgDisplayMode, Array )
+
+    // Members
+    union
+    {
+        // Portability Warning: Anonymous struct for non POD - C++ Extension (MSVC++)
+        struct { cgSize  size; };
+        struct { cgInt32 width, height; };
+    };
+    cgInt32     bitDepth;
+    cgDouble    refreshRate;
+
+}; // End Struct : cgDisplayMode
 
 #endif // !_CGE_CGRENDERINGTYPES_H_

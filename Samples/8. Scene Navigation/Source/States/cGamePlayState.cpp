@@ -103,7 +103,7 @@ bool cGamePlayState::begin( )
     // Load the main form that will display the options for
     // spawning objects (hidden initially).
     cgUIManager * interfaceManager = cgUIManager::getInstance();
-    if ( !(mForm = interfaceManager->loadForm( _T("appdir://Scripts/7. Spawning Objects/SpawnObjects.frm"), _T("spawningForm") ) ) )
+    if ( !(mForm = interfaceManager->loadForm( _T("appdir://Scripts/8. Environment Navigation/SpawnObjects.frm"), _T("spawningForm") ) ) )
         return false;
     mForm->setVisible(false);
 
@@ -113,6 +113,8 @@ bool cGamePlayState::begin( )
     cgScriptObject * formScript = mForm->getScriptObject();
     arguments.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("Scene@+"), (void*)mScene ) );
     formScript->executeMethodVoid( _T("setScene"), arguments, true );
+    arguments[0] = cgScriptArgument( cgScriptArgumentType::Object, _T("CameraNode@+"), (void*)mCamera );
+    formScript->executeMethodVoid( _T("setPlayerCamera"), arguments, true );
     
     // Switch to direct mouse input mode (no cursor)
     cgInputDriver * inputDriver = cgInputDriver::getInstance();
@@ -175,14 +177,14 @@ bool cGamePlayState::loadScene( )
     controller->initialize( );
     
     // Position the player in the world.
-    mPlayer->setPosition( cgVector3(0.0f, 2.8f, -20.0f) );
+    mPlayer->setPosition( cgVector3(0.0f, 0.1f, -20.0f) );
     //mPlayer->setPosition( cgVector3(0.0f, 2.8f, -2.0f) );
     
     // Now create a camera that can be attached to the player object.
     mCamera = static_cast<cgCameraNode*>(mScene->createObjectNode( true, RTID_CameraObject, false ));
     
     // Setup camera properties
-    mCamera->setFOV( 75.0f );
+    mCamera->setFOV( 85.0f );
     mCamera->setNearClip( 0.2f );
     mCamera->setFarClip( 10000.01f );
     mCamera->setUpdateRate( cgUpdateRate::Always );
@@ -190,7 +192,7 @@ bool cGamePlayState::loadScene( )
     // Offset the camera to "eye" level based on the configured height
     // of the character controller prior to attaching to the player.
     mLastCamPos    = mPlayer->getPosition();
-    mLastCamPos.y += (controller->getCharacterHeight() * 0.5f) * 0.95f;
+    mLastCamPos.y += controller->getCharacterHeight() * 0.95f;
     mCamera->setPosition( mLastCamPos );
     
     // Attach the camera as a child of the player object.
@@ -214,15 +216,16 @@ bool cGamePlayState::loadScene( )
 
     // Spawn a number of characters in a circle around the player
     // that we will task to move through the scene.
+    cgInt agentCount = 5;
     cgNavigationAgentCreateParams params;
     params.agentRadius         = 1.0f;
     params.separationWeight    = 8.0f;
     params.maximumSpeed        = 10.0f;
     params.maximumAcceleration = 20.0f;
-    for ( cgInt i = 0; i < 10; ++i )
+    for ( cgInt i = 0; i < agentCount; ++i )
     {
         // Generate starting position
-        cgFloat a = (i / 10.0f) * CGE_TWO_PI;
+        cgFloat a = (i / (cgFloat)agentCount) * CGE_TWO_PI;
         cgVector3 pos( cosf(a) * 5.0f, 0.0f, sinf(a) * 5.0f );
         
         // Spawn in the alien character actor.
@@ -272,32 +275,43 @@ void cGamePlayState::update( )
         
         } // End if pressed tab
 
-        // Update navigation task of all agents when we press 'c'.
-        if ( inputDriver->isKeyPressed( cgKeys::C, true ) )
-        {
-            for ( size_t i = 0; i < mAgents.size(); ++i )
-            {
-                // Position in a circle around the player.
-                cgFloat a = (i / (cgFloat)mAgents.size()) * CGE_TWO_PI;
-                cgVector3 pos( cosf(a) * 5.0f, -0.9f, sinf(a) * 5.0f );
-
-                // Attempt to navigate to this location. If the agent is unable
-                // to find a target at the given location around the player, just 
-                // navigate close to the player's exact location.
-                if ( !mAgents[i]->navigateTo( mPlayer->getPosition() + pos ) )
-                    mAgents[i]->navigateTo( mPlayer->getPosition() );
-
-            } // Next agent
-        
-        } // End if pressed 'c'
-
         // If the cursor is not up, handle input to adjust character controller.
         cgCharacterController * controller = static_cast<cgCharacterController*>(mPlayer->getPhysicsController());
         if ( inputDriver->getMouseMode() != cgMouseHandlerMode::Cursor )
         {
+            // Zoom when holding middle mouse button.
+            if ( inputDriver->isMouseButtonPressed( cgMouseButtons::Middle ) )
+                mCamera->setFOV( 20.0f );
+            else
+                mCamera->setFOV( 85.0f );
+
+            // Update navigation task of all agents when we press 'c'.
+            if ( inputDriver->isKeyPressed( cgKeys::C ) )
+            {
+                for ( size_t i = 0; i < mAgents.size(); ++i )
+                {
+                    // Position in a circle around the player.
+                    cgFloat a = (i / (cgFloat)mAgents.size()) * CGE_TWO_PI;
+                    cgVector3 pos( cosf(a) * 5.0f, -0.9f, sinf(a) * 5.0f );
+
+                    // Attempt to navigate to this location. If the agent is unable
+                    // to find a target at the given location around the player, just 
+                    // navigate close to the player's exact location.
+                    if ( !mAgents[i]->navigateTo( mPlayer->getPosition() + pos ) )
+                        mAgents[i]->navigateTo( mPlayer->getPosition() );
+
+                } // Next agent
+            
+            } // End if pressed 'c'
+
+            // If the character is already airborne and the user presses space,
+            // switch to 'fly mode'.
+            if ( controller->getCharacterState() == cgCharacterController::Airborne && inputDriver->isKeyPressed( cgKeys::Space, true ) )
+                controller->enableFlyMode( true, true );
+            
             // Update player controller details in response to key presses.
             // Here we're handling player crouching by responding to control key presses.
-            if ( inputDriver->isKeyPressed( cgKeys::LControl ) )
+            if ( !controller->isFlyModeEnabled() && inputDriver->isKeyPressed( cgKeys::LControl ) )
             {
                 // Here we request that the character controller be switched
                 // to 'Crouch' mode and reduce the maximum speed of the character
@@ -331,7 +345,7 @@ void cGamePlayState::update( )
         // right in line here to keep things simple for now. First compute the 
         // camera's required vertical offset from its parent player based on the
         // height of the character.
-        cgFloat cameraOffset = (controller->getCharacterHeight( true ) * 0.5f) * 0.95f;
+        cgFloat cameraOffset = controller->getCharacterHeight( true ) * 0.95f;
 
         // Compute head bob offsets (we only want it to bob if the character not 
         // currently sliding or airborne)

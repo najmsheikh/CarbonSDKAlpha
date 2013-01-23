@@ -59,19 +59,19 @@ namespace Quaternion
             BINDSUCCESS( engine->registerGlobalFunction( "bool quaternionIsIdentity(const Quaternion &in)", asFUNCTIONPR(cgQuaternion::isIdentity, (const cgQuaternion&), bool), asCALL_CDECL ) );
             BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionConjugate(Quaternion &inout, const Quaternion &in)", asFUNCTIONPR(cgQuaternion::conjugate, (cgQuaternion&, const cgQuaternion&), cgQuaternion*), asCALL_CDECL ) );
 
-            BINDSUCCESS( engine->registerGlobalFunction( "void quaternionToAxisAngle(const Quaternion &in, Vector3 &inout, float &inout)", asFUNCTION(cgQuaternion::toAxisAngle), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionRotationMatrix(Quaternion &inout, const Matrix &in)", asFUNCTION(cgQuaternion::rotationMatrix), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionRotationAxis(Quaternion &inout, const Vector3 &in, float)", asFUNCTION(cgQuaternion::rotationAxis), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionRotationYawPitchRoll(Quaternion &inout, float, float, float)", asFUNCTION(cgQuaternion::rotationYawPitchRoll), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionMultiply(Quaternion &inout, const Quaternion &in, const Quaternion &in)", asFUNCTION(cgQuaternion::multiply), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionNormalize(Quaternion &inout, const Quaternion &in)", asFUNCTION(cgQuaternion::normalize), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionInverse(Quaternion &inout, const Quaternion &in)", asFUNCTION(cgQuaternion::inverse), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionLn(Quaternion &inout, const Quaternion &in)", asFUNCTION(cgQuaternion::ln), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionExp(Quaternion &inout, const Quaternion &in)", asFUNCTION(cgQuaternion::exp), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionSlerp(Quaternion &inout, const Quaternion &in, const Quaternion &in, float)", asFUNCTION(cgQuaternion::slerp), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionSquad(Quaternion &inout, const Quaternion &in, const Quaternion &in, const Quaternion &in, const Quaternion &in, float)", asFUNCTION(cgQuaternion::squad), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionSquadSetup(Quaternion &inout, Quaternion &inout, Quaternion &inout, const Quaternion &in, const Quaternion &in, const Quaternion &in, const Quaternion &in)", asFUNCTION(cgQuaternion::squadSetup), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionBaryCentric(Quaternion &inout, const Quaternion &in, const Quaternion &in, const Quaternion &in, float, float)", asFUNCTION(cgQuaternion::baryCentric), asCALL_STDCALL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "void quaternionToAxisAngle(const Quaternion &in, Vector3 &inout, float &inout)", asFUNCTION(cgQuaternion::toAxisAngle), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionRotationMatrix(Quaternion &inout, const Matrix &in)", asFUNCTION(cgQuaternion::rotationMatrix), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionRotationAxis(Quaternion &inout, const Vector3 &in, float)", asFUNCTION(cgQuaternion::rotationAxis), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionRotationYawPitchRoll(Quaternion &inout, float, float, float)", asFUNCTION(cgQuaternion::rotationYawPitchRoll), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionMultiply(Quaternion &inout, const Quaternion &in, const Quaternion &in)", asFUNCTION(cgQuaternion::multiply), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionNormalize(Quaternion &inout, const Quaternion &in)", asFUNCTION(cgQuaternion::normalize), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionInverse(Quaternion &inout, const Quaternion &in)", asFUNCTION(cgQuaternion::inverse), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionLn(Quaternion &inout, const Quaternion &in)", asFUNCTION(cgQuaternion::ln), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionExp(Quaternion &inout, const Quaternion &in)", asFUNCTION(cgQuaternion::exp), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionSlerp(Quaternion &inout, const Quaternion &in, const Quaternion &in, float)", asFUNCTION(cgQuaternion::slerp), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionSquad(Quaternion &inout, const Quaternion &in, const Quaternion &in, const Quaternion &in, const Quaternion &in, float)", asFUNCTION(cgQuaternion::squad), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionSquadSetup(Quaternion &inout, Quaternion &inout, Quaternion &inout, const Quaternion &in, const Quaternion &in, const Quaternion &in, const Quaternion &in)", asFUNCTION(cgQuaternion::squadSetup), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Quaternion& quaternionBaryCentric(Quaternion &inout, const Quaternion &in, const Quaternion &in, const Quaternion &in, float, float)", asFUNCTION(cgQuaternion::baryCentric), asCALL_CDECL ) );
         }
 
         //-----------------------------------------------------------------------------

@@ -41,9 +41,9 @@ namespace RenderDriver
             // Register properties
             BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "String deviceName"      , offsetof(cgRenderDriver::InitConfig,deviceName) ) );
             BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool windowed"          , offsetof(cgRenderDriver::InitConfig,windowed) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "uint width"             , offsetof(cgRenderDriver::InitConfig,width) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "uint height"            , offsetof(cgRenderDriver::InitConfig,height) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "uint refreshRate"       , offsetof(cgRenderDriver::InitConfig,refreshRate) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "int width"              , offsetof(cgRenderDriver::InitConfig,width) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "int height"             , offsetof(cgRenderDriver::InitConfig,height) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "int refreshRate"        , offsetof(cgRenderDriver::InitConfig,refreshRate) ) );
             BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool useHardwareTnL"    , offsetof(cgRenderDriver::InitConfig,useHardwareTnL) ) );
             BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool useVSync"          , offsetof(cgRenderDriver::InitConfig,useVSync) ) );
             BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool useTripleBuffering", offsetof(cgRenderDriver::InitConfig,useTripleBuffering) ) );
@@ -67,6 +67,7 @@ namespace RenderDriver
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "RenderDriverConfig getConfig() const", asMETHODPR(cgRenderDriver, getConfig, () const, cgRenderDriver::InitConfig), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "ResourceManager@+ getResourceManager( ) const", asMETHODPR(cgRenderDriver,getResourceManager,() const,cgResourceManager*), asCALL_THISCALL) );
 			BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "RenderingCapabilities@+ getCapabilities( ) const", asMETHODPR(cgRenderDriver,getCapabilities,() const,cgRenderingCapabilities*), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool updateDisplayMode( const DisplayMode &in, bool )", asMETHODPR(cgRenderDriver,updateDisplayMode,( const cgDisplayMode&, bool ),bool), asCALL_THISCALL) );
 			
 			// ToDo: BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "AppWindow@+ getWindow( ) const", asMETHODPR(cgRenderDriver, GetWindow, () const, cgAppWindow*), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool useHardwareTnL( ) const", asMETHODPR(cgRenderDriver,useHardwareTnL,() const, bool), asCALL_THISCALL) );
@@ -153,10 +154,10 @@ namespace RenderDriver
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool pushUserClipPlanes( array<Plane>@+ )", asFUNCTIONPR(pushUserClipPlanes,( ScriptArray*, cgRenderDriver* ), bool), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool pushUserClipPlanes( array<Plane>@+, bool )", asFUNCTIONPR(pushUserClipPlanes,( ScriptArray*, bool, cgRenderDriver* ), bool), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool popUserClipPlanes( )", asMETHODPR(cgRenderDriver,popUserClipPlanes,( ), bool), asCALL_THISCALL) );
-            // ToDo: void SetScissorRect          ( const RECT * pRect );
-            // ToDo: bool PushScissorRect         ( const cgRect * pRect );
-            // ToDo: bool PopScissorRect          ( );
-
+            BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool setScissorRect( const Rect &in )", asMETHODPR(cgRenderDriver,setScissorRect,( const cgRect* ), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool pushScissorRect( const Rect &in )", asMETHODPR(cgRenderDriver,pushScissorRect,( const cgRect* ), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool popScissorRect( )", asMETHODPR(cgRenderDriver,popScissorRect,( ), bool), asCALL_THISCALL) );
+            
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool setSystemState( SystemState, int )", asMETHODPR(cgRenderDriver,setSystemState,( cgSystemState::Base, cgInt32 ), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "int getSystemState( SystemState )", asMETHODPR(cgRenderDriver,getSystemState,( cgSystemState::Base ), cgInt32), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool setTexture( uint, const TextureHandle &in)", asMETHODPR(cgRenderDriver,setTexture,( cgUInt32, const cgTextureHandle& ), bool), asCALL_THISCALL) );
@@ -244,6 +245,8 @@ namespace RenderDriver
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool pushTexture( uint, NullHandle@ )", asFUNCTIONPR(pushTexture,( cgUInt32, void*, cgRenderDriver* ), bool), asCALL_CDECL_OBJLAST ) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool setViewport( NullHandle@ )", asFUNCTIONPR(setViewport,( void*, cgRenderDriver* ), bool), asCALL_CDECL_OBJLAST ) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool pushViewport( NullHandle@ )", asFUNCTIONPR(pushViewport,( void*, cgRenderDriver* ), bool), asCALL_CDECL_OBJLAST ) );
+            BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool setScissorRect( NullHandle@ )", asFUNCTIONPR(setScissorRect,( void*, cgRenderDriver* ), bool), asCALL_CDECL_OBJLAST ) );
+            BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool pushScissorRect( NullHandle@ )", asFUNCTIONPR(pushScissorRect,( void*, cgRenderDriver* ), bool), asCALL_CDECL_OBJLAST ) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool beginTargetRender( const RenderTargetHandle &in, NullHandle@ )", asFUNCTIONPR(beginTargetRender,( const cgRenderTargetHandle&, void*, cgRenderDriver* ), bool), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool beginTargetRender( const RenderTargetHandle &in, int, NullHandle@ )", asFUNCTIONPR(beginTargetRender,( const cgRenderTargetHandle&, cgInt32, void*, cgRenderDriver* ), bool), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool beginTargetRender( const RenderTargetHandle &in, int, bool, NullHandle@ )", asFUNCTIONPR(beginTargetRender,( const cgRenderTargetHandle&, cgInt32, bool, void*, cgRenderDriver* ), bool), asCALL_CDECL_OBJLAST) );
@@ -553,6 +556,32 @@ namespace RenderDriver
         static bool pushViewport( void*nullHandle, cgRenderDriver *thisPointer )
         {
             return thisPointer->pushViewport( CG_NULL );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : setScissorRect ()
+        /// <summary>
+        /// Provides an alternative overload for the script accessible
+        /// RenderDriver::setScissorRect() method that allows the script to
+        /// pass 'null'.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static bool setScissorRect( void*nullHandle, cgRenderDriver *thisPointer )
+        {
+            return thisPointer->setScissorRect( CG_NULL );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : pushScissorRect ()
+        /// <summary>
+        /// Provides an alternative overload for the script accessible
+        /// RenderDriver::pushScissorRect() method that allows the script to
+        /// pass 'null'.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static bool pushScissorRect( void*nullHandle, cgRenderDriver *thisPointer )
+        {
+            return thisPointer->pushScissorRect( CG_NULL );
         }
 
         //---------------------------------------------------------------------

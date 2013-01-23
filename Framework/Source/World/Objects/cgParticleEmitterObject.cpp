@@ -569,6 +569,7 @@ bool cgParticleEmitterObject::onComponentCreated( cgComponentCreatedEventArgs * 
         mLayers.resize( 1 );
         mLayers[0].databaseId = 0;
         mLayers[0].initialEmission = true;
+        mLayers[0].applyGravity = false;
         cgParticleEmitterProperties & properties = mLayers[0].properties;
 
         // Default emitter properties
@@ -591,6 +592,8 @@ bool cgParticleEmitterObject::onComponentCreated( cgComponentCreatedEventArgs * 
         properties.blendMethod                 = cgParticleBlendMethod::Additive;
         
         // Default particle properties
+        properties.velocityAligned             = false;
+        properties.velocityScaleStrength       = 0.0f;
         properties.speed.min                   = 2.5f;
         properties.speed.max                   = 3.0f;
         properties.mass.min                    = 10.0f;
@@ -802,6 +805,9 @@ bool cgParticleEmitterObject::insertComponentData( )
             
             // Final properties
             mInsertEmitterLayer.bindParameter( 56, mLayers[i].initialEmission );
+            mInsertEmitterLayer.bindParameter( 57, mLayers[i].applyGravity );
+            mInsertEmitterLayer.bindParameter( 58, mLayers[i].properties.velocityAligned );
+            mInsertEmitterLayer.bindParameter( 59, mLayers[i].properties.velocityScaleStrength );
 
             // Execute
             if ( !mInsertEmitterLayer.step( true ) )
@@ -919,6 +925,9 @@ bool cgParticleEmitterObject::onComponentLoading( cgComponentLoadingEventArgs * 
         mLoadEmitterLayers.getColumn( _T("MaxBaseScale"), properties.baseScale.max );
         mLoadEmitterLayers.getColumn( _T("HDRScalar"), properties.hdrScale );
         mLoadEmitterLayers.getColumn( _T("EmissionEnabled"), layer.initialEmission );
+        mLoadEmitterLayers.getColumn( _T("ApplyGravity"), layer.applyGravity );
+        mLoadEmitterLayers.getColumn( _T("VelocityAligned"), properties.velocityAligned );
+        mLoadEmitterLayers.getColumn( _T("VelocityScaleStrength"), properties.velocityScaleStrength );
 
         // Set enumerations
         properties.blendMethod = (cgParticleBlendMethod::Base)blendMethod;
@@ -1099,7 +1108,7 @@ void cgParticleEmitterObject::prepareQueries()
         if ( !mInsertEmitterLayer.isPrepared() )
             mInsertEmitterLayer.prepare( mWorld, _T("INSERT INTO 'Objects::ParticleEmitter::Layers' VALUES(NULL,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,")
                                                  _T("?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44,?45,")
-                                                 _T("?46,?47,?48,?49,?50,?51,?52,?53,?54,?55,?56)"), true );
+                                                 _T("?46,?47,?48,?49,?50,?51,?52,?53,?54,?55,?56,?57,?58,?59)"), true );
         if ( !mDeleteEmitterLayer.isPrepared() )
             mDeleteEmitterLayer.prepare( mWorld, _T("DELETE FROM 'Objects::ParticleEmitter::Layers' WHERE LayerId=?1"), true );
         if ( !mUpdateConeAngles.isPrepared() )
@@ -1107,15 +1116,15 @@ void cgParticleEmitterObject::prepareQueries()
         if ( !mUpdateEmissionRadii.isPrepared() )
             mUpdateEmissionRadii.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET EmissionRadius=?1, DeadZoneRadius=?2 WHERE LayerId=?3"), true );
         if ( !mUpdateParticleCounts.isPrepared() )
-            mUpdateParticleCounts.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET MaxSimultaneousParticles=?1 WHERE LayerId=?2"), true );
+            mUpdateParticleCounts.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET MaxSimultaneousParticles=?1, MaxFiredParticles=?2 WHERE LayerId=?3"), true );
         if ( !mUpdateReleaseProperties.isPrepared() )
             mUpdateReleaseProperties.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET BirthFrequency=?1, RandomizeRotation=?2, EmissionEnabled=?3 WHERE LayerId=?4"), true );
         if ( !mUpdateRenderingProperties.isPrepared() )
-            mUpdateRenderingProperties.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET SortedRender=?1, BlendMethod=?2, HDRScalar=?3 WHERE LayerId=?4"), true );
+            mUpdateRenderingProperties.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET SortedRender=?1, BlendMethod=?2, HDRScalar=?3, VelocityAligned=?4, VelocityScaleStrength=?5 WHERE LayerId=?6"), true );
         if ( !mUpdateParticleProperties.isPrepared() )
             mUpdateParticleProperties.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET MinSpeed=?1, MaxSpeed=?2, MinMass=?3, MaxMass=?4, MinAngularSpeed=?5,")
                                                        _T("MaxAngularSpeed=?6, MinBaseScale=?7, MaxBaseScale=?8, MinLifetime=?9, MaxLifetime=?10, BaseSizeX=?11,")
-                                                       _T("BaseSizeY=?12, AirResistance=?13, ParticleTexture=?14 WHERE LayerId=?15"), true );
+                                                       _T("BaseSizeY=?12, AirResistance=?13, ParticleTexture=?14, ApplyGravity=?15 WHERE LayerId=?16"), true );
     } // End if sandbox
 
     // Read queries
@@ -1207,6 +1216,18 @@ cgUInt32 cgParticleEmitterObject::getMaxSimultaneousParticles( cgUInt32 layerInd
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getMaximumParticles ()
+/// <summary>
+/// Get the maximum number of particles that this emitter can release before it
+/// is automatically destroyed / unloaded.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgUInt32 cgParticleEmitterObject::getMaximumParticles( cgUInt32 layerIndex ) const
+{
+    return mLayers[layerIndex].properties.maxFiredParticles;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getBirthFrequency ()
 /// <summary>
 /// Get the rate at which the emitter will create and release particles each
@@ -1254,6 +1275,30 @@ bool cgParticleEmitterObject::getRandomizedRotation( cgUInt32 layerIndex ) const
 bool cgParticleEmitterObject::getSortedRender( cgUInt32 layerIndex ) const
 {
     return mLayers[layerIndex].properties.sortedRender;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getVelocityAlignment ()
+/// <summary>
+/// Get the property that indicates whether the particles should be aligned
+/// and orientated to match their current velocities during rendering.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgParticleEmitterObject::getVelocityAlignment( cgUInt32 layerIndex ) const
+{
+    return mLayers[layerIndex].properties.velocityAligned;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getVelocityScaleStrength ()
+/// <summary>
+/// Get the amount by which the velocity of each particle will affect its
+/// scale (0 = no effect, 1 = full effect)
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloat cgParticleEmitterObject::getVelocityScaleStrength( cgUInt32 layerIndex ) const
+{
+    return mLayers[layerIndex].properties.velocityScaleStrength;
 }
 
 //-----------------------------------------------------------------------------
@@ -1375,6 +1420,17 @@ cgParticleBlendMethod::Base cgParticleEmitterObject::getParticleBlendMethod( cgU
 bool cgParticleEmitterObject::getInitialEnabledState( cgUInt32 layerIndex ) const
 {
     return mLayers[layerIndex].initialEmission;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isGravityEnabled ()
+/// <summary>
+/// Determine if gravity should be considered during particle updates.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgParticleEmitterObject::isGravityEnabled( cgUInt32 layerIndex ) const
+{
+    return mLayers[layerIndex].applyGravity;
 }
 
 //-----------------------------------------------------------------------------
@@ -1585,7 +1641,8 @@ void cgParticleEmitterObject::setMaxSimultaneousParticles( cgUInt32 layerIndex, 
     {
         prepareQueries();
         mUpdateParticleCounts.bindParameter( 1, nAmount );
-        mUpdateParticleCounts.bindParameter( 2, layer.databaseId );
+        mUpdateParticleCounts.bindParameter( 2, layer.properties.maxFiredParticles );
+        mUpdateParticleCounts.bindParameter( 3, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleCounts.step( true ) )
@@ -1604,6 +1661,49 @@ void cgParticleEmitterObject::setMaxSimultaneousParticles( cgUInt32 layerIndex, 
 
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("MaxSimultaneousParticles");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setMaximumParticles ()
+/// <summary>
+/// Set the maximum number of particles that this emitter can release before it
+/// is automatically destroyed / unloaded.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::setMaximumParticles( cgUInt32 layerIndex, cgUInt32 amount )
+{
+    Layer & layer = mLayers[layerIndex];
+
+    // Is this a no-op?
+    if ( layer.properties.maxFiredParticles == amount )
+        return;
+
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateParticleCounts.bindParameter( 1, layer.properties.maxSimultaneousParticles );
+        mUpdateParticleCounts.bindParameter( 2, amount );
+        mUpdateParticleCounts.bindParameter( 3, layer.databaseId );
+        
+        // Execute
+        if ( !mUpdateParticleCounts.step( true ) )
+        {
+            cgString strError;
+            mUpdateParticleCounts.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update particle count limits for particle emitter '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
+    // Update local member
+    layer.properties.maxFiredParticles = amount;
+
+    // Notify listeners that object data has changed.
+    static const cgString strContext = _T("MaximumParticles");
     onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
 }
 
@@ -1719,7 +1819,9 @@ void cgParticleEmitterObject::enableSortedRender( cgUInt32 layerIndex, bool bVal
         mUpdateRenderingProperties.bindParameter( 1, bValue );
         mUpdateRenderingProperties.bindParameter( 2, (cgUInt8)layer.properties.blendMethod );
         mUpdateRenderingProperties.bindParameter( 3, layer.properties.hdrScale );
-        mUpdateRenderingProperties.bindParameter( 4, layer.databaseId );
+        mUpdateRenderingProperties.bindParameter( 4, layer.properties.velocityAligned );
+        mUpdateRenderingProperties.bindParameter( 5, layer.properties.velocityScaleStrength );
+        mUpdateRenderingProperties.bindParameter( 6, layer.databaseId );
         
         // Execute
         if ( !mUpdateRenderingProperties.step( true ) )
@@ -1738,6 +1840,154 @@ void cgParticleEmitterObject::enableSortedRender( cgUInt32 layerIndex, bool bVal
 
     // Notify listeners that object data has changed.
     static const cgString strContext = _T("SortedRender");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : enableGravity ()
+/// <summary>
+/// Enable or disable the application of gravity forces to particles 
+/// throughout their lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::enableGravity( cgUInt32 layerIndex, bool enable )
+{
+    Layer & layer = mLayers[layerIndex];
+
+    // Is this a no-op?
+    if ( layer.applyGravity == enable )
+        return;
+
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateParticleProperties.bindParameter( 1, layer.properties.speed.min );
+        mUpdateParticleProperties.bindParameter( 2, layer.properties.speed.max );
+        mUpdateParticleProperties.bindParameter( 3, layer.properties.mass.min );
+        mUpdateParticleProperties.bindParameter( 4, layer.properties.mass.max );
+        mUpdateParticleProperties.bindParameter( 5, layer.properties.angularSpeed.min );
+        mUpdateParticleProperties.bindParameter( 6, layer.properties.angularSpeed.max );
+        mUpdateParticleProperties.bindParameter( 7, layer.properties.baseScale.min );
+        mUpdateParticleProperties.bindParameter( 8, layer.properties.baseScale.max );
+        mUpdateParticleProperties.bindParameter( 9, layer.properties.lifetime.min );
+        mUpdateParticleProperties.bindParameter( 10, layer.properties.lifetime.max );
+        mUpdateParticleProperties.bindParameter( 11, layer.properties.baseSize.width );
+        mUpdateParticleProperties.bindParameter( 12, layer.properties.baseSize.height );
+        mUpdateParticleProperties.bindParameter( 13, layer.properties.airResistance );
+        mUpdateParticleProperties.bindParameter( 14, layer.properties.particleTexture );
+        mUpdateParticleProperties.bindParameter( 15, enable );
+        mUpdateParticleProperties.bindParameter( 16, layer.databaseId );
+        
+        // Execute
+        if ( !mUpdateParticleProperties.step( true ) )
+        {
+            cgString strError;
+            mUpdateParticleProperties.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update particle properties for particle emitter '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
+    // Update local member
+    layer.applyGravity = enable;
+
+    // Notify listeners that object data has changed.
+    static const cgString strContext = _T("ApplyGravity");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : enableVelocityAlignment ()
+/// <summary>
+/// Set the property that indicates whether the particles should be aligned
+/// and orientated to match their current velocities during rendering.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::enableVelocityAlignment( cgUInt32 layerIndex, bool enabled )
+{
+    Layer & layer = mLayers[layerIndex];
+
+    // Is this a no-op?
+    if ( layer.properties.velocityAligned == enabled )
+        return;
+
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateRenderingProperties.bindParameter( 1, layer.properties.sortedRender );
+        mUpdateRenderingProperties.bindParameter( 2, (cgUInt8)layer.properties.blendMethod );
+        mUpdateRenderingProperties.bindParameter( 3, layer.properties.hdrScale );
+        mUpdateRenderingProperties.bindParameter( 4, enabled );
+        mUpdateRenderingProperties.bindParameter( 5, layer.properties.velocityScaleStrength );
+        mUpdateRenderingProperties.bindParameter( 6, layer.databaseId );
+        
+        // Execute
+        if ( !mUpdateRenderingProperties.step( true ) )
+        {
+            cgString strError;
+            mUpdateRenderingProperties.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update rendering properties for particle emitter '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
+    // Update local member
+    layer.properties.velocityAligned = enabled;
+
+    // Notify listeners that object data has changed.
+    static const cgString strContext = _T("VelocityAligned");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setVelocityScaleStrength ()
+/// <summary>
+/// Set the amount by which the velocity of each particle will affect its
+/// scale (0 = no effect, 1 = full effect)
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::setVelocityScaleStrength( cgUInt32 layerIndex, cgFloat strength )
+{
+    Layer & layer = mLayers[layerIndex];
+
+    // Is this a no-op?
+    if ( layer.properties.velocityScaleStrength == strength )
+        return;
+
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateRenderingProperties.bindParameter( 1, layer.properties.sortedRender );
+        mUpdateRenderingProperties.bindParameter( 2, (cgUInt8)layer.properties.blendMethod );
+        mUpdateRenderingProperties.bindParameter( 3, layer.properties.hdrScale );
+        mUpdateRenderingProperties.bindParameter( 4, layer.properties.velocityAligned );
+        mUpdateRenderingProperties.bindParameter( 5, strength );
+        mUpdateRenderingProperties.bindParameter( 6, layer.databaseId );
+        
+        // Execute
+        if ( !mUpdateRenderingProperties.step( true ) )
+        {
+            cgString strError;
+            mUpdateRenderingProperties.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update rendering properties for particle emitter '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
+    // Update local member
+    layer.properties.velocityScaleStrength = strength;
+
+    // Notify listeners that object data has changed.
+    static const cgString strContext = _T("VelocityScaleStrength");
     onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
 }
 
@@ -1774,7 +2024,8 @@ void cgParticleEmitterObject::setParticleTexture( cgUInt32 layerIndex, const cgS
         mUpdateParticleProperties.bindParameter( 12, layer.properties.baseSize.height );
         mUpdateParticleProperties.bindParameter( 13, layer.properties.airResistance );
         mUpdateParticleProperties.bindParameter( 14, textureFile );
-        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
+        mUpdateParticleProperties.bindParameter( 15, layer.applyGravity );
+        mUpdateParticleProperties.bindParameter( 16, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleProperties.step( true ) )
@@ -1841,7 +2092,8 @@ void cgParticleEmitterObject::setParticleSpeed( cgUInt32 layerIndex, const cgRan
         mUpdateParticleProperties.bindParameter( 12, layer.properties.baseSize.height );
         mUpdateParticleProperties.bindParameter( 13, layer.properties.airResistance );
         mUpdateParticleProperties.bindParameter( 14, layer.properties.particleTexture );
-        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
+        mUpdateParticleProperties.bindParameter( 15, layer.applyGravity );
+        mUpdateParticleProperties.bindParameter( 16, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleProperties.step( true ) )
@@ -1908,7 +2160,8 @@ void cgParticleEmitterObject::setParticleMass( cgUInt32 layerIndex, const cgRang
         mUpdateParticleProperties.bindParameter( 12, layer.properties.baseSize.height );
         mUpdateParticleProperties.bindParameter( 13, layer.properties.airResistance );
         mUpdateParticleProperties.bindParameter( 14, layer.properties.particleTexture );
-        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
+        mUpdateParticleProperties.bindParameter( 15, layer.applyGravity );
+        mUpdateParticleProperties.bindParameter( 16, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleProperties.step( true ) )
@@ -1975,7 +2228,8 @@ void cgParticleEmitterObject::setParticleAngularSpeed( cgUInt32 layerIndex, cons
         mUpdateParticleProperties.bindParameter( 12, layer.properties.baseSize.height );
         mUpdateParticleProperties.bindParameter( 13, layer.properties.airResistance );
         mUpdateParticleProperties.bindParameter( 14, layer.properties.particleTexture );
-        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
+        mUpdateParticleProperties.bindParameter( 15, layer.applyGravity );
+        mUpdateParticleProperties.bindParameter( 16, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleProperties.step( true ) )
@@ -2044,7 +2298,8 @@ void cgParticleEmitterObject::setParticleBaseScale( cgUInt32 layerIndex, const c
         mUpdateParticleProperties.bindParameter( 12, layer.properties.baseSize.height );
         mUpdateParticleProperties.bindParameter( 13, layer.properties.airResistance );
         mUpdateParticleProperties.bindParameter( 14, layer.properties.particleTexture );
-        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
+        mUpdateParticleProperties.bindParameter( 15, layer.applyGravity );
+        mUpdateParticleProperties.bindParameter( 16, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleProperties.step( true ) )
@@ -2111,7 +2366,8 @@ void cgParticleEmitterObject::setParticleLifetime( cgUInt32 layerIndex, const cg
         mUpdateParticleProperties.bindParameter( 12, layer.properties.baseSize.height );
         mUpdateParticleProperties.bindParameter( 13, layer.properties.airResistance );
         mUpdateParticleProperties.bindParameter( 14, layer.properties.particleTexture );
-        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
+        mUpdateParticleProperties.bindParameter( 15, layer.applyGravity );
+        mUpdateParticleProperties.bindParameter( 16, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleProperties.step( true ) )
@@ -2176,7 +2432,8 @@ void cgParticleEmitterObject::setParticleSize( cgUInt32 layerIndex, const cgSize
         mUpdateParticleProperties.bindParameter( 12, Size.height );
         mUpdateParticleProperties.bindParameter( 13, layer.properties.airResistance );
         mUpdateParticleProperties.bindParameter( 14, layer.properties.particleTexture );
-        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
+        mUpdateParticleProperties.bindParameter( 15, layer.applyGravity );
+        mUpdateParticleProperties.bindParameter( 16, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleProperties.step( true ) )
@@ -2231,7 +2488,8 @@ void cgParticleEmitterObject::setParticleAirResistance( cgUInt32 layerIndex, cgF
         mUpdateParticleProperties.bindParameter( 12, layer.properties.baseSize.height );
         mUpdateParticleProperties.bindParameter( 13, fValue );
         mUpdateParticleProperties.bindParameter( 14, layer.properties.particleTexture );
-        mUpdateParticleProperties.bindParameter( 15, layer.databaseId );
+        mUpdateParticleProperties.bindParameter( 15, layer.applyGravity );
+        mUpdateParticleProperties.bindParameter( 16, layer.databaseId );
         
         // Execute
         if ( !mUpdateParticleProperties.step( true ) )
@@ -2275,7 +2533,9 @@ void cgParticleEmitterObject::setHDRScale( cgUInt32 layerIndex, cgFloat scale )
         mUpdateRenderingProperties.bindParameter( 1, layer.properties.sortedRender );
         mUpdateRenderingProperties.bindParameter( 2, (cgUInt8)layer.properties.blendMethod );
         mUpdateRenderingProperties.bindParameter( 3, scale );
-        mUpdateRenderingProperties.bindParameter( 4, layer.databaseId );
+        mUpdateRenderingProperties.bindParameter( 4, layer.properties.velocityAligned );
+        mUpdateRenderingProperties.bindParameter( 5, layer.properties.velocityScaleStrength );
+        mUpdateRenderingProperties.bindParameter( 6, layer.databaseId );
         
         // Execute
         if ( !mUpdateRenderingProperties.step( true ) )
@@ -2319,7 +2579,9 @@ void cgParticleEmitterObject::setParticleBlendMethod( cgUInt32 layerIndex, cgPar
         mUpdateRenderingProperties.bindParameter( 1, layer.properties.sortedRender );
         mUpdateRenderingProperties.bindParameter( 2, (cgUInt8)method );
         mUpdateRenderingProperties.bindParameter( 3, layer.properties.hdrScale );
-        mUpdateRenderingProperties.bindParameter( 4, layer.databaseId );
+        mUpdateRenderingProperties.bindParameter( 4, layer.properties.velocityAligned );
+        mUpdateRenderingProperties.bindParameter( 5, layer.properties.velocityScaleStrength );
+        mUpdateRenderingProperties.bindParameter( 6, layer.databaseId );
         
         // Execute
         if ( !mUpdateRenderingProperties.step( true ) )
@@ -2527,6 +2789,13 @@ void cgParticleEmitterNode::onComponentModified( cgComponentModifiedEventArgs * 
             {
                 // Initially enabled?
                 mEmitters[i]->enableEmission( getInitialEnabledState(i) );
+
+                // Use gravity?
+                // ToDo: Needs to update if scene gravity changes.
+                if ( isGravityEnabled(i) )
+                    mEmitters[i]->setGravity( mParentScene->getPhysicsWorld()->getDefaultGravity() );
+                else
+                    mEmitters[i]->setGravity( cgVector3(0,0,0) );
             
             } // End if succeeded
 
@@ -2552,6 +2821,13 @@ void cgParticleEmitterNode::onComponentModified( cgComponentModifiedEventArgs * 
             {
                 // Initially enabled?
                 mEmitters[i]->enableEmission( getInitialEnabledState(i) );
+
+                // Use gravity?
+                // ToDo: Needs to update if scene gravity changes.
+                if ( isGravityEnabled(i) )
+                    mEmitters[i]->setGravity( mParentScene->getPhysicsWorld()->getDefaultGravity() );
+                else
+                    mEmitters[i]->setGravity( cgVector3(0,0,0) );
             
             } // End if success
 
@@ -2571,6 +2847,13 @@ void cgParticleEmitterNode::onComponentModified( cgComponentModifiedEventArgs * 
                 // only when in sandbox mode.
                 if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
                     mEmitters[i]->enableEmission( getInitialEnabledState(i) );
+
+                // Use gravity?
+                // ToDo: Needs to update if scene gravity changes.
+                if ( isGravityEnabled(i) )
+                    mEmitters[i]->setGravity( mParentScene->getPhysicsWorld()->getDefaultGravity() );
+                else
+                    mEmitters[i]->setGravity( cgVector3(0,0,0) );
             
             } // End if succeeded
 
@@ -2611,6 +2894,13 @@ bool cgParticleEmitterNode::onNodeCreated( const cgUID & ObjectType, cgCloneMeth
         {
             // Initially enabled?
             mEmitters[i]->enableEmission( getInitialEnabledState(i) );
+
+            // Use gravity?
+            // ToDo: Needs to update if scene gravity changes.
+            if ( isGravityEnabled(i) )
+                mEmitters[i]->setGravity( mParentScene->getPhysicsWorld()->getDefaultGravity() );
+            else
+                mEmitters[i]->setGravity( cgVector3(0,0,0) );
         
         } // End if succeeded
 
@@ -2649,6 +2939,13 @@ bool cgParticleEmitterNode::onNodeLoading( const cgUID & ObjectType, cgWorldQuer
         {
             // Initially enabled?
             mEmitters[i]->enableEmission( getInitialEnabledState(i) );
+
+            // Use gravity?
+            // ToDo: Needs to update if scene gravity changes.
+            if ( isGravityEnabled(i) )
+                mEmitters[i]->setGravity( mParentScene->getPhysicsWorld()->getDefaultGravity() );
+            else
+                mEmitters[i]->setGravity( cgVector3(0,0,0) );
         
         } // End if succeeded
 
@@ -2726,16 +3023,27 @@ void cgParticleEmitterNode::update( cgFloat fElapsedTime )
     cgObjectNode::update( fElapsedTime );
 
     // Now allow the emitters to update.
+    bool destroyEmitter = (cgGetSandboxMode() != cgSandboxMode::Enabled);
     for ( size_t i = 0; i < mEmitters.size(); ++i )
     {
         if ( mEmitters[i] )
         {
             mEmitters[i]->setEmitterMatrix( getWorldTransform(false) );
-            mEmitters[i]->update( fElapsedTime, cgVector3(0,0,0), false );
+            mEmitters[i]->update( fElapsedTime, cgVector3(0,0,0), true );
+
+            // Destroy the emitter when all particles are spent (except in sandbox mode).
+            if ( !getMaximumParticles(i) || !mEmitters[i]->particlesSpent( true ) )
+                destroyEmitter = false;    
         
         } // End if valid
+        else
+            destroyEmitter = false;
     
     } // Next emitter
+
+    // Clean up the emitter?
+    if ( !mEmitters.empty() && destroyEmitter )
+        unload();
 }
 
 //-----------------------------------------------------------------------------

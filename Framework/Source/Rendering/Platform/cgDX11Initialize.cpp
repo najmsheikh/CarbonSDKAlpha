@@ -355,59 +355,6 @@ HRESULT cgDX11Initialize::createDisplay( cgDX11Settings & D3DSettings, cgUInt32 
     return S_OK;
 }
 
-/*//-----------------------------------------------------------------------------
-//  Name : ResetDisplay ()
-/// <summary>
-/// Reset the display device, and optionally the window etc.
-/// </summary>
-//-----------------------------------------------------------------------------
-HRESULT cgDX11Initialize::ResetDisplay( IDirect3DDevice9 * pD3DDevice, cgDX11Settings& D3DSettings, HWND hWnd, bool bCreateDepthBuffer )
-{   
-    D3DPRESENT_PARAMETERS    d3dpp     = BuildPresentParameters( D3DSettings, bCreateDepthBuffer );
-    cgDX11Settings::Settings *pSettings = D3DSettings.getSettings();
-
-    // Validate Requirements
-    if ( !pD3DDevice )
-        return S_OK;
-
-    if ( hWnd )
-    {
-        // Setup styles based on windowed / fullscreen mode
-        if ( !D3DSettings.windowed )
-        {
-            SetMenu( hWnd, CG_NULL );
-            SetWindowLong( hWnd, GWL_STYLE, WS_VISIBLE | WS_POPUP );
-            SetWindowPos( hWnd, CG_NULL, 0, 0, pSettings->displayMode.Width, pSettings->displayMode.Height, SWP_NOZORDER );
-        
-        } // End if Fullscreen
-        else
-        {
-            // Use fullscreen settings as the foundation for the window size
-            cgDX11Settings::Settings * pSettings = &D3DSettings.Fullscreen_Settings;
-
-            // Change back to an overlapped window
-            SetWindowLong( hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW );
-
-            // Adjust width / height to take into account window decoration
-            cgUInt32 Width = pSettings->displayMode.Width + GetSystemMetrics( SM_CXSIZEFRAME ) * 2;
-            cgUInt32 Height = pSettings->displayMode.Width + (GetSystemMetrics( SM_CYSIZEFRAME ) * 2) + GetSystemMetrics( SM_CYCAPTION );
-
-            // Update position
-            SetWindowPos( hWnd, HWND_NOTOPMOST, 50, 50, Width, Height, SWP_NOACTIVATE | SWP_SHOWWINDOW );
-
-        } // End if windowed
-
-    } // End if
-
-    // Reset the device
-    HRESULT hRet = pD3DDevice->Reset( &d3dpp );
-    if ( FAILED( hRet ) )
-        return hRet;
-
-    // Success
-    return S_OK;
-}*/
-
 //-----------------------------------------------------------------------------
 //  Name : enumerateAdapters () (Private)
 /// <summary>
@@ -878,6 +825,7 @@ DXGI_SWAP_CHAIN_DESC cgDX11Initialize::buildSwapChainParameters( cgDX11Settings 
     scDesc.SampleDesc.Count = pSettings->multiSampleCount;
     scDesc.SampleDesc.Quality = pSettings->multiSampleQuality;
     scDesc.Windowed     = D3DSettings.windowed;
+    scDesc.Flags        = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
     // Is this windowed?
     if ( D3DSettings.windowed )

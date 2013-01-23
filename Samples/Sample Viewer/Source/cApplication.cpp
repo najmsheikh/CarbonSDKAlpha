@@ -175,7 +175,7 @@ void cApplication::frameEnd()
     cgAppStateManager * applicationStates = cgAppStateManager::getInstance();
     cgAppState * activeState = applicationStates->getActiveState();
     cgString currentSample = (activeState) ? activeState->getStateId() : _T("None");
-    cgString instructions = cgString::format( _T("Current Sample: [c=#ff5555ff]%s[/c]\nPress 1 through %i to select a sample."), currentSample.c_str(), mSamples.size() + 1 );
+    cgString instructions = cgString::format( _T("Current Sample: [c=#ff5555ff]%s[/c]\nPress 1 through %i to select a sample."), currentSample.c_str(), mSamples.size() );
     interfaceManager->printText( textArea, instructions, cgTextFlags::Multiline | cgTextFlags::AllowFormatCode, 0xFFFFFFFF, 0, 10 );
 
     // Switch samples when a number key is pressed (temporary logic).

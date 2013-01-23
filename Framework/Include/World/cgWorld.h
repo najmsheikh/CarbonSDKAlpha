@@ -172,6 +172,7 @@ public:
     // Database methods
     void                        componentTablesCreated      ( const cgUID & typeIdentifier );
     bool                        componentTablesExist        ( const cgUID & typeIdentifier ) const;
+    bool                        tableExists                 ( const cgString & name );
     bool                        executeQuery                ( const cgString & statements, bool asOneTransaction );
     void                        beginTransaction            ( );
     void                        beginTransaction            ( const cgString & savepoint );

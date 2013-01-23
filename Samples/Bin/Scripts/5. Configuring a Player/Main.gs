@@ -134,43 +134,59 @@ class Main : IScriptedAppState
             // Allow the scene to perform any necessary update tasks.
             mScene.update();
 
-            // Update player controller details in response to key presses.
-            // Here we're handling player crouching by responding to control key presses.
+            // If the cursor is not up, handle input to adjust character controller.
             InputDriver @ inputDriver = getAppInputDriver();
             CharacterController @ controller = cast<CharacterController>(mPlayer.getPhysicsController());
-            if ( inputDriver.isKeyPressed( Keys::LControl ) )
+            if ( inputDriver.getMouseMode() != MouseHandlerMode::Cursor )
             {
-                // Here we request that the character controller be switched
-                // to 'Crouch' mode and reduce the maximum speed of the character
-                // to a slower pace.
-                controller.requestStandingMode( CharacterStandingMode::Crouching );
-                controller.setMaximumWalkSpeed( 1.34112f * 2 );
-            
-            } // End if LControl
-            else
-            {
-                // Request that the character controller switch to a standing
-                // mode. This is a request only since there is no guarantee that 
-                // it will immediately be able to switch if, for instance, there is
-                // solid geometry above the player's head stopping this from happening.
-                // The controller will however switch as soon as there is room for the
-                // character to stand.
-                controller.requestStandingMode( CharacterStandingMode::Standing );
-
-                // Set running or walking speed if holding shift.
-                if ( inputDriver.isKeyPressed( Keys::LShift ) )
-                    controller.setMaximumWalkSpeed( 1.34112f * 2 );
+                // Zoom when holding middle mouse button.
+                if ( inputDriver.isMouseButtonPressed( MouseButtons::Middle ) )
+                    mCamera.setFOV( 20.0f );
                 else
-                    controller.setMaximumWalkSpeed( 1.34112f * 4 );
-            
-            } // End if !LControl
+                    mCamera.setFOV( 85.0f );
+
+                // If the character is already airborne and the user presses space,
+                // switch to 'fly mode'.
+                if ( controller.getCharacterState() == CharacterState::Airborne && inputDriver.isKeyPressed( Keys::Space, true ) )
+                    controller.enableFlyMode( true, true );
+
+                // Update player controller details in response to key presses.
+                // Here we're handling player crouching by responding to control key presses.
+                if ( !controller.isFlyModeEnabled() &&  inputDriver.isKeyPressed( Keys::LControl ) )
+                {
+                    // Here we request that the character controller be switched
+                    // to 'Crouch' mode and reduce the maximum speed of the character
+                    // to a slower pace.
+                    controller.requestStandingMode( CharacterStandingMode::Crouching );
+                    controller.setMaximumWalkSpeed( 1.34112f * 2 );
+                
+                } // End if LControl
+                else
+                {
+                    // Request that the character controller switch to a standing
+                    // mode. This is a request only since there is no guarantee that 
+                    // it will immediately be able to switch if, for instance, there is
+                    // solid geometry above the player's head stopping this from happening.
+                    // The controller will however switch as soon as there is room for the
+                    // character to stand.
+                    controller.requestStandingMode( CharacterStandingMode::Standing );
+
+                    // Set running or walking speed if holding shift.
+                    if ( inputDriver.isKeyPressed( Keys::LShift ) )
+                        controller.setMaximumWalkSpeed( 1.34112f * 2 );
+                    else
+                        controller.setMaximumWalkSpeed( 1.34112f * 4 );
+                
+                } // End if !LControl
+
+            } // End if no cursor
 
             // Here we'll add a little 'head bob' effect to the camera. This could
             // potentially be done in the player's behavior script, but we'll do it
             // right in line here to keep things simple for now. First compute the 
             // camera's required vertical offset from its parent player based on the
             // height of the character.
-            float cameraOffset = (controller.getCharacterHeight( true ) * 0.5f) * 0.95f;
+            float cameraOffset = controller.getCharacterHeight( true ) * 0.95f;
 
             // Compute head bob offsets (we only want it to bob if the character not 
             // currently sliding or airborne)
@@ -328,13 +344,13 @@ class Main : IScriptedAppState
         controller.initialize( );
         
         // Position the player in the world.
-        mPlayer.setPosition( Vector3(0.0f, 2.8f, -4.0f) );
+        mPlayer.setPosition( Vector3(0.0f, 0.1f, -4.0f) );
         
         // Now create a camera that can be attached to the player object.
         @mCamera = cast<CameraNode>(mScene.createObjectNode( true, RTID_CameraObject, false ));
         
         // Setup camera properties
-        mCamera.setFOV( 75.0f );
+        mCamera.setFOV( 85.0f );
         mCamera.setNearClip( 0.2f );
         mCamera.setFarClip( 10000.01f );
         mCamera.setUpdateRate( UpdateRate::Always );
@@ -342,7 +358,7 @@ class Main : IScriptedAppState
         // Offset the camera to "eye" level based on the configured height
         // of the character controller prior to attaching to the player.
         mLastCamPos    = mPlayer.getPosition();
-        mLastCamPos.y += (controller.getCharacterHeight() * 0.5f) * 0.95f;
+        mLastCamPos.y += controller.getCharacterHeight() * 0.95f;
         mCamera.setPosition( mLastCamPos );
         
         // Attach the camera as a child of the player object.

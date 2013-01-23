@@ -39,6 +39,7 @@ namespace Messaging
             // Messages issued by cgRenderDriver
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "RenderDriver_DeviceLost", cgSystemMessages::RenderDriver_DeviceLost ) );
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "RenderDriver_DeviceRestored", cgSystemMessages::RenderDriver_DeviceRestored ) );
+            BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "RenderDriver_ScreenLayoutChange", cgSystemMessages::RenderDriver_ScreenLayoutChange ) );
 
             // Messages processed by cgResourceManager
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "Resources_CollectGarbage", cgSystemMessages::Resources_CollectGarbage ) );
@@ -60,6 +61,9 @@ namespace Messaging
             // Messages issued by user interface system
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_OnInitControl", cgSystemMessages::UI_OnInitControl ) );
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_OnSize", cgSystemMessages::UI_OnSize ) );
+            BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_OnClosing", cgSystemMessages::UI_OnClosing ) );
+            BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_OnClose", cgSystemMessages::UI_OnClose ) );
+            BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_OnScreenLayoutChange", cgSystemMessages::UI_OnScreenLayoutChange ) );
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_OnMouseButtonDown", cgSystemMessages::UI_OnMouseButtonDown ) );
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_OnMouseButtonUp", cgSystemMessages::UI_OnMouseButtonUp ) );
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_OnMouseMove", cgSystemMessages::UI_OnMouseMove ) );
@@ -67,9 +71,15 @@ namespace Messaging
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_OnKeyDown", cgSystemMessages::UI_OnKeyDown ) );
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_OnKeyUp", cgSystemMessages::UI_OnKeyUp ) );
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_OnKeyPressed", cgSystemMessages::UI_OnKeyPressed ) );
+            BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_OnLostFocus", cgSystemMessages::UI_OnLostFocus ) );
+            BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_OnGainFocus", cgSystemMessages::UI_OnGainFocus ) );
             
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_Button_OnClick", cgSystemMessages::UI_Button_OnClick ) );
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_ScrollBar_OnValueChange", cgSystemMessages::UI_ScrollBar_OnValueChange ) );
+            BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_ListBox_OnSelectedIndexChange", cgSystemMessages::UI_ListBox_OnSelectedIndexChange ) );
+            BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_ComboBox_OnSelectedIndexChange", cgSystemMessages::UI_ComboBox_OnSelectedIndexChange ) );
+            BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_CheckBox_OnClick", cgSystemMessages::UI_CheckBox_OnClick ) );
+            BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_CheckBox_OnCheckedStateChange", cgSystemMessages::UI_CheckBox_OnCheckedStateChange ) );
 
             // Messages issued by cgSceneLoader
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "SceneLoader_ProgressUpdated", cgSystemMessages::SceneLoader_ProgressUpdated ) );

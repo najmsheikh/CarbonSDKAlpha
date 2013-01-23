@@ -155,7 +155,13 @@ cgAnimationSet::cgAnimationSet( cgUInt32 nReferenceId, cgWorld * pWorld, cgAnima
         if ( Data.scaleController )
             DestData.scaleController = new cgScaleXYZTargetController( *(cgScaleXYZTargetController*)Data.scaleController, frameRange );
         if ( Data.rotationController )
-            DestData.rotationController = new cgEulerAnglesTargetController( *(cgEulerAnglesTargetController*)Data.rotationController, frameRange );
+        {
+            if ( Data.rotationController->getControllerType() == cgAnimationTargetControllerType::EulerAngles )
+                DestData.rotationController = new cgEulerAnglesTargetController( *(cgEulerAnglesTargetController*)Data.rotationController, frameRange );
+            else
+                DestData.rotationController = new cgQuaternionTargetController( *(cgQuaternionTargetController*)Data.rotationController, frameRange );
+        
+        } // End if has rotation
     
     } // Next target
 
@@ -466,7 +472,7 @@ bool cgAnimationSet::loadSet( cgUInt32 nSourceRefId, cgResourceManager * pManage
             mLoadTargetControllers.bindParameter( 1, nDatabaseId );
             if ( !mLoadTargetControllers.step() )
                 throw cgExceptions::ResultException( _T("Animation set data contained invalid or corrupt animation target controller information."), cgDebugSource() );
-            
+
             // Iterate through them.
             for ( ; mLoadTargetControllers.nextRow(); )
             {
@@ -926,7 +932,7 @@ void cgAnimationSet::addRotationKey( cgInt32 nFrame, const cgString & strTargetI
     // If there is no rotation controller, assign the default.
     TargetData & Data = mTargetData[ strTargetId ];
     if ( !Data.rotationController )
-        Data.rotationController = new cgEulerAnglesTargetController();
+        Data.rotationController = new cgQuaternionTargetController();
 
     // Initial insert will generate a 'linear' curve between last point
     // and the newly inserted point.
@@ -1089,12 +1095,12 @@ cgInt32 cgAnimationSet::computeFrameIndex( cgDouble position )
 /// target at the specified position (in seconds).
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgAnimationSet::getSRT( cgDouble framePosition, const cgString & strTargetId, cgInt32 nMinFrame, cgInt32 nMaxFrame, cgVector3 & Scale, cgQuaternion & Rotation, cgVector3 & Translation )
+bool cgAnimationSet::getSRT( cgDouble framePosition, cgAnimationPlaybackMode::Base mode, const cgString & strTargetId, cgInt32 nMinFrame, cgInt32 nMaxFrame, cgVector3 & Scale, cgQuaternion & Rotation, cgVector3 & Translation )
 {
     static const cgVector3 DefaultScale( 1, 1, 1 );
     static const cgQuaternion DefaultRotation( 0, 0, 0, 1 );
     static const cgVector3 DefaultTranslation( 0, 0, 0 );
-    return getSRT( framePosition, strTargetId, nMinFrame, nMaxFrame, DefaultScale, DefaultRotation, DefaultTranslation, Scale, Rotation, Translation );
+    return getSRT( framePosition, mode, strTargetId, nMinFrame, nMaxFrame, DefaultScale, DefaultRotation, DefaultTranslation, Scale, Rotation, Translation );
 }
 
 //-----------------------------------------------------------------------------
@@ -1104,7 +1110,7 @@ bool cgAnimationSet::getSRT( cgDouble framePosition, const cgString & strTargetI
 /// target at the specified position (in seconds).
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgAnimationSet::getSRT( cgDouble fFramePosition, const cgString & strTargetId, cgInt32 nMinFrame, cgInt32 nMaxFrame, const cgVector3 & DefaultScale, const cgQuaternion & DefaultRotation, const cgVector3 & DefaultTranslation, cgVector3 & Scale, cgQuaternion & Rotation, cgVector3 & Translation )
+bool cgAnimationSet::getSRT( cgDouble fFramePosition, cgAnimationPlaybackMode::Base mode, const cgString & strTargetId, cgInt32 nMinFrame, cgInt32 nMaxFrame, const cgVector3 & DefaultScale, const cgQuaternion & DefaultRotation, const cgVector3 & DefaultTranslation, cgVector3 & Scale, cgQuaternion & Rotation, cgVector3 & Translation )
 {
     // Any target matching this identifier?
     TargetDataMap::iterator itTargetData = mTargetData.find( strTargetId );
@@ -1127,10 +1133,22 @@ bool cgAnimationSet::getSRT( cgDouble fFramePosition, const cgString & strTarget
 
     // Map the specified frame position into the "periodic" for this animation set.
     cgDouble fPeriodic = 0.0f;
-    if ( fFramePosition > 0 )
-        fPeriodic = fMinPeriod + fmod( fFramePosition, (fMaxPeriod - fMinPeriod) );
-    else
-        fPeriodic = fMinPeriod + ((fMaxPeriod - fMinPeriod) + fmod( fFramePosition, (fMaxPeriod - fMinPeriod) ));
+    switch ( mode )
+    {
+        case cgAnimationPlaybackMode::Loop:
+            if ( fFramePosition > 0 )
+                fPeriodic = fMinPeriod + fmod( fFramePosition, (fMaxPeriod - fMinPeriod) );
+            else
+                fPeriodic = fMinPeriod + ((fMaxPeriod - fMinPeriod) + fmod( fFramePosition, (fMaxPeriod - fMinPeriod) ));
+            break;
+
+        case cgAnimationPlaybackMode::PlayOnce:
+            fPeriodic = fMinPeriod + fFramePosition;
+            fPeriodic = max( fMinPeriod, fPeriodic );
+            fPeriodic = min( fMaxPeriod, fPeriodic );
+            break;
+    
+    } // End switch playback mode
 
     // Evaluate scale
     if ( Data.scaleController )

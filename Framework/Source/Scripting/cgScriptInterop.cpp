@@ -49,21 +49,25 @@ ScriptArray::ScriptArray( cgUInt32 nLength, asIObjectType * pObjectType )
     // Initialize variables to sensible defaults.
     mRefCount     = 1;    // IMPORTANT!
     mObjectType   = pObjectType;
+    mGCFlag       = false;
     pObjectType->AddRef();
 
     // Determine element size
-    // TODO: Should probably store the template sub type id as well
-    int nTypeId = pObjectType->GetSubTypeId( );
-    if ( nTypeId & asTYPEID_MASK_OBJECT )
+    mSubTypeId = pObjectType->GetSubTypeId( );
+    if ( mSubTypeId & asTYPEID_MASK_OBJECT )
         mElementSize = sizeof(size_t);
     else
-        mElementSize = pObjectType->GetEngine()->GetSizeOfPrimitiveType( nTypeId );
+        mElementSize = pObjectType->GetEngine()->GetSizeOfPrimitiveType( mSubTypeId );
 
     // Storing handles?
-    mIsArrayOfHandles = (nTypeId & asTYPEID_OBJHANDLE) ? true : false;
+    mIsArrayOfHandles = (mSubTypeId & asTYPEID_OBJHANDLE) ? true : false;
 
     // Allocate storage
     createBuffer( &mBuffer, nLength );
+
+    // Notify the GC of the successful creation
+	if ( pObjectType->GetFlags() & asOBJ_GC )
+		pObjectType->GetEngine()->NotifyGarbageCollectorOfNewObject(this, pObjectType);
 }
 
 //-----------------------------------------------------------------------------
@@ -83,46 +87,166 @@ ScriptArray::~ScriptArray()
 }
 
 //-----------------------------------------------------------------------------
-//  Name : ScriptArrayFactory () (Static)
+//  Name : factory () (Static)
 /// <summary>
 /// Construct a new instance of the ScriptArray class.
 /// </summary>
 //-----------------------------------------------------------------------------
-ScriptArray * ScriptArray::ScriptArrayFactory( asIObjectType * pObjectType )
+ScriptArray * ScriptArray::factory( asIObjectType * pObjectType )
 {
     return new ScriptArray(0, pObjectType);
 }
 
 //-----------------------------------------------------------------------------
-//  Name : ScriptArrayFactory () (Static)
+//  Name : factory () (Static)
 /// <summary>
 /// Construct a new instance of the ScriptArray class with the specified
 /// length.
 /// </summary>
 //-----------------------------------------------------------------------------
-ScriptArray * ScriptArray::ScriptArrayFactory( asIObjectType * pObjectType, cgUInt32 nLength )
+ScriptArray * ScriptArray::factory( asIObjectType * pObjectType, cgUInt32 nLength )
 {
     return new ScriptArray( nLength, pObjectType );
 }
 
 //-----------------------------------------------------------------------------
-//  Name : Register () (Static)
+//  Name : listFactory () (Static)
+/// <summary>
+/// Construct a new instance of the ScriptArray class with the specified
+/// length used exclusively for initialization lists.
+/// </summary>
+//-----------------------------------------------------------------------------
+ScriptArray * ScriptArray::listFactory( asIObjectType * pObjectType, cgUInt32 nLength)
+{
+	ScriptArray * a = new ScriptArray( nLength, pObjectType );
+
+	// It's possible the constructor raised a script exception, in which case we 
+	// need to free the memory and return null instead, else we get a memory leak.
+	asIScriptContext * ctx = asGetActiveContext();
+	if ( ctx && ctx->GetState() == asEXECUTION_EXCEPTION )
+	{
+		delete a;
+		return 0;
+	
+    } // End if exception
+	return a;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : templateCallback () (Static)
+/// <summary>
+/// Validate whether the specified subtype is valid for this template.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool ScriptArray::templateCallback(asIObjectType *ot, bool &dontGarbageCollect)
+{
+    // This optional callback is called when the template type is first used by the compiler.
+    // It allows the application to validate if the template can be instanciated for the requested 
+    // subtype at compile time, instead of at runtime. The output argument dontGarbageCollect
+    // allow the callback to tell the engine if the template instance type shouldn't be garbage collected, 
+    // i.e. no asOBJ_GC flag. 
+
+	// Make sure the subtype can be instanciated with a default factory/constructor, 
+	// otherwise we won't be able to instanciate the elements. 
+	int typeId = ot->GetSubTypeId();
+	if( typeId == asTYPEID_VOID )
+		return false;
+	if( (typeId & asTYPEID_MASK_OBJECT) && !(typeId & asTYPEID_OBJHANDLE) )
+	{
+		asIObjectType *subtype = ot->GetEngine()->GetObjectTypeById(typeId);
+		asDWORD flags = subtype->GetFlags();
+		if( (flags & asOBJ_VALUE) && !(flags & asOBJ_POD) )
+		{
+			// Verify that there is a default constructor
+			bool found = false;
+			for( asUINT n = 0; n < subtype->GetBehaviourCount(); n++ )
+			{
+				asEBehaviours beh;
+				asIScriptFunction *func = subtype->GetBehaviourByIndex(n, &beh);
+				if( beh != asBEHAVE_CONSTRUCT ) continue;
+
+				if( func->GetParamCount() == 0 )
+				{
+					// Found the default constructor
+					found = true;
+					break;
+				}
+			}
+
+			if( !found )
+			{
+				// There is no default constructor
+				return false;
+			}
+		}
+		else if( (flags & asOBJ_REF) )
+		{
+			// Verify that there is a default factory
+			bool found = false;
+			for( asUINT n = 0; n < subtype->GetFactoryCount(); n++ )
+			{
+				asIScriptFunction *func = subtype->GetFactoryByIndex(n);
+				if( func->GetParamCount() == 0 )
+				{
+					// Found the default factory
+					found = true;
+					break;
+				}
+			}	
+
+			if( !found )
+			{
+				// No default factory
+				return false;
+			}
+		}
+
+		// If the object type is not garbage collected then the array also doesn't need to be
+		if( !(flags & asOBJ_GC) )
+			dontGarbageCollect = true;
+	}
+	else if( !(typeId & asTYPEID_OBJHANDLE) )
+	{
+		// Arrays with primitives cannot form circular references, 
+		// thus there is no need to garbage collect them
+		dontGarbageCollect = true;
+	}
+
+	// The type is ok
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : bind () (Static)
 /// <summary>
 /// Register the script array template type.
 /// </summary>
 //-----------------------------------------------------------------------------
-void ScriptArray::Register( asIScriptEngine * pEngine )
+void ScriptArray::bind( asIScriptEngine * pEngine )
 {
     // Register the array type as a template
-    BINDSUCCESS( pEngine->RegisterObjectType("array<class T>", 0, asOBJ_REF | asOBJ_TEMPLATE) );
+    BINDSUCCESS( pEngine->RegisterObjectType("array<class T>", 0, asOBJ_REF | asOBJ_GC | asOBJ_TEMPLATE) );
+
+    // Register a callback for validating the subtype before it is used
+	BINDSUCCESS( pEngine->RegisterObjectBehaviour("array<T>", asBEHAVE_TEMPLATE_CALLBACK, "bool f(int&in, bool&out)", asFUNCTION(templateCallback), asCALL_CDECL) );
 
     // Templates receive the object type as the first parameter. To the script writer this is hidden
-    BINDSUCCESS( pEngine->RegisterObjectBehaviour("array<T>", asBEHAVE_FACTORY, "array<T>@ f(int&in)", asFUNCTIONPR(ScriptArrayFactory, (asIObjectType*), ScriptArray*), asCALL_CDECL) );
-    BINDSUCCESS( pEngine->RegisterObjectBehaviour("array<T>", asBEHAVE_FACTORY, "array<T>@ f(int&in, uint)", asFUNCTIONPR(ScriptArrayFactory, (asIObjectType*, cgUInt32), ScriptArray*), asCALL_CDECL) );
+    BINDSUCCESS( pEngine->RegisterObjectBehaviour("array<T>", asBEHAVE_FACTORY, "array<T>@ f(int&in)", asFUNCTIONPR(factory, (asIObjectType*), ScriptArray*), asCALL_CDECL) );
+    BINDSUCCESS( pEngine->RegisterObjectBehaviour("array<T>", asBEHAVE_FACTORY, "array<T>@ f(int&in, uint)", asFUNCTIONPR(factory, (asIObjectType*, cgUInt32), ScriptArray*), asCALL_CDECL) );
+
+    // Register the factory that will be used for initialization lists
+	BINDSUCCESS( pEngine->RegisterObjectBehaviour("array<T>", asBEHAVE_LIST_FACTORY, "array<T>@ f(int&in, uint)", asFUNCTIONPR(listFactory, (asIObjectType*, cgUInt32), ScriptArray*), asCALL_CDECL) );
 
     // The memory management methods
     BINDSUCCESS( pEngine->RegisterObjectBehaviour("array<T>", asBEHAVE_ADDREF, "void f()", asMETHOD(ScriptArray,addRef), asCALL_THISCALL) );
     BINDSUCCESS( pEngine->RegisterObjectBehaviour("array<T>", asBEHAVE_RELEASE, "void f()", asMETHOD(ScriptArray,release), asCALL_THISCALL) );
+
+    // Register GC behaviours in case the array needs to be garbage collected
+	BINDSUCCESS( pEngine->RegisterObjectBehaviour("array<T>", asBEHAVE_GETREFCOUNT, "int f()", asMETHOD(ScriptArray, getRefCount), asCALL_THISCALL) );
+	BINDSUCCESS( pEngine->RegisterObjectBehaviour("array<T>", asBEHAVE_SETGCFLAG, "void f()", asMETHOD(ScriptArray, setGCFlag), asCALL_THISCALL) );
+	BINDSUCCESS( pEngine->RegisterObjectBehaviour("array<T>", asBEHAVE_GETGCFLAG, "bool f()", asMETHOD(ScriptArray, getGCFlag), asCALL_THISCALL) );
+	BINDSUCCESS( pEngine->RegisterObjectBehaviour("array<T>", asBEHAVE_ENUMREFS, "void f(int&in)", asMETHOD(ScriptArray, enumReferences), asCALL_THISCALL) );
+	BINDSUCCESS( pEngine->RegisterObjectBehaviour("array<T>", asBEHAVE_RELEASEREFS, "void f(int&in)", asMETHOD(ScriptArray, releaseAllHandles), asCALL_THISCALL) );
 
     // The index operator returns the template subtype
     BINDSUCCESS( pEngine->RegisterObjectMethod("array<T>", "T &opIndex(uint)", asMETHOD(ScriptArray, at), asCALL_THISCALL) );
@@ -454,19 +578,90 @@ void ScriptArray::copyBuffer( ArrayBuffer * pDest, ArrayBuffer * pSrc )
 //-----------------------------------------------------------------------------
 void ScriptArray::addRef()
 {
+    // Clear the GC flag then increase the counter
+	mGCFlag = false;
     mRefCount++;
 }
 
 //-----------------------------------------------------------------------------
 //  Name : release ()
 /// <summary>
-/// release reference to script array object.
+/// Release reference to script array object.
 /// </summary>
 //-----------------------------------------------------------------------------
 void ScriptArray::release()
 {
+    // Now do the actual releasing (clearing the flag set by GC)
+	mGCFlag = false;
     if ( --mRefCount == 0 )
         delete this;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setGCFlag ()
+/// <summary>
+/// Used to set the state of the garbage collection flag to 'true'.
+/// </summary>
+//-----------------------------------------------------------------------------
+void ScriptArray::setGCFlag()
+{
+	mGCFlag = true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getGCFlag ()
+/// <summary>
+/// Used to get the current state of the garbage collection flag.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool ScriptArray::getGCFlag()
+{
+	return mGCFlag;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getRefCount ()
+/// <summary>
+/// Retrieve the current number of references to this object.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt ScriptArray::getRefCount()
+{
+	return mRefCount;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : releaseAllHandles ()
+/// <summary>
+/// Garbage collector requests that we release all handles we own.
+/// </summary>
+//-----------------------------------------------------------------------------
+void ScriptArray::releaseAllHandles( asIScriptEngine * engine )
+{
+	// Resizing to zero will release everything
+	resize(0);
+}
+
+//-----------------------------------------------------------------------------
+//  Name : enumReferences ()
+/// <summary>
+/// Garbage collector requests that we enumerate the handles we hold.
+/// </summary>
+//-----------------------------------------------------------------------------
+void ScriptArray::enumReferences( asIScriptEngine *engine )
+{
+	// If the array is holding handles, then we need to notify the GC of them
+	if ( mSubTypeId & asTYPEID_MASK_OBJECT )
+	{
+		void **d = (void**)mBuffer->data;
+		for( asUINT n = 0; n < mBuffer->elementCount; n++ )
+		{
+			if ( d[n] )
+				engine->GCEnumCallback(d[n]);
+		
+        } // Next element
+	
+    } // End if holds objects
 }
 
 ///////////////////////////////////////////////////////////////////////////////

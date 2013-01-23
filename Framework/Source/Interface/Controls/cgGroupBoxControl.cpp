@@ -185,7 +185,7 @@ void cgGroupBoxControl::updateGroupLabel( )
         mControlElements[ BorderTopBegin ] = mGroupLabel;
 
         // Set the label's correct management data.
-        mGroupLabel->setManagementData( this, mRootForm );
+        mGroupLabel->setManagementData( mUIManager, mUILayer, this, mRootForm );
         mGroupLabel->setParentVisible( isVisible() );
         mGroupLabel->setParentEnabled( isEnabled() );
 

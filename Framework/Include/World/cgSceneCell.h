@@ -66,22 +66,23 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    cgScene       * getParentScene      ( );
-    cgVector3       getWorldOrigin      ( ) const;
-    cgBoundingBox   getBoundingBox      ( ) const;
-    cgUInt32        getCellId           ( ) const;
-    void            getGridOffsets      ( cgInt16 & x, cgInt16 & y, cgInt16 & z ) const;
-    bool            isEmpty             ( ) const;
-    void            addNode             ( cgObjectNode * node );
-    void            removeNode          ( cgObjectNode * node );
-    bool            load                ( cgWorldQuery * cellQuery );
-    bool            insert              ( cgWorld * world, cgUInt32 sceneId );
-    bool            remove              ( cgWorld * world, cgUInt32 sceneId );
+    cgScene               * getParentScene      ( );
+    cgVector3               getWorldOrigin      ( ) const;
+    cgBoundingBox           getBoundingBox      ( ) const;
+    cgUInt32                getCellId           ( ) const;
+    void                    getGridOffsets      ( cgInt16 & x, cgInt16 & y, cgInt16 & z ) const;
+    const cgObjectNodeSet & getNodes            ( ) const;
+    bool                    isEmpty             ( ) const;
+    void                    addNode             ( cgObjectNode * node );
+    void                    removeNode          ( cgObjectNode * node );
+    bool                    load                ( cgWorldQuery * cellQuery );
+    bool                    insert              ( cgWorld * world, cgUInt32 sceneId );
+    bool                    remove              ( cgWorld * world, cgUInt32 sceneId );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
     //-------------------------------------------------------------------------
-    virtual void    dispose             ( bool disposeBase );
+    virtual void            dispose             ( bool disposeBase );
 
 protected:
     //-------------------------------------------------------------------------

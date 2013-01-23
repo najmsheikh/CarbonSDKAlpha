@@ -63,6 +63,17 @@ cgPhysicsController::cgPhysicsController( cgPhysicsWorld * pWorld )
 //-----------------------------------------------------------------------------
 cgPhysicsController::~cgPhysicsController()
 {
+    dispose(false);
+}
+
+//-----------------------------------------------------------------------------
+//  Name : dispose () (Virtual)
+/// <summary>
+/// Release any resources allocated by the physics world.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgPhysicsController::dispose( bool bDisposeBase )
+{
     // Remove this controller from the world
     if ( mWorld )
         mWorld->removeController( this );

@@ -81,6 +81,7 @@ public:
     bool                        buildMesh                   ( );
     cgNavigationAgent         * createAgent                 ( const cgNavigationAgentCreateParams & params, const cgVector3 & position );
     const cgNavigationMeshCreateParams& getParameters       ( ) const;
+    cgNavigationHandler       * getNavigationHandler        ( ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods

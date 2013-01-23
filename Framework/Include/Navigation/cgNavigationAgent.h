@@ -29,6 +29,7 @@
 //-----------------------------------------------------------------------------
 #include <System/cgReference.h>
 #include <Scripting/cgScriptInterop.h>
+#include <Navigation/cgNavigationTypes.h>
 
 //-----------------------------------------------------------------------------
 // Forward Declarations
@@ -99,36 +100,43 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    bool                initialize          ( const cgNavigationAgentCreateParams & params, const cgVector3 & position );
-    bool                setMoveTarget       ( const cgVector3 & position, bool adjust );
-    cgVector3           getPosition         ( ) const;
-    cgVector3           getDesiredVelocity  ( ) const;
-    cgVector3           getActualVelocity   ( ) const;
+    bool                            initialize          ( const cgNavigationAgentCreateParams & params, const cgVector3 & position );
+    bool                            setMoveTarget       ( const cgVector3 & position, bool adjust );
+    bool                            setMoveVelocity     ( const cgVector3 & velocity );
+    cgVector3                       getPosition         ( ) const;
+    cgVector3                       getDesiredVelocity  ( ) const;
+    cgVector3                       getActualVelocity   ( ) const;
+    cgNavigationAgentState::Base    getAgentState       ( ) const;
+    cgNavigationTargetState::Base   getTargetState      ( ) const;
+    cgNavigationHandler           * getHandler          ( ) const;
+    void                            updateParameters    ( const cgNavigationAgentCreateParams & params );
+    const cgNavigationAgentCreateParams & getParameters ( ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
-    virtual void        onNavigationAgentReposition ( cgNavigationAgentRepositionEventArgs * e );
+    virtual void                    onNavigationAgentReposition ( cgNavigationAgentRepositionEventArgs * e );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
     //-------------------------------------------------------------------------
-    virtual void        dispose             ( bool disposeBase );
+    virtual void                    dispose             ( bool disposeBase );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
     //-------------------------------------------------------------------------
-    virtual const cgUID       & getReferenceType        ( ) const { return RTID_NavigationAgent; }
-    virtual bool                queryReferenceType      ( const cgUID & type ) const;
+    virtual const cgUID           & getReferenceType        ( ) const { return RTID_NavigationAgent; }
+    virtual bool                    queryReferenceType      ( const cgUID & type ) const;
 
 protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    cgNavigationHandler   * mHandler;           // The handler that owns this agent.
-    cgInt                   mDetourIndex;       // Detour reference to this agent.
-    cgUInt                  mTargetRef;         // Reference to poly closest to requested target position.
-    cgVector3               mTargetPosition;    // Actual target position, closest to that requested.
+    cgNavigationHandler           * mHandler;           // The handler that owns this agent.
+    cgNavigationAgentCreateParams   mParams;            // Parameters specified during agent creation.
+    cgInt                           mDetourIndex;       // Detour reference to this agent.
+    cgUInt                          mTargetRef;         // Reference to poly closest to requested target position.
+    cgVector3                       mTargetPosition;    // Actual target position, closest to that requested.
 };
 
 #endif // !_CGE_CGNAVIGATIONAGENT_H_

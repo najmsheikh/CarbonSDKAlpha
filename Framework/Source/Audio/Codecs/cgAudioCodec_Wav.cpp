@@ -27,12 +27,6 @@
 //-----------------------------------------------------------------------------
 #include <Audio/Codecs/cgAudioCodec_Wav.h>
 
-// Windows platform includes
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>    // Warning: Portability
-#include <mmsystem.h>    // Warning: Portability
-#undef WIN32_LEAN_AND_MEAN
-
 //-----------------------------------------------------------------------------
 //  Name : cgAudioCodec_Wav () (Constructor)
 /// <summary>
@@ -80,20 +74,95 @@ bool cgAudioCodec_Wav::isValid( cgInputStream & Stream )
     bool          bValid;
 
     // Open the specified file for reading
-    if ( Stream.getType() == cgStreamType::File )
-        hInput = mmioOpen( const_cast<LPTSTR>(Stream.getSourceFile().c_str()), CG_NULL, MMIO_ALLOCBUF | MMIO_READ );
-    else
-        return false; // ToDo: Support memory stream
-    if ( !hInput ) return false;
+    cgInputStream TestStream = Stream;
+    if ( !TestStream.open() )
+        return false;
+
+    // Attempt to open the multimedia IO stream.
+    MMIOINFO Info;
+    memset( &Info, 0, sizeof(MMIOINFO) );
+    Info.pIOProc = ioProc;
+    ((cgInputStream*&)Info.adwInfo[0]) = &TestStream;
+    hInput = mmioOpenA( CG_NULL, &Info, MMIO_ALLOCBUF | MMIO_READ );
+    if ( !hInput )
+        return false;
 
     // Read the header information
     bValid = readMMIO( hInput, Format );
 
     // Close file
     mmioClose( hInput, 0 );
+    TestStream.close();
 
     // Valid?
     return bValid;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : ioProc () (Private, Static)
+/// <summary>
+/// Callback mechanism for MMIO system that allows us to read from a custom
+/// data stream.
+/// </summary>
+//-----------------------------------------------------------------------------
+LRESULT WINAPI cgAudioCodec_Wav::ioProc( LPSTR lpmmioinfo, UINT uMsg, LPARAM lParam1, LPARAM lParam2 )
+{
+    MMIOINFO * Info = (MMIOINFO*)lpmmioinfo;
+
+    // Get the pointer to the stream.
+    cgInputStream & Stream = *((cgInputStream*&)Info->adwInfo[0]);
+    
+    // What operation are we being asked to perform?
+    switch ( uMsg )
+    {
+        case MMIOM_OPEN:
+            Stream.seek( 0, cgInputStream::Begin );
+            Info->lDiskOffset = 0;
+            return MMSYSERR_NOERROR;
+
+        case MMIOM_CLOSE:
+            return MMSYSERR_NOERROR;
+
+        case MMIOM_READ:
+        {
+            size_t BytesRead = Stream.read( (void*)lParam1, (size_t)((LPARAM)lParam2) );
+            Info->lDiskOffset = (cgInt32)Stream.getPosition();
+            return (LRESULT)BytesRead;
+        
+        } // End case READ
+        case MMIOM_SEEK:
+        {
+            cgInputStream::SeekOrigin origin;
+            switch ( (LPARAM)lParam2 )
+            {
+                case SEEK_SET:
+                    origin = cgInputStream::Begin;
+                    break;
+                case SEEK_CUR:
+                    origin = cgInputStream::Current;
+                    break;
+                case SEEK_END:
+                    origin = cgInputStream::End;
+                    break;
+            } // End switch whence
+            if ( !Stream.seek( (cgInt64)((LPARAM)lParam1), origin ) )
+                return -1;
+            Info->lDiskOffset = (cgInt32)Stream.getPosition();
+            return (LRESULT)Info->lDiskOffset;
+        
+        } // End case SEEK
+        case MMIOM_WRITE:
+            // Unsupported
+            break;
+
+        case MMIOM_WRITEFLUSH:
+            // Unsupported
+            break;
+
+    } // End switch message
+
+    // Unrecognized message.
+    return 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -106,20 +175,42 @@ bool cgAudioCodec_Wav::isValid( cgInputStream & Stream )
 bool cgAudioCodec_Wav::open( cgInputStream & Stream )
 {
     // Already open?
-    if ( mInput ) close();
+    if ( mInput )
+        close();
 
     // Open the specified file for reading
-    if ( Stream.getType() == cgStreamType::File )
-        mInput = mmioOpen( const_cast<LPTSTR>(Stream.getSourceFile().c_str()), CG_NULL, MMIO_ALLOCBUF | MMIO_READ );
-    else
-        return false; // ToDo: Support memory stream
-    if ( !mInput ) return false;
+    mFile = Stream;
+    if ( !mFile.open() )
+        return false;
+
+    // Attempt to open the multimedia IO stream.
+    MMIOINFO Info;
+    memset( &Info, 0, sizeof(MMIOINFO) );
+    Info.pIOProc = ioProc;
+    ((cgInputStream*&)Info.adwInfo[0]) = &mFile;
+    mInput = mmioOpenA( CG_NULL, &Info, MMIO_ALLOCBUF | MMIO_READ );
+    if ( !mInput )
+    {
+        mFile.close();
+        return false;
+    
+    } // End if failed
 
     // Read the header information
-    if( !readMMIO( mInput, mPCMFormat ) ) { close(); return false; }
+    if ( !readMMIO( mInput, mPCMFormat ) )
+    {
+        close();
+        return false;
+    
+    } // End if failed
     
     // Reset the file ready for reading
-    if( !reset() ) { close(); return false; }
+    if( !reset() )
+    {
+        close();
+        return false;
+    
+    } // End if failed
     
     // Opened successfully
     return true;
@@ -134,8 +225,9 @@ bool cgAudioCodec_Wav::open( cgInputStream & Stream )
 void cgAudioCodec_Wav::close( )
 {
     // Close opened files
-    if ( mInput != CG_NULL )
+    if ( mInput )
         mmioClose( (HMMIO)mInput, 0 );
+    mFile.close();
 
     // Clear variables
     mInput = CG_NULL;

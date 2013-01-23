@@ -60,6 +60,11 @@ class CGE_API cgUIManager : public cgReference
 {
     DECLARE_DERIVED_SCRIPTOBJECT( cgUIManager, cgReference, "UIManager" )
 
+    //-------------------------------------------------------------------------
+    // Friend List
+    //-------------------------------------------------------------------------
+    friend class cgUIForm;
+
 public:
     //-------------------------------------------------------------------------
     // Constructors & Destructors
@@ -122,6 +127,8 @@ public:
     cgRect                  printText           ( const cgRect & bounds, const cgString & text, const cgPoint & offset, cgUInt32 flags, cgUInt32 color, cgInt32 kerning, cgInt32 lineSpacing );
 
     // Layers
+    void                    addLayer            ( cgUILayer * layer );
+    void                    removeLayer         ( cgUILayer * layer, bool destroyLayer );
     void                    bringLayerToFront   ( cgUILayer * layer );
     void                    sendLayerToBack     ( cgUILayer * layer );
 
@@ -190,6 +197,9 @@ private:
     // Private Methods
     //-------------------------------------------------------------------------
     bool                    createSystemLayers  ( );
+    void                    removeForm          ( cgUIForm * form );
+    void                    checkGarbage        ( );
+    void                    sendGarbageMessage  ( );
 
     //-------------------------------------------------------------------------
     // Private Variables
@@ -206,6 +216,9 @@ private:
     cgUIControl       * mCapturedControl;   // The control that has currently been "captured" by the mouse.
     cgUIControl       * mFocusControl;      // The control that currently has "focus".
     cgUICursorLayer   * mCursorLayer;       // The system layer containing the cursor.
+
+    // Garbage lists
+    FormList            mGarbageForms;      // List of all forms that are due to be unloaded.
 
     //-------------------------------------------------------------------------
     // Private Static Variables

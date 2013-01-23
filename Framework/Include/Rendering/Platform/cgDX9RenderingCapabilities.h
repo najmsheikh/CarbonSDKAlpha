@@ -35,6 +35,11 @@
 #include <Rendering/cgRenderingCapabilities.h>
 
 //-----------------------------------------------------------------------------
+// Forward Declarations
+//-----------------------------------------------------------------------------
+class cgDX9Initialize;
+
+//-----------------------------------------------------------------------------
 // Main Class Definitions
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -63,6 +68,11 @@ public:
     virtual ~cgDX9RenderingCapabilities( );
 
     //-------------------------------------------------------------------------
+    // Public Methods
+    //-------------------------------------------------------------------------
+    bool                postInit                    ( cgDX9Initialize * data, cgUInt32 fullScreenAdapter );
+
+    //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgRenderingCapabilities)
     //-------------------------------------------------------------------------
     virtual bool        enumerate					( );
@@ -72,17 +82,19 @@ public:
     virtual bool        supportsNonPow2Textures		( ) const;
 	virtual bool        supportsDepthStencilReading ( ) const;
     virtual bool        supportsShaderModel			( cgShaderModel::Base model ) const;
+    virtual bool        getDisplayModes             ( cgDisplayMode::Array & modes ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
     //-------------------------------------------------------------------------
-    virtual void        dispose                 ( bool disposeBase );
+    virtual void        dispose                     ( bool disposeBase );
 
 protected:
     //-------------------------------------------------------------------------
     // Protected Member Variables
     //-------------------------------------------------------------------------
-    D3DCAPS9    mHardwareCaps;             // Capabilities of the selected D3D device.
+    D3DCAPS9                mHardwareCaps;      // Capabilities of the selected D3D device.
+    cgDisplayMode::Array    mDisplayModes;      // Enumerated full screen display modes available for selection.
 };
 
 #endif // CGE_DX9_RENDER_SUPPORT

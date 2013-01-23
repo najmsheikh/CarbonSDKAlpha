@@ -58,8 +58,6 @@ cgUIForm::FormAllocTypeMap  cgUIForm::mRegisteredForms;
 cgUIForm::cgUIForm( cgUIControlLayer * pLayer ) : cgUIControl( Complex, _T("Form") )
 {
     // Initialize variables to sensible defaults
-    mUIManager        = CG_NULL;
-    mUILayer          = CG_NULL;
     mCaption          = CG_NULL;
     mCloseButton      = CG_NULL;
     mMinimizeButton   = CG_NULL;
@@ -68,6 +66,7 @@ cgUIForm::cgUIForm( cgUIControlLayer * pLayer ) : cgUIControl( Complex, _T("Form
     mFormScriptObject = CG_NULL;
     mAcceptButton     = CG_NULL;
     mCancelButton     = CG_NULL;
+    mClosePending     = false;
 
     // Store the interface manager from the layer
     mUILayer          = pLayer;
@@ -104,16 +103,15 @@ void cgUIForm::dispose( bool bDisposeBase )
         mFormScriptObject->release();
 
     // Clear variables
-    mUIManager        = CG_NULL;
-    mUILayer          = CG_NULL;
     mCaption          = CG_NULL;
     mCloseButton      = CG_NULL;
     mMinimizeButton   = CG_NULL;
     mMaximizeButton   = CG_NULL;
-    mFormScriptRes       = CG_NULL;
+    mFormScriptRes    = CG_NULL;
     mFormScriptObject = CG_NULL;
     mAcceptButton     = CG_NULL;
     mCancelButton     = CG_NULL;
+    mClosePending     = false;
 
     // Release resources
     mFormScript.close();
@@ -184,10 +182,27 @@ cgUIForm * cgUIForm::createInstance( const cgString & strTypeName, cgUIControlLa
 }
 
 //-----------------------------------------------------------------------------
-//  Name : createForm ()
+//  Name : close ()
 /// <summary>
-/// Initialize the form based on the derived classes specification and 
-/// prepare for rendering.
+/// Request that the form is closed.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIForm::close( )
+{
+    // Hide the form.
+    setVisible( false );
+
+    // Add to UI manager's garbage list.
+    mUIManager->mGarbageForms.push_back( this );
+
+    // Trigger close event.
+    raiseEvent( cgSystemMessages::UI_OnClose, CG_NULL );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : loadForm ()
+/// <summary>
+/// Load a form from a script ready for display.
 /// </summary>
 //-----------------------------------------------------------------------------
 bool cgUIForm::loadForm( cgInputStream FormScriptStream, const cgString & strName )

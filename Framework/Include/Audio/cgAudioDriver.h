@@ -87,6 +87,8 @@ public:
 //-----------------------------------------------------------------------------
 class CGE_API cgAudioDriver : public cgReference
 {
+    DECLARE_DERIVED_SCRIPTOBJECT( cgAudioDriver, cgReference, "AudioDriver" )
+
     //-------------------------------------------------------------------------
     // Friend declarations
     //-------------------------------------------------------------------------
@@ -139,6 +141,7 @@ public:
 
     // 3D Audio
     virtual void                    set3DWorldScale         ( cgFloat unitsPerMeter ) = 0;
+    virtual void                    set3DRolloffFactor      ( cgFloat factor ) = 0;
     virtual void                    set3DListenerTransform  ( const cgTransform & t ) = 0;
 
     //-------------------------------------------------------------------------

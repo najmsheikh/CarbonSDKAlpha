@@ -175,11 +175,11 @@ public:
 	//-------------------------------------------------------------------------
 	// Public Methods
 	//-------------------------------------------------------------------------
-    HRESULT                     enumerate              ( );
+    HRESULT                     enumerate               ( );
     
-    HRESULT                     createDisplay          ( cgDX11Settings & settings, cgUInt32 flags = 0, HWND focusWindow = CG_NULL, HWND outputWindow = CG_NULL,
-                                                         WNDPROC windowProcedure = CG_NULL, LPCTSTR windowTitle = CG_NULL, cgUInt32 width = CW_USEDEFAULT, 
-                                                         cgUInt32 height = CW_USEDEFAULT, LPVOID lparam = CG_NULL, bool modifyWindow = true, bool attachPerfHUD = false );
+    HRESULT                     createDisplay           ( cgDX11Settings & settings, cgUInt32 flags = 0, HWND focusWindow = CG_NULL, HWND outputWindow = CG_NULL,
+                                                          WNDPROC windowProcedure = CG_NULL, LPCTSTR windowTitle = CG_NULL, cgUInt32 width = CW_USEDEFAULT, 
+                                                          cgUInt32 height = CW_USEDEFAULT, LPVOID lparam = CG_NULL, bool modifyWindow = true, bool attachPerfHUD = false );
 
     bool                        findBestWindowedMode    ( cgDX11Settings & settings, bool requireHAL = false, bool requireREF = false );
     bool                        findBestFullScreenMode  ( cgDX11Settings & settings, DXGI_MODE_DESC * matchMode = CG_NULL, bool requireHAL = false, bool requireREF = false );

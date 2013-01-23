@@ -34,6 +34,7 @@
 // cgDX11RenderDriver Module Includes
 //-----------------------------------------------------------------------------
 #include <Rendering/Platform/cgDX11RenderDriver.h>
+#include <Rendering/Platform/cgDX11RenderingCapabilities.h>
 #include <System/Platform/cgWinAppWindow.h>
 #include <System/cgStringUtility.h>
 #include <System/cgProfiler.h>
@@ -222,7 +223,13 @@ void cgDX11RenderDriver::dispose( bool bDisposeBase )
     if ( mFrameBufferView )
         mFrameBufferView->Release();
     if ( mD3DSwapChain )
+    {
+        mSuppressResizeEvent = true;
+        mD3DSwapChain->SetFullscreenState( FALSE, CG_NULL );
         mD3DSwapChain->Release();
+        mSuppressResizeEvent = false;
+    
+    } // End if swap chain alive
     if ( mD3DDeviceContext )
         mD3DDeviceContext->Release();
     if ( mD3DDevice )
@@ -625,6 +632,165 @@ bool cgDX11RenderDriver::initialize( cgResourceManager * pResources, const cgStr
 }
 
 //-----------------------------------------------------------------------------
+//  Name : updateDisplayMode () (Virtual)
+/// <summary>
+/// Alter the display mode after initialization, and optionally switch between
+/// windowed and fullscreen mode.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgDX11RenderDriver::updateDisplayMode( const cgDisplayMode & mode, bool windowed )
+{
+    // Is this a no-op?
+    if ( mConfig.width == mode.width && mConfig.height == mode.height && mConfig.refreshRate == mode.refreshRate &&
+         mConfig.windowed == windowed )
+         return true;
+
+    // Log the changes being made.
+    cgString modeInfo = cgString::format( _T("Application selected a new %s display mode of %ix%ix%ibpp @ %ihz."), 
+                                         (windowed) ? _T("windowed") : _T("fullscreen"), mode.width, mode.height, 
+                                         mode.bitDepth, mode.refreshRate );
+    cgAppLog::write( cgAppLog::Info, _T("%s\n"), modeInfo.c_str() );
+
+    // If we're currently in windowed mode and the caller is not
+    // requesting that we switch to fullscreen, just resize the window.
+    bool success = true;
+    if ( isWindowed() && windowed )
+    {
+        // Update the device configuration
+        mConfig.width       = mode.width;
+        mConfig.height      = mode.height;
+        mConfig.refreshRate = (cgInt32)mode.refreshRate;
+        mConfig.windowed    = windowed;
+
+        // Update the size of the focus window.
+        mFocusWindow->setClientSize( cgSize( mode.width, mode.height ) );
+
+    } // End if remaining windowed
+    else
+    {
+        // Switching to windowed from fullscreen?
+        if ( windowed )
+        {
+            // Update the device configuration
+            mConfig.width       = mode.width;
+            mConfig.height      = mode.height;
+            mConfig.refreshRate = (cgInt32)mode.refreshRate;
+            mConfig.windowed    = windowed;
+
+            // Switch the focus window to the new mode and then set its size.
+            // This will automatically trigger a window resize event that will
+            // cause the device to be reset.
+            mD3DSettings.windowed = true;
+            mFocusWindow->setFullScreenMode( false );
+            mFocusWindow->setClientSize( cgSize( mode.width, mode.height ) );
+
+        } // End if windowed
+        else
+        {
+            // We're switching to or remaining in fullscreen.
+            // First make sure that window resize events are suppressed.
+            mSuppressResizeEvent = true;
+
+            // Update settings.
+            mD3DSettings.fullScreenSettings.displayMode.Width       = mode.width;
+            mD3DSettings.fullScreenSettings.displayMode.Height      = mode.height;
+            mD3DSettings.fullScreenSettings.displayMode.RefreshRate.Numerator = (UINT)mode.refreshRate;
+            mD3DSettings.fullScreenSettings.displayMode.RefreshRate.Denominator =  (mode.refreshRate == 0) ? 0 : 1;
+            mD3DSettings.windowed = false;
+
+            // Switch the focus window to the new mode and then set its size.
+            mFocusWindow->setFullScreenMode( true );
+            mFocusWindow->setClientSize( cgSize( mode.width, mode.height ) );
+
+            // Release our references to the swap chain resources.
+            mDeviceFrameBuffer.unloadResource();
+            mFrameBufferView->Release();
+            mFrameBufferView = CG_NULL;
+            mD3DDeviceContext->ClearState();    
+
+            // Resize swap chain's buffers.
+            cgUInt bufferCount = (mD3DSettings.fullScreenSettings.tripleBuffering) ? 2 : 1;
+            HRESULT hRet = mD3DSwapChain->ResizeBuffers( bufferCount, mode.width, mode.height, mD3DSettings.fullScreenSettings.displayMode.Format, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH );
+            if ( FAILED( hRet ) )
+            {
+                cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("Failed to resize swap chain after window resize. The error reported was: (0x%x) %s - %s\n"), hRet, DXGetErrorString( hRet ), DXGetErrorDescription( hRet ) );
+                mLostDevice = true;
+
+                cgToDo( "DX11", "Try again or exit?" );
+
+            } // End if failed to reset
+
+            // Switch device to full screen mode as necessary.
+            BOOL fullScreenState;
+            mD3DSwapChain->GetFullscreenState( &fullScreenState, CG_NULL );
+            if ( fullScreenState != TRUE )
+            {
+                HRESULT hRet = mD3DSwapChain->SetFullscreenState( TRUE, CG_NULL );
+                if ( FAILED( hRet ) )
+                {
+                    cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("Failed to switch display to full screen exclusive mode. The error reported was: (0x%x) %s - %s\n"), hRet, DXGetErrorString( hRet ), DXGetErrorDescription( hRet ) );
+                    mLostDevice = true;
+
+                    cgToDo( "DX11", "Try again or exit?" );
+
+                } // End if failed to reset
+            
+            } // End if !fullscreen
+
+            // Alter display mode.
+            hRet = mD3DSwapChain->ResizeTarget( &mD3DSettings.fullScreenSettings.displayMode );
+            if ( FAILED( hRet ) )
+            {
+                cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("Failed to alter display mode after window resize. The error reported was: (0x%x) %s - %s\n"), hRet, DXGetErrorString( hRet ), DXGetErrorDescription( hRet ) );
+                mLostDevice = true;
+            
+            } // End if failed
+
+            // Re-create a render target view for the primary swap chain back buffer.
+            ID3D11Texture2D * pBackBuffer = CG_NULL;
+            if ( FAILED( hRet = mD3DSwapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), (void**)&pBackBuffer ) ) )
+            {
+                cgAppLog::write( cgAppLog::Error, _T("Failed to retrieve primary swap chain back buffer on the selected device. The error reported was: (0x%x) %s - %s\n"), hRet, DXGetErrorString( hRet ), DXGetErrorDescription( hRet ) );
+                mLostDevice = true;
+            
+            } // End if failed
+            else
+            {
+                hRet = mD3DDevice->CreateRenderTargetView( pBackBuffer, CG_NULL, &mFrameBufferView );
+                pBackBuffer->Release();
+                if ( FAILED( hRet ) )
+                {
+                    cgAppLog::write( cgAppLog::Error, _T("Failed to create a render target view for primary swap chain back buffer on the selected device. The error reported was: (0x%x) %s - %s\n"), hRet, DXGetErrorString( hRet ), DXGetErrorDescription( hRet ) );
+                    mLostDevice = true;
+                
+                } // End if failed
+
+                // Recreate device frame buffer target.
+                mDeviceFrameBuffer.loadResource();
+            
+            } // End if success
+            
+            // Window resize events can continue.
+            mSuppressResizeEvent = false;
+
+            // Update the device configuration
+            mConfig.width       = mode.width;
+            mConfig.height      = mode.height;
+            mConfig.refreshRate = (cgInt32)mode.refreshRate;
+            mConfig.windowed    = windowed;
+
+            // Perform final updates and notify listeners.
+            cgRenderDriver::windowResized( mode.width, mode.height );
+
+        } // End if fullscreen
+
+    } // End if other
+
+    // Done
+    return success;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : postInit () (Protected Virtual)
 /// <summary>
 /// Complete the render driver initialization process
@@ -676,6 +842,9 @@ bool cgDX11RenderDriver::postInit()
     // Call base class implementation.
     if ( !cgRenderDriver::postInit( ) )
         return false;
+
+    // Populate remaining capabilities and display modes.
+    dynamic_cast<cgDX11RenderingCapabilities*>(mCaps)->postInit( mD3DInitialize, mD3DSettings.fullScreenSettings.adapterOrdinal, mD3DSettings.fullScreenSettings.outputOrdinal );
 
     // Create internal constant buffers
     bool bSuccess = true;
@@ -2543,6 +2712,9 @@ bool cgDX11RenderDriver::beginFrame( bool bClearTarget, cgUInt32 nTargetColor )
     // Reset the device viewport (for the clear)
     setViewport( CG_NULL );
 
+    // Reset the scissor rectangle
+    setScissorRect( CG_NULL );
+
     // Clear the frame buffer on request ready for drawing
     if ( bClearTarget )
     {
@@ -3446,14 +3618,20 @@ void cgDX11RenderDriver::windowResized( cgInt32 nWidth, cgInt32 nHeight )
     if ( !isInitialized() || !isWindowed() )
         return;
 
+    // Release our references to the swap chain resources.
+    mDeviceFrameBuffer.unloadResource();
+    mFrameBufferView->Release();
+    mFrameBufferView = CG_NULL;
+    mD3DDeviceContext->ClearState();
+
     // Update Settings
     cgDX11Settings::Settings *pSettings = mD3DSettings.getSettings();
     pSettings->displayMode.Width  = nWidth;
     pSettings->displayMode.Height = nHeight;
-    
+
     // Resize swap chain's buffers.
     cgUInt nBufferCount = (pSettings->tripleBuffering) ? 2 : 1;
-    HRESULT hRet = mD3DSwapChain->ResizeBuffers( nBufferCount, nWidth, nHeight, pSettings->displayMode.Format, 0 );
+    HRESULT hRet = mD3DSwapChain->ResizeBuffers( nBufferCount, nWidth, nHeight, pSettings->displayMode.Format, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH );
     if ( FAILED( hRet ) )
     {
         cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("Failed to resize swap chain after window resize. The error reported was: (0x%x) %s - %s\n"), hRet, DXGetErrorString( hRet ), DXGetErrorDescription( hRet ) );
@@ -3462,6 +3640,33 @@ void cgDX11RenderDriver::windowResized( cgInt32 nWidth, cgInt32 nHeight )
         cgToDo( "DX11", "Try again or exit?" );
 
     } // End if failed to reset
+    else
+    {
+        // Re-create a render target view for the primary swap chain back buffer.
+        ID3D11Texture2D * pBackBuffer = CG_NULL;
+        if ( FAILED( hRet = mD3DSwapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), (void**)&pBackBuffer ) ) )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to retrieve primary swap chain back buffer on the selected device. The error reported was: (0x%x) %s - %s\n"), hRet, DXGetErrorString( hRet ), DXGetErrorDescription( hRet ) );
+            mLostDevice = true;
+        
+        } // End if failed
+        else
+        {
+            hRet = mD3DDevice->CreateRenderTargetView( pBackBuffer, CG_NULL, &mFrameBufferView );
+            pBackBuffer->Release();
+            if ( FAILED( hRet ) )
+            {
+                cgAppLog::write( cgAppLog::Error, _T("Failed to create a render target view for primary swap chain back buffer on the selected device. The error reported was: (0x%x) %s - %s\n"), hRet, DXGetErrorString( hRet ), DXGetErrorDescription( hRet ) );
+                mLostDevice = true;
+            
+            } // End if failed
+
+            // Recreate device frame buffer target.
+            mDeviceFrameBuffer.loadResource();
+        
+        } // End if success
+
+    } // End if reset
     
     // Call base class implementation.
     cgRenderDriver::windowResized( nWidth, nHeight );
@@ -4023,6 +4228,11 @@ bool cgDX11RenderDriverInit::validateDisplayMode( const DXGI_MODE_DESC & Mode )
     if ( Mode.Width < 640 || Mode.Height < 480 || fRefreshRate <= 30 )
         return false;
 
+    // Disallow formats other than 32bpp
+    cgUInt32 nBitsPerPixel = cgBufferFormatEnum::formatBitsPerPixel(cgDX11BufferFormatEnum::formatFromNative(Mode.Format));
+    if ( nBitsPerPixel < 32 )
+        return false;
+    
     cgToDo( "Carbon General", "Ideally we need 'FindBestFullscreenDisplayMode()' to work based on the options it built, not ask DXGI to do it based on unvalidated modes." )
     // Enforce fullscreen config options?
     if ( mEnforce && !mConfig.windowed )

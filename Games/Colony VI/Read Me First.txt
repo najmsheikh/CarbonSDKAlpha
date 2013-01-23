@@ -1,0 +1,21 @@
+Controls
+--------
+
+WASD   = Move & Strafe
+Shift  = Walk
+Space  = Jump
+Ctrl   = Crouch
+LMB    = Shoot
+RMB    = Aim
+1      = Pistol
+2      = M16
+G      = Grenade
+F9     = Restart
+Escape = Exit
+
+Credits
+-------
+
+All Music by Kevin MacLeod (http://incompetech.com/)
+Licensed under Creative Commons: By Attribution 3.0
+http://creativecommons.org/licenses/by/3.0/

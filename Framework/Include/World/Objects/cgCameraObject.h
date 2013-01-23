@@ -78,6 +78,18 @@ public:
     void                        setFarClip              ( cgFloat distance );
     void                        setZoomFactor           ( cgFloat zoom );
 
+    void                        enableDepthOfField      ( bool enable );
+    void                        setForegroundExtents    ( cgFloat minimum, cgFloat maximum );
+    void                        setForegroundExtents    ( const cgRangeF & range );
+    void                        setBackgroundExtents    ( cgFloat minimum, cgFloat maximum );
+    void                        setBackgroundExtents    ( const cgRangeF & range );
+    void                        setBackgroundBlur       ( cgInt32 passCountHigh, cgInt32 pixelRadiusHigh, cgFloat distanceFactorHigh,
+                                                          cgInt32 passCountLow, cgInt32 pixelRadiusLow, cgFloat distanceFactorLow );
+    void                        setBackgroundBlur       ( const cgBlurOpDesc & highBlur, const cgBlurOpDesc & lowBlur );
+    void                        setForegroundBlur       ( cgInt32 passCountHigh, cgInt32 pixelRadiusHigh, cgFloat distanceFactorHigh,
+                                                          cgInt32 passCountLow, cgInt32 pixelRadiusLow, cgFloat distanceFactorLow );
+    void                        setForegroundBlur       ( const cgBlurOpDesc & highBlur, const cgBlurOpDesc & lowBlur );
+
     cgProjectionMode::Base      getProjectionMode       ( ) const;
     cgFloat                     getFOV                  ( ) const;
     // ToDo: 6767 -- Move to a rectangle, and/or LTRB ordering
@@ -85,6 +97,12 @@ public:
     cgFloat                     getNearClip             ( ) const;
     cgFloat                     getFarClip              ( ) const;
     cgFloat                     getZoomFactor           ( ) const;
+
+    bool                        isDepthOfFieldEnabled   ( ) const;
+    const cgRangeF            & getForegroundExtents    ( ) const;
+    const cgRangeF            & getBackgroundExtents    ( ) const;
+    void                        getBackgroundBlur       ( cgBlurOpDesc & highBlur, cgBlurOpDesc & lowBlur ) const;
+    void                        getForegroundBlur       ( cgBlurOpDesc & highBlur, cgBlurOpDesc & lowBlur ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldObject)
@@ -117,6 +135,13 @@ private:
     cgFloat                 mFarClip;               /// Far clip plane Distance
     cgVector4               mProjectionWindow;      /// Projection window (orthographic only)
     cgFloat                 mZoomFactor;            /// The zoom factor (scale) currently applied to any orthographic view.
+    cgRangeF                mForegroundExtents;     /// Minimum and maximum distances (from the camera origin) that are to be considered 'foreground'.
+    cgRangeF                mBackgroundExtents;     /// Minimum and maximum distances (from the camera origin) that are to be considered 'background'.
+    cgBlurOpDesc            mBackgroundHighBlur;    /// Settings to use when processing the high resolution blur pass for the elements within the background extents.
+    cgBlurOpDesc            mBackgroundLowBlur;     /// Settings to use when processing the low resolution blur pass for the elements within the background extents.
+    cgBlurOpDesc            mForegroundHighBlur;    /// Settings to use when processing the high resolution blur pass for the elements within the foreground extents.
+    cgBlurOpDesc            mForegroundLowBlur;     /// Settings to use when processing the low resolution blur pass for the elements within the background extents.
+    bool                    mDepthOfFieldEnabled;   /// Render control script should process depth of field for this camera.
 
 };
 
@@ -240,6 +265,46 @@ public:
     {
         ((cgCameraObject*)mReferencedObject)->setZoomFactor( zoom );
     }
+    inline void enableDepthOfField( bool enable )
+    {
+        ((cgCameraObject*)mReferencedObject)->enableDepthOfField( enable );
+    }
+    inline void setForegroundExtents( cgFloat minimum, cgFloat maximum )
+    {
+        ((cgCameraObject*)mReferencedObject)->setForegroundExtents( minimum, maximum );
+    }
+    inline void setForegroundExtents( const cgRangeF & range )
+    {
+        ((cgCameraObject*)mReferencedObject)->setForegroundExtents( range );
+    }
+    inline void setBackgroundExtents( cgFloat minimum, cgFloat maximum )
+    {
+        ((cgCameraObject*)mReferencedObject)->setBackgroundExtents( minimum, maximum );
+    }
+    inline void setBackgroundExtents( const cgRangeF & range )
+    {
+        ((cgCameraObject*)mReferencedObject)->setBackgroundExtents( range );
+    }
+    inline void setBackgroundBlur( cgInt32 passCountHigh, cgInt32 pixelRadiusHigh, cgFloat distanceFactorHigh,
+                                   cgInt32 passCountLow, cgInt32 pixelRadiusLow, cgFloat distanceFactorLow )
+    {
+        ((cgCameraObject*)mReferencedObject)->setBackgroundBlur( passCountHigh, pixelRadiusHigh, distanceFactorHigh,
+                                                                 passCountLow, pixelRadiusLow, distanceFactorLow );
+    }
+    inline void setBackgroundBlur( const cgBlurOpDesc & highBlur, const cgBlurOpDesc & lowBlur )
+    {
+        ((cgCameraObject*)mReferencedObject)->setBackgroundBlur( highBlur, lowBlur );
+    }
+    inline void setForegroundBlur( cgInt32 passCountHigh, cgInt32 pixelRadiusHigh, cgFloat distanceFactorHigh,
+                                   cgInt32 passCountLow, cgInt32 pixelRadiusLow, cgFloat distanceFactorLow )
+    {
+        ((cgCameraObject*)mReferencedObject)->setForegroundBlur( passCountHigh, pixelRadiusHigh, distanceFactorHigh,
+                                                                 passCountLow, pixelRadiusLow, distanceFactorLow );
+    }
+    inline void setForegroundBlur( const cgBlurOpDesc & highBlur, const cgBlurOpDesc & lowBlur )
+    {
+        ((cgCameraObject*)mReferencedObject)->setForegroundBlur( highBlur, lowBlur );
+    }
 
     // Object Property 'Get' Routing
     inline cgProjectionMode::Base getProjectionMode( ) const
@@ -266,6 +331,26 @@ public:
     inline cgFloat getZoomFactor( ) const
     {
         return ((cgCameraObject*)mReferencedObject)->getZoomFactor( );
+    }
+    inline bool isDepthOfFieldEnabled( ) const
+    {
+        return ((cgCameraObject*)mReferencedObject)->isDepthOfFieldEnabled( );
+    }
+    inline const cgRangeF & getForegroundExtents( ) const
+    {
+        return ((cgCameraObject*)mReferencedObject)->getForegroundExtents( );
+    }
+    inline const cgRangeF & getBackgroundExtents( ) const
+    {
+        return ((cgCameraObject*)mReferencedObject)->getBackgroundExtents( );
+    }
+    inline void getBackgroundBlur( cgBlurOpDesc & highBlur, cgBlurOpDesc & lowBlur ) const
+    {
+        ((cgCameraObject*)mReferencedObject)->getBackgroundBlur( highBlur, lowBlur );
+    }
+    inline void getForegroundBlur( cgBlurOpDesc & highBlur, cgBlurOpDesc & lowBlur ) const
+    {
+        ((cgCameraObject*)mReferencedObject)->getForegroundBlur( highBlur, lowBlur );
     }
 
 private:

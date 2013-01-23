@@ -237,7 +237,7 @@ private:
 /// additional functionality.
 /// </summary>
 //-----------------------------------------------------------------------------
-class CGE_API cgString : public std::basic_string<cgTChar>
+class cgString : public std::basic_string<cgTChar>
 {
     // Useful typedefs.
     #define MYBASE std::basic_string<cgTChar>
@@ -849,7 +849,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Static Variables
     //-------------------------------------------------------------------------
-    static const cgString Empty;
+    static CGE_API const cgString Empty;
 };
 
 #if defined(__SGI_STL_PORT) || (_MSC_VER >= 1700 )

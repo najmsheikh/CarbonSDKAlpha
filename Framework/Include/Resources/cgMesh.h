@@ -282,9 +282,11 @@ public:
     void                    setDefaultColor     ( cgUInt32 color );
     bool                    setMeshMaterial     ( const cgMaterialHandle & material );
     bool                    setFaceMaterial     ( cgUInt32 faceIndex, const cgMaterialHandle & material );
+    bool                    replaceMaterial     ( const cgMaterialHandle & oldMaterial, const cgMaterialHandle & newMaterial );
 
     // Utility functions
     bool                    scaleMeshData       ( cgFloat scale );
+    bool                    generateAdjacency   ( cgUInt32Array & adjacency );
     
     // Object access methods
     cgRenderDriver        * getRenderDriver     ( );
@@ -293,7 +295,7 @@ public:
     cgByte                * getSystemVB         ( );
     cgUInt32              * getSystemIB         ( );
     cgVertexFormat        * getVertexFormat     ( );
-    cgMaterialHandleArray & getMaterials        ( );
+    const cgMaterialHandleArray & getMaterials  ( ) const;
     cgSkinBindData        * getSkinBindData     ( );
     const BonePaletteArray& getBonePalettes     ( ) const;
     const MeshSubset      * getSubset           ( const cgMaterialHandle & material, cgUInt32 dataGroupId = 0 ) const;
@@ -455,7 +457,6 @@ protected:
     bool                    generateVertexComponents    ( bool weld );
     bool                    generateVertexNormals       ( cgUInt32 * adjacency, cgUInt32Array * remapArray = CG_NULL );
     bool                    generateVertexTangents      ( );
-    cgUInt32              * generateAdjacency           ( );
     bool                    weldVertices                ( cgUInt32Array * vertexRemap = CG_NULL );
     void                    renderMeshData              ( cgRenderDriver * driver, cgMeshDrawMode::Base mode, const cgMaterialHandle * material, cgUInt32 faceStart, cgUInt32 faceCount, cgUInt32 vertexStart, cgUInt32 vertexCount );
     bool                    restoreBuffers              ( );

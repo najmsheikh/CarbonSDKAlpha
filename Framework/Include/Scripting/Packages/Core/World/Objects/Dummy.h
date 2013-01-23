@@ -12,7 +12,7 @@ namespace Dummy
 {
     //-------------------------------------------------------------------------
     // Name : registerNodeMethods ()
-    // Desc : Register the base cgGroupNode's class methods. Can be called by
+    // Desc : Register the base cgDummyNode's class methods. Can be called by
     //        derived classes to re-register the behaviors
     //-------------------------------------------------------------------------
     template <class type>
@@ -29,7 +29,7 @@ namespace Dummy
 
     //-------------------------------------------------------------------------
     // Name : registerObjectMethods ()
-    // Desc : Register the base cgGroupObject's class methods. Can be called by
+    // Desc : Register the base cgDummyObject's class methods. Can be called by
     //        derived classes to re-register the behaviors
     //-------------------------------------------------------------------------
     template <class type>

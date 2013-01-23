@@ -83,6 +83,11 @@ public:
     virtual bool    supportsInputChannels   ( ) const;
     virtual void    setCollidable           ( bool collidable );
 
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods (Overrides DisposableScriptObject)
+    //-------------------------------------------------------------------------
+    virtual void    dispose                 ( bool disposeBase );
+
 protected:
     //-------------------------------------------------------------------------
     // Protected Methods

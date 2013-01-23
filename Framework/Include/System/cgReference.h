@@ -123,7 +123,7 @@ public:
     /// Determine if this object has been disposed.
     /// </summary>
     //-------------------------------------------------------------------------
-    inline bool isDisposed( )
+    inline bool isDisposed( ) const
     {
         return mDisposed;
     }

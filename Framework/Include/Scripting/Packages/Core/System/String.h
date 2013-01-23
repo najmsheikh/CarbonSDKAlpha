@@ -30,6 +30,10 @@ namespace String
 
             // Register the object operator overloads
             BINDSUCCESS( engine->registerObjectBehavior( "String", asBEHAVE_CONSTRUCT, "void f()", asFUNCTION(construct), asCALL_CDECL_OBJLAST) );
+            BINDSUCCESS( engine->registerObjectBehavior( "String", asBEHAVE_CONSTRUCT, "void f(int)", asFUNCTION(constructInt), asCALL_CDECL_OBJLAST) );
+            BINDSUCCESS( engine->registerObjectBehavior( "String", asBEHAVE_CONSTRUCT, "void f(uint)", asFUNCTION(constructUInt), asCALL_CDECL_OBJLAST) );
+            BINDSUCCESS( engine->registerObjectBehavior( "String", asBEHAVE_CONSTRUCT, "void f(double)", asFUNCTION(constructDouble), asCALL_CDECL_OBJLAST) );
+            BINDSUCCESS( engine->registerObjectBehavior( "String", asBEHAVE_CONSTRUCT, "void f(float)", asFUNCTION(constructFloat), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectBehavior( "String", asBEHAVE_DESTRUCT, "void f()", asFUNCTION(destruct), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectMethod( "String", "String &opAssign(const String &in)", asMETHODPR(cgString, operator=, (const cgString&), cgString&), asCALL_THISCALL) );
 	        BINDSUCCESS( engine->registerObjectMethod( "String", "String &opAddAssign(const String &in)", asMETHODPR(cgString, operator+=, (const cgString&), cgString&), asCALL_THISCALL) );
@@ -100,6 +104,66 @@ namespace String
         {
             // Use placement new to allocate which will in turn call the constructor
             new(thisPointer) cgString();
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : constructInt ()
+        /// <summary>
+        /// This is a wrapper for an overloaded cgString constructor, that
+        /// automatically populates it with the string representation of the
+        /// supplied value.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static void constructInt( cgInt32 value, cgString *thisPointer )
+        {
+            // Use placement new to allocate which will in turn call the constructor
+            new(thisPointer) cgString();
+            assignIntToString( value, *thisPointer );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : constructUInt ()
+        /// <summary>
+        /// This is a wrapper for an overloaded cgString constructor, that
+        /// automatically populates it with the string representation of the
+        /// supplied value.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static void constructUInt( cgUInt32 value, cgString *thisPointer )
+        {
+            // Use placement new to allocate which will in turn call the constructor
+            new(thisPointer) cgString();
+            assignUIntToString( value, *thisPointer );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : constructDouble ()
+        /// <summary>
+        /// This is a wrapper for an overloaded cgString constructor, that
+        /// automatically populates it with the string representation of the
+        /// supplied value.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static void constructDouble( cgDouble value, cgString *thisPointer )
+        {
+            // Use placement new to allocate which will in turn call the constructor
+            new(thisPointer) cgString();
+            assignDoubleToString( value, *thisPointer );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : constructFloat ()
+        /// <summary>
+        /// This is a wrapper for an overloaded cgString constructor, that
+        /// automatically populates it with the string representation of the
+        /// supplied value.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static void constructFloat( cgFloat value, cgString *thisPointer )
+        {
+            // Use placement new to allocate which will in turn call the constructor
+            new(thisPointer) cgString();
+            assignFloatToString( value, *thisPointer );
         }
 
         //---------------------------------------------------------------------
@@ -183,7 +247,7 @@ namespace String
             return dest;
         }
 
-        static cgString & assignIntToString( int i, cgString & dest )
+        static cgString & assignIntToString( cgInt32 i, cgString & dest )
         {
             cgStringParser stream;
             stream << i;

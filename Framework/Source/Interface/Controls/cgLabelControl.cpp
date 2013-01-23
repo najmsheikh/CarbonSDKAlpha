@@ -26,7 +26,6 @@
 //-----------------------------------------------------------------------------
 #include <Interface/Controls/cgLabelControl.h>
 #include <Interface/cgUImanager.h>
-#include <Interface/cgUIForm.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 // cgLabelControl Member Functions
@@ -45,7 +44,6 @@ cgLabelControl::cgLabelControl( ) : cgUIControl( Simple, _T("") )
     mAutoSize           = false;
     mHorizontalAlign    = cgHorizontalAlignment::Left;
     mVerticalAlign      = cgVerticalAlignment::Top;
-    mTextColor          = cgColorValue( 1, 1, 1, 1 );
     mAllowFormatCode    = false;
 
     // Set default padding
@@ -112,28 +110,18 @@ bool cgLabelControl::getAllowFormatCode( ) const
 }
 
 //-----------------------------------------------------------------------------
-//  Name : setTextColor ()
+//  Name : setTextColor () (Virtual)
 /// <summary>
 /// Set the default color of any text rendered for this control.
 /// </summary>
 //-----------------------------------------------------------------------------
 void cgLabelControl::setTextColor( const cgColorValue & Color )
 {
-    mTextColor = Color;
+    // Call base class implementation first.
+    cgUIControl::setTextColor( Color );
 
     // Recompute metrics (contains colors per character)
     computeTextMetrics();
-}
-
-//-----------------------------------------------------------------------------
-//  Name : getTextColor ()
-/// <summary>
-/// Retreive the default color of any text rendered for this control.
-/// </summary>
-//-----------------------------------------------------------------------------
-const cgColorValue & cgLabelControl::getTextColor( ) const
-{
-    return mTextColor;
 }
 
 //-----------------------------------------------------------------------------
@@ -290,10 +278,11 @@ void cgLabelControl::computeTextMetrics()
     } // End if not autosizing
 
     // Select the correct font.
-    cgUIManager  * pManager    = mRootForm->getUIManager();
-    cgTextEngine * pTextEngine = pManager->getTextEngine();
-    pTextEngine->setColor( mTextColor );
-    pManager->selectFont( getFont() );
+    cgTextEngine * pTextEngine = mUIManager->getTextEngine();
+    pTextEngine->setKerning( 0 );
+    pTextEngine->setLineSpacing( 0 );
+    pTextEngine->setColor( mControlTextColor );
+    mUIManager->selectFont( getFont() );
 
     // Compute metrics for this text.
     pTextEngine->computeTextMetrics( getClientArea( cgControlCoordinateSpace::ClientRelative ), 
@@ -339,8 +328,7 @@ void cgLabelControl::renderSecondary( )
         return;
 
     // Get access to required systems
-    cgUIManager  * pManager = mRootForm->getUIManager();
-    cgTextEngine * pEngine  = pManager->getTextEngine();
+    cgTextEngine * pEngine  = mUIManager->getTextEngine();
     
     // Draw the label text based on computed metrics
     cgRect  rcText   = getClientArea( cgControlCoordinateSpace::ScreenRelative );

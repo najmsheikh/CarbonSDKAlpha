@@ -239,9 +239,11 @@ namespace cgScriptInterop
             //-------------------------------------------------------------------------
             // Public Static Methods
             //-------------------------------------------------------------------------
-            static ScriptArray    * ScriptArrayFactory  ( asIObjectType * objectType );
-            static ScriptArray    * ScriptArrayFactory  ( asIObjectType * objectType, cgUInt32 length );
-            static void             Register            ( asIScriptEngine * engine );
+            static ScriptArray    * factory         ( asIObjectType * objectType );
+            static ScriptArray    * factory         ( asIObjectType * objectType, cgUInt32 length );
+            static ScriptArray    * listFactory     ( asIObjectType * objectType, cgUInt32 length );
+            static void             bind            ( asIScriptEngine * engine );
+            static bool             templateCallback(asIObjectType *ot, bool &dontGarbageCollect);
 
             //-------------------------------------------------------------------------
             // Public Operators
@@ -261,20 +263,27 @@ namespace cgScriptInterop
             //-------------------------------------------------------------------------
             // Protected Methods
             //-------------------------------------------------------------------------
-            void            createBuffer(ArrayBuffer **bufferVariable, cgUInt32 elements );
-            void            deleteBuffer(ArrayBuffer *buffer);
-            void            copyBuffer  (ArrayBuffer *destination, ArrayBuffer *source);
-            void            construct   (ArrayBuffer *buffer, cgUInt32 start, cgUInt32 end );
-            void            destruct    (ArrayBuffer *buffer, cgUInt32 start, cgUInt32 end );
+            void            createBuffer        (ArrayBuffer **bufferVariable, cgUInt32 elements );
+            void            deleteBuffer        (ArrayBuffer *buffer);
+            void            copyBuffer          (ArrayBuffer *destination, ArrayBuffer *source);
+            void            construct           (ArrayBuffer *buffer, cgUInt32 start, cgUInt32 end );
+            void            destruct            (ArrayBuffer *buffer, cgUInt32 start, cgUInt32 end );
+            bool            getGCFlag           ( );
+            void            setGCFlag           ( );
+            cgInt           getRefCount         ( );
+            void            releaseAllHandles   ( asIScriptEngine * engine );
+            void            enumReferences      ( asIScriptEngine *engine );
 
             //-------------------------------------------------------------------------
             // Protected Variables
             //-------------------------------------------------------------------------
-            cgInt32         mRefCount;
+            cgInt           mRefCount;
+            cgInt           mSubTypeId;
             asIObjectType * mObjectType;
             ArrayBuffer   * mBuffer;
             bool            mIsArrayOfHandles;
             cgInt32         mElementSize;
+            bool            mGCFlag;
         };
 
     }; // End Namespace : cgScriptInterop::Types

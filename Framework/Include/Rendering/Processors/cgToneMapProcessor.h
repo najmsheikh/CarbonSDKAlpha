@@ -56,6 +56,7 @@ public:
         Filmic                 = 2,
 		FilmicHable            = 3,
         Exponential            = 4,
+		ExponentialWhitePoint  = 5
     };
 
     //-------------------------------------------------------------------------

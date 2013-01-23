@@ -33,6 +33,9 @@ namespace Reference
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void deleteReference( )", asMETHODPR(type, deleteReference,( ), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void onReferenceAdded( Reference@+, int, bool )", asMETHODPR(type, onReferenceAdded,( cgReference*, cgInt32, bool ), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void onReferenceRemoved( Reference@+, int, bool )", asMETHODPR(type, onReferenceRemoved,( cgReference*, cgInt32, bool ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool isDisposed() const", asMETHODPR(type, isDisposed,( ) const, bool ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool isDisposing() const", asMETHODPR(type, isDisposing,( ) const, bool ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool isInternalReference() const", asMETHODPR(type, isInternalReference,( ) const, bool ), asCALL_THISCALL) );
 
         // Type queries
         BINDSUCCESS( engine->registerObjectMethod( typeName, "const UID& getReferenceType( ) const", asMETHODPR(type, getReferenceType,() const, const cgUID& ), asCALL_THISCALL) );        

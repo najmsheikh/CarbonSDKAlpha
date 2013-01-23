@@ -156,7 +156,7 @@ cgInt32 cgResource::removeReference( cgReference * pHolder, bool bDisconnecting 
     // manager as the remaining reference.
     if ( nRefCount == 1 && mManager && !(mFlags & cgResourceFlags::AlwaysResident)  )
     {
-        if ( mDestroyDelay > 0 )
+        if ( mDestroyDelay > 0 || !mManager->isDestructionEnabled() )
         {
             // Set up for delayed destruction
             mLastReferenced = mTimer->getTime();

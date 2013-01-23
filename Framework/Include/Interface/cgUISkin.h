@@ -73,16 +73,33 @@ public:
 
     }; // End Struct TextBoxConfig
 
+    // Settings for the listbox control type
+    struct ListBoxConfig
+    {
+        cgColorValue    selectionColor;     // The color used to render the selection rectangle.
+
+        // Reset method to allow for post-load validation
+        void reset()
+        {
+            // Clear vars
+            selectionColor  = cgColorValue( 0.019f, 0.566f, 0.945f, 1.0f );
+        
+        } // End Method reset
+
+    }; // End Struct ListBoxConfig
+
     // Contains the various configuration settings for control types
     struct ControlConfig
     {
-        TextBoxConfig   textBox;    // Configuration options for textbox
+        TextBoxConfig   textBox;    // Configuration options for text box control.
+        ListBoxConfig   listBox;    // Configuration options for list box control.
         
         // Reset method to allow for post-load validation
         void reset()
         {
             // Clear vars
             textBox.reset();
+            listBox.reset();
         
         } // End Method reset
 

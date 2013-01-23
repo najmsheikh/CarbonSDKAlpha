@@ -68,6 +68,7 @@ public:
     //-------------------------------------------------------------------------
     virtual void            renderSecondary     ( );
     virtual void            setControlText      ( const cgString & text );
+    virtual void            setTextColor        ( const cgColorValue & color );
     virtual void            onInitControl       ( );
     virtual void            onSize              ( cgInt32 width, cgInt32 height );
     virtual bool            onMouseMove         ( const cgPoint & position, const cgPointF & offset );
@@ -90,8 +91,6 @@ public:
     //-------------------------------------------------------------------------
     bool                    setImage            ( const cgString & referenceName );
     const cgString        & getImage            ( ) const;
-    void                    setTextColor        ( const cgColorValue & color );
-    const cgColorValue    & getTextColor        ( ) const;
 
 protected:
     //-------------------------------------------------------------------------

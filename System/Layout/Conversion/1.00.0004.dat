@@ -1,0 +1,170 @@
+bool upgrade( World @ world, uint sourceVersion, uint destinationVersion )
+{
+    if ( sourceVersion == 0x1000003 ) // v1.00.0003
+        return upgrade_1000003_to_1000004( world );
+
+    // Unsupported source version
+    return false;
+}
+
+bool upgrade_1000003_to_1000004( World @ world )
+{
+    String sql;
+
+    /*// During upgrade to Newton core300, convex hull mesh serialization
+    // layout has changed. Old versions must be removed from the dataset.
+    if ( world.tableExists( "[Objects::ParticleEmitter::Layers]" ) )
+    {
+        if ( !world.executeQuery( "UPDATE [ObjectSubElements::HullCollisionShape] SET HullData=NULL WHERE 1", false ) )
+            return false;
+    
+    } // End if has hull shapes*/
+
+    // Three new particle emitter properties have been added. ApplyGravity, VelocityAligned and VelocityScaleStrength.
+    if ( world.tableExists( "Objects::ParticleEmitter::Layers" ) )
+    {
+        // Copy existing layer table data into temporary table and drop the original.
+        sql  = "CREATE TEMPORARY TABLE [TEMP_Objects::ParticleEmitter::Layers] AS SELECT * FROM [Objects::ParticleEmitter::Layers];";
+        sql += "DROP TABLE [Objects::ParticleEmitter::Layers];";
+
+        // Create the updated table.
+        sql += "CREATE TABLE [Objects::ParticleEmitter::Layers] (";
+        sql += "  [LayerId] integer NOT NULL PRIMARY KEY, ";
+        sql += "  [EmitterId] integer, ";
+        sql += "  [LayerOrder] smallint DEFAULT 0, ";
+        sql += "  [Type] smallint DEFAULT 0, ";
+        sql += "  [ScriptFile] path, ";
+        sql += "  [InnerCone] real, ";
+        sql += "  [OuterCone] real, ";
+        sql += "  [EmissionRadius] real, ";
+        sql += "  [DeadZoneRadius] real, ";
+        sql += "  [MaxSimultaneousParticles] INTEGER, ";
+        sql += "  [InitialParticles] integer, ";
+        sql += "  [MaxFiredParticles] integer, ";
+        sql += "  [BirthFrequency] real, ";
+        sql += "  [ParticleTexture] path, ";
+        sql += "  [ParticleShader] path, ";
+        sql += "  [SortedRender] tinyint DEFAULT 0, ";
+        sql += "  [BlendMethod] smallint DEFAULT 0, ";
+        sql += "  [FixedEmitDirX] real DEFAULT 0, ";
+        sql += "  [FixedEmitDirY] real DEFAULT 0, ";
+        sql += "  [FixedEmitDirZ] real DEFAULT 0, ";
+        sql += "  [RandomizeRotation] tinyint, ";
+        sql += "  [FireAmount] integer, ";
+        sql += "  [FireDelay] real, ";
+        sql += "  [FireDelayOffset] real, ";
+        sql += "  [BaseSizeX] real, ";
+        sql += "  [BaseSizeY] real, ";
+        sql += "  [MinLifetime] real, ";
+        sql += "  [MaxLifetime] real, ";
+        sql += "  [MinSpeed] real, ";
+        sql += "  [MaxSpeed] real, ";
+        sql += "  [MinMass] real, ";
+        sql += "  [MaxMass] real, ";
+        sql += "  [AirResistance] REAL, ";
+        sql += "  [MinAngularSpeed] real, ";
+        sql += "  [MaxAngularSpeed] real, ";
+        sql += "  [MinBaseScale] real, ";
+        sql += "  [MaxBaseScale] real,";
+        sql += "  [HDRScalar] real DEFAULT 1,";
+        sql += "  [ScaleXCurveType] SMALLINT DEFAULT 3, ";
+        sql += "  [ScaleXCurveSize] SMALLINT DEFAULT 0, ";
+        sql += "  [ScaleXCurve] BLOB, ";
+        sql += "  [ScaleYCurveType] SMALLINT DEFAULT 3, ";
+        sql += "  [ScaleYCurveSize] SMALLINT DEFAULT 0, ";
+        sql += "  [ScaleYCurve] BLOB, ";
+        sql += "  [ColorRCurveType] SMALLINT DEFAULT 3, ";
+        sql += "  [ColorRCurveSize] SMALLINT DEFAULT 0, ";
+        sql += "  [ColorRCurve] BLOB, ";
+        sql += "  [ColorGCurveType] SMALLINT DEFAULT 3, ";
+        sql += "  [ColorGCurveSize] SMALLINT DEFAULT 0, ";
+        sql += "  [ColorGCurve] BLOB, ";
+        sql += "  [ColorBCurveType] SMALLINT DEFAULT 3, ";
+        sql += "  [ColorBCurveSize] SMALLINT DEFAULT 0, ";
+        sql += "  [ColorBCurve] BLOB, ";
+        sql += "  [ColorACurveType] SMALLINT DEFAULT 3, ";
+        sql += "  [ColorACurveSize] SMALLINT DEFAULT 0, ";
+        sql += "  [ColorACurve] BLOB,";
+        sql += "  [EmissionEnabled] tinyint DEFAULT 1, ";
+        sql += "  [ApplyGravity] tinyint(1) DEFAULT 0, ";
+        sql += "  [VelocityAligned] tinyint(1) DEFAULT 0, ";
+        sql += "  [VelocityScaleStrength] REAL DEFAULT 0);";
+        sql += "CREATE INDEX [Objects::ParticleEmitter::Layers_OrderedEmitterLayer] ON [Objects::ParticleEmitter::Layers] ([EmitterId], [LayerOrder]);";
+
+        // Copy data over to new table.
+        sql += "INSERT INTO [Objects::ParticleEmitter::Layers] SELECT";
+        sql += "  [LayerId],";
+        sql += "  [EmitterId],";
+        sql += "  [LayerOrder],";
+        sql += "  [Type],";
+        sql += "  [ScriptFile],";
+        sql += "  [InnerCone],";
+        sql += "  [OuterCone],";
+        sql += "  [EmissionRadius],";
+        sql += "  [DeadZoneRadius],";
+        sql += "  [MaxSimultaneousParticles],";
+        sql += "  [InitialParticles],";
+        sql += "  [MaxFiredParticles],";
+        sql += "  [BirthFrequency],";
+        sql += "  [ParticleTexture],";
+        sql += "  [ParticleShader],";
+        sql += "  [SortedRender],";
+        sql += "  [BlendMethod],";
+        sql += "  [FixedEmitDirX],";
+        sql += "  [FixedEmitDirY],";
+        sql += "  [FixedEmitDirZ],";
+        sql += "  [RandomizeRotation],";
+        sql += "  [FireAmount],";
+        sql += "  [FireDelay],";
+        sql += "  [FireDelayOffset],";
+        sql += "  [BaseSizeX],";
+        sql += "  [BaseSizeY],";
+        sql += "  [MinLifetime],";
+        sql += "  [MaxLifetime],";
+        sql += "  [MinSpeed],";
+        sql += "  [MaxSpeed],";
+        sql += "  [MinMass],";
+        sql += "  [MaxMass],";
+        sql += "  [AirResistance],";
+        sql += "  [MinAngularSpeed],";
+        sql += "  [MaxAngularSpeed],";
+        sql += "  [MinBaseScale],";
+        sql += "  [MaxBaseScale],";
+        sql += "  [HDRScalar],";
+        sql += "  [ScaleXCurveType],";
+        sql += "  [ScaleXCurveSize],";
+        sql += "  [ScaleXCurve],";
+        sql += "  [ScaleYCurveType],";
+        sql += "  [ScaleYCurveSize],";
+        sql += "  [ScaleYCurve],";
+        sql += "  [ColorRCurveType],";
+        sql += "  [ColorRCurveSize],";
+        sql += "  [ColorRCurve],";
+        sql += "  [ColorGCurveType],";
+        sql += "  [ColorGCurveSize],";
+        sql += "  [ColorGCurve],";
+        sql += "  [ColorBCurveType],";
+        sql += "  [ColorBCurveSize],";
+        sql += "  [ColorBCurve],";
+        sql += "  [ColorACurveType],";
+        sql += "  [ColorACurveSize],";
+        sql += "  [ColorACurve],";
+        sql += "  [EmissionEnabled],";
+        sql += "  0, 0, 0 FROM [TEMP_Objects::ParticleEmitter::Layers];";
+
+        // Drop the temporary table.
+        sql += "DROP TABLE [TEMP_Objects::ParticleEmitter::Layers];";
+
+        // Execute the query
+        if ( !world.executeQuery( sql, false ) )
+            return false;
+    
+    } // End if has particle layers
+
+    // Update version number to 1.00.0004
+    if ( !world.executeQuery( "UPDATE [Configuration] SET Version=1,Subversion=0,Revision=4 WHERE Type='Primary'", false ) )
+        return false;
+
+    // Success!
+    return true;
+}

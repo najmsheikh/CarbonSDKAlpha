@@ -34,6 +34,8 @@
 //-----------------------------------------------------------------------------
 class cgBillboard2D;
 class cgUIForm;
+class cgUIManager;
+class cgUIControlLayer;
 class cgScriptObject;
 class cgScript;
 
@@ -67,6 +69,14 @@ public:
     {
         Simple = 0,
         Complex
+    };
+
+    enum ControlRenderMode
+    {
+        RenderMode_Normal      = 0,
+        RenderMode_Hover       = 1,
+        RenderMode_Pressed     = 2,
+        RenderMode_Disabled    = 3
     };
 
     // UIEventArgs base structure
@@ -196,6 +206,8 @@ public:
     // Public Methods
     //-------------------------------------------------------------------------
     cgUIForm          * getRootForm         ( ) const { return mRootForm; }
+    cgUIControlLayer  * getControlLayer     ( ) const { return mUILayer; }
+    cgUIManager       * getUIManager        ( ) const { return mUIManager; }
     const cgString    & getName             ( ) const { return mControlName; }
     void                setName             ( const cgString & name ) { mControlName = name; }
     bool                addChildControl     ( cgUIControl * child );
@@ -220,12 +232,16 @@ public:
     const cgSize      & getMaximumSize      ( ) const { return mMaximumSize; }
     const cgPoint     & getPosition         ( ) const { return mPosition; }
     const cgRect      & getPadding          ( ) const { return mPadding; }
+    bool                canGainFocus        ( ) const;
+    bool                canGainFocus        ( bool includeParentState ) const;
+    void                setCanGainFocus     ( bool enabled );
     bool                isVisible           ( ) const;
     bool                isVisible           ( bool includeParentState ) const;
     bool                isEnabled           ( ) const;
     bool                isEnabled           ( bool includeParentState ) const;
     void                setEnabled          ( bool enabled );
     cgString            getFont             ( ) const;
+    const cgColorValue& getTextColor        ( ) const;
     void                setBackgroundOpacity( cgFloat opacity );
     cgFloat             getBackgroundOpacity( ) const;
     void                setDockMode         ( cgDockMode::Base mode );
@@ -239,14 +255,18 @@ public:
     void                raiseEvent          ( cgUInt32 message, UIEventArgs * data );
 
     // System methods.
-    void                setManagementData   ( cgUIControl * parent, cgUIForm * rootForm );
-    void                setParentEnabled    ( bool enabled );
+    void                setManagementData       ( cgUIManager * manager, cgUIControlLayer * layer, cgUIControl * parent, cgUIForm * rootForm );
+    void                setParentEnabled        ( bool enabled );
+    void                setParentCanGainFocus   ( bool enabled );
+    void                setRenderMode           ( ControlRenderMode mode );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
+    virtual bool        build               ( );
     virtual void        setControlText      ( const cgString & text ) { mControlText = text; }
     virtual void        setFont             ( const cgString & name );
+    virtual void        setTextColor        ( const cgColorValue & color );
     virtual void        setMinimumSize      ( const cgSize & size );
     virtual void        setMinimumSize      ( cgInt32 width, cgInt32 height );
     virtual void        setMaximumSize      ( const cgSize & size );
@@ -269,7 +289,11 @@ public:
     virtual bool        onKeyDown           ( cgInt32 keyCode, cgUInt32 modifiers );
     virtual bool        onKeyUp             ( cgInt32 keyCode, cgUInt32 modifiers );
     virtual bool        onKeyPressed        ( cgInt32 keyCode, cgUInt32 modifiers );
+    virtual void        onLostFocus         ( );
+    virtual void        onGainFocus         ( );
     virtual void        onSize              ( cgInt32 width, cgInt32 height );
+    virtual void        onScreenLayoutChange( );
+    virtual void        onParentAttach      ( cgUIControl * parent );
 
 protected:
     //-------------------------------------------------------------------------
@@ -300,14 +324,6 @@ protected:
     {
         State_Active   = 0,
         State_Inactive = 1
-    };
-
-    enum ControlRenderMode
-    {
-        RenderMode_Normal      = 0,
-        RenderMode_Hover       = 1,
-        RenderMode_Pressed     = 2,
-        RenderMode_Disabled    = 3
     };
 
     // Contains the frame and group indices that should be set for this control state
@@ -377,11 +393,6 @@ protected:
     CGE_MAP_DECLARE (cgUInt32, EventHandler, EventHandlerMap) // ToDo: unordered_map?
         
     //-------------------------------------------------------------------------
-    // Protected Virtual Methods
-    //-------------------------------------------------------------------------
-    virtual bool                build                   ( );
-
-    //-------------------------------------------------------------------------
     // Protected Methods
     //-------------------------------------------------------------------------
     bool                        buildComplex            ( );
@@ -389,7 +400,6 @@ protected:
     bool                        hasControlElement       ( ControlElements element ) const;
     cgUIControl               * getControlElement       ( ControlElements element );
     const cgUIControl         * getControlElement       ( ControlElements element ) const;
-    void                        setRenderMode           ( ControlRenderMode mode );
     void                        constructRegions        ( RenderFrameDesc & desc, const cgString & elementName );
     const RenderFrameDesc     * getCurrentRenderFrame   ( ) const;
     cgUIHandleType::Base        pointOverHandle         ( const cgPoint & screenPoint ) const;
@@ -399,6 +409,8 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
+    cgUIManager       * mUIManager;             // The UI manager responsible for this control.
+    cgUIControlLayer  * mUILayer;               // The interface layer in which this control exists.
     cgUIForm          * mRootForm;              // The root form of which this control is ultimately a child.
     cgUIControl       * mParent;                // The parent of this control.
     cgDockMode::Base    mDockMode;              // Automatic control docking mode. Used to aid in the automatic layout of controls.
@@ -422,9 +434,12 @@ protected:
     bool                mParentVisible;         // Is the parent of this control visible?
     bool                mEnabled;               // Is the control enabled?
     bool                mParentEnabled;         // Is the parent of this control enabled?
+    bool                mCanGainFocus;          // Can this control gain focus right now?
+    bool                mParentCanGainFocus;    // Can the parent of this control gain focus right now?
     cgString            mFontName;              // Font to use for rendering this control
     bool                mBuilt;                 // Has the control been built yet?
     cgFloat             mBackgroundOpacity;     // Opacity level for the control background.
+    cgColorValue        mControlTextColor;      // Set the default color of any text rendered for this control.
 };
 
 #endif // !_CGE_CGUICONTROL_H_

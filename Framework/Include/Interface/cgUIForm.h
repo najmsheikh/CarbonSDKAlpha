@@ -32,8 +32,6 @@
 //-----------------------------------------------------------------------------
 // Forward Declarations
 //-----------------------------------------------------------------------------
-class cgUIControlLayer;
-class cgUIManager;
 class cgLabelControl;
 class cgButtonControl;
 
@@ -81,14 +79,13 @@ public:
     //-------------------------------------------------------------------------
     bool                        loadForm                ( cgInputStream formScriptStream, const cgString & name );
     bool                        createForm              ( const cgString & name );
-    cgUIManager               * getUIManager            ( ) const { return mUIManager; }
-    cgUIControlLayer          * getControlLayer         ( ) const { return mUILayer; }
     cgScript                  * getScript               ( ) const { return mFormScriptRes; }
     cgScriptObject            * getScriptObject         ( ) const { return mFormScriptObject; }
     void                        setAcceptButton         ( cgButtonControl * button );
     cgButtonControl           * getAcceptButton         ( ) const;
     void                        setCancelButton         ( cgButtonControl * button );
     cgButtonControl           * getCancelButton         ( ) const;
+    void                        close                   ( );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods
@@ -126,8 +123,6 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    cgUIManager       * mUIManager;         // The interface manager responsible for this form.
-    cgUIControlLayer  * mUILayer;           // The interface layer in which this control exists
     cgLabelControl    * mCaption;           // The label control that will render the caption text.
     cgButtonControl   * mCloseButton;       // Form close button that appears in the form caption bar.
     cgButtonControl   * mMinimizeButton;    // Form minimize button that appears in the form caption bar.
@@ -140,6 +135,7 @@ protected:
     cgUIFormProperties  mProperties;        // The properties for the form, set up by the script.
     cgButtonControl   * mAcceptButton;      // Default 'OK' / 'Accept' button (triggered on enter).
     cgButtonControl   * mCancelButton;      // Default 'Cancel' button (triggered on escape).
+    bool                mClosePending;      // Records a close operation that was delayed due to an invoke.
 
 private:
     //-------------------------------------------------------------------------

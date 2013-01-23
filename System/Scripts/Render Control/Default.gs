@@ -508,7 +508,7 @@ class StandardRenderControl : IScriptedRenderControl
 			if ( mHDRDepthOfField && mDrawDepthOfField )
 			{
 				profiler.beginProcess( "Depth of Field (HDR)" );
-				depthOfField( );
+				depthOfField( activeCamera );
 				profiler.endProcess( );
 			}
 			
@@ -516,7 +516,7 @@ class StandardRenderControl : IScriptedRenderControl
 			if ( mHDRMotionBlur && mDrawMotionBlur )
 			{
 				profiler.beginProcess( "Motion Blur (HDR)" );
-				motionBlur( activeCamera, frameTime );
+				motionBlur( activeCamera, renderDriver, frameTime );
 				profiler.endProcess( );
 			}
 
@@ -546,7 +546,7 @@ class StandardRenderControl : IScriptedRenderControl
 		if ( !mHDRDepthOfField && mDrawDepthOfField )
 		{
 			profiler.beginProcess( "Depth of Field (LDR)" );
-			depthOfField( );
+			depthOfField( activeCamera );
 			profiler.endProcess( );
 		}
 		
@@ -554,7 +554,7 @@ class StandardRenderControl : IScriptedRenderControl
 		if ( !mHDRMotionBlur && mDrawMotionBlur )
 		{
 			profiler.beginProcess( "Motion Blur (LDR)" );
-			motionBlur( activeCamera, frameTime );
+			motionBlur( activeCamera, renderDriver, frameTime );
 			profiler.endProcess( );
 		}
 	}
@@ -576,8 +576,11 @@ class StandardRenderControl : IScriptedRenderControl
 		// Is the depth-stencil buffer readable?
 		mDepthStencilReads = activeView.readableDepthStencilBuffer();
 
-		// We can't support full specular color without depth reading
-		mFullSpecularColor = mDepthStencilReads && mFullSpecularColor;
+		// If we can't do depth-stencil reads, we need to do a separate depth pass
+		mDrawDepth = !mDepthStencilReads;
+
+		// We can only support full specular color if we do not require surface normals. This has deep implications however (i.e., limited volume decals, etc.).
+		mFullSpecularColor = mFullSpecularColor && (mSurfaceNormalType == NormalType::NoNormal);
 
         // Retrieve the primary frame buffer
         mFrameBuffer = activeView.getViewBuffer();
@@ -586,10 +589,9 @@ class StandardRenderControl : IScriptedRenderControl
         BufferFormat bufferFormat = BufferFormat::B8G8R8A8;
         
         // Retrieve our geometry buffers
-        mGBuffer0 = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "GBuffer0" );    // Normal
-        mGBuffer1 = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "GBuffer1" );    // Diffuse
-        if ( mFullSpecularColor )
-			mGBuffer2 = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "GBuffer2" );    // Specular
+        mGBuffer0 = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "GBuffer0" );    
+        mGBuffer1 = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "GBuffer1" );    
+		mGBuffer2 = activeView.getRenderSurface( bufferFormat, 1.0, 1.0, "GBuffer2" );    
 		
 		// Create the depth buffer (ToDo: GetBestFormat -- One channel, floating point, full precision | half precision?)
 		if ( mDepthType == DepthType::LinearZ_Packed || mDepthType == DepthType::LinearDistance_Packed ) 
@@ -715,8 +717,8 @@ class StandardRenderControl : IScriptedRenderControl
 		mApplyShadows      = true;
 
 		// Setup the depth and normal buffer types
-		mSurfaceNormalType = NormalType::NoNormal; //mViewSpaceLighting ? NormalType::NormalView : NormalType::NormalWorld; 
-		mDepthType = mViewSpaceLighting ? DepthType::LinearZ_Packed : DepthType::LinearDistance_Packed; 
+		mDepthType         = mViewSpaceLighting ? DepthType::LinearZ_Packed : DepthType::LinearDistance_Packed; 
+		mSurfaceNormalType = mViewSpaceLighting ? NormalType::NormalView : NormalType::NormalWorld; //NormalType::NoNormal 
 
 		// Are we using sandbox material rendering mode?
 		bool isSandboxMaterial = (mContext == SceneRenderContext::SandboxMaterial);
@@ -728,21 +730,29 @@ class StandardRenderControl : IScriptedRenderControl
 		else
             mClearColor = ColorValue(0x00000000);
 
+		// Start by disabling everything by default
+		mDrawGlare          = false;
+		mDrawAnamorphic     = false;
+		mDrawDepthOfField   = false;
+		mDrawSSAO           = false;
+		mDrawMotionBlur     = false;
+		mDrawILR            = false;
+		mDrawHDR            = false;
+		mHDRGlare           = false;
+		mHDRDepthOfField    = false;
+		mHDRMotionBlur      = false;
+		mHDRILR             = false;
+		mAntialiasing       = AntialiasingMethod::None;
+
 		// Material preview mode is non-interlaced LDR only with no shadows and no environment
 		// effects. It uses full g-buffers to ensure all material features are visualized.
 		if ( isSandboxMaterial )
 		{
-			mDrawHDR            = false;
 			mDrawSky            = false;
 			mDrawFog            = false;
-			mDrawGlare          = false;
-			mDrawMotionBlur     = false;
-			mDrawDepthOfField   = false;
-			mDrawSSAO           = false;
-			mDrawILR            = false;
 			mApplyShadows       = false;
-			mAntialiasing       = AntialiasingMethod::None;
-
+            mFullSpecularColor  = true;
+			
         } // End if material preview mode
 		else
 		{
@@ -765,40 +775,13 @@ class StandardRenderControl : IScriptedRenderControl
 			}
 
 			// Setup antialiasing quality
-			if ( mAntiAliasingQuality == AntiAliasingQuality::Poor )
-			{
-				mAntialiasing = AntialiasingMethod::None;
-			}
-			else if ( mAntiAliasingQuality <= AntiAliasingQuality::Low )
-			{
+			if( mAntiAliasingQuality <= AntiAliasingQuality::Medium )
 				mAntialiasing = AntialiasingMethod::FXAA;
-			}
-			else if( mAntiAliasingQuality == AntiAliasingQuality::Medium )
-			{
-				mAntialiasing = AntialiasingMethod::FXAA;
-			}
 			else
-			{
-				//mAntialiasing = AntialiasingMethod::FXAA_T2x;
-                mAntialiasing = AntialiasingMethod::FXAA;
-			}
-
+				mAntialiasing = AntialiasingMethod::FXAA;
+			
 			// Setup post-processing quality
-			if ( mPostProcessQuality == PostProcessQuality::Poor )
-			{
-				mDrawGlare          = false;
-				mDrawAnamorphic     = false;
-				mDrawDepthOfField   = false;
-				mDrawSSAO           = false;
-				mDrawMotionBlur     = false;
-				mDrawILR            = false;
-				
-				mHDRGlare           = mDrawHDR && false;
-				mHDRDepthOfField    = mDrawHDR && false;
-				mHDRMotionBlur      = mDrawHDR && false;
-				mHDRILR             = mDrawILR && false;
-			}
-			else if ( mPostProcessQuality == PostProcessQuality::Low )
+			if ( mPostProcessQuality == PostProcessQuality::Low )
 			{
 				mDrawGlare          = true;
 				mDrawAnamorphic     = false;
@@ -821,30 +804,30 @@ class StandardRenderControl : IScriptedRenderControl
 				mDrawSSAO			   = false;
 				mDrawILR               = false;
 				
-			    mHDRGlare              = mDrawHDR && false;
+			    mHDRGlare              = mDrawHDR && true;
 				mHDRDepthOfField       = mDrawHDR && false;
 				mHDRMotionBlur         = mDrawHDR && false;				
-				mHDRILR                = mDrawILR && false;
+				mHDRILR                = mDrawHDR && false;
 			}
 			else if( mPostProcessQuality == PostProcessQuality::High )
 			{
 				mDrawGlare             = true;
 				mDrawAnamorphic        = true;
-				mDrawDepthOfField      = false;
+				mDrawILR               = true;
+				mDrawDepthOfField      = true;
 				mDrawMotionBlur        = true;
 				mDrawSSAO			   = true;
-				mDrawILR               = true;
 				
 			    mHDRGlare              = mDrawHDR && true;
 				mHDRDepthOfField       = mDrawHDR && true;
 				mHDRMotionBlur         = mDrawHDR && true;				
-				mHDRILR                = mDrawILR && false;
+				mHDRILR                = mDrawHDR && false;
 			}
-			else
+			else if( mPostProcessQuality == PostProcessQuality::Ultra )
 			{
 				mDrawGlare             = true;
 				mDrawAnamorphic        = true;
-				mDrawDepthOfField      = false;
+				mDrawDepthOfField      = true;
 				mDrawMotionBlur        = true;
 				mDrawSSAO			   = true;
 				mDrawILR               = true;
@@ -852,7 +835,7 @@ class StandardRenderControl : IScriptedRenderControl
 			    mHDRGlare              = mDrawHDR && true;
 				mHDRDepthOfField       = mDrawHDR && true;
 				mHDRMotionBlur         = mDrawHDR && true;				
-				mHDRILR                = mDrawILR && true;
+				mHDRILR                = mDrawHDR && true;
 			}
 
             // Disable features not supported whilst rendering in editor.
@@ -883,6 +866,8 @@ class StandardRenderControl : IScriptedRenderControl
 	// Name : depth()
 	// Desc : Render the entire scene in order to establish per-pixel depth-stencil
 	//        information. 
+	// Note: If depth-stencil reads are supported, we can skip this pass. Otherwise
+	//       we'll use it to fill the depth texture.
 	//-----------------------------------------------------------------------------
 	void depth( CameraNode @ activeCamera, RenderDriver @ renderDriver )
 	{
@@ -897,11 +882,8 @@ class StandardRenderControl : IScriptedRenderControl
 		if ( renderDriver.beginTargetRender( targets, mDepthStencilBuffer ) )
 		{
 			// Clear the buffer(s)
-			renderDriver.clear( ClearFlags::Depth | ClearFlags::Stencil, ColorValue(0xFFFFFFFF), 1, 0 );
+			renderDriver.clear( ClearFlags::Target | ClearFlags::Depth | ClearFlags::Stencil, ColorValue(0xFFFFFFFF), 1, 0 );
 
-			// Set the depth type to none to indicate no depth texture output
-			renderDriver.setSystemState( SystemState::DepthType, DepthType::None );
-			 
 			// Notify system that we are performing the "depth" pass. 
             if ( mScene.beginRenderPass( "depth" ) )
             {
@@ -935,7 +917,7 @@ class StandardRenderControl : IScriptedRenderControl
 		// Update the current scene target
 		mCurrentSceneTarget = mDepthBuffer;
 	}
-
+	
 	//-----------------------------------------------------------------------------
 	// Name : geometry()
 	// Desc : Render all opaque (and alpha tested) geometry to the geometry buffer.
@@ -965,7 +947,7 @@ class StandardRenderControl : IScriptedRenderControl
 		array<RenderTargetHandle> targets( 4 );		
 		targets[0] = mGBuffer0;
 		targets[1] = mGBuffer1;
-		targets[2] = mFullSpecularColor ? mGBuffer2 : mDepthBuffer;
+		targets[2] = mGBuffer2;
 		targets[3] = lightingBuffer; 
 		if ( renderDriver.beginTargetRender( targets, mDepthStencilBuffer ) )
 		{
@@ -1016,7 +998,7 @@ class StandardRenderControl : IScriptedRenderControl
             targets.resize( 3 );
 			targets[0] = mGBuffer0;
 			targets[1] = mGBuffer1;
-			targets[2] = mFullSpecularColor ? mGBuffer2 : mDepthBuffer;
+			targets[2] = mGBuffer2;
 
             // Fill in specular color, gloss, transmission (0) via appropriate channels
 			if ( renderDriver.beginTargetRender( targets, mDepthStencilBuffer ) )
@@ -1033,33 +1015,11 @@ class StandardRenderControl : IScriptedRenderControl
 		////////////////////////////////////////////////////
 		
 		// Set the targets and begin rendering
-		if ( mFullSpecularColor )
-		{
-			targets.resize( 4 );
-			targets[0] = mGBuffer0;
-			targets[1] = mGBuffer1;
-			targets[2] = mGBuffer2;
-			targets[3] = lightingBuffer; 
-		}
-		else
-		{
-			if ( mDepthStencilReads )
-			{
-				targets.resize( 3 );
-				targets[0] = mGBuffer0;
-				targets[1] = mGBuffer1;
-				targets[2] = lightingBuffer; 
-			}
-			else
-			{
-				targets.resize( 4 );
-				targets[0] = mGBuffer0;
-				targets[1] = mGBuffer1;
-				targets[2] = mDepthBuffer;
-				targets[3] = lightingBuffer; 
-			}
-		}
-		
+		targets.resize( 4 );
+		targets[0] = mGBuffer0;
+		targets[1] = mGBuffer1;
+		targets[2] = mGBuffer2;
+		targets[3] = lightingBuffer; 
 		if ( renderDriver.beginTargetRender( targets, mDepthStencilBuffer ) )
 		{	
 			drawGeometry( activeCamera, renderDriver, false /*true*/ );
@@ -1269,52 +1229,32 @@ class StandardRenderControl : IScriptedRenderControl
             // Set the depth buffer
             mDepthSampler.apply( 3, mDepthBuffer );
             
-            // Set the surface normal buffer
-            mNormalSampler.apply( 4, mNormalBuffer );
-					
 			// Apply a random rotation texture for shadow map noise adjustments
 			mRotationSampler.apply( 6, mRotationTexture );
 		}
 		else if ( context == "SetupLightingInputs" )
 		{
-			// Set the normal buffer
+			// Set the g-buffers
 			mGBuffer0Sampler.apply( 0, mGBuffer0 );
-
-			// Set the diffuse color buffer
 			mGBuffer1Sampler.apply( 1, mGBuffer1 );
-			
-			// Set specular color buffer (Higher quality modes only)
-			if ( mShadingQuality > ShadingQuality::Low )
-				mGBuffer2Sampler.apply( 2, mGBuffer2 );
+			mGBuffer2Sampler.apply( 2, mGBuffer2 );
 			
 			// Set the depth buffer
 			mDepthSampler.apply( 3, mDepthBuffer );
 			
-			// Set the surface normal buffer
-			mNormalSampler.apply( 4, mNormalBuffer );
-
-			// Apply a random rotation texture for shadow map noise adjustments
+			// Apply a random rotation texture
 			mRotationSampler.apply( 6, mRotationTexture );
 		}
-
 		else if ( context == "SetupLowResIndirectInputs" )
 		{
-			// Set the normal buffer (bumped)
+			// Set the g-buffers
 			mGBuffer0Sampler.apply( 0, mGBuffer0 );
-
-			// Set the diffuse color buffer
 			mGBuffer1Sampler.apply( 1, mGBuffer1 );
-			
-			// Set specular color buffer (Higher quality modes only)
-			if ( mShadingQuality > ShadingQuality::Low )
-				mGBuffer2Sampler.apply( 2, mGBuffer2 );
+			mGBuffer2Sampler.apply( 2, mGBuffer2 );
 			
 			// Set the depth buffer
 			mDepthSampler.apply( 3, mDepthChain0.getLevel( 1 ) );
 			
-			// Set the surface normal buffer
-			mNormalSampler.apply( 4, mNormalChain0.getLevel( 1 ) );
-
 			// Apply a random rotation texture 
 			mRotationSampler.apply( 6, mRotationTexture );
 		}
@@ -1412,7 +1352,7 @@ class StandardRenderControl : IScriptedRenderControl
 		if ( mHDRGlare )
 		{
 			mGlare.setBrightThreshold( 0.25f, 0.9f );
-			mGlare.setGlareAmount( 0.045f );
+			mGlare.setGlareAmount( 0.006f );
 
 			steps.resize( 4 );		
 			steps[ 0 ] = GlareStepDesc( 2, 0.40f, 1, 2, 2.0f, 0.0f, 30.0f );			
@@ -1437,7 +1377,7 @@ class StandardRenderControl : IScriptedRenderControl
 		bool reduceFlicker = true;
 
 		// Set anamorphic flare data (#passes, radius, intensity, color, edgeScale, edgeBias)
-		mGlare.setAnamorphicData( mDrawAnamorphic ? 5 : 0, 5, 0.05f, Vector3( 0.55f, 0.55f, 1.0f ), 0.75f, 0.65f );
+		mGlare.setAnamorphicData( mDrawAnamorphic ? 5 : 0, 5, 0.07f, Vector3( 0.35f, 0.35f, 1.0f ), 0.75f, 0.65f );
 		
 		// If HDR glare
 		if ( mHDRGlare )
@@ -1516,11 +1456,13 @@ class StandardRenderControl : IScriptedRenderControl
         mToneMapper.setLuminanceRange( 0.005f, 50000.0f );
 		
 		// Set the tone mapping controls
-        mToneMapper.setToneMapMethod( ToneMapMethod::FilmicHable ); //Photographic PhotographicWhitePoint Filmic FilmicHable Exponential
+        mToneMapper.setToneMapMethod( ToneMapMethod::FilmicHable ); //Photographic PhotographicWhitePoint Filmic FilmicHable Exponential ExponentialWhitePoint
 
 		// If LDR glare is being used, lower the key value to compensate for the loss of information and to reduce oversaturation        
         mToneMapper.setKeyAdjust( mHDRGlare ? 1.0f : 0.5f, 0.0f );       
         mToneMapper.setWhitePointAdjust( 1.0f, 0.0f ); 
+        mToneMapper.setKeyAdjust( 2.0f, 0.0f );       
+        mToneMapper.setWhitePointAdjust( 0.0f, 11.2f ); 
 		mToneMapper.setLuminanceAdaptation( 0.75f, 1.25f, 1.0f ); // cones, rods, rod sensitivity
 
 		// Set the luminance computation update rate (times per second) 
@@ -1578,16 +1520,25 @@ class StandardRenderControl : IScriptedRenderControl
 	// Name : depthOfField()
 	// Desc : Applies a depth of field filter to the current scene.
 	//-----------------------------------------------------------------------------
-	void depthOfField( )
+	void depthOfField( CameraNode @ activeCamera )
 	{
+        // Must be enabled in camera.
+        if ( !activeCamera.isDepthOfFieldEnabled() )
+            return;
+
 		// Set depth of field constants
-        mDepthOfField.setForegroundExtents( 0.01, 2 );
-        //mDepthOfField.setBackgroundExtents( 15, 25 );
-        mDepthOfField.setBackgroundExtents( 0, 0 ); // Disabled
+        mDepthOfField.setForegroundExtents( activeCamera.getForegroundExtents() );
+        mDepthOfField.setBackgroundExtents( activeCamera.getBackgroundExtents() );
 		
 		// Set the blur parameters
-		mDepthOfField.setBackgroundBlur( 1, 1, 1.0f, 1, 1, 1.0f );
-        mDepthOfField.setForegroundBlur( 1, 2, 2.0f, 1, 1, -1.0f );
+        BlurOpDesc highBlur, lowBlur;
+        activeCamera.getBackgroundBlur( highBlur, lowBlur );
+        mDepthOfField.setBackgroundBlur( highBlur, lowBlur );
+        activeCamera.getForegroundBlur( highBlur, lowBlur );
+        mDepthOfField.setForegroundBlur( highBlur, lowBlur );
+        
+        //mDepthOfField.setBackgroundBlur( 1, 1, 1.0f, 1, 1, 1.0f );
+        //mDepthOfField.setForegroundBlur( 1, 2, -1, 1, 1, -1.0f );
 			
 		// Run the process
         bool result = true;
@@ -1616,7 +1567,7 @@ class StandardRenderControl : IScriptedRenderControl
 	// Name : motionBlur()
 	// Desc : Applies a camera motion hour filter to the current scene.
 	//-----------------------------------------------------------------------------
-	void motionBlur( CameraNode @ activeCamera, float frameTime )
+	void motionBlur( CameraNode @ activeCamera, RenderDriver @ renderDriver, float frameTime )
 	{
 		// Set the motion blur parameters
 		mMotionBlur.setBlurAmount( 0.25 );
@@ -1626,6 +1577,9 @@ class StandardRenderControl : IScriptedRenderControl
         mMotionBlur.setAttenuationRates( 10, 30 );
         mMotionBlur.setMaxSpeed( 0.005 );
         mMotionBlur.setCompositeSpeedScale( 150.0, 250.0, 2.0 );
+
+		// Do we wish to mask off the first person weapon?
+		bool maskFirstPersonWeapon = true;
 
 		// Set the required buffers
         RenderTargetHandle sourceColor, sourceColorLow, scratchLow, velocity, destination;
@@ -1642,15 +1596,60 @@ class StandardRenderControl : IScriptedRenderControl
 			scratchLow     = mLDRChain1.getLevel(1);
 		}
 
+		// If we are masking off the first person weapon (prevent it from participating in blur)
+		if ( maskFirstPersonWeapon )
+		{
+			// We'll need to use a separate destination target (rather than a blend)
+			if ( sourceColor == mLightingChain0.getLevel(0) )
+				destination = mLightingChain1.getLevel(0);
+			else
+				destination = mLightingChain0.getLevel(0);
+
+			// Clear the alpha channel of the initial blur target to 1 (assists with reducing out of bounds sampling artifacts)
+			mImageProcessor.processColorImage( sourceColor, ImageOperation::SetColorA, ColorValue(0,0,0,1) );
+
+			// Use a mask for the first person weapons (alpha channel)
+			VisibilitySet @ cameraVis = activeCamera.getVisibilitySet();
+			ObjectRenderQueue @ queue = ObjectRenderQueue( mScene );
+			if ( renderDriver.beginTargetRender( sourceColor, mDepthStencilBuffer ) )
+			{
+				if ( mScene.beginRenderPass( "motionBlurMask" ) )
+				{
+					// Draw first person weapons 
+					queue.setMaterialFilter( mFilterOpaqueDeferred );
+					queue.begin( cameraVis );
+					queue.renderClass( "Default" ); // ToDo 6767: Use a class filter for FP weapons here.
+					queue.end( true );
+	            
+					// We have finished this render pass.
+    				mScene.endRenderPass( );
+
+				} // End if beginRenderPass()
+
+				// End rendering to specified target.
+				renderDriver.endTargetRender();
+			
+			} // End if beginTargetRender()
+
+			// Downsample the color buffer to 1/4 res (use alpha masking during downsample)
+			mImageProcessor.downSample( sourceColor, sourceColorLow, ImageOperation::DownSampleAverage, true, false, true );
+	
+		} // End if mask weapon
+		else
+		{
+			// Downsample the color buffer to 1/4 res
+			mImageProcessor.downSample( sourceColor, sourceColorLow, ImageOperation::DownSampleAverage, false, false, false );
+	
+			// Clear the alpha channel to 1
+			mImageProcessor.processColorImage( sourceColorLow, ImageOperation::SetColorA, ColorValue(0,0,0,1) );
+		}
+		
 		// Compute pixel velocity (at 1/4 res)
 		if ( mMotionBlur.computePixelVelocity( activeCamera, frameTime, mDepthChain0.getLevel(1), mDepthType, mVelocityBufferMB ) )
 		{
-			// Downsample the color buffer to 1/4 res
-			mImageProcessor.downSample( sourceColor, sourceColorLow );
-		
 			// Run the filter
 			if ( mMotionBlur.execute( 2,
-									  sourceColor,       // High res color
+									  mCurrentSceneTarget,       // High res color
 									  mVelocityBufferMB, // Low res velocity
 									  sourceColorLow,    // Low res color
 									  scratchLow,        // Low res color (scratch)

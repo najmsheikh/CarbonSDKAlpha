@@ -84,6 +84,7 @@ public:
     virtual bool        onKeyDown           ( cgInt32 keyCode, cgUInt32 modifiers ) { return false; }
     virtual bool        onKeyUp             ( cgInt32 keyCode, cgUInt32 modifiers ) { return false; }
     virtual bool        onKeyPressed        ( cgInt32 keyCode, cgUInt32 modifiers ) { return false; }
+    virtual bool        onScreenLayoutChange( ) { return false; }
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
@@ -136,6 +137,7 @@ public:
     virtual bool                onKeyDown           ( cgInt32 keyCode, cgUInt32 modifiers );
     virtual bool                onKeyUp             ( cgInt32 keyCode, cgUInt32 modifiers );
     virtual bool                onKeyPressed        ( cgInt32 keyCode, cgUInt32 modifiers );
+    virtual bool                onScreenLayoutChange( );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)

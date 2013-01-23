@@ -211,6 +211,9 @@ bool cgFloatCurveAnimationChannel::deserialize( cgWorldQuery & channelQuery, boo
 
     } // End if described
 
+    // Make sure spline is initialized during load rather than on first use.
+    data.isComplex();
+
     // Only associate with the original database row identifier if we were
     // not instructed to clone data. By ensuring that the 'databaseId'
     // is '0', this will force the insertion of a new channel row.
@@ -1246,6 +1249,12 @@ void cgQuaternionTargetController::evaluate( cgDouble position, cgQuaternion & q
         return;
     
     } // End if no data
+    else if ( mKeyFrames.data.size() == 1 )
+    {
+        q = mKeyFrames.data[0].value;
+        return;
+    
+    } // End if single key
 
     // Find the correct segment for this X location
     cgQuaternionAnimationChannel::QuaternionKeyArray & keys = mKeyFrames.data;
@@ -1341,6 +1350,17 @@ void cgQuaternionTargetController::addKey( cgInt32 frame, const cgQuaternion & v
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getAnimationChannel ()
+/// <summary>
+/// Retrieve the quaternion keyframe data associated with this controller.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgQuaternionAnimationChannel & cgQuaternionTargetController::getAnimationChannel( ) const
+{
+    return mKeyFrames;
+}
+
+//-----------------------------------------------------------------------------
 // Name : getSupportedChannels ( )
 /// <summary>
 /// Retrieve an array containing the string identifiers of the animation
@@ -1350,7 +1370,7 @@ void cgQuaternionTargetController::addKey( cgInt32 frame, const cgQuaternion & v
 //-----------------------------------------------------------------------------
 const cgStringArray & cgQuaternionTargetController::getSupportedChannels( ) const
 {
-    static const cgString channels[] = { _T("value"), cgString::Empty };
+    static const cgString channels[] = { _T("q"), cgString::Empty };
     static const cgStringArray channelVector( channels, channels + 1 );
     return channelVector;
 }
@@ -1564,7 +1584,6 @@ void cgEulerAnglesTargetController::addLinearKey( cgInt32 frame, const cgQuatern
         if ( !mCurves[i].isEmpty() )
         {
             const cgBezierSpline2::SplinePoint & pt = mCurves[i].data.getSplinePoints().back();
-            // ToDo: Always Y???
             while ( fabsf(e[i] - pt.point.y) > CGE_PI )
                 e[i] = (pt.point.y < e[i]) ? (e[i] - CGE_TWO_PI) : (e[i] + CGE_TWO_PI);
 

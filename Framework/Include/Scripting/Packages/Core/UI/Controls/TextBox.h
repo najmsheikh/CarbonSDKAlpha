@@ -37,9 +37,7 @@ namespace TextBox
             BINDSUCCESS( engine->registerObjectMethod( "TextBox", "void setSelectionRange( int, int )", asMETHODPR(cgTextBoxControl, setSelectionRange, ( cgInt32, cgInt32 ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "TextBox", "String getSelectedText( ) const", asMETHODPR(cgTextBoxControl, getSelectedText, ( ) const, cgString ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "TextBox", "void setMultiline( bool )", asMETHODPR(cgTextBoxControl, setMultiline, ( bool ), void ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "TextBox", "bool getMultiline( ) const", asMETHODPR(cgTextBoxControl, getMultiline, ( ) const, bool ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "TextBox", "void setTextColor( const ColorValue &in )", asMETHODPR(cgTextBoxControl, setTextColor, ( const cgColorValue & ), void ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "TextBox", "const ColorValue& getTextColor( ) const", asMETHODPR(cgTextBoxControl, getTextColor, ( ) const, const cgColorValue & ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "TextBox", "bool getMultiline( ) const", asMETHODPR(cgTextBoxControl, getMultiline, ( ) const, bool ), asCALL_THISCALL) );            
             BINDSUCCESS( engine->registerObjectMethod( "TextBox", "void setReadOnly( bool )", asMETHODPR(cgTextBoxControl, setReadOnly, ( bool ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "TextBox", "bool getReadOnly( ) const", asMETHODPR(cgTextBoxControl, getReadOnly, ( ) const, bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "TextBox", "void setAllowFormatCode( bool )", asMETHODPR(cgTextBoxControl, setAllowFormatCode, ( bool ), void ), asCALL_THISCALL) );
@@ -52,8 +50,6 @@ namespace TextBox
             // Register object property methods
             BINDSUCCESS( engine->registerObjectMethod( "TextBox", "void set_multiline( bool )", asMETHODPR(cgTextBoxControl, setMultiline, ( bool ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "TextBox", "bool get_multiline( ) const", asMETHODPR(cgTextBoxControl, getMultiline, ( ) const, bool ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "TextBox", "void set_textColor( const ColorValue &in )", asMETHODPR(cgTextBoxControl, setTextColor, ( const cgColorValue & ), void ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "TextBox", "const ColorValue& get_textColor( ) const", asMETHODPR(cgTextBoxControl, getTextColor, ( ) const, const cgColorValue & ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "TextBox", "void set_readOnly( bool )", asMETHODPR(cgTextBoxControl, setReadOnly, ( bool ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "TextBox", "bool get_readOnly( ) const", asMETHODPR(cgTextBoxControl, getReadOnly, ( ) const, bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "TextBox", "void set_allowFormatCode( bool )", asMETHODPR(cgTextBoxControl, setAllowFormatCode, ( bool ), void ), asCALL_THISCALL) );

@@ -264,10 +264,20 @@ void cgPhysicsBody::applyForce( const cgVector3 & vForce, const cgVector3 & vAt 
 //-----------------------------------------------------------------------------
 void cgPhysicsBody::applyImpulse( const cgVector3 & vImpulse )
 {
-    cgVector3 vLinearVelocity;
+    /*cgVector3 vLinearVelocity;
     NewtonBodyGetVelocity( mBody, vLinearVelocity );
     vLinearVelocity += mWorld->toPhysicsScale( vImpulse );
-    NewtonBodySetVelocity( mBody, vLinearVelocity );
+    NewtonBodySetVelocity( mBody, vLinearVelocity );*/
+
+    // Compute center of mass for the body
+    cgMatrix m;
+    cgVector3 vCenter;
+    NewtonBodyGetMatrix( mBody, m );
+    NewtonBodyGetCentreOfMass( mBody, vCenter );
+    cgVector3::transformCoord( vCenter, vCenter, m );
+
+    // Apply an impulse directly to the center of mass
+    NewtonBodyAddImpulse( mBody, mWorld->toPhysicsScale(vImpulse), vCenter );
 }
 
 //-----------------------------------------------------------------------------
@@ -278,7 +288,7 @@ void cgPhysicsBody::applyImpulse( const cgVector3 & vImpulse )
 //-----------------------------------------------------------------------------
 void cgPhysicsBody::applyImpulse( const cgVector3 & vImpulse, const cgVector3 & vAt )
 {
-    // Get current velocities
+    /*// Get current velocities
     cgVector3 vLinearVelocity, vAngularVelocity;
     NewtonBodyGetVelocity( mBody, vLinearVelocity );
     NewtonBodyGetOmega( mBody, vAngularVelocity );
@@ -303,7 +313,9 @@ void cgPhysicsBody::applyImpulse( const cgVector3 & vImpulse, const cgVector3 & 
 
     // Set back to the body
     NewtonBodySetVelocity( mBody, vLinearVelocity );
-    NewtonBodySetOmega( mBody, vAngularVelocity );
+    NewtonBodySetOmega( mBody, vAngularVelocity );*/
+
+    NewtonBodyAddImpulse( mBody, mWorld->toPhysicsScale(vImpulse), mWorld->toPhysicsScale(vAt) );
 }
 
 //-----------------------------------------------------------------------------

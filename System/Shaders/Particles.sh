@@ -91,7 +91,7 @@ class ParticleShader : ISurfaceShader
         @mResources = resources;
 
         // Default variables
-        blendMethod = ParticleBlendMethod::Screen;
+        blendMethod = ParticleBlendMethod::Additive;
 
         ///////////////////////////////////////////////////////////////
         // Depth Stencil States
@@ -350,9 +350,9 @@ class ParticleShader : ISurfaceShader
             look = normalize( cross( right, up ) );
 
             // Multiply by this new matrix
-            worldPosition.x += dot( Offset, float3( right.x, up.x, look.x) );
-            worldPosition.y += dot( Offset, float3( right.y, up.y, look.y) );
-            worldPosition.z += dot( Offset, float3( right.z, up.z, look.z) );
+            worldPosition.x += dot( offset, float3( right.x, up.x, look.x) );
+            worldPosition.y += dot( offset, float3( right.y, up.y, look.y) );
+            worldPosition.z += dot( offset, float3( right.z, up.z, look.z) );
 
             // Compute the clip space position
             clipPosition = mul( float4( worldPosition, 1 ), _viewProjectionMatrix );

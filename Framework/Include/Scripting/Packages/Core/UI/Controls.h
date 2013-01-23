@@ -6,6 +6,7 @@
 // Child packages
 #include "Controls/UIControl.h"
 #include "Controls/ComboBox.h"
+#include "Controls/CheckBox.h"
 #include "Controls/GroupBox.h"
 #include "Controls/ImageBox.h"
 #include "Controls/ListBox.h"
@@ -25,7 +26,8 @@ namespace Controls
     {
         BEGIN_SCRIPT_PACKAGE( "Core.UI.Controls" )
             DECLARE_PACKAGE_CHILD( UIControl )
-            //DECLARE_PACKAGE_CHILD( ComboBox )
+            DECLARE_PACKAGE_CHILD( ComboBox )
+            DECLARE_PACKAGE_CHILD( CheckBox )
             DECLARE_PACKAGE_CHILD( GroupBox )
             //DECLARE_PACKAGE_CHILD( ImageBox )
             DECLARE_PACKAGE_CHILD( ListBox )

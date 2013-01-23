@@ -36,7 +36,6 @@
 cgAudioCodec_Ogg::cgAudioCodec_Ogg()
 {
     // Initialize variables to sensible defaults
-    mFile           = CG_NULL;
     mVorbisOpened   = false;
     mCurrentSection = 0;
 
@@ -70,28 +69,90 @@ bool cgAudioCodec_Ogg::isValid( cgInputStream & Stream )
     bool           bValid = true;
 
     // Open the specified file (read mode!)
-    if ( Stream.getType() == cgStreamType::File )
-    {
-#if defined(_UNICODE ) || defined(UNICODE)
-        pFile = _wfopen( Stream.getSourceFile().c_str(), _T("rb") );
-#else // UNICODE
-        pFile = fopen( Stream.getSourceFile().c_str(), _T("rb") );
-#endif // !UNICODE
-        
-    } // End if file stream
-    else
-        return false; // ToDo: Support memory stream
-    if (!pFile) return false;
+    cgInputStream TestStream = Stream;
+    if ( !TestStream.open() )
+        return false;
 
     // Attempt to open the bitstream
-    if ( ov_test( pFile, &VorbisFile, CG_NULL, 0 ) < 0 ) bValid = false;
+    ov_callbacks Callbacks;
+    Callbacks.read_func = readStream;
+    Callbacks.seek_func = seekStream;
+    Callbacks.tell_func = tellStream;
+    Callbacks.close_func = closeStream;
+    if ( ov_test_callbacks( &TestStream, &VorbisFile, CG_NULL, 0, Callbacks ) < 0 )
+        bValid = false;
     
     // Finish up
-    if ( bValid == true ) ov_clear( &VorbisFile );
-    fclose( pFile );
+    if ( bValid )
+        ov_clear( &VorbisFile );
+    TestStream.close();
 
     // Valid?
     return bValid;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : readStream() (Private, Static)
+/// <summary>
+/// Callback to read data from the opened ogg vorbis stream.
+/// </summary>
+//-----------------------------------------------------------------------------
+size_t cgAudioCodec_Ogg::readStream( void *ptr, size_t size, size_t nmemb, void *dataSource )
+{
+    cgInputStream & Stream = *(cgInputStream*)dataSource;
+    return Stream.read( ptr, size );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : seekStream() (Private, Static)
+/// <summary>
+/// Callback to reposition the current pointer in the opened ogg vorbis stream.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt cgAudioCodec_Ogg::seekStream( void *dataSource, ogg_int64_t offset, cgInt whence )
+{
+    cgInputStream & Stream = *(cgInputStream*)dataSource;
+    cgInputStream::SeekOrigin origin;
+    switch ( whence )
+    {
+        case SEEK_SET:
+            origin = cgInputStream::Begin;
+            break;
+        case SEEK_CUR:
+            origin = cgInputStream::Current;
+            break;
+        case SEEK_END:
+            origin = cgInputStream::End;
+            break;
+    } // End switch whence
+    if ( !Stream.seek( offset, origin ) )
+        return -1;
+    return 0;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : closeStream() (Private, Static)
+/// <summary>
+/// Callback to close the currently opened ogg vorbis stream.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt cgAudioCodec_Ogg::closeStream( void *dataSource )
+{
+    // Currently unsupported, we'll clean up.
+    return 0;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : tellStream() (Private, Static)
+/// <summary>
+/// Callback to retrieve the current position of the currently opened ogg 
+/// vorbis stream.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt32 cgAudioCodec_Ogg::tellStream( void *dataSource )
+{
+    cgInputStream & Stream = *(cgInputStream*)dataSource;
+    return (cgInt32)Stream.getPosition();
 }
 
 //-----------------------------------------------------------------------------
@@ -104,24 +165,25 @@ bool cgAudioCodec_Ogg::isValid( cgInputStream & Stream )
 bool cgAudioCodec_Ogg::open( cgInputStream & Stream )
 {
     // Already open?
-    if ( mFile || mVorbisOpened ) close();
+    if ( mFile.isOpen() || mVorbisOpened )
+        close();
 
     // Open the specified file (read mode!)
-    if ( Stream.getType() == cgStreamType::File )
-    {
-#if defined(_UNICODE ) || defined(UNICODE)
-        mFile = _wfopen( Stream.getSourceFile().c_str(), _T("rb") );
-#else // UNICODE
-        mFile = fopen( Stream.getSourceFile().c_str(), _T("rb") );
-#endif // !UNICODE
-
-    } // End if file stream
-    else
-        return false; // ToDo: Support memory stream
-    if (!mFile) return false;
+    mFile = Stream;
+    if ( !mFile.open() )
+        return false;
 
     // Attempt to open the bitstream
-    if ( ov_open( mFile, &mVorbisFile, CG_NULL, 0 ) < 0 ) { close(); return false; }
+    ov_callbacks Callbacks;
+    Callbacks.read_func = readStream;
+    Callbacks.seek_func = seekStream;
+    Callbacks.tell_func = tellStream;
+    Callbacks.close_func = closeStream;
+    if ( ov_open_callbacks( &mFile, &mVorbisFile, CG_NULL, 0, Callbacks ) < 0 )
+    {
+        close();
+        return false;
+    } // End if failed
     mVorbisOpened = true;
 
     // Setup some values
@@ -140,11 +202,11 @@ bool cgAudioCodec_Ogg::open( cgInputStream & Stream )
 void cgAudioCodec_Ogg::close( )
 {
     // Close opened files
-    if ( mVorbisOpened ) ov_clear( &mVorbisFile );
-    if ( mFile         ) fclose( mFile );
-
+    if ( mVorbisOpened )
+        ov_clear( &mVorbisFile );
+    mFile.close();
+    
     // Clear variables
-    mFile         = CG_NULL;
     mVorbisOpened = false;
 
     // Clear structures

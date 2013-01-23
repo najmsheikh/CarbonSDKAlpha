@@ -152,7 +152,7 @@ protected:
 //-----------------------------------------------------------------------------
 class CGE_API cgHemisphereLightNode : public cgLightNode
 {
-    DECLARE_DERIVED_SCRIPTOBJECT( cgHemisphereLightNode, cgLightNode, "PointLightNode" )
+    DECLARE_DERIVED_SCRIPTOBJECT( cgHemisphereLightNode, cgLightNode, "HemisphereLightNode" )
 
 public:
     //-------------------------------------------------------------------------

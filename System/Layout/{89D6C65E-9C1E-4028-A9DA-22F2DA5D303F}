@@ -71,6 +71,9 @@ CREATE TABLE [Objects::ParticleEmitter::Layers] (
   [ColorACurveType] SMALLINT DEFAULT 3, 
   [ColorACurveSize] SMALLINT DEFAULT 0, 
   [ColorACurve] BLOB,
-  [EmissionEnabled] tinyint DEFAULT 1);
+  [EmissionEnabled] tinyint DEFAULT 1, 
+  [ApplyGravity] tinyint(1) DEFAULT 0,
+  [VelocityAligned] tinyint(1) DEFAULT 0, 
+  [VelocityScaleStrength] REAL DEFAULT 0);
 
 CREATE INDEX [Objects::ParticleEmitter::Layers_OrderedEmitterLayer] ON [Objects::ParticleEmitter::Layers] ([EmitterId], [LayerOrder]);

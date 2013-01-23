@@ -28,6 +28,7 @@
 //-----------------------------------------------------------------------------
 #include <cgBase.h>
 #include <System/cgApplication.h>
+#include <sys/timeb.h>
 
 // Windows platform includes
 #define WIN32_LEAN_AND_MEAN
@@ -76,6 +77,8 @@
 #include <World/Objects/cgFixedAxisJointObject.h>
 #include <World/Objects/cgHingeJointObject.h>
 #include <World/Objects/cgSoundEmitterObject.h>
+#include <World/Objects/cgNavigationPatrolPoint.h>
+#include <World/Objects/cgBillboardObject.h>
 
 // Object sub-element types
 #include <World/Objects/Elements/cgBoxCollisionShapeElement.h>
@@ -199,6 +202,11 @@ bool cgEngineInit( const CGEConfig & Config, cgLogOutput * pOutput /* = CG_NULL 
         //SetThreadPriority( GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL );
 
     } // End if high priority requested
+
+    // Seed the standard random number generator.
+    timeb tb;
+    ftime( &tb );
+    srand( tb.millitm + (tb.time & 0xfffff) * 1000 );
     
     // Force the thread on which timing processes are run
     // onto a single processor / core.
@@ -264,22 +272,24 @@ bool cgEngineInit( const CGEConfig & Config, cgLogOutput * pOutput /* = CG_NULL 
     cgPhysicsController::registerType( _T("Core::PhysicsControllers::Character"), cgCharacterController::allocate );
 
     // Register standard object types.
-    cgWorldObject::registerType( RTID_CameraObject          , _T("Camera")           , cgCameraObject::allocateNew, cgCameraObject::allocateClone, cgCameraNode::allocateNew, cgCameraNode::allocateClone );
-    cgWorldObject::registerType( RTID_MeshObject            , _T("Mesh")             , cgMeshObject::allocateNew, cgMeshObject::allocateClone, cgMeshNode::allocateNew, cgMeshNode::allocateClone );
-    cgWorldObject::registerType( RTID_SkinObject            , _T("Skin")             , cgSkinObject::allocateNew, cgSkinObject::allocateClone, cgSkinNode::allocateNew, cgSkinNode::allocateClone );
-    cgWorldObject::registerType( RTID_DummyObject           , _T("Dummy")            , cgDummyObject::allocateNew, cgDummyObject::allocateClone, cgDummyNode::allocateNew, cgDummyNode::allocateClone );
-    cgWorldObject::registerType( RTID_GroupObject           , _T("Group")            , cgGroupObject::allocateNew, CG_NULL, cgGroupNode::allocateNew, CG_NULL );
-    cgWorldObject::registerType( RTID_ActorObject           , _T("Actor")            , cgActorObject::allocateNew, cgActorObject::allocateClone, cgActorNode::allocateNew, cgActorNode::allocateClone );
-    cgWorldObject::registerType( RTID_SpotLightObject       , _T("Spot Light")       , cgSpotLightObject::allocateNew, cgSpotLightObject::allocateClone, cgSpotLightNode::allocateNew, cgSpotLightNode::allocateClone );
-    cgWorldObject::registerType( RTID_PointLightObject      , _T("Point Light")      , cgPointLightObject::allocateNew, cgPointLightObject::allocateClone, cgPointLightNode::allocateNew, cgPointLightNode::allocateClone );
-    cgWorldObject::registerType( RTID_DirectionalLightObject, _T("Directional Light"), cgDirectionalLightObject::allocateNew, cgDirectionalLightObject::allocateClone, cgDirectionalLightNode::allocateNew, cgDirectionalLightNode::allocateClone );
-    cgWorldObject::registerType( RTID_HemisphereLightObject , _T("Hemisphere Light") , cgHemisphereLightObject::allocateNew, cgHemisphereLightObject::allocateClone, cgHemisphereLightNode::allocateNew, cgHemisphereLightNode::allocateClone );
-    cgWorldObject::registerType( RTID_ProjectorLightObject  , _T("Projector Light")  , cgProjectorLightObject::allocateNew, cgProjectorLightObject::allocateClone, cgProjectorLightNode::allocateNew, cgProjectorLightNode::allocateClone );
-    cgWorldObject::registerType( RTID_TargetObject          , _T("Target")           , cgTargetObject::allocateNew, cgTargetObject::allocateClone, cgTargetNode::allocateNew, cgTargetNode::allocateClone );
-    cgWorldObject::registerType( RTID_BoneObject            , _T("Bone")             , cgBoneObject::allocateNew, cgBoneObject::allocateClone, cgBoneNode::allocateNew, cgBoneNode::allocateClone );
-    cgWorldObject::registerType( RTID_ParticleEmitterObject , _T("Particle Emitter") , cgParticleEmitterObject::allocateNew, cgParticleEmitterObject::allocateClone, cgParticleEmitterNode::allocateNew, cgParticleEmitterNode::allocateClone );
-    cgWorldObject::registerType( RTID_SplineObject          , _T("Spline")           , cgSplineObject::allocateNew, cgSplineObject::allocateClone, cgSplineNode::allocateNew, cgSplineNode::allocateClone );
-    cgWorldObject::registerType( RTID_SoundEmitterObject    , _T("Sound Emitter")    , cgSoundEmitterObject::allocateNew, cgSoundEmitterObject::allocateClone, cgSoundEmitterNode::allocateNew, cgSoundEmitterNode::allocateClone );
+    cgWorldObject::registerType( RTID_CameraObject               , _T("Camera")           , cgCameraObject::allocateNew, cgCameraObject::allocateClone, cgCameraNode::allocateNew, cgCameraNode::allocateClone );
+    cgWorldObject::registerType( RTID_MeshObject                 , _T("Mesh")             , cgMeshObject::allocateNew, cgMeshObject::allocateClone, cgMeshNode::allocateNew, cgMeshNode::allocateClone );
+    cgWorldObject::registerType( RTID_SkinObject                 , _T("Skin")             , cgSkinObject::allocateNew, cgSkinObject::allocateClone, cgSkinNode::allocateNew, cgSkinNode::allocateClone );
+    cgWorldObject::registerType( RTID_DummyObject                , _T("Dummy")            , cgDummyObject::allocateNew, cgDummyObject::allocateClone, cgDummyNode::allocateNew, cgDummyNode::allocateClone );
+    cgWorldObject::registerType( RTID_GroupObject                , _T("Group")            , cgGroupObject::allocateNew, CG_NULL, cgGroupNode::allocateNew, CG_NULL );
+    cgWorldObject::registerType( RTID_ActorObject                , _T("Actor")            , cgActorObject::allocateNew, cgActorObject::allocateClone, cgActorNode::allocateNew, cgActorNode::allocateClone );
+    cgWorldObject::registerType( RTID_SpotLightObject            , _T("Spot Light")       , cgSpotLightObject::allocateNew, cgSpotLightObject::allocateClone, cgSpotLightNode::allocateNew, cgSpotLightNode::allocateClone );
+    cgWorldObject::registerType( RTID_PointLightObject           , _T("Point Light")      , cgPointLightObject::allocateNew, cgPointLightObject::allocateClone, cgPointLightNode::allocateNew, cgPointLightNode::allocateClone );
+    cgWorldObject::registerType( RTID_DirectionalLightObject     , _T("Directional Light"), cgDirectionalLightObject::allocateNew, cgDirectionalLightObject::allocateClone, cgDirectionalLightNode::allocateNew, cgDirectionalLightNode::allocateClone );
+    cgWorldObject::registerType( RTID_HemisphereLightObject      , _T("Hemisphere Light") , cgHemisphereLightObject::allocateNew, cgHemisphereLightObject::allocateClone, cgHemisphereLightNode::allocateNew, cgHemisphereLightNode::allocateClone );
+    cgWorldObject::registerType( RTID_ProjectorLightObject       , _T("Projector Light")  , cgProjectorLightObject::allocateNew, cgProjectorLightObject::allocateClone, cgProjectorLightNode::allocateNew, cgProjectorLightNode::allocateClone );
+    cgWorldObject::registerType( RTID_TargetObject               , _T("Target")           , cgTargetObject::allocateNew, cgTargetObject::allocateClone, cgTargetNode::allocateNew, cgTargetNode::allocateClone );
+    cgWorldObject::registerType( RTID_BoneObject                 , _T("Bone")             , cgBoneObject::allocateNew, cgBoneObject::allocateClone, cgBoneNode::allocateNew, cgBoneNode::allocateClone );
+    cgWorldObject::registerType( RTID_ParticleEmitterObject      , _T("Particle Emitter") , cgParticleEmitterObject::allocateNew, cgParticleEmitterObject::allocateClone, cgParticleEmitterNode::allocateNew, cgParticleEmitterNode::allocateClone );
+    cgWorldObject::registerType( RTID_SplineObject               , _T("Spline")           , cgSplineObject::allocateNew, cgSplineObject::allocateClone, cgSplineNode::allocateNew, cgSplineNode::allocateClone );
+    cgWorldObject::registerType( RTID_SoundEmitterObject         , _T("Sound Emitter")    , cgSoundEmitterObject::allocateNew, cgSoundEmitterObject::allocateClone, cgSoundEmitterNode::allocateNew, cgSoundEmitterNode::allocateClone );
+    cgWorldObject::registerType( RTID_NavigationPatrolPointObject, _T("Patrol Point")     , cgNavigationPatrolPointObject::allocateNew, cgNavigationPatrolPointObject::allocateClone, cgNavigationPatrolPointNode::allocateNew, cgNavigationPatrolPointNode::allocateClone );
+    cgWorldObject::registerType( RTID_BillboardObject            , _T("Billboard")        , cgBillboardObject::allocateNew, cgBillboardObject::allocateClone, cgBillboardNode::allocateNew, cgBillboardNode::allocateClone );
     
     // Register physics joint object types
     cgWorldObject::registerType( RTID_KinematicControllerJointObject, _T("Kinematic Controller Joint"), cgKinematicControllerJointObject::allocateNew, cgKinematicControllerJointObject::allocateClone, cgKinematicControllerJointNode::allocateNew, cgKinematicControllerJointNode::allocateClone );
@@ -411,6 +421,9 @@ void cgEngineCleanup()
 
     // End the logging process
     cgAppLog::endLogging( );
+
+    // Shut down file system.
+    cgFileSystem::shutdown();
 
     // Shutdown GDI+
     if ( GDIPlusToken != 0 )

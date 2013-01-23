@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Colony VI", "Colony VI.vcxproj", "{8DB474C6-C225-4970-8EDE-0E8EA6042BA1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Carbon", "..\..\..\..\Framework\Projects\vc11\Carbon.vcxproj", "{457F7CC1-087A-47A4-811B-D0E606CC9C96}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug (DX9 Only)|Win32 = Debug (DX9 Only)|Win32
+		Debug|Win32 = Debug|Win32
+		Publish (DX9 Only)|Win32 = Publish (DX9 Only)|Win32
+		Publish|Win32 = Publish|Win32
+		Release (DX9 Only)|Win32 = Release (DX9 Only)|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8DB474C6-C225-4970-8EDE-0E8EA6042BA1}.Debug (DX9 Only)|Win32.ActiveCfg = Debug (DX9 Only)|Win32
+		{8DB474C6-C225-4970-8EDE-0E8EA6042BA1}.Debug (DX9 Only)|Win32.Build.0 = Debug (DX9 Only)|Win32
+		{8DB474C6-C225-4970-8EDE-0E8EA6042BA1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8DB474C6-C225-4970-8EDE-0E8EA6042BA1}.Debug|Win32.Build.0 = Debug|Win32
+		{8DB474C6-C225-4970-8EDE-0E8EA6042BA1}.Publish (DX9 Only)|Win32.ActiveCfg = Publish (DX9 Only)|Win32
+		{8DB474C6-C225-4970-8EDE-0E8EA6042BA1}.Publish (DX9 Only)|Win32.Build.0 = Publish (DX9 Only)|Win32
+		{8DB474C6-C225-4970-8EDE-0E8EA6042BA1}.Publish|Win32.ActiveCfg = Publish|Win32
+		{8DB474C6-C225-4970-8EDE-0E8EA6042BA1}.Publish|Win32.Build.0 = Publish|Win32
+		{8DB474C6-C225-4970-8EDE-0E8EA6042BA1}.Release (DX9 Only)|Win32.ActiveCfg = Release (DX9 Only)|Win32
+		{8DB474C6-C225-4970-8EDE-0E8EA6042BA1}.Release (DX9 Only)|Win32.Build.0 = Release (DX9 Only)|Win32
+		{8DB474C6-C225-4970-8EDE-0E8EA6042BA1}.Release|Win32.ActiveCfg = Release|Win32
+		{8DB474C6-C225-4970-8EDE-0E8EA6042BA1}.Release|Win32.Build.0 = Release|Win32
+		{457F7CC1-087A-47A4-811B-D0E606CC9C96}.Debug (DX9 Only)|Win32.ActiveCfg = Debug (DX9 Only)|Win32
+		{457F7CC1-087A-47A4-811B-D0E606CC9C96}.Debug (DX9 Only)|Win32.Build.0 = Debug (DX9 Only)|Win32
+		{457F7CC1-087A-47A4-811B-D0E606CC9C96}.Debug|Win32.ActiveCfg = Debug|Win32
+		{457F7CC1-087A-47A4-811B-D0E606CC9C96}.Debug|Win32.Build.0 = Debug|Win32
+		{457F7CC1-087A-47A4-811B-D0E606CC9C96}.Publish (DX9 Only)|Win32.ActiveCfg = Publish (DX9 Only)|Win32
+		{457F7CC1-087A-47A4-811B-D0E606CC9C96}.Publish (DX9 Only)|Win32.Build.0 = Publish (DX9 Only)|Win32
+		{457F7CC1-087A-47A4-811B-D0E606CC9C96}.Publish|Win32.ActiveCfg = Publish|Win32
+		{457F7CC1-087A-47A4-811B-D0E606CC9C96}.Publish|Win32.Build.0 = Publish|Win32
+		{457F7CC1-087A-47A4-811B-D0E606CC9C96}.Release (DX9 Only)|Win32.ActiveCfg = Release (DX9 Only)|Win32
+		{457F7CC1-087A-47A4-811B-D0E606CC9C96}.Release (DX9 Only)|Win32.Build.0 = Release (DX9 Only)|Win32
+		{457F7CC1-087A-47A4-811B-D0E606CC9C96}.Release|Win32.ActiveCfg = Release|Win32
+		{457F7CC1-087A-47A4-811B-D0E606CC9C96}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

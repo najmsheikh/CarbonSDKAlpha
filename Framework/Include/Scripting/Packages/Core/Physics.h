@@ -4,6 +4,7 @@
 #include <Scripting/cgScriptPackage.h>
 
 // Child packages
+#include "Physics/Types.h"
 #include "Physics/Joints.h"
 #include "Physics/Bodies.h"
 #include "Physics/Controllers.h"
@@ -20,6 +21,7 @@ namespace Physics
     class Package : public cgScriptPackage
     {
         BEGIN_SCRIPT_PACKAGE( "Core.Physics" )
+            DECLARE_PACKAGE_CHILD( Types )
             DECLARE_PACKAGE_CHILD( Joints )
             DECLARE_PACKAGE_CHILD( Bodies )
             DECLARE_PACKAGE_CHILD( Controllers )

@@ -23,6 +23,8 @@ namespace UIControl
         Core::System::References::Reference::registerReferenceMethods<type>( engine, typeName );
         
         // Register the object methods
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "UIManager@+ getUIManager( ) const", asMETHODPR(type,getUIManager,() const,cgUIManager*), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "ControlLayer@+ getControlLayer( ) const", asMETHODPR(type,getControlLayer,() const,cgUIControlLayer*), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "Form@+ getRootForm( ) const", asMETHODPR(type, getRootForm, () const, cgUIForm* ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "const String& getName( ) const", asMETHODPR(type, getName, () const, const cgString& ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void setName( const String &in )", asMETHODPR(type, setName, ( const cgString& ), void ), asCALL_THISCALL) );
@@ -54,7 +56,12 @@ namespace UIControl
         BINDSUCCESS( engine->registerObjectMethod( typeName, "bool isEnabled( ) const", asMETHODPR(type, isEnabled, ( ) const, bool ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "bool isEnabled( bool ) const", asMETHODPR(type, isEnabled, ( bool ) const, bool ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void setEnabled( bool )", asMETHODPR(type, setEnabled, ( bool ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool canGainFocus( ) const", asMETHODPR(type, canGainFocus, ( ) const, bool ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool canGainFocus( bool ) const", asMETHODPR(type, canGainFocus, ( bool ) const, bool ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void setCanGainFocus( bool )", asMETHODPR(type, setCanGainFocus, ( bool ), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "String getFont( ) const", asMETHODPR(type, getFont, ( ) const, cgString ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void setTextColor( const ColorValue &in )", asMETHODPR(type, setTextColor, ( const cgColorValue & ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "const ColorValue& getTextColor( ) const", asMETHODPR(type, getTextColor, ( ) const, const cgColorValue & ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void setControlText( const String&in )", asMETHODPR(type, setControlText, ( const cgString& ), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void setFont( const String&in )", asMETHODPR(type, setFont, ( const cgString& ), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void setMinimumSize( const Size &in )", asMETHODPR(type, setMinimumSize, ( const cgSize& ), void ), asCALL_THISCALL) );
@@ -94,9 +101,13 @@ namespace UIControl
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void set_visible( bool )", asMETHODPR(type, setVisible, ( bool ), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "bool get_enabled( ) const", asMETHODPR(type, isEnabled, ( ) const, bool ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void set_enabled( bool )", asMETHODPR(type, setEnabled, ( bool ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool get_canGainFocus( ) const", asMETHODPR(type, canGainFocus, ( ) const, bool ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void set_canGainFocus( bool )", asMETHODPR(type, setCanGainFocus, ( bool ), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "String get_font( ) const", asMETHODPR(type, getFont, ( ) const, cgString ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "const ColorValue& get_textColor( ) const", asMETHODPR(type, getTextColor, ( ) const, const cgColorValue & ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void set_controlText( const String&in )", asMETHODPR(type, setControlText, ( const cgString& ), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void set_font( const String&in )", asMETHODPR(type, setFont, ( const cgString& ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void set_textColor( const ColorValue &in )", asMETHODPR(type, setTextColor, ( const cgColorValue & ), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void set_minimumSize( const Size &in )", asMETHODPR(type, setMinimumSize, ( const cgSize& ), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void set_maximumSize( const Size &in )", asMETHODPR(type, setMaximumSize, ( const cgSize& ), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void set_padding( const Rect &in )", asMETHODPR(type, setPadding, ( const cgRect& ), void ), asCALL_THISCALL) );
@@ -117,9 +128,14 @@ namespace UIControl
         BINDSUCCESS( engine->registerObjectMethod( typeName, "bool onKeyUp( int, uint )", asMETHODPR(type, onKeyUp, ( cgInt32, cgUInt32 ), bool ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "bool onKeyPressed( int, uint )", asMETHODPR(type, onKeyPressed, ( cgInt32, cgUInt32 ), bool ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void onSize( int, int )", asMETHODPR(type, onSize, ( cgInt32, cgInt32 ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void onLostFocus( )", asMETHODPR(type, onLostFocus, ( ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void onGainFocus( )", asMETHODPR(type, onGainFocus, ( ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void onScreenLayoutChange( )", asMETHODPR(type, onScreenLayoutChange, ( ), void ), asCALL_THISCALL) );
 
         // Message registration.
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void registerEventHandler( uint, const String &in, IScriptedForm@+ )", asFUNCTIONPR(registerEventHandler, ( cgUInt32, const cgString&, asIScriptObject*, cgUIControl* ), void ), asCALL_CDECL_OBJLAST) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void registerEventHandler( uint, const String &in, IScriptedAppState@+ )", asFUNCTIONPR(registerEventHandler, ( cgUInt32, const cgString&, asIScriptObject*, cgUIControl* ), void ), asCALL_CDECL_OBJLAST) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void registerEventHandler( uint, const String &in, IScriptedObjectBehavior@+ )", asFUNCTIONPR(registerEventHandler, ( cgUInt32, const cgString&, asIScriptObject*, cgUIControl* ), void ), asCALL_CDECL_OBJLAST) );
         // ToDo: ??? void                raiseEvent          ( cgUInt32 nUIMessage, UIEventArgs * pData );
         
     } // End Method registerControlMethods<>
@@ -133,7 +149,8 @@ namespace UIControl
     //-----------------------------------------------------------------------------
     void registerEventHandler( cgUInt32 messageId, const cgString & handler, asIScriptObject * nativeScriptObject, cgUIControl* thisPointer )
     {
-        cgScriptObject * scriptObject = new cgScriptObject( thisPointer->getRootForm()->getScript(), nativeScriptObject );
+        cgScript * script = (cgScript*)asGetActiveContext()->GetUserData();
+        cgScriptObject * scriptObject = new cgScriptObject( script, nativeScriptObject );
         thisPointer->registerEventHandler( messageId, handler, scriptObject );
         scriptObject->release();
     }

@@ -17,6 +17,8 @@
 //      Copyright (c) 1997 - 2012 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
+#include_once "TrooperActor.gs"
+
 //-----------------------------------------------------------------------------
 // Enumerations
 //-----------------------------------------------------------------------------
@@ -49,7 +51,12 @@ shared class FirstPersonActor : IScriptedObjectBehavior
     private ObjectNode@             mDummyWeaponMag;        // Dummy weapon magazine in the player's hand (hidden unless reloading).
     private ObjectNode@             mActualWeaponMag;       // Actual weapon magazine in the gun (hidden during reloading).
     private bool                    mMagHidden;             // Magazine is in hidden state?
+    private double                  mFireCycle;             // Timings for firing.
+    private float                   mTimeToFire;            // Time until we send another bullet.
     private WeaponState             mState;                 // Current state of the weapon (i.e. idling, firing, etc.)
+    private AudioBufferHandle       mReloadSound;
+    private AudioBufferHandle       mFireLoopSound;
+    private AudioBufferHandle       mFireEndSound;
 
 	///////////////////////////////////////////////////////////////////////////
 	// Constructors & Destructors
@@ -83,6 +90,19 @@ shared class FirstPersonActor : IScriptedObjectBehavior
         @mDummyWeaponMag     = mActor.findChild( "Dummy Magazine" );
         @mActualWeaponMag    = mActor.findChild( "Weapon Magazine" );
 
+        // Setup the actor's animation controller.
+        mActor.setTrackFadeTimes( 0.15f, 0.15f );
+
+        // Auto raise weapon from lowered state.
+        mState = WeaponState::Raising;
+        mActor.playAnimationSet( "Action", "Raising", AnimationPlaybackMode::PlayOnce );
+
+        // Load sound effects.
+        ResourceManager @ resources = mActor.getScene().getResourceManager();
+        resources.loadAudioBuffer( mReloadSound,   "Sounds/GunReload.wav", AudioBufferFlags::Complex, 0, DebugSource() );
+        resources.loadAudioBuffer( mFireLoopSound, "Sounds/Carbine Fire.ogg", AudioBufferFlags::Complex, 0, DebugSource() );
+        resources.loadAudioBuffer( mFireEndSound,  "Sounds/Carbine Fire End.ogg", AudioBufferFlags::Complex, 0, DebugSource() );
+
         // Initially hide the dummy weapon magazine.
         if ( @mDummyWeaponMag != null )
             mDummyWeaponMag.showNode( false, true );
@@ -114,9 +134,7 @@ shared class FirstPersonActor : IScriptedObjectBehavior
 
         AnimationController @ controller = mActor.getAnimationController();
         InputDriver @ input = getAppInputDriver();
-
-        // Get the current track position.
-        double pos = controller.getTrackPosition( 0 );
+        bool directMode = (input.getMouseMode() == MouseHandlerMode::Direct);
 
         // What is the current weapon state?
         switch ( mState )
@@ -124,12 +142,10 @@ shared class FirstPersonActor : IScriptedObjectBehavior
             case WeaponState::Lowered:
 
                 // Start raising the weapon when LMB is pressed
-                if ( input.isMouseButtonPressed( MouseButtons::Left ) )
+                if ( input.isMouseButtonPressed( MouseButtons::Left ) && directMode )
                 {
                     mState = WeaponState::Raising;
-                    controller.setTrackAnimationSet( 0, mActor.getAnimationSetByName( "Raising" ) );
-                    controller.setTrackPosition( 0, 0 );
-                    controller.setTrackSpeed( 0, 1.0f );
+                    mActor.playAnimationSet( "Action", "Raising", AnimationPlaybackMode::PlayOnce );
 
                 } // End if LMB
                 break;
@@ -137,67 +153,109 @@ shared class FirstPersonActor : IScriptedObjectBehavior
             case WeaponState::Raising:
 
                 // Switch to idle when raising is complete.
-                if ( pos >= (24.0f / 30.0f) )
+                if ( !mActor.isAnimationTrackPlaying( "Action", true ) )
                 {
+                    // Switch to idle state when we've finished raising
                     mState = WeaponState::Idle;
-                    controller.setTrackAnimationSet( 0, mActor.getAnimationSetByName( "Idle" ) );
-                    controller.setTrackPosition( 0, 0 );
-                    controller.setTrackSpeed( 0, 1.0f );
+                    mActor.playAnimationSet( "Primary", "Idle", AnimationPlaybackMode::Loop );
                 
                 } // End if complete
-                else
-                {
-                    // Only break if we don't want to drop through to idle state.
-                    break;
-                
-                } // End if playing
+                break;
 
             case WeaponState::Firing:
-                if ( !input.isMouseButtonPressed( MouseButtons::Left ) )
+                if ( !input.isMouseButtonPressed( MouseButtons::Left ) || !directMode)
                 {
+                    // Switch back to idle state
                     mState = WeaponState::Idle;
-                    controller.setTrackAnimationSet( 0, mActor.getAnimationSetByName( "Idle" ) );
-                    controller.setTrackFrameLimits( 0, 0x7FFFFFFF, 0x7FFFFFFF );
-                    controller.setTrackPosition( 0, 0 );
-                    controller.setTrackSpeed( 0, 1.0f );
+                    mActor.playAnimationSet( "Primary", "Idle", AnimationPlaybackMode::Loop );
 
+                    // Play the fire end sound effect.
+                    AudioBuffer @ effect = mFireEndSound.getResource(true);
+                    if ( @effect != null && effect.isLoaded() )
+                    {
+                        effect.setVolume( 0.9f );
+                        effect.setBufferPosition( 0 );
+                        effect.play( false ); // Once
+                    
+                    } // End if loaded
+
+                    // Stop the firing effect loop
+                    @effect = mFireLoopSound.getResource(true);
+                    if ( @effect != null && effect.isLoaded() )
+                        effect.stop();
+                    
+                    // Hide muzzle flash billboard
                     if ( @mMuzzleFlashEmitter != null )
                         mMuzzleFlashEmitter.enableLayerEmission( 0, false );
 
+                    // Hide muzzle flash light
                     if ( @mMuzzleFlashLight != null )
                         mMuzzleFlashLight.showNode( false, false );
 
-                } // End if LMB
+                } // End if !LMB
                 else
                 {
+                    mFireCycle += elapsedTime;
+                    mTimeToFire -= elapsedTime;
+                    if ( mTimeToFire <= 0.0f )
+                    {
+                        // Send a bullet
+                        fireShot();
+
+                        // Reset
+                        mTimeToFire += 0.1f;
+                    }
+
+                    // Cycle muzzle flash light
                     if ( @mMuzzleFlashLight != null )
-                        mMuzzleFlashLight.showNode( (pos % (5.0f / 30.0f)) <= (2.5f / 30.0f), false );
-                }
+                        mMuzzleFlashLight.showNode( (mFireCycle % 0.1f) <= 0.05f, false );
+                
+                } // End if LMB
                 break;
 
             case WeaponState::Idle:
 
-                // If user presses 'R', switch to reload.
-                if ( input.isKeyPressed( Keys::R, true ) )
+                // If user presses 'R', switch to reload or fire with LMB.
+                if ( input.isKeyPressed( Keys::R, true ) && directMode )
                 {
                     mState = WeaponState::Reloading;
-                    controller.setTrackAnimationSet( 0, mActor.getAnimationSetByName( "Reload" ) );
-                    controller.setTrackPosition( 0, 0 );
-                    controller.setTrackSpeed( 0, 1.0f );
+                    mActor.stopAnimationTrack( "Primary" );
+                    mActor.playAnimationSet( "Action", "Reload", AnimationPlaybackMode::PlayOnce, 1, 0.1f );
+
+                    // Play the reload sound effect.
+                    AudioBuffer @ effect = mReloadSound.getResource(true);
+                    if ( @effect != null && effect.isLoaded() )
+                    {
+                        effect.setVolume( 0.85f );
+                        effect.setBufferPosition( 0 );
+                        effect.play( false ); // Once
+                    
+                    } // End if loaded
 
                 } // End if 'R'
-                // Start raising the weapon when LMB is pressed
-                else if ( input.isMouseButtonPressed( MouseButtons::Left ) )
+                else if ( input.isMouseButtonPressed( MouseButtons::Left ) && directMode )
                 {
+                    // Switch to firing state.
                     mState = WeaponState::Firing;
-                    controller.setTrackAnimationSet( 0, mActor.getAnimationSetByName( "Fire" ) );
-                    controller.setTrackFrameLimits( 0, 0, 5 );
-                    controller.setTrackPosition( 0, 0 );
-                    controller.setTrackSpeed( 0, 1.0f );
+                    mFireCycle = 0;
+                    mTimeToFire = 0;
+                    mActor.playAnimationSet( "Primary", "Fire Cycle", AnimationPlaybackMode::Loop );
 
+                    // Play the firing sound effect.
+                    AudioBuffer @ effect = mFireLoopSound.getResource(true);
+                    if ( @effect != null && effect.isLoaded() )
+                    {
+                        effect.setVolume( 0.9f );
+                        effect.setBufferPosition( 0 );
+                        effect.play( true ); // Loop
+                    
+                    } // End if loaded
+                    
+                    // Show muzzle flash emitter.
                     if ( @mMuzzleFlashEmitter != null )
                         mMuzzleFlashEmitter.enableLayerEmission( 0, true );
 
+                    // Show muzzle flash light source.
                     if ( @mMuzzleFlashLight != null )
                         mMuzzleFlashLight.showNode( true, false );
 
@@ -207,16 +265,18 @@ shared class FirstPersonActor : IScriptedObjectBehavior
             case WeaponState::Reloading:
 
                 // Switch back to idle when reload is complete.
-                if ( pos >= (139.0f / 30.0f) )
+                if ( !mActor.isAnimationTrackPlaying( "Action", true ) )
                 {
+                    // Switch back to idle.
                     mState = WeaponState::Idle;
-                    controller.setTrackAnimationSet( 0, mActor.getAnimationSetByName( "Idle" ) );
-                    controller.setTrackPosition( 0, 0 );
-                    controller.setTrackSpeed( 0, 1.0f );
+                    mActor.playAnimationSet( "Primary", "Idle", AnimationPlaybackMode::Loop );
                 
                 } // End if complete
                 else
                 {
+                    int track = mActor.playAnimationSet( "Action", "Reload", AnimationPlaybackMode::PlayOnce );
+                    double pos = controller.getTrackPosition( track );
+
                     if ( !mMagHidden )
                     {
                         // Hide actual magazine (in weapon) and show dummy magazine (in hand) on frame 21.
@@ -252,5 +312,51 @@ shared class FirstPersonActor : IScriptedObjectBehavior
 
         } // End switch state
 	}
+
+    //-------------------------------------------------------------------------
+	// Name : fireShot () (Private)
+	// Desc : Fire a shot into the scene and react (temporary).
+	//-------------------------------------------------------------------------
+    private void fireShot( )
+    {
+        RenderDriver @ driver = getAppRenderDriver();
+        Viewport viewport = driver.getViewport();
+        Size viewportSize = Size(viewport.width, viewport.height);
+
+        // Convert the location at the center of the screen into a ray for picking
+        Vector3 rayOrigin, rayDir;
+        CameraNode @ camera = cast<CameraNode>(mActor.getParent());
+        if ( @camera == null || !camera.viewportToRay( viewportSize, Vector2(viewportSize.width/2.0f, viewportSize.height/2.0f), rayOrigin, rayDir ) )
+            return;
+
+        // Ask the scene to retrieve the closest intersected object node.
+        Vector3 intersection;
+        Scene @ scene = mActor.getScene();
+        ObjectNode @ pickedNode = scene.pickClosestNode( viewportSize, rayOrigin, rayDir, intersection );
+
+        // Take action based on the selected object node
+        if ( @pickedNode != null )
+        {
+            // Push the object if it has a physics body
+            PhysicsBody @ body = pickedNode.getPhysicsBody();
+            if ( @body != null )
+                body.applyImpulse( rayDir * 6.0f, intersection );
+
+            // Note: Requires that actor group is OPEN! This is just a test.
+            if ( pickedNode.queryObjectType( RTID_BoneObject ) )
+            {
+                // Get the owner group (should be an actor)
+                ActorNode @ actor = cast<ActorNode>(pickedNode.getOwnerGroup( ));
+                if ( @actor != null && actor.getBehaviorCount() > 0 )
+                {
+                    TrooperActor @ trooper = cast<TrooperActor>(actor.getScriptedBehavior(0));
+                    if ( @trooper != null )
+                        trooper.onHitScan();
+                }
+
+            } // End if bone.
+
+        } // End if intersect
+    }
 
 } // End Class FirstPersonActor

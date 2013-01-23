@@ -129,6 +129,24 @@ bool cgPhysicsWorld::initialize( const cgBoundingBox & WorldSize )
 	// this is the most efficient but the less accurate mode
 	NewtonSetSolverModel( mWorld, 1 );
 
+    //cgInt32 defaultMaterialId = NewtonMaterialGetDefaultGroupID( mWorld );
+    //NewtonMaterialSetDefaultElasticity( mWorld, defaultMaterialId, defaultMaterialId, -1000 );
+    //NewtonMaterialSetDefaultSoftness( mWorld, defaultMaterialId, defaultMaterialId, 0.0f );
+    //NewtonMaterialSetSurfaceThickness( mWorld, defaultMaterialId, defaultMaterialId, 0.001f );
+
+    // Retrieve / create default material group Ids
+    mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Standard ]  = NewtonMaterialGetDefaultGroupID( mWorld );
+    mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Character ] = NewtonMaterialCreateGroupID( mWorld );
+    mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Ragdoll ]   = NewtonMaterialCreateGroupID( mWorld );
+
+    // Setup default properties.
+    NewtonMaterialSetDefaultElasticity( mWorld, mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Character ], 
+                                        mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Standard ], -1000 );
+
+    // Disable interaction between certain groups.
+    NewtonMaterialSetDefaultCollidable( mWorld, mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Character ],
+                                        mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Ragdoll ], 0 );
+
     // Success!
     return true;
 }
@@ -142,7 +160,7 @@ bool cgPhysicsWorld::initialize( const cgBoundingBox & WorldSize )
 void cgPhysicsWorld::update( cgFloat fTimeElapsed )
 {
     // Initialized?
-    if ( mWorld == CG_NULL || fTimeElapsed == 0.0f )
+    if ( mWorld == CG_NULL || fTimeElapsed <= 0 )
         return;
 
     // Increment the time accumulator
@@ -172,8 +190,13 @@ void cgPhysicsWorld::update( cgFloat fTimeElapsed )
         for ( itController = mControllers.begin(); itController != mControllers.end(); ++itController )
             (*itController)->preStep( (cgFloat)fRate );
 
-        // Simulate
+        // Simulate newton.
         NewtonUpdate( mWorld, (cgFloat)fRate );
+
+        // Trigger 'onPhysicsStep' of all listeners.
+        Listeners = mEventListeners;
+        for ( itListener = Listeners.begin(); itListener != Listeners.end(); ++itListener )
+            (static_cast<cgPhysicsWorldEventListener*>(*itListener))->onPhysicsStep( this, &Args );
 
         // Allow controllers to update.
         for ( itController = mControllers.begin(); itController != mControllers.end(); ++itController )
@@ -373,4 +396,152 @@ bool cgPhysicsWorld::addShapeToCache( cgPhysicsShape * pShape )
 void cgPhysicsWorld::removeShapeFromCache( cgPhysicsShape * pShape )
 {
     mShapeCache.erase( cgPhysicsShapeCacheKey(pShape) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : rayCastClosest()
+/// <summary>
+/// Find the closest intersected physics body along the specified ray.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgPhysicsWorld::rayCastClosest( const cgVector3 & from, const cgVector3 & to, cgCollisionContact & closestContact )
+{
+    // Reset contact structure.
+    closestContact = cgCollisionContact();
+
+    // Run the query.
+    NewtonWorldRayCast( mWorld, from, to, rayCastClosestFilter, &closestContact, CG_NULL );
+
+    // Anything found?
+    return ( closestContact.body != CG_NULL );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : rayCastAll()
+/// <summary>
+/// Collect a list of all intersected physics body along the specified ray. The
+/// list of contacts can optionally be sorted by distance with the closest
+/// intersection first.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgPhysicsWorld::rayCastAll( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgCollisionContact::Array & contacts )
+{
+    // Reset contact list.
+    contacts.clear();
+
+    // Run the query.
+    NewtonWorldRayCast( mWorld, from, to, rayCastAllFilter, &contacts, CG_NULL );
+
+    // ToDo: Sort the contacts by distance.
+
+    // Anything found?
+    return !contacts.empty();
+}
+
+//-----------------------------------------------------------------------------
+//  Name : rayCast()
+/// <summary>
+/// Perform a ray cast and execute the specified callback whenever a new
+/// potential contact is encountered.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgPhysicsWorld::rayCast( const cgVector3 & from, const cgVector3 & to, RayCastPreFilterCallback preFilter, RayCastFilterCallback filter, void * userData )
+{
+    // Build the user data.
+    RayCastFilterCallbackData data;
+    data.filterCallback = filter;
+    data.preFilterCallback = preFilter;
+    data.userData = userData;
+
+    // Run the query.
+    NewtonWorldRayCast( mWorld, from, to, (filter) ? rayCastFilter : CG_NULL, &data, (preFilter) ? rayCastPreFilter : CG_NULL );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : rayCastAllFilter() (Protected, Static)
+/// <summary>
+/// TODO
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloat cgPhysicsWorld::rayCastAllFilter( const NewtonBody* const body, const cgFloat * const hitNormal, cgInt collisionId, void* const userData, cgFloat intersectParam )
+{
+    // Build contact.
+    cgCollisionContact contact;
+    contact.intersectParam = intersectParam;
+    contact.body           = (cgPhysicsBody*)NewtonBodyGetUserData( body );
+    contact.contactNormal  = hitNormal;
+    contact.collisionId    = (cgInt32)collisionId;
+    
+    // Add to list.
+    cgCollisionContact::Array * contacts = (cgCollisionContact::Array*)userData;
+    contacts->push_back( contact );
+    
+    // Find all
+    return 1.0f;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : rayCastClosestFilter() (Protected, Static)
+/// <summary>
+/// TODO
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloat cgPhysicsWorld::rayCastClosestFilter( const NewtonBody* const body, const cgFloat * const hitNormal, cgInt collisionId, void* const userData, cgFloat intersectParam )
+{
+    cgCollisionContact * contact = (cgCollisionContact*)userData;
+    if ( intersectParam < contact->intersectParam )
+    {
+        contact->intersectParam = intersectParam;
+        contact->body           = (cgPhysicsBody*)NewtonBodyGetUserData( body );
+        contact->contactNormal  = hitNormal;
+        contact->collisionId    = (cgInt32)collisionId;
+    
+    } // End if closer
+
+    // Find closest
+    return intersectParam;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : rayCastFilter() (Protected, Static)
+/// <summary>
+/// TODO
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloat cgPhysicsWorld::rayCastFilter( const NewtonBody* const body, const cgFloat * const hitNormal, cgInt collisionId, void* const userData, cgFloat intersectParam )
+{
+    cgPhysicsBody * outBody = static_cast<cgPhysicsBody*>(NewtonBodyGetUserData( body ));
+    RayCastFilterCallbackData * outData = static_cast<RayCastFilterCallbackData*>(userData);
+
+    // Pass through to user callback.
+    return outData->filterCallback( outBody, hitNormal, collisionId, outData->userData, intersectParam );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : rayCastPreFilter() (Protected, Static)
+/// <summary>
+/// TODO
+/// </summary>
+//-----------------------------------------------------------------------------
+cgUInt cgPhysicsWorld::rayCastPreFilter( const NewtonBody* const body, const NewtonCollision * const collision, void* const userData )
+{
+    cgPhysicsBody * outBody = static_cast<cgPhysicsBody*>(NewtonBodyGetUserData( body ));
+    cgPhysicsShape * outShape = CG_NULL; //static_cast<cgPhysicsShape*>(NewtonCollisionGetUserData( collision ));
+    RayCastFilterCallbackData * outData = static_cast<RayCastFilterCallbackData*>(userData);
+
+    // Pass through to user callback.
+    return (outData->preFilterCallback( outBody, outShape, outData->userData ) != 0);
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getDefaultMaterialGroupId()
+/// <summary>
+/// Get the material group id of the specified default material group that
+/// will be automatically assigned (by default) to certain types of objects
+/// in the world.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt32 cgPhysicsWorld::getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Base group ) const
+{
+    return mDefaultMaterialIds[ (size_t)group ];
 }

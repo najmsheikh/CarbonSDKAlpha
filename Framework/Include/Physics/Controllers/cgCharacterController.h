@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 #include <Physics/cgPhysicsController.h>
 #include <Scripting/cgScriptInterop.h>
+#include <Navigation/cgNavigationTypes.h>
 #include <Math/cgMathTypes.h>
 
 //-----------------------------------------------------------------------------
@@ -35,6 +36,7 @@ class cgRigidBody;
 class cgPhysicsBody;
 class cgPhysicsShape;
 class cgPhysicsJoint;
+class cgNavigationAgent;
 
 //-----------------------------------------------------------------------------
 // Main Class Declarations
@@ -72,7 +74,7 @@ public:
     //-------------------------------------------------------------------------
     // Constructors & Destructors
     //-------------------------------------------------------------------------
-             cgCharacterController( cgPhysicsWorld * world );
+             cgCharacterController( cgPhysicsWorld * world, bool playerControlled );
     virtual ~cgCharacterController( );
 
     //-------------------------------------------------------------------------
@@ -83,53 +85,64 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    CharacterState      getCharacterState       ( ) const;
-    void                setKinematicCushion     ( cgFloat value );
-    void                setCharacterMass        ( cgFloat value );
-    void                setCharacterHeight      ( cgFloat value );
-    void                setCharacterRadius      ( cgFloat value );
-    void                setCharacterOffset      ( cgFloat value );
-    void                setMaximumSlope         ( cgFloat degrees );
-    void                setMaximumStepHeight    ( cgFloat value );
-    void                setMaximumWalkSpeed     ( cgFloat value );
-    void                setWalkAcceleration     ( cgFloat value );
-    void                setGravity              ( const cgVector3 & gravity );
-    void                setJumpImpulse          ( cgFloat value );
-    void                setAirborneWalkDamping  ( cgFloat value );
-    void                setRampWalkDamping      ( cgFloat value );
-    void                setRampJumpDamping      ( cgFloat value );
-    bool                requestStandingMode     ( StandingMode mode );
-    cgFloat             getKinematicCushion     ( ) const;
-    cgFloat             getCharacterMass        ( ) const;
-    cgFloat             getCharacterHeight      ( ) const;
-    cgFloat             getCharacterHeight      ( bool adjustByStandingMode ) const;
-    cgFloat             getCharacterRadius      ( ) const;
-    cgFloat             getCharacterOffset      ( ) const;
-    cgFloat             getMaximumSlope         ( ) const;
-    cgFloat             getMaximumStepHeight    ( ) const;
-    cgFloat             getMaximumWalkSpeed     ( ) const;
-    cgFloat             getWalkAcceleration     ( ) const;
-    const cgVector3   & getGravity              ( ) const;
-    const cgVector3   & getVelocity             ( ) const;
-    cgFloat             getJumpImpulse          ( ) const;
-    cgFloat             getAirborneWalkDamping  ( ) const;
-    cgFloat             getRampWalkDamping      ( ) const;
-    cgFloat             getRampJumpDamping      ( ) const;
-    StandingMode        getRequestedStandingMode( ) const;
-    StandingMode        getActualStandingMode   ( ) const;
+    CharacterState                  getCharacterState       ( ) const;
+    cgNavigationTargetState::Base   getNavigationState      ( ) const;
+    void                            applyImpulse            ( const cgVector3 & impulse );
+    void                            setKinematicCushion     ( cgFloat value );
+    void                            setCharacterMass        ( cgFloat value );
+    void                            setCharacterHeight      ( cgFloat value );
+    void                            setCharacterRadius      ( cgFloat value );
+    void                            setCharacterOffset      ( cgFloat value );
+    void                            setMaximumSlope         ( cgFloat degrees );
+    void                            setMaximumStepHeight    ( cgFloat value );
+    void                            setMaximumWalkSpeed     ( cgFloat value );
+    void                            setMaximumFlySpeed      ( cgFloat value );
+    void                            setWalkAcceleration     ( cgFloat value );
+    void                            setFlyAcceleration      ( cgFloat value );
+    void                            setGravity              ( const cgVector3 & gravity );
+    void                            setJumpImpulse          ( cgFloat value );
+    void                            setAirborneWalkDamping  ( cgFloat value );
+    void                            setRampWalkDamping      ( cgFloat value );
+    void                            setRampJumpDamping      ( cgFloat value );
+    bool                            requestStandingMode     ( StandingMode mode );
+    void                            enableFlyMode           ( bool enable );
+    void                            enableFlyMode           ( bool enable, bool autoDisable );
+    cgFloat                         getKinematicCushion     ( ) const;
+    cgFloat                         getCharacterMass        ( ) const;
+    cgFloat                         getCharacterHeight      ( ) const;
+    cgFloat                         getCharacterHeight      ( bool adjustByStandingMode ) const;
+    cgFloat                         getCharacterRadius      ( ) const;
+    cgFloat                         getCharacterOffset      ( ) const;
+    cgFloat                         getMaximumSlope         ( ) const;
+    cgFloat                         getMaximumStepHeight    ( ) const;
+    cgFloat                         getMaximumWalkSpeed     ( ) const;
+    cgFloat                         getMaximumFlySpeed      ( ) const;
+    cgFloat                         getWalkAcceleration     ( ) const;
+    cgFloat                         getFlyAcceleration      ( ) const;
+    const cgVector3               & getGravity              ( ) const;
+    const cgVector3               & getVelocity             ( ) const;
+    cgFloat                         getJumpImpulse          ( ) const;
+    cgFloat                         getAirborneWalkDamping  ( ) const;
+    cgFloat                         getRampWalkDamping      ( ) const;
+    cgFloat                         getRampJumpDamping      ( ) const;
+    StandingMode                    getRequestedStandingMode( ) const;
+    StandingMode                    getActualStandingMode   ( ) const;
+    const cgQuaternion            & getSuggestedHeading     ( ) const;
+    bool                            isFlyModeEnabled        ( ) const;
+    bool                            navigateTo              ( const cgVector3 & position );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgPhysicsController)
     //-------------------------------------------------------------------------
-    virtual void        preStep                 ( cgFloat timeDelta );
-    virtual void        postStep                ( cgFloat timeDelta );
-    virtual bool        initialize              ( );
-    virtual bool        supportsInputChannels   ( ) const;
+    virtual void                    preStep                 ( cgFloat timeDelta );
+    virtual void                    postStep                ( cgFloat timeDelta );
+    virtual bool                    initialize              ( );
+    virtual bool                    supportsInputChannels   ( ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
     //-------------------------------------------------------------------------
-    virtual void        dispose                 ( bool disposeBase );
+    virtual void                    dispose                 ( bool disposeBase );
 	
 protected:
     //-------------------------------------------------------------------------
@@ -151,6 +164,11 @@ protected:
     cgVector3       stepForward             ( cgVector3 & position, const cgVector3 & velocity, const cgVector3 & upAxis, cgFloat timeDelta );
     bool            findSupportingSurface   ( const cgVector3 & source, const cgVector3 & destination, const cgVector3 & upAxis, cgPhysicsShape * shape, cgFloat & distance, cgVector3 & surfaceNormal, bool rejectPenetratingDynamics = false ) const;
     bool            attemptStandingChange   ( );
+
+    void            preStepPlayer           ( cgFloat timeDelta );
+    void            preStepNPC              ( cgFloat timeDelta );
+    void            postStepPlayer          ( cgFloat timeDelta );
+    void            postStepNPC             ( cgFloat timeDelta );
     
     void            preProcessAirborne      ( cgVector3 & currentPosition, cgFloat timeDelta );
     void            preProcessOnRamp        ( cgVector3 & currentPosition, cgFloat timeDelta );
@@ -162,13 +180,16 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    cgRigidBody       * mBody;                // The rigid body that ties us to the physics simulation.
-    cgPhysicsJoint    * mUpJoint;             // Joint that fixes the rigid body to a given up axis.
-    cgPhysicsShape    * mDynamicsSensorShape; // Shape used to search for stairs.
-    cgPhysicsShape    * mFloorSensorShape;    // Shape used to search for suitable floor.
-    cgPhysicsShape    * mBodySensorShape;     // Shape used to search for collisions in forward motion.
+    cgRigidBody       * mBody;                  // The rigid body that ties us to the physics simulation.
+    cgPhysicsJoint    * mUpJoint;               // Joint that fixes the rigid body to a given up axis.
+    cgPhysicsShape    * mDynamicsSensorShape;   // Shape used to search for stairs.
+    cgPhysicsShape    * mFloorSensorShape;      // Shape used to search for suitable floor.
+    cgPhysicsShape    * mBodySensorShape;       // Shape used to search for collisions in forward motion.
     
     // Character Properties
+    bool                mPlayerControlled;      // Is this a player controlled character controller, or navigation controlled?
+    bool                mFlyModeEnabled;        // Is fly mode currently enabled?
+    bool                mAutoDisableFlyMode;    // Automatically disable fly mode on contact with ground.
     cgFloat             mKinematicCushion;      // Cushion around the object used during kinematic motion processing.
     cgFloat             mCharacterMass;         // The mass of the character.
     cgFloat             mCharacterHeight;       // Height of the character.
@@ -177,8 +198,10 @@ protected:
     cgFloat             mMaxStepHeight;         // Maximum height that we can automatically step up.
     cgFloat             mMaxSlope;              // Maximum allowed slope angle that can support the player.
     cgFloat             mWalkSpeed;             // Requested walking speed of the character
+    cgFloat             mFlySpeed;              // Requested flying speed of the character
     cgVector3           mGravity;               // Gravity force to apply to the character.
-    cgFloat             mMaximumAcceleration;   // The rate at which the character can accelerate / decelerate.
+    cgFloat             mWalkAcceleration;      // The rate at which the character can accelerate / decelerate while walking.
+    cgFloat             mFlyAcceleration;       // The rate at which the character can accelerate / decelerate while flying.
     cgFloat             mJumpImpulse;           // Impulse to apply when jumping.
     cgFloat             mAirborneWalkDamping;   // Amount to damp walk acceleration when airborne.
     cgFloat             mRampWalkDamping;       // Amount to damp walk acceleration when on a ramp.
@@ -188,12 +211,16 @@ protected:
     cgFloat             mCrouchHeightScale;     // Amount to scale the character's height when crouching.
     cgFloat             mProneHeightScale;      // Amount to scale the character's height when prone.
 
+    // Character navigation
+    cgNavigationAgent * mNavAgent;              // Automatic navigation agent integration for non player controlled character
+
     // Character State
     cgVector3           mUpAxis;                // Axis to which this character is aligned.
     cgVector3           mVelocity;              // Current velocity of the charater
     cgVector3           mFloorNormal;           // Normal of the surface on which the character is standing (ramp or floor)
     CharacterState      mState;                 // The current state of the character (falling, on floor, etc.)
     cgFloat             mAirborneTime;          // The amount of time that the has elapsed since the character left the floor.
+    cgQuaternion        mSuggestedHeading;      // The heading suggested by the navigation subsystems.
 
     // Collision Reporting
     ContactDataArray    mContacts;              // List of contacts made during kinematic motion phase

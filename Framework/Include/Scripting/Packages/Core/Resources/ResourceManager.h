@@ -55,6 +55,8 @@ namespace ResourceManager
             // ToDo: BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "const BufferFormatEnum & getBufferFormats( ) const", asMETHODPR(cgResourceManager,getBufferFormats,() const, const cgBufferFormatEnum&), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "void emptyGarbage()", asMETHODPR(cgResourceManager,emptyGarbage,(), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "void debugResources()", asMETHODPR(cgResourceManager,debugResources,(), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "void enableDestruction( bool )", asMETHODPR(cgResourceManager,enableDestruction,( bool ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool isDestructionEnabled( ) const", asMETHODPR(cgResourceManager,isDestructionEnabled,( ) const, bool), asCALL_THISCALL) );
             
             // Textures
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool addTexture( TextureHandle &inout, Texture@+, uint, const String &in, const DebugSource &in )", asMETHODPR(cgResourceManager,addTexture,(cgTextureHandle*,cgTexture*,cgUInt32,const cgString&,const cgDebugSourceInfo&), bool), asCALL_THISCALL) );
@@ -103,10 +105,33 @@ namespace ResourceManager
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool createDepthStencilState( DepthStencilStateHandle &inout, const DepthStencilStateDesc &in, uint, const DebugSource &in )", asMETHODPR(cgResourceManager,createDepthStencilState,(cgDepthStencilStateHandle*,const cgDepthStencilStateDesc&,cgUInt32,const cgDebugSourceInfo&), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool createRasterizerState( RasterizerStateHandle &inout, const RasterizerStateDesc &in, uint, const DebugSource &in )", asMETHODPR(cgResourceManager,createRasterizerState,(cgRasterizerStateHandle*,const cgRasterizerStateDesc&,cgUInt32,const cgDebugSourceInfo&), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool createBlendState( BlendStateHandle &inout, const BlendStateDesc &in, uint, const DebugSource &in )", asMETHODPR(cgResourceManager,createBlendState,(cgBlendStateHandle*,const cgBlendStateDesc&,cgUInt32,const cgDebugSourceInfo&), bool), asCALL_THISCALL) );
+
+            // Materials
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool addMaterial( MaterialHandle &inout, Material@+, uint, const DebugSource &in )", asMETHODPR(cgResourceManager,addMaterial,(cgMaterialHandle*,cgMaterial*,cgUInt32,const cgDebugSourceInfo&), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool createMaterial( MaterialHandle &inout, bool, World@+, MaterialType,uint, const DebugSource &in )", asMETHODPR(cgResourceManager,createMaterial,(cgMaterialHandle*,bool, cgWorld*, cgMaterialType::Base,cgUInt32,const cgDebugSourceInfo&), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool createMaterial( MaterialHandle &inout, MaterialType,uint, const DebugSource &in )", asMETHODPR(cgResourceManager,createMaterial,(cgMaterialHandle*, cgMaterialType::Base,cgUInt32,const cgDebugSourceInfo&), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool cloneMaterial( MaterialHandle &inout, World@+, bool, Material@+, uint, const DebugSource &in )", asMETHODPR(cgResourceManager,cloneMaterial,(cgMaterialHandle*, cgWorld*, bool, cgMaterial*,cgUInt32,const cgDebugSourceInfo&), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool loadMaterial( MaterialHandle &inout, World@+, MaterialType, uint, bool, uint, const DebugSource &in )", asMETHODPR(cgResourceManager,loadMaterial,(cgMaterialHandle*, cgWorld*, cgMaterialType::Base, cgUInt32, bool, cgUInt32,const cgDebugSourceInfo&), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool getMaterialFromId( MaterialHandle &inout, uint )", asMETHODPR(cgResourceManager,getMaterialFromId,(cgMaterialHandle*, cgUInt32), bool), asCALL_THISCALL) );
         
             // Samplers
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "Sampler @ createSampler( const String &in )", asMETHODPR(cgResourceManager, createSampler, (const cgString &), cgSampler*), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "Sampler @ createSampler( const String &in, const SurfaceShaderHandle &in )", asMETHODPR(cgResourceManager, createSampler, (const cgString&, const cgSurfaceShaderHandle&), cgSampler*), asCALL_THISCALL) );
+
+            // Scripts
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool loadScript( ScriptHandle &inout, const InputStream &in, uint, const DebugSource &in )", asMETHODPR(cgResourceManager,loadScript,(cgScriptHandle*,const cgInputStream&,cgUInt32, const cgDebugSourceInfo&), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool loadScript( ScriptHandle &inout, const InputStream &in, const String &in, uint, const DebugSource &in )", asMETHODPR(cgResourceManager,loadScript,(cgScriptHandle*,const cgInputStream&, const cgString&, cgUInt32, const cgDebugSourceInfo&), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool loadScript( ScriptHandle &inout, const InputStream &in, const String &in, const String &in, uint, const DebugSource &in )", asMETHODPR(cgResourceManager,loadScript,(cgScriptHandle*,const cgInputStream&, const cgString&, const cgString&, cgUInt32, const cgDebugSourceInfo&), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool loadScript( ScriptHandle &inout, const String &in, uint, const DebugSource &in )", asFUNCTIONPR(loadScript,(cgScriptHandle*,const cgString&,cgUInt32,const cgDebugSourceInfo&,cgResourceManager*), bool), asCALL_CDECL_OBJLAST) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool loadScript( ScriptHandle &inout, const String &in, const String &in, uint, const DebugSource &in )", asFUNCTIONPR(loadScript,(cgScriptHandle*,const cgString&, const cgString&, cgUInt32,const cgDebugSourceInfo&,cgResourceManager*), bool), asCALL_CDECL_OBJLAST) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool loadScript( ScriptHandle &inout, const String &in, const String &in, const String &in, uint, const DebugSource &in )", asFUNCTIONPR(loadScript,(cgScriptHandle*,const cgString&, const cgString&, const cgString&, cgUInt32,const cgDebugSourceInfo&,cgResourceManager*), bool), asCALL_CDECL_OBJLAST) );
+
+            ///////////////////////////////////////////////////////////////////////
+            // Global Utility Functions
+            ///////////////////////////////////////////////////////////////////////
+
+            // Register singleton access.
+            BINDSUCCESS( engine->registerGlobalFunction( "ResourceManager@+ getAppResourceManager( )", asFUNCTIONPR(cgResourceManager::getInstance, ( ), cgResourceManager*), asCALL_CDECL) );
         }
 
         //---------------------------------------------------------------------
@@ -135,6 +160,48 @@ namespace ResourceManager
         static bool loadAudioBuffer( cgAudioBufferHandle * handleOut, const cgString & stream, cgUInt32 soundFlags, cgUInt32 flags, const cgDebugSourceInfo & _debugSource, cgResourceManager * thisPointer )
         {
             return thisPointer->loadAudioBuffer( handleOut, stream, soundFlags, flags, _debugSource );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : loadScript () (Static)
+        /// <summary>
+        /// Provides an alternative overload for the script accessible
+        /// ResourceManager::loadScript() method that allows the script to
+        /// pass a string type directly (no implicit cast is supported to the
+        /// required InputStream type).
+        /// </summary>
+        //---------------------------------------------------------------------
+        static bool loadScript( cgScriptHandle * handleOut, const cgString & stream, cgUInt32 flags, const cgDebugSourceInfo & _debugSource, cgResourceManager * thisPointer )
+        {
+            return thisPointer->loadScript( handleOut, stream, flags, _debugSource );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : loadScript () (Static)
+        /// <summary>
+        /// Provides an alternative overload for the script accessible
+        /// ResourceManager::loadScript() method that allows the script to
+        /// pass a string type directly (no implicit cast is supported to the
+        /// required InputStream type).
+        /// </summary>
+        //---------------------------------------------------------------------
+        static bool loadScript( cgScriptHandle * handleOut, const cgString & stream, const cgString & thisType, cgUInt32 flags, const cgDebugSourceInfo & _debugSource, cgResourceManager * thisPointer )
+        {
+            return thisPointer->loadScript( handleOut, stream, thisType, flags, _debugSource );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : loadScript () (Static)
+        /// <summary>
+        /// Provides an alternative overload for the script accessible
+        /// ResourceManager::loadScript() method that allows the script to
+        /// pass a string type directly (no implicit cast is supported to the
+        /// required InputStream type).
+        /// </summary>
+        //---------------------------------------------------------------------
+        static bool loadScript( cgScriptHandle * handleOut, const cgString & stream, const cgString & thisType, const cgString & instanceId, cgUInt32 flags, const cgDebugSourceInfo & _debugSource, cgResourceManager * thisPointer )
+        {
+            return thisPointer->loadScript( handleOut, stream, thisType, instanceId, flags, _debugSource );
         }
 
         //---------------------------------------------------------------------

@@ -51,12 +51,12 @@ namespace Plane
             BINDSUCCESS( engine->registerGlobalFunction( "float planeDotNormal(const Plane &in, const Vector3 &in )", asFUNCTIONPR(cgPlane::dotNormal, (const cgPlane&, const cgVector3&), cgFloat), asCALL_CDECL ) );
             BINDSUCCESS( engine->registerGlobalFunction( "Plane & planeScale(Plane &inout, const Plane &in, float )", asFUNCTIONPR(cgPlane::scale, (cgPlane&, const cgPlane&, cgFloat), cgPlane*), asCALL_CDECL ) );
             
-            BINDSUCCESS( engine->registerGlobalFunction( "Plane & planeNormalize(Plane &inout, const Plane &in)", asFUNCTION(cgPlane::normalize), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector3 & planeIntersectLine(Vector3 &inout, const Plane &in, const Vector3 &in, const Vector3 &in)", asFUNCTION(cgPlane::intersectLine), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Plane & planeFromPointNormal(Plane &inout, const Vector3 &in, const Vector3 &in)", asFUNCTION(cgPlane::fromPointNormal), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Plane & planeFromPoints(Plane &inout, const Vector3 &in, const Vector3 &in, const Vector3 &in)", asFUNCTION(cgPlane::fromPoints), asCALL_STDCALL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Plane & planeNormalize(Plane &inout, const Plane &in)", asFUNCTION(cgPlane::normalize), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector3 & planeIntersectLine(Vector3 &inout, const Plane &in, const Vector3 &in, const Vector3 &in)", asFUNCTION(cgPlane::intersectLine), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Plane & planeFromPointNormal(Plane &inout, const Vector3 &in, const Vector3 &in)", asFUNCTION(cgPlane::fromPointNormal), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Plane & planeFromPoints(Plane &inout, const Vector3 &in, const Vector3 &in, const Vector3 &in)", asFUNCTION(cgPlane::fromPoints), asCALL_CDECL ) );
             
-            BINDSUCCESS( engine->registerGlobalFunction( "Plane & planeTransform(Plane &inout, const Plane &in, const Matrix &in)", asFUNCTION(cgPlane::transform), asCALL_STDCALL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Plane & planeTransform(Plane &inout, const Plane &in, const Matrix &in)", asFUNCTION(cgPlane::transform), asCALL_CDECL ) );
         }
 
         //-----------------------------------------------------------------------------

@@ -60,16 +60,16 @@ namespace Vector3
             BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3Scale(Vector3 &inout, const Vector3 &in, float)", asFUNCTIONPR(cgVector3::scale, (cgVector3&, const cgVector3&,cgFloat), cgVector3*), asCALL_CDECL ) );
             BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3Lerp(Vector3 &inout, const Vector3 &in, const Vector3 &in, float)", asFUNCTIONPR(cgVector3::lerp, (cgVector3&, const cgVector3&,const cgVector3&, cgFloat), cgVector3*), asCALL_CDECL ) );
 
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3Normalize(Vector3 &inout, const Vector3 &in)", asFUNCTION(cgVector3::normalize), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3Hermite(Vector3 &inout, const Vector3 &in, const Vector3 &in, const Vector3 &in, const Vector3 &in, float)", asFUNCTION(cgVector3::hermite), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3CatmullRom(Vector3 &inout, const Vector3 &in, const Vector3 &in, const Vector3 &in, const Vector3 &in, float)", asFUNCTION(cgVector3::catmullRom), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3BaryCentric(Vector3 &inout, const Vector3 &in, const Vector3 &in, const Vector3 &in, float, float)", asFUNCTION(cgVector3::baryCentric), asCALL_STDCALL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3Normalize(Vector3 &inout, const Vector3 &in)", asFUNCTION(cgVector3::normalize), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3Hermite(Vector3 &inout, const Vector3 &in, const Vector3 &in, const Vector3 &in, const Vector3 &in, float)", asFUNCTION(cgVector3::hermite), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3CatmullRom(Vector3 &inout, const Vector3 &in, const Vector3 &in, const Vector3 &in, const Vector3 &in, float)", asFUNCTION(cgVector3::catmullRom), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3BaryCentric(Vector3 &inout, const Vector3 &in, const Vector3 &in, const Vector3 &in, float, float)", asFUNCTION(cgVector3::baryCentric), asCALL_CDECL ) );
 
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec3Transform(Vector4 &inout, const Vector3 &in, const Matrix &in)", asFUNCTION(cgVector3::transform), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3TransformCoord(Vector3 &inout, const Vector3 &in, const Matrix &in)", asFUNCTION(cgVector3::transformCoord), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3TransformNormal(Vector3 &inout, const Vector3 &in, const Matrix &in)", asFUNCTION(cgVector3::transformNormal), asCALL_STDCALL ) );
-            //ToDo: BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3Project(Vector3 &inout, const Vector3 &in, const Viewport &in, const Matrix &in, const Matrix &in, const Matrix &in)", asFUNCTION(cgVector3::project), asCALL_STDCALL ) );
-            //ToDo: BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3Unproject(Vector3 &inout, const Vector3 &in, const Viewport &in, const Matrix &in, const Matrix &in, const Matrix &in)", asFUNCTION(cgVector3::unproject), asCALL_STDCALL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec3Transform(Vector4 &inout, const Vector3 &in, const Matrix &in)", asFUNCTION(cgVector3::transform), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3TransformCoord(Vector3 &inout, const Vector3 &in, const Matrix &in)", asFUNCTION(cgVector3::transformCoord), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3TransformNormal(Vector3 &inout, const Vector3 &in, const Matrix &in)", asFUNCTION(cgVector3::transformNormal), asCALL_CDECL ) );
+            //ToDo: BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3Project(Vector3 &inout, const Vector3 &in, const Viewport &in, const Matrix &in, const Matrix &in, const Matrix &in)", asFUNCTION(cgVector3::project), asCALL_CDECL ) );
+            //ToDo: BINDSUCCESS( engine->registerGlobalFunction( "Vector3& vec3Unproject(Vector3 &inout, const Vector3 &in, const Viewport &in, const Matrix &in, const Matrix &in, const Matrix &in)", asFUNCTION(cgVector3::unproject), asCALL_CDECL ) );
         }
 
         //-----------------------------------------------------------------------------

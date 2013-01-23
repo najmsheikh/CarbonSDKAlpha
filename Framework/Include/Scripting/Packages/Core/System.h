@@ -68,6 +68,10 @@ namespace System
             // Register standard engine utilities (such as __FILE__ / __LINE__ analogs)
             engine->registerGlobalFunction( "String executingFile()", asFUNCTION(executingFile), asCALL_CDECL );
             engine->registerGlobalFunction( "uint executingLine()", asFUNCTION(executingLine), asCALL_CDECL );
+            engine->registerGlobalFunction( "void decomposeVersion( uint, uint &inout, uint &inout, uint &inout )", asFUNCTION(decomposeVersion), asCALL_CDECL );
+            engine->registerGlobalFunction( "uint makeVersion( uint, uint, uint )", asFUNCTION(makeVersion), asCALL_CDECL );
+            engine->registerGlobalFunction( "double getTime( )", asFUNCTIONPR(getTime,(),cgDouble), asCALL_CDECL );
+            engine->registerGlobalFunction( "double getTime( bool )", asFUNCTIONPR(getTime,( bool ),cgDouble), asCALL_CDECL );
         }
 
         //---------------------------------------------------------------------
@@ -93,6 +97,56 @@ namespace System
         static cgUInt32 executingLine()
         {
             return asGetActiveContext()->GetLineNumber();
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : decomposeVersion ()
+        /// <summary>
+        /// Utility function to decompose a packed version number into separate
+        /// version, subversion and revision components.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static void decomposeVersion( cgUInt32 packedVersion, cgUInt32 & version, cgUInt32 & subversion, cgUInt32 & revision )
+        {
+            cgDecomposeVersion( packedVersion, version, subversion, revision );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : makeVersion ()
+        /// <summary>
+        /// Compose a packed version number from separate version, subversion 
+        /// and revision components.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static cgUInt32 makeVersion( cgUInt32 version, cgUInt32 subversion, cgUInt32 revision )
+        {
+            return cgMakeVersion( version, subversion, revision );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : getTime ()
+        /// <summary>
+        /// Returns the current floating point time in seconds since the start
+        /// of the application.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static cgDouble getTime( )
+        {
+            return cgTimer::getInstance()->getTime();
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : getTime ()
+        /// <summary>
+        /// Returns the current floating point time in seconds since the start
+        /// of the application. Value returned will either be the time sampled
+        /// at the beginning of the current frame (queryTimer=false), or 
+        /// alternatively the timer can be re-sampled precisely (queryTimer=true).
+        /// </summary>
+        //---------------------------------------------------------------------
+        static cgDouble getTime( bool queryTimer )
+        {
+            return cgTimer::getInstance()->getTime( queryTimer );
         }
 
     }; // End Class : Package

@@ -6,6 +6,7 @@
 // Child packages
 #include "Controllers/PhysicsController.h"
 #include "Controllers/CharacterController.h"
+#include "Controllers/RagdollController.h"
 
 // Parent hierarchy
 namespace cgScriptPackages { namespace Core { namespace Physics {
@@ -20,6 +21,7 @@ namespace Controllers
         BEGIN_SCRIPT_PACKAGE( "Core.Physics.Controllers" )
             DECLARE_PACKAGE_CHILD( PhysicsController )
             DECLARE_PACKAGE_CHILD( CharacterController )
+            DECLARE_PACKAGE_CHILD( RagdollController )
         END_SCRIPT_PACKAGE( )
 
         // Member bindings

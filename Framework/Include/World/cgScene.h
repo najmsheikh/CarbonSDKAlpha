@@ -29,6 +29,7 @@
 #include <World/cgWorldQuery.h>
 #include <Scripting/cgScriptInterop.h>
 #include <Resources/cgResourceHandles.h>
+#include <Physics/cgPhysicsWorld.h>
 #include <System/cgReferenceManager.h>
 #include <System/cgFilterExpression.h>
 #include <Math/cgMathTypes.h>
@@ -39,7 +40,6 @@
 //-----------------------------------------------------------------------------
 class cgResourceManager;
 class cgRenderDriver;
-class cgPhysicsWorld;
 class cgSceneController;
 class cgLightingManager;
 class cgCameraNode;
@@ -259,7 +259,7 @@ public:
 /// interior of a building.
 /// </summary>
 //-----------------------------------------------------------------------------
-class CGE_API cgScene : public cgReference
+class CGE_API cgScene : public cgReference, public cgPhysicsWorldEventListener
 {
     DECLARE_DERIVED_SCRIPTOBJECT( cgScene, cgReference, "Scene" )
 
@@ -325,15 +325,16 @@ public:
     const cgSceneCellMap      & getSceneCells               ( ) const;
     const cgSceneElementArray & getSceneElements            ( ) const;
     const cgSceneElementArray & getSceneElementsByType      ( const cgUID & type ) const;
-    // ToDo: 9999 - Reintroduce?
-    /*bool                        getObjectsByType            ( cgUID objectType, cgSceneObjectList **objects );
-    bool                        getObjectsByDistance        ( cgSceneObjectList & objectList, const cgVector3 & position, cgFloat distance );
-    bool                        getObjectsInBounds          ( cgSceneObjectList & objectList, const cgBoundingBox & bounds );*/
+    const cgObjectNodeArray   & getObjectNodesByType        ( const cgUID & type ) const;
+    void                        getObjectNodesInBounds      ( const cgVector3 & center, cgFloat radius, cgObjectNodeArray & nodesOut ) const;
+    void                        getObjectNodesInBounds      ( const cgBoundingBox&, cgObjectNodeArray & nodesOut ) const;
     void                        setObjectUpdateRate         ( cgObjectNode * node, cgUpdateRate::Base rate );
     void                        addController               ( cgSceneController * controller );
     bool                        setActiveCamera             ( cgCameraNode * camera );
     cgCameraNode              * getActiveCamera             ( ) const;
     cgLandscape               * importLandscape             ( const cgLandscapeImportParams & params );
+    bool                        rayCastClosest              ( const cgVector3 & from, const cgVector3 & to, cgSceneCollisionContact & closestContact );
+    bool                        rayCastAll                  ( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgSceneCollisionContact::Array & contacts );
     
     // Cell Management
     const cgVector3           & getCellSize                 ( ) const;
@@ -436,6 +437,11 @@ public:
     virtual void                onMaterialRemoved           ( cgSceneMaterialEventArgs * e );
 
     //-------------------------------------------------------------------------
+    // Public Virtual Methods (Overrides cgPhysicsWorldEventListener)
+    //-------------------------------------------------------------------------
+    virtual void                onPhysicsStep               ( cgPhysicsWorld * sender, cgPhysicsWorldStepEventArgs * e );
+
+    //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
     //-------------------------------------------------------------------------
     virtual const cgUID       & getReferenceType            ( ) const { return RTID_Scene; }
@@ -460,11 +466,17 @@ protected:
 
     }; // End Struct UpdateBucket
 
+    struct RayCastFilterData
+    {
+        cgObjectNode  * node;
+        void * userData;
+    };
+
     //-------------------------------------------------------------------------
     // Protected Typedefs
     //-------------------------------------------------------------------------
     CGE_VECTOR_DECLARE      (cgSceneController*, ControllerArray)
-    CGE_UNORDEREDMAP_DECLARE(cgUID, cgObjectNodeMap, ObjectNodeTypeMap)
+    CGE_UNORDEREDMAP_DECLARE(cgUID, cgObjectNodeArray, ObjectNodeTypeMap)
     CGE_UNORDEREDMAP_DECLARE(cgString, cgObjectNode*, ObjectNodeNamedMap)
     CGE_UNORDEREDMAP_DECLARE(cgUID, cgSceneElementArray, SceneElementTypeMap)
 
@@ -478,6 +490,12 @@ protected:
 
     // Cell Management
     bool                        loadAllCells                ( );
+
+    //-------------------------------------------------------------------------
+    // Protected Static Functions
+    //-------------------------------------------------------------------------
+    static bool                 rayCastPreFilter            ( cgPhysicsBody * body, cgPhysicsShape * shape, void * userData );
+    static cgFloat              rayCastClosestFilter        ( cgPhysicsBody * body, const cgVector3 & hitNormal, cgInt collisionId, void * userData, cgFloat intersectParam );
     
     //-------------------------------------------------------------------------
     // Protected Variables
@@ -497,6 +515,7 @@ protected:
 
     // Object nodes
     cgObjectNodeMap         mObjectNodes;               // Physical scene nodes being managed (in the order in which they were added).
+    ObjectNodeTypeMap       mObjectNodeTypes;           // List of scene nodes categorized by type.
     cgObjectNodeMap         mRootNodes;                 // List of nodes that exist at the root level of the hierarchy.
     cgCameraNode          * mActiveCamera;              // The currently active camera node
 

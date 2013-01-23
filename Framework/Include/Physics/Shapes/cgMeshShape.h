@@ -135,6 +135,9 @@ protected:
         }
     };
     CGE_UNORDEREDSET_DECLARE( cgUInt32, FaceIntersectionSet );
+    CGE_VECTOR_DECLARE( cgInt, AttributeArray )
+    CGE_VECTOR_DECLARE( cgInt, IndexArray )
+    CGE_VECTOR_DECLARE( cgVector3, VertexArray )
 
     //-------------------------------------------------------------------------
     // Protected Methods
@@ -142,7 +145,9 @@ protected:
     void            initMeshHooks           ( );
     void            buildBroadphaseData     ( );
     void            buildBVHTree            ( cgInt depth, BVHNode * node, const cgUInt32Array & faces, const cgBoundingBox & parentBounds, cgByte * vertices, cgUInt32 * indices, cgUInt32 vertexStride );
-    void            collectIntersectedFaces ( BVHNode * node, const cgBoundingBox & bounds, FaceIntersectionSet & faces, cgByte * vertices, cgUInt32 * indices, cgUInt32 vertexStride );
+    void            collectIntersectedFaces ( BVHNode * node, const cgBoundingBox & bounds, FaceIntersectionSet & faces, const cgByte * vertices, const cgUInt32 * indices, cgUInt32 vertexStride );
+    bool            rayTest                 ( BVHNode * node, const cgVector3 & from, const cgVector3 & to, const cgByte * vertices, const cgUInt32 * indices, cgUInt32 vertexStride, cgFloat & closestDistance, cgUInt32 & closestFace, cgVector3 & closestNormal );
+    bool            collectCollisionData    ( BVHNode * node, const cgBoundingBox & bounds, const cgByte * vertices, const cgUInt32 * indices, cgUInt32 vertexStride, cgUInt32 * faceMap, VertexArray & verticesOut, AttributeArray & attributesOut, cgUInt32 & vertexCountOut, cgUInt32 & faceCountOut );
 
     //-------------------------------------------------------------------------
     // Protected Static Methods

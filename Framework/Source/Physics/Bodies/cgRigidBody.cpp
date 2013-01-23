@@ -425,8 +425,6 @@ void cgRigidBody::applyForceAndTorqueCallback( const NewtonBody * pBody, cgFloat
     // Retrieve the Carbon side rigid body to which this callback applies.
     cgRigidBody * pThis = (cgRigidBody*)NewtonBodyGetUserData( pBody );
 
-    cgToDo( "Physics", "Get gravity from world, or apply local gravity." )
-	
     // Compute the force of gravity.
     cgVector3 vGravityForce;
     cgFloat fIxx, fIyy, fIzz, fMass;

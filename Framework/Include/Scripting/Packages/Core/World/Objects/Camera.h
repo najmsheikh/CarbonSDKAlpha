@@ -52,6 +52,16 @@ namespace Camera
             BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "void setNearClip( float )", asMETHODPR(cgCameraObject, setNearClip, ( cgFloat ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "void setFarClip( float )", asMETHODPR(cgCameraObject, setFarClip, ( cgFloat ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "void setZoomFactor( float )", asMETHODPR(cgCameraObject, setZoomFactor, ( cgFloat ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "void enableDepthOfField( bool )", asMETHODPR(cgCameraObject, enableDepthOfField, ( bool ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "void setForegroundExtents( float, float )", asMETHODPR(cgCameraObject, setForegroundExtents, ( cgFloat, cgFloat ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "void setForegroundExtents( const RangeF &in )", asMETHODPR(cgCameraObject, setForegroundExtents, ( const cgRangeF& ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "void setBackgroundExtents( float, float )", asMETHODPR(cgCameraObject, setBackgroundExtents, ( cgFloat, cgFloat ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "void setBackgroundExtents( const RangeF &in )", asMETHODPR(cgCameraObject, setBackgroundExtents, ( const cgRangeF& ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "void setBackgroundBlur( int, int, float, int, int, float )", asMETHODPR(cgCameraObject, setBackgroundBlur, ( cgInt32, cgInt32, cgFloat, cgInt32, cgInt32, cgFloat ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "void setBackgroundBlur( const BlurOpDesc &in, const BlurOpDesc &in )", asMETHODPR(cgCameraObject, setBackgroundBlur, ( const cgBlurOpDesc&, const cgBlurOpDesc& ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "void setForegroundBlur( int, int, float, int, int, float )", asMETHODPR(cgCameraObject, setForegroundBlur, ( cgInt32, cgInt32, cgFloat, cgInt32, cgInt32, cgFloat ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "void setForegroundBlur( const BlurOpDesc &in, const BlurOpDesc &in )", asMETHODPR(cgCameraObject, setForegroundBlur, ( const cgBlurOpDesc&, const cgBlurOpDesc& ), void), asCALL_THISCALL) );
+
             
             BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "ProjectionMode getProjectionMode( ) const", asMETHODPR(cgCameraObject, getProjectionMode, ( ) const, cgProjectionMode::Base), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "float getFOV( ) const", asMETHODPR(cgCameraObject, getFOV, ( ) const, cgFloat), asCALL_THISCALL) );
@@ -59,7 +69,12 @@ namespace Camera
             BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "float getNearClip( ) const", asMETHODPR(cgCameraObject, getNearClip, ( ) const, cgFloat), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "float getFarClip( ) const", asMETHODPR(cgCameraObject, getFarClip, ( ) const, cgFloat), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "float getZoomFactor( ) const", asMETHODPR(cgCameraObject, getZoomFactor, ( ) const, cgFloat), asCALL_THISCALL) );
-            
+            BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "bool isDepthOfFieldEnabled( ) const", asMETHODPR(cgCameraObject, isDepthOfFieldEnabled, ( ) const, bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "const RangeF& getForegroundExtents( ) const", asMETHODPR(cgCameraObject, getForegroundExtents, ( ) const, const cgRangeF&), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "void getForegroundBlur( BlurOpDesc &inout, BlurOpDesc &inout ) const", asMETHODPR(cgCameraObject, getForegroundBlur, ( cgBlurOpDesc&, cgBlurOpDesc& ) const, void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "const RangeF& getBackgroundExtents( ) const", asMETHODPR(cgCameraObject, getBackgroundExtents, ( ) const, const cgRangeF&), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraObject", "void getBackgroundBlur( BlurOpDesc &inout, BlurOpDesc &inout ) const", asMETHODPR(cgCameraObject, getBackgroundBlur, ( cgBlurOpDesc&, cgBlurOpDesc& ) const, void), asCALL_THISCALL) );
+
             ///////////////////////////////////////////////////////////////////////
             // cgCameraNode (Class)
             ///////////////////////////////////////////////////////////////////////
@@ -104,6 +119,15 @@ namespace Camera
             BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void setNearClip( float )", asMETHODPR(cgCameraNode, setNearClip, ( cgFloat ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void setFarClip( float )", asMETHODPR(cgCameraNode, setFarClip, ( cgFloat ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void setZoomFactor( float )", asMETHODPR(cgCameraNode, setZoomFactor, ( cgFloat ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void enableDepthOfField( bool )", asMETHODPR(cgCameraNode, enableDepthOfField, ( bool ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void setForegroundExtents( float, float )", asMETHODPR(cgCameraNode, setForegroundExtents, ( cgFloat, cgFloat ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void setForegroundExtents( const RangeF &in )", asMETHODPR(cgCameraNode, setForegroundExtents, ( const cgRangeF& ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void setBackgroundExtents( float, float )", asMETHODPR(cgCameraNode, setBackgroundExtents, ( cgFloat, cgFloat ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void setBackgroundExtents( const RangeF &in )", asMETHODPR(cgCameraNode, setBackgroundExtents, ( const cgRangeF& ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void setBackgroundBlur( int, int, float, int, int, float )", asMETHODPR(cgCameraNode, setBackgroundBlur, ( cgInt32, cgInt32, cgFloat, cgInt32, cgInt32, cgFloat ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void setBackgroundBlur( const BlurOpDesc &in, const BlurOpDesc &in )", asMETHODPR(cgCameraNode, setBackgroundBlur, ( const cgBlurOpDesc&, const cgBlurOpDesc& ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void setForegroundBlur( int, int, float, int, int, float )", asMETHODPR(cgCameraNode, setForegroundBlur, ( cgInt32, cgInt32, cgFloat, cgInt32, cgInt32, cgFloat ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void setForegroundBlur( const BlurOpDesc &in, const BlurOpDesc &in )", asMETHODPR(cgCameraNode, setForegroundBlur, ( const cgBlurOpDesc&, const cgBlurOpDesc& ), void), asCALL_THISCALL) );
             
             BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "ProjectionMode getProjectionMode( ) const", asMETHODPR(cgCameraNode, getProjectionMode, ( ) const, cgProjectionMode::Base), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "float getFOV( ) const", asMETHODPR(cgCameraNode, getFOV, ( ) const, cgFloat), asCALL_THISCALL) );
@@ -111,8 +135,13 @@ namespace Camera
             BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "float getNearClip( ) const", asMETHODPR(cgCameraNode, getNearClip, ( ) const, cgFloat), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "float getFarClip( ) const", asMETHODPR(cgCameraNode, getFarClip, ( ) const, cgFloat), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "float getZoomFactor( ) const", asMETHODPR(cgCameraNode, getZoomFactor, ( ) const, cgFloat), asCALL_THISCALL) );
-
-			BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void setJitterAA( const Vector2 & in )", asMETHODPR(cgCameraNode, setJitterAA, ( const cgVector2& ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "bool isDepthOfFieldEnabled( ) const", asMETHODPR(cgCameraNode, isDepthOfFieldEnabled, ( ) const, bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "const RangeF& getForegroundExtents( ) const", asMETHODPR(cgCameraNode, getForegroundExtents, ( ) const, const cgRangeF&), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void getForegroundBlur( BlurOpDesc &inout, BlurOpDesc &inout ) const", asMETHODPR(cgCameraNode, getForegroundBlur, ( cgBlurOpDesc&, cgBlurOpDesc& ) const, void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "const RangeF& getBackgroundExtents( ) const", asMETHODPR(cgCameraNode, getBackgroundExtents, ( ) const, const cgRangeF&), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void getBackgroundBlur( BlurOpDesc &inout, BlurOpDesc &inout ) const", asMETHODPR(cgCameraNode, getBackgroundBlur, ( cgBlurOpDesc&, cgBlurOpDesc& ) const, void), asCALL_THISCALL) );
+			
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void setJitterAA( const Vector2 & in )", asMETHODPR(cgCameraNode, setJitterAA, ( const cgVector2& ), void), asCALL_THISCALL) );
         }
 
     }; // End Class : Package

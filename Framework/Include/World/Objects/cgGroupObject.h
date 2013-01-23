@@ -158,7 +158,7 @@ public:
     //-------------------------------------------------------------------------
     virtual cgBoundingBox       getLocalBoundingBox     ( );
     virtual bool                pick                    ( cgCameraNode * camera, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut, cgObjectNode *& closestNode );
-    virtual void                setSelected             ( bool selected, bool updateDependents = true, bool sendNotifications = true );
+    virtual void                setSelected             ( bool selected, bool updateDependents = true, bool sendNotifications = true, cgObjectNodeMap & alteredNodes = cgObjectNodeMap() );
     virtual bool                onNodeDeleted           ( );
 
     //-------------------------------------------------------------------------
@@ -191,7 +191,7 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Methods
     //-------------------------------------------------------------------------
-    void         alterSelectionState( bool state, cgObjectNode * node );
+    bool         alterSelectionState( bool state, cgObjectNode * node, cgObjectNodeMap & updateMap );
     void         alterOpenState     ( bool state, cgObjectNode * node );
     void         computeGroupAABB   ( cgObjectNode * node, cgBoundingBox & bounds, cgTransform & inverseGroupTransform );
     void         getGroupedNodes    ( cgObjectNodeMap & nodesOut, cgGroupNode * parentNode, cgObjectNode * node, bool explodeGroups );

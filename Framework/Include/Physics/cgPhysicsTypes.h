@@ -27,6 +27,11 @@
 #include <cgBaseTypes.h>
 
 //-----------------------------------------------------------------------------
+// Forward Declarations
+//-----------------------------------------------------------------------------
+class cgPhysicsBody;
+
+//-----------------------------------------------------------------------------
 // Common Global Enumerations
 //-----------------------------------------------------------------------------
 namespace cgPhysicsModel
@@ -52,10 +57,22 @@ namespace cgSimulationQuality
 
 }; // End Namespace : cgSimulationQuality
 
+namespace cgDefaultPhysicsMaterialGroup
+{
+    enum Base
+    {
+        Standard = 0,
+        Character,
+        Ragdoll,
+        Count
+    };
+
+}; // End Namespace : cgDefaultPhysicsMaterialGroup
+
 //-----------------------------------------------------------------------------
 // Common Global Structures
 //-----------------------------------------------------------------------------
-struct cgRigidBodyCreateParams
+struct CGE_API cgRigidBodyCreateParams
 {
     cgPhysicsModel::Base        model;              // Type of motion (if any) to simulate.
     cgTransform                 initialTransform;   // The starting transformation of this body.
@@ -65,15 +82,25 @@ struct cgRigidBodyCreateParams
     cgVector3                   shapeOffset;        // Amount to offset the body's shape relative to the position.
 
     // Provide defaults
-    cgRigidBodyCreateParams()
-    {
-        model           = cgPhysicsModel::RigidDynamic;
-        quality         = cgSimulationQuality::Default;
-        mass            = 1.0f;
-        centerOfMass    = cgVector3(0,0,0);
-        shapeOffset     = cgVector3(0,0,0);
-    }
+    cgRigidBodyCreateParams() :
+        model( cgPhysicsModel::RigidDynamic ), quality( cgSimulationQuality::Default ),
+        mass( 1.0f ), centerOfMass(0,0,0), shapeOffset(0,0,0) {}
 
-}; // End cgRigidBodyCreateParams
+}; // End Struct : cgRigidBodyCreateParams
+
+struct CGE_API cgCollisionContact
+{
+    CGE_VECTOR_DECLARE( cgCollisionContact, Array );
+
+    cgPhysicsBody * body;               // The intersected physics body.
+    cgFloat         intersectParam;     // Intersection 't' value along the specified path.
+    cgVector3       contactNormal;      // Surface normal at the point of contact.
+    cgInt32         collisionId;        // Custom identifier associated returned by the shape in contact.
+
+    // Provide defaults
+    cgCollisionContact() :
+        body(CG_NULL), intersectParam(FLT_MAX), contactNormal(0,0,0), collisionId(-1) {}
+
+}; // End Struct : cgCollisionContact
 
 #endif // !_CGE_CGPHYSICSTYPES_H_

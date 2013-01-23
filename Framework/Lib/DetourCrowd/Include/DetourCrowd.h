@@ -68,6 +68,7 @@ enum CrowdAgentState
 struct dtCrowdAgentParams
 {
 	float radius;						///< Agent radius. [Limit: >= 0]
+    float slowDownRadius;               ///< Defines the distance from the goal at which the agent will begin to slow [Limit: >= 0]
 	float height;						///< Agent height. [Limit: > 0]
 	float maxAcceleration;				///< Maximum allowed acceleration. [Limit: >= 0]
 	float maxSpeed;						///< Maximum allowed speed. [Limit: >= 0]

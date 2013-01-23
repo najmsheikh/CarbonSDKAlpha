@@ -52,12 +52,12 @@
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>false</CLRSupport>
     <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -127,9 +127,9 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">../../Bin/Lib/</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">$(ProjectDir)Compiled\$(Configuration)\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">$(ProjectDir)Compiled\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">../../Bin/Lib/</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">../../Bin/Dll/</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">$(ProjectDir)Compiled\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">../../Bin/Lib/</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">../../Bin/Dll/</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">$(ProjectDir)Compiled\$(Configuration)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">../../Bin/Lib/</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../Bin/Lib/</OutDir>
@@ -144,10 +144,10 @@
     <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
-    <TargetName>$(ProjectName)dExports</TargetName>
+    <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
-    <TargetName>$(ProjectName)Exports</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(VCInstallDir)include;$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
@@ -159,8 +159,8 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_NEWTON_USE_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -179,15 +179,15 @@
       <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)d.lib</OutputFile>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CGE_DX11_RENDER_SUPPORT;_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -206,7 +206,7 @@
       <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;d3d11.lib;d3dx11.lib;dxgi.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)d.lib</OutputFile>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
@@ -216,8 +216,8 @@
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -229,12 +229,12 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>cgPrecompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Lib>
       <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
@@ -244,8 +244,8 @@
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CGE_DX11_RENDER_SUPPORT;_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -257,20 +257,20 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>cgPrecompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Lib>
       <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;d3d11.lib;d3dx11.lib;dxgi.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_NEWTON_USE_LIB;WIN32;_DEBUG;_LIB;CGE_DLL_EXPORTS;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;_DEBUG;_LIB;CGE_DLL_EXPORTS;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -281,13 +281,18 @@
       <PrecompiledHeaderFile>cgPrecompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/Zm125 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Lib>
       <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)dExports.lib</OutputFile>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <Link>
+      <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;dxgi.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
     <ClCompile>
@@ -296,8 +301,8 @@
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;CGE_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;CGE_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -309,14 +314,19 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>cgPrecompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <AdditionalOptions>/Zm125 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Lib>
       <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)Exports.lib</OutputFile>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <Link>
+      <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
     <ClCompile>
@@ -325,8 +335,8 @@
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -339,12 +349,12 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>cgPrecompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Lib>
       <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -354,8 +364,8 @@
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CGE_DX11_RENDER_SUPPORT;_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -368,12 +378,12 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>cgPrecompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Lib>
       <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;d3d11.lib;d3dx11.lib;dxgi.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -633,6 +643,7 @@
     <ClCompile Include="..\..\Source\Interface\cgUIManager.cpp" />
     <ClCompile Include="..\..\Source\Interface\cgUISkin.cpp" />
     <ClCompile Include="..\..\Source\Interface\Controls\cgButtonControl.cpp" />
+    <ClCompile Include="..\..\Source\Interface\Controls\cgCheckBoxControl.cpp" />
     <ClCompile Include="..\..\Source\Interface\Controls\cgComboBoxControl.cpp" />
     <ClCompile Include="..\..\Source\Interface\Controls\cgGroupBoxControl.cpp" />
     <ClCompile Include="..\..\Source\Interface\Controls\cgImageBoxControl.cpp" />
@@ -648,6 +659,7 @@
     <ClCompile Include="..\..\Source\Math\cgExtrudedBoundingBox.cpp" />
     <ClCompile Include="..\..\Source\Math\cgFrustum.cpp" />
     <ClCompile Include="..\..\Source\Math\cgMathUtility.cpp" />
+    <ClCompile Include="..\..\Source\Math\cgMatrix.cpp" />
     <ClCompile Include="..\..\Source\Math\cgPolynomial.cpp" />
     <ClCompile Include="..\..\Source\Math\cgRandom.cpp" />
     <ClCompile Include="..\..\Source\Math\cgTransform.cpp" />
@@ -664,6 +676,8 @@
     <ClCompile Include="..\..\Source\Physics\cgPhysicsWorld.cpp" />
     <ClCompile Include="..\..\Source\Physics\Controllers\cgCharacterController.cpp" />
     <ClCompile Include="..\..\Source\Physics\Bodies\cgRigidBody.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Controllers\cgRagdollController.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Joints\cgBallJoint.cpp" />
     <ClCompile Include="..\..\Source\Physics\Shapes\cgBoxShape.cpp" />
     <ClCompile Include="..\..\Source\Physics\Shapes\cgCapsuleShape.cpp" />
     <ClCompile Include="..\..\Source\Physics\Shapes\cgConeShape.cpp" />
@@ -757,11 +771,14 @@
     <ClCompile Include="..\..\Source\World\Elements\cgNavigationMeshElement.cpp" />
     <ClCompile Include="..\..\Source\World\Elements\cgSkyElement.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgActor.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgBillboardObject.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgBoneObject.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgCameraObject.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgDummyObject.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgGroupObject.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgMeshObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgNavigationPatrolPoint.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgNavigationWaypoint.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgParticleEmitterObject.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgSkinObject.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgSoundEmitterObject.cpp" />
@@ -1355,6 +1372,14 @@
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
       </PrecompiledHeader>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\Source\Network\cgBroadcast.cpp" />
     <ClCompile Include="..\..\Source\Network\cgBroadcastClient.cpp" />
@@ -1365,25 +1390,53 @@
     <ClCompile Include="..\..\Source\Animation\cgAnimationTypes.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\Carbon.h" />
+    <ClInclude Include="..\..\Include\Interface\Controls\cgCheckBoxControl.h" />
     <ClInclude Include="..\..\Include\Navigation\cgNavigationAgent.h" />
     <ClInclude Include="..\..\Include\Navigation\cgNavigationHandler.h" />
     <ClInclude Include="..\..\Include\Navigation\cgNavigationMesh.h" />
     <ClInclude Include="..\..\Include\Navigation\cgNavigationTile.h" />
     <ClInclude Include="..\..\Include\Navigation\cgNavigationTypes.h" />
+    <ClInclude Include="..\..\Include\Physics\Controllers\cgRagdollController.h" />
+    <ClInclude Include="..\..\Include\Physics\Joints\cgBallJoint.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Animation\Types.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Audio.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Audio\AudioDriver.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Audio\Types.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Navigation.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Navigation\Types.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Controllers.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Controllers\CharacterController.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Controllers\PhysicsController.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Controllers\RagdollController.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Types.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\BillboardBuffer.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\States.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\States\AppState.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\States\AppStateManager.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\States\AppTransitionState.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Controls\CheckBox.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Elements.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Elements\SceneElement.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Elements\SkyElement.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Billboard.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Bone.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Dummy.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\DirectionalLight.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\HemisphereLight.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\PointLight.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\ProjectorLight.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\SpotLight.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Mesh.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Navigation.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Navigation\NavigationPatrolPoint.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Navigation\NavigationWaypoint.h" />
     <ClInclude Include="..\..\Include\World\cgSceneElement.h" />
     <ClInclude Include="..\..\Include\World\Elements\cgNavigationMeshElement.h" />
     <ClInclude Include="..\..\Include\World\Elements\cgSkyElement.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgBillboardObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgNavigationPatrolPoint.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgNavigationWaypoint.h" />
     <ClInclude Include="..\..\Lib\AngelScript\include\angelscript.h" />
     <ClInclude Include="..\..\Lib\AngelScript\source\as_array.h" />
     <ClInclude Include="..\..\Lib\AngelScript\source\as_atomic.h" />

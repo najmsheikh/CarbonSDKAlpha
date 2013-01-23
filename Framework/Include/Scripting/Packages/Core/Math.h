@@ -59,6 +59,10 @@ namespace Math
             BINDSUCCESS( engine->registerGlobalFunction("float ceil( float )", asFUNCTION(ceilf), asCALL_CDECL) );
             BINDSUCCESS( engine->registerGlobalFunction("float floor( float )", asFUNCTION(floorf), asCALL_CDECL) );
             BINDSUCCESS( engine->registerGlobalFunction("float smooth( float, float, float )", asFUNCTION(cgMathUtility::smooth), asCALL_CDECL) );
+            BINDSUCCESS( engine->registerGlobalFunction("int randomInt( int, int )", asFUNCTION(cgMathUtility::randomInt), asCALL_CDECL) );
+            BINDSUCCESS( engine->registerGlobalFunction("float randomFloat( float, float)", asFUNCTION(cgMathUtility::randomFloat), asCALL_CDECL) );
+            BINDSUCCESS( engine->registerGlobalFunction("float CGEToDegree( float )", asFUNCTION(toDegree), asCALL_CDECL) );
+            BINDSUCCESS( engine->registerGlobalFunction("float CGEToRadian( float )", asFUNCTION(toRadian), asCALL_CDECL) );
 
             // Constants
             // ToDo: Add as defines to script pre-processor rather than using global properties at some point.
@@ -84,6 +88,16 @@ namespace Math
             BINDSUCCESS( engine->registerGlobalProperty("const double CGE_PI", (void*)&pi ) );
             BINDSUCCESS( engine->registerGlobalProperty("const double CGE_TWO_PI", (void*)&two_pi ) );
             BINDSUCCESS( engine->registerGlobalProperty("const double CGE_RECIP_PI", (void*)&recip_pi ) );
+        }
+
+        static cgFloat toDegree( cgFloat x )
+        {
+            return CGEToDegree( x );
+        }
+
+        static cgFloat toRadian( cgFloat x) 
+        {
+            return CGEToRadian( x );
         }
 
     }; // End Class : Package

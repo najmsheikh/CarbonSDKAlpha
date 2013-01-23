@@ -62,6 +62,17 @@ namespace Actor
             BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "const AnimationSetHandle & getAnimationSetByName( const String &in ) const", asMETHODPR(cgActorNode, getAnimationSetByName, ( const cgString& ) const, const cgAnimationSetHandle& ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "uint32 getAnimationSetCount( ) const", asMETHODPR(cgActorNode, getAnimationSetCount, ( ) const, cgUInt32 ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "const AnimationSetHandle & getAnimationSet( uint32 ) const", asMETHODPR(cgActorNode, getAnimationSet, ( cgUInt32 ) const, const cgAnimationSetHandle& ), asCALL_THISCALL) );
+
+            BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "int playAnimationSet( const String&in, const String&in )", asMETHODPR(cgActorNode, playAnimationSet, ( const cgString&, const cgString& ), cgInt32 ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "int playAnimationSet( const String&in, const String&in, float, float )", asMETHODPR(cgActorNode, playAnimationSet, ( const cgString&, const cgString&, cgFloat, cgFloat ), cgInt32 ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "int playAnimationSet( const String&in, const String&in, AnimationPlaybackMode )", asMETHODPR(cgActorNode, playAnimationSet, ( const cgString&, const cgString&, cgAnimationPlaybackMode::Base ), cgInt32 ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "int playAnimationSet( const String&in, const String&in, AnimationPlaybackMode, float, float )", asMETHODPR(cgActorNode, playAnimationSet, ( const cgString&, const cgString&, cgAnimationPlaybackMode::Base, cgFloat, cgFloat ), cgInt32 ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "int playAnimationSet( const String&in, const String&in, AnimationPlaybackMode, float, float, float, float )", asMETHODPR(cgActorNode, playAnimationSet, ( const cgString&, const cgString&, cgAnimationPlaybackMode::Base, cgFloat, cgFloat, cgFloat, cgFloat ), cgInt32 ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "bool stopAnimationTrack( const String&in )", asMETHODPR(cgActorNode, stopAnimationTrack, ( const cgString& ), bool ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "bool stopAnimationTrack( const String&in, bool )", asMETHODPR(cgActorNode, stopAnimationTrack, ( const cgString&, bool ), bool ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "bool isAnimationTrackPlaying( const String&in ) const", asMETHODPR(cgActorNode, isAnimationTrackPlaying, ( const cgString& ) const, bool ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "bool isAnimationTrackPlaying( const String&in, bool ) const", asMETHODPR(cgActorNode, isAnimationTrackPlaying, ( const cgString&, bool ) const, bool ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "void setTrackFadeTimes( float, float )", asMETHODPR(cgActorNode, setTrackFadeTimes, ( cgFloat, cgFloat ), void ), asCALL_THISCALL) );
         }
 
     }; // End Class : Package

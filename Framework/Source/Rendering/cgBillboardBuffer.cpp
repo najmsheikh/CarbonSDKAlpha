@@ -69,6 +69,18 @@ cgBillboardBuffer::cgBillboardBuffer( )
 cgBillboardBuffer::~cgBillboardBuffer( )
 {
     // Release allocated resources
+    dispose( false );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : dispose () (Virtual)
+/// <summary>
+/// Release any memory, references or resources allocated by this object.
+/// </summary>
+/// <copydetails cref="cgScriptInterop::DisposableScriptObject::dispose()" />
+//-----------------------------------------------------------------------------
+void cgBillboardBuffer::dispose( bool disposeBase )
+{
     clear( true );
 }
 
@@ -94,7 +106,7 @@ void cgBillboardBuffer::clear( bool destroyBillboards )
     {
         BillboardArray::iterator itBillboard;
         for ( itBillboard = mBillboards.begin(); itBillboard != mBillboards.end(); ++itBillboard )
-            delete (*itBillboard);
+            (*itBillboard)->scriptSafeDispose();
     
     } // End if destroy
     mBillboards.clear();
@@ -127,7 +139,18 @@ void cgBillboardBuffer::clear( bool destroyBillboards )
 /// Initialize the buffer ready for population.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgBillboardBuffer::prepareBuffer( cgUInt32 flags, cgRenderDriver * driver, cgInputStream textureFile, cgInputStream shaderFile /* = cgString::Empty */ )
+bool cgBillboardBuffer::prepareBuffer( cgUInt32 flags, cgRenderDriver * driver, cgInputStream textureFile )
+{
+    return prepareBuffer( flags, driver, textureFile, cgString::Empty );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : prepareBuffer ()
+/// <summary>
+/// Initialize the buffer ready for population.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgBillboardBuffer::prepareBuffer( cgUInt32 flags, cgRenderDriver * driver, cgInputStream textureFile, cgInputStream shaderFile )
 {
     // Cannot initialize more than once
     if ( mDriver != CG_NULL )
@@ -178,7 +201,19 @@ bool cgBillboardBuffer::prepareBuffer( cgUInt32 flags, cgRenderDriver * driver, 
 /// atlas definition file specified.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgBillboardBuffer::prepareBufferFromAtlas( cgUInt32 flags, cgRenderDriver * driver, cgInputStream atlasFile, cgInputStream shaderFile /* = cgString::Empty */ )
+bool cgBillboardBuffer::prepareBufferFromAtlas( cgUInt32 flags, cgRenderDriver * driver, cgInputStream atlasFile )
+{
+    return prepareBufferFromAtlas( flags, driver, atlasFile, cgString::Empty );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : prepareBufferFromAtlas ()
+/// <summary>
+/// Initialize the buffer ready for population based upon the image
+/// atlas definition file specified.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgBillboardBuffer::prepareBufferFromAtlas( cgUInt32 flags, cgRenderDriver * driver, cgInputStream atlasFile, cgInputStream shaderFile )
 {
     // Open and parse the XML file
     cgXMLDocument document;

@@ -25,6 +25,7 @@
 // cgPhysicsWorld Header Includes
 //-----------------------------------------------------------------------------
 #include <cgBase.h>
+#include <Physics/cgPhysicsTypes.h>
 #include <Physics/cgPhysicsShape.h>
 #include <Scripting/cgScriptInterop.h>
 #include <System/cgEventDispatcher.h>
@@ -38,8 +39,9 @@ class cgPhysicsEngine;
 class cgPhysicsEntity;
 class cgPhysicsController;
 
-// Newton Game Dynamisc.
+// Newton Game Dynamics.
 struct NewtonWorld;
+struct NewtonBody;
 
 //-----------------------------------------------------------------------------
 // Event Argument Definitions
@@ -70,6 +72,7 @@ public:
     // Public Virtual Methods
     //-------------------------------------------------------------------------
     virtual void    onPrePhysicsStep  ( cgPhysicsWorld * sender, cgPhysicsWorldStepEventArgs * e ) {};
+    virtual void    onPhysicsStep     ( cgPhysicsWorld * sender, cgPhysicsWorldStepEventArgs * e ) {};
     virtual void    onPostPhysicsStep ( cgPhysicsWorld * sender, cgPhysicsWorldStepEventArgs * e ) {};
 };
 
@@ -93,6 +96,12 @@ class CGE_API cgPhysicsWorld : public cgEventDispatcher
 
 public:
     //-------------------------------------------------------------------------
+    // Public Typedefs
+    //-------------------------------------------------------------------------
+    typedef cgFloat (*RayCastFilterCallback)    ( cgPhysicsBody * body, const cgVector3 & hitNormal, cgInt collisionId, void * userData, cgFloat intersectParam );
+    typedef bool    (*RayCastPreFilterCallback) ( cgPhysicsBody * body, cgPhysicsShape * shape, void * userData );
+
+    //-------------------------------------------------------------------------
     // Constructors & Destructors
     //-------------------------------------------------------------------------
              cgPhysicsWorld( cgPhysicsEngine * engine );
@@ -101,26 +110,36 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    bool                initialize          ( const cgBoundingBox & worldSize );
-    void                update              ( cgFloat timeDelta );
-    void                setSystemScale      ( cgFloat scale );
-    void                clearForces         ( );
-    void                setDefaultGravity   ( const cgVector3 & gravity );
-    const cgVector3   & getDefaultGravity   ( ) const;
+    bool                initialize              ( const cgBoundingBox & worldSize );
+    void                update                  ( cgFloat timeDelta );
+    void                setSystemScale          ( cgFloat scale );
+    void                clearForces             ( );
+    void                setDefaultGravity       ( const cgVector3 & gravity );
+    const cgVector3   & getDefaultGravity       ( ) const;
+
+    // Queries
+    bool                rayCastClosest          ( const cgVector3 & from, const cgVector3 & to, cgCollisionContact & closestContact );
+    bool                rayCastAll              ( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgCollisionContact::Array & contacts );
+    void                rayCast                 ( const cgVector3 & from, const cgVector3 & to, RayCastPreFilterCallback preFilter, RayCastFilterCallback filter, void * userData );
+    //bool                convexCastClosest   ( const cgVector3 & from, const cgVector3 & to, cgCollisionContact & closestContact );
+    //bool                convexCastAll       ( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgCollisionContact::Array & contacts );
 
     // Internal utilities
-    NewtonWorld       * getInternalWorld    ( );
+    NewtonWorld       * getInternalWorld        ( );
 
     // Entity management
-    void                addEntity           ( cgPhysicsEntity * entity );
-    void                removeEntity        ( cgPhysicsEntity * entity );
+    void                addEntity               ( cgPhysicsEntity * entity );
+    void                removeEntity            ( cgPhysicsEntity * entity );
 
     // Controller management
-    void                addController       ( cgPhysicsController * controller );
-    void                removeController    ( cgPhysicsController * controller );
+    void                addController           ( cgPhysicsController * controller );
+    void                removeController        ( cgPhysicsController * controller );
 
     // Shape management
-    cgPhysicsShape    * getExistingShape    ( const cgPhysicsShapeCacheKey & key ) const;
+    cgPhysicsShape    * getExistingShape        ( const cgPhysicsShapeCacheKey & key ) const;
+
+    // Material management
+    cgInt32             getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Base group ) const;
     
     //-------------------------------------------------------------------------
     // Public Inline Methods
@@ -148,10 +167,28 @@ protected:
     CGE_MAP_DECLARE(cgPhysicsShapeCacheKey, cgPhysicsShape*, PhysicsShapeCacheMap )
 
     //-------------------------------------------------------------------------
+    // Protected Structures
+    //-------------------------------------------------------------------------
+    struct RayCastFilterCallbackData
+    {
+        RayCastFilterCallback filterCallback;
+        RayCastPreFilterCallback preFilterCallback;
+        void * userData;
+    };
+
+    //-------------------------------------------------------------------------
     // Protected Methods
     //-------------------------------------------------------------------------
-    bool                addShapeToCache     ( cgPhysicsShape * shape );
-    void                removeShapeFromCache( cgPhysicsShape * shape );
+    bool                    addShapeToCache     ( cgPhysicsShape * shape );
+    void                    removeShapeFromCache( cgPhysicsShape * shape );
+
+    //-------------------------------------------------------------------------
+    // Protected Static Functions
+    //-------------------------------------------------------------------------
+    static cgFloat          rayCastClosestFilter( const NewtonBody* const body, const cgFloat * const hitNormal, cgInt collisionId, void* const userData, cgFloat intersectParam );
+    static cgFloat          rayCastAllFilter    ( const NewtonBody* const body, const cgFloat * const hitNormal, cgInt collisionId, void* const userData, cgFloat intersectParam );
+    static cgFloat          rayCastFilter       ( const NewtonBody* const body, const cgFloat * const hitNormal, cgInt collisionId, void* const userData, cgFloat intersectParam );
+    static cgUInt           rayCastPreFilter    ( const NewtonBody* const body, const NewtonCollision * const collision, void* const userData );
 
     //-------------------------------------------------------------------------
     // Protected Variables
@@ -165,6 +202,7 @@ protected:
     ControllerSet           mControllers;       // List of controllers registered with the world.
     PhysicsShapeCacheMap    mShapeCache;        // Dictionary of all physics shapes with common properties.
     cgVector3               mDefaultGravity;    // Default gravity force for this physics world. Can be overridden by individual bodies.
+    cgInt                   mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Count ];
 };
 
 #endif // !_CGE_CGPHYSICSWORLD_H_

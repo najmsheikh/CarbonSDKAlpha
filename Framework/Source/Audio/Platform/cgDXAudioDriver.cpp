@@ -384,6 +384,22 @@ void cgDXAudioDriver::set3DWorldScale( cgFloat fUnitsPerMeter )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : set3DRolloffFactor () (Virtual)
+/// <summary>
+/// Set the rate at which audio is attenuated based on distance. 1.0 = real
+/// world, 0.0 = no attenuation.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgDXAudioDriver::set3DRolloffFactor( cgFloat factor )
+{
+    if ( m3DListener == CG_NULL )
+        return;
+
+    // Store parameter (don't apply immediately, wait for 'CommitDeferredSettings()')
+    m3DListener->SetRolloffFactor( factor, DS3D_DEFERRED );
+}
+
+//-----------------------------------------------------------------------------
 //  Name : set3DListenerTransform () (Virtual)
 /// <summary>
 /// Set the position and orientation of the listener relative to the 
@@ -462,9 +478,6 @@ void cgDXAudioDriver::apply3DSettings( )
     // Commit the changes to the hardware (will also apply any 
     // changes made by individual audio buffers)
     m3DListener->CommitDeferredSettings( );
-
-    // Clean up.
-    m3DListener->Release();
 }
 
 //-----------------------------------------------------------------------------

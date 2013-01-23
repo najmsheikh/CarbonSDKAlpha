@@ -112,7 +112,7 @@
 /// </summary>
 //-----------------------------------------------------------------------------
 template <class _Vt, class _Et=size_t>
-class CGE_API cgAutoPtr
+class cgAutoPtr
 {
     //-------------------------------------------------------------------------
     // Private Typedefs

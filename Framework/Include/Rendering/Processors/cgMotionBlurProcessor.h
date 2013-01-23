@@ -81,6 +81,21 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Structures
     //-------------------------------------------------------------------------
+    struct CameraData
+    {
+        cgMatrix    viewKeyMatrix1;
+        cgMatrix    viewKeyMatrix2;
+        cgMatrix    prevCameraMatrix;
+        cgFloat     accumulatedTime;
+        cgFloat     currentRenderRate;
+
+        // Constructor
+        CameraData() : 
+            viewKeyMatrix1(cgMatrix::Identity), viewKeyMatrix2(cgMatrix::Identity),
+            prevCameraMatrix(cgMatrix::Identity), accumulatedTime(0), currentRenderRate(0) {}
+    };
+    CGE_UNORDEREDMAP_DECLARE( void*, CameraData, CameraDataMap )
+
     // Constant buffers
     struct _cbMotionBlur
     {
@@ -105,11 +120,7 @@ protected:
 	cgSampler             * mVelocitySampler;
 	cgSampler             * mColorLowSampler;
 
-    cgFloat                 mCurrentRenderRate;
-    cgFloat                 mAccumulatedTime;
-    cgFloat                 mBlurAttenuation;
-    cgMatrix                mViewKeyMatrix1;
-    cgMatrix                mViewKeyMatrix2;
+    CameraDataMap           mCameraData;
     _cbMotionBlur           mOperationData;
     
     // Configuration
@@ -122,8 +133,6 @@ protected:
 	cgFloat					mMinimumAngularVelocity;
 	cgFloat					mMaximumAngularVelocity;
 	cgFloat					mBlendPower;
-
-	cgMatrix                mPrevCamMatrix;
 };
 
 #endif // !_CGE_CGMOTIONBLURPROCESSOR_H_

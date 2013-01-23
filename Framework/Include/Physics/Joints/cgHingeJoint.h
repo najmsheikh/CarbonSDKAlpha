@@ -23,7 +23,7 @@
 #define _CGE_CGHINGEJOINT_H_
 
 //-----------------------------------------------------------------------------
-// cgFixedAxisJoint Header Includes
+// cgHingeJoint Header Includes
 //-----------------------------------------------------------------------------
 #include <Physics/cgPhysicsJoint.h>
 #include <Scripting/cgScriptInterop.h>

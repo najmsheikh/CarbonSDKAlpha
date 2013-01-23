@@ -28,15 +28,13 @@
 //-----------------------------------------------------------------------------
 #include <Interface/cgUIControl.h>
 #include <Interface/cgUIManager.h>
-#include <Interface/cgUIForm.h>
 #include <Interface/cgUILayers.h>
+#include <Interface/cgUIForm.h>
 #include <Resources/cgScript.h>
 #include <Rendering/cgBillboardBuffer.h>
 #include <System/cgMessageTypes.h>
 
-// ToDo: Remove these comments once completed.
 // ToDo: Add TabStop / TabIndex support.
-// ToDo: Remove all the mRootForm->getUIManager() stuff and add a function directly to the control (note: that controls #include <cgUIForm.h> for this purpose currently). Also check that it always returns a valid value (i.e. has been attached to a form)
 // ToDo: Tighten up the 'Focus Control' concept and find a nice way to show control with current focus.
 // ToDo: Add 'CanGainFocus' support (defaults to true)
 // ToDo: When a form script is destroyed, all event handlers still referencing it must be removed!
@@ -54,6 +52,8 @@
 cgUIControl::cgUIControl( ControlMode Mode, const cgString & strSkinElementName ) : cgReference( cgReferenceManager::generateInternalRefId( ) )
 {
     // Initialize variables to sensible defaults
+    mUILayer            = CG_NULL;
+    mUIManager          = CG_NULL;
     mParent             = CG_NULL;
     mRootForm           = CG_NULL;
     mDockMode           = cgDockMode::None;
@@ -71,7 +71,10 @@ cgUIControl::cgUIControl( ControlMode Mode, const cgString & strSkinElementName 
     mParentVisible      = true;
     mEnabled            = true;
     mParentEnabled      = true;
+    mCanGainFocus       = true;
+    mParentCanGainFocus = true;
     mBuilt              = false;
+    mControlTextColor   = cgColorValue( 1, 1, 1, 1 );
 
     // Set default padding
     mPadding            = cgRect( 0, 0, 0, 0 );
@@ -108,15 +111,10 @@ void cgUIControl::dispose( bool bDisposeBase )
     cgInt32                   i, j, k;
 
     // Clear the captured / focus control if we're the one captured
-    if ( mRootForm )
-    {
-        cgUIManager * pManager = mRootForm->getUIManager();
-        if ( pManager && pManager->getCapture() == this )
-            pManager->setCapture( CG_NULL );
-        if ( pManager && pManager->getFocus() == this )
-            pManager->setFocus( CG_NULL );
-
-    } // End if root form set
+    if ( mUIManager && mUIManager->getCapture() == this )
+        mUIManager->setCapture( CG_NULL );
+    if ( mUIManager && mUIManager->getFocus() == this )
+        mUIManager->setFocus( CG_NULL );
 
     // Release all event handlers
     for ( itEventHandler = mEventHandlers.begin(); itEventHandler != mEventHandlers.end(); ++itEventHandler )
@@ -147,11 +145,13 @@ void cgUIControl::dispose( bool bDisposeBase )
     mChildren.clear();
 
     // Clear variables
-    mParent     = CG_NULL;
-    mPosition    = cgPoint(0,0);
-    mSize        = cgSize(500,500);
-    mBillboard  = CG_NULL;
-    mRootForm   = CG_NULL;
+    mUILayer            = CG_NULL;
+    mUIManager          = CG_NULL;
+    mParent             = CG_NULL;
+    mPosition           = cgPoint(0,0);
+    mSize               = cgSize(500,500);
+    mBillboard          = CG_NULL;
+    mRootForm           = CG_NULL;
 
     // Release any required elements of the state structures
     for ( i = 0; i < 2; ++i )
@@ -281,7 +281,7 @@ bool cgUIControl::buildSimple( )
     cgInt16  nFrameIndex;
 
     // Retrieve billboard buffer
-    cgBillboardBuffer * pBillboards = mRootForm->getControlLayer()->getLayerBuffer();
+    cgBillboardBuffer * pBillboards = getControlLayer()->getLayerBuffer();
 
     // Active states first
     ControlStateDesc * pDesc = &mControlStateInfo[State_Active];
@@ -409,7 +409,7 @@ void cgUIControl::constructRegions( RenderFrameDesc & Desc, const cgString & str
     cgInt32 i;
 
     // Get the skin element from the layer
-    const cgUISkinElement * pElement = mRootForm->getControlLayer()->getSkinElement( strElementName );
+    const cgUISkinElement * pElement = getControlLayer()->getSkinElement( strElementName );
     if ( !pElement ) return;
 
     // Store the element pointer in the frame descriptor to allow
@@ -449,7 +449,7 @@ bool cgUIControl::buildComplex( )
                                                _T("BorderBottomRight"), _T("Background") };
 
     // Retrieve billboard buffer
-    cgBillboardBuffer * pBillboards = mRootForm->getControlLayer()->getLayerBuffer();
+    cgBillboardBuffer * pBillboards = getControlLayer()->getLayerBuffer();
 
     // Loop through each of the element types, and allocate (or not) as required
     for ( cgInt i = 0; i < 17; ++i )
@@ -462,9 +462,10 @@ bool cgUIControl::buildComplex( )
         {
             // Allocate a new control and store it in our map
             cgUIControl * pControl = new cgUIControl( Simple, strElementName );
-            pControl->setManagementData( this, mRootForm );
+            pControl->setManagementData( mUIManager, mUILayer, this, mRootForm );
             pControl->setParentVisible( isVisible() );
             pControl->setParentEnabled( isEnabled() );
+            pControl->setParentCanGainFocus( canGainFocus() );
             pControl->setBackgroundOpacity( getBackgroundOpacity() );
             mControlElements[ i ] = pControl;
 
@@ -1020,6 +1021,28 @@ void cgUIControl::setPosition( cgInt32 nX, cgInt32 nY )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : setTextColor ()
+/// <summary>
+/// Set the default color of any text rendered for this control.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIControl::setTextColor( const cgColorValue & Color )
+{
+    mControlTextColor = Color;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getTextColor ()
+/// <summary>
+/// Retreive the default color of any text rendered for this control.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgColorValue & cgUIControl::getTextColor( ) const
+{
+    return mControlTextColor;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : setFont () (Virtual)
 /// <summary>
 /// Set the font to use when rendering this control.
@@ -1116,9 +1139,13 @@ bool cgUIControl::addChildControl( cgUIControl * pChild )
         return false;
 
     // Set the child's parent control and manager objects
-    pChild->setManagementData( this, mRootForm );
+    pChild->setManagementData( mUIManager, mUILayer, this, mRootForm );
     pChild->setParentVisible( isVisible() );
     pChild->setParentEnabled( isEnabled() );
+    pChild->setParentCanGainFocus( canGainFocus() );
+
+    // Allow child to perform any necessary operations.
+    pChild->onParentAttach( this );
 
     // Add this to the child control list
     mChildren.push_back( pChild );
@@ -1134,11 +1161,13 @@ bool cgUIControl::addChildControl( cgUIControl * pChild )
 /// also recurse into any already attached children and populate them.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgUIControl::setManagementData( cgUIControl * pParent, cgUIForm * pRootForm )
+void cgUIControl::setManagementData( cgUIManager * pManager, cgUIControlLayer * pLayer, cgUIControl * pParent, cgUIForm * pRootForm )
 {
     ControlList::iterator   itControl;
 
     // Store details
+    mUIManager        = pManager;
+    mUILayer          = pLayer;
     mParent           = pParent;
     mRootForm         = pRootForm;
     
@@ -1149,7 +1178,7 @@ void cgUIControl::setManagementData( cgUIControl * pParent, cgUIForm * pRootForm
         if ( !pControl ) continue;
         
         // Set child data
-        pControl->setManagementData( this, pRootForm );
+        pControl->setManagementData( pManager, pLayer, this, pRootForm );
 
     } // Next child control
 }
@@ -1247,8 +1276,8 @@ cgRect cgUIControl::getClientArea( cgControlCoordinateSpace::Base Origin ) const
     if ( mControlMode == Complex )
     {
         // Get the required elements
-        const cgUISkinElement * pTopLeft     = mRootForm->getControlLayer()->getSkinElement( mSkinElement + _T(".BorderTopLeft") );
-        const cgUISkinElement * pBottomRight = mRootForm->getControlLayer()->getSkinElement( mSkinElement + _T(".BorderBottomRight") );
+        const cgUISkinElement * pTopLeft     = getControlLayer()->getSkinElement( mSkinElement + _T(".BorderTopLeft") );
+        const cgUISkinElement * pBottomRight = getControlLayer()->getSkinElement( mSkinElement + _T(".BorderBottomRight") );
         
         // Remove size of top and left borders
         if ( pTopLeft )
@@ -1312,8 +1341,8 @@ cgSize cgUIControl::getClientSize( ) const
     if ( mControlMode == Complex )
     {
         // Get the required elements
-        const cgUISkinElement * pTopLeft     = mRootForm->getControlLayer()->getSkinElement( mSkinElement + _T(".BorderTopLeft") );
-        const cgUISkinElement * pBottomRight = mRootForm->getControlLayer()->getSkinElement( mSkinElement + _T(".BorderBottomRight") );
+        const cgUISkinElement * pTopLeft     = getControlLayer()->getSkinElement( mSkinElement + _T(".BorderTopLeft") );
+        const cgUISkinElement * pBottomRight = getControlLayer()->getSkinElement( mSkinElement + _T(".BorderBottomRight") );
         
         // Remove size of top and left borders
         if ( pTopLeft )
@@ -1353,7 +1382,7 @@ cgPoint cgUIControl::getClientOrigin( cgControlCoordinateSpace::Base Origin ) co
     if ( mControlMode == Complex )
     {
         // Get the required elements
-        const cgUISkinElement * pTopLeft = mRootForm->getControlLayer()->getSkinElement( mSkinElement + _T(".BorderTopLeft") );
+        const cgUISkinElement * pTopLeft = getControlLayer()->getSkinElement( mSkinElement + _T(".BorderTopLeft") );
         
         // Compute top left position
         if ( pTopLeft )
@@ -1493,7 +1522,7 @@ bool cgUIControl::pointInControl( const cgPoint & ptTest ) const
         else
         {
             // Just test against the control's screen space bounding box.
-            return (::PtInRect( (RECT*)&getControlArea( cgControlCoordinateSpace::ScreenRelative ), (POINT&)ptTest ) == TRUE);
+            return getControlArea( cgControlCoordinateSpace::ScreenRelative ).containsPoint( ptTest );
         
         } // End if no active region
 
@@ -1629,6 +1658,30 @@ void cgUIControl::setRenderMode( ControlRenderMode Mode )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : onLostFocus() (Virtual)
+/// <summary>
+/// Triggered whenever the control loses user input focus.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIControl::onLostFocus( )
+{
+    // Raise the associated event
+    raiseEvent( cgSystemMessages::UI_OnLostFocus, CG_NULL );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onGainFocus () (Virtual)
+/// <summary>
+/// Triggered whenever the control gains user input focus.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIControl::onGainFocus( )
+{
+    // Raise the associated event
+    raiseEvent( cgSystemMessages::UI_OnGainFocus, CG_NULL );
+}
+
+//-----------------------------------------------------------------------------
 //  Name : onInitControl () (Virtual)
 /// <summary>
 /// Triggered whenever the control has been initialized.
@@ -1707,7 +1760,7 @@ bool cgUIControl::onMouseButtonDown( cgInt32 nButtons, const cgPoint & Position 
 bool cgUIControl::onMouseButtonUp( cgInt32 nButtons, const cgPoint & Position )
 {
     // Ignore if control is not visible
-    if ( !isVisible() )
+    if ( !isVisible() && mUIManager->getCapture() != this )
         return false;
 
     // Pass through to all child controls
@@ -1857,6 +1910,43 @@ void cgUIControl::onSize( cgInt32 nWidth, cgInt32 nHeight )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : onParentAttach () (Virtual)
+/// <summary>
+/// This method is called when a control is first attached to a new parent
+/// control.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIControl::onParentAttach( cgUIControl * parent )
+{
+    // Nothing in base implementation
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onScreenLayoutChange () (Virtual)
+/// <summary>
+/// This method is called whenever the render driver reports that the layout
+/// of the screen may have changes (its size, etc.)
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIControl::onScreenLayoutChange( )
+{
+    // Raise the event on the top level control first.
+    raiseEvent( cgSystemMessages::UI_OnScreenLayoutChange, CG_NULL );
+
+    // Pass through to all child controls from top to bottom
+    ControlList::iterator itControl;
+    for ( itControl = mChildren.begin(); itControl != mChildren.end(); ++itControl )
+    {
+        cgUIControl * pControl = *itControl;
+        if ( !pControl ) continue;
+        
+        // Notify child
+        pControl->onScreenLayoutChange( );
+
+    } // Next child control
+}
+
+//-----------------------------------------------------------------------------
 //  Name : registerEventHandler ()
 /// <summary>
 /// This function is used to register an event handler that should
@@ -1869,10 +1959,10 @@ void cgUIControl::registerEventHandler( cgUInt32 nUIMessage, cgInt32 nReferenceI
     EventHandler Handler;
 
     // Construct event handler data
-    Handler.referenceId    = nReferenceId;
-    Handler.func       = CG_NULL;
-    Handler.context        = CG_NULL;
-    Handler.scriptObject   = CG_NULL;
+    Handler.referenceId  = nReferenceId;
+    Handler.func         = CG_NULL;
+    Handler.context      = CG_NULL;
+    Handler.scriptObject = CG_NULL;
 
     // Store this event handler
     mEventHandlers[ nUIMessage ] = Handler;
@@ -2108,6 +2198,33 @@ bool cgUIControl::isVisible( bool bIncludeParentState ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : canGainFocus ()
+/// <summary>
+/// Determine if this control can currently gain focus. This will include
+/// the parent focus enabled status by default.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgUIControl::canGainFocus( ) const
+{
+    return mCanGainFocus && mParentCanGainFocus;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : canGainFocus ()
+/// <summary>
+/// Determine if this control can currently gain focus. This will include
+/// the parent focus enabled status by default.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgUIControl::canGainFocus( bool bIncludeParentState ) const
+{
+    if (bIncludeParentState)
+        return mCanGainFocus && mParentCanGainFocus;
+    else
+        return mCanGainFocus;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : isEnabled ()
 /// <summary>
 /// Determine if this control is considered enabled. This will include
@@ -2249,6 +2366,102 @@ void cgUIControl::setParentVisible( bool bVisible )
         mBillboard->update();
     
     } // End if billboard exists
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setCanGainFocus ()
+/// <summary>
+/// Set the flag that dictates whether or not this control can receive input
+/// focus.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIControl::setCanGainFocus( bool bCanGainFocus )
+{
+    ControlList::iterator     itControl;
+    ControlIndexMap::iterator itElement;
+    cgUIControl             * pControl;
+
+    // Is this a no-op?
+    if ( bCanGainFocus == mCanGainFocus )
+        return;
+
+    // Update our internal status
+    mCanGainFocus = bCanGainFocus;
+
+    // Pass through to all child controls
+    for ( itControl = mChildren.begin(); itControl != mChildren.end(); ++itControl )
+    {
+        pControl = *itControl;
+        if ( !pControl ) continue;
+        
+        // Set child's "parent" focus gain status
+        pControl->setParentCanGainFocus( bCanGainFocus );
+
+    } // Next child control
+
+    // Update the control elements if it has any
+    if ( mControlMode == Complex )
+    {
+        for ( itElement = mControlElements.begin(); itElement != mControlElements.end(); ++itElement )
+        {
+            pControl = itElement->second;
+            if ( !pControl ) continue;
+            pControl->setParentCanGainFocus( bCanGainFocus );
+
+        } // Next element
+    
+    } // End if complex control
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setParentCanGainFocus () (Protected)
+/// <summary>
+/// Parent status and child status are treated differently.
+/// Because the status of the parent should not affect the original
+/// status of the child, this is tracked separately.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIControl::setParentCanGainFocus( bool bCanGainFocus )
+{
+    ControlList::iterator     itControl;
+    ControlIndexMap::iterator itElement;
+    cgUIControl             * pControl;
+
+    // Is this a no-op?
+    if ( bCanGainFocus == mParentCanGainFocus )
+        return;
+
+    // Update our parent status
+    mParentCanGainFocus = bCanGainFocus;
+
+    // If parent is being enabled again, and we were already disabled
+    // just bail.
+    if ( bCanGainFocus && !mCanGainFocus )
+        return;
+
+    // Pass through to all child controls
+    for ( itControl = mChildren.begin(); itControl != mChildren.end(); ++itControl )
+    {
+        pControl = *itControl;
+        if ( !pControl ) continue;
+        
+        // Set child's "parent" focus gain status
+        pControl->setParentCanGainFocus( bCanGainFocus );
+
+    } // Next child control
+
+    // Update state of the control elements if it has any
+    if ( mControlMode == Complex )
+    {
+        for ( itElement = mControlElements.begin(); itElement != mControlElements.end(); ++itElement )
+        {
+            pControl = itElement->second;
+            if ( !pControl ) continue;
+            pControl->setParentCanGainFocus( bCanGainFocus );
+
+        } // Next element
+    
+    } // End if complex control
 }
 
 //-----------------------------------------------------------------------------
@@ -2444,11 +2657,6 @@ cgDockMode::Base cgUIControl::getDockMode( ) const
 //-----------------------------------------------------------------------------
 void cgUIControl::focus( )
 {
-    if ( mRootForm )
-    {
-        cgUIManager * pManager = mRootForm->getUIManager();
-        if ( pManager )
-            pManager->setFocus( this );
-
-    } // End if root form set
+    if ( mUIManager )
+        mUIManager->setFocus( this );
 }

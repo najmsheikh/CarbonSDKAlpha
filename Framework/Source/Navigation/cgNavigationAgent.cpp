@@ -32,6 +32,7 @@
 #include <Navigation/cgNavigationHandler.h>
 #include <Navigation/cgNavigationTypes.h>
 #include "../../Lib/DetourCrowd/Include/DetourCrowd.h"
+#include "../../Lib/Detour/Include/DetourCommon.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // cgNavigationAgent Members
@@ -127,8 +128,59 @@ bool cgNavigationAgent::queryReferenceType( const cgUID & type ) const
 //-----------------------------------------------------------------------------
 bool cgNavigationAgent::initialize( const cgNavigationAgentCreateParams & params, const cgVector3 & position )
 {
+    // Store the parameters being used.
+    mParams = params;
+
+    // Build detour parameters
     dtCrowdAgentParams dtparams;
 	memset( &dtparams, 0, sizeof(dtCrowdAgentParams) );
+    dtparams.slowDownRadius        = params.slowDownRadius;
+	dtparams.radius                = params.agentRadius;
+	dtparams.height                = params.agentHeight;
+	dtparams.maxAcceleration       = params.maximumAcceleration;
+	dtparams.maxSpeed              = params.maximumSpeed;
+	dtparams.collisionQueryRange   = dtparams.radius * 12.0f;
+	dtparams.pathOptimizationRange = dtparams.radius * 30.0f;
+	dtparams.updateFlags           = 0; 
+    dtparams.obstacleAvoidanceType = (cgByte)params.avoidanceQuality;
+	dtparams.separationWeight      = params.separationWeight;
+	if ( params.anticipateTurns )
+        dtparams.updateFlags      |= DT_CROWD_ANTICIPATE_TURNS;
+	if ( params.optimizeVisibility )
+	    dtparams.updateFlags      |= DT_CROWD_OPTIMIZE_VIS;
+	if ( params.optimizeTopology )
+	    dtparams.updateFlags      |= DT_CROWD_OPTIMIZE_TOPO;
+	if ( params.obstacleAvoidance )
+	    dtparams.updateFlags      |= DT_CROWD_OBSTACLE_AVOIDANCE;
+	if ( params.separation )
+	    dtparams.updateFlags      |= DT_CROWD_SEPARATION;
+    
+    // Add to detour
+    mDetourIndex = mHandler->mCrowd->addAgent( position, &dtparams );
+	
+    // Added new agent?
+    return (mDetourIndex != -1);
+}
+
+//-----------------------------------------------------------------------------
+//  Name : updateParameters ()
+/// <summary>
+/// Update the parameters that describe the agent's properties and behavior.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgNavigationAgent::updateParameters( const cgNavigationAgentCreateParams & params )
+{
+    // Store the parameters being used.
+    mParams = params;
+
+    // Anything else to do?
+    if ( mDetourIndex < 0 )
+        return;
+
+    // Build detour parameters
+    dtCrowdAgentParams dtparams;
+	memset( &dtparams, 0, sizeof(dtCrowdAgentParams) );
+    dtparams.slowDownRadius        = params.slowDownRadius;
 	dtparams.radius                = params.agentRadius;
 	dtparams.height                = params.agentHeight;
 	dtparams.maxAcceleration       = params.maximumAcceleration;
@@ -149,11 +201,21 @@ bool cgNavigationAgent::initialize( const cgNavigationAgentCreateParams & params
 	if ( params.separation )
 	    dtparams.updateFlags      |= DT_CROWD_SEPARATION;
 	
-    // Add to detour
-    mDetourIndex = mHandler->mCrowd->addAgent( position, &dtparams );
-	
-    // Added new agent?
-    return (mDetourIndex != -1);
+    // Update detour
+    mHandler->mCrowd->updateAgentParameters( mDetourIndex, &dtparams );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getParameters ()
+/// <summary>
+/// Retrieve the parameters that describe the agent's properties and behavior
+/// specified when the agent was created, or in a subsequent call to
+/// 'updateParameters()'.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgNavigationAgentCreateParams & cgNavigationAgent::getParameters( ) const
+{
+    return mParams;
 }
 
 //-----------------------------------------------------------------------------
@@ -231,6 +293,25 @@ bool cgNavigationAgent::setMoveTarget( const cgVector3 & position, bool adjust )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : setMoveVelocity ()
+/// <summary>
+/// Attempt to move the agent based on the specified velocity.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgNavigationAgent::setMoveVelocity( const cgVector3 & velocity )
+{
+	dtCrowd * crowd    = mHandler->mCrowd;
+
+    // Request that we navigate to this position.
+    const dtCrowdAgent * agent = crowd->getAgent( mDetourIndex );
+    if ( agent && agent->active )
+        return crowd->requestMoveVelocity( mDetourIndex, velocity );
+
+    // Not a valid operation.
+    return false;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getPosition ()
 /// <summary>
 /// Retrieve the current position of the agent.
@@ -290,4 +371,67 @@ void cgNavigationAgent::onNavigationAgentReposition( cgNavigationAgentReposition
     EventListenerList Listeners = mEventListeners;
     for ( itListener = Listeners.begin(); itListener != Listeners.end(); ++itListener )
         (static_cast<cgNavigationAgentEventListener*>(*itListener))->onNavigationAgentReposition( this, e );
+}
+
+//-----------------------------------------------------------------------------
+// Name : getAgentState()
+/// <summary>
+/// Determine the current state of the agent, i.e. whether it is currently 
+/// in a position to receieve navigation requests.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgNavigationAgentState::Base cgNavigationAgent::getAgentState( ) const
+{
+    dtCrowd * crowd = mHandler->mCrowd;
+    const dtCrowdAgent * agent = crowd->getAgent( mDetourIndex );
+    if ( !agent || !agent->active )
+        return cgNavigationAgentState::Invalid;
+    return (cgNavigationAgentState::Base)agent->state;
+}
+
+//-----------------------------------------------------------------------------
+// Name : getTargetState()
+/// <summary>
+/// Determine the current state of the most recent navigation request.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgNavigationTargetState::Base cgNavigationAgent::getTargetState( ) const
+{
+    dtCrowd * crowd = mHandler->mCrowd;
+    const dtCrowdAgent * agent = crowd->getAgent( mDetourIndex );
+    if ( !agent || !agent->active )
+        return cgNavigationTargetState::None;
+
+    // Determine if we've arrived at the target
+    if ( agent->targetState == DT_CROWDAGENT_TARGET_VALID )
+    {
+        if ( agent->ncorners )
+        {
+            // Is the agent at the end of its path?
+		    const bool endOfPath = (agent->cornerFlags[agent->ncorners-1] & DT_STRAIGHTPATH_END) ? true : false;
+	        if ( endOfPath )
+            {
+                // Within its own radius of the goal?
+                if ( dtVdist2D(agent->npos, &agent->cornerVerts[(agent->ncorners-1)*3]) <= agent->params.radius )
+                    return cgNavigationTargetState::Arrived;
+            
+            } // End if reaching end
+
+        } // End if has path
+    	
+    } // End if valid
+
+    // Return the underlying state.
+    return (cgNavigationTargetState::Base)agent->targetState;
+}
+
+//-----------------------------------------------------------------------------
+// Name : getHandler ()
+/// <summary>
+/// Get the handler that is responsible for managing this navigation agent.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgNavigationHandler * cgNavigationAgent::getHandler( ) const
+{
+    return mHandler;
 }

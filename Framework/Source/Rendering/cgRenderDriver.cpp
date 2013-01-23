@@ -78,6 +78,7 @@ cgRenderDriver::cgRenderDriver() : cgReference( cgReferenceManager::generateInte
     mOwnsWindow             = false;
     mLostDevice             = false;
     mActive                 = false;
+    mSuppressResizeEvent    = false;
     mStateFilteringEnabled  = true;
     mTargetSize             = cgSize( 0, 0 );
     mAdapterAspectRatio     = 0;
@@ -307,7 +308,8 @@ void cgRenderDriver::dispose( bool bDisposeBase )
         delete mFocusWindow;
 
     // Release any allocated memory
-    delete mCaps;
+    if ( mCaps )
+        mCaps->scriptSafeDispose();
     
     // Reset any variables
     mCaps                   = CG_NULL;
@@ -945,7 +947,10 @@ bool cgRenderDriver::initShaderSystem()
    		 !(mSystemExportVars.transmissive = (bool*)mSystemExports->getAddressOfMember( _T("transmissive") )) ||
          !(mSystemExportVars.translucent = (bool*)mSystemExports->getAddressOfMember( _T("translucent") )) ||
          !(mSystemExportVars.emissive = (bool*)mSystemExports->getAddressOfMember( _T("emissive") )) ||
-		 !(mSystemExportVars.alphaTest = (bool*)mSystemExports->getAddressOfMember( _T("alphaTest") )) )
+		 !(mSystemExportVars.alphaTest = (bool*)mSystemExports->getAddressOfMember( _T("alphaTest") )) ||
+
+		 !(mSystemExportVars.objectRenderClass = (int*)mSystemExports->getAddressOfMember( _T("objectRenderClass") )) )
+
     {
         cgAppLog::write( cgAppLog::Error, _T("Failed to access one or more required shader system variables.\n") );
         return false;
@@ -1617,7 +1622,12 @@ bool cgRenderDriver::setSystemState( cgSystemState::Base State, cgInt32 Value )
 			else
 				*mSystemExportVars.materialFlags &= ~AlphaTest;
             break;
-        default:
+
+		case cgSystemState::ObjectRenderClass:
+			*mSystemExportVars.objectRenderClass = Value;
+			break;
+		
+		default:
             return false;
 
     } // End Switch
@@ -1807,6 +1817,10 @@ cgInt32 cgRenderDriver::getSystemState( cgSystemState::Base State )
 		case cgSystemState::AlphaTest:
             Value = (*mSystemExportVars.alphaTest != 0);
             break;
+
+		case cgSystemState::ObjectRenderClass:
+			Value = *mSystemExportVars.objectRenderClass;
+			break;
 
         default:
             return 0;
@@ -5048,7 +5062,7 @@ bool cgRenderDriver::processMessage( cgMessage * pMessage )
                 mActive = true;
 
                 // Trigger a resize event if we're in windowed mode
-                if ( isWindowed() )
+                if ( isWindowed() && !mSuppressResizeEvent  )
                     windowResized( pArgs->size.width, pArgs->size.height );
 
             } // End if !minimized
@@ -5088,10 +5102,16 @@ void cgRenderDriver::windowResized( cgInt32 nWidth, cgInt32 nHeight )
         cgCameraNode * pCamera = *itCamera;
 
         // Update the camera if applicable
-        if ( !pCamera->isAspectLocked() )
+        if ( pCamera && !pCamera->isAspectLocked() )
             pCamera->setAspectRatio( fAspect );
 
     } // Next Camera
+
+    // Send layout change message.
+    cgMessage LayoutMessage;
+    LayoutMessage.messageId   = cgSystemMessages::RenderDriver_ScreenLayoutChange;
+    LayoutMessage.messageData = (void*)this;
+    cgReferenceManager::sendMessageToGroup( getReferenceId(), cgSystemMessageGroups::MGID_RenderDriver, &LayoutMessage );
 }
 
 //-----------------------------------------------------------------------------

@@ -4508,8 +4508,8 @@ bool cgMesh::generateVertexComponents( bool bWeld )
     if ( mForceNormalGen || mPrepareData.computeNormals )
     {
         // Generate the adjacency information for vertex normal computation
-        cgUInt32 * pAdjacency = generateAdjacency();
-        if ( pAdjacency == CG_NULL )
+        cgUInt32Array adjacency;
+        if ( !generateAdjacency( adjacency ) )
         {
             cgAppLog::write( cgAppLog::Error, _T("Failed to generate adjacency buffer for mesh containing %i faces.\n"), mPrepareData.triangleCount );
             return false;
@@ -4517,16 +4517,12 @@ bool cgMesh::generateVertexComponents( bool bWeld )
         } // End if failed to generate
 
         // Generate any vertex normals that have not been provided
-        if ( !generateVertexNormals( pAdjacency ) )
+        if ( !generateVertexNormals( &adjacency.front() ) )
         {
             cgAppLog::write( cgAppLog::Error, _T("Failed to generate vertex normals for mesh containing %i faces.\n"), mPrepareData.triangleCount );
-            delete []pAdjacency;
             return false;
 
         } // End if failed to generate
-
-        // We're done with the adjacency information
-        delete []pAdjacency;
 
     } // End if compute
 
@@ -4962,111 +4958,212 @@ bool cgMesh::generateVertexTangents( )
 }
 
 //-----------------------------------------------------------------------------
-//  Name : generateAdjacency () (Private)
+//  Name : generateAdjacency ()
 /// <summary>
-/// Generates edge-triangle adjacency information for the pre-built data
-/// added prior to building the hardware buffers.
+/// Generates edge-triangle adjacency information for the mesh data either
+/// prior to, or after building the hardware buffers. Input array will be
+/// automatically sized, and will contain 3 values per triangle contained
+/// in the mesh representing the indices to adjacent faces for each edge in 
+/// the triangle (or 0xFFFFFFFF if there is no adjacent face).
 /// </summary>
 //-----------------------------------------------------------------------------
-cgUInt32 * cgMesh::generateAdjacency( )
+bool cgMesh::generateAdjacency( cgUInt32Array & adjacency )
 {
     std::map< AdjacentEdgeKey, cgUInt32 > EdgeTree;
     std::map< AdjacentEdgeKey, cgUInt32 >::const_iterator itEdge;
-    cgUInt32 i, *pBuffer = CG_NULL;
-
-    // Validate requirements
-    if ( mPrepareData.triangleCount == 0 )
-        return CG_NULL;
-
-    // Retrieve useful data offset information.
-    cgInt nPositionOffset = mVertexFormat->getElementOffset( D3DDECLUSAGE_POSITION );
-    cgInt nVertexStride   = (cgInt)mVertexFormat->getStride();
-
-    // Insert all edges into the edge tree
-    cgByte * pSrcVertices = &mPrepareData.vertexData[0];
-    for ( i = 0; i < mPrepareData.triangleCount; ++i )
+    
+    // What is the status of the mesh?
+    if ( mPrepareStatus != cgMeshStatus::Prepared )
     {
-        AdjacentEdgeKey Edge;
-        
-        // Retrieve positions of each referenced vertex.
-        const Triangle & Tri = mPrepareData.triangleData[i];
-        const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (Tri.indices[0] * nVertexStride) + nPositionOffset);
-        const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (Tri.indices[1] * nVertexStride) + nPositionOffset);
-        const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (Tri.indices[2] * nVertexStride) + nPositionOffset);
-        
-        // Edge 1
-        Edge.vertex1    = v1;
-        Edge.vertex2    = v2;
-        EdgeTree[ Edge ] = i;
+        // Validate requirements
+        if ( mPrepareData.triangleCount == 0 )
+            return false;
 
-        // Edge 2
-        Edge.vertex1    = v2;
-        Edge.vertex2    = v3;
-        EdgeTree[ Edge ] = i;
+        // Retrieve useful data offset information.
+        cgInt nPositionOffset = mVertexFormat->getElementOffset( D3DDECLUSAGE_POSITION );
+        cgInt nVertexStride   = (cgInt)mVertexFormat->getStride();
 
-        // Edge 3
-        Edge.vertex1    = v3;
-        Edge.vertex2    = v1;
-        EdgeTree[ Edge ] = i;
+        // Insert all edges into the edge tree
+        cgByte * pSrcVertices = &mPrepareData.vertexData[0];
+        for ( cgUInt32 i = 0; i < mPrepareData.triangleCount; ++i )
+        {
+            AdjacentEdgeKey Edge;
+            
+            // Retrieve positions of each referenced vertex.
+            const Triangle & Tri = mPrepareData.triangleData[i];
+            const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (Tri.indices[0] * nVertexStride) + nPositionOffset);
+            const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (Tri.indices[1] * nVertexStride) + nPositionOffset);
+            const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (Tri.indices[2] * nVertexStride) + nPositionOffset);
+            
+            // Edge 1
+            Edge.vertex1    = v1;
+            Edge.vertex2    = v2;
+            EdgeTree[ Edge ] = i;
 
-    } // Next Face
+            // Edge 2
+            Edge.vertex1    = v2;
+            Edge.vertex2    = v3;
+            EdgeTree[ Edge ] = i;
 
-    // Allocate the buffer to hold the adjacency information
-    pBuffer = new cgUInt32[ mPrepareData.triangleCount * 3 ];
+            // Edge 3
+            Edge.vertex1    = v3;
+            Edge.vertex2    = v1;
+            EdgeTree[ Edge ] = i;
 
-    // Now, find any adjacent edges for each triangle edge
-    for ( i = 0; i < mPrepareData.triangleCount; ++i )
+        } // Next Face
+
+        // Size the output array.
+        adjacency.resize( mPrepareData.triangleCount * 3 );
+
+        // Now, find any adjacent edges for each triangle edge
+        for ( cgUInt32 i = 0; i < mPrepareData.triangleCount; ++i )
+        {
+            AdjacentEdgeKey Edge;
+
+            // Retrieve positions of each referenced vertex.
+            const Triangle & Tri = mPrepareData.triangleData[i];
+            const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (Tri.indices[0] * nVertexStride) + nPositionOffset);
+            const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (Tri.indices[1] * nVertexStride) + nPositionOffset);
+            const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (Tri.indices[2] * nVertexStride) + nPositionOffset);
+
+            // Note: Notice below that the order of the edge vertices
+            //       is swapped. This is because we want to find the 
+            //       matching ADJACENT edge, rather than simply finding
+            //       the same edge that we're currently processing.
+            
+            // Edge 1
+            Edge.vertex2 = v1;
+            Edge.vertex1 = v2;
+            
+            // Find the matching adjacent edge
+            itEdge = EdgeTree.find( Edge );
+            if ( itEdge == EdgeTree.end() )
+                adjacency[ (i * 3) ] = 0xFFFFFFFF;
+            else
+                adjacency[ (i * 3) ] = itEdge->second;
+
+            // Edge 2
+            Edge.vertex2 = v2;
+            Edge.vertex1 = v3;
+            
+            // Find the matching adjacent edge
+            itEdge = EdgeTree.find( Edge );
+            if ( itEdge == EdgeTree.end() )
+                adjacency[ (i * 3) + 1 ] = 0xFFFFFFFF;
+            else
+                adjacency[ (i * 3) + 1 ] = itEdge->second;
+
+            // Edge 3
+            Edge.vertex2 = v3;
+            Edge.vertex1 = v1;
+            
+            // Find the matching adjacent edge
+            itEdge = EdgeTree.find( Edge );
+            if ( itEdge == EdgeTree.end() )
+                adjacency[ (i * 3) + 2 ] = 0xFFFFFFFF;
+            else
+                adjacency[ (i * 3) + 2 ] = itEdge->second;
+
+        } // Next Face
+
+    } // End if not prepared
+    else
     {
-        AdjacentEdgeKey Edge;
+        // Validate requirements
+        if ( mFaceCount == 0 )
+            return false;
 
-        // Retrieve positions of each referenced vertex.
-        const Triangle & Tri = mPrepareData.triangleData[i];
-        const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (Tri.indices[0] * nVertexStride) + nPositionOffset);
-        const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (Tri.indices[1] * nVertexStride) + nPositionOffset);
-        const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (Tri.indices[2] * nVertexStride) + nPositionOffset);
+        // Retrieve useful data offset information.
+        cgInt nPositionOffset = mVertexFormat->getElementOffset( D3DDECLUSAGE_POSITION );
+        cgInt nVertexStride   = (cgInt)mVertexFormat->getStride();
 
-        // Note: Notice below that the order of the edge vertices
-        //       is swapped. This is because we want to find the 
-        //       matching ADJACENT edge, rather than simply finding
-        //       the same edge that we're currently processing.
-        
-        // Edge 1
-        Edge.vertex2 = v1;
-        Edge.vertex1 = v2;
-        
-        // Find the matching adjacent edge
-        itEdge = EdgeTree.find( Edge );
-        if ( itEdge == EdgeTree.end() )
-            pBuffer[ (i * 3) ] = 0xFFFFFFFF;
-        else
-            pBuffer[ (i * 3) ] = itEdge->second;
+        // Insert all edges into the edge tree
+        cgByte * pSrcVertices = mSystemVB;
+        cgUInt32 * pSrcIndices  = mSystemIB;
+        for ( cgUInt32 i = 0; i < mFaceCount; ++i, pSrcIndices+=3 )
+        {
+            AdjacentEdgeKey Edge;
+            
+            // Retrieve positions of each referenced vertex.
+            const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (pSrcIndices[0] * nVertexStride) + nPositionOffset);
+            const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (pSrcIndices[1] * nVertexStride) + nPositionOffset);
+            const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (pSrcIndices[2] * nVertexStride) + nPositionOffset);
+            
+            // Edge 1
+            Edge.vertex1    = v1;
+            Edge.vertex2    = v2;
+            EdgeTree[ Edge ] = i;
 
-        // Edge 2
-        Edge.vertex2 = v2;
-        Edge.vertex1 = v3;
-        
-        // Find the matching adjacent edge
-        itEdge = EdgeTree.find( Edge );
-        if ( itEdge == EdgeTree.end() )
-            pBuffer[ (i * 3) + 1 ] = 0xFFFFFFFF;
-        else
-            pBuffer[ (i * 3) + 1 ] = itEdge->second;
+            // Edge 2
+            Edge.vertex1    = v2;
+            Edge.vertex2    = v3;
+            EdgeTree[ Edge ] = i;
 
-        // Edge 3
-        Edge.vertex2 = v3;
-        Edge.vertex1 = v1;
-        
-        // Find the matching adjacent edge
-        itEdge = EdgeTree.find( Edge );
-        if ( itEdge == EdgeTree.end() )
-            pBuffer[ (i * 3) + 2 ] = 0xFFFFFFFF;
-        else
-            pBuffer[ (i * 3) + 2 ] = itEdge->second;
+            // Edge 3
+            Edge.vertex1    = v3;
+            Edge.vertex2    = v1;
+            EdgeTree[ Edge ] = i;
 
-    } // Next Face
+        } // Next Face
 
-    // Return the buffer
-    return pBuffer;
+        // Size the output array.
+        adjacency.resize( mFaceCount * 3 );
+
+        // Now, find any adjacent edges for each triangle edge
+        pSrcIndices  = mSystemIB;
+        for ( cgUInt32 i = 0; i < mFaceCount; ++i, pSrcIndices+=3 )
+        {
+            AdjacentEdgeKey Edge;
+
+            // Retrieve positions of each referenced vertex.
+            const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (pSrcIndices[0] * nVertexStride) + nPositionOffset);
+            const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (pSrcIndices[1] * nVertexStride) + nPositionOffset);
+            const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (pSrcIndices[2] * nVertexStride) + nPositionOffset);
+
+            // Note: Notice below that the order of the edge vertices
+            //       is swapped. This is because we want to find the 
+            //       matching ADJACENT edge, rather than simply finding
+            //       the same edge that we're currently processing.
+            
+            // Edge 1
+            Edge.vertex2 = v1;
+            Edge.vertex1 = v2;
+            
+            // Find the matching adjacent edge
+            itEdge = EdgeTree.find( Edge );
+            if ( itEdge == EdgeTree.end() )
+                adjacency[ (i * 3) ] = 0xFFFFFFFF;
+            else
+                adjacency[ (i * 3) ] = itEdge->second;
+
+            // Edge 2
+            Edge.vertex2 = v2;
+            Edge.vertex1 = v3;
+            
+            // Find the matching adjacent edge
+            itEdge = EdgeTree.find( Edge );
+            if ( itEdge == EdgeTree.end() )
+                adjacency[ (i * 3) + 1 ] = 0xFFFFFFFF;
+            else
+                adjacency[ (i * 3) + 1 ] = itEdge->second;
+
+            // Edge 3
+            Edge.vertex2 = v3;
+            Edge.vertex1 = v1;
+            
+            // Find the matching adjacent edge
+            itEdge = EdgeTree.find( Edge );
+            if ( itEdge == EdgeTree.end() )
+                adjacency[ (i * 3) + 2 ] = 0xFFFFFFFF;
+            else
+                adjacency[ (i * 3) + 2 ] = itEdge->second;
+
+        } // Next Face
+
+    } // End if prepared
+
+    // Success!
+    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -6435,7 +6532,7 @@ bool cgMesh::pickMeshSubset( cgUInt32 nDataGroupId, cgCameraNode * pCamera, cons
 /// during rendering.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgMaterialHandleArray & cgMesh::getMaterials( )
+const cgMaterialHandleArray & cgMesh::getMaterials( ) const
 {
     return mObjectMaterials;
 }
@@ -6656,6 +6753,63 @@ bool cgMesh::setFaceMaterial( cgUInt32 nFace, const cgMaterialHandle & hMaterial
 
         // Replace the material reference for the specified face.
         mTriangleData[nFace].material = hMaterial;
+
+        // Re-sort the mesh data if required.
+        if ( mDisableFinalSort == true )
+            return true;
+        else
+            return sortMeshData( mOptimizedMesh, mHardwareMesh );
+        
+    } // End if Prepared
+
+    // Nothing to do.
+    return false;
+}
+
+//-----------------------------------------------------------------------------
+// Name : replaceMaterial()
+/// <summary>
+/// Replace the specified material, with a new one.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgMesh::replaceMaterial( const cgMaterialHandle & oldMaterial, const cgMaterialHandle & newMaterial )
+{
+    // Mesh requires standard material types.
+    const cgMaterial * newMaterialRes = newMaterial.getResourceSilent();
+    if ( newMaterialRes != CG_NULL && newMaterialRes->queryReferenceType( RTID_StandardMaterial ) == false )
+    {
+        cgAppLog::write( cgAppLog::Debug | cgAppLog::Error, _T("Unable to assign new material to mesh because the specified material was not of a valid type.\n") );
+        return false;
+    
+    } // End if invalid type
+
+    // Different approaches are required depending on whether or not
+    // the mesh is currently in the process of being prepared or not.
+    if ( mPrepareStatus == cgMeshStatus::Preparing )
+    {
+        // Process all unprepared triangles.
+        for ( cgUInt32 i = 0; i < mPrepareData.triangleCount; ++i )
+        {
+            // Replace the material reference for the specified face.
+            if ( mPrepareData.triangleData[i].material == oldMaterial )
+                mPrepareData.triangleData[i].material = newMaterial;
+        
+        } // Next triangle
+
+        // Success!
+        return true;
+
+    } // End if Preparing
+    else if ( mPrepareStatus == cgMeshStatus::Prepared )
+    {
+        // Swap materials in triangle data.
+        for ( cgUInt32 i = 0; i < mFaceCount; ++i )
+        {
+            // Replace the material reference for the specified face.
+            if ( mTriangleData[i].material == oldMaterial )
+                mTriangleData[i].material = newMaterial;
+        
+        } // Next triangle
 
         // Re-sort the mesh data if required.
         if ( mDisableFinalSort == true )

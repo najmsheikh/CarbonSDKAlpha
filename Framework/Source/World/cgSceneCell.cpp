@@ -141,6 +141,18 @@ cgVector3 cgSceneCell::getWorldOrigin( ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getNodes ()
+/// <summary>
+/// Retrieve the set containing all allocated nodes associated with this
+/// scene cell.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgObjectNodeSet & cgSceneCell::getNodes( ) const
+{
+    return mNodes;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getCellId ()
 /// <summary>
 /// Retrieve the unique identifier of this cell.

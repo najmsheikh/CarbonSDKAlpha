@@ -35,6 +35,7 @@ namespace cgSystemMessages
         // Messages issued by cgRenderDriver
         RenderDriver_DeviceLost         = 1,
         RenderDriver_DeviceRestored     = 2,
+        RenderDriver_ScreenLayoutChange = 3,
 
         // Messages processed by cgResourceManager
         Resources_CollectGarbage        = 1001,
@@ -54,18 +55,28 @@ namespace cgSystemMessages
         AudioDriver_Apply3DSettings     = 3001,
 
         // Messages issued by user interface system
-        UI_OnInitControl                = 4000,
-        UI_OnSize                       = 4001,
-        UI_OnMouseButtonDown            = 4002,
-        UI_OnMouseButtonUp              = 4003,
-        UI_OnMouseMove                  = 4004,
-        UI_OnMouseWheelScroll           = 4005,
-        UI_OnKeyDown                    = 4006,
-        UI_OnKeyUp                      = 4007,
-        UI_OnKeyPressed                 = 4008,
+        UI_CollectGarbage               = 4000,
+        UI_OnInitControl                = 4001,
+        UI_OnSize                       = 4002,
+        UI_OnClosing                    = 4003,
+        UI_OnClose                      = 4004,
+        UI_OnScreenLayoutChange         = 4005,
+        UI_OnMouseButtonDown            = 4006,
+        UI_OnMouseButtonUp              = 4007,
+        UI_OnMouseMove                  = 4008,
+        UI_OnMouseWheelScroll           = 4009,
+        UI_OnKeyDown                    = 4010,
+        UI_OnKeyUp                      = 4011,
+        UI_OnKeyPressed                 = 4012,
+        UI_OnLostFocus                  = 4013,
+        UI_OnGainFocus                  = 4014,
         
-        UI_Button_OnClick               = 4100,
-        UI_ScrollBar_OnValueChange      = 4101,
+        UI_Button_OnClick                   = 4100,
+        UI_ScrollBar_OnValueChange          = 4120,
+        UI_ListBox_OnSelectedIndexChange    = 4140,
+        UI_ComboBox_OnSelectedIndexChange   = 4160,
+        UI_CheckBox_OnClick                 = 4180,
+        UI_CheckBox_OnCheckedStateChange    = 4181,
 
         // Messages issued by cgSceneLoader
         SceneLoader_ProgressUpdated     = 5001,

@@ -154,7 +154,6 @@ namespace Types
         void declare( cgScriptEngine * engine )
         {
             // Value Types / Structures
-            BINDSUCCESS( engine->registerObjectType( "AudioBufferFormat" , sizeof(cgAudioBufferFormat) , asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS ) );
             BINDSUCCESS( engine->registerObjectType( "ImageInfo"         , sizeof(cgImageInfo)         , asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CDA ) );
             BINDSUCCESS( engine->registerObjectType( "MaterialTerms"     , sizeof(cgMaterialTerms)     , asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
             BINDSUCCESS( engine->registerObjectType( "ConstantDesc"      , sizeof(cgConstantDesc)      , asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
@@ -169,10 +168,13 @@ namespace Types
             BINDSUCCESS( engine->registerEnum( "MultiSampleType" ) );
             BINDSUCCESS( engine->registerEnum( "ResourceType" ) );
             BINDSUCCESS( engine->registerEnum( "ResourceFlags" ) );
-            BINDSUCCESS( engine->registerEnum( "AudioBufferFlags" ) );
             BINDSUCCESS( engine->registerEnum( "ResampleMethod" ) );
             BINDSUCCESS( engine->registerEnum( "ConstantType" ) );
             BINDSUCCESS( engine->registerEnum( "ScaleMode" ) );
+            BINDSUCCESS( engine->registerEnum( "MeshStatus" ) );
+            BINDSUCCESS( engine->registerEnum( "MeshDrawMode" ) );
+            BINDSUCCESS( engine->registerEnum( "MeshCreateOrigin" ) );
+            BINDSUCCESS( engine->registerEnum( "MaterialType" ) );
         }
 
         // Member bindings
@@ -402,20 +404,6 @@ namespace Types
             BINDSUCCESS( engine->registerEnumValue( "ResourceFlags", "DeferredLoad"  , cgResourceFlags::DeferredLoad ) );
 
             ///////////////////////////////////////////////////////////////////////
-            // cgAudioBufferFlags (Enum)
-            ///////////////////////////////////////////////////////////////////////
-
-            // Register Values
-            BINDSUCCESS( engine->registerEnumValue( "AudioBufferFlags", "Simple"     , cgAudioBufferFlags::Simple ) );
-            BINDSUCCESS( engine->registerEnumValue( "AudioBufferFlags", "Streaming"  , cgAudioBufferFlags::Streaming ) );
-            BINDSUCCESS( engine->registerEnumValue( "AudioBufferFlags", "Positional" , cgAudioBufferFlags::Positional ) );
-            BINDSUCCESS( engine->registerEnumValue( "AudioBufferFlags", "AllowPan"   , cgAudioBufferFlags::AllowPan ) );
-            BINDSUCCESS( engine->registerEnumValue( "AudioBufferFlags", "AllowVolume", cgAudioBufferFlags::AllowVolume ) );
-            BINDSUCCESS( engine->registerEnumValue( "AudioBufferFlags", "AllowPitch" , cgAudioBufferFlags::AllowPitch ) );
-            BINDSUCCESS( engine->registerEnumValue( "AudioBufferFlags", "Complex"    , cgAudioBufferFlags::Complex ) );
-            BINDSUCCESS( engine->registerEnumValue( "AudioBufferFlags", "Complex3D"  , cgAudioBufferFlags::Complex3D ) );
-
-            ///////////////////////////////////////////////////////////////////////
             // cgResampleMethod (Enum)
             ///////////////////////////////////////////////////////////////////////
 
@@ -443,6 +431,40 @@ namespace Types
             BINDSUCCESS( engine->registerEnumValue( "ConstantType", "Double"    , cgConstantType::Double ) );
             BINDSUCCESS( engine->registerEnumValue( "ConstantType", "Unresolved", cgConstantType::Unresolved ) );
 
+            ///////////////////////////////////////////////////////////////////////
+            // cgMeshStatus (Enum)
+            ///////////////////////////////////////////////////////////////////////
+
+            // Register Values
+            BINDSUCCESS( engine->registerEnumValue( "MeshStatus", "NotPrepared", cgMeshStatus::NotPrepared ) );
+            BINDSUCCESS( engine->registerEnumValue( "MeshStatus", "Preparing"  , cgMeshStatus::Preparing ) );
+            BINDSUCCESS( engine->registerEnumValue( "MeshStatus", "Prepared"   , cgMeshStatus::Prepared ) );
+
+            ///////////////////////////////////////////////////////////////////////
+            // cgMeshDrawMode (Enum)
+            ///////////////////////////////////////////////////////////////////////
+
+            // Register Values
+            BINDSUCCESS( engine->registerEnumValue( "MeshDrawMode", "Automatic", cgMeshDrawMode::Automatic ) );
+            BINDSUCCESS( engine->registerEnumValue( "MeshDrawMode", "Simple"   , cgMeshDrawMode::Simple ) );
+
+            ///////////////////////////////////////////////////////////////////////
+            // cgMeshCreateOrigin (Enum)
+            ///////////////////////////////////////////////////////////////////////
+
+            // Register Values
+            BINDSUCCESS( engine->registerEnumValue( "MeshCreateOrigin", "Bottom", cgMeshCreateOrigin::Bottom ) );
+            BINDSUCCESS( engine->registerEnumValue( "MeshCreateOrigin", "Center", cgMeshCreateOrigin::Center ) );
+            BINDSUCCESS( engine->registerEnumValue( "MeshCreateOrigin", "Top"   , cgMeshCreateOrigin::Top ) );
+
+            ///////////////////////////////////////////////////////////////////////
+            // cgMaterialType (Enum)
+            ///////////////////////////////////////////////////////////////////////
+
+            // Register Values
+            BINDSUCCESS( engine->registerEnumValue( "MaterialType", "Standard"      , cgMaterialType::Standard ) );
+            BINDSUCCESS( engine->registerEnumValue( "MaterialType", "LandscapeLayer", cgMaterialType::LandscapeLayer ) );
+            
             ///////////////////////////////////////////////////////////////////////
             // cgConstantDesc (Struct)
             ///////////////////////////////////////////////////////////////////////
@@ -490,19 +512,6 @@ namespace Types
             BINDSUCCESS( engine->registerObjectProperty( "ConstantBufferDesc", "int globalOffset"            , offsetof(cgConstantBufferDesc,globalOffset) ) );
             BINDSUCCESS( engine->registerObjectProperty( "ConstantBufferDesc", "bool bindVS"                 , offsetof(cgConstantBufferDesc,bindVS) ) );
             BINDSUCCESS( engine->registerObjectProperty( "ConstantBufferDesc", "bool bindPS"                 , offsetof(cgConstantBufferDesc,bindPS) ) );
-            
-            ///////////////////////////////////////////////////////////////////////
-            // cgAudioBufferFormat (Struct)
-            ///////////////////////////////////////////////////////////////////////
-
-            // Register Properties
-            BINDSUCCESS( engine->registerObjectProperty( "AudioBufferFormat", "uint16 formatType"         , offsetof(cgAudioBufferFormat,formatType) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "AudioBufferFormat", "uint16 channels"           , offsetof(cgAudioBufferFormat,channels) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "AudioBufferFormat", "uint samplesPerSecond"     , offsetof(cgAudioBufferFormat,samplesPerSecond) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "AudioBufferFormat", "uint averageBytesPerSecond", offsetof(cgAudioBufferFormat,averageBytesPerSecond) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "AudioBufferFormat", "uint16 blockAlign"         , offsetof(cgAudioBufferFormat,blockAlign) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "AudioBufferFormat", "uint16 bitsPerSample"      , offsetof(cgAudioBufferFormat,bitsPerSample) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "AudioBufferFormat", "uint16 size"               , offsetof(cgAudioBufferFormat,size) ) );
 
             ///////////////////////////////////////////////////////////////////////
             // cgMaterialTerms (Struct)

@@ -69,6 +69,7 @@ public:
 
     // 3D Audio
     virtual void                    set3DWorldScale         ( cgFloat unitsPerMeter );
+    virtual void                    set3DRolloffFactor      ( cgFloat factor );
     virtual void                    set3DListenerTransform  ( const cgTransform & t );
 
     //-------------------------------------------------------------------------

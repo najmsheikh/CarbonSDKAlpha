@@ -1170,8 +1170,8 @@ void dtCrowd::update(const float dt, dtCrowdAgentDebugInfo* debug)
 				calcStraightSteerDirection(ag, dvel);
 			
 			// Calculate speed scale, which tells the agent to slowdown at the end of the path.
-			const float slowDownRadius = ag->params.radius*2;	// TODO: make less hacky.
-			const float speedScale = getDistanceToGoal(ag, slowDownRadius) / slowDownRadius;
+			const float slowDownRadius = ag->params.slowDownRadius; // AMH: Added radius support
+            const float speedScale = (slowDownRadius>1e-5f) ? getDistanceToGoal(ag, slowDownRadius) / slowDownRadius : 1;
 				
 			ag->desiredSpeed = ag->params.maxSpeed;
 			dtVscale(dvel, dvel, ag->desiredSpeed * speedScale);

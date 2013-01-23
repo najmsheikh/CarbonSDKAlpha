@@ -360,6 +360,23 @@ bool cgUIControlLayer::onKeyPressed( cgInt32 nKeyCode, cgUInt32 nModifiers )
     return false;
 }
 
+//-----------------------------------------------------------------------------
+//  Name : onScreenLayoutChange () (Virtual)
+/// <summary>
+/// This method is called whenever the render driver reports that the layout
+/// of the screen may have changes (its size, etc.)
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgUIControlLayer::onScreenLayoutChange( )
+{
+    // Pass the message on to the attached control
+    if ( mControl )
+        mControl->onScreenLayoutChange( );
+
+    // Always continue processing (everyone should receive).
+    return false;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // cgUICursorLayer Member Functions
 ///////////////////////////////////////////////////////////////////////////////

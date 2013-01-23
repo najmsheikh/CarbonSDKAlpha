@@ -19,6 +19,9 @@ namespace Types
         // Type declarations
         void declare( cgScriptEngine * engine )
         {
+            // Value Types / Structures
+            BINDSUCCESS( engine->registerObjectType( "SceneCollisionContact", sizeof(cgSceneCollisionContact), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CDA ) );
+
             // Enumerations
             BINDSUCCESS( engine->registerEnum( "WorldComponentType" ) );
             BINDSUCCESS( engine->registerEnum( "VisibilitySearchFlags" ) );
@@ -112,6 +115,19 @@ namespace Types
             BINDSUCCESS( engine->registerEnumValue( "TransformSource", "Standard", cgTransformSource::Standard ) );
             BINDSUCCESS( engine->registerEnumValue( "TransformSource", "Dynamics", cgTransformSource::Dynamics ) );
             BINDSUCCESS( engine->registerEnumValue( "TransformSource", "Navigation", cgTransformSource::Navigation ) );
+
+            ///////////////////////////////////////////////////////////////////////
+            // cgSceneCollisionContact (Struct)
+            ///////////////////////////////////////////////////////////////////////
+            // Register the default constructor, destructor and assignment operators.
+            registerDefaultCDA<cgSceneCollisionContact>( engine, "SceneCollisionContact" );
+
+            // Register properties
+            BINDSUCCESS( engine->registerObjectProperty( "SceneCollisionContact", "ObjectNode @ node"    , offsetof(cgSceneCollisionContact,node) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "SceneCollisionContact", "PhysicsBody @ body"   , offsetof(cgSceneCollisionContact,body) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "SceneCollisionContact", "float intersectParam" , offsetof(cgSceneCollisionContact,intersectParam) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "SceneCollisionContact", "Vector3 contactNormal", offsetof(cgSceneCollisionContact,contactNormal) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "SceneCollisionContact", "int collisionId"      , offsetof(cgSceneCollisionContact,collisionId) ) );
         }
 
     }; // End Class : Package

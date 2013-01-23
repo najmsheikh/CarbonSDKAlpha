@@ -81,6 +81,7 @@ public:
     bool                linkLibrary                 ( const cgInputStream & stream, const cgString & libraryName, cgResourceManager * resourceManager = CG_NULL );
     void                unloadScripts               ( );
     void                enableVerboseOutput         ( bool enable );
+    void                garbageCollect              ( );
 
     bool                declarePackage              ( cgScriptPackage * package, bool declareChildren );
     bool                bindPackage                 ( const cgString & packageNamespace, bool bindChildren );

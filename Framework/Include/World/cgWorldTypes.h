@@ -25,6 +25,7 @@
 // cgWorldTypes Header Includes
 //-----------------------------------------------------------------------------
 #include <cgBaseTypes.h>
+#include <Physics/cgPhysicsTypes.h>
 
 //-----------------------------------------------------------------------------
 // Forward Declarations
@@ -251,6 +252,17 @@ namespace cgDeferredUpdateFlags
 
 }; // End Namespace : cgDeferredUpdateFlags
 
+namespace cgObjectNodeFlags
+{
+    enum Base
+    {
+        Visible         = 0x1,                  // Manual visibility status flag (use cgObjectNode::isRenderable() to query)
+        Selected        = 0x2,                  // Is the node currently selected?
+        DelayUnload     = 0x4,                  // Delay any unload until it is safe to do so (internal).
+        UnloadPending   = 0x8                   // An unload operation is pending (internal).
+    };
+};
+
 //-----------------------------------------------------------------------------
 // Common Global Constants
 //-----------------------------------------------------------------------------
@@ -396,5 +408,17 @@ struct cgSceneElementTypeDesc
     AllocNewFunc    elementAllocNew;
 
 }; // End Struct cgSceneElementTypeDesc
+
+struct CGE_API cgSceneCollisionContact : public cgCollisionContact
+{
+    CGE_VECTOR_DECLARE( cgSceneCollisionContact, Array );
+
+    cgObjectNode  * node;               // The intersected node.
+    
+    // Provide defaults
+    cgSceneCollisionContact() :
+        node(CG_NULL), cgCollisionContact() {}
+
+}; // End Struct : cgSceneCollisionContact
 
 #endif // !_CGE_CGWORLDTYPES_H_

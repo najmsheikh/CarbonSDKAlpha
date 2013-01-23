@@ -33,6 +33,8 @@
 #include <World/cgObjectSubElement.h>
 #include <World/cgScene.h>
 #include <World/cgSceneElement.h>
+#include <Scripting/cgScriptEngine.h>
+#include <Resources/cgScript.h>
 #include <System/cgStringUtility.h>
 
 cgToDo( "Carbon General", "Consider creation of new world that is not database driven?" )
@@ -255,10 +257,31 @@ cgConfigResult::Base cgWorldConfiguration::loadConfiguration( cgUInt32 minSuppor
             cgAppLog::write( cgAppLog::Info, _T("Attempting to upgrade layout of world database from v%i.%02i.%04i to v%i.%02i.%04i.\n"), 
                              version, subversion, revision, newVersion, newSubversion, newRevision );
 
-            // Run the upgrade script
-            cgString layout = cgFileSystem::loadStringFromStream( conversionFile );
-            if ( !mWorld->executeQuery( layout, true ) )
+            // Load the upgrade script.
+            cgScriptEngine * engine = cgScriptEngine::getInstance();
+            cgScript script( 0, conversionFile, cgString::Empty, engine );
+            script.setResourceName( conversionFile );
+            if ( !script.loadResource() )
                 return cgConfigResult::Error;
+
+            // Begin a transaction so that we can automatically roll back on failure.
+            mWorld->beginTransaction();
+
+            // Run the upgrade script.
+            bool success = false;
+            cgScriptArgument::Array args(3);
+            args[0] = cgScriptArgument( cgScriptArgumentType::Object, _T("World@+"), mWorld );
+            args[1] = cgScriptArgument( cgScriptArgumentType::DWord, _T("uint"), &mVersion );
+            args[2] = cgScriptArgument( cgScriptArgumentType::DWord, _T("uint"), &maxSupportedVersion );
+            if ( !script.executeFunctionBool( _T("upgrade"), args, false, &success ) || !success )
+            {
+                mWorld->rollbackTransaction();
+                return cgConfigResult::Error;
+            
+            } // End if failed
+
+            // Commit any changes.
+            mWorld->commitTransaction();
 
             // Update version number and mark as upgraded
             mVersion = maxSupportedVersion;

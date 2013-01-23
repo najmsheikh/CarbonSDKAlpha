@@ -137,6 +137,20 @@ bool cgFileSystem::pathProtocolDefined( const cgString & strProtocol )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : shutdown () (Static)
+/// <summary>
+/// Shut down the file system and clean up allocated data.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgFileSystem::shutdown( )
+{
+    // Clean up allocated data packages.
+    for ( size_t i = 0; i < mPackages.size(); ++i )
+        delete mPackages[i];
+    mPackages.clear();
+}
+
+//-----------------------------------------------------------------------------
 //  Name : addPackage () (Static)
 /// <summary>
 /// Add a specific package file to the system for indexing.

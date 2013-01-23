@@ -27,6 +27,7 @@
 // cgActor Header Includes
 //-----------------------------------------------------------------------------
 #include <World/Objects/cgGroupObject.h>
+#include <Animation/cgAnimationTypes.h>
 
 //-----------------------------------------------------------------------------
 // Forward Declarations
@@ -169,6 +170,16 @@ public:
     //-------------------------------------------------------------------------
     cgAnimationController     * getAnimationController      ( ) const;
     const TargetMap           & getAnimationTargets         ( ) const;
+    cgInt32                     playAnimationSet            ( const cgString & trackName, const cgString & setName );
+    cgInt32                     playAnimationSet            ( const cgString & trackName, const cgString & setName, cgFloat playbackSpeed, cgFloat startTime );
+    cgInt32                     playAnimationSet            ( const cgString & trackName, const cgString & setName, cgAnimationPlaybackMode::Base mode );
+    cgInt32                     playAnimationSet            ( const cgString & trackName, const cgString & setName, cgAnimationPlaybackMode::Base mode, cgFloat playbackSpeed, cgFloat startTime );
+    cgInt32                     playAnimationSet            ( const cgString & trackName, const cgString & setName, cgAnimationPlaybackMode::Base mode, cgFloat playbackSpeed, cgFloat startTime, cgFloat requestedWeight, cgFloat initialWeight );
+    bool                        stopAnimationTrack          ( const cgString & trackName );
+    bool                        stopAnimationTrack          ( const cgString & trackName, bool immediately );
+    bool                        isAnimationTrackPlaying     ( const cgString & trackName ) const;
+    bool                        isAnimationTrackPlaying     ( const cgString & trackName, bool includeFadeOut ) const;
+    void                        setTrackFadeTimes           ( cgFloat fadeOutTime, cgFloat fadeInTime );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgGroupNode)
@@ -233,10 +244,32 @@ public:
 
 protected:
     //-------------------------------------------------------------------------
+    // Protected Typedefs, Structures & Enumerations
+    //-------------------------------------------------------------------------
+    enum FadeState { FadeNone = 0, FadeOut = 1, FadeIn = 2 };
+    struct AnimationItem
+    {
+        cgAnimationSetHandle    animationSet;
+        FadeState               state;
+        cgFloat                 requestedWeight;
+        cgUInt16                trackIndex;
+    };
+    CGE_LIST_DECLARE         (AnimationItem*, AnimationItemList)
+    CGE_UNORDEREDMAP_DECLARE (cgString, AnimationItemList, AnimationTrackMap )
+
+    //-------------------------------------------------------------------------
+    // Protected Methods
+    //-------------------------------------------------------------------------
+    cgAnimationSetHandle    generateActorSnapshot   ( );
+
+    //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    TargetMap               mTargets;   // Preconstructed list of all animation targets attached to this actor.
+    TargetMap               mTargets;           // Preconstructed list of all animation targets attached to this actor.
     cgAnimationController * mController;
+    AnimationTrackMap       mAnimationTracks;
+    cgFloat                 mFadeOutTime;       // Amount of time it takes an animation set to fade out when transitioning.
+    cgFloat                 mFadeInTime;        // Amount of time it takes an animation set to fade in when transitioning.
 };
 
 #endif // !_CGE_CGACTOR_H_

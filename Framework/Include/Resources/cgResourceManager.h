@@ -164,6 +164,8 @@ public:
     const cgBufferFormatEnum  & getBufferFormats            ( ) const;
     void                        emptyGarbage                ( );
     void                        releaseOwnedResources       ( );
+    void                        enableDestruction           ( bool enable );
+    bool                        isDestructionEnabled        ( ) const;
 
     // Textures
     bool                        addTexture                  ( cgTextureHandle * resourceOut, cgTexture * texture, cgUInt32 flags = 0, const cgString & resourceName = _T(""), const cgDebugSourceInfo & _debugSource = cgDebugSourceInfo(_T(""),0) );
@@ -408,6 +410,7 @@ private:
     // Private Variables
     //-------------------------------------------------------------------------
     InitConfig                  mConfig;                        // Configuration for the resource manager.
+    bool                        mDestructionEnabled;            // When destruction is disabled, resources are forced into the garbage queue on unload until it is re-enabled.
 
     ResourceItemList            mTextures;                      // List of texture resources.
     ResourceItemList            mVertexBuffers;                 // List of vertex buffer resources.

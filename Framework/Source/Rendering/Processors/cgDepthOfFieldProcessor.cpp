@@ -217,8 +217,20 @@ void cgDepthOfFieldProcessor::setBackgroundExtents( const cgRangeF & range )
 void cgDepthOfFieldProcessor::setBackgroundBlur( cgInt32 passCountHigh, cgInt32 pixelRadiusHigh, cgFloat distanceFactorHigh,
                                                  cgInt32 passCountLow, cgInt32 pixelRadiusLow, cgFloat distanceFactorLow )
 {
-    mBackgroundBlurOps[0] = cgBlurOpDesc( passCountHigh, pixelRadiusHigh, distanceFactorHigh );
-    mBackgroundBlurOps[1] = cgBlurOpDesc( passCountLow, pixelRadiusLow, distanceFactorLow );
+    setBackgroundBlur( cgBlurOpDesc( passCountHigh, pixelRadiusHigh, distanceFactorHigh ),
+                       cgBlurOpDesc( passCountLow, pixelRadiusLow, distanceFactorLow ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setBackgroundBlur ()
+/// <summary>
+/// Configure the level of blur that is applied to the two background levels.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgDepthOfFieldProcessor::setBackgroundBlur( const cgBlurOpDesc & highBlur, const cgBlurOpDesc & lowBlur )
+{
+    mBackgroundBlurOps[0] = highBlur;
+    mBackgroundBlurOps[1] = lowBlur;
     mBackgroundBlurOps[0].inputAlpha = cgAlphaWeightMethod::Sample;
     mBackgroundBlurOps[0].outputAlpha = cgAlphaWeightMethod::Sample;
     mBackgroundBlurOps[1].inputAlpha = cgAlphaWeightMethod::Sample;
@@ -234,8 +246,20 @@ void cgDepthOfFieldProcessor::setBackgroundBlur( cgInt32 passCountHigh, cgInt32 
 void cgDepthOfFieldProcessor::setForegroundBlur( cgInt32 passCountHigh, cgInt32 pixelRadiusHigh, cgFloat distanceFactorHigh,
                                                  cgInt32 passCountLow, cgInt32 pixelRadiusLow, cgFloat distanceFactorLow )
 {
-    mForegroundBlurOps[0] = cgBlurOpDesc( passCountHigh, pixelRadiusHigh, distanceFactorHigh );
-    mForegroundBlurOps[1] = cgBlurOpDesc( passCountLow, pixelRadiusLow, distanceFactorLow );
+    setForegroundBlur( cgBlurOpDesc( passCountHigh, pixelRadiusHigh, distanceFactorHigh ),
+                       cgBlurOpDesc( passCountLow, pixelRadiusLow, distanceFactorLow ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setForegroundBlur()
+/// <summary>
+/// Configure the level of blur that is applied to the two foreground levels.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgDepthOfFieldProcessor::setForegroundBlur( const cgBlurOpDesc & highBlur, const cgBlurOpDesc & lowBlur )
+{
+    mForegroundBlurOps[0] = highBlur;
+    mForegroundBlurOps[1] = lowBlur;
     mForegroundBlurOps[0].inputAlpha = cgAlphaWeightMethod::None;
     mForegroundBlurOps[0].outputAlpha = cgAlphaWeightMethod::Center;
     mForegroundBlurOps[1].inputAlpha = cgAlphaWeightMethod::None;

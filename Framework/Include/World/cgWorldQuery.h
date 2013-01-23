@@ -47,6 +47,8 @@ struct sqlite3_file;
 //-----------------------------------------------------------------------------
 class CGE_API cgWorldQuery : public cgWorldEventListener
 {
+    DECLARE_DERIVED_SCRIPTOBJECT( cgWorldQuery, cgEventListener, "WorldQuery" )
+
 public:
     //-------------------------------------------------------------------------
     // Constructors & Destructors

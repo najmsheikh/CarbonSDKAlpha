@@ -35,6 +35,8 @@
 //-----------------------------------------------------------------------------
 #include <Rendering/Platform/cgDX9RenderingCapabilities.h>
 #include <Rendering/Platform/cgDX9RenderDriver.h>
+#include <Rendering/Platform/cgDX9Initialize.h>
+#include <Resources/Platform/cgDX9BufferFormatEnum.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 // cgDX9RenderingCapabilities Members
@@ -71,6 +73,10 @@ cgDX9RenderingCapabilities::~cgDX9RenderingCapabilities( )
 //-----------------------------------------------------------------------------
 void cgDX9RenderingCapabilities::dispose( bool bDisposeBase )
 {
+    // Release allocated memory
+    mDisplayModes.clear();
+
+    // Call base class implementation on request
     if ( bDisposeBase )
         cgRenderingCapabilities::dispose( true );
 }
@@ -112,6 +118,32 @@ bool cgDX9RenderingCapabilities::enumerate( )
     pDevice->Release();
 
     // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : postInit ()
+/// <summary>
+/// Perform any remaining post render driver initialization tasks.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgDX9RenderingCapabilities::postInit( cgDX9Initialize * data, cgUInt32 fullScreenAdapter )
+{
+    // Populate the list of available full screen display modes for this device.
+    const cgDX9EnumAdapter * pAdapter = data->getAdapter( fullScreenAdapter );
+    DX9VectorDisplayMode::const_iterator itMode;
+    for ( itMode = pAdapter->modes.begin(); itMode != pAdapter->modes.end(); ++itMode )
+    {
+        cgDisplayMode mode;
+        mode.width          = itMode->Width;
+        mode.height         = itMode->Height;
+        mode.refreshRate    = (cgDouble)itMode->RefreshRate;
+        mode.bitDepth       = cgBufferFormatEnum::formatBitsPerPixel(cgDX9BufferFormatEnum::formatFromNative(itMode->Format));
+        mDisplayModes.push_back( mode );
+
+    } // Next mode
+
+    // Success
     return true;
 }
 
@@ -204,6 +236,19 @@ bool cgDX9RenderingCapabilities::supportsShaderModel( cgShaderModel::Base Model 
 bool cgDX9RenderingCapabilities::supportsDepthStencilReading ( ) const
 {
 	return mBufferFormats->isFormatSupported( cgBufferType::DepthStencil, cgBufferFormat::INTZ, cgBufferFormatCaps::CanSample );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getDisplayModes () (Virtual)
+/// <summary>
+/// Retrieve a list of all full screen display modes supported by this
+/// device.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgDX9RenderingCapabilities::getDisplayModes( cgDisplayMode::Array & modes ) const
+{
+    modes = mDisplayModes;
+    return true;
 }
 
 

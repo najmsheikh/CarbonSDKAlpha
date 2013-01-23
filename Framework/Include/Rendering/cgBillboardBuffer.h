@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 #include <cgBase.h>
 #include <Resources/cgResourceHandles.h>
+#include <Scripting/cgScriptInterop.h>
 #include <Math/cgMathTypes.h>
 
 //-----------------------------------------------------------------------------
@@ -50,8 +51,10 @@ class cgXMLNode;
 /// otherwise), or in batches of an arbitrary size.
 /// </summary>
 //-----------------------------------------------------------------------------
-class CGE_API cgBillboardBuffer
+class CGE_API cgBillboardBuffer : public cgScriptInterop::DisposableScriptObject
 {
+    DECLARE_SCRIPTOBJECT( cgBillboardBuffer, "BillboardBuffer" );
+
 public:
     //-------------------------------------------------------------------------
     // Public Typedefs, Structures and Enumerations
@@ -94,8 +97,10 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    bool                    prepareBuffer           ( cgUInt32 flags, cgRenderDriver * driver, cgInputStream textureFile, cgInputStream shaderFile = cgString::Empty );
-    bool                    prepareBufferFromAtlas  ( cgUInt32 flags, cgRenderDriver * driver, cgInputStream atlasFile, cgInputStream shaderFile = cgString::Empty );
+    bool                    prepareBuffer           ( cgUInt32 flags, cgRenderDriver * driver, cgInputStream textureFile );
+    bool                    prepareBuffer           ( cgUInt32 flags, cgRenderDriver * driver, cgInputStream textureFile, cgInputStream shaderFile );
+    bool                    prepareBufferFromAtlas  ( cgUInt32 flags, cgRenderDriver * driver, cgInputStream atlasFile );
+    bool                    prepareBufferFromAtlas  ( cgUInt32 flags, cgRenderDriver * driver, cgInputStream atlasFile, cgInputStream shaderFile );
     cgInt32                 addBillboard            ( cgBillboard * billboard );
     bool                    buildUniformFrames      ( cgInt16 frameCount, cgInt16 framePitch );
     cgInt16                 addFrameGroup           ( );
@@ -114,9 +119,12 @@ public:
     cgInt16                 getFrameIndex           ( cgInt16 groupIndex, const cgString & frameName ) const;
     cgSurfaceShaderHandle   getSurfaceShader        ( ) const;
     void                    setDirty                ( bool dirty ) { mBufferDirty = dirty; }
-    void                    onDeviceLost            ( );
-    void                    onDeviceReset           ( );
     void                    clear                   ( bool destroyBillboards );
+
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods (Overrides DisposableScriptObject)
+    //-------------------------------------------------------------------------
+    void                    dispose                 ( bool disposeBase );
 
 private:
     //-------------------------------------------------------------------------
@@ -183,8 +191,10 @@ private:
 /// individual billboard in the buffer.
 /// </summary>
 //-----------------------------------------------------------------------------
-class CGE_API cgBillboard
+class CGE_API cgBillboard : public cgScriptInterop::DisposableScriptObject
 {
+    DECLARE_SCRIPTOBJECT( cgBillboard, "Billboard" )
+
 public:
     //-------------------------------------------------------------------------
     // Friend List
@@ -198,16 +208,11 @@ public:
     virtual ~cgBillboard( );
 
     //-------------------------------------------------------------------------
-    // Public Virtual Methods
-    //-------------------------------------------------------------------------
-    virtual bool        update          ( ) = 0;
-
-    //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
     void                setPosition     ( const cgVector3 & position );
     void                setPosition     ( cgFloat x, cgFloat y, cgFloat z );
-    const cgVector3 & getPosition     ( ) const { return mPosition; }
+    const cgVector3   & getPosition     ( ) const { return mPosition; }
     void                setSize         ( const cgSizeF & size );
     void                setSize         ( cgFloat width, cgFloat height );
     const cgSizeF     & getSize         ( ) const { return mSize; }
@@ -217,6 +222,11 @@ public:
     bool                getVisible      ( ) const { return mVisible; }
     void                setColor        ( cgUInt32 color );
     cgUInt32            getColor        ( ) const { return mColor; }
+
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods
+    //-------------------------------------------------------------------------
+    virtual bool        update          ( ) = 0;
     
 protected:
     //-------------------------------------------------------------------------
@@ -241,6 +251,8 @@ protected:
 //-----------------------------------------------------------------------------
 class CGE_API cgBillboard2D : public cgBillboard
 {
+    DECLARE_DERIVED_SCRIPTOBJECT( cgBillboard2D, cgBillboard, "Billboard2D" )
+
 public:
     //-------------------------------------------------------------------------
     // Constructors & Destructors
@@ -264,6 +276,8 @@ public:
 //-----------------------------------------------------------------------------
 class CGE_API cgBillboard3D : public cgBillboard
 {
+    DECLARE_DERIVED_SCRIPTOBJECT( cgBillboard3D, cgBillboard, "Billboard3D" )
+
 public:
     //-------------------------------------------------------------------------
     // Constructors & Destructors

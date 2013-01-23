@@ -91,6 +91,7 @@
 #include <Physics\cgPhysicsWorld.h>
 #include <Physics\Bodies\cgRigidBody.h>
 #include <Physics\Controllers\cgCharacterController.h>
+#include <Physics\Controllers\cgRagdollController.h>
 #include <Physics\Joints\cgBallJoint.h>
 #include <Physics\Joints\cgFixedAxisJoint.h>
 #include <Physics\Joints\cgHingeJoint.h>
@@ -104,6 +105,13 @@
 #include <Physics\Shapes\cgMeshShape.h>
 #include <Physics\Shapes\cgNullShape.h>
 #include <Physics\Shapes\cgSphereShape.h>
+
+// Navigation
+#include <Navigation/cgNavigationMesh.h>
+#include <Navigation/cgNavigationTile.h>
+#include <Navigation/cgNavigationHandler.h>
+#include <Navigation/cgNavigationAgent.h>
+#include <Navigation/cgNavigationTypes.h>
 
 // Rendering
 #include <Rendering\cgBillboardBuffer.h>
@@ -233,6 +241,8 @@
 #include <World\Objects\cgSplineObject.h>
 #include <World\Objects\cgSpotLight.h>
 #include <World\Objects\cgTargetObject.h>
+#include <World\Objects\cgNavigationWaypoint.h>
+#include <World\Objects\cgNavigationPatrolPoint.h>
 #include <World\Objects\Elements\cgAnimationSetElement.h>
 #include <World\Objects\Elements\cgBoxCollisionShapeElement.h>
 #include <World\Objects\Elements\cgCapsuleCollisionShapeElement.h>

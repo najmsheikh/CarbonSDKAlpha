@@ -58,8 +58,10 @@ public:
     void            setBackgroundExtents    ( const cgRangeF & range );
     void            setForegroundExtents    ( float minimum, float maximum );
     void            setForegroundExtents    ( const cgRangeF & range );
+    void            setBackgroundBlur       ( const cgBlurOpDesc & highBlur, const cgBlurOpDesc & lowBlur );
     void            setBackgroundBlur       ( cgInt32 passCountHigh, cgInt32 pixelRadiusHigh, cgFloat distanceFactorHigh,
                                               cgInt32 passCountLow, cgInt32 pixelRadiusLow, cgFloat distanceFactorLow );
+    void            setForegroundBlur       ( const cgBlurOpDesc & highBlur, const cgBlurOpDesc & lowBlur );
     void            setForegroundBlur       ( cgInt32 passCountHigh, cgInt32 pixelRadiusHigh, cgFloat distanceFactorHigh,
                                               cgInt32 passCountLow, cgInt32 pixelRadiusLow, cgFloat distanceFactorLow );
     bool            execute                 ( const cgRenderTargetHandle & source, const cgRenderTargetHandle & destination, 

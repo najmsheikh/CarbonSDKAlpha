@@ -34,9 +34,11 @@
 // cgDX9RenderDriver Module Includes
 //-----------------------------------------------------------------------------
 #include <Rendering/Platform/cgDX9RenderDriver.h>
+#include <Rendering/Platform/cgDX9RenderingCapabilities.h>
 #include <System/Platform/cgWinAppWindow.h>
 #include <System/cgStringUtility.h>
 #include <System/cgProfiler.h>
+#include <System/cgMessageTypes.h>
 #include <Resources/cgResourceManager.h>
 #include <Resources/cgBufferFormatEnum.h>
 #include <Resources/cgHardwareShaders.h>
@@ -579,6 +581,114 @@ bool cgDX9RenderDriver::initialize( cgResourceManager * pResources, const cgStri
 }
 
 //-----------------------------------------------------------------------------
+//  Name : updateDisplayMode () (Virtual)
+/// <summary>
+/// Alter the display mode after initialization, and optionally switch between
+/// windowed and fullscreen mode.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgDX9RenderDriver::updateDisplayMode( const cgDisplayMode & mode, bool windowed )
+{
+    // Is this a no-op?
+    if ( mConfig.width == mode.width && mConfig.height == mode.height && mConfig.refreshRate == mode.refreshRate &&
+         mConfig.windowed == windowed )
+         return true;
+
+    // Log the changes being made.
+    cgString modeInfo = cgString::format( _T("Application selected a new %s display mode of %ix%ix%ibpp @ %ihz."), 
+                                         (windowed) ? _T("windowed") : _T("fullscreen"), mode.width, mode.height, 
+                                         mode.bitDepth, mode.refreshRate );
+    cgAppLog::write( cgAppLog::Info, _T("%s\n"), modeInfo.c_str() );
+
+    // If we're currently in windowed mode and the caller is not
+    // requesting that we switch to fullscreen, just resize the window.
+    bool success = true;
+    if ( isWindowed() && windowed )
+    {
+        // Update the device configuration
+        mConfig.width       = mode.width;
+        mConfig.height      = mode.height;
+        mConfig.refreshRate = (cgInt32)mode.refreshRate;
+        mConfig.windowed    = windowed;
+
+        // Update the size of the focus window.
+        mFocusWindow->setClientSize( cgSize( mode.width, mode.height ) );
+
+    } // End if remaining windowed
+    else
+    {
+        // Switching to windowed from fullscreen?
+        if ( windowed )
+        {
+            // Update the device configuration
+            mConfig.width       = mode.width;
+            mConfig.height      = mode.height;
+            mConfig.refreshRate = (cgInt32)mode.refreshRate;
+            mConfig.windowed    = windowed;
+
+            // Switch the focus window to the new mode and then set its size.
+            // This will automatically trigger a window resize event that will
+            // cause the device to be reset.
+            mD3DSettings.windowed = true;
+            mFocusWindow->setFullScreenMode( false );
+            mFocusWindow->setClientSize( cgSize( mode.width, mode.height ) );
+
+        } // End if windowed
+        else
+        {
+            // We're switching to or remaining in fullscreen.
+            // First make sure that window resize events are suppressed.
+            mSuppressResizeEvent = true;
+
+            // Update settings.
+            mD3DSettings.fullScreenSettings.displayMode.Width       = mode.width;
+            mD3DSettings.fullScreenSettings.displayMode.Height      = mode.height;
+            mD3DSettings.fullScreenSettings.displayMode.RefreshRate = (UINT)mode.refreshRate;
+            mD3DSettings.windowed = false;
+
+            // Switch the focus window to the new mode and then set its size.
+            mFocusWindow->setFullScreenMode( true );
+            mFocusWindow->setClientSize( cgSize( mode.width, mode.height ) );
+        
+            // Clean up prior to reset
+            onDeviceLost();
+
+            // Reset the display
+            HRESULT hRet = mD3DInitialize->resetDisplay( mD3DDevice, mD3DSettings, CG_NULL, CG_NULL, false );
+            if ( FAILED( hRet ) )
+            {
+                cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("Failed to reset display device after window resize. The error reported was: (0x%x) %s - %s\n"), hRet, DXGetErrorString( hRet ), DXGetErrorDescription( hRet ) );
+                mLostDevice = true;
+
+            } // End if failed to reset
+            else
+            {
+                // Restore post-reset
+                onDeviceReset();
+            
+            } // End if reset success
+
+            // Window resize events can continue.
+            mSuppressResizeEvent = false;
+
+            // Update the device configuration
+            mConfig.width       = mode.width;
+            mConfig.height      = mode.height;
+            mConfig.refreshRate = (cgInt32)mode.refreshRate;
+            mConfig.windowed    = windowed;
+
+            // Perform final updates and notify listeners.
+            cgRenderDriver::windowResized( mode.width, mode.height );
+
+        } // End if fullscreen
+
+    } // End if other
+
+    // Done
+    return success;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : postInit () (Protected Virtual)
 /// <summary>
 /// Complete the render driver initialization process
@@ -608,9 +718,10 @@ bool cgDX9RenderDriver::postInit()
     cgAppLog::write( cgAppLog::Info, strDeviceInfo.c_str() );
 
     // Build component parts for the mode information required for log output
-    strDeviceInfo = cgString::format( _T("Selected %s display mode of %ix%i @ %ibpp.\n"), (mD3DSettings.windowed) ? _T("windowed") : _T("fullscreen"), 
+    strDeviceInfo = cgString::format( _T("Selected %s display mode of %ix%ix%ibpp @ %ihz.\n"), (mD3DSettings.windowed) ? _T("windowed") : _T("fullscreen"), 
                                       pSettings->displayMode.Width, pSettings->displayMode.Height,
-                                      cgBufferFormatEnum::formatBitsPerPixel( cgDX9BufferFormatEnum::formatFromNative(pSettings->displayMode.Format) ) );
+                                      cgBufferFormatEnum::formatBitsPerPixel( cgDX9BufferFormatEnum::formatFromNative(pSettings->displayMode.Format) ),
+                                      pSettings->displayMode.RefreshRate );
 
     // Output information
     cgAppLog::write( cgAppLog::Info, strDeviceInfo.c_str() );
@@ -638,6 +749,9 @@ bool cgDX9RenderDriver::postInit()
     // Call base class implementation.
     if ( !cgRenderDriver::postInit( ) )
         return false;
+
+    // Populate remaining capabilities and display modes.
+    dynamic_cast<cgDX9RenderingCapabilities*>(mCaps)->postInit( mD3DInitialize, mD3DSettings.fullScreenSettings.adapterOrdinal );
 
     // Create internal constant buffers
     bool bSuccess = true;
@@ -2057,6 +2171,9 @@ bool cgDX9RenderDriver::beginFrame( bool bClearTarget, cgUInt32 nTargetColor )
     // Reset the device viewport (for the clear)
     setViewport( CG_NULL );
 
+    // Reset the scissor rectangle
+    setScissorRect( CG_NULL );
+
     // Clear the frame buffer on request ready for drawing
     if ( bClearTarget == true )
 	    mD3DDevice->Clear( 0, CG_NULL, D3DCLEAR_TARGET, nTargetColor, 1.0f, 0 );
@@ -3450,6 +3567,11 @@ bool cgDX9RenderDriverInit::validateDisplayMode( const D3DDISPLAYMODE &Mode )
 {
     // Test display mode
     if ( Mode.Width < 640 || Mode.Height < 480 || Mode.RefreshRate <= 30 )
+        return false;
+
+    // Disallow formats other than 32bpp
+    cgUInt32 nBitsPerPixel = cgBufferFormatEnum::formatBitsPerPixel(cgDX9BufferFormatEnum::formatFromNative(Mode.Format));
+    if ( nBitsPerPixel < 32 )
         return false;
 
     // Enforce fullscreen config options?

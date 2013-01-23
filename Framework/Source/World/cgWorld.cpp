@@ -511,12 +511,12 @@ bool cgWorld::create( cgWorldType::Base type )
 bool cgWorld::postConnect( bool newWorld )
 {
     // Select performance related options.
+    executeQuery( _T("PRAGMA main.journal_mode=MEMORY"), false );   // Use in-memory journal
     executeQuery( _T("PRAGMA cache_size=2000"),false );         // 2000 pages (2mb, the default)
     executeQuery( _T("PRAGMA synchronous=OFF"), false );        // Don't wait for file access to complete.
     executeQuery( _T("PRAGMA count_changes=OFF"), false );      // Don't count database changes.
     executeQuery( _T("PRAGMA temp_store=2"), false );           // Temporary tables in memory.
-    executeQuery( _T("PRAGMA main.journal_mode=MEMORY"), false );    // Use in-memory journal
-
+    
     // In sandbox mode, we need to perform some adjustments on the data in the database.
     if ( !newWorld && cgGetSandboxMode() != cgSandboxMode::Disabled )
     {
@@ -822,7 +822,7 @@ bool cgWorld::open( const cgInputStream & stream )
     // from the database. In sandbox mode, we instruct the configuration object to automatically
     // upgrade the database layout if it does not match the maximum required version.
     mConfiguration = new cgWorldConfiguration( this );
-    cgUInt32 requiredVersionMinimum = cgMakeVersion( 1, 0, 0 );
+    cgUInt32 requiredVersionMinimum = cgMakeVersion( CGE_WORLD_MIN_VERSION, CGE_WORLD_MIN_SUBVERSION, CGE_WORLD_MIN_REVISION );
     cgUInt32 requiredVersionMaximum = cgMakeVersion( CGE_WORLD_VERSION, CGE_WORLD_SUBVERSION, CGE_WORLD_REVISION );
     cgConfigResult::Base configResult = mConfiguration->loadConfiguration( requiredVersionMinimum, requiredVersionMaximum, (cgGetSandboxMode() == cgSandboxMode::Enabled) );
     if ( configResult == cgConfigResult::Mismatch )
@@ -833,8 +833,13 @@ bool cgWorld::open( const cgInputStream & stream )
         cgDecomposeVersion( mConfiguration->getVersion(), actualVersion, actualSubversion, actualRevision );
         cgDecomposeVersion( requiredVersionMinimum, minimumVersion, minimumSubversion, minimumRevision );
         cgDecomposeVersion( requiredVersionMaximum, maximumVersion, maximumSubversion, maximumRevision );
-        cgAppLog::write( cgAppLog::Error, _T("Unable to establish connection with world database in stream '%s'. The database layout version (v%i.%02i.%04i) did not fall within the range supported by this application (v%i.%02i.%04i through v%i.%02i.%04i) or conversion is required. It may however be possible for the sandbox editing environment to convert the database to a layout that is compatible with this application. Check with your vendor for more information.\n"),
-                         stream.getName().c_str(), actualVersion, actualSubversion, actualRevision, minimumVersion, minimumSubversion, minimumRevision, maximumVersion, maximumSubversion, maximumRevision );
+        cgString errorNote;
+        if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
+            errorNote = _T("conversion is required. It may however be possible for the sandbox editing environment to convert the database to a layout that is compatible with this application");
+        else
+            errorNote = _T("or the conversion process failed");
+        cgAppLog::write( cgAppLog::Error, _T("Unable to establish connection with world database in stream '%s'. The database layout version (v%i.%02i.%04i) did not fall within the range supported by this application (v%i.%02i.%04i through v%i.%02i.%04i) or %s. Check with your vendor for more information.\n"),
+                         stream.getName().c_str(), actualVersion, actualSubversion, actualRevision, minimumVersion, minimumSubversion, minimumRevision, maximumVersion, maximumSubversion, maximumRevision, errorNote.c_str() );
         dispose( false );
         return false;
     
@@ -1174,6 +1179,31 @@ void cgWorld::componentTablesCreated( const cgUID & typeIdentifier )
 bool cgWorld::componentTablesExist( const cgUID & typeIdentifier ) const
 {
     return ( mExistingTypeTables.find( typeIdentifier ) != mExistingTypeTables.end() );
+}
+
+//-----------------------------------------------------------------------------
+// Name : tableExists()
+/// <summary>
+/// Determine if a data table with the specified name currently exists in the 
+/// master world database file.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgWorld::tableExists( const cgString & name )
+{
+    static const cgString queryString = _T("SELECT name FROM sqlite_master WHERE type='table' AND name=?1");
+    cgWorldQuery query( this, queryString );
+    if ( !query.isPrepared() )
+        return false;
+
+    // Execute the query and get the result.
+    bool result = false;
+    query.bindParameter( 1, name );
+    if ( query.step( false ) )
+        result = query.hasResults();
+    
+    // Clean up and return the result
+    query.reset();
+    return result;
 }
 
 //-----------------------------------------------------------------------------
@@ -1523,7 +1553,7 @@ cgWorldObject * cgWorld::loadObject( const cgUID & typeIdentifier, cgUInt32 refe
             cgWorldObject * existingObject = (cgWorldObject*)reference;
             if ( cloneMethod == cgCloneMethod::None || cloneMethod == cgCloneMethod::ObjectInstance )
                 return existingObject;
-
+            
             // Otherwise, we need to clone the existing object using the cloning 
             // method requested.
             if ( !existingObject->clone( cloneMethod, this, true, newObject ) )

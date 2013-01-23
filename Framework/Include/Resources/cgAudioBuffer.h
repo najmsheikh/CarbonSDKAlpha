@@ -28,6 +28,7 @@
 #include <Audio/cgAudioTypes.h>
 #include <Scripting/cgScriptInterop.h>
 #include <Resources/cgResource.h>
+#include <Math/cgMathTypes.h>
 
 //-----------------------------------------------------------------------------
 // Forward Declarations
@@ -36,7 +37,6 @@ class cgAudioDriver;
 class cgAudioCodec;
 struct IDirectSoundBuffer;
 struct IDirectSound3DBuffer;
-class cgVector3;
 
 //-----------------------------------------------------------------------------
 // Globally Unique Type Id(s)
@@ -96,7 +96,9 @@ public:
 
     // Audio Control
     bool                        setVolume               ( cgFloat volume );
+    bool                        setPan                  ( cgFloat pan );
     cgFloat                     getVolume               ( ) const;
+    cgFloat                     getPan                  ( ) const;
 
     // Streaming support
     bool                        checkStreamUpdate       ( );
@@ -164,8 +166,14 @@ private:
 	cgInt64					mStreamDataWritten;	    // Amount of data written to the stream so far.
 	cgUInt32                mLastStreamPosition;	// Temporary member used for storing the previous position within the stream buffer.
 
+    // Volume / Panning Parameters
+    cgFloat                 mVolume;
+
     // 3D / Positional Parameters
     cgFloat                 m3DUpdateDelay;         // Amount of time in seconds to delay each 3D update pass
+    cgVector3               m3DPosition;
+    cgVector3               m3DVelocity;
+    cgRangeF                m3DRanges;
 };
 
 #endif // !_CGE_CGAUDIOBUFFER_H_

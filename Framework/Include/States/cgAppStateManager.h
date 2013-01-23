@@ -97,7 +97,6 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    void            cleanup             ( );
     bool            registerState       ( cgAppState * state );
     cgAppState    * getActiveState      ( );
     bool            setActiveState      ( const cgString & stateId );
@@ -207,12 +206,18 @@ public:
     //-------------------------------------------------------------------------
     bool                    isActive                ( ) const;
     bool                    isSuspended             ( ) const;
+    bool                    isScripted              ( ) const;
     cgAppTransitionState  * getOutgoingTransition   ( );
     cgAppTransitionState  * getIncomingTransition   ( );
     cgAppState            * getRootState            ( );
     cgAppState            * getTerminalState        ( );
+    cgAppState            * getParentState          ( );
     const cgString        & getStateId              ( ) const;
     void                    raiseEvent              ( const cgString & eventName );
+    cgAppStateManager     * getManager              ( );
+    bool                    spawnChildState         ( const cgString & stateId, bool suspendParent );
+    const cgScriptHandle  & getScript               ( ) const;
+    cgScriptObject        * getScriptObject         ( );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods

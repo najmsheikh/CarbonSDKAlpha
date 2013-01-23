@@ -21,12 +21,17 @@ namespace World
         void declare( cgScriptEngine * engine )
         {
             BINDSUCCESS( engine->registerObjectType( "World", 0, asOBJ_REF ) );
+            BINDSUCCESS( engine->registerObjectType( "WorldQuery", 0, asOBJ_REF ) );
         }
 
         // Member bindings
         void bind( cgScriptEngine * engine )
         {
             using namespace cgScriptInterop::Utils;
+
+            ///////////////////////////////////////////////////////////////////////
+            // cgWorld (Class)
+            ///////////////////////////////////////////////////////////////////////
 
             // Register the reference/object handle support for the objects.
             registerHandleBehaviors<cgWorld>( engine );
@@ -58,6 +63,24 @@ namespace World
             BINDSUCCESS( engine->registerObjectMethod("World", "RenderDriver@+ getRenderDriver( ) const", asMETHODPR(cgWorld,getRenderDriver,( ) const, cgRenderDriver*), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod("World", "ResourceManager@+ getResourceManager( ) const", asMETHODPR(cgWorld,getResourceManager,( ) const, cgResourceManager*), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod("World", "bool isSceneLoaded( uint ) const", asMETHODPR(cgWorld,isSceneLoaded,( cgUInt32 ) const, bool), asCALL_THISCALL) );
+
+            BINDSUCCESS( engine->registerObjectMethod("World", "bool tableExists( const String &in )", asMETHODPR(cgWorld,tableExists,( const cgString& ), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod("World", "bool componentTablesExist( const UID &in ) const", asMETHODPR(cgWorld,componentTablesExist,( const cgUID& ) const, bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod("World", "bool executeQuery( const String &in, bool )", asMETHODPR(cgWorld,executeQuery,( const cgString&, bool ), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod("World", "void beginTransaction( )", asMETHODPR(cgWorld,beginTransaction,( ), void ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod("World", "void beginTransaction( const String &in )", asMETHODPR(cgWorld,beginTransaction,( const cgString& ), void ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod("World", "void commitTransaction( )", asMETHODPR(cgWorld,commitTransaction,( ), void ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod("World", "void commitTransaction( const String &in )", asMETHODPR(cgWorld,commitTransaction,( const cgString& ), void ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod("World", "void rollbackTransaction( )", asMETHODPR(cgWorld,rollbackTransaction,( ), void ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod("World", "void rollbackTransaction( const String &in )", asMETHODPR(cgWorld,rollbackTransaction,( const cgString& ), void ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod("World", "void rollbackTransaction( const String &in, bool )", asMETHODPR(cgWorld,rollbackTransaction,( const cgString&, bool ), void ), asCALL_THISCALL) );
+
+            ///////////////////////////////////////////////////////////////////////
+            // cgWorldQuery (Class)
+            ///////////////////////////////////////////////////////////////////////
+
+            // Register the reference/object handle support for the objects.
+            registerHandleBehaviors<cgWorldQuery>( engine );
 
             ///////////////////////////////////////////////////////////////////////
             // Global Utility Functions

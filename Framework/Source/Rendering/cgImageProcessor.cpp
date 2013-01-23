@@ -1499,6 +1499,7 @@ void cgImageProcessor::setConstants( const cgTextureHandle & hSrcImage, cgInt32 
         buffer.setFloat( "brightness", brightness );
         buffer.setFloat( "exposure", exposure );
         buffer.setFloat( "exposureAmount", exposureAmount );
+		buffer.setFloat( "contrast", contrast );
         buffer.setFloat( "saturation", saturation );
         buffer.setFloat( "grainAmount", grainAmount );
         buffer.setVector( "vignette", vignette );*/
@@ -1760,6 +1761,11 @@ void cgImageProcessor::setExposure( cgFloat exposure, cgFloat strength )
 void cgImageProcessor::setSaturation( cgFloat f )
 {
     // ToDo: color control params.
+}
+
+void cgImageProcessor::setContrast( cgFloat f )
+{
+	// ToDo: color control params.
 }
 
 void cgImageProcessor::setDepthExtents( cgFloat minimum, cgFloat maximum )

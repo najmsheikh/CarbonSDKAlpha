@@ -487,28 +487,36 @@ void cgGroupNode::computeGroupAABB( cgObjectNode * pNode, cgBoundingBox & Bounds
 //-----------------------------------------------------------------------------
 // Name : alterSelectionState() (Protected, Recursive)
 /// <summary>
-/// Adjust the selection state of any of our direct children who are belong
-/// to this group ;)
+/// Adjust the selection state of any of our direct children who belong
+/// to this group. Returns true if any of our children were modified.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgGroupNode::alterSelectionState( bool bState, cgObjectNode * pNode )
+bool cgGroupNode::alterSelectionState( bool bState, cgObjectNode * pNode, cgObjectNodeMap & updateMap )
 {
-    // Alter the current node's own selection state first of all
-    if ( pNode == this )
-        pNode->setSelected( bState, true, true );
-    else
-        pNode->setSelected( bState, true, false );
+    bool modified = false;
 
-    // Now traverse the child hierarchy and update any who
+    // Alter the current node's selection state
+    if ( pNode != this && pNode->isSelected() != bState )
+    {
+        updateMap[pNode->getReferenceId()] = pNode;
+        pNode->setSelected( bState, true, false, updateMap );
+        modified = true;
+    
+    } // End if altered
+
+    // Traverse the child hierarchy and update any who
     // belong to this group.
     cgObjectNodeList::iterator itChild;
     for ( itChild = pNode->getChildren().begin(); itChild != pNode->getChildren().end(); ++itChild )
     {
         cgObjectNode * pChildNode = *itChild;
         if ( pChildNode->getOwnerGroup() == this )
-            alterSelectionState( bState, pChildNode );
+            modified |= alterSelectionState( bState, pChildNode, updateMap );
     
     } // Next Child
+
+    // Modified anything?
+    return modified;
 }
 
 //-----------------------------------------------------------------------------
@@ -672,18 +680,29 @@ void cgGroupNode::onComponentModified( cgComponentModifiedEventArgs * e )
     // What was modified?
     if ( e->context == _T("Open") )
     {
-        // If opening, then deselect the group (will automatically deselect children)
         bool bNewValue = isOpen();
-        if ( bNewValue == true )
-            setSelected( false );
-
-        // If closing, we must close any open child groups.
-        if ( bNewValue == false )
+        if ( bNewValue )
+        {
+            // We're opening. If this group is selected, deselect it and 
+            // any children of the group.
+            setSelected( false, true, true );
+        
+        } // End if opening
+        else if ( !bNewValue )
+        {
+            // If closing, we must close any open child groups.
             alterOpenState( false, this );
 
-        // If closing, then also select the group (will automatically select children)
-        if ( bNewValue == false )
-            alterSelectionState( true, this );
+            // If we are currently selected, re-select all children.
+            if ( isSelected() )
+            {
+                cgObjectNodeMap updateMap;
+                if ( alterSelectionState( true, this, updateMap ) )
+                    mParentScene->onSelectionUpdated( &cgSelectionUpdatedEventArgs( mParentScene, &updateMap ) );
+
+            } // End if closing
+
+        } // End if closing
 
     } // End if Open
 
@@ -734,18 +753,33 @@ cgUInt32 cgGroupNode::onGroupRefRemoved( cgObjectNode * pNode )
 /// Set the node's selection status.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgGroupNode::setSelected( bool bSelected, bool bUpdateDependents /* = true */, bool bSendNotifications /* = true */  )
+void cgGroupNode::setSelected( bool bSelected, bool bUpdateDependents /* = true */, bool bSendNotifications /* = true */, cgObjectNodeMap & alteredNodes /* = cgObjectNodeMap() */  )
 {
     // Skip if this is a no-op (also prevents infinite recursion)
-    if ( mSelected == bSelected )
+    if ( ((mFlags & cgObjectNodeFlags::Selected) != 0) == bSelected )
         return;
 
-    // Call base class implementation
-    cgObjectNode::setSelected( bSelected, bUpdateDependents, bSendNotifications );
-
     // If we are currently a closed group, affect all children too
-    if ( isOpen() == false )
-        alterSelectionState( bSelected, this );
+    if ( !isOpen() )
+    {
+        // Update selected flag *temporarily* to prevent re-entrance.
+        mFlags &= ~cgObjectNodeFlags::Selected;
+        if ( bSelected )
+            mFlags |= cgObjectNodeFlags::Selected;
+
+        // Traverse
+        alterSelectionState( bSelected, this, alteredNodes );
+
+        // Restore prior selected flag before entering base class.
+        mFlags &= ~cgObjectNodeFlags::Selected;
+        if ( !bSelected )
+            mFlags |= cgObjectNodeFlags::Selected;
+
+    } // End if !open
+
+    // Call base class implementation LAST so that notifications can be
+    // sent with a complete list of all altered nodes.
+    cgObjectNode::setSelected( bSelected, bUpdateDependents, bSendNotifications, alteredNodes );
 }
 
 //-----------------------------------------------------------------------------

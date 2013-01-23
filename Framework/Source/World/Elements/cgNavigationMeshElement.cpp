@@ -556,3 +556,15 @@ const cgNavigationMeshCreateParams & cgNavigationMeshElement::getParameters( ) c
 {
     return mParams;
 }
+
+//-----------------------------------------------------------------------------
+// Name : getNavigationHandler ( )
+/// <summary>
+/// Retrieve the navigation handler (crowd) that is responsible for managing
+/// the agents that will navigate this mesh.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgNavigationHandler * cgNavigationMeshElement::getNavigationHandler( ) const
+{
+    return mHandler;
+}

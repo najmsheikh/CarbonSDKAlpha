@@ -151,25 +151,18 @@ void cgButtonControl::onInitControl( )
 }
 
 //-----------------------------------------------------------------------------
-//  Name : setTextColor ()
+//  Name : setTextColor () (Virtual)
 /// <summary>
 /// Set the default color of any text rendered for this control.
 /// </summary>
 //-----------------------------------------------------------------------------
 void cgButtonControl::setTextColor( const cgColorValue & Color )
 {
-    mLabel->setTextColor( Color );
-}
+    // Call base class implementation.
+    cgUIControl::setTextColor( Color );
 
-//-----------------------------------------------------------------------------
-//  Name : getTextColor ()
-/// <summary>
-/// Retreive the default color of any text rendered for this control.
-/// </summary>
-//-----------------------------------------------------------------------------
-const cgColorValue & cgButtonControl::getTextColor( ) const
-{
-    return mLabel->getTextColor();
+    // Pass through to label.
+    mLabel->setTextColor( Color );
 }
 
 //-----------------------------------------------------------------------------
@@ -289,18 +282,17 @@ bool cgButtonControl::onMouseButtonDown( cgInt32 nButtons, const cgPoint & Posit
         return true;
 
     // Only process if no other control is captured
-    cgUIManager * pManager = mRootForm->getUIManager();
-    if ( pManager->getCapture() )
+    if ( mUIManager->getCapture() )
         return false;
 
     // Is this within our control's rectangle?
     if ( pointInControl( Position ) )
     {
         // Already captured?
-        if ( !pManager->getCapture() )
+        if ( !mUIManager->getCapture() )
         {
             // Capture the control
-            pManager->setCapture( this );
+            mUIManager->setCapture( this );
             
             // Control is enabled?
             if ( isEnabled() )
@@ -314,7 +306,7 @@ bool cgButtonControl::onMouseButtonDown( cgInt32 nButtons, const cgPoint & Posit
             } // End if enabled
 
             // We're now the focus control
-            pManager->setFocus( this );
+            mUIManager->setFocus( this );
         
         } // End if not captured yet
 
@@ -339,7 +331,7 @@ bool cgButtonControl::onMouseButtonDown( cgInt32 nButtons, const cgPoint & Posit
 bool cgButtonControl::onMouseButtonUp( cgInt32 nButtons, const cgPoint & Position )
 {
     // Ignore if control is not visible
-    if ( !isVisible() )
+    if ( !isVisible() && mUIManager->getCapture() != this )
         return false;
 
     // Call base class implementation
@@ -347,8 +339,7 @@ bool cgButtonControl::onMouseButtonUp( cgInt32 nButtons, const cgPoint & Positio
         return true;
 
     // We only pay attention to the mouse up if we were previously captured
-    cgUIManager * pManager = mRootForm->getUIManager();
-    if ( pManager->getCapture() == this )
+    if ( mUIManager->getCapture() == this )
     {
         // Control is enabled?
         if ( isEnabled() )
@@ -360,7 +351,7 @@ bool cgButtonControl::onMouseButtonUp( cgInt32 nButtons, const cgPoint & Positio
         } // End if enabled
 
         // Uncapture
-        pManager->setCapture( CG_NULL );
+        mUIManager->setCapture( CG_NULL );
 
         // Raise the event, we processed this
         raiseEvent( cgSystemMessages::UI_OnMouseButtonUp, &UI_OnMouseButtonUpArgs( nButtons, Position ) );
@@ -410,11 +401,10 @@ bool cgButtonControl::onMouseMove( const cgPoint & Position, const cgPointF & Of
     if ( cgUIControl::onMouseMove( Position, Offset ) )
         return true;
 
-    cgUIManager * pManager         = mRootForm->getUIManager();
-    cgUIControl * pCapturedControl = pManager->getCapture();
+    cgUIControl * pCapturedControl = mUIManager->getCapture();
     bool bPointInControl = pointInControl( Position );
     if ( bPointInControl )
-        pManager->selectCursor( ( isEnabled() ) ? _T("Busy") : _T("Arrow") );
+        mUIManager->selectCursor( ( isEnabled() ) ? _T("Busy") : _T("Arrow") );
     
     // Are we the captured item?
     if ( pCapturedControl == this )

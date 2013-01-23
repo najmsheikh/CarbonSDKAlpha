@@ -141,6 +141,7 @@ public:
     const cgString                & getRenderClass          ( ) const;
     cgUInt32                        getRenderClassId        ( ) const;
     cgWorldObject                 * getReferencedObject     ( ) const;
+    cgPropertyContainer           & getCustomProperties     ( );
     const cgPropertyContainer     & getCustomProperties     ( ) const;
     void                            setCustomProperties     ( const cgPropertyContainer & properties );
 
@@ -152,6 +153,7 @@ public:
     const cgConstantBufferHandle  & getRenderTransformBuffer( );
     const cgTransform             & getCellTransform        ( );
     const cgTransform             & getLocalTransform       ( ) const;
+    const cgTransform             & getOffsetTransform      ( ) const;
     const cgTransform             & getWorldTransform       ( );
     const cgTransform             & getWorldTransform       ( bool atPivot );
     const cgVector3               & getPosition             ( bool atPivot );
@@ -188,7 +190,7 @@ public:
     cgSceneCell                   * getCell                 ( ) const;
     cgSpatialTreeNode             * getSpatialTree          ( ) const;
     cgGroupNode                   * getOwnerGroup           ( ) const;
-    cgObjectNode                  * getParentOfType         ( const cgUID & typeIdentifier );
+    cgObjectNode                  * getParentOfType         ( const cgUID & typeIdentifier ) const;
     cgObjectNodeList              & getChildren             ( );
     cgNodeTargetMethod::Base        getTargetMethod         ( ) const;
     cgTargetNode                  * getTargetNode           ( ) const;
@@ -216,6 +218,7 @@ public:
     cgInt32                         getBehaviorCount        ( ) const;    
 
     // Physics
+    void                            setPhysicsController    ( cgPhysicsController * controller );
     void                            setPhysicsModel         ( cgPhysicsModel::Base model );
     cgPhysicsModel::Base            getPhysicsModel         ( ) const;
     void                            setSimulationQuality    ( cgSimulationQuality::Base quality );
@@ -235,6 +238,8 @@ public:
     bool                            enableNavigation        ( const cgNavigationAgentCreateParams * params );
     bool                            navigateTo              ( const cgVector3 & position );
     bool                            isNavigationAgent       ( ) const;
+    cgNavigationAgentState::Base    getNavigationAgentState ( ) const;
+    cgNavigationTargetState::Base   getNavigationTargetState( ) const;
 
     // Sandbox Integration
     bool                            isParentSelected        ( bool immediateOnly = false ) const;
@@ -293,7 +298,7 @@ public:
     virtual void                    setTargetMethod         ( cgNodeTargetMethod::Base mode );
 
     // System Integration (Physics, Collision, Input, etc.)
-    virtual cgPhysicsController   * setPhysicsController    ( cgPhysicsController * controller );
+    virtual cgPhysicsController   * setPhysicsController    ( cgPhysicsController * controller, bool destroyOld );
     virtual cgPhysicsController   * getPhysicsController    ( );
     virtual bool                    supportsInputChannels	( ) const;
     virtual void                    hitByObject             ( cgObjectNode * node, const cgVector3 & hitPoint, const cgVector3 & surfaceNormal );
@@ -324,7 +329,7 @@ public:
     virtual bool                    pick                    ( cgCameraNode * camera, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut, cgObjectNode *& closestNodeOut );
     virtual bool                    sandboxRender           ( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane );
     virtual bool                    isSelected              ( ) const;
-    virtual void                    setSelected             ( bool selected, bool updateDependents = true, bool sendNotifications = true );
+    virtual void                    setSelected             ( bool selected, bool updateDependents = true, bool sendNotifications = true, cgObjectNodeMap & alteredNodes = cgObjectNodeMap() );
     virtual cgUInt32                getNodeColor            ( ) const;
     virtual bool                    setNodeColor            ( cgUInt32 color );
     virtual bool                    showSelectionAABB       ( ) const;
@@ -452,15 +457,13 @@ protected:
     cgPropertyContainer       * mCustomProperties;          // List of custom, application defined properties for this node.
     cgUInt32                    mColor;                     // Base node color (if no material is assigned).
     cgUInt32                    mRenderClassId;             // Custom user specified identifier used to identify the object's rendering category / class.
+    cgUInt16                    mFlags;                     // Various flags that describe the state of this node.
 
     // Transformations
     cgTransform                 mOffsetTransform;           // Transformation describing the offset from the pivot (origin) of the node, to the *actual* referenced object.
     cgTransform                 mCellTransform;             // Node's parent cell relative transformation information.
     cgTransform                 mLocalTransform;            // Describes the relative transformation between any associated parent node and this child.
     cgTransformMethod::Base     mTransformMethod;           // The currently selected approach to use when applying transformations (i.e. Standard, Adjust only the pivot, etc.)
-
-    // Visibility
-    bool                        mShowNode;                  // Manual visibility status flag (use isRenderable() to query)
     
     // Update Process
     cgUpdateRate::Base          mUpdateRate;                // The rate at which the node is currently set to update
@@ -499,7 +502,6 @@ protected:
     cgConstantBufferHandle      mWorldTransformBuffer;      // Cached world transform constant buffer.
     
     // Sandbox Related
-    bool                        mSelected;                  // This node is currently selected?
     cgInt32                     mSelectionId;               // An identifier, issued in consecutive order, that allows us to retrieve selected nodes in the order in which they were selected.
 
     //-------------------------------------------------------------------------

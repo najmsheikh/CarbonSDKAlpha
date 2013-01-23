@@ -15,6 +15,7 @@
 #include "Rendering/ObjectRenderContext.h"
 #include "Rendering/ObjectRenderQueue.h"
 #include "Rendering/Processors.h"
+#include "Rendering/BillboardBuffer.h"
 
 // Parent hierarchy
 namespace cgScriptPackages { namespace Core {
@@ -37,6 +38,7 @@ namespace Rendering
             DECLARE_PACKAGE_CHILD( ObjectRenderQueue )
             DECLARE_PACKAGE_CHILD( Processors )
 			DECLARE_PACKAGE_CHILD( RenderingCapabilities )
+            DECLARE_PACKAGE_CHILD( BillboardBuffer )
         END_SCRIPT_PACKAGE( )
 
         // Member bindings

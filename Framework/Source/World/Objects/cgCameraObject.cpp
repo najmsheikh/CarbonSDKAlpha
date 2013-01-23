@@ -48,12 +48,15 @@
 cgCameraObject::cgCameraObject( cgUInt32 nReferenceId, cgWorld * pWorld ) : cgWorldObject( nReferenceId, pWorld )
 {
     // Reset / Clear all required values
-    mProjectionMode     = cgProjectionMode::Perspective;
-    mFOV                = 60.0f;
-    mNearClip           = 0.2f;
-    mFarClip            = 500.0f;
-    mProjectionWindow   = cgVector4( 0, 0, 0, 0 );
-    mZoomFactor         = 1.0f;
+    mProjectionMode      = cgProjectionMode::Perspective;
+    mFOV                 = 60.0f;
+    mNearClip            = 0.2f;
+    mFarClip             = 500.0f;
+    mProjectionWindow    = cgVector4( 0, 0, 0, 0 );
+    mZoomFactor          = 1.0f;
+    mForegroundExtents   = cgRangeF(0,0);
+    mBackgroundExtents   = cgRangeF(0,0);
+    mDepthOfFieldEnabled = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -66,11 +69,18 @@ cgCameraObject::cgCameraObject( cgUInt32 referenceId, cgWorld * world, cgWorldOb
 {
     // Duplicate values from object to clone.
     cgCameraObject * pObject = (cgCameraObject*)init;
-    mProjectionMode     = pObject->mProjectionMode;
-    mFOV                = pObject->mFOV;
-    mNearClip           = pObject->mNearClip;
-    mProjectionWindow   = pObject->mProjectionWindow;
-    mZoomFactor         = pObject->mZoomFactor;
+    mProjectionMode      = pObject->mProjectionMode;
+    mFOV                 = pObject->mFOV;
+    mNearClip            = pObject->mNearClip;
+    mProjectionWindow    = pObject->mProjectionWindow;
+    mZoomFactor          = pObject->mZoomFactor;
+    mForegroundExtents   = pObject->mForegroundExtents;
+    mBackgroundExtents   = pObject->mBackgroundExtents;
+    mBackgroundHighBlur  = pObject->mBackgroundHighBlur;
+    mBackgroundLowBlur   = pObject->mBackgroundLowBlur;
+    mForegroundHighBlur  = pObject->mForegroundHighBlur;
+    mForegroundLowBlur   = pObject->mForegroundLowBlur;
+    mDepthOfFieldEnabled = pObject->mDepthOfFieldEnabled;
 }
 
 //-----------------------------------------------------------------------------
@@ -367,6 +377,175 @@ void cgCameraObject::applyObjectRescale( cgFloat fScale )
 
     // Call base class implementation.
     cgWorldObject::applyObjectRescale( fScale );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : enableDepthOfField()
+/// <summary>
+/// Enable or disable depth of field processing for this camera.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCameraObject::enableDepthOfField( bool enable )
+{
+    mDepthOfFieldEnabled = enable;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setForegroundExtents ()
+/// <summary>
+/// Set the distance range for the part of the scene that is to be considered
+/// part of the foreground.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCameraObject::setForegroundExtents( cgFloat minimum, cgFloat maximum )
+{
+    setForegroundExtents( cgRangeF(minimum,maximum) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setForegroundExtents ()
+/// <summary>
+/// Set the distance range for the part of the scene that is to be considered
+/// part of the foreground.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCameraObject::setForegroundExtents( const cgRangeF & range )
+{
+    mForegroundExtents = range;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setBackgroundExtents ()
+/// <summary>
+/// Set the distance range for the part of the scene that is to be considered
+/// part of the background.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCameraObject::setBackgroundExtents( cgFloat minimum, cgFloat maximum )
+{
+    setBackgroundExtents( cgRangeF(minimum,maximum) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setBackgroundExtents ()
+/// <summary>
+/// Set the distance range for the part of the scene that is to be considered
+/// part of the background.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCameraObject::setBackgroundExtents( const cgRangeF & range )
+{
+    mBackgroundExtents = range;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setBackgroundBlur ()
+/// <summary>
+/// Configure the level of blur that is applied to the two background levels.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCameraObject::setBackgroundBlur( cgInt32 passCountHigh, cgInt32 pixelRadiusHigh, cgFloat distanceFactorHigh,
+                                        cgInt32 passCountLow, cgInt32 pixelRadiusLow, cgFloat distanceFactorLow )
+{
+    setBackgroundBlur( cgBlurOpDesc( passCountHigh, pixelRadiusHigh, distanceFactorHigh ),
+                       cgBlurOpDesc( passCountLow, pixelRadiusLow, distanceFactorLow ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setBackgroundBlur ()
+/// <summary>
+/// Configure the level of blur that is applied to the two background levels.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCameraObject::setBackgroundBlur( const cgBlurOpDesc & highBlur, const cgBlurOpDesc & lowBlur )
+{
+    mBackgroundHighBlur = highBlur;
+    mBackgroundLowBlur  = lowBlur;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setForegroundBlur()
+/// <summary>
+/// Configure the level of blur that is applied to the two foreground levels.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCameraObject::setForegroundBlur( cgInt32 passCountHigh, cgInt32 pixelRadiusHigh, cgFloat distanceFactorHigh,
+                                                 cgInt32 passCountLow, cgInt32 pixelRadiusLow, cgFloat distanceFactorLow )
+{
+    setForegroundBlur( cgBlurOpDesc( passCountHigh, pixelRadiusHigh, distanceFactorHigh ),
+                       cgBlurOpDesc( passCountLow, pixelRadiusLow, distanceFactorLow ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setForegroundBlur()
+/// <summary>
+/// Configure the level of blur that is applied to the two foreground levels.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCameraObject::setForegroundBlur( const cgBlurOpDesc & highBlur, const cgBlurOpDesc & lowBlur )
+{
+    mForegroundHighBlur = highBlur;
+    mForegroundLowBlur  = lowBlur;
+}
+
+
+//-----------------------------------------------------------------------------
+//  Name : isDepthOfFieldEnabled()
+/// <summary>
+/// Determine if depth of field processing is enabled for this camera.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgCameraObject::isDepthOfFieldEnabled( ) const
+{
+    return mDepthOfFieldEnabled;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getForegroundExtents ()
+/// <summary>
+/// Get the distance range for the part of the scene that is to be considered
+/// part of the foreground.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgRangeF & cgCameraObject::getForegroundExtents( ) const
+{
+    return mForegroundExtents;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getBackgroundExtents ()
+/// <summary>
+/// Get the distance range for the part of the scene that is to be considered
+/// part of the background.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgRangeF & cgCameraObject::getBackgroundExtents( ) const
+{
+    return mBackgroundExtents;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getBackgroundBlur ()
+/// <summary>
+/// Retrieve the level of blur that is applied to the two background levels.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCameraObject::getBackgroundBlur( cgBlurOpDesc & highBlur, cgBlurOpDesc & lowBlur ) const
+{
+    highBlur = mBackgroundHighBlur;
+    lowBlur = mBackgroundLowBlur;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getForegroundBlur()
+/// <summary>
+/// Configure the level of blur that is applied to the two foreground levels.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCameraObject::getForegroundBlur( cgBlurOpDesc & highBlur, cgBlurOpDesc & lowBlur ) const
+{
+    highBlur = mForegroundHighBlur;
+    lowBlur = mForegroundLowBlur;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

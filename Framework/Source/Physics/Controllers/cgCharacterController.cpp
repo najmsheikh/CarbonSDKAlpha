@@ -26,9 +26,14 @@
 // cgCharacterController Module Includes
 //-----------------------------------------------------------------------------
 #include <Physics/Controllers/cgCharacterController.h>
-#include <Physics/cgPhysicsWorld.h>
-#include <World/cgObjectNode.h>
 #include <Math/cgMathTypes.h>
+#include <Math/cgMathUtility.h>
+#include <World/cgObjectNode.h>
+#include <World/cgScene.h>
+#include <World/Elements/cgNavigationMeshElement.h>
+#include <Navigation/cgNavigationAgent.h>
+#include <Navigation/cgNavigationHandler.h>
+#include <Physics/cgPhysicsWorld.h>
 #include <Physics/Bodies/cgRigidBody.h>
 #include <Physics/Joints/cgFixedAxisJoint.h>
 #include <Physics/Shapes/cgCylinderShape.h>
@@ -42,6 +47,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 namespace
 {    
+    struct PreFilterData
+    {
+        cgInt32 sourceMaterialGroupId;
+        cgPhysicsWorld * world;
+        std::set<const NewtonBody*> skipSet;
+    };
+
     //-----------------------------------------------------------------------------
     //  Name : preProcessContacts () (Static, Protected)
     /// <summary>
@@ -96,8 +108,13 @@ namespace
     //-----------------------------------------------------------------------------
     cgUInt convexCastPreFilter( const NewtonBody * body, const NewtonCollision * collision, void * userData )
     {
+        // Ignore any bodies that we cannot collide with.
+        cgPhysicsWorld * world = ((PreFilterData*)userData)->world;
+        if ( NewtonBodyGetMaterialGroupID( body ) == world->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Ragdoll ) )
+            return 0;
+
         // Skip any bodies that occur in the set.
-        std::set<const NewtonBody*> & skipSet = *(std::set<const NewtonBody*>*)userData;
+        std::set<const NewtonBody*> & skipSet = ((PreFilterData*)userData)->skipSet;
         return ( skipSet.find( body ) == skipSet.end() );
     }
 
@@ -110,14 +127,19 @@ namespace
     //-----------------------------------------------------------------------------
     cgUInt convexCastPreFilterStaticOnly( const NewtonBody * body, const NewtonCollision * collision, void * userData )
     {
-        // If the body has mass, then it's dynamic and should be rejected.
+        // If the body has mass, then it is dynamic and should be rejected.
         cgFloat mass, ixx, iyy, izz;
         NewtonBodyGetMassMatrix( body, &mass, &ixx, &iyy, &izz );
         if ( mass > 0 )
             return 0;
+
+        // Ignore any bodies that we cannot collide with.
+        cgPhysicsWorld * world = ((PreFilterData*)userData)->world;
+        if ( NewtonBodyGetMaterialGroupID( body ) == world->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Ragdoll ) )
+            return 0;
         
         // Skip any bodies that occur in the set.
-        std::set<const NewtonBody*> & skipSet = *(std::set<const NewtonBody*>*)userData;
+        std::set<const NewtonBody*> & skipSet = ((PreFilterData*)userData)->skipSet;
         return ( skipSet.find( body ) == skipSet.end() );
     }
 
@@ -135,9 +157,14 @@ namespace
         NewtonBodyGetMassMatrix( body, &mass, &ixx, &iyy, &izz );
         if ( mass <= 0 )
             return 0;
+
+        // Ignore any bodies that we cannot collide with.
+        cgPhysicsWorld * world = ((PreFilterData*)userData)->world;
+        if ( NewtonBodyGetMaterialGroupID( body ) == world->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Ragdoll ) )
+            return 0;
         
         // Skip any bodies that occur in the set.
-        std::set<const NewtonBody*> & skipSet = *(std::set<const NewtonBody*>*)userData;
+        std::set<const NewtonBody*> & skipSet = ((PreFilterData*)userData)->skipSet;
         return ( skipSet.find( body ) == skipSet.end() );
     }
 
@@ -153,7 +180,7 @@ namespace
 /// Constructor for this class.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgCharacterController::cgCharacterController( cgPhysicsWorld * world ) : cgPhysicsController( world )
+cgCharacterController::cgCharacterController( cgPhysicsWorld * world, bool playerControlled ) : cgPhysicsController( world )
 {
     // Initialize variables to sensible defaults
     mBody                 = CG_NULL;
@@ -161,8 +188,12 @@ cgCharacterController::cgCharacterController( cgPhysicsWorld * world ) : cgPhysi
     mDynamicsSensorShape  = CG_NULL;
     mFloorSensorShape     = CG_NULL;
     mBodySensorShape      = CG_NULL;
+    mNavAgent             = CG_NULL;
     
     // Properties
+    mPlayerControlled     = playerControlled;
+    mFlyModeEnabled       = false;
+    mAutoDisableFlyMode   = false;
     mKinematicCushion     = 3.0f/64.0f;    
     mCharacterHeight      = 1.8f;          // 1.8 meters
     mCharacterRadius      = 0.3f;          // 30cm
@@ -171,8 +202,10 @@ cgCharacterController::cgCharacterController( cgPhysicsWorld * world ) : cgPhysi
     mMaxStepHeight        = 0.4f;          // 40cm
     mMaxSlope             = 45.0f;         // 45 degrees
     mWalkSpeed            = 1.34112f * 4;  // Meters per second (average 3mph walking, 15mph (5 times that) for sprinting)
+    mFlySpeed             = mWalkSpeed * 4;
     mGravity              = cgVector3(0, -9.81f, 0);
-    mMaximumAcceleration  = 80.0f;         // 80 m/s/s
+    mWalkAcceleration     = 80.0f;         // 80 m/s/s
+    mFlyAcceleration      = 60.0f;         // 60 m/s/s
     mJumpImpulse          = 4.0f;          // 4.0m/s
     mAirborneWalkDamping  = 0.3f;
     mRampWalkDamping      = 0.2f;
@@ -188,6 +221,7 @@ cgCharacterController::cgCharacterController( cgPhysicsWorld * world ) : cgPhysi
     mState                = Airborne;
     mRequestedStandMode   = Standing;
     mActualStandMode      = Standing;
+    cgQuaternion::identity( mSuggestedHeading );
 }
 
 //-----------------------------------------------------------------------------
@@ -213,7 +247,10 @@ void cgCharacterController::dispose( bool disposeBase )
 {
     // Release internal references
     if ( mBody )
+    {
+        mBody->removeReference( mParentObject );
         mBody->removeReference( CG_NULL );
+    } // End if has body
     if ( mUpJoint )
         mUpJoint->removeReference( CG_NULL );
     if ( mBodySensorShape ) 
@@ -222,6 +259,8 @@ void cgCharacterController::dispose( bool disposeBase )
         mFloorSensorShape->removeReference( CG_NULL );
     if ( mDynamicsSensorShape ) 
         mDynamicsSensorShape->removeReference( CG_NULL );
+    if ( mNavAgent )
+        mNavAgent->removeReference( CG_NULL );
     
     // Clear variables
     mBody                 = CG_NULL;
@@ -229,6 +268,7 @@ void cgCharacterController::dispose( bool disposeBase )
     mBodySensorShape      = CG_NULL;
     mFloorSensorShape     = CG_NULL;
     mDynamicsSensorShape  = CG_NULL;
+    mNavAgent             = CG_NULL;
 
     // Dispose base
     if ( disposeBase )
@@ -243,7 +283,7 @@ void cgCharacterController::dispose( bool disposeBase )
 //-----------------------------------------------------------------------------
 cgPhysicsController * cgCharacterController::allocate( const cgString & typeName, cgPhysicsWorld * world )
 {
-    return new cgCharacterController( world );
+    return new cgCharacterController( world, true );
 }
 
 //-----------------------------------------------------------------------------
@@ -265,7 +305,10 @@ bool cgCharacterController::initialize(  )
     // Release prior data. This allows this function to be called more than 
     // once internally when properties are modified.
     if ( mBody )
+    {
+        mBody->removeReference( mParentObject );
         mBody->removeReference( CG_NULL );
+    } // End if has body
     if ( mUpJoint )
         mUpJoint->removeReference( CG_NULL );
     if ( mBodySensorShape ) 
@@ -302,6 +345,10 @@ bool cgCharacterController::initialize(  )
     mBody = new cgRigidBody( mWorld, mDynamicsSensorShape, cp );
     mBody->addReference( CG_NULL );
 
+    // Add our parent object as a reference holder too so that
+    // scene raycasts will correctly pick up the node.
+    mBody->addReference( mParentObject );
+
     // Never allow the body to sleep
     mBody->enableAutoSleep( false );
 
@@ -318,17 +365,74 @@ bool cgCharacterController::initialize(  )
     mUpJoint = new cgFixedAxisJoint( mWorld, mBody, cgVector3(0,1,0) );
     mUpJoint->addReference( CG_NULL );
 
-    //////////////////////////////////////
-    cgToDo( "Physics", "When we add the concept of physics materials, move into physics world." );
-    
-    // Set material properties
-    NewtonWorld * nativeWorld = mWorld->getInternalWorld();
-    cgInt characterMaterial = NewtonMaterialCreateGroupID(nativeWorld);
-    cgInt32 defaultMaterialId = NewtonMaterialGetDefaultGroupID( nativeWorld );
-    NewtonMaterialSetDefaultElasticity( nativeWorld, characterMaterial, defaultMaterialId, -1000 );
-    NewtonBodySetMaterialGroupID( mBody->getInternalBody(), characterMaterial );
+    // Assign body to the character material group.
+    NewtonBodySetMaterialGroupID( mBody->getInternalBody(), mWorld->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Character ) );
 
-    //////////////////////////////////////
+    // Construct a custom navigation agent if this is an NPC character.
+    if ( !mPlayerControlled )
+    {
+        cgVector3 initialPosition = mParentObject->getPosition();
+        
+        // Set the initial suggested heading to match that of the object itself
+        mSuggestedHeading = mParentObject->getCellTransform().orientation();
+
+        // Construct the agent parameters to match the selected options.
+        cgNavigationAgentCreateParams params;
+        params.agentRadius         = mCharacterRadius;
+        params.agentHeight         = mCharacterHeight;
+        params.slowDownRadius      = (mWalkSpeed*mWalkSpeed)/(2*mWalkAcceleration); // Frictionless stopping distance.
+        params.separationWeight    = 2.0f;
+        params.separation          = false; //!mPlayerControlled;
+        params.maximumSpeed        = mWalkSpeed;
+        params.maximumAcceleration = mWalkAcceleration;
+        params.anticipateTurns     = !mPlayerControlled;
+        params.obstacleAvoidance   = !mPlayerControlled;
+        params.optimizeTopology    = !mPlayerControlled;
+        params.optimizeVisibility  = !mPlayerControlled;
+        //params.avoidanceQuality    = cgNavigationAvoidanceQuality::Low;
+
+        // Retrieve the list of navigation meshes currently defined
+        // within the parent scene, and find one with properties that
+        // most closely match the requested agent parameters.
+        cgFloat bestDifference = FLT_MAX;
+        cgNavigationMeshElement * element = CG_NULL;
+        cgScene * scene = mParentObject->getScene();
+        const cgSceneElementArray & elements = scene->getSceneElementsByType( RTID_NavigationMeshElement );
+        for ( size_t i = 0; i < elements.size(); ++i )
+        {
+            // Closest match to radius so far?
+            cgFloat difference = fabsf( params.agentRadius - ((cgNavigationMeshElement*)elements[i])->getParameters().agentRadius );
+            if ( difference < bestDifference )
+            {
+                bestDifference = difference;
+                element = (cgNavigationMeshElement*)elements[i];
+            
+            } // End if better
+
+        } // Next element
+
+        // Found a mesh?
+        if ( element )
+        {
+            // Create an agent for this node.
+            mNavAgent = element->createAgent( params, initialPosition );
+            if ( !mNavAgent )
+            {
+                cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("Failed to create navigation agent while attempting to enable navigation for object node '0x%x'. Check supplied parameters.\n"), mParentObject->getReferenceId() );
+                return false;
+
+            } // End if failed
+
+            // Increase reference count
+            mNavAgent->addReference( CG_NULL );
+
+            // Take ownership of the new agent and listen for events.
+            //mNavAgent->addReference( this );
+            //mNavAgent->registerEventListener( static_cast<cgNavigationAgentEventListener*>(this) );
+            
+        } // End if found mesh
+
+    } // End if NPC
 
     // Call base class implementation.
     return cgPhysicsController::initialize( );
@@ -357,8 +461,8 @@ void cgCharacterController::buildSensorShapes( )
 
     // Compute the height for the top and bottom caps of the cylinders
     // we're about to construct.
-    cgFloat top    =  height * 0.5f;
-    cgFloat bottom = -height * 0.5f;
+    cgFloat top    = height;
+    cgFloat bottom = 0.0f;
     top    += mCharacterOffset;
     bottom += mCharacterOffset;
 
@@ -371,8 +475,8 @@ void cgCharacterController::buildSensorShapes( )
 		cgFloat z = sinf(CGE_TWO_PI * (cgFloat)i / (cgFloat)SensorShapeSegments );
 
         // Compute final X & Z location for the floor sensor vertex
-		cgFloat floorX = mCharacterRadius * x;
-		cgFloat floorZ = mCharacterRadius * z;
+        cgFloat floorX = (mPlayerControlled ? mCharacterRadius : 0.01f) * x;
+		cgFloat floorZ = (mPlayerControlled ? mCharacterRadius : 0.01f) * z;
 
         // Compute the final X & Z location for the dynamics sensor vertex
         cgFloat dynamicsX = (mCharacterRadius + (mKinematicCushion * 0.75f) ) * x;
@@ -423,12 +527,46 @@ void cgCharacterController::buildSensorShapes( )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : navigateTo ()
+/// <summary>
+/// When navigation is enabled for this controller, use this method to request
+/// the object to autonomously navigate to the specified world space position
+/// if possible.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgCharacterController::navigateTo( const cgVector3 & position )
+{
+    if ( !mNavAgent )
+        return false;
+    return mNavAgent->setMoveTarget( position, false );
+}
+
+//-----------------------------------------------------------------------------
 //  Name : preStep ()
 /// <summary>
 /// Called just prior to the upcoming physics simulation step.
 /// </summary>
 //-----------------------------------------------------------------------------
 void cgCharacterController::preStep( cgFloat timeDelta )
+{
+    // Call into the correct pre-step method.
+    if ( mPlayerControlled )
+        preStepPlayer( timeDelta );
+    else
+        preStepNPC( timeDelta );
+
+    // Call base class implementation.
+    cgPhysicsController::preStep( timeDelta );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : preStepPlayer () (Protected)
+/// <summary>
+/// Called just prior to the upcoming physics simulation step for player
+/// controlled characters.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCharacterController::preStepPlayer( cgFloat timeDelta )
 {
     // First attempt to make any requested standing mode change
     // if one is still pending.
@@ -439,7 +577,7 @@ void cgCharacterController::preStep( cgFloat timeDelta )
 	cgVector3 verticalVelocity   = mUpAxis * cgVector3::dot( mVelocity, mUpAxis );
     cgVector3 horizontalVelocity = mVelocity - verticalVelocity;
 
-    // Compute requested walkDirection direction.
+    // Compute requested walk direction.
     cgVector3 forwardDirection  = mParentObject->getZAxis();
     cgVector3 rightDirection    = mParentObject->getXAxis();
     cgVector3 walkDirection     = forwardDirection * mParentObject->getInputChannelState( _T("ForwardBackward"), 0.0f ) +
@@ -453,84 +591,172 @@ void cgCharacterController::preStep( cgFloat timeDelta )
     {
         case OnFloor:
         {
-            // Was a jump requested?
-            cgFloat jumpStrength = mParentObject->getInputChannelState( _T("Jump"), 0.0f );
-            if ( jumpStrength > 0 )
+            // Automatically disable fly mode?
+            if ( mAutoDisableFlyMode )
+                mFlyModeEnabled = false;
+
+            // Flying?
+            if ( !mFlyModeEnabled )
             {
-                // Apply impulse to vertical velocity
-                verticalVelocity += mUpAxis * jumpStrength * mJumpImpulse;
+                // Was a jump requested?
+                cgFloat jumpStrength = mParentObject->getInputChannelState( _T("Jump"), 0.0f );
+                if ( jumpStrength > 0 )
+                {
+                    // Apply impulse to vertical velocity
+                    verticalVelocity += mUpAxis * jumpStrength * mJumpImpulse;
 
-                // Mark as airborne.
-                mState = Airborne;
-                mAirborneTime = 1.0f;
+                    // Mark as airborne.
+                    mState = Airborne;
+                    mAirborneTime = 1.0f;
 
-                // Apply airborne damping.
-                walkDirection *= mAirborneWalkDamping;
+                    // Apply airborne damping.
+                    walkDirection *= mAirborneWalkDamping;
+                
+                } // End if jumping
             
-            } // End if jumping
+            } // End if !flying
+            else
+            {
+            } // End if flying
             break;
         
         } // End case OnFloor
         
         case OnRamp:
         {
+            // Automatically disable fly mode?
+            if ( mAutoDisableFlyMode )
+                mFlyModeEnabled = false;
 
-            // Only a portion of the requested motion will be applied when standing on a ramp?
-            walkDirection *= mRampWalkDamping;
-
-            // Was a jump requested?
-            cgFloat jumpStrength = mParentObject->getInputChannelState( _T("Jump"), 0.0f ) * mRampJumpDamping;
-            if ( jumpStrength > 0 )
+            // Flying?
+            if ( !mFlyModeEnabled )
             {
-                // Apply impulse to vertical velocity
-                verticalVelocity += mUpAxis * jumpStrength * mJumpImpulse;
+                // Only a portion of the requested motion will be applied when standing on a ramp?
+                walkDirection *= mRampWalkDamping;
 
-                // Mark as airborne.
-                mState = Airborne;
-                mAirborneTime = 1.0f;
+                // Was a jump requested?
+                cgFloat jumpStrength = mParentObject->getInputChannelState( _T("Jump"), 0.0f ) * mRampJumpDamping;
+                if ( jumpStrength > 0 )
+                {
+                    // Apply impulse to vertical velocity
+                    verticalVelocity += mUpAxis * jumpStrength * mJumpImpulse;
 
-                // Apply airborne damping.
-                walkDirection *= mAirborneWalkDamping;
+                    // Mark as airborne.
+                    mState = Airborne;
+                    mAirborneTime = 1.0f;
 
-            } // End if jumping
+                    // Apply airborne damping.
+                    walkDirection *= mAirborneWalkDamping;
+
+                } // End if jumping
+            
+            } // End if !flying
+            else
+            {
+            } // End if flying
             break;
         }
 
         case Airborne:
-            // Only a portion of the requested motion will be applied when airborne?
-            walkDirection *= mAirborneWalkDamping;
+            // Flying?
+            if ( !mFlyModeEnabled )
+            {
+                // Only a portion of the requested motion will be applied when airborne?
+                walkDirection *= mAirborneWalkDamping;
+            
+            } // End if !flying
+            else
+            {
+            } // End if flying
             break;
     
     } // End case state
-    
-    // Compute new horizontal velocity depending on whether the
-    // character is accelerating or decelerating.
-    if ( cgVector3::length( walkDirection ) > CGE_EPSILON )
+
+    // Accelerate / decelerate
+    if ( mFlyModeEnabled )
     {
-        horizontalVelocity += (walkDirection * mMaximumAcceleration) * timeDelta;
-    
-    } // End if accelerating
-    else if ( state == OnFloor )
-    {
-        cgFloat horizontalSpeed = cgVector3::length( horizontalVelocity );
-        cgFloat newSpeed = horizontalSpeed - (mMaximumAcceleration * timeDelta);
-        if ( newSpeed < 0 )
-            horizontalVelocity = cgVector3(0,0,0);
+        cgFloat climbSinkStrength = mParentObject->getInputChannelState( _T("ClimbSink"), 0.0f );
+        
+        // Compute new vertical velocity depending on whether the
+        // character is accelerating or decelerating up/down.
+        if ( fabsf(climbSinkStrength) > CGE_EPSILON )
+        {
+            verticalVelocity += ((mUpAxis * climbSinkStrength) * mFlyAcceleration) * timeDelta;
+        
+        } // End if accelerating
         else
-            horizontalVelocity *= (newSpeed / horizontalSpeed);
+        {
+            cgFloat verticalSpeed = cgVector3::length( verticalVelocity );
+            cgFloat newSpeed = verticalSpeed - (mFlyAcceleration * timeDelta);
+            if ( newSpeed < 0 )
+                verticalVelocity = cgVector3(0,0,0);
+            else
+                verticalVelocity *= (newSpeed / verticalSpeed);
+
+        } // End if decelerating
+
+        // Compute new horizontal velocity depending on whether the
+        // character is accelerating or decelerating horizontally.
+        if ( cgVector3::length( walkDirection ) > CGE_EPSILON )
+        {
+            horizontalVelocity += (walkDirection * mFlyAcceleration) * timeDelta;
+        
+        } // End if accelerating
+        else
+        {
+            cgFloat horizontalSpeed = cgVector3::length( horizontalVelocity );
+            cgFloat newSpeed = horizontalSpeed - (mFlyAcceleration * timeDelta);
+            if ( newSpeed < 0 )
+                horizontalVelocity = cgVector3(0,0,0);
+            else
+                horizontalVelocity *= (newSpeed / horizontalSpeed);
+        
+        } // End if decelerating
+
+        // Clamp vertical velocity to max value.
+        cgFloat verticalSpeed = cgVector3::length( verticalVelocity );
+        if ( verticalSpeed > mFlySpeed )
+            verticalVelocity *= (mFlySpeed / verticalSpeed);
+
+        // Clamp horizontal velocity to max value.
+        cgFloat horizontalSpeed = cgVector3::length( horizontalVelocity );
+        if ( horizontalSpeed > mFlySpeed )
+            horizontalVelocity *= (mFlySpeed / horizontalSpeed);
     
-    } // End if decelerating
+    } // End if flying
+    else
+    {
+        // Compute new horizontal velocity depending on whether the
+        // character is accelerating or decelerating horizontally.
+        if ( cgVector3::length( walkDirection ) > CGE_EPSILON )
+        {
+            horizontalVelocity += (walkDirection * mWalkAcceleration) * timeDelta;
+        
+        } // End if accelerating
+        else if ( state == OnFloor )
+        {
+            cgFloat horizontalSpeed = cgVector3::length( horizontalVelocity );
+            cgFloat newSpeed = horizontalSpeed - (mWalkAcceleration * timeDelta);
+            if ( newSpeed < 0 )
+                horizontalVelocity = cgVector3(0,0,0);
+            else
+                horizontalVelocity *= (newSpeed / horizontalSpeed);
+        
+        } // End if decelerating
 
-    // Clamp horizontal velocity to max value.
-    cgFloat horizontalSpeed = cgVector3::length( horizontalVelocity );
-    if ( horizontalSpeed > mWalkSpeed )
-        horizontalVelocity *= (mWalkSpeed / horizontalSpeed);
+        // Clamp horizontal velocity to max value.
+        cgFloat horizontalSpeed = cgVector3::length( horizontalVelocity );
+        if ( horizontalSpeed > mWalkSpeed )
+            horizontalVelocity *= (mWalkSpeed / horizontalSpeed);
 
+    } // End if !flying
+    
     // Reconstruct final velocity vector.
     mVelocity = horizontalVelocity + verticalVelocity;
 
     // Apply acceleration due to gravity ((Gravity * Mass) / Mass) / Time.
-    mVelocity += mGravity * timeDelta;
+    if ( !mFlyModeEnabled )
+        mVelocity += mGravity * timeDelta;
 
     // Record the most recent position of the parent object. This will serve 
     // as both our starting point for the upcoming kinematic motion step. It
@@ -571,9 +797,78 @@ void cgCharacterController::preStep( cgFloat timeDelta )
     mBody->setTransform( bodyTransform );
     mBody->setAngularVelocity( cgVector3(0,0,0) );
     mBody->setVelocity( horizontalVelocity );
+    
+    // Handle navigation agent integration if active.
+    if ( mNavAgent )
+    {
+        // If the navigation agent is not in the correct
+        // position, it must catch up.
+        cgVector3 navPosition = mNavAgent->getPosition();
+        horizontalVelocity += (cgVector3(currentPosition.x, 0, currentPosition.z) - cgVector3(navPosition.x, 0, navPosition.z)) / timeDelta;
 
-    // Call base class implementation.
-    cgPhysicsController::preStep( timeDelta );
+        // Apply movement.
+        mNavAgent->setMoveVelocity( horizontalVelocity );
+    
+    } // End if nav integrated
+}
+
+//-----------------------------------------------------------------------------
+//  Name : preStepNPC () (Protected)
+/// <summary>
+/// Called just prior to the upcoming physics simulation step for non player
+/// controlled characters.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCharacterController::preStepNPC( cgFloat timeDelta )
+{
+    // Generate orientation for NPC characters.
+    cgVector3 direction = mNavAgent->getDesiredVelocity();
+    cgFloat length = cgVector3::length( direction );
+    if ( !_isnan(length) && length > 0.01f && mNavAgent->getTargetState() != cgNavigationTargetState::Arrived )
+    {
+        // Compute new orientation
+        cgTransform t /* = mParentObject->getCellTransform() */;
+        cgVector3 y( 0, 1, 0 ), x, z;
+        z = direction / length; // Normalize
+        cgVector3::cross( x, y, z );
+        t.setOrientation( x, y, z );
+        
+        // Store as suggested heading.
+        mSuggestedHeading = t.orientation();
+
+    } // End if has direction
+
+    // Actual velocity is controlled by the navigation agent
+    // if this is not a player controlled character.
+    mVelocity = mNavAgent->getActualVelocity();
+
+    // Separate out current velocity into its vertical and horizontal components.
+	cgVector3 verticalVelocity   = mUpAxis * cgVector3::dot( mVelocity, mUpAxis );
+    cgVector3 horizontalVelocity = mVelocity - verticalVelocity;
+
+    // Record the most recent position of the parent object. This will serve 
+    // as both our starting point for the upcoming kinematic motion step. It
+    // must also be backed up so that we can compare how the object moved
+    // during the actual physics step.
+    cgVector3 currentPosition = mNavAgent->getPosition();
+    mOriginalPosition = currentPosition;
+
+    // For navigation agents, we always assume that the character
+    // is on a walkable surface.
+    mState = OnFloor;
+    preProcessOnFloor( currentPosition, timeDelta );
+
+    // Retrieve the final horizontal velocity of the character.
+    // This will be the velocity we pass to the physics engine to
+    // have it simulate dynamics.
+    verticalVelocity   = mUpAxis * cgVector3::dot( mVelocity, mUpAxis );
+    horizontalVelocity = mVelocity - verticalVelocity;
+
+    // Position and set the body properties and then "let it fly" :)
+    cgTransform bodyTransform( currentPosition );
+    mBody->setTransform( bodyTransform );
+    mBody->setAngularVelocity( cgVector3(0,0,0) );
+    mBody->setVelocity( horizontalVelocity );
 }
 
 //-----------------------------------------------------------------------------
@@ -583,6 +878,25 @@ void cgCharacterController::preStep( cgFloat timeDelta )
 /// </summary>
 //-----------------------------------------------------------------------------
 void cgCharacterController::postStep( cgFloat timeDelta )
+{
+    // Call into the correct post-step method.
+    if ( mPlayerControlled )
+        postStepPlayer( timeDelta );
+    else
+        postStepNPC( timeDelta );
+
+    // Call base class implementation.
+    cgPhysicsController::postStep( timeDelta );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : postStepPlayer () (Protected)
+/// <summary>
+/// Called just after the most recent physics simulation step for player
+/// controlled characters.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCharacterController::postStepPlayer( cgFloat timeDelta )
 {
     // Retrieve the final position and velocity of the physics body
     // as it exists after the dynamics simulation has run.
@@ -612,11 +926,45 @@ void cgCharacterController::postStep( cgFloat timeDelta )
     
     } // End switch state
 
-    // We're done. Update the parent' objects final position.
-    mParentObject->setPosition( currentPosition );
+    // We're done. Update the parent object's final position (if changed).
+    if ( cgMathUtility::compareVectors( mParentObject->getPosition(), currentPosition, CGE_EPSILON_1MM ) != 0 )
+        mParentObject->setPosition( currentPosition );
 
     // Call base class implementation.
     cgPhysicsController::postStep( timeDelta );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : postStepNPC () (Protected)
+/// <summary>
+/// Called just after the most recent physics simulation step for non player
+/// controlled characters.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCharacterController::postStepNPC( cgFloat timeDelta )
+{
+    // Retrieve the final position and velocity of the physics body
+    // as it exists after the dynamics simulation has run.
+    cgTransform bodyTransform = mBody->getTransform();
+    mVelocity.x = mBody->getVelocity().x;
+    mVelocity.z = mBody->getVelocity().z;
+    cgVector3 currentPosition = bodyTransform.position();
+
+    // For navigation agents, we always assume that the character
+    // is on a walkable surface.
+    // ToDo: Just use findSupportingSurface directly?
+    postProcessOnFloor( currentPosition, timeDelta );
+    mState = OnFloor;
+
+    // Compute final position and velocity.
+    cgVector3 navPos = mNavAgent->getPosition();
+    currentPosition.x = navPos.x;
+    currentPosition.z = navPos.z;
+    mVelocity = (currentPosition - mOriginalPosition) / timeDelta; //mNavAgent->getActualVelocity();
+    
+    // We're done. Update the parent object's final position.
+    if ( cgMathUtility::compareVectors( mParentObject->getPosition(), currentPosition, CGE_EPSILON_1MM ) != 0 )
+        mParentObject->setPosition( currentPosition );        
 }
 
 //-----------------------------------------------------------------------------
@@ -703,7 +1051,7 @@ void cgCharacterController::preProcessOnFloor( cgVector3 & currentPosition, cgFl
     // Strip any vertical velocity component.
     mVelocity -= mUpAxis * cgVector3::dot( mUpAxis, mVelocity );
 
-    // In order to walkDirection over steps we first have to lift the body off the ground
+    // In order to walk over steps we first have to lift the body off the ground
     // by the maximum step height just as if the character was lifting their foot
     // or jumping over steps. We must perform an upward cast to make sure that there
     // is enough room for us to do so. Begin by generating source and destination 
@@ -941,8 +1289,10 @@ bool cgCharacterController::findSupportingSurface( const cgVector3 & source, con
     cgVector3 finalDestination( mWorld->toPhysicsScale( destination ) );
 
     // Always ignore the character body during convex cast.
-    std::set<const NewtonBody*> skipSet;
-    skipSet.insert( mBody->getInternalBody() );
+    PreFilterData filterData;
+    filterData.world = mWorld;
+    filterData.sourceMaterialGroupId = NewtonBodyGetMaterialGroupID( mBody->getInternalBody() );
+    filterData.skipSet.insert( mBody->getInternalBody() );
 
     // Keep searching until we find a "clean" detection (will only
     // iterate more than once if the caller wants to reject any
@@ -952,7 +1302,7 @@ bool cgCharacterController::findSupportingSurface( const cgVector3 & source, con
     {
         // Cast to find the floor;
 	    cgInt contactCount = NewtonWorldConvexCast( mWorld->getInternalWorld(), (cgMatrix)sourceTransform, finalDestination, shape->getInternalShape(),
-                                                    &distance, &skipSet, convexCastPreFilter, contactInfo,
+                                                    &distance, &filterData, convexCastPreFilter, contactInfo,
                                                     sizeof(contactInfo) / sizeof(contactInfo[0]), 0 );
     	
         // Any contacts?
@@ -976,7 +1326,7 @@ bool cgCharacterController::findSupportingSurface( const cgVector3 & source, con
                         bestContact = -1;
 
                         // Don't test the penetrating body again.
-                        skipSet.insert( contactInfo[i].m_hitBody );
+                        filterData.skipSet.insert( contactInfo[i].m_hitBody );
                         break;
                     
                     } // End if dymamic
@@ -1057,7 +1407,9 @@ cgVector3 cgCharacterController::stepForward( cgVector3 & position, const cgVect
     cgFloat cushion = mWorld->toPhysicsScale(mKinematicCushion);
 
     // Attempt horizontal motion first
-    std::set<const NewtonBody*> skipSet;
+    PreFilterData filterData;
+    filterData.world = mWorld;
+    filterData.sourceMaterialGroupId = NewtonBodyGetMaterialGroupID( mBody->getInternalBody() );
     cgFloat currentSpeedSq = cgVector3::lengthSq( currentVelocity );
 	if ( currentSpeedSq > 0.0f )
     {
@@ -1067,7 +1419,7 @@ cgVector3 cgCharacterController::stepForward( cgVector3 & position, const cgVect
 		cgVector3 bounceNormals[MaxContacts * 2];
 
         // Do not test character body for (self) intersection.
-        skipSet.insert( mBody->getInternalBody() );
+        filterData.skipSet.insert( mBody->getInternalBody() );
 
         // Compute the initial source and destination for the first horizontal cast.
         cgTransform sourceTransform;
@@ -1097,7 +1449,7 @@ cgVector3 cgCharacterController::stepForward( cgVector3 & position, const cgVect
 		    // Cast out and collect contacts. Dynamic bodies are ignored! These
             // will be handled separately during the actual physics simulation.
 		    contactCount = NewtonWorldConvexCast( nativeWorld, (cgMatrix)sourceTransform, destination, shape, &hitParam, 
-                                                  &skipSet, convexCastPreFilterStaticOnly, contactInfo,
+                                                  &filterData, convexCastPreFilterStaticOnly, contactInfo,
                                                   sizeof(contactInfo) / sizeof(contactInfo[0]), 0 );
 		    contactCount = preProcessContacts( contactInfo, contactCount, upAxis );
 
@@ -1226,6 +1578,21 @@ cgVector3 cgCharacterController::stepForward( cgVector3 & position, const cgVect
 
     // Return final velocity
     return currentVelocity + verticalVelocity;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getNavigationState ()
+/// <summary>
+/// If this is a non-player controlled character, retrieve the current state 
+/// navigation request (i.e. waiting, moving, arrived, etc.)
+/// </summary>
+//-----------------------------------------------------------------------------
+cgNavigationTargetState::Base cgCharacterController::getNavigationState( ) const
+{
+    if ( !mPlayerControlled && mNavAgent )
+        return mNavAgent->getTargetState();
+    else
+        return cgNavigationTargetState::None;
 }
 
 //-----------------------------------------------------------------------------
@@ -1361,13 +1728,36 @@ void cgCharacterController::setMaximumStepHeight( cgFloat value )
 //-----------------------------------------------------------------------------
 //  Name : setMaximumWalkSpeed ()
 /// <summary>
-/// Set the maximum speed at which the character is able to walkDirection in any
+/// Set the maximum speed at which the character is able to walk in any
 /// horizontal direction (does not limit vertical velocity).
 /// </summary>
 //-----------------------------------------------------------------------------
 void cgCharacterController::setMaximumWalkSpeed( cgFloat value )
 {
     mWalkSpeed = value;
+
+    // Update any NPC navigation agent.
+    if ( !mPlayerControlled && mNavAgent )
+    {
+        cgNavigationAgentCreateParams params = mNavAgent->getParameters();
+        params.maximumSpeed = value;
+        params.slowDownRadius = (mWalkSpeed*mWalkSpeed)/(2*mWalkAcceleration); // Frictionless stopping distance.
+        mNavAgent->updateParameters( params );
+
+    } // End if NPC
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setMaximumFlySpeed ()
+/// <summary>
+/// Set the maximum speed at which the character is able to fly in any
+/// horizontal or vertical direction when fly mode is enabled (see
+/// cgCharacterController::enableFlyMode())
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCharacterController::setMaximumFlySpeed( cgFloat value )
+{
+    mFlySpeed = value;
 }
 
 //-----------------------------------------------------------------------------
@@ -1379,7 +1769,29 @@ void cgCharacterController::setMaximumWalkSpeed( cgFloat value )
 //-----------------------------------------------------------------------------
 void cgCharacterController::setWalkAcceleration( cgFloat value )
 {
-    mMaximumAcceleration = value;
+    mWalkAcceleration = value;
+
+    // Update any NPC navigation agent.
+    if ( !mPlayerControlled && mNavAgent )
+    {
+        cgNavigationAgentCreateParams params = mNavAgent->getParameters();
+        params.maximumAcceleration = value;
+        params.slowDownRadius = (mWalkSpeed*mWalkSpeed)/(2*mWalkAcceleration); // Frictionless stopping distance.
+        mNavAgent->updateParameters( params );
+
+    } // End if NPC
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setFlyAcceleration ()
+/// <summary>
+/// Set the rate at which the character accelerates when input is received, or
+/// decelerates when no input is received while fly mode is enabled.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCharacterController::setFlyAcceleration( cgFloat value )
+{
+    mFlyAcceleration = value;
 }
 
 //-----------------------------------------------------------------------------
@@ -1547,13 +1959,26 @@ cgFloat cgCharacterController::getMaximumStepHeight( ) const
 //-----------------------------------------------------------------------------
 //  Name : getMaximumWalkSpeed ()
 /// <summary>
-/// Get the maximum speed at which the character is able to walkDirection in any
+/// Get the maximum speed at which the character is able to walk in any
 /// horizontal direction (does not limit vertical velocity).
 /// </summary>
 //-----------------------------------------------------------------------------
 cgFloat cgCharacterController::getMaximumWalkSpeed( ) const
 {
     return mWalkSpeed;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getMaximumFlySpeed ()
+/// <summary>
+/// Get the maximum speed at which the character is able to fly in any
+/// horizontal or vertical direction when fly mode is enabled (see
+/// cgCharacterController::enableFlyMode())
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloat cgCharacterController::getMaximumFlySpeed( ) const
+{
+    return mFlySpeed;
 }
 
 //-----------------------------------------------------------------------------
@@ -1565,7 +1990,19 @@ cgFloat cgCharacterController::getMaximumWalkSpeed( ) const
 //-----------------------------------------------------------------------------
 cgFloat cgCharacterController::getWalkAcceleration( ) const
 {
-    return mMaximumAcceleration;
+    return mWalkAcceleration;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setFlyAcceleration ()
+/// <summary>
+/// Set the rate at which the character accelerates when input is received, or
+/// decelerates when no input is received while fly mode is enabled.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloat cgCharacterController::getFlyAcceleration( ) const
+{
+    return mFlyAcceleration;
 }
 
 //-----------------------------------------------------------------------------
@@ -1689,9 +2126,6 @@ bool cgCharacterController::attemptStandingChange( )
     // (i.e. standing to crouching or crouching to prone, etc.)
     if ( heightChange <= 0 )
     {
-        // Offset the parent by an appropriate amount.
-        mParentObject->move( 0, heightChange * 0.5f, 0 );
-
         // Switch to the requested mode.
         mActualStandMode = mRequestedStandMode;
 
@@ -1711,10 +2145,6 @@ bool cgCharacterController::attemptStandingChange( )
     cgVector3 destination = source + mUpAxis * heightChange;
     if ( !findSupportingSurface( source, destination, -mUpAxis, mBodySensorShape, distance, surfaceNormal ) )
     {
-        // It was all clear above us to make the transition.
-        // Offset the parent by an appropriate amount.
-        mParentObject->move( 0, heightChange * 0.5f, 0 );
-
         // Switch to the requested mode.
         mActualStandMode = mRequestedStandMode;
 
@@ -1753,4 +2183,77 @@ cgCharacterController::StandingMode cgCharacterController::getRequestedStandingM
 cgCharacterController::StandingMode cgCharacterController::getActualStandingMode( ) const
 {
     return mActualStandMode;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getSuggestedHeading ()
+/// <summary>
+/// For non player character controllers, this method can be called in order to
+/// retrieve the requested heading that relates to the current navigation task.
+/// It may not always be the case that the object should be pointing in this
+/// direction (i.e. it may want to point at its target and strafe), so this
+/// is only a suggestion.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgQuaternion & cgCharacterController::getSuggestedHeading( ) const
+{
+    return mSuggestedHeading;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : enableFlyMode ()
+/// <summary>
+/// Disable gravity and allow the character to fly using 'ClimbSink' input 
+/// state.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCharacterController::enableFlyMode( bool enable )
+{
+    enableFlyMode( enable, false );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : enableFlyMode ()
+/// <summary>
+/// Disable gravity and allow the character to fly using up/down input states.
+/// Optionally, fly mode can be automatically disabled when the character is
+/// no longer airborne.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCharacterController::enableFlyMode( bool enable, bool autoDisable )
+{
+    mFlyModeEnabled     = enable;
+    mAutoDisableFlyMode = autoDisable;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isFlyModeEnabled ()
+/// <summary>
+/// Determine if fly mode is currently enabled (gravity disabled).
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgCharacterController::isFlyModeEnabled( ) const
+{
+    return mFlyModeEnabled;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : applyImpulse ()
+/// <summary>
+/// Apply an impulse to this character for integration during the next update.
+/// Note: When an impulse is applied, the character will automatically enter
+/// the airborne state.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCharacterController::applyImpulse( const cgVector3 & impulse )
+{
+    if ( mPlayerControlled )
+    {
+        mVelocity += impulse;
+
+        // Mark as airborne.
+        mState = Airborne;
+        mAirborneTime = 1.0f;
+    
+    } // End if player controlled
 }

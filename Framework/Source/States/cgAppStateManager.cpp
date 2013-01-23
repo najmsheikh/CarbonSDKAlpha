@@ -82,7 +82,8 @@ void cgAppStateManager::dispose( bool bDisposeBase )
     for ( itState = mRegisteredStates.begin(); itState != mRegisteredStates.end(); ++itState )
     {
         StateDesc & Desc = itState->second;
-        delete Desc.state;
+        if ( Desc.state )
+            Desc.state->scriptSafeDispose();
 
     } // Next registered state
 
@@ -622,6 +623,17 @@ bool cgAppState::queryReferenceType( const cgUID & type ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getManager ()
+/// <summary>
+/// Retrieve the application state manager to which this state belongs.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgAppStateManager * cgAppState::getManager( )
+{
+    return mStateManager;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : isActive ()
 /// <summary>
 /// Determine if this state is the currently active state (other states 
@@ -702,6 +714,18 @@ cgAppState * cgAppState::getRootState( )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getParentState ()
+/// <summary>
+/// Retrieve the state object that is immediately above this state in the
+/// active state history list.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgAppState * cgAppState::getParentState( )
+{
+    return mParentState;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getTerminalState ()
 /// <summary>
 /// Irrespective of this state's position in the restorable history list,
@@ -718,6 +742,43 @@ cgAppState * cgAppState::getTerminalState( )
 
     // Return the state item.
     return pCurrentState;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isScripted ()
+/// <summary>
+/// Returns true if the state is implemented through a script. Returns false
+/// if this behavior has a native application side implementation.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAppState::isScripted( ) const
+{
+    return mScript.isValid();
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getScript ()
+/// <summary>
+/// Retrieve the handle the script containing the state logic if this is
+/// a scripted application state (see cgAppState::isScripted()).
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgScriptHandle & cgAppState::getScript( ) const
+{
+    return mScript;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getScriptObject ()
+/// <summary>
+/// Retrieve the script object referencing the specific instance of the
+/// application state class associated with this state if scripted 
+/// (see cgAppState::isScripted()).
+/// </summary>
+//-----------------------------------------------------------------------------
+cgScriptObject * cgAppState::getScriptObject( )
+{
+    return mScriptObject;
 }
 
 //-----------------------------------------------------------------------------
@@ -1088,9 +1149,7 @@ void cgAppState::processEvent( const cgString & strEventName )
             break;
 
         case ActionType_SpawnChild:
-            
-            // We should spawn a new child state and, if requested, we should also be put in the suspended state
-            mStateManager->spawnChildState( this, Desc.toStateId, ( Desc.flags & ActionFlag_SuspendParent ) );
+            spawnChildState( Desc.toStateId, (Desc.flags & ActionFlag_SuspendParent) != 0 );
             break;
 
         case ActionType_EndState:
@@ -1118,6 +1177,17 @@ void cgAppState::processEvent( const cgString & strEventName )
             break;
     
     } // End Switch actionType
+}
+
+//-----------------------------------------------------------------------------
+//  Name : spawnChildState () (Virtual)
+/// <summary>
+/// Spawn a new child state and, if requested, also suspend this state.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAppState::spawnChildState( const cgString & stateId, bool suspendParent )
+{
+    return mStateManager->spawnChildState( this, stateId, suspendParent );
 }
 
 //-----------------------------------------------------------------------------

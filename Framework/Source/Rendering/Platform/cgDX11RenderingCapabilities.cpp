@@ -34,6 +34,8 @@
 // cgDX11RenderingCapabilities Module Includes
 //-----------------------------------------------------------------------------
 #include <Rendering/Platform/cgDX11RenderingCapabilities.h>
+#include <Rendering/Platform/cgDX11Initialize.h>
+#include <Resources/Platform/cgDX11BufferFormatEnum.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 // cgDX11RenderingCapabilities Members
@@ -70,6 +72,10 @@ cgDX11RenderingCapabilities::~cgDX11RenderingCapabilities( )
 //-----------------------------------------------------------------------------
 void cgDX11RenderingCapabilities::dispose( bool bDisposeBase )
 {
+    // Clear variables.
+    mDisplayModes.clear();
+
+    // Call base class implementation as required.
     if ( bDisposeBase )
         cgRenderingCapabilities::dispose( true );
 }
@@ -87,6 +93,36 @@ bool cgDX11RenderingCapabilities::enumerate( )
         return false;
 
     // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : postInit ()
+/// <summary>
+/// Perform any remaining post render driver initialization tasks.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgDX11RenderingCapabilities::postInit( cgDX11Initialize * data, cgUInt32 fullScreenAdapter, cgUInt32 fullScreenOutput )
+{
+    // Populate the list of available full screen display modes for this device.
+    const cgDX11EnumAdapter * pAdapter = data->getAdapter( fullScreenAdapter );
+    const cgDX11EnumOutput * pOutput = pAdapter->outputs[fullScreenOutput];
+    for ( size_t j = 0; j < pOutput->modes.size(); ++j )
+    {
+        const DXGI_MODE_DESC & sourceMode = pOutput->modes[j];
+        
+        // Store display mode.
+        cgDisplayMode mode;
+        mode.width          = sourceMode.Width;
+        mode.height         = sourceMode.Height;
+        cgUInt denominator  = max( 1, sourceMode.RefreshRate.Denominator );
+        mode.refreshRate    = sourceMode.RefreshRate.Numerator / (cgDouble)denominator;
+        mode.bitDepth       = cgBufferFormatEnum::formatBitsPerPixel(cgDX11BufferFormatEnum::formatFromNative(sourceMode.Format));
+        mDisplayModes.push_back( mode );
+
+    } // Next mode
+    
+    // Success
     return true;
 }
 
@@ -180,6 +216,19 @@ bool cgDX11RenderingCapabilities::supportsShaderModel( cgShaderModel::Base Model
 bool cgDX11RenderingCapabilities::supportsDepthStencilReading ( ) const
 {
 	return mBufferFormats->isFormatSupported( cgBufferType::DepthStencil, cgBufferFormat::INTZ, cgBufferFormatCaps::CanSample );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getDisplayModes () (Virtual)
+/// <summary>
+/// Retrieve a list of all full screen display modes supported by this
+/// device.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgDX11RenderingCapabilities::getDisplayModes( cgDisplayMode::Array & modes ) const
+{
+    modes = mDisplayModes;
+    return true;
 }
 
 #endif // CGE_DX11_RENDER_SUPPORT

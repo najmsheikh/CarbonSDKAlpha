@@ -63,6 +63,37 @@ namespace cgAnimationChannelDataType
 
 }; // End Namespace : cgAnimationChannelDataType
 
+namespace cgAnimationPlaybackMode
+{
+    enum Base
+    {
+        Loop = 0,
+        PlayOnce
+    };
+
+}; // End Namespace : cgAnimationPlaybackMode
+
+//-----------------------------------------------------------------------------
+// Global Structures
+//-----------------------------------------------------------------------------
+struct CGE_API cgAnimationTrackDesc
+{
+    cgAnimationPlaybackMode::Base playbackMode; // Method used to playback the animation.
+    cgDouble                      position;     // Current position of this track in seconds.
+    cgDouble                      length;       // Computed length of the animation track in seconds. This member is populated by the animation controller.
+    cgFloat                       weight;       // Current blending weight of this track.
+    cgFloat                       speed;        // Rate at which the track should play.
+    cgInt32                       firstFrame;   // Minimum key frame index to limit the animation set sampler.
+    cgInt32                       lastFrame;    // Maximum key frame index to limit the animation set sampler.
+    bool                          enabled;      // Track is currently playing back (will still contribute even when false, just will not advance)
+
+    // Constructor
+    cgAnimationTrackDesc() :
+        playbackMode(cgAnimationPlaybackMode::Loop), position(0), length(0), speed(1),
+        weight(1), firstFrame(0x7FFFFFFF), lastFrame(0x7FFFFFFF), enabled(true) {}
+
+}; // End Struct : cgAnimationTrackDesc
+
 //-----------------------------------------------------------------------------
 // Main Class Declarations
 //-----------------------------------------------------------------------------
@@ -419,8 +450,9 @@ public:
     //-------------------------------------------------------------------------
 	// Public Methods
 	//-------------------------------------------------------------------------
-    void            evaluate            ( cgDouble position, cgQuaternion & q, const cgQuaternion & default );
-    void            addKey              ( cgInt32 frame, const cgQuaternion & value );
+    void                                evaluate            ( cgDouble position, cgQuaternion & q, const cgQuaternion & default );
+    void                                addKey              ( cgInt32 frame, const cgQuaternion & value );
+    const cgQuaternionAnimationChannel& getAnimationChannel ( ) const;
 
     //-------------------------------------------------------------------------
 	// Public Virtual Methods (Overrides cgAnimationTargetController)

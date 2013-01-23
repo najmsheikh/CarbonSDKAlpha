@@ -67,6 +67,7 @@ public:
     bool                initialize          ( cgNavigationMesh * navMesh, cgUInt32 maxAgents );
     cgNavigationAgent * createAgent         ( const cgNavigationAgentCreateParams & params, const cgVector3 & position );
     void                update              ( cgFloat timeDelta );
+    void                step                ( cgFloat timeDelta );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)

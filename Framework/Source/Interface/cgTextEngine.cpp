@@ -956,12 +956,6 @@ cgFontSet::~cgFontSet( )
 //-----------------------------------------------------------------------------
 bool cgFontSet::parseFontSet( const cgXMLNode & node, const cgString & fontDefinition )
 {
-    /*cgUInt16        pageCount, loadedPages, characterId;
-    CharDesc      * pNewChar = CG_NULL, character;
-    FontSetPage   * pNewPage = CG_NULL, Page;
-    cgXMLNode       childNode, pagesNode, charactersNode, kerningsNode;
-    cgString        value;*/
-
     try
     {
         // Retrieve the font information
@@ -1031,6 +1025,10 @@ bool cgFontSet::parseFontSet( const cgXMLNode & node, const cgString & fontDefin
             // Must have a 'file' attribute
             if ( !childNode.getAttributeText( _T("file"), page.texture ) )
                 continue;
+
+            // Make font page texture relative to atlas file.
+            // ToDo: Test this for reliability
+            page.texture = cgFileSystem::getDirectoryName(fontDefinition) + _T("/") + page.texture;
             
             // Build a new character type and add this to the font set's page map
             mFontPages[page.pageId] = new FontSetPage( page );
@@ -1148,13 +1146,6 @@ bool cgFontSet::parseFontSet( const cgXMLNode & node, const cgString & fontDefin
 //-----------------------------------------------------------------------------
 bool cgFontSet::initializeFontPages( cgRenderDriver * renderDriver, cgInputStream shader )
 {
-    /*cgBillboardBuffer         * buffer;
-    cgRect                      frameBounds;
-    
-    CharacterArray::iterator    itChar;
-    cgInt32                     i, nPageIndex = 0;
-    bool                        bResult;*/
-
     // Iterate through all registered font pages
     PageArray::iterator itPage;
     for ( itPage = mFontPages.begin(); itPage!= mFontPages.end(); ++itPage )
@@ -1424,6 +1415,30 @@ const cgTextMetrics::TextLine & cgTextMetrics::getLineMetrics( cgInt32 lineIndex
 cgUInt32 cgTextMetrics::getLineHeight( ) const
 {
     return mLineHeight;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getFirstVisibleLine ()
+/// <summary>
+/// Retrieve the index of the first line of text that was deemed visible
+/// (i.e. not fully outside of any supplied clipping rectangle / region).
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt32 cgTextMetrics::getFirstVisibleLine( ) const
+{
+    return mFirstLine;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getLastVisibleLine ()
+/// <summary>
+/// Retrieve the index of the last line of text that was deemed visible
+/// (i.e. not fully outside of any supplied clipping rectangle / region).
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt32 cgTextMetrics::getLastVisibleLine( ) const
+{
+    return mLastLine;
 }
 
 //-----------------------------------------------------------------------------

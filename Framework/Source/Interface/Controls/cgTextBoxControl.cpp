@@ -27,7 +27,6 @@
 #include <Interface/Controls/cgTextBoxControl.h>
 #include <Interface/Controls/cgScrollBarControl.h>
 #include <Interface/cgUIManager.h>
-#include <Interface/cgUIForm.h>
 #include <Interface/cgUISkin.h>
 #include <Input/cgInputDriver.h>
 #include <System/cgMessageTypes.h>
@@ -65,7 +64,6 @@ cgTextBoxControl::cgTextBoxControl( ) : cgUIControl( Complex, _T("ControlFrame")
     mSelectionRef           = 0;
     mCaretCharacter         = 0;
     mVerticalScrollAmount   = 0;
-    mTextColor              = cgColorValue( 1, 1, 1, 1 );
     mMetricsDirty           = false;
     
     // Clear structures
@@ -103,7 +101,6 @@ cgTextBoxControl::cgTextBoxControl( const cgString & strElementName ) : cgUICont
     mSelectionRef           = 0;
     mCaretCharacter         = 0;
     mVerticalScrollAmount   = 0;
-    mTextColor              = cgColorValue( 1, 1, 1, 1 );
     mMetricsDirty           = false;
     
     // Clear structures
@@ -183,28 +180,18 @@ bool cgTextBoxControl::getAllowFormatCode( ) const
 }
 
 //-----------------------------------------------------------------------------
-//  Name : setTextColor ()
+//  Name : setTextColor () (Virtual)
 /// <summary>
 /// Set the default color of any text rendered for this control.
 /// </summary>
 //-----------------------------------------------------------------------------
 void cgTextBoxControl::setTextColor( const cgColorValue & Color )
 {
-    mTextColor = Color;
+    // Call base class implementation
+    cgUIControl::setTextColor( Color );
     
     // Recompute text metrics (contains per character colors)
     computeTextMetrics();
-}
-
-//-----------------------------------------------------------------------------
-//  Name : getTextColor ()
-/// <summary>
-/// Retreive the default color of any text rendered for this control.
-/// </summary>
-//-----------------------------------------------------------------------------
-const cgColorValue & cgTextBoxControl::getTextColor( ) const
-{
-    return mTextColor;
 }
 
 //-----------------------------------------------------------------------------
@@ -226,10 +213,9 @@ void cgTextBoxControl::renderSecondary( )
         return;
 
     // Get access to interface manager
-    cgUIManager     * pManager = mRootForm->getUIManager();
-    cgUISkin        * pSkin    = pManager->getCurrentSkin();
-    cgRenderDriver  * pDriver  = pManager->getRenderDriver();
-    cgTextEngine    * pEngine  = pManager->getTextEngine();
+    cgUISkin        * pSkin    = mUIManager->getCurrentSkin();
+    cgRenderDriver  * pDriver  = mUIManager->getRenderDriver();
+    cgTextEngine    * pEngine  = mUIManager->getTextEngine();
 
     // Build text rendering flags.
     if ( mMultiline )
@@ -241,7 +227,7 @@ void cgTextBoxControl::renderSecondary( )
     rcText = getTextArea( cgControlCoordinateSpace::ScreenRelative );
     pEngine->setKerning( 0 );
     pEngine->setLineSpacing( 0 );
-    pManager->selectFont( getFont() );
+    mUIManager->selectFont( getFont() );
     pEngine->printText( mTextMetrics, cgPoint( rcText.left, rcText.top ) );
 
     // Get skin configuration for control rendering
@@ -251,7 +237,7 @@ void cgTextBoxControl::renderSecondary( )
     pDriver->pushScissorRect( &rcText );
 
     // Render caret?
-    if ( mShowCaret && isEnabled() && mCaretCharacter >= 0 && pManager->getFocus() == this )
+    if ( mShowCaret && isEnabled() && mCaretCharacter >= 0 && mUIManager->getFocus() == this )
     {
         // Blink on and off as required
         if ( Config.textBox.caretBlinkSpeed == 0 || 
@@ -286,7 +272,7 @@ void cgTextBoxControl::renderSecondary( )
         cgColorValue Color = Config.textBox.selectionColor;
 
         // If we don't currently have focus, use a light gray selection color
-        if ( pManager->getFocus() != this )
+        if ( mUIManager->getFocus() != this )
             Color = cgColorValue( 0.7f, 0.7f, 0.7f, 0.3f );
 
         // Compute the rectangles for the selected range
@@ -302,7 +288,7 @@ void cgTextBoxControl::renderSecondary( )
             rcDraw.top    += rcText.top;
             rcDraw.bottom += rcText.top;
 
-            // Ensure rectangle is at least 3 characters wide (for empty lines)
+            // Ensure rectangle is at least 3 pixels wide (for empty lines)
             if ( (rcDraw.right - rcDraw.left) < 3 )
                 rcDraw.right = rcDraw.left + 3;
 
@@ -339,8 +325,8 @@ void cgTextBoxControl::onSize( cgInt32 nWidth, cgInt32 nHeight )
 
     // Reposition scroll bar (ensure it fills entire control area irrespective of the padding)
     cgRect controlArea = getControlArea( cgControlCoordinateSpace::ClientRelative );
-    mVerticalScrollBar->setPosition( controlArea.right - 15, controlArea.top );
-    mVerticalScrollBar->setSize( 15, controlArea.height() );
+    mVerticalScrollBar->setPosition( controlArea.right - 17, controlArea.top );
+    mVerticalScrollBar->setSize( 17, controlArea.height() );
     mVerticalScrollBar->setVisible( false ); // Invisible until overflow detected
 
     // Recompute the metrics now our scroll bar is correctly sized
@@ -364,20 +350,19 @@ bool cgTextBoxControl::onMouseButtonDown( cgInt32 nButtons, const cgPoint & Posi
         return true;
 
     // Only process if no other control is captured
-    cgUIManager   * pManager = mRootForm->getUIManager();
     cgInputDriver * pInput   = cgInputDriver::getInstance();
-    if ( pManager->getCapture() )
+    if ( mUIManager->getCapture() )
         return false;
     
     // Is this within our control's rectangle?
-    if ( ::PtInRect( (RECT*)&getTextArea( cgControlCoordinateSpace::ScreenRelative), (POINT&)Position ) == TRUE )
+    if ( getTextArea( cgControlCoordinateSpace::ScreenRelative ).containsPoint( Position ) )
     {
         // Already captured?
-        if ( !pManager->getCapture() )
-            pManager->setCapture( this );
+        if ( !mUIManager->getCapture() )
+            mUIManager->setCapture( this );
 
         // We have focus now
-        pManager->setFocus( this );
+        mUIManager->setFocus( this );
 
         // Control is enabled ?
         if ( isEnabled() )
@@ -408,7 +393,7 @@ bool cgTextBoxControl::onMouseButtonDown( cgInt32 nButtons, const cgPoint & Posi
 bool cgTextBoxControl::onMouseButtonUp( cgInt32 nButtons, const cgPoint & Position )
 {
     // Ignore if control is not visible
-    if ( !isVisible() )
+    if ( !isVisible() && mUIManager->getCapture() != this )
         return false;
     
     // Call base class implementation
@@ -416,11 +401,10 @@ bool cgTextBoxControl::onMouseButtonUp( cgInt32 nButtons, const cgPoint & Positi
         return true;
 
     // We only pay attention to the mouse up if we were previously captured
-    cgUIManager * pManager = mRootForm->getUIManager();
-    if ( pManager->getCapture() == this )
+    if ( mUIManager->getCapture() == this )
     {
         // Uncapture
-        pManager->setCapture( CG_NULL );
+        mUIManager->setCapture( CG_NULL );
 
         // Raise the event, we processed this
         raiseEvent( cgSystemMessages::UI_OnMouseButtonUp, &UI_OnMouseButtonUpArgs( nButtons, Position ) );
@@ -451,7 +435,7 @@ bool cgTextBoxControl::onMouseWheelScroll( cgInt32 nDelta, const cgPoint & Posit
         return true;
 
     // If we're over our text area, scroll it.
-    if ( ::PtInRect( (RECT*)&getTextArea( cgControlCoordinateSpace::ScreenRelative ), (POINT&)Position ) == TRUE )
+    if ( getTextArea( cgControlCoordinateSpace::ScreenRelative ).containsPoint( Position ) )
     {
         if ( mMultiline )
             mVerticalScrollBar->setValue( (cgFloat)(mVerticalScrollAmount - (nDelta * (signed)mTextMetrics.getLineHeight())) );
@@ -485,11 +469,10 @@ bool cgTextBoxControl::onMouseMove( const cgPoint & Position, const cgPointF & O
         return true;
 
     // Are we the captured item?
-    cgUIManager * pManager         = mRootForm->getUIManager();
-    cgUIControl * pCapturedControl = pManager->getCapture();
+    cgUIControl * pCapturedControl = mUIManager->getCapture();
     if ( pCapturedControl == this )
     {
-        pManager->selectCursor( _T("IBeam") );
+        mUIManager->selectCursor( _T("IBeam") );
 
         // Control is enabled ?
         if ( isEnabled() )
@@ -510,8 +493,8 @@ bool cgTextBoxControl::onMouseMove( const cgPoint & Position, const cgPointF & O
     else
     {
         // Set the cursor if applicable
-        if ( ::PtInRect( (RECT*)&getTextArea( cgControlCoordinateSpace::ScreenRelative ), (POINT&)Position ) == TRUE )
-            pManager->selectCursor( _T("IBeam") );
+        if ( getTextArea( cgControlCoordinateSpace::ScreenRelative ).containsPoint( Position ) )
+            mUIManager->selectCursor( _T("IBeam") );
     
     } // End if not the captured item
     
@@ -541,13 +524,12 @@ bool cgTextBoxControl::onKeyPressed( cgInt32 nKeyCode, cgUInt32 nModifiers )
         return false;
 
     // Get useful modifier values
-    bool          bShift, bControl;
-    cgUIManager * pManager = mRootForm->getUIManager();
+    bool bShift, bControl;
     bShift   = (nModifiers & cgModifierKeys::Shift) != 0;
     bControl = (nModifiers & cgModifierKeys::Control) != 0;
 
     // Do we currently have focus?
-    if ( pManager->getFocus() == this )
+    if ( mUIManager->getFocus() == this )
     {
         // Convert the key code to a character
         cgString strChar = cgInputDriver::getInstance()->keyCodeToCharacter( nKeyCode );
@@ -1210,8 +1192,7 @@ void cgTextBoxControl::computeTextMetrics()
     cgRect   rcText;
 
     // Retrieve the text engine from the manager, we need low level access
-    cgUIManager  * pManager = mRootForm->getUIManager();
-    cgTextEngine * pEngine  = pManager->getTextEngine();
+    cgTextEngine * pEngine = mUIManager->getTextEngine();
 
     // First build metric computation flags.
     if ( mMultiline )
@@ -1225,10 +1206,10 @@ void cgTextBoxControl::computeTextMetrics()
     rcText     = getClientArea( cgControlCoordinateSpace::ClientRelative );
     ptOffset.x = 0;
     ptOffset.y = -mVerticalScrollAmount;
-    pManager->selectFont( getFont() );
+    mUIManager->selectFont( getFont() );
     pEngine->setKerning( 0 );
     pEngine->setLineSpacing( 0 );
-    pEngine->setColor( mTextColor );
+    pEngine->setColor( mControlTextColor );
     pEngine->computeTextMetrics( rcText, nFlags, mControlText, ptOffset, mTextMetrics );
 
     // Did the text overflow the specified rectangle when multiline rendering?
@@ -1341,9 +1322,6 @@ bool cgTextBoxControl::processMessage( cgMessage * pMessage )
 {
     // Retrieve the reference target
     cgReference * pTarget = cgReferenceManager::getReference( pMessage->fromId );
-
-    // Get access to interface manager
-    cgUIManager * pManager = mRootForm->getUIManager();
 
     // Was this our vertical scroll bar message?
     if ( pTarget == mVerticalScrollBar && pMessage->messageId == cgSystemMessages::UI_ScrollBar_OnValueChange )

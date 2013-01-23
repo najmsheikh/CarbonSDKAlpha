@@ -96,9 +96,9 @@ public:
     {
         cgString            deviceName;         // Name of the device to which we will attach
         bool                windowed;           // If true, device should create in windowed mode
-        cgUInt32            width;              // Width of the frame buffer / window
-        cgUInt32            height;             // Height of the frame buffer / window
-        cgUInt32            refreshRate;        // Rate at which the screen is refreshed (if VSync is enabled)
+        cgInt32             width;              // Width of the frame buffer / window
+        cgInt32             height;             // Height of the frame buffer / window
+        cgInt32             refreshRate;        // Rate at which the screen is refreshed
         bool                useHardwareTnL;     // Enable the use of hardware transformation and lighting on the device
         bool                useVSync;           // Synchronize frame presentation to the vertical trace of the screen
         bool                useTripleBuffering; // Enable triple buffering.
@@ -150,6 +150,7 @@ public:
     virtual cgConfigResult::Base    loadConfig              ( const cgString & fileName ) = 0;
     virtual cgConfigResult::Base    loadDefaultConfig       ( bool windowed = false ) = 0;
     virtual bool                    saveConfig              ( const cgString & fileName ) = 0;
+    virtual bool                    updateDisplayMode       ( const cgDisplayMode & mode, bool windowed ) = 0;
     virtual void                    windowResized           ( cgInt32 width, cgInt32 height );
     virtual void                    releaseOwnedResources   ( );
     virtual cgSize                  getScreenSize           ( ) const = 0;
@@ -537,6 +538,9 @@ protected:
         bool          * translucent;
         bool          * alphaTest;
         bool          * emissive;
+
+		// Objects
+		int           * objectRenderClass;
     };
 
     //-------------------------------------------------------------------------
@@ -609,6 +613,7 @@ protected:
     cgUInt32                    mConstantsDirty;                        // Records the current 'dirty' state of a maximum of 32 constant buffers currently assigned to this driver.
     cgUInt32                    mPrimitivesDrawn;                       // Number of triangles rendered in the current frame.
     bool                        mStateFilteringEnabled;                 // Duplicate device states and resources should be filtered out.
+    bool                        mSuppressResizeEvent;                   // Prevent window resize events from being processed when this is true.
 
 
     // System integration

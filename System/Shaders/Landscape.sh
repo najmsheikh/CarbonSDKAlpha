@@ -1147,7 +1147,7 @@ class LandscapeTerrainShader : ISurfaceShader
         // Definitions
         /////////////////////////////////////////////
         // Define shader outputs (2 or 3 g-buffer targets depending on quality)
-        if ( shadingQuality == ShadingQuality::LowQuality )
+        if ( shadingQuality == ShadingQuality::Low )
         {
             // 2 g-buffer output
             <?out
@@ -1177,7 +1177,7 @@ class LandscapeTerrainShader : ISurfaceShader
         ?>
         
         // Low or high quality shading?
-        if ( shadingQuality == ShadingQuality::LowQuality )
+        if ( shadingQuality == ShadingQuality::Low )
         {
             // Low quality shading mode packs diffuse.rgb with a specular luminance/mask in diffuse.a
             <?

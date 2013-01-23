@@ -30,6 +30,8 @@
 //-----------------------------------------------------------------------------
 class cgButtonControl;
 class cgTextBoxControl;
+class cgListBoxControl;
+class cgUIControlLayer;
 
 //-----------------------------------------------------------------------------
 // Globally Unique Type Id(s)
@@ -53,39 +55,82 @@ class CGE_API cgComboBoxControl : public cgUIControl
 
 public:
     //-------------------------------------------------------------------------
+    // Public Structures, Typedefs and Enumerations
+    //-------------------------------------------------------------------------
+    // UI_ComboBox_OnSelectedIndexChangeArgs Message Data
+    struct UI_ComboBox_OnSelectedIndexChangeArgs : public UIEventArgs
+    {
+        cgInt32 oldIndex;
+        cgInt32 newIndex;
+        
+        // Constructor
+        UI_ComboBox_OnSelectedIndexChangeArgs( cgInt32 _oldIndex, cgInt32 _newIndex ) : 
+            oldIndex(_oldIndex), newIndex(_newIndex) {}
+
+        // Conversion to script argument list
+        virtual void toArgumentList( cgScriptArgument::Array & arguments ) const
+        {
+            arguments.push_back( cgScriptArgument( cgScriptArgumentType::DWord, _T("int"), (void*)&oldIndex ) );
+            arguments.push_back( cgScriptArgument( cgScriptArgumentType::DWord, _T("int"), (void*)&newIndex ) );
+        }
+    };
+
+    //-------------------------------------------------------------------------
     // Constructors & Destructors
     //-------------------------------------------------------------------------
              cgComboBoxControl( );
     virtual ~cgComboBoxControl( );
 
     //-------------------------------------------------------------------------
+    // Public Methods
+    //-------------------------------------------------------------------------
+    cgInt32                 addItem                 ( const cgString & value );
+    void                    setSelectedIndex        ( cgInt32 index );
+    cgInt32                 getSelectedIndex        ( ) const;
+    void                    showDropDown            ( bool show );
+    bool                    isDropDownVisible       ( ) const;
+
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods
+    //-------------------------------------------------------------------------
+    virtual void            onSelectedIndexChange   ( cgInt32 oldIndex, cgInt32 newIndex );
+
+    //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgUIControl)
     //-------------------------------------------------------------------------
-    virtual void            setControlText      ( const cgString & text );
-    virtual void            onInitControl       ( );
-    virtual void            onSize              ( cgInt32 width, cgInt32 height );
+    virtual void            onInitControl           ( );
+    virtual void            onSize                  ( cgInt32 width, cgInt32 height );
+    virtual void            onParentAttach          ( cgUIControl * parent );
+    virtual void            setFont                 ( const cgString & fontName );
+    virtual void            setTextColor            ( const cgColorValue & color );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
     //-------------------------------------------------------------------------
-    virtual const cgUID   & getReferenceType    ( ) const { return RTID_UIComboBoxControl; }
-    virtual bool            queryReferenceType  ( const cgUID & type ) const;
+    virtual const cgUID   & getReferenceType        ( ) const { return RTID_UIComboBoxControl; }
+    virtual bool            queryReferenceType      ( const cgUID & type ) const;
+    virtual bool            processMessage          ( cgMessage * pMessage );
 
     //-------------------------------------------------------------------------
-    // Public Methods
+    // Public Virtual Methods (Overrides DisposableScriptObject)
     //-------------------------------------------------------------------------
+    virtual void            dispose                 ( bool disposeBase );
 
 protected:
     //-------------------------------------------------------------------------
     // Protected Methods
     //-------------------------------------------------------------------------
-
     
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    cgButtonControl   * mDropButton;    // The button which opens the combo box dropdown list
-    cgTextBoxControl  * mTextBox;       // The text box for the (potentially editable) "text" portion of the combo
+    cgButtonControl   * mDropButton;        // The button which opens the combo box dropdown list
+    cgTextBoxControl  * mTextBox;           // The text box for the (potentially editable) "text" portion of the combo
+    cgListBoxControl  * mDropDownList;      // The list box to display.
+    cgUIControlLayer  * mDropDownLayer;     // Control layer on which the drop down list is displayed.
+    bool                mDropDownVisible;   // Is the drop down list currently visible?
+    cgInt32             mSelectedIndex;     // The index of the currently selected item.
+    cgStringArray       mItems;             // List of items represented by this list box.
 };
 
 #endif // !_CGE_CGCOMBOBOXCONTROL_H_

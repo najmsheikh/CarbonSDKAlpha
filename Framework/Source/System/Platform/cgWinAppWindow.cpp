@@ -40,6 +40,7 @@ cgWinAppWindow::cgWinAppWindow()
     // Clear variables
     mWnd        = CG_NULL;
     mOwnsWindow = false;
+    mFullScreen = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -53,6 +54,7 @@ cgWinAppWindow::cgWinAppWindow( void * pNativeWindow ) : cgAppWindow( )
     // Clear variables
     mWnd        = (HWND)pNativeWindow;
     mOwnsWindow = false;
+    mFullScreen = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -102,6 +104,7 @@ bool cgWinAppWindow::create( bool bFullscreen, cgUInt32 Width, cgUInt32 Height, 
 
     // Store details
     mClassName = strTitle;
+    mFullScreen = bFullscreen;
 
     // Register the new window's window class.
     mWndClass.style            = CS_BYTEALIGNCLIENT | CS_HREDRAW | CS_VREDRAW;
@@ -145,6 +148,79 @@ bool cgWinAppWindow::create( bool bFullscreen, cgUInt32 Width, cgUInt32 Height, 
     mOwnsWindow = true;
     return (mWnd != CG_NULL);
     
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setSize ()
+/// <summary>
+/// Alter the size of the window such that its outer dimensions (including 
+/// non-client regions such as caption and border) match those supplied.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgWinAppWindow::setSize( const cgSize & size )
+{
+    SetWindowPos( mWnd, NULL, 0, 0, size.width, size.height, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOZORDER );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setClientSize ()
+/// <summary>
+/// Alter the size of the window such that its inner client area dimensions 
+/// (excluding non-client regions such as caption and border) match those 
+/// supplied.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgWinAppWindow::setClientSize( const cgSize & size )
+{
+    cgSize outerSize = size;
+
+    // Adjust the size to include the border / caption, etc. if this
+    // window is not in fullscreen mode.
+    if ( !mFullScreen )
+    {
+        outerSize.width  += GetSystemMetrics( SM_CXSIZEFRAME ) * 2;
+        outerSize.height += (GetSystemMetrics( SM_CYSIZEFRAME ) * 2) + GetSystemMetrics( SM_CYCAPTION );
+    
+    } // End if popup window
+    SetWindowPos( mWnd, NULL, 0, 0, outerSize.width, outerSize.height, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOZORDER );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setFullScreenMode ()
+/// <summary>
+/// Alter the styling of the window to match the requested full screen mode.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgWinAppWindow::setFullScreenMode( bool fullScreen )
+{
+    // Is this a no-op?
+    if ( mFullScreen == fullScreen )
+        return;
+
+    // Switching to windowed or full screen?
+    if ( fullScreen )
+    {
+        // Switch to borderless style and set always on top.
+        cgUInt32 Style = WS_VISIBLE | WS_POPUP;
+        cgUInt32 StyleEx = GetWindowLong( mWnd, GWL_EXSTYLE ) | WS_EX_TOPMOST;
+        SetWindowLong( mWnd, GWL_STYLE, Style );
+        SetWindowLong( mWnd, GWL_EXSTYLE, StyleEx );
+        SetWindowPos( mWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_SHOWWINDOW );
+
+    } // End if full screen
+    else
+    {
+        // Re-add borders and remove top most style
+        cgUInt32 Style = WS_OVERLAPPEDWINDOW;
+        cgUInt32 StyleEx = GetWindowLong( mWnd, GWL_EXSTYLE ) & ~WS_EX_TOPMOST;
+        SetWindowLong( mWnd, GWL_STYLE, Style );
+        SetWindowLong( mWnd, GWL_EXSTYLE, StyleEx );
+        SetWindowPos( mWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW );
+
+    } // End if windowed
+
+    // Store current state
+    mFullScreen = fullScreen;
 }
 
 //-----------------------------------------------------------------------------

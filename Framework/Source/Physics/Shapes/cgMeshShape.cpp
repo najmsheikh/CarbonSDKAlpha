@@ -32,6 +32,7 @@
 #include <Rendering/cgVertexFormats.h>
 #include <Resources/cgMesh.h>
 #include <Math/cgBoundingBox.h>
+#include <Math/cgCollision.h>
 
 // Newton Game Dynamics
 #include <Newton.h>
@@ -388,7 +389,7 @@ void cgMeshShape::buildBVHTree( cgInt nDepth, BVHNode * pNode, const cgUInt32Arr
 /// intersect the specified bounding box.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgMeshShape::collectIntersectedFaces( BVHNode * pNode, const cgBoundingBox & Bounds, FaceIntersectionSet & aFaces, cgByte * pVertices, cgUInt32 * pIndices, cgUInt32 nVertexStride )
+void cgMeshShape::collectIntersectedFaces( BVHNode * pNode, const cgBoundingBox & Bounds, FaceIntersectionSet & aFaces, const cgByte * pVertices, const cgUInt32 * pIndices, cgUInt32 nVertexStride )
 {
     // Is leaf?
     if ( pNode->leaf )
@@ -422,6 +423,73 @@ void cgMeshShape::collectIntersectedFaces( BVHNode * pNode, const cgBoundingBox 
 }
 
 //-----------------------------------------------------------------------------
+//  Name : collectCollisionData () (Protected, Recursive)
+/// <summary>
+/// Recursively search the bounding volume hierarchy for intersecting geometry
+/// for use during collision testing.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgMeshShape::collectCollisionData( BVHNode * node, const cgBoundingBox & bounds, const cgByte * vertices, const cgUInt32 * indices, cgUInt32 vertexStride, cgUInt32 * faceMap, VertexArray & verticesOut, AttributeArray & attributesOut, cgUInt32 & vertexCountOut, cgUInt32 & faceCountOut )
+{
+    bool result = false;
+
+    // Is leaf?
+    if ( node->leaf )
+    {
+        const cgFloat scale = mWorld->toPhysicsScale();
+
+        // Check faces.
+        const cgUInt32Array & leafFaces = node->leaf->faces;
+        for ( size_t i = 0; i < leafFaces.size(); ++i )
+        {
+            // Retrieve triangle vertices.
+            cgUInt32 faceIndex = leafFaces[i];
+            if ( faceMap[faceIndex] != 0xFFFFFFFF )
+                continue;
+
+            const cgVector3 & v0 = *(cgVector3*)(vertices + indices[faceIndex*3] * vertexStride);
+            const cgVector3 & v1 = *(cgVector3*)(vertices + indices[(faceIndex*3)+1] * vertexStride);
+            const cgVector3 & v2 = *(cgVector3*)(vertices + indices[(faceIndex*3)+2] * vertexStride);
+
+            // Intersects?
+            if ( bounds.intersect( v0, v1, v2, mFaces[faceIndex].bounds ) )
+            {
+                // Add to output buffer.
+                mOffset.transformCoord( verticesOut[ vertexCountOut++ ], v0 * scale );
+                mOffset.transformCoord( verticesOut[ vertexCountOut++ ], v1 * scale );
+                mOffset.transformCoord( verticesOut[ vertexCountOut++ ], v2 * scale );
+                
+                // Record its final location.
+                faceMap[faceIndex] = faceCountOut;
+
+                // Populate user attribute with source face index
+                attributesOut[ faceCountOut++ ] = faceIndex;
+                result = true;
+
+            } // End if intersects
+
+        } // Next face from leaf
+        return result;
+
+    } // End if is leaf
+
+    // Check child nodes
+    for ( cgInt i = 0; i < 8; ++i )
+    {
+        if ( node->children[i] )
+        {
+            if ( node->children[i]->bounds.intersect( bounds ) )
+                result |= collectCollisionData( node->children[i], bounds, vertices, indices, vertexStride, faceMap, verticesOut, attributesOut, vertexCountOut, faceCountOut );
+
+        } // End if has child
+
+    } // Next child
+
+    // Return result!
+    return result;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : onCollide() (Protected, Callback)
 /// <summary>
 /// Called whenever a mesh collision is checked by the physics engine when the 
@@ -432,104 +500,163 @@ void cgMeshShape::collectIntersectedFaces( BVHNode * pNode, const cgBoundingBox 
 void cgMeshShape::onCollide( NewtonUserMeshCollisionCollideDesc * const collideDescData )
 {
     // Retrieve the Carbon side shape to which this callback applies.
-    cgMeshShape * pThis = (cgMeshShape*)collideDescData->m_userData;
+    cgMeshShape * thisPointer = (cgMeshShape*)collideDescData->m_userData;
 
     // Retrieve the mesh referenced by this shape.
-    cgMesh * pMesh = pThis->mMesh.getResource(true);
-    if ( !pMesh || !pMesh->isLoaded() )
+    cgMesh * mesh = thisPointer->mMesh.getResource(true);
+    if ( !mesh || !mesh->isLoaded() )
         return;
-
-    // Get necessary internal mesh data.
-    cgVertexFormat * pFormat = pMesh->getVertexFormat();
-    cgUInt32   nStride   = (cgUInt32)pFormat->getStride();
-    cgUInt32 * pIndices  = pMesh->getSystemIB();
-    cgByte   * pVertices = pMesh->getSystemVB() + pFormat->getElementOffset( D3DDECLUSAGE_POSITION );
 
     // Transform the bounding box into the space of the mesh.
-    cgTransform InverseOffset;
-    cgBoundingBox Bounds( collideDescData->m_boxP0, collideDescData->m_boxP1 );
-    Bounds.transform( pThis->mOffset.inverse( InverseOffset ) );
-    Bounds *= pThis->mWorld->fromPhysicsScale();
+    cgTransform inverseOffset;
+    cgBoundingBox bounds( collideDescData->m_boxP0, collideDescData->m_boxP1 );
+    bounds.transform( thisPointer->mOffset.inverse( inverseOffset ) );
+    bounds *= thisPointer->mWorld->fromPhysicsScale();
 
-    // Collect the list of intersected faces.
-    //cgUInt32Array aFaces;
-    FaceIntersectionSet aFaces;
-    pThis->collectIntersectedFaces( pThis->mRootNode, Bounds, aFaces, pVertices, pIndices, nStride );
+    // Anything to do? (Intersects our own local bounding box?)
+    if ( !thisPointer->mMeshBounds.intersect( bounds ) )
+        return; // Nothing hit
 
-    // Anything intersected?
-    if ( aFaces.empty() )
-        return;
+    // Has triangle data?
+    const size_t maxFaceCount  = mesh->getFaceCount();
+    if ( maxFaceCount == 0 )
+        return; // Nothing hit
+
+    // Get necessary internal mesh data.
+    cgVertexFormat * format = mesh->getVertexFormat();
+    const cgUInt32   stride    = (cgUInt32)format->getStride();
+    const cgUInt32 * indices   = mesh->getSystemIB();
+    const cgByte   * vertices  = mesh->getSystemVB() + format->getElementOffset( D3DDECLUSAGE_POSITION );
 
     // Size the output arrays appropriately if they do not contain enough elements.
-    // First, the vertex array.
-    static std::vector<cgVector3> aVertices;
-    size_t nVertexCount = aFaces.size() * 3;
-    size_t nBufferSize = max( nVertexCount, 1 );
-    if ( nBufferSize > aVertices.size() )
-        aVertices.resize( nBufferSize );
-
-    // Then the index array. This is never explicitly populated and will
-    // always contain a simple incrementing sequence of numbers designed
-    // to directly and linearly map to the above vertex array.
-    static std::vector<cgInt> aIndices;
-    size_t nIndexCount = aFaces.size() * 3;
-    nBufferSize = max( nIndexCount, 1 );
-    if ( nBufferSize > aIndices.size() )
+    // First the index array. This is never explicitly populated and will always 
+    // contain a simple incrementing sequence of numbers designed to directly and 
+    // linearly map to the vertex array as discreet triangles.
+    static std::vector<cgInt> indicesOut;
+    const size_t maxIndexCount = maxFaceCount * 3;
+    size_t bufferSize = max( maxIndexCount, 1 );
+    if ( bufferSize > indicesOut.size() )
     {
-        size_t nOldSize = aIndices.size();
-        aIndices.resize( nBufferSize );
-        for ( size_t i = nOldSize; i < nBufferSize; ++i )
-            aIndices[i] = i;
+        const size_t oldSize = indicesOut.size();
+        indicesOut.resize( bufferSize );
+        for ( size_t i = oldSize; i < bufferSize; ++i )
+            indicesOut[i] = i;
     
     } // End if inflate
 
+    // Next, make sure the vertex array is large enough.
+    static std::vector<cgVector3> verticesOut;
+    const size_t maxVertexCount = maxFaceCount * 3;
+    bufferSize = max( maxVertexCount, 1 );
+    if ( bufferSize > verticesOut.size() )
+        verticesOut.resize( bufferSize );
+
     // Next the user attributes buffer which will contain the triangle
     // identifiers useful in collision callbacks.
-    static std::vector<cgInt> aUserAttributes;
-    nBufferSize = max( aFaces.size(), 1 );
-    if ( nBufferSize > aUserAttributes.size() )
-        aUserAttributes.resize( nBufferSize, 0 );
+    static std::vector<cgInt> attributesOut;
+    static std::vector<cgUInt32> faceMap;
+    bufferSize = max( maxFaceCount, 1 );
+    if ( bufferSize > attributesOut.size() )
+    {
+        attributesOut.resize( bufferSize, 0 );
+        faceMap.resize( bufferSize, 0 );
+    
+    } // End if larger
+    memset( &faceMap[0], 0xFF, maxFaceCount * sizeof(cgUInt32) );
 
     // Finally, the face index count buffer. This is never explicitly populated
     // and will always contain a default value of '3' in every element.
-    static std::vector<cgInt> aFaceIndexCount;
-    nBufferSize = max( aFaces.size(), 1 );
-    if ( nBufferSize > aFaceIndexCount.size() )
-        aFaceIndexCount.resize( nBufferSize, 3 );
+    static std::vector<cgInt> faceIndexCountOut;
+    bufferSize = max( maxFaceCount, 1 );
+    if ( bufferSize > faceIndexCountOut.size() )
+        faceIndexCountOut.resize( bufferSize, 3 );
 
-    // Now populate the two buffers we need to generate starting with the vertex data.
-    // These need to be transformed by the mesh shape offset and subsequently
-    // scaled into meters.
-    cgUInt32 i = 0;
-    cgFloat fScale = pThis->mWorld->toPhysicsScale();
-    for ( FaceIntersectionSet::iterator itFace = aFaces.begin(); itFace != aFaces.end(); ++itFace, ++i )
-    //for ( cgUInt32 i = 0; i < aFaces.size(); ++i )
+    // Now populate the two buffers we need to generate. We do this recursively
+    // by traversing through the bounding volume hierarchy and adding any faces
+    // that intersect the computed bounds.
+    cgUInt32 faceCountOut = 0, vertexCountOut = 0;
+    if ( thisPointer->collectCollisionData( thisPointer->mRootNode, bounds, vertices, indices, stride, &faceMap[0],
+                                            verticesOut, attributesOut, vertexCountOut, faceCountOut ) )
     {
-        // Generate final vertices
-        //cgUInt32 nFaceIndex = aFaces[i];
-        cgUInt32 nFaceIndex = *itFace;
-        cgVector3 & v0 = aVertices[i*3];
-        cgVector3 & v1 = aVertices[i*3+1];
-        cgVector3 & v2 = aVertices[i*3+2];
-        v0 = *(cgVector3*)(pVertices + pIndices[nFaceIndex*3] * nStride) * fScale;
-        v1 = *(cgVector3*)(pVertices + pIndices[(nFaceIndex*3)+1] * nStride) * fScale;
-        v2 = *(cgVector3*)(pVertices + pIndices[(nFaceIndex*3)+2] * nStride) * fScale;
-        pThis->mOffset.transformCoord( v0, v0 );
-        pThis->mOffset.transformCoord( v1, v1 );
-        pThis->mOffset.transformCoord( v2, v2 );
+        // Faces were discovered. Populate the collision description.
+        collideDescData->m_vertexStrideInBytes  = sizeof(cgVector3);
+        collideDescData->m_faceCount            = faceCountOut;
+        collideDescData->m_vertex               = (cgFloat*)&verticesOut[0];
+        collideDescData->m_userAttribute        = &attributesOut[0];
+        collideDescData->m_faceIndexCount       = &faceIndexCountOut[0];
+        collideDescData->m_faceVertexIndex      = &indicesOut[0];
 
-        // Populate user attribute with source face index
-        aUserAttributes[i] = nFaceIndex;
-    
-    } // Next vertex
-    
-    // Populate the collision description
-    collideDescData->m_vertexStrideInBytes  = sizeof(cgVector3);
-    collideDescData->m_faceCount            = aFaces.size();
-    collideDescData->m_vertex               = (cgFloat*)&aVertices[0];
-    collideDescData->m_userAttribute        = &aUserAttributes[0];
-    collideDescData->m_faceIndexCount       = &aFaceIndexCount[0];
-    collideDescData->m_faceVertexIndex      = &aIndices[0];
+    } // End if found faces
+}
+
+//-----------------------------------------------------------------------------
+//  Name : rayTest () (Protected, Recursive)
+/// <summary>
+/// Recursively search the bounding volume hierarchy for the closest triangle
+/// that intersects the specified ray.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgMeshShape::rayTest( BVHNode * node, const cgVector3 & from, const cgVector3 & to, const cgByte * vertices, const cgUInt32 * indices, cgUInt32 vertexStride, cgFloat & closestDistance, cgUInt32 & closestFace, cgVector3 & closestNormal )
+{
+    bool result = false;
+
+    // Is leaf?
+    if ( node->leaf )
+    {
+        cgVector3 normal;
+
+        // Check faces.
+        const cgUInt32Array & leafFaces = node->leaf->faces;
+        for ( size_t i = 0; i < leafFaces.size(); ++i )
+        {
+            // Retrieve triangle vertices.
+            cgUInt32 faceIndex = leafFaces[i];
+            const cgVector3 & v0 = *(cgVector3*)(vertices + indices[faceIndex*3] * vertexStride);
+            const cgVector3 & v1 = *(cgVector3*)(vertices + indices[(faceIndex*3)+1] * vertexStride);
+            const cgVector3 & v2 = *(cgVector3*)(vertices + indices[(faceIndex*3)+2] * vertexStride);
+
+            // Generate the triangle normal
+            cgVector3::cross( normal, v1 - v0, v2 - v0 );
+            cgVector3::normalize( normal, normal );
+
+            // Ray test!
+            cgFloat t;
+            if ( cgCollision::rayIntersectTriangle( from, to-from, v0, v1, v2, normal, t, CGE_EPSILON, false, true ) )
+            {
+                // Closest so far?
+                if ( t < closestDistance )
+                {
+                    closestDistance = t;
+                    closestFace = faceIndex;
+                    closestNormal = normal;
+                    result = true;
+                
+                } // End if closest
+
+            } // End if intersected
+
+        } // Next face from leaf
+        return result;
+
+    } // End if is leaf
+
+    // Check child nodes
+    // ToDo: We can optimize this further by searching the children
+    // in front to back order and returning immediately if one is found.
+    for ( cgInt i = 0; i < 8; ++i )
+    {
+        if ( node->children[i] )
+        {
+            cgFloat t;
+            if ( node->children[i]->bounds.intersect( from, (to-from), t, true ) )
+                result |= rayTest( node->children[i], from, to, vertices, indices, vertexStride, closestDistance, closestFace, closestNormal );
+
+        } // End if has child
+
+    } // Next child
+
+    // Return result!
+    return result;
 }
 
 //-----------------------------------------------------------------------------
@@ -540,10 +667,54 @@ void cgMeshShape::onCollide( NewtonUserMeshCollisionCollideDesc * const collideD
 //-----------------------------------------------------------------------------
 cgFloat cgMeshShape::onRayHit( NewtonUserMeshCollisionRayHitDesc * const lineDescData )
 {
-    //cgToDoAssert( "Physics", "Unhandled callback detected (onRayHit())." );
-    cgToDo( "Physics", "Unhandled callback detected (onRayHit())." );
+    // Retrieve the Carbon side shape to which this callback applies.
+    cgMeshShape * thisPointer = (cgMeshShape*)lineDescData->m_userData;
 
-    // Nothing was hit
+    // Retrieve the mesh referenced by this shape.
+    cgMesh * mesh = thisPointer->mMesh.getResource(true);
+    if ( !mesh || !mesh->isLoaded() )
+        return 1.0f;
+
+    // Transform the ray into the space of the mesh.
+    cgVector3 from, to;
+    cgTransform inverseOffset;
+    cgFloat scale = thisPointer->mWorld->toPhysicsScale();
+    thisPointer->mOffset.inverse( inverseOffset );
+    inverseOffset.transformCoord( from, lineDescData->m_p0 );
+    inverseOffset.transformCoord( to, lineDescData->m_p1 );
+    from *= scale;
+    to *= scale;
+
+    // Ray intersects our own local bounding box?
+    cgFloat t;
+    if ( !thisPointer->mMeshBounds.intersect( from, (to-from), t, true ) )
+        return 1.0f; // Nothing hit
+
+    // Get necessary internal mesh data.
+    cgVertexFormat * format = mesh->getVertexFormat();
+    const cgUInt32   stride   = (cgUInt32)format->getStride();
+    const cgUInt32 * indices  = mesh->getSystemIB();
+    const cgByte   * vertices = mesh->getSystemVB() + format->getElementOffset( D3DDECLUSAGE_POSITION );
+
+    // Pass the ray through the tree!
+    t = FLT_MAX;
+    cgVector3 closestNormal;
+    cgUInt32 closestFace = cgUInt32(-1);
+    thisPointer->rayTest( thisPointer->mRootNode, from, to, vertices, indices, stride, t, closestFace, closestNormal );
+
+    // Anything found?
+    if ( closestFace != cgUInt32(-1) )
+    {
+        // Transform normal back into the space of the collision.
+        thisPointer->mOffset.transformNormal( closestNormal, closestNormal );
+        cgVector3::normalize( closestNormal, closestNormal );
+        memcpy( lineDescData->m_normalOut, closestNormal, sizeof(cgVector3) );
+        lineDescData->m_userIdOut = closestFace;
+        return t;
+
+    } // End if found
+
+    // Nothing was found
     return 1.0f;
 }
 

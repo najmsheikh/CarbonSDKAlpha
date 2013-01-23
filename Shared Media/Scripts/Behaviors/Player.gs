@@ -254,10 +254,10 @@ shared class Player : IScriptedObjectBehavior
 		// We'll also add a single frame average to help out in the low frame-rate
 		// cases (i.e. 30fps or below) where the above smoothing can't be applied.
 		Vector2 rotation = mTotalOffset * consumeRate;
-		Vector2 finalRotation = (mPrevRotation + rotation) * 0.5f;
-        mPrevRotation = rotation;
-		//Vector2 finalRotation = mTotalOffset;
-		//consumeRate = 1;		
+		//Vector2 finalRotation = (mPrevRotation + rotation) * 0.5f;
+        //mPrevRotation = rotation;
+		Vector2 finalRotation = mTotalOffset;
+		consumeRate = 1;		
 
 		// Rotate parent left/right and its child camera up/down.
 		if ( finalRotation.x != 0.0f )
@@ -287,9 +287,9 @@ shared class Player : IScriptedObjectBehavior
 		    strafeState += 1.0f;
         if ( input.isKeyPressed( Keys::Space ) )
             jumpState = 1.0f;
-	    if ( input.isKeyPressed( Keys::R ) || input.isMouseButtonPressed( MouseButtons::Right )  )
+	    if ( input.isKeyPressed( Keys::R ) || input.isKeyPressed( Keys::Space )  )
 		    climbState = 1.0f;
-	    if ( input.isKeyPressed( Keys::F ) )
+	    if ( input.isKeyPressed( Keys::F ) || input.isKeyPressed( Keys::LControl ) )
             climbState = -1.0f;
 
         // Set the input channel states (the character controller listens in on these).

@@ -365,6 +365,11 @@
 					<Color>0,0.2,0.75,0.2</Color> 
 				</Selection>
 			</TextBox>
+			<ListBox>
+				<Selection>
+					<Color>0,0.2,0.75,0.2</Color> 
+				</Selection>
+			</ListBox>
 		</Configuration>
 		<Elements>
 			<Element name="Button.BorderTopLeft" x="24" y="128" width="3" height="3" />
@@ -425,6 +430,14 @@
 			<Element name="ScrollBarFrame.Vertical.Background" x="417" y="60" width="16" height="17" />
 			<Element name="ScrollBarFrame.Horizontal.BorderTopFiller" x="403" y="60" width="13" height="1" />
 			<Element name="ScrollBarFrame.Horizontal.Background" x="403" y="61" width="13" height="16" />
+			<Element name="CheckBoxUnchecked" x="104" y="128" width="13" height="13" />
+			<Element name="CheckBoxUnchecked.Hover" x="117" y="128" width="13" height="13" />
+			<Element name="CheckBoxUnchecked.Pressed" x="130" y="128" width="13" height="13" />
+			<Element name="CheckBoxUnchecked.Disabled" x="143" y="128" width="13" height="13" />
+			<Element name="CheckBoxChecked" x="156" y="128" width="13" height="13" />
+			<Element name="CheckBoxChecked.Hover" x="169" y="128" width="13" height="13" />
+			<Element name="CheckBoxChecked.Pressed" x="182" y="128" width="13" height="13" />
+			<Element name="CheckBoxChecked.Disabled" x="195" y="128" width="13" height="13" />
         </Elements>
     </Controls>
 </SkinDefinition>

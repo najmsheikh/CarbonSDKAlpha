@@ -70,6 +70,7 @@ class ImageProcessingShader : ISurfaceShader
         float  brightness       = 0.0;
         float  exposure         = 1.0;
         float  exposureAmount   = 0.0;
+        float  contrast         = 1.0;
         float  saturation       = 1.0;
         float  grainAmount      = 0.0;
         float3 vignette         = { 1.0, 0.0, 1.0 };
@@ -628,7 +629,7 @@ class ImageProcessingShader : ISurfaceShader
 		
 		// If a binary output alpha is desired, set it		
 		if ( binaryAlphaOutput )
-			<?color.a = totalWeight > 0.0f;?>
+			<?color.a = color.a > 0.0 ? 1.0f : 0.0f;?>
 	}
 
 
@@ -2169,6 +2170,15 @@ class ImageProcessingShader : ISurfaceShader
 			case ImageOperation::Saturation:
 				<?$outputVariable.rgb = lerp( dot( $inputVariable.rgb, float3( 0.2125, 0.7154, 0.0721 ) ), $inputVariable.rgb, saturation );?>
 			    break;			
+			case ImageOperation::Contrast:
+				<?
+				{ // Begin ImageOperation::Contrast
+				float __luminance     = dot( $inputVariable.rgb, float3( 0.2125, 0.7154, 0.0721 ) ) + 1e-7f; 
+				float __luminanceAdj  = saturate( (__luminance - 0.5) * contrast + 0.5 );
+				$outputVariable.rgb = $inputVariable.rgb * (__luminanceAdj / __luminance);
+				} // End ImageOperation::Contrast
+				?>
+			    break;			
 			case ImageOperation::LevelsIn:
 				<?$outputVariable.rgb = $inputVariable.rgb * inRange + minAdjust;?>
 			    break;			
@@ -3013,6 +3023,153 @@ class ImageProcessingShader : ISurfaceShader
 		return true;
 	}
 
+	/*
+	//-----------------------------------------------------------------------------
+	// Name: depthToNormal()
+	// Desc: Converts depths to surface normals via derivative instructions.
+	//-----------------------------------------------------------------------------
+	bool depthToNormal( int depthType, bool packDepthNormal, bool orthographicCamera )
+	{
+		/////////////////////////////////////////////
+		// Definitions
+		/////////////////////////////////////////////
+		// Define shader inputs.
+        <?in
+			float4  screenPosition : SV_POSITION;
+            float2  texCoords      : TEXCOORD0;
+        ?>
+
+		// Define shader outputs.
+		<?out
+			float4  color       : SV_TARGET0;
+		?>
+
+		// Constant buffer usage.
+		<?cbufferrefs
+			cbImageProcessing;
+			_cbCamera;
+		?>
+
+		/////////////////////////////////////////////
+		// Shader Code
+		/////////////////////////////////////////////
+		<?float eyeZ;?>
+				
+		// Retrieve camera space Z coordinate
+		sampleDepthBuffer( "eyeZ", "sDepthSrcTex", "sDepthSrc", "texCoords", false, depthType );
+		
+		<?
+		// Generate camera space position
+		float3 position = getViewPosition( texCoords, eyeZ, $orthographicCamera );
+
+		// Generate surface normal
+		float3 normal = normalize( cross( ddy(position), ddx(position) ) );
+		?>
+		
+		// If we are packing depth and normal into a single texture
+		if ( packDepthNormal )
+		{
+			<?
+			eyeZ     *= _cameraRecipMaxDistance;
+			color.rg  = compressF16( eyeZ );
+			color.ba  = encodeNormalLambert( normal );
+			?>
+		}
+		else
+		{
+			<?
+			color.rgb = normal * 0.5 + 0.5;
+			color.a   = 0;
+			?>
+		}
+		
+		// Valid shader
+		return true;
+	}
+
+	//-----------------------------------------------------------------------------
+	// Name: repairNormalBuffer()
+	// Desc: Runs a repair pass on normals at depth discontinuities (derivative instructions generally fail there).
+	//-----------------------------------------------------------------------------
+	bool repairNormalBuffer( bool packedDepthNormalIn, bool packedDepthNormalOut )
+	{
+		/////////////////////////////////////////////
+		// Definitions
+		/////////////////////////////////////////////
+		// Define shader inputs.
+        <?in
+			float4  screenPosition : SV_POSITION;
+            float2  texCoords      : TEXCOORD0;
+        ?>
+
+		// Define shader outputs.
+		<?out
+			float4  color       : SV_TARGET0;
+		?>
+
+		// Constant buffer usage.
+		<?cbufferrefs
+			cbImageProcessing;
+			_cbCamera;
+		?>
+
+		/////////////////////////////////////////////
+		// Shader Code
+		/////////////////////////////////////////////
+		<?
+		float   eyeZ, depthRef;
+		float3  normal;
+		float4  texData, depths;
+		float2  uv, depthData, sampleCoords[5];
+		float4  depthThreshold = depthExtents.yyyy;
+		
+		float4  sampleData[5];
+		
+		sampleCoords[0] = texCoords;
+		sampleCoords[1] = texCoords + float2( -1.0,  0.0 ) * textureSize.zw;
+		sampleCoords[2] = texCoords + float2(  1.0,  0.0 ) * textureSize.zw;
+		sampleCoords[3] = texCoords + float2(  0.0, -1.0 ) * textureSize.zw;
+		sampleCoords[4] = texCoords + float2(  0.0,  1.0 ) * textureSize.zw;
+		?>
+				
+		// Sample data
+		for ( int i = 0; i < 5; i++ )
+		{
+			<?
+			uv      = sampleCoords[$i];
+			texData = sample2D( sNormalSrcTex, sNormalSrc, uv );
+			?>
+			if ( packedDepthNormalsIn )
+			{
+				<?sampleData[$i] = float4( decodeNormalLambert( texData.ba ), decompressF16( texData.rg ) );?>
+			}
+			else
+			{
+				sampleDepthBuffer( "eyeZ", "sDepthSrcTex", "sDepthSrc", "uv", false, depthType );
+				<?
+				sampleData[$i].xyz = texData.rgb * 2.0f - 1.0f;
+				sampleData[$i].a   = eyeZ;
+				?>
+			}
+
+		} // Next sample
+				
+		// Is this an edge? (Note: If this is an edge, we will attempt to repair the broken surface normal.)
+		<?
+		float4 neighborDepths  = float4( sampleData[1].a, sampleData[2].a, sampleData[3].a, sampleData[4].a );
+		float4 depthDiff       = abs( sampleData[0].a - neighborDepths );
+		float4 isDiscontinuity = depthDiff > depthThreshold;
+		
+		float  isEdgePixel     = dot( isDiscontinuity, float4( 1, 1, 1, 1 ) ) > 0 ? 1 : 0;
+		
+		
+		color.a = dot( isDiscontinuity, float4( 1, 1, 1, 1 ) ) > 0 ? 1 : 0;
+		?>
+		
+		// Valid shader
+		return true;
+	}
+	*/
 
    
 } // End Class : ImageProcessing

@@ -36,6 +36,7 @@ namespace UILayer
         BINDSUCCESS( engine->registerObjectMethod( typeName, "bool onKeyDown( int, uint )", asMETHODPR(type, onKeyDown, ( cgInt32, cgUInt32 ), bool ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "bool onKeyUp( int, uint )", asMETHODPR(type, onKeyUp, ( cgInt32, cgUInt32 ), bool ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "bool onKeyPressed( int, uint )", asMETHODPR(type, onKeyPressed, ( cgInt32, cgUInt32 ), bool ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool onScreenLayoutChange( )", asMETHODPR(type, onScreenLayoutChange, ( ), bool ), asCALL_THISCALL) );
         
     } // End Method registerLayerMethods<>
 

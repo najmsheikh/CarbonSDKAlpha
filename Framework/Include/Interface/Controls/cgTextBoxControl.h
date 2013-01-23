@@ -71,6 +71,7 @@ public:
     virtual bool            onMouseWheelScroll  ( cgInt32 delta, const cgPoint & position );
     virtual bool            onKeyPressed        ( cgInt32 keyCode, cgUInt32 modifiers );
     virtual void            setFont             ( const cgString & fontName );
+    virtual void            setTextColor        ( const cgColorValue & color );
     virtual void            setVisible          ( bool visible );
     virtual void            setParentVisible    ( bool visible );
 
@@ -88,8 +89,6 @@ public:
     cgString                getSelectedText         ( ) const;
     void                    setMultiline            ( bool multiline );
     bool                    getMultiline            ( ) const { return mMultiline; }
-    void                    setTextColor            ( const cgColorValue & color );
-    const cgColorValue    & getTextColor            ( ) const;
     void                    setReadOnly             ( bool readOnly );
     bool                    getReadOnly             ( ) const;
     void                    setAllowFormatCode      ( bool allow );
@@ -129,7 +128,6 @@ protected:
     cgScrollBarControl        * mVerticalScrollBar;     // The vertical scroll bar for multi-line text boxes
     cgInt32                     mVerticalScrollAmount;  // The amount to scroll the text vertically.
     bool                        mMultiline;             // Is this a multi-line text box control (if true, will word wrap etc.)
-    cgColorValue                mTextColor;             // Set the default color of any text rendered for this control.
     bool                        mReadOnly;              // Is this a read-only text box (if true, will prevent user input).
     bool                        mAllowFormatCode;       // Are formatting code tags allowed?
     bool                        mMetricsDirty;          // When true, indicates that the text was modified while the control was hidden.

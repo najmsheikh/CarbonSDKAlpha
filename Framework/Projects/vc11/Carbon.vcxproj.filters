@@ -325,6 +325,15 @@
     <Filter Include="Source Files\World\Elements">
       <UniqueIdentifier>{a2e5833e-0a88-4cff-acda-f34a18b36450}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Scripting\Packages\Core\Audio">
+      <UniqueIdentifier>{99aec0e6-bbba-4bb9-8fa2-0fe06a479126}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scripting\Packages\Core\Navigation">
+      <UniqueIdentifier>{16bbd713-fb92-43cb-9dca-ed5c6225cb5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scripting\Packages\Core\World\Objects\Navigation">
+      <UniqueIdentifier>{21b29ea3-97b4-4f5a-b369-9902d1aa9db7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\cgBase.cpp">
@@ -1094,6 +1103,27 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\World\cgSceneElement.cpp">
       <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Interface\Controls\cgCheckBoxControl.cpp">
+      <Filter>Source Files\Interface\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\World\Objects\cgBillboardObject.cpp">
+      <Filter>Source Files\World\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\World\Objects\cgNavigationPatrolPoint.cpp">
+      <Filter>Source Files\World\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\World\Objects\cgNavigationWaypoint.cpp">
+      <Filter>Source Files\World\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Physics\Joints\cgBallJoint.cpp">
+      <Filter>Source Files\Physics\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Physics\Controllers\cgRagdollController.cpp">
+      <Filter>Source Files\Physics\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Math\cgMatrix.cpp">
+      <Filter>Source Files\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2344,6 +2374,90 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\World\cgSceneElement.h">
       <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\World\Objects\cgBillboardObject.h">
+      <Filter>Header Files\World\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\World\Objects\cgNavigationPatrolPoint.h">
+      <Filter>Header Files\World\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\World\Objects\cgNavigationWaypoint.h">
+      <Filter>Header Files\World\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Physics\Controllers\cgRagdollController.h">
+      <Filter>Header Files\Physics\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Physics\Joints\cgBallJoint.h">
+      <Filter>Header Files\Physics\Joints</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Interface\Controls\cgCheckBoxControl.h">
+      <Filter>Header Files\Interface\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Carbon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Audio.h">
+      <Filter>Header Files\Scripting\Packages\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Navigation.h">
+      <Filter>Header Files\Scripting\Packages\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Audio\AudioDriver.h">
+      <Filter>Header Files\Scripting\Packages\Core\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Audio\Types.h">
+      <Filter>Header Files\Scripting\Packages\Core\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Navigation\Types.h">
+      <Filter>Header Files\Scripting\Packages\Core\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Controls\CheckBox.h">
+      <Filter>Header Files\Scripting\Packages\Core\UI\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\BillboardBuffer.h">
+      <Filter>Header Files\Scripting\Packages\Core\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Animation\Types.h">
+      <Filter>Header Files\Scripting\Packages\Core\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Types.h">
+      <Filter>Header Files\Scripting\Packages\Core\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Controllers\RagdollController.h">
+      <Filter>Header Files\Scripting\Packages\Core\Physics\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Billboard.h">
+      <Filter>Header Files\Scripting\Packages\Core\World\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Bone.h">
+      <Filter>Header Files\Scripting\Packages\Core\World\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Mesh.h">
+      <Filter>Header Files\Scripting\Packages\Core\World\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Navigation.h">
+      <Filter>Header Files\Scripting\Packages\Core\World\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Navigation\NavigationPatrolPoint.h">
+      <Filter>Header Files\Scripting\Packages\Core\World\Objects\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Navigation\NavigationWaypoint.h">
+      <Filter>Header Files\Scripting\Packages\Core\World\Objects\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\DirectionalLight.h">
+      <Filter>Header Files\Scripting\Packages\Core\World\Objects\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\HemisphereLight.h">
+      <Filter>Header Files\Scripting\Packages\Core\World\Objects\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\PointLight.h">
+      <Filter>Header Files\Scripting\Packages\Core\World\Objects\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\ProjectorLight.h">
+      <Filter>Header Files\Scripting\Packages\Core\World\Objects\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\SpotLight.h">
+      <Filter>Header Files\Scripting\Packages\Core\World\Objects\Lights</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

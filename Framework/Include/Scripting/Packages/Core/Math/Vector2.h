@@ -59,14 +59,14 @@ namespace Vector2
             BINDSUCCESS( engine->registerGlobalFunction( "Vector2& vec2Scale(Vector2 &inout, const Vector2 &in, float)", asFUNCTIONPR(cgVector2::scale, (cgVector2&, const cgVector2&,cgFloat), cgVector2*), asCALL_CDECL ) );
             BINDSUCCESS( engine->registerGlobalFunction( "Vector2& vec2Lerp(Vector2 &inout, const Vector2 &in, const Vector2 &in, float)", asFUNCTIONPR(cgVector2::lerp, (cgVector2&, const cgVector2&,const cgVector2&, cgFloat), cgVector2*), asCALL_CDECL ) );
 
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector2& vec2Normalize(Vector2 &inout, const Vector2 &in)", asFUNCTION(cgVector2::normalize), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector2& vec2Hermite(Vector2 &inout, const Vector2 &in, const Vector2 &in, const Vector2 &in, const Vector2 &in, float)", asFUNCTION(cgVector2::hermite), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector2& vec2CatmullRom(Vector2 &inout, const Vector2 &in, const Vector2 &in, const Vector2 &in, const Vector2 &in, float)", asFUNCTION(cgVector2::catmullRom), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector2& vec2BaryCentric(Vector2 &inout, const Vector2 &in, const Vector2 &in, const Vector2 &in, float, float)", asFUNCTION(cgVector2::baryCentric), asCALL_STDCALL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector2& vec2Normalize(Vector2 &inout, const Vector2 &in)", asFUNCTION(cgVector2::normalize), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector2& vec2Hermite(Vector2 &inout, const Vector2 &in, const Vector2 &in, const Vector2 &in, const Vector2 &in, float)", asFUNCTION(cgVector2::hermite), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector2& vec2CatmullRom(Vector2 &inout, const Vector2 &in, const Vector2 &in, const Vector2 &in, const Vector2 &in, float)", asFUNCTION(cgVector2::catmullRom), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector2& vec2BaryCentric(Vector2 &inout, const Vector2 &in, const Vector2 &in, const Vector2 &in, float, float)", asFUNCTION(cgVector2::baryCentric), asCALL_CDECL ) );
 
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec2Transform(Vector4 &inout, const Vector2 &in, const Matrix &in)", asFUNCTION(cgVector2::transform), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector2& vec2TransformCoord(Vector2 &inout, const Vector2 &in, const Matrix &in)", asFUNCTION(cgVector2::transformCoord), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector2& vec2TransformNormal(Vector2 &inout, const Vector2 &in, const Matrix &in)", asFUNCTION(cgVector2::transformNormal), asCALL_STDCALL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec2Transform(Vector4 &inout, const Vector2 &in, const Matrix &in)", asFUNCTION(cgVector2::transform), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector2& vec2TransformCoord(Vector2 &inout, const Vector2 &in, const Matrix &in)", asFUNCTION(cgVector2::transformCoord), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector2& vec2TransformNormal(Vector2 &inout, const Vector2 &in, const Matrix &in)", asFUNCTION(cgVector2::transformNormal), asCALL_CDECL ) );
         }
 
         //-----------------------------------------------------------------------------

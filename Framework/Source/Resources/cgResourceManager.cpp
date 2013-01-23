@@ -71,6 +71,7 @@ cgResourceManager::cgResourceManager( ) : cgReference( cgReferenceManager::gener
     // Initialize variables to sensible defaults
     mRenderDriver             = CG_NULL;
     mAudioDriver              = CG_NULL;
+    mDestructionEnabled       = true;
 
     // Clear structures
     memset( mDefaultSamplers, 0, sizeof(mDefaultSamplers) );
@@ -129,6 +130,9 @@ void cgResourceManager::dispose( bool bDisposeBase )
 {
     // We are in the process of disposing?
     mDisposing = true;
+
+    // Re-enable resource destruction if it was disabled.
+    mDestructionEnabled = true;
 
     // Destroy default samplers.
     if ( mDefaultSamplers[DefaultDiffuseSampler] )
@@ -3382,6 +3386,34 @@ cgMaterialHandle cgResourceManager::getDefaultMaterial( ) const
 }
 
 //-----------------------------------------------------------------------------
+// Name : enableDestruction()
+/// <summary>
+/// Use this method to enable / disable the destruction of resources. When
+/// disabled, all resources that are due to be destroyed will be automatically
+/// added to the garbage queue instead where they will await destruction
+/// until enabled once again via this method.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgResourceManager::enableDestruction( bool enable )
+{
+    mDestructionEnabled = enable;
+}
+
+//-----------------------------------------------------------------------------
+// Name : isDestructionEnabled()
+/// <summary>
+/// Determine if automatic resource destruction is enabled. When
+/// disabled, all resources that are due to be destroyed will be automatically
+/// added to the garbage queue instead where they will await destruction
+/// until enabled once again via this method.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgResourceManager::isDestructionEnabled( ) const
+{
+    return mDestructionEnabled;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : debugResources ()
 /// <summary>
 /// Debug the actual resources we're currently still maintaining
@@ -3626,7 +3658,7 @@ cgString cgResourceManager::listActiveResources( ResourceItemList & ResourceList
         strLost = (pResource->isResourceLost()) ? _T(" (Lost)") : _T("");
 
         // Build string representing the item
-        strItem = cgString::format( _T("Item %i - Resource '%s'%s remains referenced in %i location(s) beginning with '%s'.\n"), Counter, pResource->getResourceName().c_str(), strLost.c_str(), pResource->getReferenceCount( true ), pResource->getResourceName().c_str() );
+        strItem = cgString::format( _T("Item %i - Resource '%s'%s remains referenced in %i location(s) beginning with '%s'.\n"), Counter, pResource->getResourceName().c_str(), strLost.c_str(), pResource->getReferenceCount( true ), pResource->getResourceSource().c_str() );
 
         // Append to list
         strList += strItem + _T("\n");
@@ -3815,9 +3847,6 @@ void cgResourceManager::emptyGarbage( )
     //        when child resources are added to the end, it will automatically 
     //        release those resources too.
     checkGarbage( true );
-
-    // Clear the garbage list (paranoia)
-    mResourceGarbage.clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -3828,12 +3857,15 @@ void cgResourceManager::emptyGarbage( )
 //-----------------------------------------------------------------------------
 void cgResourceManager::checkGarbage( bool bEmpty /* = false */ )
 {
+    // Skip garbage check altogether if destruction is disabled.
+    if ( !mDestructionEnabled )
+        return;
+    
+    // Keep testing while necessary
     ResourceItemSet::iterator itItem;
     ResourceItemSet::iterator itNext;
     cgFloat fCurrentTime = (cgFloat)cgTimer::getInstance()->getTime();
-    bool    bTestGarbage = true;
-
-    // Keep testing while necessary
+    bool bTestGarbage = true;
     for ( ; bTestGarbage == true; )
     {
         // Following loop must request to test again if necessary
@@ -3855,7 +3887,7 @@ void cgResourceManager::checkGarbage( bool bEmpty /* = false */ )
             // Due to be cleaned up?
             if ( bEmpty || (fCurrentTime > (pResource->mLastReferenced + pResource->mDestroyDelay)) )
             {
-                if ( !bEmpty )
+                if ( !bEmpty && pResource->mDestroyDelay > 0 )
                     cgAppLog::write( cgAppLog::Debug, _T("Unloading trashed resource '%s' because its destruction delay of %g second(s) expired.\n"), pResource->getResourceName().c_str(), pResource->mDestroyDelay );
 
                 // Release the final reference to the resource

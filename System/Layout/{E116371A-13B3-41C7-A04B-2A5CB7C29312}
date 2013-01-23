@@ -1,0 +1,13 @@
+--Table: Objects::Base::NavigationWaypoint -- {E116371A-13B3-41C7-A04B-2A5CB7C29312}
+
+CREATE TABLE IF NOT EXISTS [Objects::Base::NavigationWaypoint] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [Availability] integer DEFAULT 0
+);
+
+CREATE TRIGGER IF NOT EXISTS [Objects::Base::NavigationWaypoint_OnDelete]
+  BEFORE DELETE
+  ON [Objects::Base::NavigationWaypoint]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;

@@ -27,7 +27,6 @@
 #include <Interface/Controls/cgScrollBarControl.h>
 #include <Interface/Controls/cgButtonControl.h>
 #include <Interface/cgUIManager.h>
-#include <Interface/cgUIForm.h>
 #include <System/cgMessageTypes.h>
 
 // ToDo: Remove these comments once completed.
@@ -665,9 +664,6 @@ bool cgScrollBarControl::processMessage( cgMessage * pMessage )
     // Retrieve the reference target
     cgReference * pTarget = cgReferenceManager::getReference( pMessage->fromId );
 
-    // Get access to interface manager
-    cgUIManager * pManager = mRootForm->getUIManager();
-
     // Was this our thumb button message?
     if ( pTarget == mThumbButton )
     {
@@ -689,7 +685,7 @@ bool cgScrollBarControl::processMessage( cgMessage * pMessage )
                 
                 // If the thumb button is currently captured, we should update
                 // the scroll bar value accordingly.
-                if ( pManager->getCapture() == mThumbButton )
+                if ( mUIManager->getCapture() == mThumbButton )
                 {
                     cgSize  ThumbSize = mThumbButton->getSize();
                     cgPoint ptShift   = cgPoint( pArgs->position.x - mThumbTrackPos.x, pArgs->position.y - mThumbTrackPos.y );

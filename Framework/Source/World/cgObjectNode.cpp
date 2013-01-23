@@ -105,13 +105,11 @@ cgObjectNode::cgObjectNode( cgUInt32 referenceId, cgScene * scene ) : cgAnimatio
     mParentCell         = CG_NULL;
     mOwnerGroup         = CG_NULL;
     mTargetNode         = CG_NULL;
-    mShowNode           = true;
     mObjectClass        = _T("Object");
     mPhysicsController  = CG_NULL;
     mUpdateRate         = cgUpdateRate::Never;
     mLastDirtyFrame     = 0;
     mPendingUpdates     = 0;
-    mSelected           = false;
     mTransformMethod    = cgTransformMethod::Standard;
     mPhysicsModel       = cgPhysicsModel::None;
     mSimulationQuality  = cgSimulationQuality::Default;
@@ -121,6 +119,9 @@ cgObjectNode::cgObjectNode( cgUInt32 referenceId, cgScene * scene ) : cgAnimatio
     mNavigationAgent    = CG_NULL;
     mRenderClassId      = 1;        // Automatically assign to the 'default' render class.
     mCustomProperties   = new cgPropertyContainer();
+
+    // Setup default flags.
+    mFlags              = cgObjectNodeFlags::Visible;
 
     // Assign a default color to the node
     mColor = cgMathUtility::randomColor( );
@@ -146,13 +147,11 @@ cgObjectNode::cgObjectNode( cgUInt32 referenceId, cgScene * scene, cgObjectNode 
     mParentCell         = CG_NULL;
     mOwnerGroup         = CG_NULL;
     mTargetNode         = CG_NULL;
-    mShowNode           = init->mShowNode;
     mObjectClass        = init->mObjectClass;
     mPhysicsController  = CG_NULL; // ToDo: clone?
     mUpdateRate         = init->mUpdateRate;
     mLastDirtyFrame     = 0;
     mPendingUpdates     = 0;
-    mSelected           = false;
     mTransformMethod    = cgTransformMethod::Standard;
     mPhysicsModel       = init->mPhysicsModel;
     mSimulationQuality  = init->mSimulationQuality;
@@ -166,6 +165,10 @@ cgObjectNode::cgObjectNode( cgUInt32 referenceId, cgScene * scene, cgObjectNode 
     mPhysicsBody        = CG_NULL;
     mNavigationAgent    = CG_NULL;
     mRenderClassId      = init->mRenderClassId;
+
+    // Duplicate flags that are important to us.
+    mFlags              = 0;
+    mFlags             |= (init->mFlags & cgObjectNodeFlags::Visible);
 
     // Cached data.
     mWorldPivotTransform = init->mWorldPivotTransform;
@@ -353,11 +356,23 @@ void cgObjectNode::dispose( bool disposeBase )
 //-----------------------------------------------------------------------------
 void cgObjectNode::unload( )
 {
-    if ( mParentScene )
-        mParentScene->unloadObjectNode( this );
+    // Is unloading delayed?
+    if ( mFlags & cgObjectNodeFlags::DelayUnload )
+    {
+        // It is delayed, so just required the fact that an unload is required.
+        mFlags |= cgObjectNodeFlags::UnloadPending;
 
-    // Note: 'this' pointer is now unsafe. Do not use after a call
-    // to 'unloadObjectNode()'.
+    } // End if delayed
+    else
+    {
+        // Otherwise, unload immediately.
+        if ( mParentScene )
+            mParentScene->unloadObjectNode( this );
+
+        // Note: 'this' pointer is now unsafe. Do not use after a call
+        // to 'unloadObjectNode()'.
+    
+    } // End if !delayed
 }
 
 //-----------------------------------------------------------------------------
@@ -368,6 +383,9 @@ void cgObjectNode::unload( )
 //-----------------------------------------------------------------------------
 void cgObjectNode::update( cgFloat timeDelta )
 {
+    // Make sure that unload operations are delayed.
+    mFlags |= cgObjectNodeFlags::DelayUnload;
+
     // Has any time elapsed? Passing a delta time of 0 
     // may cause problems.
     if ( timeDelta > 0 && (!mParentScene || mParentScene->isUpdatingEnabled()) )
@@ -382,6 +400,13 @@ void cgObjectNode::update( cgFloat timeDelta )
         } // Next Behavior
 
     } // End if elapsed
+
+    // Restore ability to unload.
+    mFlags &= ~cgObjectNodeFlags::DelayUnload;
+
+    // If an unload was requested during this process, trigger it now.
+    if ( mFlags & cgObjectNodeFlags::UnloadPending )
+        unload();
 }
 
 //-----------------------------------------------------------------------------
@@ -724,21 +749,52 @@ bool cgObjectNode::removeBehavior( cgInt32 index, bool destroy /* = true */ )
 //-----------------------------------------------------------------------------
 //  Name : setPhysicsController ()
 /// <summary>
-/// Replace the current object physics controller with the one specified.
-/// Note : Returns a pointer to the current controller so that it can be released, 
-/// or saved for later use.
+/// Replace the current object physics controller with the one specified. Any
+/// prior assigned controller will be automatically destroyed. To preven this,
+/// use the alternative overload for this method.
 /// Note : Any physics controller still set to the object when it is destroyed
 /// will also be released.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgPhysicsController * cgObjectNode::setPhysicsController( cgPhysicsController * controller )
+void cgObjectNode::setPhysicsController( cgPhysicsController * controller )
+{
+    setPhysicsController( controller, true );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setPhysicsController () (Virtual)
+/// <summary>
+/// Replace the current object physics controller with the one specified. The
+/// prior controller can be optionally destroyed by specifying true to the
+/// final parameter. If the caller opts not to destroy the prior controller,
+/// this method returns its pointer so that it can be released,  or saved for 
+/// later use.
+/// Note : Any physics controller still set to the object when it is destroyed
+/// will also be released.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgPhysicsController * cgObjectNode::setPhysicsController( cgPhysicsController * controller, bool destroyOld )
 {
     cgPhysicsController * oldController = mPhysicsController;
 
+    // Is this a no-op?
+    if ( oldController && oldController == controller )
+        return CG_NULL;
+
     // Set new controller, and notify it that we're now it's owner
     mPhysicsController = controller;
-    if ( controller != NULL )
+    if ( controller )
         controller->setParentObject( this );
+
+    // If the old controller is to be destroyed, do so now.
+    if ( oldController && destroyOld )
+    {
+        oldController->scriptSafeDispose();
+        oldController = CG_NULL;
+
+    } // End if destroy old controller
+    else if ( oldController )
+        oldController->setParentObject( CG_NULL );
 
     // Return the old controller
     return oldController;
@@ -1215,6 +1271,33 @@ bool cgObjectNode::navigateTo( const cgVector3 & position )
 cgNavigationAgent * cgObjectNode::getNavigationAgent( ) const
 {
     return mNavigationAgent;
+}
+
+//-----------------------------------------------------------------------------
+// Name : getNavigationAgentState()
+/// <summary>
+/// Determine the current state of the agent, i.e. whether it is currently 
+/// in a position to receieve navigation requests.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgNavigationAgentState::Base cgObjectNode::getNavigationAgentState ( ) const
+{
+    if ( !mNavigationAgent )
+        return cgNavigationAgentState::Invalid;
+    return mNavigationAgent->getAgentState();
+}
+
+//-----------------------------------------------------------------------------
+// Name : getNavigationTargetState()
+/// <summary>
+/// Determine the current state of the most recent navigation request.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgNavigationTargetState::Base cgObjectNode::getNavigationTargetState( ) const
+{
+    if ( !mNavigationAgent )
+        return cgNavigationTargetState::None;
+    return mNavigationAgent->getTargetState();
 }
 
 //-----------------------------------------------------------------------------
@@ -1800,6 +1883,19 @@ const cgTransform & cgObjectNode::getLocalTransform( ) const
 {
     // Return reference to our internal matrix
     return mLocalTransform;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getOffsetTransform()
+/// <summary>
+/// Retrieve the transform describing the offset from the pivot (origin) of the 
+/// node, to the *actual* origin of the referenced object.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgTransform & cgObjectNode::getOffsetTransform( ) const
+{
+    // Return reference to our internal matrix
+    return mOffsetTransform;
 }
 
 //-----------------------------------------------------------------------------
@@ -2455,6 +2551,13 @@ bool cgObjectNode::onNodeLoading( const cgUID & objectType, cgWorldQuery * nodeD
 
     } // End if valid identifier
 
+    // Load flags
+    bool visible;
+    mFlags = 0;
+    nodeData->getColumn( _T("Visible"), visible );
+    if ( visible )
+        mFlags |= cgObjectNodeFlags::Visible;
+
     // Load remaining node data.
     cgString name;
     nodeData->getColumn( _T("EditorName"), name );
@@ -2465,7 +2568,6 @@ bool cgObjectNode::onNodeLoading( const cgUID & objectType, cgWorldQuery * nodeD
     nodeData->getColumn( _T("SimulationQuality"), (cgInt32&)mSimulationQuality );
     nodeData->getColumn( _T("RenderClassId"), mRenderClassId );
     nodeData->getColumn( _T("UpdateRate"), (cgInt32&)mUpdateRate );
-    nodeData->getColumn( _T("Visible"), mShowNode );
 
     // Update local members
     setName( name );
@@ -2927,7 +3029,7 @@ bool cgObjectNode::sandboxRender( cgUInt32 flags, cgCameraNode * camera, cgVisib
 
     // If the object is hidden, or marked as invisible, signal "do not draw" by returning false
     // when in preview mode.
-    if ( cgGetSandboxMode() != cgSandboxMode::Enabled && !mShowNode )
+    if ( cgGetSandboxMode() != cgSandboxMode::Enabled && !(mFlags & cgObjectNodeFlags::Visible) )
         return false;
 
     // Pass on this message to any referenced object.
@@ -2971,6 +3073,17 @@ cgSceneCell * cgObjectNode::getCell( ) const
 /// </summary>
 //-----------------------------------------------------------------------------
 const cgPropertyContainer & cgObjectNode::getCustomProperties( ) const
+{
+    return *mCustomProperties;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getCustomProperties()
+/// <summary>
+/// Retrieve a reference to the interal custom property container.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgPropertyContainer & cgObjectNode::getCustomProperties( )
 {
     return *mCustomProperties;
 }
@@ -3544,9 +3657,9 @@ void cgObjectNode::setSpatialTreeLeaves( cgSceneLeafArray & leaves )
 bool cgObjectNode::isRenderable( ) const
 {
     if ( mReferencedObject )
-        return (mShowNode && mReferencedObject->isRenderable());
+        return ((mFlags & cgObjectNodeFlags::Visible) && mReferencedObject->isRenderable());
     else
-        return mShowNode;
+        return (mFlags & cgObjectNodeFlags::Visible);
 }
 
 //-----------------------------------------------------------------------------
@@ -3559,7 +3672,10 @@ bool cgObjectNode::isRenderable( ) const
 //-----------------------------------------------------------------------------
 void cgObjectNode::showNode( bool visible /* = true */, bool updateChildren /* = false */ )
 {
-    mShowNode = visible;
+    // Set the visibility bit appropriately
+    mFlags &= ~cgObjectNodeFlags::Visible;
+    if ( visible )
+        mFlags |= cgObjectNodeFlags::Visible;
 
     // Pass on to children if requested.
     if ( updateChildren )
@@ -3981,7 +4097,7 @@ bool cgObjectNode::setParent( cgObjectNode * parent, bool constructing )
         // If we were detached as a direct descendant of an owner group then
         // we should no longer belong to that group. As a result however, neither
         // can any of our children.
-        if ( mOwnerGroup && getParentOfType( RTID_GroupNode ) != mOwnerGroup )
+        if ( mOwnerGroup && getParentOfType( RTID_GroupObject ) != mOwnerGroup )
             mOwnerGroup->detachNode( this );
 
     } // End if !constructing
@@ -4020,15 +4136,15 @@ void cgObjectNode::removeChild( cgObjectNode * child )
 // Name : getParentOfType ( )
 /// <summary>
 /// Retrieve the first parent contained in the hierarchy above this node that
-/// matches the specified type.
+/// references an object that matches the specified type.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgObjectNode * cgObjectNode::getParentOfType( const cgUID & TypeIdentifier )
+cgObjectNode * cgObjectNode::getParentOfType( const cgUID & TypeIdentifier ) const
 {
     cgObjectNode * node = mParentNode;
     for ( ; node; node = node->mParentNode )
     {
-        if ( node->queryReferenceType( TypeIdentifier ) )
+        if ( node->queryObjectType( TypeIdentifier ) )
             return node;
 
     } // Next parent level
@@ -4260,7 +4376,7 @@ bool cgObjectNode::setCell( cgSceneCell * cell, bool constructing )
             mNodeInsert.bindParameter( 43, (cgUInt32)mPhysicsModel );
             mNodeInsert.bindParameter( 44, (cgUInt32)mSimulationQuality );
             mNodeInsert.bindParameter( 45, (cgUInt32)mUpdateRate );
-            mNodeInsert.bindParameter( 46, mShowNode );
+            mNodeInsert.bindParameter( 46, ((mFlags & cgObjectNodeFlags::Visible) != 0) );
             if ( !mNodeInsert.step( true ) )
             {
                 cgString error;
@@ -4736,29 +4852,6 @@ void cgObjectNode::resolvePendingUpdates( cgUInt32 updateMask )
     onResolvePendingUpdates( updates );
     if ( !mPendingUpdates && mParentScene )
         mParentScene->resolvedNodeUpdates( this );
-
-    /*// If the node requires that its full hierarchy is processed, find the top-most node 
-    // in the hierarchy that has pending hierarchy updates and recurse back through.
-    if ( mPendingUpdates & cgDeferredUpdateFlags::HierarchyProcess )
-    {
-        cgObjectNode * currentNode = this;
-        cgObjectNode * pRootUpdateNode = currentNode;
-        while ( currentNode = currentNode->getParent() )
-        {
-            if ( currentNode->mPendingUpdates & cgDeferredUpdateFlags::HierarchyProcess )
-                pRootUpdateNode = currentNode;
-        
-        } // Next parent
-        ResolvePendingUpdatesRecurse( pRootUpdateNode );
-
-    } // End if hierarchy process
-    else
-    {
-        // Just trigger our own local updates.
-        onResolvePendingUpdates( true );
-        onResolvePendingUpdates( false );
-    
-    } // End if !hierarchy process*/
 }
 
 //-----------------------------------------------------------------------------
@@ -4809,61 +4902,6 @@ void cgObjectNode::onResolvePendingUpdates( cgUInt32 updates )
             mParentScene->updateObjectOwnership( this );
 
     } // End if update ownership
-
-    /*// Before or after child updates?
-    if ( bPreRecurse )
-    {
-        // Generate new cell transform based on parent transform updates if required.
-        if ( mPendingUpdates & cgDeferredUpdateFlags::Transforms )
-        {
-            // Note: We ignore the transform source and assume 'TransformResolve' in order
-            // to ensure that the local transform of the node is not altered, nor will updates
-            // be deferred for a second time during the resolution phase. In addition, irrespective
-            // of whether or not the adjustment was due to a dynamics update, the physics body of 
-            // any child object will be forcibly updated to match the new child transform. We 
-            // acknowledge that this is not a valid  dynamics update but have no choice but to obey it.
-            if ( mParentNode )
-                setCellTransform( mLocalTransform * mParentNode->getCellTransform(), cgTransformSource::TransformResolve );
-            else
-                setCellTransform( mLocalTransform, cgTransformSource::TransformResolve );
-            mPendingUpdates &= ~cgDeferredUpdateFlags::Transforms;
-
-        } // End if update transform
-
-    } // End if before
-    else
-    {
-        // Remove from the parent scene's deferred update queue.
-        if ( mParentScene )
-            mParentScene->resolvedNodeUpdates( this );
-
-        // Any hierarchy updates complete.
-        mPendingUpdates &= ~cgDeferredUpdateFlags::HierarchyProcess;
-
-        // Update the world space bounding box on request.
-        if ( mPendingUpdates & cgDeferredUpdateFlags::BoundingBox )
-        {
-            mWorldBounds = getLocalBoundingBox();
-            mWorldBounds.transform( getWorldTransform( false ) );
-            mPendingUpdates &= ~cgDeferredUpdateFlags::BoundingBox;
-        
-        } // End if update bounds
-
-        // Update the node's ownership status in order to update its scene cell 
-        // where applicable. This process will also filter the object through to 
-        // any child spatial trees where it may be inserted into the relevant 
-        // leaves as required. The exception are those nodes that have a reference
-        // identifier of 0. These are temporary internal objects that cannot / should
-        // not be referenced.
-        if ( mPendingUpdates & cgDeferredUpdateFlags::OwnershipStatus )
-        {    
-            if ( mParentScene && mReferenceId )
-                mParentScene->updateObjectOwnership( this );
-            mPendingUpdates &= ~cgDeferredUpdateFlags::OwnershipStatus;
-
-        } // End if update ownership
-
-    } // End if after*/
 }
 
 //-----------------------------------------------------------------------------
@@ -5039,7 +5077,7 @@ bool cgObjectNode::isShadowCaster() const
 //-----------------------------------------------------------------------------
 bool cgObjectNode::isSelected( ) const
 {
-    return mSelected;
+    return (mFlags & cgObjectNodeFlags::Selected) != 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -5048,14 +5086,19 @@ bool cgObjectNode::isSelected( ) const
 /// Set the node's selection status.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgObjectNode::setSelected( bool selected, bool updateDependents /* = true */, bool sendNotifications /* = true */  )
+void cgObjectNode::setSelected( bool selected, bool updateDependents /* = true */, bool sendNotifications /* = true */, cgObjectNodeMap & alteredNodes /* = cgObjectNodeMap() */  )
 {
     // Skip if this is a no-op
-    if ( mSelected == selected )
+    if ( ((mFlags & cgObjectNodeFlags::Selected) != 0) == selected )
         return;
 
     // Update selected flag
-    mSelected = selected;
+    mFlags &= ~cgObjectNodeFlags::Selected;
+    if ( selected )
+        mFlags |= cgObjectNodeFlags::Selected;
+
+    // We were modified.
+    alteredNodes[getReferenceId()] = this;
 
     // Should we update the scene and other dependents, or just update our internal status?
     if ( updateDependents )
@@ -5077,10 +5120,11 @@ void cgObjectNode::setSelected( bool selected, bool updateDependents /* = true *
         
         } // End if selecting
 
-        // If we were owned by a closed group, alter the group's selection too
+        // If we were owned by a closed group, alter the group's selection too (this
+        // will automatically return if it is already selected).
         if ( isMergedAsGroup() )
         {
-            mOwnerGroup->setSelected( selected, true, sendNotifications );
+            mOwnerGroup->setSelected( selected, true, sendNotifications, alteredNodes );
         
         } // End if select group
         else
@@ -5088,12 +5132,7 @@ void cgObjectNode::setSelected( bool selected, bool updateDependents /* = true *
             // Notify whoever is listening that our selection status 
             // changed if requested.
             if ( sendNotifications )
-            {
-                cgObjectNodeMap updateMap;
-                updateMap[ getReferenceId() ] = this;
-                mParentScene->onSelectionUpdated( &cgSelectionUpdatedEventArgs( mParentScene, &updateMap ) );
-            
-            } // End if notify
+                mParentScene->onSelectionUpdated( &cgSelectionUpdatedEventArgs( mParentScene, &alteredNodes ) );
 
         } // End if no group
         
@@ -5503,7 +5542,7 @@ void cgObjectNode::onNavigationAgentReposition ( cgNavigationAgent * sender, cgN
     cgTransform newTransform = getCellTransform();
     cgVector3 velocity = mNavigationAgent->getDesiredVelocity();
     cgFloat length = cgVector3::length( velocity );
-    if ( !_isnan(length) && length > 0.001f )
+    if ( !_isnan(length) && length > 0.001f && mNavigationAgent->getTargetState() != cgNavigationTargetState::Arrived )
     {
         // Retrieve the current orientation.
         cgQuaternion oldOrientation = newTransform.orientation();
@@ -5516,7 +5555,7 @@ void cgObjectNode::onNavigationAgentReposition ( cgNavigationAgent * sender, cgN
 
         // Smoothly interpolate.
         cgQuaternion newOrientation = newTransform.orientation();
-        cgQuaternion::slerp( newOrientation, oldOrientation, newOrientation, cgTimer::getInstance()->getTimeElapsed() * 10 );
+        cgQuaternion::slerp( newOrientation, oldOrientation, newOrientation, cgTimer::getInstance()->getTimeElapsed() * 4 );
         newTransform.setOrientation( newOrientation );
 
     } // End if has direction

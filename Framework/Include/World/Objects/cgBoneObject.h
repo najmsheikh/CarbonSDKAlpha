@@ -181,6 +181,10 @@ public:
     virtual void                move                    ( const cgVector3 & amount );
     virtual void                moveLocal               ( const cgVector3 & amount );
 
+    // Promote remaining base class method overloads.
+    using cgObjectNode::move;
+    using cgObjectNode::moveLocal;
+
     //-------------------------------------------------------------------------
     // Public Inline Methods
     //-------------------------------------------------------------------------

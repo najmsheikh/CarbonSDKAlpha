@@ -69,6 +69,33 @@ namespace cgNavigationAvoidanceQuality
 
 } // End Namespace : cgNavigationAvoidanceQuality
 
+namespace cgNavigationAgentState
+{
+    enum Base
+    {
+        Invalid = 0,
+        Ready,
+        TraversingLink
+    };
+
+} // End Namespace : cgNavigationTargetState
+
+namespace cgNavigationTargetState
+{
+    enum Base
+    {
+        None    = 0,
+        Failed,
+        Valid,
+        Requesting,
+        WaitingForQueue,
+        WaitingForPath,
+        Velocity,
+        Arrived
+    };
+
+} // End Namespace : cgNavigationTargetState
+
 //-----------------------------------------------------------------------------
 // Common Global Structures
 //-----------------------------------------------------------------------------
@@ -114,6 +141,7 @@ struct cgNavigationAgentCreateParams
 {
     cgFloat agentRadius;
     cgFloat agentHeight;
+    cgFloat slowDownRadius;
     bool    anticipateTurns;
     bool    optimizeVisibility;
     bool    optimizeTopology;
@@ -129,6 +157,7 @@ struct cgNavigationAgentCreateParams
     {
         agentRadius         = 0.6f;
         agentHeight         = 1.8f;
+        slowDownRadius      = 1.2f;
         anticipateTurns     = true;
         optimizeVisibility  = true;
         optimizeTopology    = true;

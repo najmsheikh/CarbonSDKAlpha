@@ -1455,7 +1455,10 @@ void cgStandardMaterial::onSamplerAdded( const cgString & strName, cgSampler * p
 		if ( hTexture.isValid() )
 		{
 			cgTexture * pTexture = hTexture.getResourceSilent();
-			mSpecularTextureChannels = cgBufferFormatEnum::formatChannelCount( pTexture->getInfo().format );
+            cgBufferFormat::Base format = pTexture->getInfo().format;
+			mSpecularTextureChannels = cgBufferFormatEnum::formatChannelCount( format );
+            if ( format == cgBufferFormat::BC1 || format == cgBufferFormat::BC1_SRGB )
+                mSpecularTextureChannels = 3; // DXT1/BC1 does not have enough precision to store gloss in alpha
 		
         } // End if valid texture
 	

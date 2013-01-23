@@ -500,12 +500,7 @@ bool cgSkinObject::render( cgCameraNode * pCamera, cgVisibilitySet * pVisData, c
     if ( !pBindData )
         return false;
 
-    /*// Signal a straight draw of the object
-    pDriver->setWorldTransform( pIssuer->getWorldTransform( false ) );
-    pMesh->setDefaultColor( pIssuer->getNodeColor() );
-    pMesh->Draw( );*/
-
-    // Begin to draw the relevant subset of this object
+    // Begin to draw the relevant subsets of this object
     pDriver->setWorldTransform( CG_NULL );
     pMesh->setDefaultColor( pIssuer->getNodeColor() );
 
@@ -549,55 +544,6 @@ bool cgSkinObject::render( cgCameraNode * pCamera, cgVisibilitySet * pVisData, c
     
     // Drawn
     return true;
-
-    /* ResourceHandle hAttribute, hPrevAttribute;
-
-    // Get access to required systems
-    gpRenderDriver * pDriver = mParentScene->getRenderDriver();
-
-    // Bail if not yet processed
-    if ( mMesh.IsValid() == false )
-        return false;
-
-    // Call base class render
-    if ( gpSceneObject::render( pCamera ) == false )
-        return false;
-
-    // Retrieve the underlying mesh resource and render if available
-    gpMesh * pMesh = mMesh;
-    if ( pMesh->isLoaded() == false )
-        return false;
-
-    // Begin any profiler timing
-    ProfileRecordBegin();
-
-    // Begin to draw the relevant subset of this object
-    pDriver->setWorldTransform( GP_NULL );
-    
-    // Process each palette in the skin with a matching attribute.
-    const gpMesh::BonePaletteArray & Palettes = pMesh->getBonePalettes();
-    for ( size_t i = 0; i < Palettes.size(); ++i )
-    {
-        gpBonePalette * pPalette = Palettes[i];
-        
-        // Apply the bone palette.
-        pPalette->apply( mBoneReferences, pMesh->getSkinBindData(), pDriver );
-        
-        // Draw (don't apply attribute a second time if it isn't necessary)!
-        hAttribute = pPalette->GetAttribute();
-        pMesh->drawSubset( hAttribute, pPalette->getDataGroup(), (hAttribute == hPrevAttribute) ? gpMeshDrawMode::EffectPasses : gpMeshDrawMode::Automatic );
-        hPrevAttribute = hAttribute;
-
-    } // Next Palette
-
-    // Disable vertex blending
-    pDriver->setVertexBlendData( GP_NULL, 0, -1 );
-    
-    // Complete any profiler timing
-    ProfileRecordEnd();
-
-    // Drawn
-    return true;*/
 }
 
 //-----------------------------------------------------------------------------
@@ -622,13 +568,6 @@ bool cgSkinObject::renderSubset( cgCameraNode * pCamera, cgVisibilitySet * pVisD
     if ( !pBindData )
         return false;
 
-    /*// Signal a straight draw of the object
-    pDriver->setWorldTransform( pIssuer->getWorldTransform( false ) );
-    cgToDo( "Effect Overhaul", "Commit changes removed. It /should/ no longer be required, but just confirm." )
-    //pDriver->commitChanges(); // Required for batching, effect pass already begun.
-    pMesh->setDefaultColor( pIssuer->getNodeColor() );
-    pMesh->drawSubset( hMaterial, cgMeshDrawMode::Simple );*/
-
     // Begin to draw the relevant subset of this object
     pDriver->setWorldTransform( CG_NULL );
     pMesh->setDefaultColor( pIssuer->getNodeColor() );
@@ -652,6 +591,7 @@ bool cgSkinObject::renderSubset( cgCameraNode * pCamera, cgVisibilitySet * pVisD
     } // Next Influence
 
     // Process each palette in the skin with a matching attribute.
+    cgInt32 currentMaxBlendIndex = pDriver->getSystemState( cgSystemState::MaximumBlendIndex );
     const cgMesh::BonePaletteArray & Palettes = pMesh->getBonePalettes();
     for ( size_t i = 0; i < Palettes.size(); ++i )
     {
@@ -666,8 +606,12 @@ bool cgSkinObject::renderSubset( cgCameraNode * pCamera, cgVisibilitySet * pVisD
 
         // Have the currently assigned surface shader re-select its states and or shaders based on
         // the modifications that were made by the palette apply method (primarily 'MaxBlendIndex')
-        cgToDo( "Carbon General", "Only re-commit if the max blend index changes?" );
-        pDriver->commitChanges( );
+        if ( currentMaxBlendIndex != pPalette->getMaximumBlendIndex() )
+        {
+            pDriver->commitChanges( );
+            currentMaxBlendIndex = pPalette->getMaximumBlendIndex();
+        
+        } // End if max index changed
 
         // Draw!
         pMesh->drawSubset( hMaterial, pPalette->getDataGroup(), cgMeshDrawMode::Simple );
@@ -676,57 +620,9 @@ bool cgSkinObject::renderSubset( cgCameraNode * pCamera, cgVisibilitySet * pVisD
 
     // Disable vertex blending
     pDriver->setVertexBlendData( CG_NULL, CG_NULL, 0, -1 );
-    cgToDo( "Carbon General", "Only re-commit if the max blend index changes?" );
-    pDriver->commitChanges( );
 
     // Drawn
     return true;
-
-    /* // Bail if object not visible
-    if ( IsRenderable() == false )
-        return false;
-
-    // Get access to required systems
-    gpRenderDriver * pDriver = gpRenderDriver::getInstance();
-
-    // Retrieve the underlying mesh resource and render if available
-    gpMesh * pMesh = mMesh;
-    if ( pMesh == GP_NULL || pMesh->isLoaded() == false )
-        return false;
-
-    // Begin any profiler timing
-    ProfileRecordBegin();
-
-    // Begin to draw the relevant subset of this object
-    pDriver->setWorldTransform( GP_NULL );
-    
-    // Process each palette in the skin with a matching attribute.
-    const gpMesh::BonePaletteArray & Palettes = pMesh->getBonePalettes();
-    for ( size_t i = 0; i < Palettes.size(); ++i )
-    {
-        gpBonePalette * pPalette = Palettes[i];
-        
-        // Skip any palette that does not have a matching attribute
-        if ( pPalette->GetAttribute() != hAttribute )
-            continue;
-
-        // Apply the bone palette.
-        pPalette->apply( mBoneReferences, pMesh->getSkinBindData(), pDriver );
-        pDriver->commitChanges(); // Required for batching, effect pass already begun.
-
-        // Draw!
-        pMesh->drawSubset( hAttribute, pPalette->getDataGroup(), gpMeshDrawMode::Simple );
-
-    } // Next Palette
-
-    // Disable vertex blending
-    pDriver->setVertexBlendData( GP_NULL, 0, -1 );
-    
-    // Complete any profiler timing
-    ProfileRecordEnd();
-
-    // Drawn
-    return true;*/
 }
 
 //-----------------------------------------------------------------------------
@@ -802,6 +698,7 @@ void cgSkinObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisi
     pDriver->setWorldTransform( CG_NULL );
     
     // Execute technique.
+    cgInt32 currentMaxBlendIndex = pDriver->getSystemState( cgSystemState::MaximumBlendIndex );
     cgSurfaceShader * pShader = pDriver->getSandboxSurfaceShader().getResource(true);
     if ( pShader->beginTechnique( _T("drawWireframeMesh") ) )
     {
@@ -816,8 +713,12 @@ void cgSkinObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisi
 
                 // Have the currently assigned surface shader re-select its states and or shaders based on
                 // the modifications that were made by the palette apply method (primarily 'MaxBlendIndex')
-                cgToDo( "Carbon General", "Only re-commit if the max blend index changes?" );
-                pShader->commitChanges();
+                if ( currentMaxBlendIndex != pPalette->getMaximumBlendIndex() )
+                {
+                    pDriver->commitChanges( );
+                    currentMaxBlendIndex = pPalette->getMaximumBlendIndex();
+                
+                } // End if max index changed
 
                 // Draw!
                 pMesh->drawSubset( pPalette->getMaterial(), pPalette->getDataGroup(), cgMeshDrawMode::Simple );
@@ -831,8 +732,6 @@ void cgSkinObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisi
 
     // Disable vertex blending
     pDriver->setVertexBlendData( CG_NULL, CG_NULL, 0, -1 );
-    cgToDo( "Carbon General", "Only re-commit if the max blend index changes?" );
-    pShader->commitChanges( );
 
     // Call base class implementation last (skipping mesh, straight to world object -- this is not a bug).
     cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );

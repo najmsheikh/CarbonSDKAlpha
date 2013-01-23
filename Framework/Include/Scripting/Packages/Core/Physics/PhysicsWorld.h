@@ -51,6 +51,9 @@ namespace PhysicsWorld
             BINDSUCCESS( engine->registerObjectMethod( "PhysicsWorld", "float fromPhysicsScale( float ) const", asMETHODPR(cgPhysicsWorld, fromPhysicsScale, ( cgFloat ) const, cgFloat), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "PhysicsWorld", "Vector3 fromPhysicsScale( const Vector3&in ) const", asMETHODPR(cgPhysicsWorld, fromPhysicsScale, ( const cgVector3& ) const, cgVector3), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "PhysicsWorld", "BoundingBox fromPhysicsScale( const BoundingBox &in ) const", asMETHODPR(cgPhysicsWorld, fromPhysicsScale, ( const cgBoundingBox& ) const, cgBoundingBox), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "PhysicsWorld", "bool rayCastClosest( const Vector3 &in, const Vector3 &in, CollisionContact &inout )", asMETHODPR(cgPhysicsWorld, rayCastClosest, ( const cgVector3&, const cgVector3&, cgCollisionContact& ), bool), asCALL_THISCALL) );
+            // ToDo: bool                rayCast             ( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgCollisionContact::Array & contacts );
+            BINDSUCCESS( engine->registerObjectMethod( "PhysicsWorld", "int getDefaultMaterialGroupId( DefaultPhysicsMaterialGroup ) const", asMETHODPR(cgPhysicsWorld, getDefaultMaterialGroupId, ( cgDefaultPhysicsMaterialGroup::Base ) const, cgInt32), asCALL_THISCALL) );
         }
 
     }; // End Class : Package

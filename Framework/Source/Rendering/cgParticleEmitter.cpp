@@ -217,6 +217,8 @@ bool cgParticleEmitter::initialize( cgInputStream ScriptStream, const cgParticle
     if ( mMaxParticles == 0 )
     {
         mMaxParticles = (cgUInt32)ceilf(mProperties.birthFrequency * mProperties.lifetime.max);
+        if ( mProperties.maxFiredParticles > 0 )
+            mMaxParticles = min( mProperties.maxFiredParticles, mMaxParticles );
         if ( mMaxParticles == 0 )
             mMaxParticles = 1;
         if ( mMaxParticles > 200000 )
@@ -252,8 +254,10 @@ bool cgParticleEmitter::initialize( cgInputStream ScriptStream, const cgParticle
 
     // Does the billboard buffer need to support sorting?
     cgUInt32 nFlags = 0;
-    if ( mProperties.sortedRender == true )
+    if ( mProperties.sortedRender )
         nFlags |= cgBillboardBuffer::SupportSorting;
+    if ( mProperties.velocityAligned )
+        nFlags |= cgBillboardBuffer::OrientationAxis;
 
     // Prepare the billboard buffer
     cgString strShader = mProperties.particleShader;
@@ -409,7 +413,7 @@ void cgParticleEmitter::update( cgFloat fTimeElapsed, const cgVector3 & vecWorld
 
         // Multiply scale by velocity if requested
         if ( bVelocityScale )
-            pParticle->mScale.y *= fVelocity;
+            pParticle->mScale.y *= 1.0f + (fVelocity - 1.0f) * mProperties.velocityScaleStrength;
 
         // Update the underlying billboard
         pParticle->update();
@@ -520,7 +524,7 @@ void cgParticleEmitter::update( cgFloat fTimeElapsed, const cgVector3 & vecWorld
             } // End if cancelled the creation
 
             // A new particle was released
-            mTotalReleased = 0;
+            mTotalReleased++;
             
             // Update the optional direction vector that can be used to lock 
             // the billboard to a specific axis. This vector is based on the
@@ -536,8 +540,8 @@ void cgParticleEmitter::update( cgFloat fTimeElapsed, const cgVector3 & vecWorld
             } // End if
 
             // Multiply scale by velocity if requested
-            if ( bVelocityScale == true )
-                pParticle->mScale.y *= fVelocity;
+            if ( bVelocityScale )
+                pParticle->mScale.y *= 1.0f + (fVelocity - 1.0f) * mProperties.velocityScaleStrength;
             
             // Set as visible and add to active list if it wasn't already
             if ( bActiveParticle == false )
@@ -872,7 +876,7 @@ bool cgParticleEmitter::setEmitterProperties( const cgParticleEmitterProperties 
     // If the texture, shader or flags were altered, a new billboard buffer is required.
     bool bNewBuffer = false;
     if ( mProperties.particleTexture != Properties.particleTexture || mProperties.particleShader != Properties.particleShader ||
-         mProperties.sortedRender != Properties.sortedRender )
+        mProperties.sortedRender != Properties.sortedRender || mProperties.velocityAligned != Properties.velocityAligned )
          bNewBuffer = true;
 
     // A new buffer is also required if the maximum number of simultaneous particles has been altered.
@@ -888,8 +892,10 @@ bool cgParticleEmitter::setEmitterProperties( const cgParticleEmitterProperties 
 
         // Does the billboard buffer need to support sorting?
         cgUInt32 nFlags = 0;
-        if ( mProperties.sortedRender == true )
+        if ( Properties.sortedRender )
             nFlags |= cgBillboardBuffer::SupportSorting;
+        if ( Properties.velocityAligned )
+            nFlags |= cgBillboardBuffer::OrientationAxis;
 
         // Select the correct shader.
         cgString strShader = Properties.particleShader;

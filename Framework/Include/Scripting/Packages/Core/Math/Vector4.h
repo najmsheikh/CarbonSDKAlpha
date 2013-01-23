@@ -60,13 +60,13 @@ namespace Vector4
             BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec4Scale(Vector4 &inout, const Vector4 &in, float)", asFUNCTIONPR(cgVector4::scale, (cgVector4&, const cgVector4&,cgFloat), cgVector4*), asCALL_CDECL ) );
             BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec4Lerp(Vector4 &inout, const Vector4 &in, const Vector4 &in, float)", asFUNCTIONPR(cgVector4::lerp, (cgVector4&, const cgVector4&,const cgVector4&, cgFloat), cgVector4*), asCALL_CDECL ) );
 
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec4Cross(Vector4 &inout, const Vector4 &in, const Vector4 &in, const Vector4 &in)", asFUNCTION(cgVector4::cross), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec4Normalize(Vector4 &inout, const Vector4 &in)", asFUNCTION(cgVector4::normalize), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec4Hermite(Vector4 &inout, const Vector4 &in, const Vector4 &in, const Vector4 &in, const Vector4 &in, float)", asFUNCTION(cgVector4::hermite), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec4CatmullRom(Vector4 &inout, const Vector4 &in, const Vector4 &in, const Vector4 &in, const Vector4 &in, float)", asFUNCTION(cgVector4::catmullRom), asCALL_STDCALL ) );
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec4BaryCentric(Vector4 &inout, const Vector4 &in, const Vector4 &in, const Vector4 &in, float, float)", asFUNCTION(cgVector4::baryCentric), asCALL_STDCALL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec4Cross(Vector4 &inout, const Vector4 &in, const Vector4 &in, const Vector4 &in)", asFUNCTION(cgVector4::cross), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec4Normalize(Vector4 &inout, const Vector4 &in)", asFUNCTION(cgVector4::normalize), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec4Hermite(Vector4 &inout, const Vector4 &in, const Vector4 &in, const Vector4 &in, const Vector4 &in, float)", asFUNCTION(cgVector4::hermite), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec4CatmullRom(Vector4 &inout, const Vector4 &in, const Vector4 &in, const Vector4 &in, const Vector4 &in, float)", asFUNCTION(cgVector4::catmullRom), asCALL_CDECL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec4BaryCentric(Vector4 &inout, const Vector4 &in, const Vector4 &in, const Vector4 &in, float, float)", asFUNCTION(cgVector4::baryCentric), asCALL_CDECL ) );
 
-            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec4Transform(Vector4 &inout, const Vector4 &in, const Matrix &in)", asFUNCTION(cgVector4::transform), asCALL_STDCALL ) );
+            BINDSUCCESS( engine->registerGlobalFunction( "Vector4& vec4Transform(Vector4 &inout, const Vector4 &in, const Matrix &in)", asFUNCTION(cgVector4::transform), asCALL_CDECL ) );
         }
 
         //-----------------------------------------------------------------------------

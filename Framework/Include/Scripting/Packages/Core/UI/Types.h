@@ -103,7 +103,7 @@ namespace Types
             ///////////////////////////////////////////////////////////////////////
             BINDSUCCESS( engine->registerEnumValue( "TextFlags", "ClipRectangle"  , cgTextFlags::ClipRectangle ) );
             BINDSUCCESS( engine->registerEnumValue( "TextFlags", "Multiline"      , cgTextFlags::Multiline ) );
-            BINDSUCCESS( engine->registerEnumValue( "TextFlags", "AlightCenter"   , cgTextFlags::AlignCenter ) );
+            BINDSUCCESS( engine->registerEnumValue( "TextFlags", "AlignCenter"    , cgTextFlags::AlignCenter ) );
             BINDSUCCESS( engine->registerEnumValue( "TextFlags", "AlignRight"     , cgTextFlags::AlignRight ) );
             BINDSUCCESS( engine->registerEnumValue( "TextFlags", "VAlignCenter"   , cgTextFlags::VAlignCenter ) );
             BINDSUCCESS( engine->registerEnumValue( "TextFlags", "VAlignBottom"   , cgTextFlags::VAlignBottom ) );

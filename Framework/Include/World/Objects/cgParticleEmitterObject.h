@@ -76,20 +76,28 @@ public:
     cgFloat                             getEmissionRadius           ( cgUInt32 layerIndex ) const;
     cgFloat                             getDeadZoneRadius           ( cgUInt32 layerIndex ) const;
     cgUInt32                            getMaxSimultaneousParticles ( cgUInt32 layerIndex ) const;
+    cgUInt32                            getMaximumParticles         ( cgUInt32 layerIndex ) const;
     cgFloat                             getBirthFrequency           ( cgUInt32 layerIndex ) const;
     cgFloat                             getHDRScale                 ( cgUInt32 layerIndex ) const;
     bool                                getSortedRender             ( cgUInt32 layerIndex ) const;
     bool                                getRandomizedRotation       ( cgUInt32 layerIndex ) const;
     bool                                getInitialEnabledState      ( cgUInt32 layerIndex ) const;
+    bool                                getVelocityAlignment        ( cgUInt32 layerIndex ) const;
+    cgFloat                             getVelocityScaleStrength    ( cgUInt32 layerIndex ) const;
+    bool                                isGravityEnabled            ( cgUInt32 layerIndex ) const;
     void                                setInnerCone                ( cgUInt32 layerIndex, cgFloat degrees );
     void                                setOuterCone                ( cgUInt32 layerIndex, cgFloat degrees );
     void                                setEmissionRadius           ( cgUInt32 layerIndex, cgFloat radius );
     void                                setDeadZoneRadius           ( cgUInt32 layerIndex, cgFloat radius );
     void                                setMaxSimultaneousParticles ( cgUInt32 layerIndex, cgUInt32 amount );
+    void                                setMaximumParticles         ( cgUInt32 layerIndex, cgUInt32 amount );
     void                                setBirthFrequency           ( cgUInt32 layerIndex, cgFloat amount );
     void                                setHDRScale                 ( cgUInt32 layerIndex, cgFloat scale );
     void                                enableSortedRender          ( cgUInt32 layerIndex, bool enabled );
+    void                                enableVelocityAlignment     ( cgUInt32 layerIndex, bool enabled );
     void                                enableRandomizedRotation    ( cgUInt32 layerIndex, bool enabled );
+    void                                enableGravity               ( cgUInt32 layerIndex, bool enabled );
+    void                                setVelocityScaleStrength    ( cgUInt32 layerIndex, cgFloat strength );
     void                                setInitialEnabledState      ( cgUInt32 layerIndex, bool enabled );
     void                                setParticleTexture          ( cgUInt32 layerIndex, const cgString & textureFile );
 
@@ -156,6 +164,7 @@ protected:
         cgUInt32                    databaseId;
         cgParticleEmitterProperties properties;
         bool                        initialEmission;    // Initial enabled state.
+        bool                        applyGravity;       // Apply scene gravity?
     };
     CGE_VECTOR_DECLARE( Layer, LayerArray );
 
@@ -358,6 +367,26 @@ public:
         cgAssert( mReferencedObject != CG_NULL );
         ((cgParticleEmitterObject*)mReferencedObject)->setParticleTexture( layerIndex, textureFile );
     }
+    inline void setMaximumParticles( cgUInt32 layerIndex, cgUInt32 amount )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->setMaximumParticles( layerIndex, amount );
+    }
+    inline void enableVelocityAlignment( cgUInt32 layerIndex, bool enable )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->enableVelocityAlignment( layerIndex, enable );
+    }
+    inline void enableGravity( cgUInt32 layerIndex, bool enable )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->enableGravity( layerIndex, enable );
+    }
+    inline void setVelocityScaleStrength( cgUInt32 layerIndex, cgFloat strength )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->setVelocityScaleStrength( layerIndex, strength );
+    }
     
     // Object Property 'Get' Routing
     inline cgUInt32 getLayerCount( ) const
@@ -464,6 +493,26 @@ public:
     {
         cgAssert( mReferencedObject != CG_NULL );
         return ((cgParticleEmitterObject*)mReferencedObject)->getParticleTexture( layerIndex );
+    }
+    inline cgUInt32 getMaximumParticles( cgUInt32 layerIndex ) const
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        return ((cgParticleEmitterObject*)mReferencedObject)->getMaximumParticles( layerIndex );
+    }
+    inline bool getVelocityAlignment( cgUInt32 layerIndex ) const
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        return ((cgParticleEmitterObject*)mReferencedObject)->getVelocityAlignment( layerIndex );
+    }
+    inline bool isGravityEnabled( cgUInt32 layerIndex ) const
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        return ((cgParticleEmitterObject*)mReferencedObject)->isGravityEnabled( layerIndex );
+    }
+    inline cgFloat getVelocityScaleStrength( cgUInt32 layerIndex ) const
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        return ((cgParticleEmitterObject*)mReferencedObject)->getVelocityScaleStrength( layerIndex );
     }
     
     //-------------------------------------------------------------------------

@@ -67,6 +67,9 @@ cgUIManager::cgUIManager() : cgReference( cgReferenceManager::generateInternalRe
     // Register us with the mouse and keyboard input messaging groups
     cgReferenceManager::subscribeToGroup( getReferenceId(), cgSystemMessageGroups::MGID_MouseInput );
     cgReferenceManager::subscribeToGroup( getReferenceId(), cgSystemMessageGroups::MGID_KeyboardInput );
+
+    // Listen out for device reset events.
+    cgReferenceManager::subscribeToGroup( getReferenceId(), cgSystemMessageGroups::MGID_RenderDriver );
 }
 
 //-----------------------------------------------------------------------------
@@ -95,8 +98,12 @@ void cgUIManager::dispose( bool bDisposeBase )
     ImageLibraryMap::iterator itLibrary;
 
     // Iterate through and release all layers
-    for ( itLayer = mLayers.begin(); itLayer != mLayers.end(); ++itLayer )
+    while ( (itLayer = mLayers.begin()) != mLayers.end() )
+    {
         (*itLayer)->scriptSafeDispose();
+        mLayers.erase( itLayer );
+    
+    } // End if found layer
 
     // Iterate through and release all loaded skins
     for ( itSkin = mSkins.begin(); itSkin != mSkins.end(); ++itSkin )
@@ -110,6 +117,7 @@ void cgUIManager::dispose( bool bDisposeBase )
     mLayers.clear();
     mSkins.clear();
     mForms.clear();
+    mGarbageForms.clear();
     mImageLibraries.clear();
 
     // Release allocated memory
@@ -201,6 +209,9 @@ bool cgUIManager::initialize( cgResourceManager * pResourceManager )
 
     // We are now initialized
     mInitialized = true;
+
+    // Begin the garbage collection process
+    sendGarbageMessage();
 
     // Success!
     return true;
@@ -332,6 +343,86 @@ cgUIForm * cgUIManager::loadForm( const cgInputStream & Stream, const cgString &
 }
 
 //-----------------------------------------------------------------------------
+//  Name : removeForm ()
+/// <summary>
+/// Destroy the specified form and remove it from the manager.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIManager::removeForm( cgUIForm * pForm )
+{
+    // Find the form in the form list first and remove it.
+    FormList::iterator itForm = std::find( mForms.begin(), mForms.end(), pForm );
+    if ( itForm != mForms.end() )
+        mForms.erase( itForm );
+    
+    // Now find the form's layer in the layer list and destroy. This
+    // will automatically destroy the form itself.
+    cgUILayer * pLayer = pForm->getControlLayer();
+    LayerList::iterator itLayer = std::find( mLayers.begin(), mLayers.end(), pLayer );
+    if ( itLayer != mLayers.end() )
+        mLayers.erase( itLayer );
+    pLayer->scriptSafeDispose();
+}
+
+//-----------------------------------------------------------------------------
+//  Name : addLayer ()
+/// <summary>
+/// Add a new UI layer to the system for rendering / management.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIManager::addLayer( cgUILayer * pLayer )
+{
+    if ( pLayer->getLayerType() == cgUILayerType::SystemLayer )
+    {
+        // Insert below current system layers.
+        LayerList::iterator itLayer;
+        for ( itLayer = mLayers.begin(); itLayer != mLayers.end(); ++itLayer )
+        {
+            // If this is the first system layer, we have found our top most item
+            if ( (*itLayer)->getLayerType() == cgUILayerType::SystemLayer )
+                 break;
+
+        } // Next Layer
+
+        // Did we find a system layer?
+        if ( itLayer == mLayers.end() )
+        {
+            // We didn't find one, just insert back at the end
+            mLayers.push_back( pLayer );
+        
+        } // End if no
+        else
+        {
+            // First non-system layer found, insert just prior to this
+            mLayers.insert( itLayer, pLayer );
+
+        } // End if yes
+    
+    } // End if system
+    else
+        mLayers.push_front( pLayer );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : removeLayer ()
+/// <summary>
+/// Remove the specified UI layer from the system. The layer can optionally be
+/// destroyed.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIManager::removeLayer( cgUILayer * pLayer, bool destroyLayer )
+{
+    LayerList::iterator itLayer = std::find( mLayers.begin(), mLayers.end(), pLayer );
+    if ( itLayer != mLayers.end() )
+    {
+        mLayers.erase( itLayer );
+        if ( destroyLayer )
+            pLayer->scriptSafeDispose();
+    
+    } // End if found
+}
+
+//-----------------------------------------------------------------------------
 //  Name : bringLayerToFront ()
 /// <summary>
 /// Move the interface layer to the front of its class of layers.
@@ -349,13 +440,13 @@ void cgUIManager::bringLayerToFront( cgUILayer * pLayer )
     // First, remove this layer from the list.
     mLayers.remove( pLayer );
 
-    // Now, find the top most layer in its class
+    // Now, find the top most (non system) layer in its class
     for ( itLayer = mLayers.begin(); itLayer != mLayers.end(); ++itLayer )
     {
         // Retrieve the layer we're testing against
         pTestLayer = *itLayer;
 
-        // If this is a system layer, we have found our top most item
+        // If this is the first system layer, we have found our top most item
         if ( pTestLayer->getLayerType() == cgUILayerType::SystemLayer )
              break;
 
@@ -370,7 +461,7 @@ void cgUIManager::bringLayerToFront( cgUILayer * pLayer )
     } // End if no
     else
     {
-        // System layer found, insert just prior to this
+        // First non-system layer found, insert just prior to this
         mLayers.insert( itLayer, pLayer );
 
     } // End if yes
@@ -529,9 +620,6 @@ cgString cgUIManager::addFont( cgInputStream Definition )
     if ( strFontName.empty() == true )
         return strFontName;
 
-    // Select this as the default font (last added)
-    setDefaultFont( strFontName );
-
     // Success!
     return strFontName;
 }
@@ -565,7 +653,8 @@ bool cgUIManager::selectFont( const cgString & strFontName )
 //-----------------------------------------------------------------------------
 bool cgUIManager::selectDefaultFont(  )
 {
-    if ( !mTextEngine ) return false;
+    if ( !mTextEngine )
+        return false;
     return mTextEngine->setCurrentFont( mDefaultFont );
 }
 
@@ -980,7 +1069,24 @@ void cgUIManager::setCapture( cgUIControl * pControl )
 //-----------------------------------------------------------------------------
 void cgUIManager::setFocus( cgUIControl * pControl )
 {
+    // Is this a no-op?
+    if ( pControl == mFocusControl )
+        return;
+
+    // If specified control cannot gain focus, skip.
+    if ( pControl && !pControl->canGainFocus() )
+        return;
+
+    // Notify the prior control that it lost focus.
+    if ( mFocusControl )
+        mFocusControl->onLostFocus();
+
+    // Swap focus control.
     mFocusControl = pControl;
+
+    // Notify the new control that it gained focus.
+    if ( mFocusControl )
+        mFocusControl->onGainFocus();
 }
 
 //-----------------------------------------------------------------------------
@@ -998,6 +1104,40 @@ bool cgUIManager::queryReferenceType( const cgUID & type ) const
 
     // Unsupported.
     return false;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : checkGarbage () (Private)
+/// <summary>
+/// Check the contents of the garbage list.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIManager::checkGarbage( )
+{
+    FormList::iterator itForm;
+    for ( itForm = mGarbageForms.begin(); itForm != mGarbageForms.end(); ++itForm )
+    {
+        // Perform the full close operation.
+        removeForm( (*itForm) );
+    
+    } // Next form
+    mGarbageForms.clear();
+}
+
+//-----------------------------------------------------------------------------
+//  Name : sendGarbageMessage () (Private)
+/// <summary>
+/// Sends the garbage collection message to ourselves.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIManager::sendGarbageMessage( )
+{
+    // Initialize message structure
+    cgMessage Msg;
+    Msg.messageId = cgSystemMessages::UI_CollectGarbage;
+
+    // Send the message to ourselves with a miniscule delay so that we clean up on the next message poll
+    cgReferenceManager::sendMessageTo( getReferenceId(), getReferenceId(), &Msg, 0.00001f );
 }
 
 //-----------------------------------------------------------------------------
@@ -1019,6 +1159,35 @@ bool cgUIManager::processMessage( cgMessage * pMessage )
     // What type of message is this?
     switch ( pMessage->messageId )
     {
+        case cgSystemMessages::UI_CollectGarbage:
+        {
+            // Check for garbage that needs to be unloaded.
+            checkGarbage();
+
+            // Send the garbage collect message again if we aren't in the process of
+            // being unregistered.
+            if ( !(pMessage->fromId == getReferenceId() && pMessage->sourceUnregistered) )
+                sendGarbageMessage();
+        
+        } // End case UI_CollectGarbage
+        case cgSystemMessages::RenderDriver_ScreenLayoutChange:
+        {
+            // Iterate through each layer and notify them from the top layer down
+            for ( itLayer = mLayers.rbegin(); itLayer != mLayers.rend(); ++itLayer )
+            {
+                pLayer = *itLayer;
+                if ( pLayer == CG_NULL ) continue;
+
+                // Notify layout change
+                if ( pLayer->onScreenLayoutChange( ) == true )
+                    break;
+
+            } // Next Layer
+
+            // This message was processed by us
+            return true;
+
+        } // End Case RenderDriver_ScreenLayoutChange
         case cgSystemMessages::InputDriver_MouseMoved:
         {
             const cgMouseMoveEventArgs * pData = (cgMouseMoveEventArgs*)pMessage->messageData;
@@ -1074,7 +1243,7 @@ bool cgUIManager::processMessage( cgMessage * pMessage )
                 // Notify mouse up
                 bool bProcessed = pLayer->onMouseButtonUp( pData->buttons, pData->position );
                 
-                // Also send a zero offset mouse movement to ensure hover's etc get updated
+                // Also send a zero offset mouse movement to ensure hover state gets updated, etc.
                 if ( bProcessed == true )
                     pLayer->onMouseMove( pData->position, cgPointF( 0, 0 ) );
 

@@ -135,7 +135,13 @@ bool cgBoneObject::pick( cgCameraNode * camera, cgObjectNode * issuer, const cgS
 {
     // Only valid in sandbox mode.
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
-        return false;
+    {
+        // Just use a bounding box for now.
+        // ToDo: This is a temporary test.
+        cgBoundingBox bounds = getLocalBoundingBox();
+        return bounds.intersect( rayOrigin, rayDirection, distance, false );
+        
+    } // End if !sandbox
 
     // Generate the sandbox mesh as necessary.
     if ( !mSandboxMesh.isValid() )

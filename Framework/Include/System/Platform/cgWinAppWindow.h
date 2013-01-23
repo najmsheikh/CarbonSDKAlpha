@@ -73,6 +73,9 @@ public:
     virtual cgPoint         screenToClient      ( const cgPoint & screenPoint );
     virtual cgPoint         clientToScreen      ( const cgPoint & clientPoint );
     virtual void            setTitle            ( const cgString & title );
+    virtual void            setSize             ( const cgSize & size );
+    virtual void            setClientSize       ( const cgSize & size );
+    virtual void            setFullScreenMode   ( bool fullScreen );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
@@ -91,6 +94,7 @@ protected:
 	//-------------------------------------------------------------------------
     HWND        mWnd;               // OS window being wrapped.
     bool        mOwnsWindow;        // Were we responsible for creating the above window handle?
+    bool        mFullScreen;        // Is the window currently in fullscreen mode?
     WNDCLASS	mWndClass;
     cgString    mClassName;         // Name assigned to the window class.
 

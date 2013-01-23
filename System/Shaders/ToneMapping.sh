@@ -376,14 +376,15 @@ class ToneMappingShader : ImageProcessingShader
 		if ( toneMapper != ToneMapMethod::Filmic )		
 		{
 			<?
-			ldrColor.rgb = pow( ldrColor.rgb, 1.0f / 2.2f );
+			ldrColor.rgb = pow( ldrColor.rgb, 1.0f / 2.2f );		
 			
-			float luminance    = dot( ldrColor.rgb, float3( 0.2125, 0.7154, 0.0721 ) ); 
+			// Temporary contrast adjustment
+			float luminance    = dot( ldrColor.rgb, float3( 0.2125, 0.7154, 0.0721 ) ) + 1e-7f; 
 			float luminanceAdj = saturate( (luminance - 0.5) * 1.1 + 0.5 );
-			ldrColor.rgb       = ldrColor.rgb * (luminanceAdj / (luminance + 1e-7));			
-			?>		
+			ldrColor.rgb       = ldrColor.rgb * (luminanceAdj / luminance);
+			?>
 		}
-	
+		
 		// Prior to running any final color corrections, place the adaptation luminance in the alpha channel for potential use by utilities
 		if ( postOperations.length() > 0 )
 		{

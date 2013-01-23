@@ -99,8 +99,8 @@ public:
     cgFloat                 getFrameRate        ( ) const;
     cgRange                 getFrameRange       ( ) const;
     const TargetDataMap   & getTargetData       ( ) const;
-    bool                    getSRT              ( cgDouble framePosition, const cgString & targetId, cgInt32 firstFrame, cgInt32 lastFrame, cgVector3 & scale, cgQuaternion & rotation, cgVector3 & translation );
-    bool                    getSRT              ( cgDouble framePosition, const cgString & targetId, cgInt32 firstFrame, cgInt32 lastFrame, const cgVector3 & defaultScale, const cgQuaternion & defaultRotation, const cgVector3 & defaultTranslation, cgVector3 & scale, cgQuaternion & rotation, cgVector3 & translation );
+    bool                    getSRT              ( cgDouble framePosition, cgAnimationPlaybackMode::Base mode, const cgString & targetId, cgInt32 firstFrame, cgInt32 lastFrame, cgVector3 & scale, cgQuaternion & rotation, cgVector3 & translation );
+    bool                    getSRT              ( cgDouble framePosition, cgAnimationPlaybackMode::Base mode, const cgString & targetId, cgInt32 firstFrame, cgInt32 lastFrame, const cgVector3 & defaultScale, const cgQuaternion & defaultRotation, const cgVector3 & defaultTranslation, cgVector3 & scale, cgQuaternion & rotation, cgVector3 & translation );
     void                    addScaleKey         ( cgInt32 frame, const cgString & targetId, const cgVector3 & scale );
     void                    addRotationKey      ( cgInt32 frame, const cgString & targetId, const cgQuaternion & rotation );
     void                    addTranslationKey   ( cgInt32 frame, const cgString & targetId, const cgVector3 & translation );

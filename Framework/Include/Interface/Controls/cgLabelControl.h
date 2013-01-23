@@ -63,6 +63,7 @@ public:
     virtual void                    renderSecondary     ( );
     virtual void                    setControlText      ( const cgString & text );
     virtual void                    setFont             ( const cgString & fontName );
+    virtual void                    setTextColor        ( const cgColorValue & color );
     virtual void                    onSize              ( cgInt32 width, cgInt32 height );
 
     //-------------------------------------------------------------------------
@@ -84,8 +85,6 @@ public:
     cgHorizontalAlignment::Base     getHorizontalAlignment  ( ) const { return mHorizontalAlign; }
     void                            setVerticalAlignment    ( cgVerticalAlignment::Base align );
     cgVerticalAlignment::Base       getVerticalAlignment    ( ) const { return mVerticalAlign; }
-    void                            setTextColor            ( const cgColorValue & color );
-    const cgColorValue            & getTextColor            ( ) const;
     void                            setAllowFormatCode      ( bool allow );
     bool                            getAllowFormatCode      ( ) const;
 
@@ -104,7 +103,6 @@ protected:
     bool                        mAutoSize;          // When enabled, the control will automatically re-size itself to fit any specified text (single line only).
     cgHorizontalAlignment::Base mHorizontalAlign;   // Describes how the text should be aligned horizontally
     cgVerticalAlignment::Base   mVerticalAlign;     // Describes how the text should be aligned vertically
-    cgColorValue                mTextColor;         // Set the default color of any text rendered for this control.
     bool                        mAllowFormatCode;   // Are formatting code tags allowed?
 };
 

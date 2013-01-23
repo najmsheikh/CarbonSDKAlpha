@@ -60,12 +60,12 @@ namespace cgMathUtility
 	// Inline Functions
 	inline cgFloat randomFloat( cgFloat minimum, cgFloat maximum )
 	{
-		return minimum + ( ((cgFloat)rand()/(cgFloat)RAND_MAX) * (maximum-minimum) );
+		return minimum + ( (rand()/(cgFloat)RAND_MAX) * (cgFloat)(maximum-minimum) );
 	}
 
-	inline int randomInt( int minimum, int maximum )
+	inline cgInt32 randomInt( cgInt32 minimum, cgInt32 maximum )
 	{
-		return minimum + (int)( ((cgFloat)rand()/(cgFloat)RAND_MAX) * (maximum-minimum) );
+		return minimum + (cgInt32)(( (rand()/(cgFloat)RAND_MAX) * (cgFloat)(maximum-minimum) )+0.5f);
 	}
 
 	inline cgFloat clamp( cgFloat val, cgFloat lo, cgFloat hi )

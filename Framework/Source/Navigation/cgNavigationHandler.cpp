@@ -204,3 +204,20 @@ void cgNavigationHandler::update( cgFloat timeDelta )
     for ( itAgent = mAgents.begin(); itAgent != mAgents.end(); ++itAgent )
         (*itAgent)->onNavigationAgentReposition( &cgNavigationAgentRepositionEventArgs( (*itAgent)->getPosition(), true ) );
 }
+
+//-----------------------------------------------------------------------------
+//  Name : step ()
+/// <summary>
+/// Perform a single step of the simulation iteration. Specified delta period
+/// should be consistent between calls!
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgNavigationHandler::step( cgFloat timeDelta )
+{
+    mCrowd->update( timeDelta, CG_NULL );
+
+    // Notify all agents that an update has occurred.
+    AgentList::iterator itAgent;
+    for ( itAgent = mAgents.begin(); itAgent != mAgents.end(); ++itAgent )
+        (*itAgent)->onNavigationAgentReposition( &cgNavigationAgentRepositionEventArgs( (*itAgent)->getPosition(), true ) );
+}

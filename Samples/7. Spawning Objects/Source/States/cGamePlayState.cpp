@@ -113,6 +113,8 @@ bool cGamePlayState::begin( )
     cgScriptObject * formScript = mForm->getScriptObject();
     arguments.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("Scene@+"), (void*)mScene ) );
     formScript->executeMethodVoid( _T("setScene"), arguments, true );
+    arguments[0] = cgScriptArgument( cgScriptArgumentType::Object, _T("CameraNode@+"), (void*)mCamera );
+    formScript->executeMethodVoid( _T("setPlayerCamera"), arguments, true );
     
     // Switch to direct mouse input mode (no cursor)
     cgInputDriver * inputDriver = cgInputDriver::getInstance();
@@ -175,14 +177,14 @@ bool cGamePlayState::loadScene( )
     controller->initialize( );
     
     // Position the player in the world.
-    mPlayer->setPosition( cgVector3(0.0f, 2.8f, -20.0f) );
+    mPlayer->setPosition( cgVector3(0.0f, 0.1f, -20.0f) );
     //mPlayer->setPosition( cgVector3(0.0f, 2.8f, -2.0f) );
     
     // Now create a camera that can be attached to the player object.
     mCamera = static_cast<cgCameraNode*>(mScene->createObjectNode( true, RTID_CameraObject, false ));
     
     // Setup camera properties
-    mCamera->setFOV( 75.0f );
+    mCamera->setFOV( 85.0f );
     mCamera->setNearClip( 0.2f );
     mCamera->setFarClip( 10000.01f );
     mCamera->setUpdateRate( cgUpdateRate::Always );
@@ -190,7 +192,7 @@ bool cGamePlayState::loadScene( )
     // Offset the camera to "eye" level based on the configured height
     // of the character controller prior to attaching to the player.
     mLastCamPos    = mPlayer->getPosition();
-    mLastCamPos.y += (controller->getCharacterHeight() * 0.5f) * 0.95f;
+    mLastCamPos.y += controller->getCharacterHeight() * 0.95f;
     mCamera->setPosition( mLastCamPos );
     
     // Attach the camera as a child of the player object.
@@ -250,9 +252,20 @@ void cGamePlayState::update( )
         cgCharacterController * controller = static_cast<cgCharacterController*>(mPlayer->getPhysicsController());
         if ( inputDriver->getMouseMode() != cgMouseHandlerMode::Cursor )
         {
+            // Zoom when holding middle mouse button.
+            if ( inputDriver->isMouseButtonPressed( cgMouseButtons::Middle ) )
+                mCamera->setFOV( 20.0f );
+            else
+                mCamera->setFOV( 85.0f );
+
+            // If the character is already airborne and the user presses space,
+            // switch to 'fly mode'.
+            if ( controller->getCharacterState() == cgCharacterController::Airborne && inputDriver->isKeyPressed( cgKeys::Space, true ) )
+                controller->enableFlyMode( true, true );
+            
             // Update player controller details in response to key presses.
             // Here we're handling player crouching by responding to control key presses.
-            if ( inputDriver->isKeyPressed( cgKeys::LControl ) )
+            if ( !controller->isFlyModeEnabled() && inputDriver->isKeyPressed( cgKeys::LControl ) )
             {
                 // Here we request that the character controller be switched
                 // to 'Crouch' mode and reduce the maximum speed of the character
@@ -286,7 +299,7 @@ void cGamePlayState::update( )
         // right in line here to keep things simple for now. First compute the 
         // camera's required vertical offset from its parent player based on the
         // height of the character.
-        cgFloat cameraOffset = (controller->getCharacterHeight( true ) * 0.5f) * 0.95f;
+        cgFloat cameraOffset = controller->getCharacterHeight( true ) * 0.95f;
 
         // Compute head bob offsets (we only want it to bob if the character not 
         // currently sliding or airborne)

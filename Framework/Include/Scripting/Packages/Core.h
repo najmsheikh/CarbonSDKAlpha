@@ -9,6 +9,8 @@
 #include "Core/Animation.h"
 #include "Core/World.h"
 #include "Core/Rendering.h"
+#include "Core/Audio.h"
+#include "Core/Navigation.h"
 #include "Core/Physics.h"
 #include "Core/Input.h"
 #include "Core/Resources.h"
@@ -42,7 +44,9 @@ namespace Core {
             DECLARE_PACKAGE_CHILD( Resources )
             DECLARE_PACKAGE_CHILD( Rendering )
             DECLARE_PACKAGE_CHILD( Input )
+            DECLARE_PACKAGE_CHILD( Audio )
             DECLARE_PACKAGE_CHILD( Physics )
+            DECLARE_PACKAGE_CHILD( Navigation )
             DECLARE_PACKAGE_CHILD( World )
             DECLARE_PACKAGE_CHILD( UI )
             DECLARE_PACKAGE_CHILD( States )

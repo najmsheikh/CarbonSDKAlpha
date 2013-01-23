@@ -74,6 +74,7 @@ public:
     void            setBrightness           ( cgFloat f );
     void            setExposure             ( cgFloat exposure, cgFloat strength );
     void            setSaturation           ( cgFloat f );
+	void			setContrast             ( cgFloat f );
     void            setGrain                ( const cgTextureHandle & texture, cgFloat strength );
     void            setVignette             ( const cgTextureHandle & texture, cgFloat scale, cgFloat bias, cgFloat strength );
     void            setRemap                ( const cgTextureHandle & texture );

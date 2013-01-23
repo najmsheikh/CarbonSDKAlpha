@@ -1362,9 +1362,8 @@ sqlite3_vfs * cgWorldQuery::registerMemoryVFS( )
 //-----------------------------------------------------------------------------
 cgInt cgWorldQuery::memoryDBVFSOpen( sqlite3_vfs * pVFS, const cgChar * zName, sqlite3_file * pFile, cgInt flags, cgInt *pOutFlags )
 {
-    MemoryDBFile * pMemFile = (MemoryDBFile*)pFile;
-
     // Set up the file structure.
+    MemoryDBFile * pMemFile = (MemoryDBFile*)pFile;
     pMemFile->Flags         = flags;
     pMemFile->pStream       = CG_NULL;
     pMemFile->pBuffer       = CG_NULL;
@@ -1648,8 +1647,71 @@ cgInt cgWorldQuery::memoryDBFileCheckReservedLock( sqlite3_file*, cgInt *pResOut
 /// ToDo
 /// </summary>
 //-----------------------------------------------------------------------------
-cgInt cgWorldQuery::memoryDBFileControl( sqlite3_file*, cgInt op, void *pArg )
+cgInt cgWorldQuery::memoryDBFileControl( sqlite3_file* file, cgInt op, void *pArg )
 {
+    switch ( op )
+    {
+        case SQLITE_FCNTL_LOCKSTATE:
+            // Not required unless in test mode (which we are not)
+            break;
+
+        case SQLITE_GET_LOCKPROXYFILE:
+            // Unsupported
+            break;
+
+        case SQLITE_SET_LOCKPROXYFILE:
+            // Unsupported
+            break;
+
+        case SQLITE_LAST_ERRNO:
+            // Unsupported
+            break;
+
+        case SQLITE_FCNTL_SIZE_HINT:
+            // VFS does not support writing, so size hint is not required.
+            break;
+
+        case SQLITE_FCNTL_CHUNK_SIZE:
+            // VFS does not support writing, so chunk size alteration is not required.
+            break;
+
+        case SQLITE_FCNTL_FILE_POINTER:
+            *((sqlite3_file**)pArg) = file;
+            break;
+
+        case SQLITE_FCNTL_SYNC_OMITTED:
+            // Used to inform us about PRAGMA Synchronous=OFF scenario.
+            break;
+
+        case SQLITE_FCNTL_WIN32_AV_RETRY:
+            // Configure automatic retry counts for file IO.
+            break;
+
+        case SQLITE_FCNTL_PERSIST_WAL:
+            // VFS does not support writing, so configuring write ahead log is not required.
+            break;
+
+        case SQLITE_FCNTL_OVERWRITE:
+            // VFS does not support writing, so signaling a database overwrite is not required.
+            break;
+        
+        case SQLITE_FCNTL_VFSNAME:
+            // Unsupported
+            break;
+
+        case SQLITE_FCNTL_POWERSAFE_OVERWRITE:
+            // VFS does not support writing, so configuring power safe overwriting is not required.
+            break;
+
+        case SQLITE_FCNTL_PRAGMA:
+            // Let sqlite handle this pragma with SQLITE_NOTFOUND,
+            // or handle it ourselves and return SQLITE_OK;
+            //return SQLITE_NOTFOUND;
+            break;
+
+    } // End switch op
+
+    // Default behavior
     return SQLITE_OK;
 }
 

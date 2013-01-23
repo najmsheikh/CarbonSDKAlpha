@@ -43,8 +43,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="_NEWTON_USE_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
+				PreprocessorDefinitions="_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="2"
 				BasicRuntimeChecks="3"
@@ -71,7 +71,7 @@
 				AdditionalOptions="/ignore:4006 /ignore:4221"
 				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
 				OutputFile="$(OutDir)/$(ProjectName)d.lib"
-				AdditionalLibraryDirectories=""
+				AdditionalLibraryDirectories="$(DXSDK_DIR)Lib\x86"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -119,8 +119,8 @@
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="false"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
+				PreprocessorDefinitions="_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -132,7 +132,7 @@
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="cgPrecompiled.h"
 				WarningLevel="3"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -147,7 +147,7 @@
 				Name="VCLibrarianTool"
 				AdditionalOptions="/ignore:4006 /ignore:4221"
 				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
-				AdditionalLibraryDirectories=""
+				AdditionalLibraryDirectories="$(DXSDK_DIR)Lib\x86"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -167,9 +167,9 @@
 		</Configuration>
 		<Configuration
 			Name="DebugExports|Win32"
-			OutputDirectory="../../Bin/Lib/"
+			OutputDirectory="../../Bin/Dll/"
 			IntermediateDirectory="$(ProjectDir)Compiled\$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			CharacterSet="1"
 			ManagedExtensions="0"
 			WholeProgramOptimization="0"
@@ -193,8 +193,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="_NEWTON_USE_LIB;WIN32;_DEBUG;_LIB;CGE_DLL_EXPORTS;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
+				PreprocessorDefinitions="_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;_DEBUG;_LIB;CGE_DLL_EXPORTS;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="2"
 				BasicRuntimeChecks="0"
@@ -216,14 +216,16 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				AdditionalOptions="/ignore:4006 /ignore:4221"
+				Name="VCLinkerTool"
 				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
-				OutputFile="$(OutDir)/$(ProjectName)dExports.lib"
-				AdditionalLibraryDirectories=""
+				OutputFile="$(OutDir)\$(ProjectName)d.dll"
+				AdditionalLibraryDirectories="$(DXSDK_DIR)Lib\x86"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -235,14 +237,17 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="ReleaseExports|Win32"
-			OutputDirectory="../../Bin/Lib"
+			OutputDirectory="../../Bin/Dll"
 			IntermediateDirectory="$(ProjectDir)Compiled\$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			CharacterSet="1"
 			>
 			<Tool
@@ -267,8 +272,8 @@
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="true"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;CGE_DLL_EXPORTS"
+				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
+				PreprocessorDefinitions="_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;NDEBUG;_LIB;CGE_DLL_EXPORTS"
 				StringPooling="true"
 				ExceptionHandling="2"
 				RuntimeLibrary="2"
@@ -280,7 +285,7 @@
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="cgPrecompiled.h"
 				WarningLevel="3"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -292,14 +297,15 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				AdditionalOptions="/ignore:4006 /ignore:4221"
+				Name="VCLinkerTool"
 				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
-				OutputFile="$(OutDir)\$(ProjectName)Exports.lib"
-				AdditionalLibraryDirectories=""
+				AdditionalLibraryDirectories="$(DXSDK_DIR)Lib\x86"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -309,6 +315,9 @@
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -344,8 +353,8 @@
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="false"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
+				PreprocessorDefinitions="_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="0"
@@ -358,7 +367,7 @@
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="cgPrecompiled.h"
 				WarningLevel="3"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -373,7 +382,7 @@
 				Name="VCLibrarianTool"
 				AdditionalOptions="/ignore:4006 /ignore:4221"
 				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
-				AdditionalLibraryDirectories=""
+				AdditionalLibraryDirectories="$(DXSDK_DIR)Lib\x86"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -419,8 +428,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
+				PreprocessorDefinitions="CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="2"
 				BasicRuntimeChecks="3"
@@ -445,9 +454,9 @@
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="false"
 				AdditionalOptions="/ignore:4006 /ignore:4221"
-				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib d3d11.lib d3dx11.lib dxgi.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
+				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib dxguid.lib d3d11.lib d3dx11.lib dxgi.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
 				OutputFile="$(OutDir)/$(ProjectName)d.lib"
-				AdditionalLibraryDirectories=""
+				AdditionalLibraryDirectories="$(DXSDK_DIR)Lib\x86"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -495,8 +504,8 @@
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="false"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
+				PreprocessorDefinitions="CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="0"
@@ -509,7 +518,7 @@
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="cgPrecompiled.h"
 				WarningLevel="3"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -523,8 +532,8 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalOptions="/ignore:4006 /ignore:4221"
-				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib d3d11.lib d3dx11.lib dxgi.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
-				AdditionalLibraryDirectories=""
+				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib dxguid.lib d3d11.lib d3dx11.lib dxgi.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
+				AdditionalLibraryDirectories="$(DXSDK_DIR)Lib\x86"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -572,8 +581,8 @@
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="false"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
+				PreprocessorDefinitions="CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -585,7 +594,7 @@
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="cgPrecompiled.h"
 				WarningLevel="3"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -599,8 +608,8 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalOptions="/ignore:4006 /ignore:4221"
-				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib d3d11.lib d3dx11.lib dxgi.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
-				AdditionalLibraryDirectories=""
+				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib dxguid.lib d3d11.lib d3dx11.lib dxgi.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
+				AdditionalLibraryDirectories="$(DXSDK_DIR)Lib\x86"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -838,6 +847,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\Source\Interface\Controls\cgCheckBoxControl.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\Source\Interface\Controls\cgComboBoxControl.cpp"
 						>
 					</File>
@@ -957,6 +970,10 @@
 						RelativePath="..\..\Source\Physics\Controllers\cgCharacterController.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\..\Source\Physics\Controllers\cgRagdollController.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Bodies"
@@ -1009,6 +1026,10 @@
 				<Filter
 					Name="Joints"
 					>
+					<File
+						RelativePath="..\..\Source\Physics\Joints\cgBallJoint.cpp"
+						>
+					</File>
 					<File
 						RelativePath="..\..\Source\Physics\Joints\cgFixedAxisJoint.cpp"
 						>
@@ -1370,6 +1391,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\Source\World\Objects\cgBillboardObject.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\Source\World\Objects\cgBoneObject.cpp"
 						>
 					</File>
@@ -1498,6 +1523,18 @@
 						</File>
 						<File
 							RelativePath="..\..\Source\World\Objects\cgKinematicControllerJointObject.cpp"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Navigation"
+						>
+						<File
+							RelativePath="..\..\Source\World\Objects\cgNavigationPatrolPoint.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\World\Objects\cgNavigationWaypoint.cpp"
 							>
 						</File>
 					</Filter>
@@ -3797,6 +3834,7 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
+								PreprocessorDefinitions="SQLITE_OMIT_WAL"
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
@@ -3805,6 +3843,7 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
+								PreprocessorDefinitions="SQLITE_OMIT_WAL"
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
@@ -3813,6 +3852,7 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
+								PreprocessorDefinitions="SQLITE_OMIT_WAL"
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
@@ -3821,6 +3861,7 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
+								PreprocessorDefinitions="SQLITE_OMIT_WAL"
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
@@ -3829,6 +3870,7 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
+								PreprocessorDefinitions="SQLITE_OMIT_WAL"
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
@@ -3837,6 +3879,7 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
+								PreprocessorDefinitions="SQLITE_OMIT_WAL"
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
@@ -3845,6 +3888,7 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
+								PreprocessorDefinitions="SQLITE_OMIT_WAL"
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
@@ -3853,6 +3897,7 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
+								PreprocessorDefinitions="SQLITE_OMIT_WAL"
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
@@ -5434,6 +5479,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\Include\Carbon.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Include\cgAPI.h"
 				>
 			</File>
@@ -5533,6 +5582,10 @@
 					>
 					<File
 						RelativePath="..\..\Include\Interface\Controls\cgButtonControl.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Include\Interface\Controls\cgCheckBoxControl.h"
 						>
 					</File>
 					<File
@@ -5679,6 +5732,10 @@
 						RelativePath="..\..\Include\Physics\Controllers\cgCharacterController.h"
 						>
 					</File>
+					<File
+						RelativePath="..\..\Include\Physics\Controllers\cgRagdollController.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Bodies"
@@ -5731,6 +5788,10 @@
 				<Filter
 					Name="Joints"
 					>
+					<File
+						RelativePath="..\..\Include\Physics\Joints\cgBallJoint.h"
+						>
+					</File>
 					<File
 						RelativePath="..\..\Include\Physics\Joints\cgFixedAxisJoint.h"
 						>
@@ -6008,6 +6069,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\Include\World\Objects\cgBillboardObject.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\Include\World\Objects\cgBoneObject.h"
 						>
 					</File>
@@ -6139,6 +6204,18 @@
 							>
 						</File>
 					</Filter>
+					<Filter
+						Name="Navigation"
+						>
+						<File
+							RelativePath="..\..\Include\World\Objects\cgNavigationPatrolPoint.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Include\World\Objects\cgNavigationWaypoint.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="Lighting"
@@ -6215,11 +6292,19 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\Include\Scripting\Packages\Core\Audio.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\Include\Scripting\Packages\Core\Input.h"
 							>
 						</File>
 						<File
 							RelativePath="..\..\Include\Scripting\Packages\Core\Math.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Include\Scripting\Packages\Core\Navigation.h"
 							>
 						</File>
 						<File
@@ -6429,6 +6514,10 @@
 						<Filter
 							Name="Rendering"
 							>
+							<File
+								RelativePath="..\..\Include\Scripting\Packages\Core\Rendering\BillboardBuffer.h"
+								>
+							</File>
 							<File
 								RelativePath="..\..\Include\Scripting\Packages\Core\Rendering\ImageProcessor.h"
 								>
@@ -6665,6 +6754,14 @@
 									>
 								</File>
 								<File
+									RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Billboard.h"
+									>
+								</File>
+								<File
+									RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Bone.h"
+									>
+								</File>
+								<File
 									RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Camera.h"
 									>
 								</File>
@@ -6678,6 +6775,14 @@
 								</File>
 								<File
 									RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Lights.h"
+									>
+								</File>
+								<File
+									RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Mesh.h"
+									>
+								</File>
+								<File
+									RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Navigation.h"
 									>
 								</File>
 								<File
@@ -6700,7 +6805,39 @@
 									Name="Lights"
 									>
 									<File
+										RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\DirectionalLight.h"
+										>
+									</File>
+									<File
+										RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\HemisphereLight.h"
+										>
+									</File>
+									<File
 										RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\Light.h"
+										>
+									</File>
+									<File
+										RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\PointLight.h"
+										>
+									</File>
+									<File
+										RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\ProjectorLight.h"
+										>
+									</File>
+									<File
+										RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\SpotLight.h"
+										>
+									</File>
+								</Filter>
+								<Filter
+									Name="Navigation"
+									>
+									<File
+										RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Navigation\NavigationPatrolPoint.h"
+										>
+									</File>
+									<File
+										RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Navigation\NavigationWaypoint.h"
 										>
 									</File>
 								</Filter>
@@ -6743,6 +6880,10 @@
 							</File>
 							<File
 								RelativePath="..\..\Include\Scripting\Packages\Core\Animation\AnimationTarget.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Include\Scripting\Packages\Core\Animation\Types.h"
 								>
 							</File>
 						</Filter>
@@ -6790,6 +6931,10 @@
 								>
 								<File
 									RelativePath="..\..\Include\Scripting\Packages\Core\UI\Controls\Button.h"
+									>
+								</File>
+								<File
+									RelativePath="..\..\Include\Scripting\Packages\Core\UI\Controls\CheckBox.h"
 									>
 								</File>
 								<File
@@ -6865,6 +7010,10 @@
 								RelativePath="..\..\Include\Scripting\Packages\Core\Physics\PhysicsWorld.h"
 								>
 							</File>
+							<File
+								RelativePath="..\..\Include\Scripting\Packages\Core\Physics\Types.h"
+								>
+							</File>
 							<Filter
 								Name="Bodies"
 								>
@@ -6900,6 +7049,10 @@
 									RelativePath="..\..\Include\Scripting\Packages\Core\Physics\Controllers\PhysicsController.h"
 									>
 								</File>
+								<File
+									RelativePath="..\..\Include\Scripting\Packages\Core\Physics\Controllers\RagdollController.h"
+									>
+								</File>
 							</Filter>
 						</Filter>
 						<Filter
@@ -6915,6 +7068,26 @@
 							</File>
 							<File
 								RelativePath="..\..\Include\Scripting\Packages\Core\States\AppTransitionState.h"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="Navigation"
+							>
+							<File
+								RelativePath="..\..\Include\Scripting\Packages\Core\Navigation\Types.h"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="Audio"
+							>
+							<File
+								RelativePath="..\..\Include\Scripting\Packages\Core\Audio\AudioDriver.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Include\Scripting\Packages\Core\Audio\Types.h"
 								>
 							</File>
 						</Filter>

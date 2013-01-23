@@ -67,6 +67,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Static Functions
     //-------------------------------------------------------------------------
+    static void     shutdown            ( );
     static bool     setRootDirectory    ( const cgString & directoryName );
     static bool     addPathProtocol     ( const cgString & protocol, const cgString & directoryName );
     static bool     addPackage          ( const cgString & packageFile );

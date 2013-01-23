@@ -55,13 +55,7 @@ cgMotionBlurProcessor::cgMotionBlurProcessor(  )
 	mVelocitySampler        = CG_NULL;
 	mColorLowSampler        = CG_NULL;
 
-    mCurrentRenderRate      = 0.0f;
-    mAccumulatedTime        = 0.0f;
-    mBlurAttenuation        = 0.0f;
-
     // Clear matrices
-    cgMatrix::identity( mViewKeyMatrix1 );
-    cgMatrix::identity( mViewKeyMatrix2 );
     cgMatrix::identity( mOperationData.interpolatedCameraMatrix );
 
 	mOperationData.blurAmount          = 0.5f;
@@ -78,8 +72,6 @@ cgMotionBlurProcessor::cgMotionBlurProcessor(  )
 
     mTargetRate             = 50;
     mAttenuationRates       = cgRangeF( 0, 0 );
-
-	cgMatrix::identity( mPrevCamMatrix );
 }
 
 //-----------------------------------------------------------------------------
@@ -122,14 +114,9 @@ void cgMotionBlurProcessor::dispose( bool disposeBase )
     mDepthSampler           = CG_NULL;
 	mVelocitySampler        = CG_NULL;
 	mColorLowSampler        = CG_NULL;
-
-    mCurrentRenderRate      = 0.0f;
-    mAccumulatedTime        = 0.0f;
-    mBlurAttenuation        = 0.0f;
+    mCameraData.clear();
 
     // Clear matrices
-    cgMatrix::identity( mViewKeyMatrix1 );
-    cgMatrix::identity( mViewKeyMatrix2 );
 	cgMatrix::identity( mOperationData.interpolatedCameraMatrix );
 
 	mOperationData.blurAmount     = 0.1f;
@@ -252,11 +239,8 @@ bool cgMotionBlurProcessor::execute( cgInt32 nPasses,
 		return false;
 
 	// Setup targets
-	cgRenderTargetHandle target0 = sourceColorLow;
-	cgRenderTargetHandle target1 = sourceColorLowScratch;
-
-	// Clear the alpha channel of the initial blur target (assists with reducing out of bounds sampling artifacts)
-	processColorImage( target0, target1, cgImageOperation::CopyRGBSetAlpha, cgColorValue(0,0,0,1) );
+	cgRenderTargetHandle target0 = sourceColorLowScratch;
+	cgRenderTargetHandle target1 = sourceColorLow;
 
 	// Set shader constants
 	mMotionBlurConstants->updateBuffer( 0, 0, &mOperationData );
@@ -296,7 +280,6 @@ bool cgMotionBlurProcessor::execute( cgInt32 nPasses,
 		{
 			if ( !useBlending )
 			{
-				mColorSampler->apply( sourceColor );
 				mDriver->setBlendState( mDefaultRGBABlendState );
 			}
 			else
@@ -304,6 +287,7 @@ bool cgMotionBlurProcessor::execute( cgInt32 nPasses,
 				mDriver->setBlendState( mAlphaBlendState );
 			}
 
+			mColorSampler->apply( sourceColor );
 			mColorLowSampler->apply( currDst );
 			if ( mDriver->beginTargetRender( destination, cgDepthStencilTargetHandle::Null ) )
 			{
@@ -335,29 +319,34 @@ bool cgMotionBlurProcessor::update( cgCameraNode * activeCamera, cgFloat timeDel
 	cgMatrix invCameraView;
 	cgMatrix::inverse( invCameraView, cameraView );
 
+    // Get the camera data for this camera.
+    CameraData & data = mCameraData[activeCamera];
+
     // Increment the time since we last captured blur matrices
-    mCurrentRenderRate = (timeDelta > 0.0f) ? (1.0f / timeDelta) : 10000.0f;
-    mAccumulatedTime  += timeDelta;
+    data.currentRenderRate = (timeDelta > 0.0f) ? (1.0f / timeDelta) : 10000.0f;
+    data.accumulatedTime  += timeDelta;
+
+    // ToDo: Remove camera data if it has not been used in a while.
 
     // If enough time has elapsed such that we can sample new
     // matrices, then cycle the two key frames and capture new data.
-	if ( mAccumulatedTime >= (1.0f / mTargetRate) )
+	if ( data.accumulatedTime >= (1.0f / mTargetRate) )
 	{
         // Cycle key frames.
-        mViewKeyMatrix1 = mViewKeyMatrix2;
+        data.viewKeyMatrix1 = data.viewKeyMatrix2;
 
         // Capture current camera data.
-        mViewKeyMatrix2 = cameraWorld;
+        data.viewKeyMatrix2 = cameraWorld;
 
         // Setup for next capture
-        mAccumulatedTime = 0.0f;
+        data.accumulatedTime -= (1.0f/mTargetRate);
 
     } // End if time expired
 
 	// Compute angular velocity
 	cgEulerAngles euler0, euler1;
-	euler0.fromMatrix( mPrevCamMatrix, cgEulerAnglesOrder::YXZ );
-	euler1.fromMatrix( cameraWorld,    cgEulerAnglesOrder::YXZ );
+	euler0.fromMatrix( data.prevCameraMatrix, cgEulerAnglesOrder::YXZ );
+	euler1.fromMatrix( cameraWorld, cgEulerAnglesOrder::YXZ );
 	cgEulerAngles deltaEuler;
 	deltaEuler.x = euler1.x - euler0.x;
 	deltaEuler.y = euler1.y - euler0.y;
@@ -384,28 +373,29 @@ bool cgMotionBlurProcessor::update( cgCameraNode * activeCamera, cgFloat timeDel
 	mOperationData.compositeBlend = angularVelocityWeight;
 
     // Compute the required blur attenuation based on current rate.
-	mBlurAttenuation = max( 0.0f, min( 1.0f, (mCurrentRenderRate - mAttenuationRates.min) / (mAttenuationRates.max - mAttenuationRates.min) ) );
+    cgFloat blurAttenuation = (data.currentRenderRate - mAttenuationRates.min) / (mAttenuationRates.max - mAttenuationRates.min);
+	blurAttenuation = max( 0.0f, min( 1.0f, blurAttenuation ) );
 
 	// Attenuate blurriness factor(s)
-	mOperationData.blurAmount = mBlurAmount * mBlurAttenuation * (mTargetRate / mCurrentRenderRate);
+	mOperationData.blurAmount = mBlurAmount * blurAttenuation * (mTargetRate / data.currentRenderRate);
 
     // If there is blurring to do
-    if ( mBlurAttenuation > 0.0f )
+    if ( blurAttenuation > 0.0f )
 	{
 		// Compute current rotation for resulting blur matrix.
 		cgQuaternion rotation, tmpQuat;
-		cgFloat frameDelta = min( 1.0f, mAccumulatedTime * mTargetRate );
+		cgFloat frameDelta = min( 1.0f, data.accumulatedTime * mTargetRate );
 		cgQuaternion qkey1, qkey2;
-		cgQuaternion::rotationMatrix( qkey1, mViewKeyMatrix1 );
-		cgQuaternion::rotationMatrix( qkey2, mViewKeyMatrix2 );
+		cgQuaternion::rotationMatrix( qkey1, data.viewKeyMatrix1 );
+		cgQuaternion::rotationMatrix( qkey2, data.viewKeyMatrix2 );
 		cgQuaternion::slerp( rotation, qkey1, qkey2, frameDelta );
 		cgQuaternion::rotationMatrix( tmpQuat, cameraWorld );
 		cgQuaternion::slerp( rotation, tmpQuat, rotation, mRotationalBlurAmt * 1.0f );
 
 		// Compute current translation for resulting blur matrix
 		cgVector3 translation;
-		const cgVector3 & key1 = (cgVector3&)mViewKeyMatrix1._41;
-		const cgVector3 & key2 = (cgVector3&)mViewKeyMatrix2._41;
+		const cgVector3 & key1 = (cgVector3&)data.viewKeyMatrix1._41;
+		const cgVector3 & key2 = (cgVector3&)data.viewKeyMatrix2._41;
 		cgVector3::lerp( translation, key1, key2, frameDelta );
 		cgVector3::lerp( translation, (cgVector3&)cameraWorld._41, translation, mTranslationBlurAmt * 1.0f );
 
@@ -420,7 +410,7 @@ bool cgMotionBlurProcessor::update( cgCameraNode * activeCamera, cgFloat timeDel
 	mOperationData.interpolatedCameraMatrix = invCameraView * (cameraView * cameraProj);
 
 	// Cache current camera matrix for use in the next frame
-	mPrevCamMatrix = cameraWorld;
+	data.prevCameraMatrix = cameraWorld;
 
     // Return success
     return true;

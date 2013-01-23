@@ -42,8 +42,6 @@ namespace Label
             BINDSUCCESS( engine->registerObjectMethod( "Label", "HorizontalAlignment getHorizontalAlignment( ) const", asMETHODPR(cgLabelControl, getHorizontalAlignment, ( ) const, cgHorizontalAlignment::Base ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Label", "void setVerticalAlignment( VerticalAlignment )", asMETHODPR(cgLabelControl, setVerticalAlignment, ( cgVerticalAlignment::Base ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Label", "VerticalAlignment getVerticalAlignment( ) const", asMETHODPR(cgLabelControl, getVerticalAlignment, ( ) const, cgVerticalAlignment::Base ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Label", "void setTextColor( const ColorValue &in )", asMETHODPR(cgLabelControl, setTextColor, ( const cgColorValue & ), void ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Label", "const ColorValue& getTextColor( ) const", asMETHODPR(cgLabelControl, getTextColor, ( ) const, const cgColorValue & ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Label", "void setAllowFormatCode( bool )", asMETHODPR(cgLabelControl, setAllowFormatCode, ( bool ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Label", "bool getAllowFormatCode( ) const", asMETHODPR(cgLabelControl, getAllowFormatCode, ( ) const, bool ), asCALL_THISCALL) );
 
@@ -56,8 +54,6 @@ namespace Label
             BINDSUCCESS( engine->registerObjectMethod( "Label", "HorizontalAlignment get_horizontalAlignment( ) const", asMETHODPR(cgLabelControl, getHorizontalAlignment, ( ) const, cgHorizontalAlignment::Base ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Label", "void set_verticalAlignment( VerticalAlignment )", asMETHODPR(cgLabelControl, setVerticalAlignment, ( cgVerticalAlignment::Base ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Label", "VerticalAlignment get_verticalAlignment( ) const", asMETHODPR(cgLabelControl, getVerticalAlignment, ( ) const, cgVerticalAlignment::Base ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Label", "void set_textColor( const ColorValue &in )", asMETHODPR(cgLabelControl, setTextColor, ( const cgColorValue & ), void ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Label", "const ColorValue& get_textColor( ) const", asMETHODPR(cgLabelControl, getTextColor, ( ) const, const cgColorValue & ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Label", "void set_allowFormatCode( bool )", asMETHODPR(cgLabelControl, setAllowFormatCode, ( bool ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Label", "bool get_allowFormatCode( ) const", asMETHODPR(cgLabelControl, getAllowFormatCode, ( ) const, bool ), asCALL_THISCALL) );
 

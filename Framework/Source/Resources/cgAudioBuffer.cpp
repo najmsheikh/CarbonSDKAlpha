@@ -72,7 +72,11 @@ cgAudioBuffer::cgAudioBuffer( cgUInt32 nReferenceId, cgAudioDriver * pDriver ) :
 	mLastStreamPosition   = 0;
 	mStreamDataWritten    = 0;
     mInputSource.codecId  = 0;
-    
+    m3DRanges             = cgRangeF(DS3D_DEFAULTMINDISTANCE,DS3D_DEFAULTMAXDISTANCE);
+    m3DVelocity           = cgVector3(0,0,0);
+    m3DPosition           = cgVector3(0,0,0);
+    mVolume               = 1.0f;
+
     // Clear structures
     memset( &mBufferFormat, 0, sizeof(cgAudioBufferFormat) );
 
@@ -111,6 +115,10 @@ cgAudioBuffer::cgAudioBuffer( cgUInt32 nReferenceId, cgAudioDriver * pDriver, co
 	mLastStreamPosition   = 0;
 	mStreamDataWritten    = 0;
     mInputSource.codecId  = 0;
+    m3DRanges             = cgRangeF(DS3D_DEFAULTMINDISTANCE,DS3D_DEFAULTMAXDISTANCE);
+    m3DVelocity           = cgVector3(0,0,0);
+    m3DPosition           = cgVector3(0,0,0);
+    mVolume               = 1.0f;
 
     // Store the resource load data
     mInputStream          = Stream;
@@ -155,6 +163,10 @@ cgAudioBuffer::cgAudioBuffer( cgUInt32 nReferenceId, cgAudioDriver * pDriver, cg
 	mStreamDataWritten    = 0;
     mInputSource.codecId  = 0;
     mInputFlags           = 0;
+    m3DRanges             = cgRangeF(DS3D_DEFAULTMINDISTANCE,DS3D_DEFAULTMAXDISTANCE);
+    m3DVelocity           = cgVector3(0,0,0);
+    m3DPosition           = cgVector3(0,0,0);
+    mVolume               = 1.0f;
     
     // Clear structures
     memset( &mBufferFormat, 0, sizeof(cgAudioBufferFormat) );
@@ -327,7 +339,9 @@ const cgAudioBufferFormat & cgAudioBuffer::getBufferFormat( ) const
 void cgAudioBuffer::set3DSoundPosition( const cgVector3 & vecPos )
 {
     // Store parameter
-    m3DBuffer->SetPosition( vecPos.x, vecPos.y, vecPos.z, DS3D_DEFERRED );
+    m3DPosition = vecPos;
+    if ( m3DBuffer )
+        m3DBuffer->SetPosition( vecPos.x, vecPos.y, vecPos.z, DS3D_DEFERRED );
 }
 
 //-----------------------------------------------------------------------------
@@ -339,7 +353,9 @@ void cgAudioBuffer::set3DSoundPosition( const cgVector3 & vecPos )
 void cgAudioBuffer::set3DSoundVelocity( const cgVector3 & vecVelocity )
 {
     // Store parameter
-    m3DBuffer->SetVelocity( vecVelocity.x, vecVelocity.y, vecVelocity.z, DS3D_DEFERRED );
+    m3DVelocity = vecVelocity;
+    if ( m3DBuffer )
+        m3DBuffer->SetVelocity( vecVelocity.x, vecVelocity.y, vecVelocity.z, DS3D_DEFERRED );
 }
 
 //-----------------------------------------------------------------------------
@@ -352,8 +368,13 @@ void cgAudioBuffer::set3DSoundVelocity( const cgVector3 & vecVelocity )
 void cgAudioBuffer::set3DRangeProperties( cgFloat fMinDistance, cgFloat fMaxDistance )
 {
     // Store parameters
-    m3DBuffer->SetMinDistance( fMinDistance, DS3D_DEFERRED );
-    m3DBuffer->SetMaxDistance( fMaxDistance, DS3D_DEFERRED );
+    m3DRanges.min = fMinDistance;
+    m3DRanges.max = fMaxDistance;
+    if ( m3DBuffer )
+    {
+        m3DBuffer->SetMinDistance( fMinDistance, DS3D_DEFERRED );
+        m3DBuffer->SetMaxDistance( fMaxDistance, DS3D_DEFERRED );
+    } // End if valid
 }
 
 //-----------------------------------------------------------------------------
@@ -561,7 +582,7 @@ bool cgAudioBuffer::load( cgInputStream Stream, cgUInt32 nFlags )
         } // End if full decode failed
 
         cgAppLog::write( cgAppLog::Debug, _T("BytesPerSecond=%i, BitsPerSample=%i, BlockAlign=%i, Channels=%i, FormatType=%i, SamplesPerSecond=%i, Size=%i.\n"), Format.averageBytesPerSecond, Format.bitsPerSample, Format.blockAlign, Format.channels, Format.formatType, Format.samplesPerSecond, Format.size );
-        cgAppLog::write( cgAppLog::Debug, _T("Creating streaming audio buffer of size %i.\n"), nAudioSize );
+        cgAppLog::write( cgAppLog::Debug, _T("Creating audio buffer of size %i.\n"), nAudioSize );
 
         // Create the buffer(s)
         if ( createAudioBuffer( nFlags, Format, nAudioSize, pAudioData, nAudioSize ) == false )
@@ -1186,10 +1207,12 @@ cgUInt32 cgAudioBuffer::getCreationFlags( ) const
 bool cgAudioBuffer::play( bool bLoop /* = false */ )
 {
     // Validate requirements
-    if ( !mBuffer || !mCodec ) return false;
+    if ( !mBuffer || !mCodec )
+        return false;
 
     cgUInt32 nFlags = 0;
-    if ( bLoop ) nFlags = DSBPLAY_LOOPING;
+    if ( bLoop )
+        nFlags = DSBPLAY_LOOPING;
     bool bIsPlaying = isPlaying();
 
     // Different looping status?
@@ -1197,7 +1220,7 @@ bool cgAudioBuffer::play( bool bLoop /* = false */ )
         stop();
 
     // If this is a streaming sound, we must update some items
-    if ( supportsMode( cgAudioBufferFlags::Streaming ) == true )
+    if ( supportsMode( cgAudioBufferFlags::Streaming ) )
     {
         mNextWriteOffset		= 0;
         mFinalWriteOffset		= 0;
@@ -1211,6 +1234,18 @@ bool cgAudioBuffer::play( bool bLoop /* = false */ )
         populateAudioBuffer( );
 
     } // End if streaming sound
+
+    // If this is a 3D positional sound effect, then before we begin playing
+    // make sure that the positional data are committed (calls to the
+    // regular 'set3DXXX' methods are deferred by default).
+    if ( supportsMode( cgAudioBufferFlags::Positional ) )
+    {
+        m3DBuffer->SetPosition( m3DPosition.x, m3DPosition.y, m3DPosition.z, DS3D_IMMEDIATE );
+        m3DBuffer->SetVelocity( m3DVelocity.x, m3DVelocity.y, m3DVelocity.z, DS3D_IMMEDIATE );
+        m3DBuffer->SetMinDistance( m3DRanges.min, DS3D_IMMEDIATE );
+        m3DBuffer->SetMaxDistance( m3DRanges.max, DS3D_IMMEDIATE );
+
+    } // End if positional
 
     // If we are already playing, simply reset it's position to the beginning
     if ( bIsPlaying )
@@ -1271,18 +1306,53 @@ bool cgAudioBuffer::stop( )
 //-----------------------------------------------------------------------------
 //  Name : setVolume ()
 /// <summary>
-/// Set the volume of the currently playing sound
+/// Set the linear volume of the currently playing sound in the range
+/// 0 (silence) to 1 (unattenuated) if the buffer supports volume adjustment.
 /// </summary>
 //-----------------------------------------------------------------------------
 bool cgAudioBuffer::setVolume( cgFloat fVolume )
 {
     // Validate Requirements
-    if ( mBuffer == CG_NULL || supportsMode( cgAudioBufferFlags::AllowVolume ) == false )
+    if ( !mBuffer || !supportsMode( cgAudioBufferFlags::AllowVolume ) )
+        return false;
+
+    // Store the requested volume for easy retrieval later.
+    mVolume = fVolume;
+
+    // Convert percentage to DirectSound level.
+    //const cgDouble b = 1e-10;
+    //const cgDouble m = 1-1e-10;
+    //const cgInt32 nVolume(-static_cast<cgInt32>(1000*log10(m*cgDouble(fVolume)+b)));
+    cgInt32 nVolume;
+	if (fVolume <= 0.0f)
+		nVolume = DSBVOLUME_MIN;
+	else if(fVolume >= 1.0f)
+		nVolume = DSBVOLUME_MAX;
+    else
+        nVolume = (cgInt32)(-2000.0 * log10(1.0 / (cgDouble)fVolume));
+    
+    // Set the volume
+    //cgInt32 nVolume = (cgInt32)(DSBVOLUME_MIN + ((DSBVOLUME_MAX - DSBVOLUME_MIN) * fVolume));
+    return SUCCEEDED( mBuffer->SetVolume( nVolume ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setPan ()
+/// <summary>
+/// Set the pan or stereo balance of this audio buffer where -1 represents
+/// a full left pan, and +1 full right.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAudioBuffer::setPan( cgFloat fPan )
+{
+    // Validate Requirements
+    if ( mBuffer == CG_NULL || supportsMode( cgAudioBufferFlags::AllowPan ) == false )
         return false;
 
     // Set the volume
-    cgInt32 nVolume = (cgInt32)(DSBVOLUME_MIN + ((DSBVOLUME_MAX - DSBVOLUME_MIN) * fVolume));
-    return SUCCEEDED( mBuffer->SetVolume( nVolume ) );
+    fPan = (fPan + 1.0f) / 2.0f;
+    cgInt32 nPan = (cgInt32)(DSBPAN_LEFT + ((DSBPAN_RIGHT - DSBPAN_LEFT) * fPan));
+    return SUCCEEDED( mBuffer->SetPan( nPan ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -1293,20 +1363,37 @@ bool cgAudioBuffer::setVolume( cgFloat fVolume )
 //-----------------------------------------------------------------------------
 cgFloat cgAudioBuffer::getVolume( ) const
 {
-    cgInt32 nVolume;
+    if ( !mBuffer )
+        return 0.0f;
+    if ( !supportsMode( cgAudioBufferFlags::AllowVolume ) )
+        return 1.0f;
+    return mVolume;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getPan ()
+/// <summary>
+/// Retrieve the pan or stereo balance of this audio buffer where -1 represents
+/// a full left pan, and +1 full right.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloat cgAudioBuffer::getPan( ) const
+{
+    cgInt32 nPan;
 
     // Validate requirements
     if ( mBuffer == CG_NULL )
         return 0.0f;
-    if ( supportsMode( cgAudioBufferFlags::AllowVolume ) == false )
-        return 1.0f;
+    if ( supportsMode( cgAudioBufferFlags::AllowPan ) == false )
+        return 0.0f;
 
-    // Query actual volume
-    if ( FAILED(mBuffer->GetVolume( &nVolume ) ) )
-        return 1.0f;
+    // Query actual pan
+    if ( FAILED(mBuffer->GetPan( &nPan ) ) )
+        return 0.0f;
 
-    // Convert to our 0-1 scalar
-    return ((cgFloat)nVolume - DSBVOLUME_MIN) / (DSBVOLUME_MAX - DSBVOLUME_MIN);
+    // Convert to our -1 to +1 scalar
+    cgFloat fPan = ((cgFloat)nPan - DSBPAN_LEFT) / (DSBPAN_RIGHT - DSBPAN_LEFT);
+    return (fPan * 2.0f) - 1.0f;
 }
 
 //-----------------------------------------------------------------------------

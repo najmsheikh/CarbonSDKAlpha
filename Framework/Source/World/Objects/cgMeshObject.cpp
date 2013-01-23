@@ -35,6 +35,7 @@
 #include <Resources/cgSurfaceShader.h>
 #include <Resources/cgConstantBuffer.h>
 #include <Resources/cgMesh.h>
+#include <Resources/cgMaterial.h>
 #include <Physics/cgPhysicsWorld.h>
 #include <Physics/Shapes/cgMeshShape.h>
 #include <Physics/Bodies/cgRigidBody.h>
@@ -656,6 +657,31 @@ bool cgMeshObject::setFaceMaterial( cgUInt32 nFace, const cgMaterialHandle & hMa
 
     // Pass through
     if ( pMesh->setFaceMaterial( nFace, hMaterial ) )
+    {
+        // Notify listeners that object data has changed.
+        static const cgString strContext = _T("MeshData");
+        onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
+        return true;
+    
+    } // End if success
+    return false;
+}
+
+//-----------------------------------------------------------------------------
+// Name : replaceMaterial()
+/// <summary>
+/// Replace the specified material, with a new one.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgMeshObject::replaceMaterial( const cgMaterialHandle & oldMaterial, const cgMaterialHandle & newMaterial )
+{
+    // Pass through to mesh object if valid.
+    cgMesh * pMesh = mMesh.getResource(true);
+    if ( !pMesh || !pMesh->isLoaded() )
+        return false;
+
+    // Pass through
+    if ( pMesh->replaceMaterial( oldMaterial, newMaterial ) )
     {
         // Notify listeners that object data has changed.
         static const cgString strContext = _T("MeshData");
@@ -1434,6 +1460,45 @@ bool cgMeshNode::onNodeLoading( const cgUID & ObjectType, cgWorldQuery * pNodeDa
     return true;
 }
 
+///-----------------------------------------------------------------------------
+// Name : onNodeCreated () (Virtual)
+/// <summary>
+/// Can be overridden or called by derived class when the object is being 
+/// created in order to perform required tasks and notify listeners.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgMeshNode::onNodeCreated( const cgUID & objectType, cgCloneMethod::Base cloneMethod )
+{
+    // Call base class implementation first.
+    if ( !cgObjectNode::onNodeCreated( objectType, cloneMethod ) )
+        return false;
+
+    // In sandbox mode, if the object is being cloned, make sure that
+    // all of the materials referenced by the mesh exist in the scene's
+    // active material list.
+    if ( mReferencedObject && cgGetSandboxMode() == cgSandboxMode::Enabled && cloneMethod != cgCloneMethod::None )
+    {
+        cgMesh * mesh = getMesh().getResource(true);
+        if ( mesh && mesh->isLoaded() )
+        {
+            const cgMaterialHandleArray & materials = mesh->getMaterials();
+            for ( size_t i = 0; i < materials.size(); ++i )
+            {
+                cgMaterialHandle materialHandle = materials[i];
+                cgMaterial * material = materialHandle.getResource(false);
+                if ( material && !material->isInternalReference() )
+                    mParentScene->addSceneMaterial( material );
+
+            } // Next material
+
+        } // End if loaded
+
+    } // End if exists
+    
+    // Success!
+    return true;
+}
+
 //-----------------------------------------------------------------------------
 //  Name : registerVisibility () (Virtual)
 /// <summary>
@@ -1459,7 +1524,7 @@ bool cgMeshNode::registerVisibility( cgVisibilitySet * pSet, cgUInt32 nFlags )
         cgMesh * pMesh = (cgMesh*)getMesh().getResource(false);
         if ( pMesh )
         {
-            cgMaterialHandleArray & aMaterials = pMesh->getMaterials();
+            const cgMaterialHandleArray & aMaterials = pMesh->getMaterials();
 
             // Register each of these materials with the visibility set.
             for ( size_t i = 0; i < aMaterials.size(); ++i )

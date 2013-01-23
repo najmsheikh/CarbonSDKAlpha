@@ -212,7 +212,7 @@ bool cgScriptEngine::initialize( )
     mEngine->SetEngineProperty(asEP_REQUIRE_ENUM_SCOPE, true );
 
     // Register the inbuilt array template type.
-    cgScriptInterop::Types::ScriptArray::Register( mEngine );
+    cgScriptInterop::Types::ScriptArray::bind( mEngine );
 
     // Mark the above array type as the default implementation.
      mEngine->RegisterDefaultArrayType( "array<T>" );
@@ -322,6 +322,18 @@ bool cgScriptEngine::declarePackage( cgScriptPackage * pPackage, bool bDeclareCh
 
     // Success!
     return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : garbageCollect ()
+/// <summary>
+/// Process the garbage list and destroy any outstanding items.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScriptEngine::garbageCollect( )
+{
+    if ( mEngine )
+        mEngine->GarbageCollect( asGC_FULL_CYCLE );
 }
 
 //-----------------------------------------------------------------------------

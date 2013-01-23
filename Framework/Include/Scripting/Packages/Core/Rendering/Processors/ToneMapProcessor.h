@@ -36,6 +36,7 @@ namespace ToneMapProcessor
             BINDSUCCESS( engine->registerEnumValue( "ToneMapMethod", "Filmic", cgToneMapProcessor::Filmic ) );
 			BINDSUCCESS( engine->registerEnumValue( "ToneMapMethod", "FilmicHable", cgToneMapProcessor::FilmicHable ) );
             BINDSUCCESS( engine->registerEnumValue( "ToneMapMethod", "Exponential", cgToneMapProcessor::Exponential ) );
+			BINDSUCCESS( engine->registerEnumValue( "ToneMapMethod", "ExponentialWhitePoint", cgToneMapProcessor::ExponentialWhitePoint ) );
 
             ///////////////////////////////////////////////////////////////////////
             // cgToneMapProcessor (Class)

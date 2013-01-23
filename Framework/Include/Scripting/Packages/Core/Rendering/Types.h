@@ -21,6 +21,7 @@ namespace Types
         {
             // Value Types / Structures
             BINDSUCCESS( engine->registerObjectType( "Viewport", sizeof(cgViewport), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS ) );
+            BINDSUCCESS( engine->registerObjectType( "DisplayMode", sizeof(cgDisplayMode), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS ) );
             BINDSUCCESS( engine->registerObjectType( "SamplerStateDesc", sizeof(cgSamplerStateDesc), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
             BINDSUCCESS( engine->registerObjectType( "TargetBlendStateDesc", sizeof(cgTargetBlendStateDesc), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CDA ) );
             BINDSUCCESS( engine->registerObjectType( "BlendStateDesc", sizeof(cgBlendStateDesc), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
@@ -54,6 +55,7 @@ namespace Types
             BINDSUCCESS( engine->registerEnum( "ShadowMethod" ) );
             BINDSUCCESS( engine->registerEnum( "FogModel" ) );
             BINDSUCCESS( engine->registerEnum( "AntialiasingMethod" ) );
+			BINDSUCCESS( engine->registerEnum( "RenderClass" ) );
         }
 
         // Member bindings
@@ -315,6 +317,9 @@ namespace Types
             BINDSUCCESS( engine->registerEnumValue( typeName, "AlphaTest"                  , cgSystemState::AlphaTest ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "Emissive"                   , cgSystemState::Emissive ) );
 
+            BINDSUCCESS( engine->registerEnumValue( typeName, "ObjectRenderClass"          , cgSystemState::ObjectRenderClass ) );
+
+
             ///////////////////////////////////////////////////////////////////////
             // cgReflectionMode (Enum)
             ///////////////////////////////////////////////////////////////////////
@@ -391,6 +396,7 @@ namespace Types
             BINDSUCCESS( engine->registerEnumValue( typeName, "Blur"                    , cgImageOperation::Blur ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "Exposure"                , cgImageOperation::Exposure ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "Saturation"              , cgImageOperation::Saturation ) );
+			BINDSUCCESS( engine->registerEnumValue( typeName, "Contrast"                , cgImageOperation::Contrast ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "LevelsIn"                , cgImageOperation::LevelsIn ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "LevelsOut"               , cgImageOperation::LevelsOut ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "Gamma"                   , cgImageOperation::Gamma ) );
@@ -511,6 +517,18 @@ namespace Types
             BINDSUCCESS( engine->registerEnumValue( typeName, "FXAA"        , cgAntialiasingMethod::FXAA ) );
             BINDSUCCESS( engine->registerEnumValue( typeName, "FXAA_T2x"    , cgAntialiasingMethod::FXAA_T2x ) );
 
+
+			///////////////////////////////////////////////////////////////////////
+			// cgObjectRenderClass (Enum)
+			///////////////////////////////////////////////////////////////////////
+
+			typeName = "RenderClass";
+
+			// Register Values
+			BINDSUCCESS( engine->registerEnumValue( typeName, "Static"         , cgRenderClass::Static ) );
+			BINDSUCCESS( engine->registerEnumValue( typeName, "Dynamic"        , cgRenderClass::Dynamic ) );
+			BINDSUCCESS( engine->registerEnumValue( typeName, "FirstPerson"    , cgRenderClass::FirstPerson ) );
+
             ///////////////////////////////////////////////////////////////////////
             // cgViewport (Struct)
             ///////////////////////////////////////////////////////////////////////
@@ -524,6 +542,22 @@ namespace Types
             BINDSUCCESS( engine->registerObjectProperty( typeName, "uint height"   , offsetof(cgViewport,height) ) );
             BINDSUCCESS( engine->registerObjectProperty( typeName, "float minimumZ", offsetof(cgViewport,minimumZ) ) );
             BINDSUCCESS( engine->registerObjectProperty( typeName, "float maximumZ", offsetof(cgViewport,maximumZ) ) );
+
+            ///////////////////////////////////////////////////////////////////////
+            // cgDisplayMode (Struct)
+            ///////////////////////////////////////////////////////////////////////
+            
+            typeName = "DisplayMode";
+
+            // Register properties
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "int width"         , offsetof(cgDisplayMode,width) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "int height"        , offsetof(cgDisplayMode,height) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "int bitDepth"      , offsetof(cgDisplayMode,bitDepth) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "double refreshRate", offsetof(cgDisplayMode,refreshRate) ) );
+
+            // Requires array type for several methods in the render driver interface.
+            BINDSUCCESS( engine->registerObjectType( "DisplayMode[]", sizeof(std::vector<cgDisplayMode>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
+            STDVectorHelper<cgDisplayMode>::registerMethods( engine, "DisplayMode[]", "DisplayMode" );
 
             ///////////////////////////////////////////////////////////////////////
             // cgSamplerStateDesc (Struct)

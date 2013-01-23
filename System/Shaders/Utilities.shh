@@ -2392,7 +2392,7 @@ __shadercall float isPointInAABB( float3 position, float3 boxMin, float3 boxMax 
 // Name : tonemapFilmicHable()
 // Desc : Tonemaps HDR to LDR via John Hable's algorithm used in Uncharted 2
 //----------------------------------------------------------------------------
-__shadercall float3 tonemapFilmicHable( float3 x )
+__shadercall float3 tonemapFilmicHable( float3 x, float linearWhitePoint )
 {
 	<?
 	float A = 0.15;   // Shoulder strength
@@ -2401,7 +2401,8 @@ __shadercall float3 tonemapFilmicHable( float3 x )
 	float D = 0.20;   // Toe strength
 	float E = 0.02;   // Toe numerator
 	float F = 0.30;   // Toe denomintor
-	float W = 11.2;   // Linear white point
+	
+	float W = linearWhitePoint;  // Linear white point
 	return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
 	?>
 }
@@ -2440,7 +2441,7 @@ __shadercall float4 toneMapping( float3 hdrColor, float exposure, float white, s
 		float lm = lw * exposure;
 		
 		// Compute white point luminance
-		float lmax        = white;
+		float lmax        = white * exposure;
 		float recipLmaxSq = 1.0 / (lmax * lmax);
 		float lb = saturate( lm * lm * recipLmaxSq );
 
@@ -2468,12 +2469,10 @@ __shadercall float4 toneMapping( float3 hdrColor, float exposure, float white, s
 		// Apply automatic exposure
 		hdrColor *= exposure; 
 
-		float exposureBias = 2.0f;
-		float3 curr = tonemapFilmicHable( exposureBias * hdrColor );
+		float3 curr = tonemapFilmicHable( hdrColor, white );
 		ldrColor.rgb = curr;
 
-		float W = 11.2f;
-		float3 currWhite = tonemapFilmicHable( W );
+		float3 currWhite = tonemapFilmicHable( white.xxx, white );
 		ldrColor.rgb *= 1.0f / currWhite;
 		?>
 	}
@@ -2485,6 +2484,20 @@ __shadercall float4 toneMapping( float3 hdrColor, float exposure, float white, s
 		
 		// Convert HDR color to LDR color
 		ldrColor.rgb = hdrColor.rgb * ( ld / max( lw, 0.0001f ) );
+		?>
+	}
+	else if ( toneMapper == ToneMapMethod::ExponentialWhitePoint )
+	{
+		<?
+		// Apply exposure and compute display luminance 
+		float ld = 1.0f - exp( -lw * exposure );
+		
+		// Convert HDR color to LDR color
+		ldrColor.rgb = hdrColor.rgb * ( ld / max( lw, 0.0001f ) );
+
+		// Apply a white point adjustment
+		float ldw = 1.0f - exp( -white * exposure );
+		ldrColor.rgb *= 1.0f / ldw;
 		?>
 	}
 	
@@ -2539,8 +2552,33 @@ __shadercall void getTangentFrame( float3 normal, float rndAngleCosine, float rn
 	}
 }
 
+//-----------------------------------------------------------------------------
+// Name : encode/decodeNormalLambert()
+// Desc : Encode/decode a normal for the Lambert azimuthal approach.
+// Note : The original code failed (div by 0) when Z was exactly -1, so I adjusted
+//        it to reduce this issue by changing sqrt(8 * N.z + 8) to the code below. 
+//-----------------------------------------------------------------------------
+__shadercall float2 encodeNormalLambert( float3 normal )
+{
+	<?
+	if ( normal.z == -1.0f )
+		normal.z = -0.9999f;
 
+	return normal.xy / sqrt( 8.0 * normal.z + 8.0 ) + 0.5;
+	?>
+}
 
-
+__shadercall float3 decodeNormalLambert( float2 encodedNormal )
+{
+	<?
+	float3 normal;
+	float2 fenc = encodedNormal * 4.0f - 2.0f;
+	float  f    = dot( fenc, fenc );
+	float  g    = sqrt( 1.0f - f / 4.0f );
+	normal.xy   = fenc * g;
+	normal.z    = 1.0f - f / 2.0f;
+    return normalize( normal );
+    ?>
+}
 
 #endif // !_UTILITIES_SHH_

@@ -236,9 +236,9 @@ class SystemExports
 		////////////////////////////////////////////
 		// Renderer
 		////////////////////////////////////////////
-		shadingQuality              = ShadingQuality::Ultra;
-		postProcessQuality          = PostProcessQuality::Ultra;
-		antiAliasingQuality         = AntiAliasingQuality::Ultra;
+		shadingQuality              = ShadingQuality::High;
+		postProcessQuality          = PostProcessQuality::High;
+		antiAliasingQuality         = AntiAliasingQuality::High;
 		outputEncodingType          = OutputEncodingType::NoEncode;
 		fogModel                    = FogModel::None;
 		orthographicCamera          = false;
@@ -296,6 +296,11 @@ class SystemExports
 		translucent                 = false;
 		alphaTest                   = false;
 		emissive                    = false;  
+
+		////////////////////////////////////////////
+		// Objects
+		////////////////////////////////////////////
+		objectRenderClass           = RenderClass::Static;
     }
 
     String SystemCommon( int shaderType )
@@ -524,6 +529,11 @@ class SystemExports
 	bool          translucent;
 	bool          alphaTest;
 	bool          emissive;  
+
+	////////////////////////////////////////////
+    // Objects
+	////////////////////////////////////////////
+    int           objectRenderClass;
 };
 
 #endif // !_SYSTEMDEFS_SHH_

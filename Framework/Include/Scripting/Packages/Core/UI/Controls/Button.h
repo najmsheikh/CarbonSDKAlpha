@@ -37,14 +37,10 @@ namespace Button
             BINDSUCCESS( engine->registerObjectMethod( "Button", "void onClick( )", asMETHODPR(cgButtonControl, onClick, ( ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Button", "bool setImage( const String &in )", asMETHODPR(cgButtonControl, setImage, ( const cgString& ), bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Button", "const String & getImage( ) const", asMETHODPR(cgButtonControl, getImage, ( ) const, const cgString& ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Button", "void setTextColor( const ColorValue &in )", asMETHODPR(cgButtonControl, setTextColor, ( const cgColorValue & ), void ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Button", "const ColorValue& getTextColor( ) const", asMETHODPR(cgButtonControl, getTextColor, ( ) const, const cgColorValue & ), asCALL_THISCALL) );
 
             // Register object property methods
             BINDSUCCESS( engine->registerObjectMethod( "Button", "bool set_image( const String &in )", asMETHODPR(cgButtonControl, setImage, ( const cgString& ), bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Button", "const String & get_image( ) const", asMETHODPR(cgButtonControl, getImage, ( ) const, const cgString& ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Button", "void set_textColor( const ColorValue &in )", asMETHODPR(cgButtonControl, setTextColor, ( const cgColorValue & ), void ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Button", "const ColorValue& get_textColor( ) const", asMETHODPR(cgButtonControl, getTextColor, ( ) const, const cgColorValue & ), asCALL_THISCALL) );
 
             ///////////////////////////////////////////////////////////////////////
             // Global Functions

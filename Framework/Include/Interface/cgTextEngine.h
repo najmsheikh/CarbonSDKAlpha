@@ -201,6 +201,8 @@ public:
     const TextLine        & getLineMetrics          ( cgInt32 lineIndex ) const;
     cgUInt32                getLineCount            ( ) const;
     cgUInt32                getLineHeight           ( ) const;
+    cgInt32                 getFirstVisibleLine     ( ) const;
+    cgInt32                 getLastVisibleLine      ( ) const;
     const cgRect          & getFullBounds           ( ) const;
     bool                    isOverflowing           ( ) const;
     bool                    isValidLocation         ( const MetricRef & location ) const;
