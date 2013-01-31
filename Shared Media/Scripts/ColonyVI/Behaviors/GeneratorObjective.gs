@@ -120,7 +120,7 @@ shared class GeneratorObjective : Objective
             } // Next node
 
             // Switch to escape music.
-            getAppAudioDriver().loadAmbientTrack( "Music", InputStream("Music/Mistake the Getaway.ogg"), 0, 0.3f );
+            getAppAudioDriver().loadAmbientTrack( "Music", "Music/Mistake the Getaway.ogg", 0, 0.3f );
 
         } // End if final objective
 

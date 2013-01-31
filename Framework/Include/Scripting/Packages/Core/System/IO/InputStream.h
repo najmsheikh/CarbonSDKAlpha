@@ -19,7 +19,7 @@ namespace InputStream
         // Type declarations
         void declare( cgScriptEngine * engine )
         {
-            BINDSUCCESS( engine->registerObjectType( "InputStream", sizeof(cgInputStream), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
+            BINDSUCCESS( engine->registerObjectType( "InputStream", sizeof(cgInputStream), asOBJ_VALUE | asOBJ_APP_CLASS_CDAK ) );
         }
 
         // Member bindings
@@ -33,7 +33,7 @@ namespace InputStream
 
             // Register the object management behaviors.
             BINDSUCCESS( engine->registerObjectBehavior( "InputStream", asBEHAVE_CONSTRUCT,  "void f()", asFUNCTIONPR(constructInputStream,(cgInputStream*),void), asCALL_CDECL_OBJLAST) );
-            BINDSUCCESS( engine->registerObjectBehavior( "InputStream", asBEHAVE_CONSTRUCT,  "void f( InputStream &in )", asFUNCTIONPR(constructInputStream,(cgInputStream&,cgInputStream*),void), asCALL_CDECL_OBJLAST) );
+            BINDSUCCESS( engine->registerObjectBehavior( "InputStream", asBEHAVE_CONSTRUCT,  "void f( const InputStream &in )", asFUNCTIONPR(constructInputStream,(const cgInputStream&,cgInputStream*),void), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectBehavior( "InputStream", asBEHAVE_CONSTRUCT,  "void f( const String &in )", asFUNCTIONPR(constructInputStream,(const cgString&,cgInputStream*),void), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectBehavior( "InputStream", asBEHAVE_CONSTRUCT,  "void f( const String &in, const String &in )", asFUNCTIONPR(constructInputStream,(const cgString&,const cgString&,cgInputStream*),void), asCALL_CDECL_OBJLAST) );
             // ToDo: Following two constructors actually uses size_t... Make sure we register the correct 32bit vs 64 bit types
@@ -88,7 +88,7 @@ namespace InputStream
         /// it is not possible to take the address of the constructor directly.
         /// </summary>
         //-----------------------------------------------------------------------------
-        static void constructInputStream( cgInputStream & stream, cgInputStream *thisPointer )
+        static void constructInputStream( const cgInputStream & stream, cgInputStream *thisPointer )
         {
             // Use placement new to allocate which will in turn call the constructor
             new(thisPointer) cgInputStream( stream );

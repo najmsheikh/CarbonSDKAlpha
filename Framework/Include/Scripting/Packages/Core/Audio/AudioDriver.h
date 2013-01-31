@@ -54,6 +54,7 @@ namespace AudioDriver
             BINDSUCCESS( engine->registerObjectMethod( "AudioDriver", "void set3DRolloffFactor( float )", asMETHODPR(cgAudioDriver, set3DRolloffFactor, ( cgFloat ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AudioDriver", "void set3DListenerTransform( const Transform &in )", asMETHODPR(cgAudioDriver, set3DListenerTransform, ( const cgTransform& ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AudioDriver", "bool loadAmbientTrack( const String &in, InputStream, float, float )", asMETHODPR(cgAudioDriver, loadAmbientTrack, ( const cgString&, cgInputStream, cgFloat, cgFloat ), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "AudioDriver", "bool loadAmbientTrack( const String &in, const String &in, float, float )", asFUNCTIONPR(loadAmbientTrack, ( const cgString&, const cgString&, cgFloat, cgFloat, cgAudioDriver* ), bool), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectMethod( "AudioDriver", "bool stopAmbientTrack( const String &in )", asMETHODPR(cgAudioDriver, stopAmbientTrack, ( const cgString& ), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AudioDriver", "bool isAmbientTrackPlaying( const String &in )", asMETHODPR(cgAudioDriver, isAmbientTrackPlaying, ( const cgString& ), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AudioDriver", "void setTrackFadeTimes( float, float )", asMETHODPR(cgAudioDriver, setTrackFadeTimes, ( cgFloat, cgFloat ), void), asCALL_THISCALL) );
@@ -64,6 +65,20 @@ namespace AudioDriver
 
             // Register singleton access.
             BINDSUCCESS( engine->registerGlobalFunction( "AudioDriver@+ getAppAudioDriver( )", asFUNCTIONPR(cgAudioDriver::getInstance, ( ), cgAudioDriver*), asCALL_CDECL) );
+        }
+
+		//---------------------------------------------------------------------
+        //  Name : loadAmbientTrack () (Static)
+        /// <summary>
+        /// Provides an alternative overload for the script accessible
+        /// AudioDriver::loadAmbientTrack() method that allows the script to pass a
+        /// string type directly (no implicit cast is supported to the required
+        /// InputStream type).
+        /// </summary>
+        //---------------------------------------------------------------------
+        static bool loadAmbientTrack( const cgString & track, const cgString & stream, cgFloat initialVolume, cgFloat desiredVolume, cgAudioDriver * thisPointer )
+        {
+            return thisPointer->loadAmbientTrack( track, stream, initialVolume, desiredVolume );
         }
 
     }; // End Class : Package

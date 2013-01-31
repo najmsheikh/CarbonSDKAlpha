@@ -102,8 +102,8 @@ shared class GamePlay : IScriptedAppState
 
         // Load the HUD elements.
         UIManager @ interfaceManager = getAppUIManager();
-        interfaceManager.addImageLibrary( InputStream("Textures/UI/HUDElements.xml"), "HUDElements" );
-        interfaceManager.addFont( InputStream("Textures/UI/Fonts/HUDFont_012.fnt") );
+        interfaceManager.addImageLibrary( "Textures/UI/HUDElements.xml", "HUDElements" );
+        interfaceManager.addFont( "Textures/UI/Fonts/HUDFont_012.fnt" );
 
         // Switch to direct mouse input mode (no cursor)
         InputDriver @ inputDriver = getAppInputDriver();
@@ -114,7 +114,7 @@ shared class GamePlay : IScriptedAppState
             getAppTimer().tick();
 
         // Play initial gameplay music.
-        getAppAudioDriver().loadAmbientTrack( "Music", InputStream("Music/Mechanolith.ogg"), 0.3f, 0.3f );
+        getAppAudioDriver().loadAmbientTrack( "Music", "Music/Mechanolith.ogg", 0.3f, 0.3f );
 
         // Success!
         return true;

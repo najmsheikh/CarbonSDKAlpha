@@ -49,6 +49,7 @@ namespace UIManager
 
             // Text Handling
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "String addFont( InputStream )", asMETHODPR(cgUIManager, addFont, ( cgInputStream ), cgString), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "UIManager", "String addFont( const String &in )", asFUNCTIONPR(addFont, ( const cgString&, cgUIManager* ), cgString), asCALL_CDECL_OBJLAST ) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool selectFont( const String &in )", asMETHODPR(cgUIManager, selectFont, ( const cgString& ), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool selectDefaultFont( )", asMETHODPR(cgUIManager, selectDefaultFont, ( ), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool setDefaultFont( const String &in )", asMETHODPR(cgUIManager, setDefaultFont, ( const cgString& ), bool), asCALL_THISCALL) );
@@ -96,6 +97,7 @@ namespace UIManager
             // Images / Glyphs / Icons
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool addImage( InputStream, const String &in )", asMETHODPR(cgUIManager, addImage, ( cgInputStream, const cgString&), bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool addImageLibrary( InputStream, const String &in )", asMETHODPR(cgUIManager, addImageLibrary, ( cgInputStream, const cgString&), bool ), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool addImageLibrary( const String &in, const String &in )", asFUNCTIONPR(addImageLibrary, ( const cgString&, const cgString&, cgUIManager*), bool ), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool removeImageLibrary( const String &in )", asMETHODPR(cgUIManager, removeImageLibrary, ( const cgString&), bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool isImageLibraryLoaded( const String &in ) const", asMETHODPR(cgUIManager, isImageLibraryLoaded, ( const cgString&) const, bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "Size getImageSize( const String &in ) const", asMETHODPR(cgUIManager, getImageSize, ( const cgString&) const, cgSize ), asCALL_THISCALL) );
@@ -145,6 +147,34 @@ namespace UIManager
         static cgUIForm * managerLoadForm( const cgString & stream, const cgString & name, cgUIManager * thisPointer )
         {
             return thisPointer->loadForm( stream, name );
+        }
+
+		//---------------------------------------------------------------------
+        //  Name : addImageLibrary () (Static)
+        /// <summary>
+        /// Provides an alternative overload for the script accessible
+        /// UIManager::addImageLibrary() method that allows the script to pass a
+        /// string type directly (no implicit cast is supported to the required
+        /// InputStream type).
+        /// </summary>
+        //---------------------------------------------------------------------
+        static bool addImageLibrary( const cgString & stream, const cgString & referenceName, cgUIManager * thisPointer )
+        {
+            return thisPointer->addImageLibrary( stream, referenceName );
+        }
+
+		//---------------------------------------------------------------------
+        //  Name : addFont () (Static)
+        /// <summary>
+        /// Provides an alternative overload for the script accessible
+        /// UIManager::addFont() method that allows the script to pass a
+        /// string type directly (no implicit cast is supported to the required
+        /// InputStream type).
+        /// </summary>
+        //---------------------------------------------------------------------
+        static cgString addFont( const cgString & stream, cgUIManager * thisPointer )
+        {
+            return thisPointer->addFont( stream );
         }
 
     }; // End Class : Package

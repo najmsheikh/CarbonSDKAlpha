@@ -71,7 +71,7 @@ class MainMenu : IScriptedAppState
     {
         // Load the image elements we need to display the main menu.
         UIManager @ interfaceManager = getAppUIManager();
-        interfaceManager.addImageLibrary( InputStream("Textures/UI/MainMenuElements.xml"), "MainMenuElements" );
+        interfaceManager.addImageLibrary( "Textures/UI/MainMenuElements.xml", "MainMenuElements" );
 
         // Allocate a new scene rendering view. This represents a collection of
         // surfaces / render targets, into which the scene will be rendered. It
@@ -89,7 +89,7 @@ class MainMenu : IScriptedAppState
         mMainForm.registerEventHandler( SystemMessages::UI_OnClose, "frmVideoOptions_OnClose", this );
         
         // Play menu music.
-        getAppAudioDriver().loadAmbientTrack( "Music", InputStream("Music/The Descent.ogg"), 0.3f, 0.3f );
+        getAppAudioDriver().loadAmbientTrack( "Music", "Music/The Descent.ogg", 0.3f, 0.3f );
         // Mechanolith
         // The Descent
         // Mistake the Getaway
