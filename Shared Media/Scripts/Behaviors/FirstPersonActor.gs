@@ -17,8 +17,6 @@
 //      Copyright (c) 1997 - 2012 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
-#include_once "TrooperActor.gs"
-
 //-----------------------------------------------------------------------------
 // Enumerations
 //-----------------------------------------------------------------------------
@@ -341,20 +339,6 @@ shared class FirstPersonActor : IScriptedObjectBehavior
             PhysicsBody @ body = pickedNode.getPhysicsBody();
             if ( @body != null )
                 body.applyImpulse( rayDir * 6.0f, intersection );
-
-            // Note: Requires that actor group is OPEN! This is just a test.
-            if ( pickedNode.queryObjectType( RTID_BoneObject ) )
-            {
-                // Get the owner group (should be an actor)
-                ActorNode @ actor = cast<ActorNode>(pickedNode.getOwnerGroup( ));
-                if ( @actor != null && actor.getBehaviorCount() > 0 )
-                {
-                    TrooperActor @ trooper = cast<TrooperActor>(actor.getScriptedBehavior(0));
-                    if ( @trooper != null )
-                        trooper.onHitScan();
-                }
-
-            } // End if bone.
 
         } // End if intersect
     }
