@@ -16,7 +16,7 @@
 //        resources.                                                         //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -45,6 +45,7 @@
 #include <Resources/cgSurfaceShader.h>
 #include <Rendering/cgVertexFormats.h>
 #include <Rendering/cgSampler.h>
+#include <Input/cgInputDriver.h>
 #include <World/Objects/cgCameraObject.h>
 #include <World/Objects/cgLightObject.h>
 #include <Math/cgMathUtility.h>
@@ -587,7 +588,7 @@ bool cgDX9RenderDriver::initialize( cgResourceManager * pResources, const cgStri
 /// windowed and fullscreen mode.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgDX9RenderDriver::updateDisplayMode( const cgDisplayMode & mode, bool windowed )
+bool cgDX9RenderDriver::updateDisplayMode( const cgDisplayMode & mode, bool windowed, bool verticalSync )
 {
     // Is this a no-op?
     if ( mConfig.width == mode.width && mConfig.height == mode.height && mConfig.refreshRate == mode.refreshRate &&
@@ -610,6 +611,10 @@ bool cgDX9RenderDriver::updateDisplayMode( const cgDisplayMode & mode, bool wind
         mConfig.height      = mode.height;
         mConfig.refreshRate = (cgInt32)mode.refreshRate;
         mConfig.windowed    = windowed;
+        mConfig.useVSync    = verticalSync;
+
+        // Update settings.
+        mD3DSettings.windowedSettings.presentInterval = (verticalSync) ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
 
         // Update the size of the focus window.
         mFocusWindow->setClientSize( cgSize( mode.width, mode.height ) );
@@ -625,6 +630,10 @@ bool cgDX9RenderDriver::updateDisplayMode( const cgDisplayMode & mode, bool wind
             mConfig.height      = mode.height;
             mConfig.refreshRate = (cgInt32)mode.refreshRate;
             mConfig.windowed    = windowed;
+            mConfig.useVSync    = verticalSync;
+
+            // Update settings.
+            mD3DSettings.windowedSettings.presentInterval = (verticalSync) ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
 
             // Switch the focus window to the new mode and then set its size.
             // This will automatically trigger a window resize event that will
@@ -644,6 +653,7 @@ bool cgDX9RenderDriver::updateDisplayMode( const cgDisplayMode & mode, bool wind
             mD3DSettings.fullScreenSettings.displayMode.Width       = mode.width;
             mD3DSettings.fullScreenSettings.displayMode.Height      = mode.height;
             mD3DSettings.fullScreenSettings.displayMode.RefreshRate = (UINT)mode.refreshRate;
+            mD3DSettings.fullScreenSettings.presentInterval         = (verticalSync) ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
             mD3DSettings.windowed = false;
 
             // Switch the focus window to the new mode and then set its size.
@@ -676,6 +686,7 @@ bool cgDX9RenderDriver::updateDisplayMode( const cgDisplayMode & mode, bool wind
             mConfig.height      = mode.height;
             mConfig.refreshRate = (cgInt32)mode.refreshRate;
             mConfig.windowed    = windowed;
+            mConfig.useVSync    = verticalSync;
 
             // Perform final updates and notify listeners.
             cgRenderDriver::windowResized( mode.width, mode.height );

@@ -5,7 +5,7 @@ var classcg_group_node =
     [ "~cgGroupNode", "classcg_group_node.html#a7f44c322336fc18c90d3859920a44166", null ],
     [ "allocateNew", "classcg_group_node.html#a8889a566f5579a81d8ab270cc2604814", null ],
     [ "alterOpenState", "classcg_group_node.html#a666210679f9bc66fbd5ec80dd35685c8", null ],
-    [ "alterSelectionState", "classcg_group_node.html#a398b71104692a0c93897f169745e91a7", null ],
+    [ "alterSelectionState", "classcg_group_node.html#aa78ac28dbd35ef2eb13b08b3c546fe6a", null ],
     [ "computeGroupAABB", "classcg_group_node.html#ac2f2e6daf8b109b8442bcadaf1e205ae", null ],
     [ "detachNode", "classcg_group_node.html#af1317a75aff14881ac3a772e2d6238c6", null ],
     [ "getGroupedNodes", "classcg_group_node.html#a478c835ca1a6dea919c21620f848235e", null ],
@@ -20,7 +20,7 @@ var classcg_group_node =
     [ "pick", "classcg_group_node.html#a147f4cb72f26963cdec8d801272d5979", null ],
     [ "queryReferenceType", "classcg_group_node.html#aa24d3df9c949f2ff330fd4c6a006a739", null ],
     [ "setOpen", "classcg_group_node.html#aa55096b2c0b9a2752febb3e1d1aa2dd5", null ],
-    [ "setSelected", "classcg_group_node.html#a6369500ea98b5a18096e6791d2f8b07d", null ],
+    [ "setSelected", "classcg_group_node.html#a7da798ac1ce3d8e54105afa465cba85c", null ],
     [ "mAutoSelfDestruct", "classcg_group_node.html#a5326fb882a8d52bdd4ba272950a19340", null ],
     [ "mBounds", "classcg_group_node.html#a860260241152e2357b4d75964a4e4070", null ],
     [ "mGroupRefCount", "classcg_group_node.html#adbe653c54a1d194ba2e2a80cc339ef9f", null ]

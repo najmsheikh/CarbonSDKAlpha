@@ -104,5 +104,30 @@ shared class Enemy_Orc : NPCAgent
     ///////////////////////////////////////////////////////////////////////////
 	// Public Method Overrides (NPCAgent)
 	///////////////////////////////////////////////////////////////////////////
+    //-------------------------------------------------------------------------
+	// Name : kill ()
+	// Desc : Trigger NPC death and apply an impulse to the specified node
+    //        in the ragdoll that is spawned.
+	//-------------------------------------------------------------------------
+    void kill( ObjectNode @ hitNode, const Vector3 & hitPoint, const Vector3 & hitImpulse )
+    {
+        // No-op?
+        if ( !isAlive() )
+            return;
+
+        // Drop the weapon.
+        if ( @mCurrentWeaponNode != null )
+        {
+            mCurrentWeaponNode.setParent( null );
+            mCurrentWeaponNode.setPhysicsModel( PhysicsModel::RigidDynamic );
+        
+        } // End if has weapon
+
+        // Agent no longer gets any updates.
+        mNode.setUpdateRate( UpdateRate::Never );
+
+        // Call base class implementation
+        NPCAgent::kill( hitNode, hitPoint, hitImpulse );
+    }
 
 } // End Class Enemy_Orc

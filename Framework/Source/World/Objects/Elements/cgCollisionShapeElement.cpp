@@ -16,7 +16,7 @@
 //        sub-component of the selected object.                              //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -54,6 +54,7 @@ cgWorldQuery cgCollisionShapeElement::mLoadBaseCollisionShape;
 cgCollisionShapeElement::cgCollisionShapeElement( cgUInt32 nReferenceId, cgWorldObject * pParentObject ) : cgObjectSubElement( nReferenceId, pParentObject )
 {
     // Initialize variables to sensible defaults
+    mBoundsOverride = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -65,6 +66,9 @@ cgCollisionShapeElement::cgCollisionShapeElement( cgUInt32 nReferenceId, cgWorld
 cgCollisionShapeElement::cgCollisionShapeElement( cgUInt32 nReferenceId, cgWorldObject * pParentObject, cgObjectSubElement * pInit ) : cgObjectSubElement( nReferenceId, pParentObject, pInit )
 {
     // Initialize variables to sensible defaults
+    mBoundsOverride = false;
+
+    // Clone required variables
     cgCollisionShapeElement * pElement = (cgCollisionShapeElement*)pInit;
     mBounds        = pElement->mBounds;
     mTransform     = pElement->mTransform;
@@ -96,6 +100,9 @@ void cgCollisionShapeElement::dispose( bool bDisposeBase )
 
     // Release resources
     mSandboxMesh.close();
+
+    // Clear variables.
+    mBoundsOverride = false;
     
     // Dispose base class if requested.
     if ( bDisposeBase == true )
@@ -676,4 +683,25 @@ cgBoundingBox cgCollisionShapeElement::getAutoFitBounds( )
 
     // Return selected bounds.
     return ParentBounds;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : fitToBounds () (Virtual)
+/// <summary>
+/// Regenerate the element so that it fits the specified bounds, along the
+/// specified auto fit axes.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCollisionShapeElement::fitToBounds( const cgBoundingBox & bounds, AutoFitType type )
+{
+    // Set the new bounding box and then disable further bounding 
+    // box updates (in response to a call to 'getAutoFitBounds()')
+    mBounds = bounds;
+    mBoundsOverride = true;
+
+    // Allow the element to fit to this bounding box.
+    autoFit( type );
+
+    // We're done.
+    mBoundsOverride = false;
 }

@@ -16,7 +16,7 @@
 //        initializing all of the systems that the application will rely on  //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//      Copyright (c) 1997 - 2012 Game Institute. All Rights Reserved.       //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #if !defined( _CAPPLICATION_H_ )

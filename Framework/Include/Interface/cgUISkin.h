@@ -17,7 +17,7 @@
 //        system.                                                            //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -119,7 +119,7 @@ public:
     const cgString            & getTextureName          ( ) const { return mTextureFile; }
     const cgString            & getGlyphDefinition      ( ) const { return mGlyphAtlas; }
     bool                        prepareControlFrames    ( cgUIControlLayer * layer, cgUIFormStyle::Base style );
-    bool                        prepareCursorFrames     ( cgBillboardBuffer * buffer );
+    bool                        prepareCursorFrames     ( cgBillboardBuffer * buffer, cgRenderDriver * renderDriver );
     const cgUICursorDesc      & getCursorDefinition     ( ) const { return mCursorDefinition; }
     const cgUIFormStyleDesc   & getFormStyleDefinition  ( cgUIFormStyle::Base type ) const;
     const ControlConfig       & getControlConfig        ( ) const { return mControlConfig; }

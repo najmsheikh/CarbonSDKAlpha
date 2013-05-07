@@ -16,7 +16,7 @@
 //        phase.                                                             //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once

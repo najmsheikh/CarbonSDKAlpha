@@ -8,14 +8,14 @@
 //                                                                           //
 //---------------------------------------------------------------------------//
 //                                                                           //
-// Name : cgObjectNode.cpp                                                  //
+// Name : cgObjectNode.cpp                                                   //
 //                                                                           //
 // Desc : This file houses the main object base class from which all system  //
 //        and application object types should derive. These objects are      //
 //        designed to be managed within a parent cgScene container.          //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -33,7 +33,7 @@
 #include <World/cgSceneCell.h>
 #include <World/cgScene.h>
 #include <World/cgVisibilitySet.h>
-#include <World/Objects/cgSpatialTreeObject.h>
+#include <World/cgSphereTree.h>
 #include <World/Objects/cgGroupObject.h>
 #include <World/Objects/cgTargetObject.h>
 #include <World/Elements/cgNavigationMeshElement.h>
@@ -46,9 +46,7 @@
 #include <Resources/cgScript.h>
 #include <System/cgStringUtility.h>
 #include <System/cgExceptions.h>
-#include <System/cgXML.h> // ToDo: Remove when no longer needed
 #include <Math/cgMathUtility.h>
-#include <algorithm> // ToDo: Remove when no longer needed
 
 // Auto-create initial physics shape.
 #include <World/Objects/Elements/cgBoxCollisionShapeElement.h>
@@ -100,9 +98,9 @@ cgObjectNode::cgObjectNode( cgUInt32 referenceId, cgScene * scene ) : cgAnimatio
     // Initialize variables to sensible defaults
     mReferencedObject   = CG_NULL;
     mParentScene        = scene;
-    mParentTree         = CG_NULL;
     mParentNode         = CG_NULL;
     mParentCell         = CG_NULL;
+    mSceneTreeNode      = CG_NULL;
     mOwnerGroup         = CG_NULL;
     mTargetNode         = CG_NULL;
     mObjectClass        = _T("Object");
@@ -119,6 +117,7 @@ cgObjectNode::cgObjectNode( cgUInt32 referenceId, cgScene * scene ) : cgAnimatio
     mNavigationAgent    = CG_NULL;
     mRenderClassId      = 1;        // Automatically assign to the 'default' render class.
     mCustomProperties   = new cgPropertyContainer();
+    mPendingUpdateFIFO  = CG_NULL;
 
     // Setup default flags.
     mFlags              = cgObjectNodeFlags::Visible;
@@ -142,9 +141,9 @@ cgObjectNode::cgObjectNode( cgUInt32 referenceId, cgScene * scene, cgObjectNode 
     // Initialize variables to sensible defaults
     mReferencedObject   = CG_NULL;
     mParentScene        = scene;
-    mParentTree         = CG_NULL;
     mParentNode         = CG_NULL;
     mParentCell         = CG_NULL;
+    mSceneTreeNode      = CG_NULL;
     mOwnerGroup         = CG_NULL;
     mTargetNode         = CG_NULL;
     mObjectClass        = init->mObjectClass;
@@ -274,6 +273,10 @@ void cgObjectNode::dispose( bool disposeBase )
     if ( mParentCell )
         mParentCell->removeNode( this );
 
+    // And from any spatial tree
+    if ( mSceneTreeNode )
+        mParentScene->getSceneTree()->removeSphere( mSceneTreeNode );
+
     // ToDo: 9999 - Detaching silently may not be a good idea. Hinge joint as an example?
     // Silently detach all children from this object.
     cgObjectNodeList::iterator itChild;
@@ -327,11 +330,11 @@ void cgObjectNode::dispose( bool disposeBase )
 
     // Clear variables
     mReferencedObject  = CG_NULL;
+    mSceneTreeNode     = CG_NULL;
     mTargetNode        = CG_NULL;
     mParentCell        = CG_NULL;
     mParentNode        = CG_NULL;
     mParentScene       = CG_NULL;
-    mParentTree        = CG_NULL;
     mPhysicsController = CG_NULL;
     mPhysicsBody       = CG_NULL;
     mNavigationAgent   = CG_NULL;
@@ -356,18 +359,40 @@ void cgObjectNode::dispose( bool disposeBase )
 //-----------------------------------------------------------------------------
 void cgObjectNode::unload( )
 {
+    unload( false );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : unload ()
+/// <summary>
+/// Unload the node and remove it from the scene without physically deleting
+/// it from the database. Optionally unload all children.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgObjectNode::unload( bool unloadChildren )
+{
     // Is unloading delayed?
     if ( mFlags & cgObjectNodeFlags::DelayUnload )
     {
         // It is delayed, so just required the fact that an unload is required.
         mFlags |= cgObjectNodeFlags::UnloadPending;
 
+        // Unloading children?
+        if ( unloadChildren )
+        {
+            cgObjectNodeList::iterator itChild;
+            cgObjectNodeList childNodes = getChildren();
+            for ( itChild = childNodes.begin(); itChild != childNodes.end(); ++itChild );
+                (*itChild)->unload( true );
+
+        } // End if unload children
+
     } // End if delayed
     else
     {
         // Otherwise, unload immediately.
         if ( mParentScene )
-            mParentScene->unloadObjectNode( this );
+            mParentScene->unloadObjectNode( this, unloadChildren );
 
         // Note: 'this' pointer is now unsafe. Do not use after a call
         // to 'unloadObjectNode()'.
@@ -519,6 +544,19 @@ const cgBoundingBox & cgObjectNode::getBoundingBox( )
 
     // Return our cached copy.
     return mWorldBounds;*/
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getBoundingSphere ()
+/// <summary>
+/// Retrieve the bounding sphere for this node (encompassing the bounding box
+/// of its referenced object by default) as it exists in world space.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgBoundingSphere cgObjectNode::getBoundingSphere( )
+{
+    const cgBoundingBox & boundingBox = getBoundingBox();
+    return cgBoundingSphere( boundingBox.getCenter(), cgVector3::length(boundingBox.getExtents()) );
 }
 
 //-----------------------------------------------------------------------------
@@ -2508,8 +2546,7 @@ bool cgObjectNode::onNodeCreated( const cgUID & objectType, cgCloneMethod::Base 
     nodeUpdated( cgDeferredUpdateFlags::BoundingBox | cgDeferredUpdateFlags::OwnershipStatus, 0 );
 
     // Build the physics body if appropriate.
-    if ( mPhysicsModel != cgPhysicsModel::None )
-        buildPhysicsBody();
+    buildPhysicsBody();
     
     // Success!
     return true;
@@ -2737,8 +2774,7 @@ bool cgObjectNode::onNodeLoading( const cgUID & objectType, cgWorldQuery * nodeD
     nodeUpdated( cgDeferredUpdateFlags::BoundingBox | cgDeferredUpdateFlags::OwnershipStatus, 0 );
 
     // Build the physics body if appropriate.
-    if ( mPhysicsModel != cgPhysicsModel::None )
-        buildPhysicsBody();
+    buildPhysicsBody();
     
     // ToDo: 9999
     /*// Make a temporary copy of the event to avoid possibility of
@@ -2827,7 +2863,9 @@ bool cgObjectNode::onNodeDeleted( )
     setParent( CG_NULL );
 
     // Remove from parent scene tree
-    setSpatialTree( CG_NULL );
+    if ( mSceneTreeNode )
+        mParentScene->getSceneTree()->removeSphere(mSceneTreeNode);
+    mSceneTreeNode = CG_NULL;
 
     // Remove target node (if any).
     setTargetMethod( cgNodeTargetMethod::NoTarget );
@@ -2942,8 +2980,7 @@ void cgObjectNode::onComponentModified( cgComponentModifiedEventArgs * e )
         // A new object sub element was added or removed. We should rebuild
         // any existing rigid body so that it takes new collision shapes into
         // account.
-        if ( mPhysicsModel != cgPhysicsModel::None )
-            buildPhysicsBody();
+        buildPhysicsBody();
 
     } // End if CollisionShapeAdded | CollisionShapeRemoved | CollisionShapeModified
 }
@@ -3473,6 +3510,25 @@ void cgObjectNode::scaleLocal( cgFloat x, cgFloat y, cgFloat z )
 }
 
 //-----------------------------------------------------------------------------
+// Name : scaleLocal() (Virtual)
+/// <summary>Scale the node by the specified amount in "local" space.</summary>
+//-----------------------------------------------------------------------------
+void cgObjectNode::scaleLocal( cgFloat x, cgFloat y, cgFloat z, const cgVector3 & localCenter )
+{
+    // Do nothing if scaling is disallowed.
+    if ( !canScale() )
+        return;
+
+    // Scale a copy of the cell transform
+    cgTransform m = getCellTransform();
+    m.scaleLocal( x, y, z, localCenter );
+
+    // Set to the node via a common method. This way, any 
+    // derived class can be easily notified of changes made.
+    setCellTransform( m );
+}
+
+//-----------------------------------------------------------------------------
 //  Name : setOrientation ()
 /// <summary>
 /// Update the node's orientation using the axis vectors provided.
@@ -3585,70 +3641,6 @@ void cgObjectNode::resetPivot( )
 }
 
 //-----------------------------------------------------------------------------
-//  Name : setSpatialTree () (Virtual)
-/// <summary>
-/// When attached as a child of a spatial tree, this method will be
-/// called in order to process the new relationship.
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgObjectNode::setSpatialTree( cgSpatialTreeNode * tree )
-{
-    // Bail if this is a no op
-    if ( mParentTree == tree )
-        return;
-
-    // Remove from all leaves to which the node was previously attached
-    if ( mParentTree )
-        setSpatialTreeLeaves( cgSceneLeafArray() );
-
-    // Attach to new tree
-    mParentTree = tree;
-}
-
-//-----------------------------------------------------------------------------
-//  Name : getSpatialTree ()
-/// <summary>
-/// Retrieve the parent spatial tree (if any) of which this object is
-/// currently a child.
-/// </summary>
-//-----------------------------------------------------------------------------
-cgSpatialTreeNode * cgObjectNode::getSpatialTree( ) const
-{
-    return mParentTree;
-}
-
-//-----------------------------------------------------------------------------
-// Name : setSpatialTreeLeaves ( ) (Virtual)
-/// <summary>
-/// Set the spatial tree leaves in which this node exists.
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgObjectNode::setSpatialTreeLeaves( cgSceneLeafArray & leaves )
-{
-    // Iterate through current leaves and detach us.
-    // ToDo: 9999 - Should this now just be an index array rather than storing the leaf pointer?
-    if ( !mParentTreeLeaves.empty() )
-    {
-        cgSceneLeafArray::iterator itLeaf;
-        for ( itLeaf = mParentTreeLeaves.begin(); itLeaf != mParentTreeLeaves.end(); ++itLeaf )
-            mParentTree->removeObjectOwnership( (*itLeaf)->getLeafIndex(), this );
-    
-    } // End if attached
-
-    // Insert us into the new leaves if any
-    if ( !leaves.empty() )
-    {
-        cgSceneLeafArray::iterator itLeaf;
-        for ( itLeaf = leaves.begin(); itLeaf != leaves.end(); ++itLeaf )
-            mParentTree->addObjectOwnership( (*itLeaf)->getLeafIndex(), this );
-    
-    } // End if new attachment
-    
-    // Store this list
-    mParentTreeLeaves = leaves;
-}
-
-//-----------------------------------------------------------------------------
 //  Name : isRenderable ()
 /// <summary>
 /// Determine if this node is currently visible / renderable or not.
@@ -3672,6 +3664,8 @@ bool cgObjectNode::isRenderable( ) const
 //-----------------------------------------------------------------------------
 void cgObjectNode::showNode( bool visible /* = true */, bool updateChildren /* = false */ )
 {
+    bool wasVisible = ((mFlags & cgObjectNodeFlags::Visible) != 0);
+
     // Set the visibility bit appropriately
     mFlags &= ~cgObjectNodeFlags::Visible;
     if ( visible )
@@ -3684,6 +3678,10 @@ void cgObjectNode::showNode( bool visible /* = true */, bool updateChildren /* =
             (*itNode)->showNode( visible, updateChildren );
     
     } // End if update children
+
+    // Invalidate the sphere tree visibility data.
+    if ( mSceneTreeNode && (wasVisible != visible) )
+        mSceneTreeNode->invalidateVisibility();
 }
 
 //-----------------------------------------------------------------------------
@@ -3878,96 +3876,6 @@ cgFloat cgObjectNode::getInputChannelState( cgInt16 handle, cgFloat default ) co
     return itState->second;
 }
 
-// ToDo: 9999 - Remove
-/*//-----------------------------------------------------------------------------
-//  Name : Deserialize ()
-/// <summary>
-/// Initialize the object based on the XML data pulled from the 
-/// environment / scene definition file.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgObjectNode::Deserialize( const cgXMLNode & InitData, cgSceneLoader * pLoader )
-{
-    cgXMLNode xProperties, xChild;
-    cgMatrix  mtxObject;
-
-    // Reset matrix.
-    cgMatrix::identity( &mtxObject );
-
-    // Retrieve the base properties we're interested in
-    xProperties = InitData.GetChildNode( _T("BaseProperties") );
-    if ( !xProperties.IsEmpty() )
-    {
-        // Retrieve object class / category
-        xChild = xProperties.GetChildNode( _T("ObjectClass") );
-        if ( !xChild.IsEmpty() )
-            mObjectClass = xChild.GetText();
-        
-        // Find position if supplied
-        xChild = xProperties.GetChildNode( _T("Position") );
-        if ( !xChild.IsEmpty() )
-            cgStringUtility::TryParse( xChild.GetText(), (cgVector3&)mtxObject._41 );
-
-        // Find upper 3x3 details if supplied.
-        xChild = xProperties.GetChildNode( _T("Matrix3x3") );
-        if ( !xChild.IsEmpty() )
-        {
-            cgStringArray aTokens;
-            if ( cgStringUtility::Tokenize( xChild.GetText(), aTokens, _T(",") ) && aTokens.size() == 9 )
-            {
-                cgStringParser( aTokens[0] ) >> mtxObject._11;
-                cgStringParser( aTokens[1] ) >> mtxObject._12;
-                cgStringParser( aTokens[2] ) >> mtxObject._13;
-                cgStringParser( aTokens[3] ) >> mtxObject._21;
-                cgStringParser( aTokens[4] ) >> mtxObject._22;
-                cgStringParser( aTokens[5] ) >> mtxObject._23;
-                cgStringParser( aTokens[6] ) >> mtxObject._31;
-                cgStringParser( aTokens[7] ) >> mtxObject._32;
-                cgStringParser( aTokens[8] ) >> mtxObject._33;
-
-            } // End if valid 3x3 matrix
-            
-        } // End if found upper 3x3
-
-        // Set the matrix to the object
-        SetObjectMatrix( mtxObject );
-
-    } // End if BaseProperties provided
-
-    // Retrieve the custom properties node
-    xProperties = InitData.GetChildNode( _T("CustomProperties") );
-    if ( !xProperties.IsEmpty() )
-    {
-        // Clear the custom property container and parse the data
-        mCustomProperties.Clear();
-        mCustomProperties.ParseXML( xProperties );
-
-    } // End if CustomProperties provided
-
-    // Success!
-    return true;
-}
-
-//-----------------------------------------------------------------------------
-//  Name : InitObject () (Virtual)
-/// <summary>
-/// Initialize the object (after deserialization / setup) as required.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgObjectNode::InitObject( bool bAutoAddObject = true )
-{
-    // Add this object to the specified scene.
-    if ( mParentScene && bAutoAddObject )
-        mParentScene->AddObject( this );
-
-    // It's important to force the object matrix from the "previous" frame
-    // to match the initial matrix just after initializing.
-    m_mtxPreviousObject = m_mtxObject;
-
-    // Success
-    return true;
-}*/
-
 //-----------------------------------------------------------------------------
 //  Name : setParent ()
 /// <summary>
@@ -4130,6 +4038,31 @@ void cgObjectNode::attachChild( cgObjectNode * child )
 void cgObjectNode::removeChild( cgObjectNode * child )
 {
     mChildren.remove( child );
+}
+
+//-----------------------------------------------------------------------------
+// Name : getSceneTreeNode ( )
+/// <summary>
+/// Retrieve the sub-node to which this object belongs within the main scene's 
+/// broadphase / scene tree.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgSphereTreeSubNode * cgObjectNode::getSceneTreeNode( ) const
+{
+    return mSceneTreeNode;
+}
+
+//-----------------------------------------------------------------------------
+// Name : setSceneTreeNode ( )
+/// <summary>
+/// Attach this object node to the scene tree hierarchy at the relevant
+/// location. This method is mostly used for the purpose of internal management 
+/// and would generally not be called directly.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgObjectNode::setSceneTreeNode( cgSphereTreeSubNode * sceneTreeNode )
+{
+    mSceneTreeNode = sceneTreeNode;
 }
 
 //-----------------------------------------------------------------------------
@@ -4932,6 +4865,24 @@ void cgObjectNode::onAnimationTransformUpdated( const cgTransform & transform )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getAnimationTransform () (Virtual)
+/// <summary>
+/// Retrieve the current animation transform for this node.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgObjectNode::getAnimationTransform( cgTransform & transform ) const
+{
+    if ( mParentNode )
+    {
+        cgTransform invParentOffset;
+        cgTransform::inverse( invParentOffset, mParentNode->mOffsetTransform );
+        cgTransform::multiply( transform, mLocalTransform, invParentOffset );
+    }
+    else
+        transform = mLocalTransform;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : nodeUpdated ()
 /// <summary>
 /// Mark the node as having been updated in this frame.
@@ -4976,36 +4927,6 @@ void cgObjectNode::nodeUpdated( cgUInt32 deferredUpdates, cgUInt32 childDeferred
             (*itNode)->nodeUpdated( childDeferredUpdates, childDeferredUpdates );
 
     } // End if queue children
-
-    // Testing: Immediate resolve
-    //resolvePendingUpdates( cgDeferredUpdateFlags::All );
-
-    // ToDo: 9999 - Do we still need this?
-    //// Update previous object matrix (the one from the prior frame)
-    //// if this is the first update on a new frame.
-    //if ( mLastDirtyFrame != currentFrame )
-        //m_mtxPreviousObject = m_mtxObject;
-
-    /*// Update the world space bounding box.
-    mWorldBounds = getLocalBoundingBox();
-    mWorldBounds.transform( getWorldTransform( false ) );
-
-    // Allow group to update.
-    if ( mOwnerGroup )
-        mOwnerGroup->nodeUpdated();
-
-    // ToDo: 9999 - This method may be called several times in a row
-    // can we find a better home for the following without having to
-    // visit every node each frame?
-
-    // Update the node's ownership status in order to update its scene cell 
-    // where applicable. This process will also filter the object through to 
-    // any child spatial trees where it may be inserted into the relevant 
-    // leaves as required. The exception are those nodes that have a reference
-    // identifier of 0. These are temporary internal objects that cannot / should
-    // not be referenced.
-    if ( mParentScene && mReferenceId )
-        mParentScene->updateObjectOwnership( this );*/
 }
 
 //-----------------------------------------------------------------------------
@@ -5014,11 +4935,13 @@ void cgObjectNode::nodeUpdated( cgUInt32 deferredUpdates, cgUInt32 childDeferred
 /// This node has been deemed visible during testing, but this method gives the
 /// node a final say on how it gets registered with the visibility set. The
 /// default behavior is simply to insert directly into object visibility list,
-/// paying close attention to filtering rules.
+/// paying close attention to its filtering rules.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgObjectNode::registerVisibility( cgVisibilitySet * visibilityData, cgUInt32 flags )
+bool cgObjectNode::registerVisibility( cgVisibilitySet * visibilityData )
 {
+    cgUInt32 flags = visibilityData->getSearchFlags();
+
     // First test filters.
     if ( (flags & cgVisibilitySearchFlags::MustCastShadows) && !isShadowCaster() )
         return false;
@@ -5026,10 +4949,18 @@ bool cgObjectNode::registerVisibility( cgVisibilitySet * visibilityData, cgUInt3
         return false;
     
     // We're visible. Add to the set.
-    visibilityData->addVisibleObject( this );
+    return visibilityData->addVisibleObject( this );
+}
 
-    // We modified the visibility set.
-    return true;
+//-----------------------------------------------------------------------------
+//  Name : unregisterVisibility () (Virtual)
+/// <summary>
+/// Unregisters this oject from the specified visibility set.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgObjectNode::unregisterVisibility( cgVisibilitySet * visibilityData )
+{
+    visibilityData->removeVisibleObject( this );
 }
 
 //-----------------------------------------------------------------------------

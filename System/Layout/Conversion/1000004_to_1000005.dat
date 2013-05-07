@@ -1,0 +1,17 @@
+// *************************************************************
+//  Master world database conversion from v1.0.4 to v1.0.5
+// *************************************************************
+#include "1.00.0005.dat"
+
+// *************************************************************
+//  Upgrade Stub
+// *************************************************************
+bool upgrade( World @ world, uint sourceVersion, uint destinationVersion )
+{
+    // Check supported versions
+    if ( sourceVersion != 0x1000004 || destinationVersion != 0x1000005 ) // v1.00.0004 -> v1.00.0005
+        return false;
+
+    // Upgrade to v1.00.0005
+    return upgrade_1000004_to_1000005( world );
+}

@@ -14,7 +14,7 @@
 //        management and basic particle physics simulation.                  //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -36,9 +36,11 @@ namespace cgParticleBlendMethod
 {
     enum Base
     {
-        Additive    = 0,
-        Linear      = 1,
-        Screen      = 2
+        Additive        = 0,
+        Linear          = 1,
+        Screen          = 2,
+        SoftAdditive    = 3,
+        SoftLinear      = 4
     };
 
 } // End Namespace : cgParticleBlendMethod

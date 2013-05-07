@@ -14,7 +14,7 @@
 //        resource data.                                                     //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -33,8 +33,6 @@
 // Platform specific implementations
 #include <Resources/Platform/cgDX9Texture.h>
 #include <Resources/Platform/cgDX11Texture.h>
-
-// ToDo: Video playback support needs to provide looping ability.
 
 ///////////////////////////////////////////////////////////////////////////////
 // cgTexture Member Functions
@@ -65,6 +63,7 @@ cgTexture::cgTexture( cgUInt32 referenceId, const cgInputStream & stream, cgRend
     
     // Select default media configuration.
     mMediaConfig.mipmapUpdateRate = 20.0f;
+    mMediaConfig.looping          = true;
     
     // Cached responses
     mResourceType = cgResourceType::Texture;
@@ -334,6 +333,24 @@ void cgTexture::update()
         } // End if locked
 
     } // End if new data available
+
+    // If video is no longer playing, and the caller has 
+    // requested that it loops, make sure that it does so here.
+    if ( mVideoSyncEvent && mMediaDecoder && mMediaConfig.looping && !mMediaDecoder->isPlaying() )
+    {
+        // Reopen the media container
+        mMediaDecoder->closeMediaContainer();
+        if ( GIEXFAILED( mMediaDecoder->openMediaContainer( mInputStream.getSourceFile().c_str() ) ) )
+        {
+            delete mMediaDecoder;
+            delete mVideoSyncEvent;
+            mMediaDecoder = CG_NULL;
+            mVideoSyncEvent = CG_NULL;
+        }
+        else
+            mMediaDecoder->play();
+    
+    } // End if should loop
 }
 
 //-----------------------------------------------------------------------------

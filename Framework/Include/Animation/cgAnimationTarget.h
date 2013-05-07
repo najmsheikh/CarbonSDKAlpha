@@ -15,7 +15,7 @@
 //        by an active animation controller.                                 //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -82,8 +82,9 @@ public:
     //-------------------------------------------------------------------------
 	// Public Virtual Methods
 	//-------------------------------------------------------------------------
-    virtual void            setInstanceIdentifier       ( const cgString & identifier );
-    virtual void            onAnimationTransformUpdated ( const cgTransform & t ) = 0;
+    virtual void                setInstanceIdentifier       ( const cgString & identifier );
+    virtual void                onAnimationTransformUpdated ( const cgTransform & t ) = 0;
+    virtual void                getAnimationTransform       ( cgTransform & transform ) const = 0;
 
 protected:
     //-------------------------------------------------------------------------

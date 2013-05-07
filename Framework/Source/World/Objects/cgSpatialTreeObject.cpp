@@ -14,7 +14,7 @@
 //        rendering of data organized using a spatial tree structure.        //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -434,7 +434,7 @@ cgBoundingBox cgSpatialTreeObject::getLocalBoundingBox( )
 /// Constructor for this class.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgSpatialTreeNode::cgSpatialTreeNode( cgUInt32 nReferenceId, cgScene * pScene ) : cgObjectNode( nReferenceId, pScene ), cgSpatialTreeInstance()
+cgSpatialTreeNode::cgSpatialTreeNode( cgUInt32 nReferenceId, cgScene * pScene ) : cgObjectNode( nReferenceId, pScene ), cgSpatialTreeInstance( )
 {
     // Initialize variables to sensible defaults.
 
@@ -581,13 +581,13 @@ void cgSpatialTreeNode::onComponentModified( cgComponentModifiedEventArgs * e )
 /// paying close attention to filtering rules.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgSpatialTreeNode::registerVisibility( cgVisibilitySet * pSet, cgUInt32 nFlags )
+bool cgSpatialTreeNode::registerVisibility( cgVisibilitySet * pSet )
 {
     // Allow base class to perform basic tests against filters and
     // add itself to the list of visible objects where necessary.
     // This includes registering active materials if there is
     // any currently active spatial tree geometry.
-    if ( !cgObjectNode::registerVisibility( pSet, nFlags ) )
+    if ( !cgObjectNode::registerVisibility( pSet ) )
         return false;
 
     // We modified the visibility set.

@@ -15,7 +15,7 @@
 //        XML data structure, or building a mesh procedurally.               //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -4656,7 +4656,7 @@ bool cgMesh::generateVertexNormals( cgUInt32 * pAdjacency, cgUInt32Array * pRema
                 
                 } // Next item in adjacency list
 
-                // If we found the edge we came entered through, the exit edge will
+                // If we found the edge we entered through, the exit edge will
                 // be the edge counter-clockwise from this one when walking backwards
                 if ( k < 3 )
                 {
@@ -4970,7 +4970,7 @@ bool cgMesh::generateVertexTangents( )
 bool cgMesh::generateAdjacency( cgUInt32Array & adjacency )
 {
     std::map< AdjacentEdgeKey, cgUInt32 > EdgeTree;
-    std::map< AdjacentEdgeKey, cgUInt32 >::const_iterator itEdge;
+    std::map< AdjacentEdgeKey, cgUInt32 >::iterator itEdge;
     
     // What is the status of the mesh?
     if ( mPrepareStatus != cgMeshStatus::Prepared )
@@ -4984,36 +4984,36 @@ bool cgMesh::generateAdjacency( cgUInt32Array & adjacency )
         cgInt nVertexStride   = (cgInt)mVertexFormat->getStride();
 
         // Insert all edges into the edge tree
-        cgByte * pSrcVertices = &mPrepareData.vertexData[0];
+        cgByte * pSrcVertices = &mPrepareData.vertexData[0] + nPositionOffset;
         for ( cgUInt32 i = 0; i < mPrepareData.triangleCount; ++i )
         {
             AdjacentEdgeKey Edge;
             
             // Retrieve positions of each referenced vertex.
             const Triangle & Tri = mPrepareData.triangleData[i];
-            const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (Tri.indices[0] * nVertexStride) + nPositionOffset);
-            const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (Tri.indices[1] * nVertexStride) + nPositionOffset);
-            const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (Tri.indices[2] * nVertexStride) + nPositionOffset);
+            const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (Tri.indices[0] * nVertexStride));
+            const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (Tri.indices[1] * nVertexStride));
+            const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (Tri.indices[2] * nVertexStride));
             
             // Edge 1
-            Edge.vertex1    = v1;
-            Edge.vertex2    = v2;
+            Edge.vertex1     = v1;
+            Edge.vertex2     = v2;
             EdgeTree[ Edge ] = i;
 
             // Edge 2
-            Edge.vertex1    = v2;
-            Edge.vertex2    = v3;
+            Edge.vertex1     = v2;
+            Edge.vertex2     = v3;
             EdgeTree[ Edge ] = i;
 
             // Edge 3
-            Edge.vertex1    = v3;
-            Edge.vertex2    = v1;
+            Edge.vertex1     = v3;
+            Edge.vertex2     = v1;
             EdgeTree[ Edge ] = i;
 
         } // Next Face
 
         // Size the output array.
-        adjacency.resize( mPrepareData.triangleCount * 3 );
+        adjacency.resize( mPrepareData.triangleCount * 3, 0xFFFFFFFF );
 
         // Now, find any adjacent edges for each triangle edge
         for ( cgUInt32 i = 0; i < mPrepareData.triangleCount; ++i )
@@ -5022,9 +5022,9 @@ bool cgMesh::generateAdjacency( cgUInt32Array & adjacency )
 
             // Retrieve positions of each referenced vertex.
             const Triangle & Tri = mPrepareData.triangleData[i];
-            const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (Tri.indices[0] * nVertexStride) + nPositionOffset);
-            const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (Tri.indices[1] * nVertexStride) + nPositionOffset);
-            const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (Tri.indices[2] * nVertexStride) + nPositionOffset);
+            const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (Tri.indices[0] * nVertexStride));
+            const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (Tri.indices[1] * nVertexStride));
+            const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (Tri.indices[2] * nVertexStride));
 
             // Note: Notice below that the order of the edge vertices
             //       is swapped. This is because we want to find the 
@@ -5037,9 +5037,7 @@ bool cgMesh::generateAdjacency( cgUInt32Array & adjacency )
             
             // Find the matching adjacent edge
             itEdge = EdgeTree.find( Edge );
-            if ( itEdge == EdgeTree.end() )
-                adjacency[ (i * 3) ] = 0xFFFFFFFF;
-            else
+            if ( itEdge != EdgeTree.end() )
                 adjacency[ (i * 3) ] = itEdge->second;
 
             // Edge 2
@@ -5048,9 +5046,7 @@ bool cgMesh::generateAdjacency( cgUInt32Array & adjacency )
             
             // Find the matching adjacent edge
             itEdge = EdgeTree.find( Edge );
-            if ( itEdge == EdgeTree.end() )
-                adjacency[ (i * 3) + 1 ] = 0xFFFFFFFF;
-            else
+            if ( itEdge != EdgeTree.end() )
                 adjacency[ (i * 3) + 1 ] = itEdge->second;
 
             // Edge 3
@@ -5059,9 +5055,7 @@ bool cgMesh::generateAdjacency( cgUInt32Array & adjacency )
             
             // Find the matching adjacent edge
             itEdge = EdgeTree.find( Edge );
-            if ( itEdge == EdgeTree.end() )
-                adjacency[ (i * 3) + 2 ] = 0xFFFFFFFF;
-            else
+            if ( itEdge != EdgeTree.end() )
                 adjacency[ (i * 3) + 2 ] = itEdge->second;
 
         } // Next Face
@@ -5078,36 +5072,36 @@ bool cgMesh::generateAdjacency( cgUInt32Array & adjacency )
         cgInt nVertexStride   = (cgInt)mVertexFormat->getStride();
 
         // Insert all edges into the edge tree
-        cgByte * pSrcVertices = mSystemVB;
+        cgByte * pSrcVertices = mSystemVB + nPositionOffset;
         cgUInt32 * pSrcIndices  = mSystemIB;
         for ( cgUInt32 i = 0; i < mFaceCount; ++i, pSrcIndices+=3 )
         {
             AdjacentEdgeKey Edge;
             
             // Retrieve positions of each referenced vertex.
-            const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (pSrcIndices[0] * nVertexStride) + nPositionOffset);
-            const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (pSrcIndices[1] * nVertexStride) + nPositionOffset);
-            const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (pSrcIndices[2] * nVertexStride) + nPositionOffset);
+            const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (pSrcIndices[0] * nVertexStride));
+            const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (pSrcIndices[1] * nVertexStride));
+            const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (pSrcIndices[2] * nVertexStride));
             
             // Edge 1
-            Edge.vertex1    = v1;
-            Edge.vertex2    = v2;
+            Edge.vertex1     = v1;
+            Edge.vertex2     = v2;
             EdgeTree[ Edge ] = i;
 
             // Edge 2
-            Edge.vertex1    = v2;
-            Edge.vertex2    = v3;
+            Edge.vertex1     = v2;
+            Edge.vertex2     = v3;
             EdgeTree[ Edge ] = i;
 
             // Edge 3
-            Edge.vertex1    = v3;
-            Edge.vertex2    = v1;
+            Edge.vertex1     = v3;
+            Edge.vertex2     = v1;
             EdgeTree[ Edge ] = i;
 
         } // Next Face
 
         // Size the output array.
-        adjacency.resize( mFaceCount * 3 );
+        adjacency.resize( mFaceCount * 3, 0xFFFFFFFF );
 
         // Now, find any adjacent edges for each triangle edge
         pSrcIndices  = mSystemIB;
@@ -5116,9 +5110,9 @@ bool cgMesh::generateAdjacency( cgUInt32Array & adjacency )
             AdjacentEdgeKey Edge;
 
             // Retrieve positions of each referenced vertex.
-            const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (pSrcIndices[0] * nVertexStride) + nPositionOffset);
-            const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (pSrcIndices[1] * nVertexStride) + nPositionOffset);
-            const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (pSrcIndices[2] * nVertexStride) + nPositionOffset);
+            const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (pSrcIndices[0] * nVertexStride));
+            const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (pSrcIndices[1] * nVertexStride));
+            const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (pSrcIndices[2] * nVertexStride));
 
             // Note: Notice below that the order of the edge vertices
             //       is swapped. This is because we want to find the 
@@ -5131,9 +5125,7 @@ bool cgMesh::generateAdjacency( cgUInt32Array & adjacency )
             
             // Find the matching adjacent edge
             itEdge = EdgeTree.find( Edge );
-            if ( itEdge == EdgeTree.end() )
-                adjacency[ (i * 3) ] = 0xFFFFFFFF;
-            else
+            if ( itEdge != EdgeTree.end() )
                 adjacency[ (i * 3) ] = itEdge->second;
 
             // Edge 2
@@ -5142,9 +5134,7 @@ bool cgMesh::generateAdjacency( cgUInt32Array & adjacency )
             
             // Find the matching adjacent edge
             itEdge = EdgeTree.find( Edge );
-            if ( itEdge == EdgeTree.end() )
-                adjacency[ (i * 3) + 1 ] = 0xFFFFFFFF;
-            else
+            if ( itEdge != EdgeTree.end() )
                 adjacency[ (i * 3) + 1 ] = itEdge->second;
 
             // Edge 3
@@ -5153,9 +5143,7 @@ bool cgMesh::generateAdjacency( cgUInt32Array & adjacency )
             
             // Find the matching adjacent edge
             itEdge = EdgeTree.find( Edge );
-            if ( itEdge == EdgeTree.end() )
-                adjacency[ (i * 3) + 2 ] = 0xFFFFFFFF;
-            else
+            if ( itEdge != EdgeTree.end() )
                 adjacency[ (i * 3) + 2 ] = itEdge->second;
 
         } // Next Face
@@ -7064,148 +7052,6 @@ void cgSkinBindData::buildVertexTable( cgUInt32 nVertexCount, const cgUInt32Arra
     } // Next Bone
 }
 
-// ToDo: 9999 - Remove once complete
-/*//-----------------------------------------------------------------------------
-//  Name : Deserialize ( ) (Virtual)
-/// <summary>
-/// Allows the object to deserialize any data it wishes to the XML 
-/// document.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgSkinBindData::Deserialize( cgXMLNode & BindData, cgSceneLoader * pLoader, const cgString & strSource )
-{
-    cgXMLNode xSection, xBone, xBind, xChild;
-    cgXMLError::Result Result;
-
-    // Supported version?
-    if ( cgStringUtility::Compare( BindData.GetAttributeText( _T("DataVersion") ), _T("1.0.0") ) != 0 )
-    {
-        cgAppLog::write( cgAppLog::Error, _T("Mesh '%s' skin bind node employs an unsupported data specification version.\n"), strSource.c_str() );
-        return false;
-    
-    } // End if invalid version
-
-    // Handle exceptions
-    try
-    {
-        // Iterate through all child nodes
-        for ( cgUInt32 i = 0; i < BindData.GetChildNodeCount(); ++i )
-        {
-            xSection = BindData.GetChildNode( i );
-
-            // What type of node is this?
-            if ( xSection.IsOfType( _T("Bones") ) )
-            {
-                // Find all child bone references
-                for ( cgUInt32 j = 0; ; )
-                {
-                    xBone = xSection.GetNextChildNode( _T("Bone"), j );
-                    if ( xBone.IsEmpty() == true ) break;
-
-                    // Allocate and store new bone influence data entry.
-                    BoneInfluence * pBone  = new BoneInfluence();
-                    pBone->influences     = CG_NULL;
-                    pBone->boneIdentifier  = _T("");
-                    pBone->nInfluenceCount = 0;
-                    cgMatrix::identity( &pBone->BindPoseMatrix );
-                    addBone( pBone );
-
-                    // Retrieve bone reference identifier
-                    cgString strBoneRefId = xBone.GetAttributeText( _T("RefId") );
-                    if ( strBoneRefId.empty() == true )
-                        throw cgExceptions::ResultException( _T("Mesh '") + strSource + _T("' skin bind data contained an invalid or corrupt bone data node"), cgDebugSource() );
-                    
-                    // Translate the cgUID referenced in the file to the name of the bone as 
-                    // understood by the scene.
-                    cgUID BoneRefId;
-                    cgStringUtility::TryParse( strBoneRefId, BoneRefId );
-                    pBone->boneIdentifier = pLoader->GetObjectName( BoneRefId );
-                    
-                    // Process bone reference properties
-                    for ( cgUInt32 k = 0; k < xBone.GetChildNodeCount(); ++k )
-                    {
-                        xBind = xBone.GetChildNode( k );
-
-                        // What type of node is this?
-                        if ( xBind.IsOfType( _T("BindMatrix") ) )
-                        {
-                            // Find position if supplied
-                            xChild = xBind.GetChildNode( _T("Position") );
-                            if ( xChild.IsEmpty() == false )
-                                cgStringUtility::TryParse( xChild.GetText(), (cgVector3&)pBone->BindPoseMatrix._41 );
-                            
-                            // Find upper 3x3 if supplied.
-                            xChild = xBind.GetChildNode( _T("Matrix3x3") );
-                            if ( xChild.IsEmpty() == false )
-                            {
-                                cgStringArray aTokens;
-                                if ( cgStringUtility::Tokenize( xChild.GetText(), aTokens, _T(",") ) == true && aTokens.size() == 9 )
-                                {
-                                    cgStringParser( aTokens[0] ) >> pBone->BindPoseMatrix._11;
-                                    cgStringParser( aTokens[1] ) >> pBone->BindPoseMatrix._12;
-                                    cgStringParser( aTokens[2] ) >> pBone->BindPoseMatrix._13;
-                                    cgStringParser( aTokens[3] ) >> pBone->BindPoseMatrix._21;
-                                    cgStringParser( aTokens[4] ) >> pBone->BindPoseMatrix._22;
-                                    cgStringParser( aTokens[5] ) >> pBone->BindPoseMatrix._23;
-                                    cgStringParser( aTokens[6] ) >> pBone->BindPoseMatrix._31;
-                                    cgStringParser( aTokens[7] ) >> pBone->BindPoseMatrix._32;
-                                    cgStringParser( aTokens[8] ) >> pBone->BindPoseMatrix._33;
-
-                                } // End if valid 3x3 matrix
-                                
-                            } // End if found upper 3x3
-
-                        } // End BindMatrix
-                        else if ( xBind.IsOfType( _T("Influences") ) )
-                        {
-                            // Supported encoding type?
-                            if ( cgStringUtility::Compare( xBind.GetAttributeText( _T("Encoding") ), _T("Base64"), true ) != 0 )
-                                throw cgExceptions::ResultException( _T("Mesh '") + strSource + _T("' skin bind data contained an influences data node using an unsupported encoding"), cgDebugSource() );
-
-                            // Retrieve influence count
-                            cgString strCount;
-                            if ( xBind.GetAttributeText( _T("Count"), strCount ) == false )
-                                throw cgExceptions::ResultException( _T("Mesh '") + strSource + _T("' skin bind data contained an invalid or corrupt influences data node"), cgDebugSource() );
-                            cgStringParser( strCount ) >> pBone->nInfluenceCount;
-                            
-                            // Validate data
-                            if ( pBone->nInfluenceCount == 0 )
-                                throw cgExceptions::ResultException( _T("Mesh '") + strSource + _T("' skin bind data contained an invalid or corrupt influences data node"), cgDebugSource() );
-
-                            // Allocate enough space for influence data and decode
-                            pBone->influences = new VertexInfluence[pBone->nInfluenceCount];
-                            cgUInt32 nDataSize = pBone->nInfluenceCount * sizeof(VertexInfluence);
-                            if ( (Result = xBind.ProcessBinary( cgXMLBinaryEncoding::Base64, nDataSize, pBone->influences )) != cgXMLError::Success )
-                                throw cgExceptions::ResultException( _T("Unable to decode binary skin binding influence data for mesh '") + strSource + _T("'. ") + cgXMLDocument::GetErrorDescription( Result ), cgDebugSource() );
-
-                        } // End influences
-
-                    } // Next Child Node
-
-                } // Next Child 'Bone' Node
-
-            } // End if Bones
-
-        } // Next Child Node
-
-        // Success!
-        return true;
-
-    } // End Try Block
-
-    catch ( const cgExceptions::ResultException & e )
-    {
-        // Clean up
-        
-        // Log error and exit.
-        cgAppLog::write( cgAppLog::Error, _T("%s\n"), e.toString().c_str() );
-        return false;
-
-    } // End Catch Block
-
-    return false;
-}*/
-
 //-----------------------------------------------------------------------------
 //  Name : getBones ()
 /// <summary>
@@ -7583,19 +7429,20 @@ bool operator < (const cgMesh::AdjacentEdgeKey& Key1, const cgMesh::AdjacentEdge
     cgFloat fDifference = 0;
 
     // Test vertex positions.
-    fDifference = Key1.vertex1->x - Key2.vertex1->x;
-    if ( fabsf( fDifference ) > CGE_EPSILON_1MM ) return (fDifference < 0);
-    fDifference = Key1.vertex1->y - Key2.vertex1->y;
-    if ( fabsf( fDifference ) > CGE_EPSILON_1MM ) return (fDifference < 0);
-    fDifference = Key1.vertex1->z - Key2.vertex1->z;
-    if ( fabsf( fDifference ) > CGE_EPSILON_1MM ) return (fDifference < 0);
+    static const cgInt32 maxUlps = 10;
+    if ( !cgMathUtility::dynamicEpsilonTest( Key1.vertex1->x, Key2.vertex1->x, maxUlps ) )
+        return ( Key2.vertex1->x < Key1.vertex1->x );
+    if ( !cgMathUtility::dynamicEpsilonTest( Key1.vertex1->y, Key2.vertex1->y, maxUlps ) )
+        return ( Key2.vertex1->y < Key1.vertex1->y );
+    if ( !cgMathUtility::dynamicEpsilonTest( Key1.vertex1->z, Key2.vertex1->z, maxUlps ) )
+        return ( Key2.vertex1->z < Key1.vertex1->z );
 
-    fDifference = Key1.vertex2->x - Key2.vertex2->x;
-    if ( fabsf( fDifference ) > CGE_EPSILON_1MM ) return (fDifference < 0);
-    fDifference = Key1.vertex2->y - Key2.vertex2->y;
-    if ( fabsf( fDifference ) > CGE_EPSILON_1MM ) return (fDifference < 0);
-    fDifference = Key1.vertex2->z - Key2.vertex2->z;
-    if ( fabsf( fDifference ) > CGE_EPSILON_1MM ) return (fDifference < 0);
+    if ( !cgMathUtility::dynamicEpsilonTest( Key1.vertex2->x, Key2.vertex2->x, maxUlps ) )
+        return ( Key2.vertex2->x < Key1.vertex2->x );
+    if ( !cgMathUtility::dynamicEpsilonTest( Key1.vertex2->y, Key2.vertex2->y, maxUlps ) )
+        return ( Key2.vertex2->y < Key1.vertex2->y );
+    if ( !cgMathUtility::dynamicEpsilonTest( Key1.vertex2->z, Key2.vertex2->z, maxUlps ) )
+        return ( Key2.vertex2->z < Key1.vertex2->z );
     
     // Exactly equal
     return false;
@@ -7609,11 +7456,11 @@ bool operator < (const cgMesh::AdjacentEdgeKey& Key1, const cgMesh::AdjacentEdge
 //-----------------------------------------------------------------------------
 bool operator < (const cgMesh::MeshSubsetKey& Key1, const cgMesh::MeshSubsetKey& Key2)
 {
-    int nDifference = 0;
+    cgInt nDifference = 0;
 
     nDifference = (Key1.material == Key2.material) ? 0 : (Key1.material < Key2.material) ? -1 : 1;
     if ( nDifference != 0 ) return (nDifference < 0);
-    nDifference = (int)Key1.dataGroupId - (int)Key2.dataGroupId;
+    nDifference = (cgInt)Key1.dataGroupId - (cgInt)Key2.dataGroupId;
     if ( nDifference != 0 ) return (nDifference < 0);
 
     // Exactly equal
@@ -7643,7 +7490,7 @@ bool operator < (const cgMesh::WeldKey& Key1, const cgMesh::WeldKey& Key2)
 //-----------------------------------------------------------------------------
 bool operator < (const cgMesh::BoneCombinationKey& Key1, const cgMesh::BoneCombinationKey& Key2)
 {
-    int nDifference;
+    cgInt nDifference;
     const cgMesh::FaceInfluences * p1 = Key1.influences;
     const cgMesh::FaceInfluences * p2 = Key2.influences;
 
@@ -7652,7 +7499,7 @@ bool operator < (const cgMesh::BoneCombinationKey& Key1, const cgMesh::BoneCombi
     if ( nDifference != 0 ) return (nDifference < 0);
     
     // The bone count must match.
-    nDifference = (int)p1->bones.size() - (int)p2->bones.size();
+    nDifference = (cgInt)p1->bones.size() - (cgInt)p2->bones.size();
     if ( nDifference != 0 ) return (nDifference < 0);
     
     // Compare the bone indices in each list
@@ -7660,7 +7507,7 @@ bool operator < (const cgMesh::BoneCombinationKey& Key1, const cgMesh::BoneCombi
     cgBonePalette::BoneIndexMap::const_iterator itBone2 = p2->bones.begin();
     for ( ; itBone1 != p1->bones.end() && itBone2 != p2->bones.end(); ++itBone1, ++itBone2 )
     {
-        nDifference = (int)itBone1->first - (int)itBone2->first;
+        nDifference = (cgInt)itBone1->first - (cgInt)itBone2->first;
         if ( nDifference != 0 ) return (nDifference < 0);
 
     } // Next Bone

@@ -1,0 +1,125 @@
+bool upgrade_1000004_to_1000005( World @ world )
+{
+    String sql;
+
+    // A new column has been added to the animation target controller table.
+    if ( world.tableExists( "DataSources::AnimationSet::TargetControllers" ) )
+    {
+        // Copy existing layer table data into temporary table and drop the original.
+        sql  = "CREATE TEMPORARY TABLE [TEMP_DataSources::AnimationSet::TargetControllers] AS SELECT * FROM [DataSources::AnimationSet::TargetControllers];";
+        sql += "DROP TABLE [DataSources::AnimationSet::TargetControllers];";
+
+        // Create the updated table.
+        sql += "CREATE TABLE [DataSources::AnimationSet::TargetControllers] (";
+        sql += "  [TargetControllerId] integer NOT NULL PRIMARY KEY AUTOINCREMENT,";
+        sql += "  [TargetDataId] integer,";
+        sql += "  [ControllerIdentifier] varchar(255),";
+        sql += "  [ControllerType] smallint DEFAULT 0,";
+        sql += "  [ControllerParams] BLOB);";
+        sql += "CREATE INDEX [DataSources::AnimationSet::TargetControllers_ControllerIdentifierMatch] ON [DataSources::AnimationSet::TargetControllers] ([TargetDataId], [ControllerIdentifier]);";
+        sql += "CREATE INDEX [DataSources::AnimationSet::TargetControllers_TargetDataIdIndex] ON [DataSources::AnimationSet::TargetControllers] ([TargetDataId]);";
+        sql += "CREATE TRIGGER [DataSources::AnimationSet::TargetControllers_OnDelete]";
+        sql += "  BEFORE DELETE";
+        sql += "  ON [DataSources::AnimationSet::TargetControllers]";
+        sql += "  BEGIN";
+        sql += "    DELETE FROM [DataSources::AnimationSet::ControllerChannels] WHERE TargetControllerId=old.TargetControllerId;";
+        sql += "  END;";
+
+        // Copy data over to new table.
+        sql += "INSERT INTO [DataSources::AnimationSet::TargetControllers] SELECT";
+        sql += "  [TargetControllerId],";
+        sql += "  [TargetDataId],";
+        sql += "  [ControllerIdentifier],";
+        sql += "  [ControllerType],";
+        sql += "  NULL FROM [TEMP_DataSources::AnimationSet::TargetControllers];";
+
+        // Drop the temporary table.
+        sql += "DROP TABLE [TEMP_DataSources::AnimationSet::TargetControllers];";
+
+        // Execute the query
+        if ( !world.executeQuery( sql, false ) )
+            return false;
+    
+    } // End if has animation set controllers
+
+    // Bone table was restructured to ditch the concept if width/height/length
+    if ( world.tableExists( "Objects::Bone" ) )
+    {
+        // Copy existing layer table data into temporary table and drop the original.
+        sql  = "CREATE TEMPORARY TABLE [TEMP_Objects::Bone] AS SELECT * FROM [Objects::Bone];";
+        sql += "DROP TABLE [Objects::Bone];";
+
+        // Create the updated table.
+        sql += "CREATE TABLE [Objects::Bone] (";
+        sql += "  [RefId] integer NOT NULL PRIMARY KEY,";
+        sql += "  [HasCollisionVolume] tinyint(1) DEFAULT 0,";
+        sql += "  [RefCount] integer DEFAULT 0);";
+        sql += "CREATE TRIGGER [Objects::Bone_OnDelete]";
+        sql += "  BEFORE DELETE";
+        sql += "  ON [Objects::Bone]";
+        sql += "  BEGIN";
+        sql += "    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;";
+        sql += "  END;";
+
+        // Copy data over to new table.
+        sql += "INSERT INTO [Objects::Bone] SELECT";
+        sql += "  [RefId],";
+        sql += "  0,";
+        sql += "  [RefCount]";
+        sql += "  FROM [TEMP_Objects::Bone];";
+
+        // Drop the temporary table.
+        sql += "DROP TABLE [TEMP_Objects::Bone];";
+
+        // Execute the query
+        if ( !world.executeQuery( sql, false ) )
+            return false;
+    
+    } // End if has bone table
+
+    // Added new 'Editor::UserAssets' table.
+    sql  = "CREATE TABLE [Editor::UserAssets] (";
+    sql += "  [AssetId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, ";
+    sql += "  [EntryType] smallint DEFAULT 0, ";
+    sql += "  [ParentId] integer, ";
+    sql += "  [Level] integer, ";
+    sql += "  [Name] TEXT,";
+    sql += "  [Path] path,";
+    sql += "  [Param] TEXT,";
+    sql += "  [UID] TEXT,";
+    sql += "  [Expanded] tinyint DEFAULT(1));";
+    sql += "CREATE INDEX [Editor::UserAssets_LevelIndex] ON [Editor::UserAssets] ([Level]);";
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+
+    // Insert default user asset filters.
+    sql  = "INSERT INTO [Editor::UserAssets] VALUES(NULL, 2, 0, 0, 'Textures', '', 'dds;png;tga;bmp;jpg;jpeg', '{63E328FB-5B3D-47B3-82B1-02F588F57687}',  1);";
+    sql += "INSERT INTO [Editor::UserAssets] VALUES(NULL, 2, 0, 0, 'Scripts', '', 'frm;gs;gsh;sh;shh', '{6F5673BF-E7C2-46A9-83E5-E46DE8A3DB2B}',  1);";
+    sql += "INSERT INTO [Editor::UserAssets] VALUES(NULL, 2, 0, 0, 'Shaders', '', 'sh;shh;fx;fxh', '{7AC38DF3-435A-4BCC-8910-2060C9DB342A}',  1);";
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+
+    // Scene unit display type numbering was altered.
+    sql = "UPDATE [Scenes] SET DistanceDisplayUnits=5 WHERE DistanceDisplayUnits=7"; // Yards
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+    sql = "UPDATE [Scenes] SET DistanceDisplayUnits=4 WHERE DistanceDisplayUnits=6"; // Feet
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+    sql = "UPDATE [Scenes] SET DistanceDisplayUnits=3 WHERE DistanceDisplayUnits=5"; // Inches
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+    sql = "UPDATE [Scenes] SET DistanceDisplayUnits=2 WHERE DistanceDisplayUnits=3"; // Millimeters
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+    sql = "UPDATE [Scenes] SET DistanceDisplayUnits=1 WHERE DistanceDisplayUnits=2"; // Centimeters
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+
+    // Update version number to 1.00.0005
+    if ( !world.executeQuery( "UPDATE [Configuration] SET Version=1,Subversion=0,Revision=5 WHERE Type='Primary'", false ) )
+        return false;
+
+    // Success!
+    return true;
+}

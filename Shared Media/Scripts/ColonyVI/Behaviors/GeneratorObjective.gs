@@ -20,8 +20,6 @@
 // Script Includes
 //-----------------------------------------------------------------------------
 #include_once "Objective.gsh"
-#include_once "DestructibleLight.gs"
-#include_once "EmergencyLight.gs"
 
 //-----------------------------------------------------------------------------
 // Class Definitions
@@ -35,9 +33,12 @@ shared class GeneratorObjective : Objective
     ///////////////////////////////////////////////////////////////////////////
 	// Private Member Variables
 	///////////////////////////////////////////////////////////////////////////
-    private int     mSequenceIndex; // Which generator?
-    private uint    mNextObjective; // Reference ID of next objective.
-    
+    private uint                    mCoverRefId;        // Reference ID of the cover that drops down when the coolant supply is shut down
+    private ObjectNode@             mCover;             // Cached reference to the cover object node
+    private uint                    mSteamRefId;        // Reference ID of the steam particle emitter that is enabled coolant supply is shut down
+    private ParticleEmitterNode@    mSteam;             // Cached reference to the emitter.
+    private float                   mSlideAmount;       // Amount that the cover has been moved so far.
+
 	///////////////////////////////////////////////////////////////////////////
 	// Constructors & Destructors
 	///////////////////////////////////////////////////////////////////////////
@@ -61,8 +62,15 @@ shared class GeneratorObjective : Objective
 	{
         // Get properties
         PropertyContainer @ properties = object.getCustomProperties();
-        mSequenceIndex = int(properties.getProperty( "sequence_index" ));
-        mNextObjective = uint(properties.getProperty( "next_objective", uint(0) ));
+        mCoverRefId = uint(properties.getProperty( "cover_refid", uint(0) ) );
+        mSteamRefId = uint(properties.getProperty( "emitter_refid", uint(0) ) );
+        
+        // Cache references to objects
+        Scene @ scene = object.getScene();
+        if ( mCoverRefId != 0 )
+            @mCover = scene.getObjectNodeById( mCoverRefId );
+        if ( mSteamRefId != 0 )
+            @mSteam = cast<ParticleEmitterNode>(scene.getObjectNodeById( mSteamRefId ) );
 
         // Call base class implementation last.
         Objective::onAttach( object );
@@ -78,6 +86,39 @@ shared class GeneratorObjective : Objective
         // Call base class implementation last
         Objective::onDetach( object );
     }
+    
+    //-------------------------------------------------------------------------
+	// Name : onUpdate () (Event)
+	// Desc : Object is performing its update step.
+	//-------------------------------------------------------------------------
+	void onUpdate( float elapsedTime )
+	{
+        // Slide the cover down.
+        if ( @mCover != null )
+        {
+            const float CoverMaxDistance = 1.67f;
+
+            // Compute amount to open.
+            float moveAmount = elapsedTime * 0.5f;
+            mSlideAmount += moveAmount;
+            if ( mSlideAmount >  CoverMaxDistance )
+            {
+                moveAmount -= (mSlideAmount - CoverMaxDistance);
+                mSlideAmount = CoverMaxDistance;
+            
+            } // End if overshoots
+
+            // Adjust cover
+            mCover.moveLocal( 0, -moveAmount, 0 );
+
+            // Done sliding?
+            if ( mSlideAmount >= CoverMaxDistance )
+                mNode.setUpdateRate( UpdateRate::Never );
+
+        } // End if has cover
+        else
+            mNode.setUpdateRate( UpdateRate::Never );
+    }
 
     ///////////////////////////////////////////////////////////////////////////
 	// Public Method Overrides (Objective)
@@ -88,49 +129,39 @@ shared class GeneratorObjective : Objective
 	//-------------------------------------------------------------------------
     Objective @ onActivate( ObjectNode @ issuer )
     {
-        // If this is the final generator objective, deactivate hall 
-        // lights and activate the emergency lights.
-        if ( mSequenceIndex == 3 )
+        // Trigger this gameplay sequence.
+        mGamePlayState.setCurrentGameSequence( mSequenceIdentifier );
+
+        // Enable updates for this objective so we can slide the cover down.
+        if ( @mCover != null )
+            mNode.setUpdateRate( UpdateRate::Always );
+        mSlideAmount = 0;
+
+        // Enable updates to particle emitter.
+        if ( @mSteam != null )
         {
-            // First, hallway lights off.
-            Scene @ scene = mNode.getScene();
-            array<ObjectNode@> nodes = scene.getObjectNodesByType( RTID_MeshObject );
-            for ( uint i = 0; i < nodes.length(); ++i )
-            {
-                ObjectNode @ node = nodes[i];
-                if ( node.getBehaviorCount() == 0 )
-                    continue;
-                DestructibleLight @ light = cast<DestructibleLight>(node.getScriptedBehavior(0));
-                if ( @light != null )
-                    light.deactivate();
-            
-            } // Next node
-
-            // Next, emergency lights on.
-            nodes = scene.getObjectNodesByType( RTID_SpotLightObject );
-            for ( uint i = 0; i < nodes.length(); ++i )
-            {
-                ObjectNode @ node = nodes[i];
-                if ( node.getBehaviorCount() == 0 )
-                    continue;
-                EmergencyLight @ light = cast<EmergencyLight>(node.getScriptedBehavior(0));
-                if ( @light != null )
-                    light.activate();
-            
-            } // Next node
-
-            // Switch to escape music.
-            getAppAudioDriver().loadAmbientTrack( "Music", "Music/Mistake the Getaway.ogg", 0, 0.3f );
-
-        } // End if final objective
+            mSteam.setUpdateRate( UpdateRate::Always );
+            mSteam.enableLayerEmission( 0, true );
+        
+        } // End if has steam
 
         // Get the next objective.
-        if ( mNextObjective != 0 )
+        if ( mNextObjectiveId != 0 )
         {
             Scene @ scene = mNode.getScene();
-            ObjectNode @ objectiveNode = scene.getObjectNodeById( mNextObjective );
+            ObjectNode @ objectiveNode = scene.getObjectNodeById( mNextObjectiveId );
             if ( objectiveNode.getBehaviorCount() > 0 )
-                return cast<Objective>(objectiveNode.getScriptedBehavior(0));
+            {
+                Objective @ nextObjective = cast<Objective>(objectiveNode.getScriptedBehavior(0));
+                if ( mSequenceIdentifier == "trigger_generator_4" )
+                {
+                    // Trigger the next objective (elevator doors will close).
+                    nextObjective.onActivate( issuer );
+                
+                } // End if final trigger
+                return nextObjective;
+
+            } // End if has script
         
         } // End if has other objective
 

@@ -14,7 +14,7 @@
 //        skinned mesh data.                                                 //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -156,6 +156,7 @@ public:
     // Public Methods
     //-------------------------------------------------------------------------
     bool                        attachBone              ( cgBoneNode * pBone );
+    void                        generateBoneShapes      ( );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgObjectNode)

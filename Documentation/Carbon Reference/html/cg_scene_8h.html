@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -114,6 +114,7 @@ $(document).ready(function(){initNavTree('cg_scene_8h.html','');});
 <code>#include &lt;<a class="el" href="cg_world_query_8h_source.html">World/cgWorldQuery.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_script_interop_8h_source.html">Scripting/cgScriptInterop.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_resource_handles_8h_source.html">Resources/cgResourceHandles.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="cg_physics_world_8h_source.html">Physics/cgPhysicsWorld.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_reference_manager_8h_source.html">System/cgReferenceManager.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_filter_expression_8h_source.html">System/cgFilterExpression.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_math_types_8h_source.html">Math/cgMathTypes.h</a>&gt;</code><br/>
@@ -131,6 +132,10 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_node_updated_event_args.html">cgNodeUpdatedEventArgs</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_node_parent_change_event_args.html">cgNodeParentChangeEventArgs</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_scene_element_event_args.html">cgSceneElementEventArgs</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_selection_set_event_args.html">cgSelectionSetEventArgs</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_scene_material_event_args.html">cgSceneMaterialEventArgs</a></td></tr>
@@ -146,10 +151,15 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_selection_set.html">cgSelectionSet</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores a list of nodes that form a pre-defined selection set.  <a href="classcg_selection_set.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene_update_f_i_f_o.html">cgSceneUpdateFIFO</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores a list of nodes that need are pending further (deferred) updates after modification by the engine or application during the scene's update process.  <a href="classcg_scene_update_f_i_f_o.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html">cgScene</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main class responsible for loading and managing an individual scene. A scene is essentially a collection of objects which might for instance make up the exterior world (containing a full blown landscape etc.) or the interior of a building.  <a href="classcg_scene.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_scene_1_1_update_bucket.html">cgScene::UpdateBucket</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_scene_1_1_ray_cast_filter_data.html">cgScene::RayCastFilterData</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
@@ -237,7 +247,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_cace410e69155a0a769d51256a788445.html">World</a></li><li class="navelem"><a class="el" href="cg_scene_8h.html">cgScene.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:27 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:05 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

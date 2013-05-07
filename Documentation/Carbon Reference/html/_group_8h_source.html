@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -172,27 +172,31 @@ $(document).ready(function(){initNavTree('_group_8h_source.html','');});
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            registerHandleBehaviors&lt;cgGroupObject&gt;( engine );</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            registerHandleBehaviors&lt;cgGroupNode&gt;( engine );</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            <span class="comment">// cgGroupObject (Class)</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <span class="comment">// Register object methods.</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            registerObjectMethods&lt;cgGroupObject&gt;( engine, <span class="stringliteral">&quot;GroupObject&quot;</span> );</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <span class="comment">// cgGroupNode (Class)</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="comment">// Register node methods.</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            registerNodeMethods&lt;cgGroupNode&gt;( engine, <span class="stringliteral">&quot;GroupNode&quot;</span> );            </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        }</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    }; <span class="comment">// End Class : Package</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;} } } } } <span class="comment">// End Namespace : cgScriptPackages::Core::World::Objects::Group</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            <span class="comment">// Type Identifiers</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"></span>            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#af2d5cc579214c94d8def39b0a9108509" title="Registers a global property accessible to all scripts. ">registerGlobalProperty</a>( <span class="stringliteral">&quot;const UID RTID_GroupObject&quot;</span>, (<span class="keywordtype">void</span>*)&amp;<a class="code" href="cg_group_object_8h.html#a4c23ef0768510dbfae93cf7f54457b46">RTID_GroupObject</a> ) );</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#af2d5cc579214c94d8def39b0a9108509" title="Registers a global property accessible to all scripts. ">registerGlobalProperty</a>( <span class="stringliteral">&quot;const UID RTID_GroupNode&quot;</span>, (<span class="keywordtype">void</span>*)&amp;<a class="code" href="cg_group_object_8h.html#a94808d4ec7e05a32acef529d99c6e10a">RTID_GroupNode</a> ) );</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <span class="comment">// cgGroupObject (Class)</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="comment">// Register object methods.</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            registerObjectMethods&lt;cgGroupObject&gt;( engine, <span class="stringliteral">&quot;GroupObject&quot;</span> );</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <span class="comment">// cgGroupNode (Class)</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="comment">// Register node methods.</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            registerNodeMethods&lt;cgGroupNode&gt;( engine, <span class="stringliteral">&quot;GroupNode&quot;</span> );            </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }; <span class="comment">// End Class : Package</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;} } } } } <span class="comment">// End Namespace : cgScriptPackages::Core::World::Objects::Group</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_036efea8fd6b39c1f1fd2dd7f1be4325.html">Scripting</a></li><li class="navelem"><a class="el" href="dir_5f20ce7c1333a975792d65b7ff262c26.html">Packages</a></li><li class="navelem"><a class="el" href="dir_962f94cc32c03ad95281b0f22b8add17.html">Core</a></li><li class="navelem"><a class="el" href="dir_4efed41db9e0bc7e6f43a5e09e03be68.html">World</a></li><li class="navelem"><a class="el" href="dir_174a3acef6be263b76842d5259bacf48.html">Objects</a></li><li class="navelem"><a class="el" href="_group_8h.html">Group.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:16 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:47:58 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

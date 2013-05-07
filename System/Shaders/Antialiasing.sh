@@ -139,20 +139,30 @@ class AntialiasingShader : ISurfaceShader
 		switch ( qualityLevel )
 		{
 			case AntiAliasingQuality::Poor:
-				<?global #define FXAA_QUALITY__PRESET 10?>
-			break;
+				<?global
+				#define FXAA_QUALITY__PRESET 10
+				?>
+			    break;
 			case AntiAliasingQuality::Low:
-				<?global #define FXAA_QUALITY__PRESET 12?>
-			break;
+				<?global
+				#define FXAA_QUALITY__PRESET 12
+				?>
+			    break;
 			case AntiAliasingQuality::Medium:
-				<?global #define FXAA_QUALITY__PRESET 20?>
-			break;
+				<?global
+				#define FXAA_QUALITY__PRESET 20
+				?>
+			    break;
 			case AntiAliasingQuality::High:
-				<?global #define FXAA_QUALITY__PRESET 29?>
-			break;
+				<?global
+				#define FXAA_QUALITY__PRESET 29
+				?>
+			    break;
 			default:
-				<?global #define FXAA_QUALITY__PRESET 39?>
-			break;
+				<?global
+				#define FXAA_QUALITY__PRESET 39
+				?>
+			    break;
 		}
 
 		<?global
@@ -709,8 +719,7 @@ class AntialiasingShader : ISurfaceShader
 	============================================================================*/
 	__shadercall float4 fxaaQuality( float2 pos, float4 fxaaConsolePosPos, FxaaTex tex,	FxaaTex fxaaConsole360TexExpBiasNegOne,	FxaaTex fxaaConsole360TexExpBiasNegTwo,	float2 fxaaQualityRcpFrame,	float4 fxaaConsoleRcpFrameOpt, float4 fxaaConsoleRcpFrameOpt2, float4 fxaaConsole360RcpFrameOpt2, float fxaaQualitySubpix, float fxaaQualityEdgeThreshold, float fxaaQualityEdgeThresholdMin, float fxaaConsoleEdgeSharpness, float fxaaConsoleEdgeThreshold, float fxaaConsoleEdgeThresholdMin, float4 fxaaConsole360ConstDir ) 
 	{
-	<?
-	/*--------------------------------------------------------------------------*/
+	    <?
 		FxaaFloat2 posM;
 		posM.x = pos.x;
 		posM.y = pos.y;
@@ -751,7 +760,7 @@ class AntialiasingShader : ISurfaceShader
 			FxaaFloat lumaN = FxaaLuma(FxaaTexOff(tex, posM, FxaaInt2( 0,-1), fxaaQualityRcpFrame.xy));
 			FxaaFloat lumaW = FxaaLuma(FxaaTexOff(tex, posM, FxaaInt2(-1, 0), fxaaQualityRcpFrame.xy));
 		#endif
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		FxaaFloat maxSM = max(lumaS, lumaM);
 		FxaaFloat minSM = min(lumaS, lumaM);
 		FxaaFloat maxESM = max(lumaE, maxSM);
@@ -764,14 +773,14 @@ class AntialiasingShader : ISurfaceShader
 		FxaaFloat range = rangeMax - rangeMin;
 		FxaaFloat rangeMaxClamped = max(fxaaQualityEdgeThresholdMin, rangeMaxScaled);
 		FxaaBool earlyExit = range < rangeMaxClamped;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		if(earlyExit)
 			#if (FXAA_DISCARD == 1)
 				FxaaDiscard;
 			#else
 				return rgbyM;
 			#endif
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		#if (FXAA_GATHER4_ALPHA == 0)
 			FxaaFloat lumaNW = FxaaLuma(FxaaTexOff(tex, posM, FxaaInt2(-1,-1), fxaaQualityRcpFrame.xy));
 			FxaaFloat lumaSE = FxaaLuma(FxaaTexOff(tex, posM, FxaaInt2( 1, 1), fxaaQualityRcpFrame.xy));
@@ -781,19 +790,19 @@ class AntialiasingShader : ISurfaceShader
 			FxaaFloat lumaNE = FxaaLuma(FxaaTexOff(tex, posM, FxaaInt2(1, -1), fxaaQualityRcpFrame.xy));
 			FxaaFloat lumaSW = FxaaLuma(FxaaTexOff(tex, posM, FxaaInt2(-1, 1), fxaaQualityRcpFrame.xy));
 		#endif
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		FxaaFloat lumaNS = lumaN + lumaS;
 		FxaaFloat lumaWE = lumaW + lumaE;
 		FxaaFloat subpixRcpRange = 1.0/range;
 		FxaaFloat subpixNSWE = lumaNS + lumaWE;
 		FxaaFloat edgeHorz1 = (-2.0 * lumaM) + lumaNS;
 		FxaaFloat edgeVert1 = (-2.0 * lumaM) + lumaWE;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		FxaaFloat lumaNESE = lumaNE + lumaSE;
 		FxaaFloat lumaNWNE = lumaNW + lumaNE;
 		FxaaFloat edgeHorz2 = (-2.0 * lumaE) + lumaNESE;
 		FxaaFloat edgeVert2 = (-2.0 * lumaN) + lumaNWNE;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		FxaaFloat lumaNWSW = lumaNW + lumaSW;
 		FxaaFloat lumaSWSE = lumaSW + lumaSE;
 		FxaaFloat edgeHorz4 = (abs(edgeHorz1) * 2.0) + abs(edgeHorz2);
@@ -802,17 +811,17 @@ class AntialiasingShader : ISurfaceShader
 		FxaaFloat edgeVert3 = (-2.0 * lumaS) + lumaSWSE;
 		FxaaFloat edgeHorz = abs(edgeHorz3) + edgeHorz4;
 		FxaaFloat edgeVert = abs(edgeVert3) + edgeVert4;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		FxaaFloat subpixNWSWNESE = lumaNWSW + lumaNESE;
 		FxaaFloat lengthSign = fxaaQualityRcpFrame.x;
 		FxaaBool horzSpan = edgeHorz >= edgeVert;
 		FxaaFloat subpixA = subpixNSWE * 2.0 + subpixNWSWNESE;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		if(!horzSpan) lumaN = lumaW;
 		if(!horzSpan) lumaS = lumaE;
 		if(horzSpan) lengthSign = fxaaQualityRcpFrame.y;
 		FxaaFloat subpixB = (subpixA * (1.0/12.0)) - lumaM;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		FxaaFloat gradientN = lumaN - lumaM;
 		FxaaFloat gradientS = lumaS - lumaM;
 		FxaaFloat lumaNN = lumaN + lumaM;
@@ -821,7 +830,7 @@ class AntialiasingShader : ISurfaceShader
 		FxaaFloat gradient = max(abs(gradientN), abs(gradientS));
 		if(pairN) lengthSign = -lengthSign;
 		FxaaFloat subpixC = FxaaSat(abs(subpixB) * subpixRcpRange);
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		FxaaFloat2 posB;
 		posB.x = posM.x;
 		posB.y = posM.y;
@@ -830,7 +839,7 @@ class AntialiasingShader : ISurfaceShader
 		offNP.y = ( horzSpan) ? 0.0 : fxaaQualityRcpFrame.y;
 		if(!horzSpan) posB.x += lengthSign * 0.5;
 		if( horzSpan) posB.y += lengthSign * 0.5;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		FxaaFloat2 posN;
 		posN.x = posB.x - offNP.x * FXAA_QUALITY__P0;
 		posN.y = posB.y - offNP.y * FXAA_QUALITY__P0;
@@ -841,13 +850,13 @@ class AntialiasingShader : ISurfaceShader
 		FxaaFloat lumaEndN = FxaaLuma(FxaaTexTop(tex, posN));
 		FxaaFloat subpixE = subpixC * subpixC;
 		FxaaFloat lumaEndP = FxaaLuma(FxaaTexTop(tex, posP));
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		if(!pairN) lumaNN = lumaSS;
 		FxaaFloat gradientScaled = gradient * 1.0/4.0;
 		FxaaFloat lumaMM = lumaM - lumaNN * 0.5;
 		FxaaFloat subpixF = subpixD * subpixE;
 		FxaaBool lumaMLTZero = lumaMM < 0.0;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		lumaEndN -= lumaNN * 0.5;
 		lumaEndP -= lumaNN * 0.5;
 		FxaaBool doneN = abs(lumaEndN) >= gradientScaled;
@@ -857,7 +866,7 @@ class AntialiasingShader : ISurfaceShader
 		FxaaBool doneNP = (!doneN) || (!doneP);
 		if(!doneP) posP.x += offNP.x * FXAA_QUALITY__P1;
 		if(!doneP) posP.y += offNP.y * FXAA_QUALITY__P1;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		if(doneNP) {
 			if(!doneN) lumaEndN = FxaaLuma(FxaaTexTop(tex, posN.xy));
 			if(!doneP) lumaEndP = FxaaLuma(FxaaTexTop(tex, posP.xy));
@@ -870,7 +879,7 @@ class AntialiasingShader : ISurfaceShader
 			doneNP = (!doneN) || (!doneP);
 			if(!doneP) posP.x += offNP.x * FXAA_QUALITY__P2;
 			if(!doneP) posP.y += offNP.y * FXAA_QUALITY__P2;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 			#if (FXAA_QUALITY__PS > 3)
 			if(doneNP) {
 				if(!doneN) lumaEndN = FxaaLuma(FxaaTexTop(tex, posN.xy));
@@ -884,7 +893,7 @@ class AntialiasingShader : ISurfaceShader
 				doneNP = (!doneN) || (!doneP);
 				if(!doneP) posP.x += offNP.x * FXAA_QUALITY__P3;
 				if(!doneP) posP.y += offNP.y * FXAA_QUALITY__P3;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 				#if (FXAA_QUALITY__PS > 4)
 				if(doneNP) {
 					if(!doneN) lumaEndN = FxaaLuma(FxaaTexTop(tex, posN.xy));
@@ -898,7 +907,7 @@ class AntialiasingShader : ISurfaceShader
 					doneNP = (!doneN) || (!doneP);
 					if(!doneP) posP.x += offNP.x * FXAA_QUALITY__P4;
 					if(!doneP) posP.y += offNP.y * FXAA_QUALITY__P4;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 					#if (FXAA_QUALITY__PS > 5)
 					if(doneNP) {
 						if(!doneN) lumaEndN = FxaaLuma(FxaaTexTop(tex, posN.xy));
@@ -912,7 +921,7 @@ class AntialiasingShader : ISurfaceShader
 						doneNP = (!doneN) || (!doneP);
 						if(!doneP) posP.x += offNP.x * FXAA_QUALITY__P5;
 						if(!doneP) posP.y += offNP.y * FXAA_QUALITY__P5;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 						#if (FXAA_QUALITY__PS > 6)
 						if(doneNP) {
 							if(!doneN) lumaEndN = FxaaLuma(FxaaTexTop(tex, posN.xy));
@@ -926,7 +935,7 @@ class AntialiasingShader : ISurfaceShader
 							doneNP = (!doneN) || (!doneP);
 							if(!doneP) posP.x += offNP.x * FXAA_QUALITY__P6;
 							if(!doneP) posP.y += offNP.y * FXAA_QUALITY__P6;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 							#if (FXAA_QUALITY__PS > 7)
 							if(doneNP) {
 								if(!doneN) lumaEndN = FxaaLuma(FxaaTexTop(tex, posN.xy));
@@ -940,7 +949,7 @@ class AntialiasingShader : ISurfaceShader
 								doneNP = (!doneN) || (!doneP);
 								if(!doneP) posP.x += offNP.x * FXAA_QUALITY__P7;
 								if(!doneP) posP.y += offNP.y * FXAA_QUALITY__P7;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		#if (FXAA_QUALITY__PS > 8)
 		if(doneNP) {
 			if(!doneN) lumaEndN = FxaaLuma(FxaaTexTop(tex, posN.xy));
@@ -954,7 +963,7 @@ class AntialiasingShader : ISurfaceShader
 			doneNP = (!doneN) || (!doneP);
 			if(!doneP) posP.x += offNP.x * FXAA_QUALITY__P8;
 			if(!doneP) posP.y += offNP.y * FXAA_QUALITY__P8;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 			#if (FXAA_QUALITY__PS > 9)
 			if(doneNP) {
 				if(!doneN) lumaEndN = FxaaLuma(FxaaTexTop(tex, posN.xy));
@@ -968,7 +977,7 @@ class AntialiasingShader : ISurfaceShader
 				doneNP = (!doneN) || (!doneP);
 				if(!doneP) posP.x += offNP.x * FXAA_QUALITY__P9;
 				if(!doneP) posP.y += offNP.y * FXAA_QUALITY__P9;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 				#if (FXAA_QUALITY__PS > 10)
 				if(doneNP) {
 					if(!doneN) lumaEndN = FxaaLuma(FxaaTexTop(tex, posN.xy));
@@ -982,7 +991,7 @@ class AntialiasingShader : ISurfaceShader
 					doneNP = (!doneN) || (!doneP);
 					if(!doneP) posP.x += offNP.x * FXAA_QUALITY__P10;
 					if(!doneP) posP.y += offNP.y * FXAA_QUALITY__P10;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 					#if (FXAA_QUALITY__PS > 11)
 					if(doneNP) {
 						if(!doneN) lumaEndN = FxaaLuma(FxaaTexTop(tex, posN.xy));
@@ -996,7 +1005,7 @@ class AntialiasingShader : ISurfaceShader
 						doneNP = (!doneN) || (!doneP);
 						if(!doneP) posP.x += offNP.x * FXAA_QUALITY__P11;
 						if(!doneP) posP.y += offNP.y * FXAA_QUALITY__P11;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 						#if (FXAA_QUALITY__PS > 12)
 						if(doneNP) {
 							if(!doneN) lumaEndN = FxaaLuma(FxaaTexTop(tex, posN.xy));
@@ -1010,56 +1019,56 @@ class AntialiasingShader : ISurfaceShader
 							doneNP = (!doneN) || (!doneP);
 							if(!doneP) posP.x += offNP.x * FXAA_QUALITY__P12;
 							if(!doneP) posP.y += offNP.y * FXAA_QUALITY__P12;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 						}
 						#endif
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 					}
 					#endif
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 				}
 				#endif
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 			}
 			#endif
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		}
 		#endif
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 							}
 							#endif
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 						}
 						#endif
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 					}
 					#endif
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 				}
 				#endif
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 			}
 			#endif
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		}
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		FxaaFloat dstN = posM.x - posN.x;
 		FxaaFloat dstP = posP.x - posM.x;
 		if(!horzSpan) dstN = posM.y - posN.y;
 		if(!horzSpan) dstP = posP.y - posM.y;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		FxaaBool goodSpanN = (lumaEndN < 0.0) != lumaMLTZero;
 		FxaaFloat spanLength = (dstP + dstN);
 		FxaaBool goodSpanP = (lumaEndP < 0.0) != lumaMLTZero;
 		FxaaFloat spanLengthRcp = 1.0/spanLength;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		FxaaBool directionN = dstN < dstP;
 		FxaaFloat dst = min(dstN, dstP);
 		FxaaBool goodSpan = directionN ? goodSpanN : goodSpanP;
 		FxaaFloat subpixG = subpixF * subpixF;
 		FxaaFloat pixelOffset = (dst * (-spanLengthRcp)) + 0.5;
 		FxaaFloat subpixH = subpixG * fxaaQualitySubpix;
-	/*--------------------------------------------------------------------------*/
+	    /*--------------------------------------------------------------------------*/
 		FxaaFloat pixelOffsetGood = goodSpan ? pixelOffset : 0.0;
 		FxaaFloat pixelOffsetSubpix = max(pixelOffsetGood, subpixH);
 		if(!horzSpan) posM.x += pixelOffsetSubpix * lengthSign;

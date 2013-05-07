@@ -1,10 +1,15 @@
 var hierarchy =
 [
+    [ "cgGlareProcessor::_cbAddLayer", "structcg_glare_processor_1_1__cb_add_layer.html", null ],
+    [ "cgGlareProcessor::_cbAnamorphicFlare", "structcg_glare_processor_1_1__cb_anamorphic_flare.html", null ],
     [ "cgAntialiasProcessor::_cbAntialiasing", "structcg_antialias_processor_1_1__cb_antialiasing.html", null ],
     [ "cgLightingManager::_cbBilateral", "structcg_lighting_manager_1_1__cb_bilateral.html", null ],
     [ "cgGlareProcessor::_cbBrightPass", "structcg_glare_processor_1_1__cb_bright_pass.html", null ],
     [ "cgDepthOfFieldProcessor::_cbDepthOfField", "structcg_depth_of_field_processor_1_1__cb_depth_of_field.html", null ],
+    [ "cgToneMapProcessor::_cbDownsample", "structcg_tone_map_processor_1_1__cb_downsample.html", null ],
     [ "cgRadianceGrid::_cbGrid", "structcg_radiance_grid_1_1__cb_grid.html", null ],
+    [ "cgGlareProcessor::_cbILRBrightPass", "structcg_glare_processor_1_1__cb_i_l_r_bright_pass.html", null ],
+    [ "cgGlareProcessor::_cbILRCompositePass", "structcg_glare_processor_1_1__cb_i_l_r_composite_pass.html", null ],
     [ "cgLightNode::_cbLight", "structcg_light_node_1_1__cb_light.html", null ],
     [ "cgLightingManager::_cbLightingSystem", "structcg_lighting_manager_1_1__cb_lighting_system.html", null ],
     [ "cgToneMapProcessor::_cbLuminance", "structcg_tone_map_processor_1_1__cb_luminance.html", null ],
@@ -12,12 +17,14 @@ var hierarchy =
     [ "cgProjectorLightNode::_cbProjectorLight", "structcg_projector_light_node_1_1__cb_projector_light.html", null ],
     [ "cgReflectanceGenerator::_cbRSM", "structcg_reflectance_generator_1_1__cb_r_s_m.html", null ],
     [ "cgShadowGenerator::_cbShadow", "structcg_shadow_generator_1_1__cb_shadow.html", null ],
+    [ "cgAtmosphericsProcessor::_cbSkyData", "structcg_atmospherics_processor_1_1__cb_sky_data.html", null ],
     [ "cgSpotLightNode::_cbSpotLight", "structcg_spot_light_node_1_1__cb_spot_light.html", null ],
     [ "cgSSAOProcessor::_cbSSAO", "structcg_s_s_a_o_processor_1_1__cb_s_s_a_o.html", null ],
     [ "cgToneMapProcessor::_cbToneMapping", "structcg_tone_map_processor_1_1__cb_tone_mapping.html", null ],
-    [ "cgGlareProcessor::_cbUpSample", "structcg_glare_processor_1_1__cb_up_sample.html", null ],
+    [ "cgGlareProcessor::_cbUpdateCache", "structcg_glare_processor_1_1__cb_update_cache.html", null ],
     [ "cgMesh::AdjacentEdgeKey", "structcg_mesh_1_1_adjacent_edge_key.html", null ],
     [ "cgAudioDriver::AmbientItem", "structcg_audio_driver_1_1_ambient_item.html", null ],
+    [ "cgActorNode::AnimationItem", "structcg_actor_node_1_1_animation_item.html", null ],
     [ "cgScriptInterop::Types::ScriptArray::ArrayBuffer", "structcg_script_interop_1_1_types_1_1_script_array_1_1_array_buffer.html", null ],
     [ "std::basic_string< Char >", null, [
       [ "cgString", "classcg_string.html", null ]
@@ -25,10 +32,12 @@ var hierarchy =
     [ "cgLandscapeTextureData::BatchedMap", "structcg_landscape_texture_data_1_1_batched_map.html", null ],
     [ "cgScriptInterop::Exceptions::BindException", "classcg_script_interop_1_1_exceptions_1_1_bind_exception.html", null ],
     [ "cgTerrainLOD::BlockSkirt", "structcg_terrain_l_o_d_1_1_block_skirt.html", null ],
+    [ "cgRagdollController::Bone", "structcg_ragdoll_controller_1_1_bone.html", null ],
     [ "cgMesh::BoneCombinationKey", "structcg_mesh_1_1_bone_combination_key.html", null ],
     [ "cgSkinBindData::BoneInfluence", "structcg_skin_bind_data_1_1_bone_influence.html", null ],
     [ "cgMeshShape::BVHLeaf", "structcg_mesh_shape_1_1_b_v_h_leaf.html", null ],
     [ "cgMeshShape::BVHNode", "structcg_mesh_shape_1_1_b_v_h_node.html", null ],
+    [ "cgMotionBlurProcessor::CameraData", "structcg_motion_blur_processor_1_1_camera_data.html", null ],
     [ "cgLandscape::cbTerrainBaseData", "structcg_landscape_1_1cb_terrain_base_data.html", null ],
     [ "cgLandscape::cbTerrainLayerData", "structcg_landscape_1_1cb_terrain_layer_data.html", null ],
     [ "cgLandscapeTextureData::cbTerrainPaintData", "structcg_landscape_texture_data_1_1cb_terrain_paint_data.html", null ],
@@ -37,9 +46,8 @@ var hierarchy =
       [ "cgFloatCurveAnimationChannel", "classcg_float_curve_animation_channel.html", null ],
       [ "cgQuaternionAnimationChannel", "classcg_quaternion_animation_channel.html", null ]
     ] ],
-    [ "cgApplication", "classcg_application.html", null ],
+    [ "cgAnimationTrackDesc", "structcg_animation_track_desc.html", null ],
     [ "cgAppLog", "classcg_app_log.html", null ],
-    [ "cgAppStateManager", "classcg_app_state_manager.html", null ],
     [ "cgAudioBufferFormat", "structcg_audio_buffer_format.html", null ],
     [ "cgAudioCodec", "classcg_audio_codec.html", [
       [ "cgAudioCodec_Ogg", "classcg_audio_codec___ogg.html", null ],
@@ -48,24 +56,25 @@ var hierarchy =
     [ "cgAutoPtr< _Vt, _Et >", "classcg_auto_ptr.html", null ],
     [ "cgBezierSpline2", "classcg_bezier_spline2.html", null ],
     [ "cgBezierSpline3", "classcg_bezier_spline3.html", null ],
-    [ "cgBillboard", "classcg_billboard.html", [
-      [ "cgBillboard2D", "classcg_billboard2_d.html", null ],
-      [ "cgBillboard3D", "classcg_billboard3_d.html", [
-        [ "cgParticle", "classcg_particle.html", null ]
-      ] ]
-    ] ],
     [ "cgBillboard2DVertex", "classcg_billboard2_d_vertex.html", null ],
     [ "cgBillboard3DVertex", "classcg_billboard3_d_vertex.html", null ],
-    [ "cgBillboardBuffer", "classcg_billboard_buffer.html", null ],
     [ "cgBlendStateDesc", "structcg_blend_state_desc.html", null ],
     [ "cgBlurOpDesc", "structcg_blur_op_desc.html", null ],
     [ "cgBonePalette", "classcg_bone_palette.html", null ],
     [ "cgBoundingBox", "classcg_bounding_box.html", null ],
+    [ "cgBoundingSphere", "classcg_bounding_sphere.html", [
+      [ "cgSphereTreeSubNode", "classcg_sphere_tree_sub_node.html", null ]
+    ] ],
     [ "cgBroadcastConnectionEventArgs", "structcg_broadcast_connection_event_args.html", null ],
     [ "cgBroadcastDataEventArgs", "structcg_broadcast_data_event_args.html", null ],
+    [ "cgBSPTreeLeaf", "classcg_b_s_p_tree_leaf.html", null ],
+    [ "cgBSPTreeSubNode", "classcg_b_s_p_tree_sub_node.html", null ],
     [ "cgBufferFormatEnum", "classcg_buffer_format_enum.html", null ],
     [ "cgCallbackData", "structcg_callback_data.html", null ],
     [ "cgClipVertex", "classcg_clip_vertex.html", null ],
+    [ "cgCollisionContact", "structcg_collision_contact.html", [
+      [ "cgSceneCollisionContact", "structcg_scene_collision_contact.html", null ]
+    ] ],
     [ "cgColorValue", "structcg_color_value.html", null ],
     [ "cgCommandPacket", "structcg_command_packet.html", null ],
     [ "cgComponentCreatedEventArgs", "structcg_component_created_event_args.html", null ],
@@ -83,6 +92,7 @@ var hierarchy =
     [ "cgDebugSourceInfo", "structcg_debug_source_info.html", null ],
     [ "cgDepthStencilOpDesc", "structcg_depth_stencil_op_desc.html", null ],
     [ "cgDepthStencilStateDesc", "structcg_depth_stencil_state_desc.html", null ],
+    [ "cgDisplayMode", "structcg_display_mode.html", null ],
     [ "CGEConfig", "struct_c_g_e_config.html", null ],
     [ "cgEulerAngles", "classcg_euler_angles.html", null ],
     [ "cgEvent", "classcg_event.html", [
@@ -115,6 +125,9 @@ var hierarchy =
     [ "cgMouseButtonEventArgs", "structcg_mouse_button_event_args.html", null ],
     [ "cgMouseMoveEventArgs", "structcg_mouse_move_event_args.html", null ],
     [ "cgMouseWheelScrollEventArgs", "structcg_mouse_wheel_scroll_event_args.html", null ],
+    [ "cgNavigationAgentCreateParams", "structcg_navigation_agent_create_params.html", null ],
+    [ "cgNavigationAgentRepositionEventArgs", "structcg_navigation_agent_reposition_event_args.html", null ],
+    [ "cgNavigationMeshCreateParams", "structcg_navigation_mesh_create_params.html", null ],
     [ "cgObjectNodeEventArgs", "structcg_object_node_event_args.html", [
       [ "cgObjectNodeNameChangeEventArgs", "structcg_object_node_name_change_event_args.html", null ]
     ] ],
@@ -132,9 +145,10 @@ var hierarchy =
     [ "cgPointF", "structcg_point_f.html", null ],
     [ "cgPointVertex", "classcg_point_vertex.html", null ],
     [ "cgPolynomial", "classcg_polynomial.html", null ],
+    [ "cgPool< T >", "classcg_pool.html", null ],
+    [ "cgPool< cgSphereTreeSubNode >", "classcg_pool.html", null ],
     [ "cgPoolAllocator< T >", "classcg_pool_allocator.html", null ],
     [ "cgProfilerStatistics", "structcg_profiler_statistics.html", null ],
-    [ "cgPropertyContainer", "classcg_property_container.html", null ],
     [ "cgQuaternion", "classcg_quaternion.html", null ],
     [ "cgRadianceBuffer", "classcg_radiance_buffer.html", null ],
     [ "cgRadianceGrid", "classcg_radiance_grid.html", null ],
@@ -146,24 +160,30 @@ var hierarchy =
     ] ],
     [ "cgRectF", "structcg_rect_f.html", null ],
     [ "cgReferenceManager", "classcg_reference_manager.html", null ],
+    [ "cgRigidBodyCreateParams", "structcg_rigid_body_create_params.html", null ],
     [ "cgSamplerBlockDesc", "structcg_sampler_block_desc.html", null ],
     [ "cgSamplerDesc", "structcg_sampler_desc.html", null ],
     [ "cgSamplerStateDesc", "structcg_sampler_state_desc.html", null ],
     [ "cgSceneCellKey", "structcg_scene_cell_key.html", null ],
     [ "cgSceneDescriptor", "classcg_scene_descriptor.html", null ],
+    [ "cgSceneElementTypeDesc", "structcg_scene_element_type_desc.html", null ],
     [ "cgSceneEventArgs", "structcg_scene_event_args.html", [
+      [ "cgNodeParentChangeEventArgs", "structcg_node_parent_change_event_args.html", null ],
       [ "cgNodesUpdatedEventArgs", "structcg_nodes_updated_event_args.html", null ],
       [ "cgNodeUpdatedEventArgs", "structcg_node_updated_event_args.html", null ],
+      [ "cgSceneElementEventArgs", "structcg_scene_element_event_args.html", null ],
       [ "cgSceneMaterialEventArgs", "structcg_scene_material_event_args.html", null ],
       [ "cgSelectionSetEventArgs", "structcg_selection_set_event_args.html", null ],
       [ "cgSelectionUpdatedEventArgs", "structcg_selection_updated_event_args.html", null ]
     ] ],
     [ "cgSceneLoadEventArgs", "structcg_scene_load_event_args.html", null ],
     [ "cgSceneUpdateEventArgs", "structcg_scene_update_event_args.html", null ],
+    [ "cgSceneUpdateFIFO", "classcg_scene_update_f_i_f_o.html", null ],
     [ "cgScreenVertex", "classcg_screen_vertex.html", null ],
     [ "cgScriptArgument", "classcg_script_argument.html", null ],
     [ "cgScriptCompatibleStruct", "structcg_script_compatible_struct.html", [
       [ "cgUIControl::UIEventArgs", "structcg_u_i_control_1_1_u_i_event_args.html", [
+        [ "cgListBoxControl::UI_ListBox_OnSelectedIndexChangeArgs", "structcg_list_box_control_1_1_u_i___list_box___on_selected_index_change_args.html", null ],
         [ "cgScrollBarControl::UI_ScrollBar_OnValueChangeArgs", "structcg_scroll_bar_control_1_1_u_i___scroll_bar___on_value_change_args.html", null ],
         [ "cgUIControl::UI_KeyEventArgs", "structcg_u_i_control_1_1_u_i___key_event_args.html", null ],
         [ "cgUIControl::UI_MouseButtonArgs", "structcg_u_i_control_1_1_u_i___mouse_button_args.html", null ],
@@ -192,11 +212,14 @@ var hierarchy =
     [ "cgSizeF", "structcg_size_f.html", null ],
     [ "cgSkinBindData", "classcg_skin_bind_data.html", null ],
     [ "cgSpatialTreeLeaf", "classcg_spatial_tree_leaf.html", [
-      [ "cgLandscapeCell", "classcg_landscape_cell.html", null ]
+      [ "cgLandscapeCell", "classcg_landscape_cell.html", null ],
+      [ "cgOctreeLeaf", "classcg_octree_leaf.html", null ]
     ] ],
     [ "cgSpatialTreeSubNode", "classcg_spatial_tree_sub_node.html", [
-      [ "cgLandscapeSubNode", "classcg_landscape_sub_node.html", null ]
+      [ "cgLandscapeSubNode", "classcg_landscape_sub_node.html", null ],
+      [ "cgOctreeSubNode", "classcg_octree_sub_node.html", null ]
     ] ],
+    [ "cgSphereTreeFIFO", "classcg_sphere_tree_f_i_f_o.html", null ],
     [ "cgTargetBlendStateDesc", "structcg_target_blend_state_desc.html", null ],
     [ "cgTerrainBlock", "classcg_terrain_block.html", null ],
     [ "cgTerrainLOD", "classcg_terrain_l_o_d.html", null ],
@@ -240,7 +263,6 @@ var hierarchy =
     [ "cgRenderDriver::ClipPlaneData", "structcg_render_driver_1_1_clip_plane_data.html", null ],
     [ "cgCollision::CollIntersect", "structcg_collision_1_1_coll_intersect.html", null ],
     [ "cgTexturePool::Config", "structcg_texture_pool_1_1_config.html", null ],
-    [ "cgRigidBody::ConstructData", "structcg_rigid_body_1_1_construct_data.html", null ],
     [ "cgCharacterController::ContactData", "structcg_character_controller_1_1_contact_data.html", null ],
     [ "cgUISkin::ControlConfig", "structcg_u_i_skin_1_1_control_config.html", null ],
     [ "cgUIControl::ControlStateDesc", "structcg_u_i_control_1_1_control_state_desc.html", null ],
@@ -259,6 +281,15 @@ var hierarchy =
         [ "cgScaleXYZTargetController", "classcg_scale_x_y_z_target_controller.html", null ],
         [ "cgUniformScaleTargetController", "classcg_uniform_scale_target_controller.html", null ]
       ] ],
+      [ "cgAppStateManager", "classcg_app_state_manager.html", null ],
+      [ "cgBillboard", "classcg_billboard.html", [
+        [ "cgBillboard2D", "classcg_billboard2_d.html", null ],
+        [ "cgBillboard3D", "classcg_billboard3_d.html", [
+          [ "cgParticle", "classcg_particle.html", null ]
+        ] ]
+      ] ],
+      [ "cgBillboardBuffer", "classcg_billboard_buffer.html", null ],
+      [ "cgBSPTree", "classcg_b_s_p_tree.html", null ],
       [ "cgCollision", "classcg_collision.html", null ],
       [ "cgEventDispatcher", "classcg_event_dispatcher.html", [
         [ "cgBroadcast", "classcg_broadcast.html", [
@@ -271,6 +302,7 @@ var hierarchy =
         [ "cgReference", "classcg_reference.html", [
           [ "cgAnimationTarget", "classcg_animation_target.html", [
             [ "cgObjectNode", "classcg_object_node.html", [
+              [ "cgBillboardNode", "classcg_billboard_node.html", null ],
               [ "cgBoneNode", "classcg_bone_node.html", null ],
               [ "cgCameraNode", "classcg_camera_node.html", null ],
               [ "cgDummyNode", "classcg_dummy_node.html", null ],
@@ -292,6 +324,9 @@ var hierarchy =
               [ "cgMeshNode", "classcg_mesh_node.html", [
                 [ "cgSkinNode", "classcg_skin_node.html", null ]
               ] ],
+              [ "cgNavigationWaypointNode", "classcg_navigation_waypoint_node.html", [
+                [ "cgNavigationPatrolPointNode", "classcg_navigation_patrol_point_node.html", null ]
+              ] ],
               [ "cgParticleEmitterNode", "classcg_particle_emitter_node.html", null ],
               [ "cgSoundEmitterNode", "classcg_sound_emitter_node.html", null ],
               [ "cgSpatialTreeNode", "classcg_spatial_tree_node.html", null ],
@@ -299,6 +334,7 @@ var hierarchy =
               [ "cgTargetNode", "classcg_target_node.html", null ]
             ] ]
           ] ],
+          [ "cgApplication", "classcg_application.html", null ],
           [ "cgAppState", "classcg_app_state.html", [
             [ "cgAppTransitionState", "classcg_app_transition_state.html", null ]
           ] ],
@@ -309,12 +345,14 @@ var hierarchy =
             [ "cgDXAudioDriver", "classcg_d_x_audio_driver.html", null ]
           ] ],
           [ "cgInputDriver", "classcg_input_driver.html", null ],
+          [ "cgNavigationAgent", "classcg_navigation_agent.html", null ],
           [ "cgPhysicsEntity", "classcg_physics_entity.html", [
             [ "cgPhysicsBody", "classcg_physics_body.html", [
               [ "cgRigidBody", "classcg_rigid_body.html", null ]
             ] ]
           ] ],
           [ "cgPhysicsJoint", "classcg_physics_joint.html", [
+            [ "cgBallJoint", "classcg_ball_joint.html", null ],
             [ "cgFixedAxisJoint", "classcg_fixed_axis_joint.html", null ],
             [ "cgHingeJoint", "classcg_hinge_joint.html", null ],
             [ "cgKinematicControllerJoint", "classcg_kinematic_controller_joint.html", null ]
@@ -365,6 +403,7 @@ var hierarchy =
           [ "cgScene", "classcg_scene.html", null ],
           [ "cgUIControl", "classcg_u_i_control.html", [
             [ "cgButtonControl", "classcg_button_control.html", null ],
+            [ "cgCheckBoxControl", "classcg_check_box_control.html", null ],
             [ "cgComboBoxControl", "classcg_combo_box_control.html", null ],
             [ "cgGroupBoxControl", "classcg_group_box_control.html", null ],
             [ "cgImageBoxControl", "classcg_image_box_control.html", null ],
@@ -378,6 +417,7 @@ var hierarchy =
           [ "cgWorld", "classcg_world.html", null ],
           [ "cgWorldComponent", "classcg_world_component.html", [
             [ "cgObjectSubElement", "classcg_object_sub_element.html", [
+              [ "cgAnimationSetElement", "classcg_animation_set_element.html", null ],
               [ "cgCollisionShapeElement", "classcg_collision_shape_element.html", [
                 [ "cgBoxCollisionShapeElement", "classcg_box_collision_shape_element.html", null ],
                 [ "cgCapsuleCollisionShapeElement", "classcg_capsule_collision_shape_element.html", null ],
@@ -388,7 +428,12 @@ var hierarchy =
               ] ]
             ] ],
             [ "cgSampler", "classcg_sampler.html", null ],
+            [ "cgSceneElement", "classcg_scene_element.html", [
+              [ "cgNavigationMeshElement", "classcg_navigation_mesh_element.html", null ],
+              [ "cgSkyElement", "classcg_sky_element.html", null ]
+            ] ],
             [ "cgWorldObject", "classcg_world_object.html", [
+              [ "cgBillboardObject", "classcg_billboard_object.html", null ],
               [ "cgBoneObject", "classcg_bone_object.html", null ],
               [ "cgCameraObject", "classcg_camera_object.html", null ],
               [ "cgDummyObject", "classcg_dummy_object.html", null ],
@@ -410,6 +455,9 @@ var hierarchy =
               [ "cgMeshObject", "classcg_mesh_object.html", [
                 [ "cgSkinObject", "classcg_skin_object.html", null ]
               ] ],
+              [ "cgNavigationWaypointObject", "classcg_navigation_waypoint_object.html", [
+                [ "cgNavigationPatrolPointObject", "classcg_navigation_patrol_point_object.html", null ]
+              ] ],
               [ "cgParticleEmitterObject", "classcg_particle_emitter_object.html", null ],
               [ "cgSoundEmitterObject", "classcg_sound_emitter_object.html", null ],
               [ "cgSpatialTreeObject", "classcg_spatial_tree_object.html", null ],
@@ -426,15 +474,21 @@ var hierarchy =
         [ "cgInputListener", "classcg_input_listener.html", [
           [ "cgObjectBehavior", "classcg_object_behavior.html", null ]
         ] ],
+        [ "cgNavigationAgentEventListener", "classcg_navigation_agent_event_listener.html", [
+          [ "cgObjectNode", "classcg_object_node.html", null ]
+        ] ],
         [ "cgObjectNodeEventListener", "classcg_object_node_event_listener.html", [
           [ "cgActorNode", "classcg_actor_node.html", null ]
         ] ],
         [ "cgPhysicsBodyEventListener", "classcg_physics_body_event_listener.html", [
+          [ "cgBallJoint", "classcg_ball_joint.html", null ],
           [ "cgHingeJoint", "classcg_hinge_joint.html", null ],
-          [ "cgObjectNode", "classcg_object_node.html", null ]
+          [ "cgObjectNode", "classcg_object_node.html", null ],
+          [ "cgRagdollController", "classcg_ragdoll_controller.html", null ]
         ] ],
         [ "cgPhysicsWorldEventListener", "classcg_physics_world_event_listener.html", [
-          [ "cgObjectBehavior", "classcg_object_behavior.html", null ]
+          [ "cgObjectBehavior", "classcg_object_behavior.html", null ],
+          [ "cgScene", "classcg_scene.html", null ]
         ] ],
         [ "cgSceneEventListener", "classcg_scene_event_listener.html", null ],
         [ "cgWorldComponentEventListener", "classcg_world_component_event_listener.html", [
@@ -458,14 +512,19 @@ var hierarchy =
         [ "cgToneMapProcessor", "classcg_tone_map_processor.html", null ]
       ] ],
       [ "cgLightingManager", "classcg_lighting_manager.html", null ],
+      [ "cgNavigationHandler", "classcg_navigation_handler.html", null ],
+      [ "cgNavigationMesh", "classcg_navigation_mesh.html", null ],
+      [ "cgNavigationTile", "classcg_navigation_tile.html", null ],
       [ "cgObjectRenderContext", "classcg_object_render_context.html", null ],
       [ "cgObjectRenderQueue", "classcg_object_render_queue.html", null ],
       [ "cgParticleEmitter", "classcg_particle_emitter.html", null ],
       [ "cgPhysicsController", "classcg_physics_controller.html", [
-        [ "cgCharacterController", "classcg_character_controller.html", null ]
+        [ "cgCharacterController", "classcg_character_controller.html", null ],
+        [ "cgRagdollController", "classcg_ragdoll_controller.html", null ]
       ] ],
       [ "cgPhysicsEngine", "classcg_physics_engine.html", null ],
       [ "cgProfiler", "classcg_profiler.html", null ],
+      [ "cgPropertyContainer", "classcg_property_container.html", null ],
       [ "cgRenderingCapabilities", "classcg_rendering_capabilities.html", null ],
       [ "cgResampleChain", "classcg_resample_chain.html", null ],
       [ "cgResampleChainMRT", "classcg_resample_chain_m_r_t.html", null ],
@@ -476,11 +535,13 @@ var hierarchy =
       ] ],
       [ "cgSpatialTree", "classcg_spatial_tree.html", [
         [ "cgLandscape", "classcg_landscape.html", null ],
+        [ "cgOctree", "classcg_octree.html", null ],
         [ "cgSpatialTreeObject", "classcg_spatial_tree_object.html", null ]
       ] ],
       [ "cgSpatialTreeInstance", "classcg_spatial_tree_instance.html", [
         [ "cgSpatialTreeNode", "classcg_spatial_tree_node.html", null ]
       ] ],
+      [ "cgSphereTree", "classcg_sphere_tree.html", null ],
       [ "cgTexturePool", "classcg_texture_pool.html", null ],
       [ "cgTimer", "classcg_timer.html", null ],
       [ "cgUILayer", "classcg_u_i_layer.html", [
@@ -507,15 +568,18 @@ var hierarchy =
     ] ],
     [ "cgGlareProcessor::GlareStepDesc", "structcg_glare_processor_1_1_glare_step_desc.html", null ],
     [ "cgFilterExpression::Identifier", "structcg_filter_expression_1_1_identifier.html", null ],
-    [ "cgProfiler::InitConfig", "structcg_profiler_1_1_init_config.html", null ],
+    [ "cgGlareProcessor::ILRElement", "structcg_glare_processor_1_1_i_l_r_element.html", null ],
     [ "cgPhysicsEngine::InitConfig", "structcg_physics_engine_1_1_init_config.html", null ],
     [ "cgAudioDriver::InitConfig", "structcg_audio_driver_1_1_init_config.html", null ],
-    [ "cgRenderDriver::InitConfig", "structcg_render_driver_1_1_init_config.html", null ],
     [ "cgInputDriver::InitConfig", "structcg_input_driver_1_1_init_config.html", null ],
+    [ "cgRenderDriver::InitConfig", "structcg_render_driver_1_1_init_config.html", null ],
     [ "cgResourceManager::InitConfig", "structcg_resource_manager_1_1_init_config.html", null ],
+    [ "cgProfiler::InitConfig", "structcg_profiler_1_1_init_config.html", null ],
     [ "cgAudioBuffer::InputSource", "structcg_audio_buffer_1_1_input_source.html", null ],
+    [ "cgParticleEmitterObject::Layer", "structcg_particle_emitter_object_1_1_layer.html", null ],
     [ "cgLandscapeTextureData::LayerReference", "structcg_landscape_texture_data_1_1_layer_reference.html", null ],
     [ "cgLightNode::LightingOpPass", "structcg_light_node_1_1_lighting_op_pass.html", null ],
+    [ "cgUISkin::ListBoxConfig", "structcg_u_i_skin_1_1_list_box_config.html", null ],
     [ "cgTerrainLOD::BlockSkirt::LODLevel", "structcg_terrain_l_o_d_1_1_block_skirt_1_1_l_o_d_level.html", null ],
     [ "cgVisibilitySet::MaterialBatch", "structcg_visibility_set_1_1_material_batch.html", null ],
     [ "cgResourceManager::MaterialKey", "structcg_resource_manager_1_1_material_key.html", null ],
@@ -524,6 +588,7 @@ var hierarchy =
     [ "cgMesh::MeshSubset", "structcg_mesh_1_1_mesh_subset.html", null ],
     [ "cgMesh::MeshSubsetKey", "structcg_mesh_1_1_mesh_subset_key.html", null ],
     [ "cgObjectBehavior::MethodHandles", "structcg_object_behavior_1_1_method_handles.html", null ],
+    [ "cgAppState::MethodHandles", "structcg_app_state_1_1_method_handles.html", null ],
     [ "cgTextMetrics::MetricRef", "structcg_text_metrics_1_1_metric_ref.html", null ],
     [ "cgImageProcessor::MultiOpShaderCacheKey", "structcg_image_processor_1_1_multi_op_shader_cache_key.html", null ],
     [ "cgRandom::NoiseGenerator", "classcg_random_1_1_noise_generator.html", null ],
@@ -535,8 +600,13 @@ var hierarchy =
     [ "cgMesh::PreparationData", "structcg_mesh_1_1_preparation_data.html", null ],
     [ "cgLandscape::ProceduralDrawBatch", "structcg_landscape_1_1_procedural_draw_batch.html", null ],
     [ "cgLandscape::ProceduralLayerRef", "structcg_landscape_1_1_procedural_layer_ref.html", null ],
+    [ "cgBSPTree::PVSData", "structcg_b_s_p_tree_1_1_p_v_s_data.html", null ],
+    [ "cgBSPTree::PVSPortal", "structcg_b_s_p_tree_1_1_p_v_s_portal.html", null ],
+    [ "cgBSPTree::PVSPortalPoints", "structcg_b_s_p_tree_1_1_p_v_s_portal_points.html", null ],
     [ "cgQuaternionAnimationChannel::QuaternionKeyFrame", "structcg_quaternion_animation_channel_1_1_quaternion_key_frame.html", null ],
     [ "cgCollision::QueryData", "structcg_collision_1_1_query_data.html", null ],
+    [ "cgPhysicsWorld::RayCastFilterCallbackData", "structcg_physics_world_1_1_ray_cast_filter_callback_data.html", null ],
+    [ "cgScene::RayCastFilterData", "structcg_scene_1_1_ray_cast_filter_data.html", null ],
     [ "cgPoolAllocator< T >::rebind< U >", "structcg_pool_allocator_1_1rebind.html", null ],
     [ "cgReference::ReferenceInfo", "structcg_reference_1_1_reference_info.html", null ],
     [ "cgLandscapeTextureData::RenderBatch", "structcg_landscape_texture_data_1_1_render_batch.html", null ],
@@ -570,8 +640,8 @@ var hierarchy =
     [ "cgLightingManager::ShadowSettingsData", "structcg_lighting_manager_1_1_shadow_settings_data.html", null ],
     [ "cgScript::SourceFileInfo", "structcg_script_1_1_source_file_info.html", null ],
     [ "cgShaderIdentifier::SourceFileInfo", "structcg_shader_identifier_1_1_source_file_info.html", null ],
-    [ "cgBezierSpline2::SplinePoint", "structcg_bezier_spline2_1_1_spline_point.html", null ],
     [ "cgBezierSpline3::SplinePoint", "structcg_bezier_spline3_1_1_spline_point.html", null ],
+    [ "cgBezierSpline2::SplinePoint", "structcg_bezier_spline2_1_1_spline_point.html", null ],
     [ "cgAppStateManager::StateDesc", "structcg_app_state_manager_1_1_state_desc.html", null ],
     [ "cgLightNode::StateGroup", "structcg_light_node_1_1_state_group.html", null ],
     [ "cgScriptInterop::Utils::STDVectorHelperBase< _elemType >", "classcg_script_interop_1_1_utils_1_1_s_t_d_vector_helper_base.html", [
@@ -586,14 +656,19 @@ var hierarchy =
     [ "cgTextMetrics::TextLine", "structcg_text_metrics_1_1_text_line.html", null ],
     [ "cgScriptPreprocessor::TokenData", "structcg_script_preprocessor_1_1_token_data.html", null ],
     [ "cgAnimationController::Track", "structcg_animation_controller_1_1_track.html", null ],
-    [ "cgAnimationController::TrackDesc", "structcg_animation_controller_1_1_track_desc.html", null ],
     [ "cgMesh::Triangle", "structcg_mesh_1_1_triangle.html", null ],
+    [ "UIEventArgs", null, [
+      [ "cgComboBoxControl::UI_ComboBox_OnSelectedIndexChangeArgs", "structcg_combo_box_control_1_1_u_i___combo_box___on_selected_index_change_args.html", null ]
+    ] ],
     [ "cgScene::UpdateBucket", "structcg_scene_1_1_update_bucket.html", null ],
     [ "cgProfilerStatistics::Values", "structcg_profiler_statistics_1_1_values.html", null ],
     [ "cgSkinBindData::VertexData", "structcg_skin_bind_data_1_1_vertex_data.html", null ],
     [ "cgSkinBindData::VertexInfluence", "structcg_skin_bind_data_1_1_vertex_influence.html", null ],
     [ "cgRenderDriver::VertexStreamData", "structcg_render_driver_1_1_vertex_stream_data.html", null ],
     [ "cgMesh::WeldKey", "structcg_mesh_1_1_weld_key.html", null ],
+    [ "cgBSPTree::Winding", "structcg_b_s_p_tree_1_1_winding.html", [
+      [ "cgBSPTree::Portal", "structcg_b_s_p_tree_1_1_portal.html", null ]
+    ] ],
     [ "_BaseClass", null, [
       [ "ResourceHandle< _RT, _BaseClass >", "class_resource_handle.html", null ]
     ] ]

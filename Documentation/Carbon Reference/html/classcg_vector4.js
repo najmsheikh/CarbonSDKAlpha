@@ -33,6 +33,8 @@ var classcg_vector4 =
     [ "scale", "classcg_vector4.html#a2667244c09ce8ef388e40cbd860db30f", null ],
     [ "subtract", "classcg_vector4.html#a6ce8a43b63641fa94b80b1b9e442d807", null ],
     [ "transform", "classcg_vector4.html#a9344f217a775a145205275fea3633ec5", null ],
+    [ "xy", "classcg_vector4.html#a4fcf69dd070abcd76c8cf0e24c86c007", null ],
+    [ "xyz", "classcg_vector4.html#a13c99427a20bbdbbab760f7d109fd905", null ],
     [ "operator*", "classcg_vector4.html#a752807c855e4131c0575f16987366def", null ],
     [ "w", "classcg_vector4.html#a7e37d1dbd190a82ad942b915f3867a5e", null ],
     [ "x", "classcg_vector4.html#a71c6dc4ba82481787b2f88fbdc083b07", null ],

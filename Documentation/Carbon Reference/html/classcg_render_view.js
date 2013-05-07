@@ -40,6 +40,7 @@ var classcg_render_view =
     [ "present", "classcg_render_view.html#a9b81f29744eca5b7108891924da2e970", null ],
     [ "processMessage", "classcg_render_view.html#aa22e15286edba33b769796ea85658b35", null ],
     [ "queryReferenceType", "classcg_render_view.html#a0a5ee19b1e6bbe5148c9a2cc5b8615ae", null ],
+    [ "readableDepthStencilBuffer", "classcg_render_view.html#ab828467cc51180774eef71fd77651dce", null ],
     [ "releaseBuffers", "classcg_render_view.html#aeba4d31f19a84653c18ee68757eb27e1", null ],
     [ "sendGarbageMessage", "classcg_render_view.html#a8e4b6fc75cb029efb2af110b1d5519ea", null ],
     [ "setLayout", "classcg_render_view.html#afdced3b0f557455f561106c750c36854", null ],

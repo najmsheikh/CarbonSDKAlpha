@@ -14,7 +14,7 @@
 //        resource data.                                                     //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -67,6 +67,7 @@ public:
     struct MediaConfig
     {
         cgFloat     mipmapUpdateRate;   // Update mip levels lower than the top-most at this rate in frames per second.
+        bool        looping;            // Media playback should loop?
     };
 
     /// <summary>Used to select / identify a specific face of a cube map.</summary>
@@ -113,6 +114,7 @@ public:
     virtual void            unlock                  ( bool updateMips = false ) = 0;
     virtual bool            getImageData            ( cgImage & imageOut ) = 0;
     virtual bool            updateMipLevels         ( ) = 0;
+    virtual bool            clone                   ( cgTexture * destinationTexture, const cgRect & sourceRectangle, const cgRect & destinationRectangle ) = 0;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (cgResource)

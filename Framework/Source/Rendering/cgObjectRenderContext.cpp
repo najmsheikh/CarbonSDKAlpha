@@ -18,7 +18,7 @@
 //        them (i.e. culling, rendering, etc.)                               //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -117,7 +117,7 @@ void cgObjectRenderContext::insertLight( cgLightNode * light )
 /// Insert the specified list of objects into the relevant material category.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgObjectRenderContext::insertObjectsByMaterial( const cgMaterialHandle & material, const cgObjectNodeArray & objects )
+void cgObjectRenderContext::insertObjectsByMaterial( const cgMaterialHandle & material, const cgObjectNodeList & objects )
 {
     size_t batch = 0;
 
@@ -150,7 +150,7 @@ void cgObjectRenderContext::insertObjectsByMaterial( const cgMaterialHandle & ma
 /// category.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgObjectRenderContext::insertObjectsByLightAndMaterial( cgLightNode * light, const cgMaterialHandle & material, const cgObjectNodeArray & objects )
+void cgObjectRenderContext::insertObjectsByLightAndMaterial( cgLightNode * light, const cgMaterialHandle & material, const cgObjectNodeList & objects )
 {
     size_t batch = 0;
 

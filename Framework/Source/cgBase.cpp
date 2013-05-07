@@ -15,7 +15,7 @@
 //        destruction)                                                       //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -90,6 +90,7 @@
 #include <World/Objects/Elements/cgAnimationSetElement.h>
 
 // Scene element types
+#include <World/Elements/cgBSPVisTreeElement.h>
 #include <World/Elements/cgNavigationMeshElement.h>
 #include <World/Elements/cgSkyElement.h>
 
@@ -306,6 +307,7 @@ bool cgEngineInit( const CGEConfig & Config, cgLogOutput * pOutput /* = CG_NULL 
     cgObjectSubElement::registerType( RTID_AnimationSetElement          , _T("Animation Set")              , cgAnimationSetElement::allocateNew, cgAnimationSetElement::allocateClone );
 
     // Register standard scene element types
+    cgSceneElement::registerType( RTID_BSPVisTreeElement    , _T("Visibility Tree"), cgBSPVisTreeElement::allocateNew );
     cgSceneElement::registerType( RTID_NavigationMeshElement, _T("Navigation Mesh"), cgNavigationMeshElement::allocateNew );
     cgSceneElement::registerType( RTID_SkyElement           , _T("Sky")            , cgSkyElement::allocateNew );
 

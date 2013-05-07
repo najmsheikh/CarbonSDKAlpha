@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -168,6 +168,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af661efc9fa2827ee7e6241403bd79e95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_text_metrics.html#af661efc9fa2827ee7e6241403bd79e95">getLineHeight</a> () const </td></tr>
 <tr class="memdesc:af661efc9fa2827ee7e6241403bd79e95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the height of each line of text.  <a href="#af661efc9fa2827ee7e6241403bd79e95"></a><br/></td></tr>
 <tr class="separator:af661efc9fa2827ee7e6241403bd79e95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60185c524829297c74f8890511ea7591"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_text_metrics.html#a60185c524829297c74f8890511ea7591">getFirstVisibleLine</a> () const </td></tr>
+<tr class="memdesc:a60185c524829297c74f8890511ea7591"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the index of the first line of text that was deemed visible (i.e. not fully outside of any supplied clipping rectangle / region).  <a href="#a60185c524829297c74f8890511ea7591"></a><br/></td></tr>
+<tr class="separator:a60185c524829297c74f8890511ea7591"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05070c62836201a79217fe502f96b7b2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_text_metrics.html#a05070c62836201a79217fe502f96b7b2">getLastVisibleLine</a> () const </td></tr>
+<tr class="memdesc:a05070c62836201a79217fe502f96b7b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the index of the last line of text that was deemed visible (i.e. not fully outside of any supplied clipping rectangle / region).  <a href="#a05070c62836201a79217fe502f96b7b2"></a><br/></td></tr>
+<tr class="separator:a05070c62836201a79217fe502f96b7b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f11d3955731504d5f1c17dc049d26aa"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_rect.html">cgRect</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_text_metrics.html#a7f11d3955731504d5f1c17dc049d26aa">getFullBounds</a> () const </td></tr>
 <tr class="memdesc:a7f11d3955731504d5f1c17dc049d26aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the rectangle describing the entire text.  <a href="#a7f11d3955731504d5f1c17dc049d26aa"></a><br/></td></tr>
 <tr class="separator:a7f11d3955731504d5f1c17dc049d26aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -402,6 +408,23 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a60185c524829297c74f8890511ea7591"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> cgTextMetrics::getFirstVisibleLine </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the index of the first line of text that was deemed visible (i.e. not fully outside of any supplied clipping rectangle / region). </p>
+
+</div>
+</div>
 <a class="anchor" id="a7f11d3955731504d5f1c17dc049d26aa"></a>
 <div class="memitem">
 <div class="memproto">
@@ -416,6 +439,23 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Retrieve the rectangle describing the entire text. </p>
+
+</div>
+</div>
+<a class="anchor" id="a05070c62836201a79217fe502f96b7b2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> cgTextMetrics::getLastVisibleLine </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the index of the last line of text that was deemed visible (i.e. not fully outside of any supplied clipping rectangle / region). </p>
 
 </div>
 </div>
@@ -567,7 +607,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_text_metrics.html">cgTextMetrics</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:52 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:55 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

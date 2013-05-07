@@ -13,7 +13,7 @@
 // Desc : Directional light source classes.                                  //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -1066,19 +1066,6 @@ bool cgDirectionalLightNode::testObjectShadowVolume( cgObjectNode * pObject, con
 }
 
 //-----------------------------------------------------------------------------
-// Name : computeVisibility () (Virtual)
-// Desc : Compute the visibility set from the point of view of this light.
-//-----------------------------------------------------------------------------
-void cgDirectionalLightNode::computeVisibility( )
-{
-    // Shadow casting is not *currently* supported for directional lights.
-    mComputeShadows = false;
-    
-    // Call base class implementation last
-    cgLightNode::computeVisibility();
-}
-
-//-----------------------------------------------------------------------------
 //  Name : registerVisibility () (Virtual)
 /// <summary>
 /// This node has been deemed visible during testing, but this method gives the
@@ -1087,8 +1074,10 @@ void cgDirectionalLightNode::computeVisibility( )
 /// paying close attention to filtering rules.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgDirectionalLightNode::registerVisibility( cgVisibilitySet * pSet, cgUInt32 nFlags )
+bool cgDirectionalLightNode::registerVisibility( cgVisibilitySet * pSet )
 {
+    cgUInt32 nFlags = pSet->getSearchFlags();
+
     // First test filters.
     if ( (nFlags & cgVisibilitySearchFlags::MustCastShadows) )
         return false;
@@ -1096,10 +1085,7 @@ bool cgDirectionalLightNode::registerVisibility( cgVisibilitySet * pSet, cgUInt3
         return false;
 
     // We're always visible. Add to the set.
-    pSet->addVisibleLight( this );
-
-    // We modified the visibility set.
-    return true;
+    return pSet->addVisibleLight( this );
 }
 
 //-----------------------------------------------------------------------------

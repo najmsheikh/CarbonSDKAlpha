@@ -20,6 +20,7 @@
 // Local Includes
 //-----------------------------------------------------------------------------
 #include_once "../Forms/MainMenuForm.frm"
+#include_once "../Forms/Options/VideoOptionsForm.frm"
 
 //-----------------------------------------------------------------------------
 // Class Definitions
@@ -28,18 +29,18 @@
 // Name : MainMenu (Class)
 // Desc : Script containing the top level logic for the main game menu.
 //-----------------------------------------------------------------------------
-class MainMenu : IScriptedAppState
+shared class MainMenu : IScriptedAppState
 {
     ///////////////////////////////////////////////////////////////////////////
 	// Private Member Variables
 	///////////////////////////////////////////////////////////////////////////
     private AppState@       mState;             // Application side state object
     private RenderView@     mView;              // Render view into which the menu will be rendered.
+    private Scene@          mBackgroundScene;   // Scene that we're rendering in the background.
+    private CameraNode@     mBackgroundCamera;  // The camera used to render the background scene.
+    private ObjectNode@     mBackgroundPlanet;
     private float           mBackgroundCycle;   // Keeps track of the current time for animating the menu background.
-
     private Form@           mMainForm;
-    
-    //private Form@           mTestForm;
     
     ///////////////////////////////////////////////////////////////////////////
 	// Interface Method Overrides (IScriptedAppState)
@@ -69,9 +70,31 @@ class MainMenu : IScriptedAppState
     //-------------------------------------------------------------------------
     bool begin( )
     {
+        // Load the scene that we'll be displaying in the background.
+        @mBackgroundScene = getAppWorld().loadScene( 0x8 );
+        if ( @mBackgroundScene == null )
+            return false;
+
+        // Create a camera through which we will view the background scene.
+        @mBackgroundCamera = cast<CameraNode>(mBackgroundScene.createObjectNode( true, RTID_CameraObject, false ));
+        mBackgroundCamera.setFOV( 60.0f );
+        mBackgroundCamera.setNearClip( 0.2f );
+        mBackgroundCamera.setFarClip( 10000.01f );
+        mBackgroundCamera.setPosition( -180, 50, -150 );
+        mBackgroundCamera.rotate( 0, 20, 15 );
+        mBackgroundScene.setActiveCamera( mBackgroundCamera );
+
+        // Get the planet object so that we can animate it.
+        @mBackgroundPlanet = mBackgroundScene.getObjectNodeById( 0xC7E );
+        mBackgroundPlanet.rotateLocal( 0, 165, 0 );
+
         // Load the image elements we need to display the main menu.
         UIManager @ interfaceManager = getAppUIManager();
         interfaceManager.addImageLibrary( "Textures/UI/MainMenuElements.xml", "MainMenuElements" );
+
+        // Add fonts for use by forms.
+        interfaceManager.addFont( "Textures/UI/Fonts/HUDFont_012.fnt" );
+        interfaceManager.addFont( "Textures/UI/Fonts/ScreenFont_020.fnt" );
 
         // Allocate a new scene rendering view. This represents a collection of
         // surfaces / render targets, into which the scene will be rendered. It
@@ -81,13 +104,9 @@ class MainMenu : IScriptedAppState
         RenderDriver @ renderDriver = getAppRenderDriver();
         @mView = renderDriver.createRenderView( "Menu View", ScaleMode::Relative, RectF(0,0,1,1) );
 
-        //@mTestForm = interfaceManager.loadForm( "Scripts/ColonyVI/Forms/Options/VideoOptionsForm.frm", "frmVideoOptions" );
-        //mTestForm.registerEventHandler( SystemMessages::UI_OnClose, "frmVideoOptions_OnClose", this );
-        //@mMainForm = interfaceManager.loadForm( "Scripts/ColonyVI/Forms/MainMenuForm.frm", "frmMain" );
-        //@cast<MainMenuForm>(mMainForm.getScriptObject()).parentState = mState;
-        @mMainForm = interfaceManager.loadForm( "Scripts/ColonyVI/Forms/Options/VideoOptionsForm.frm", "frmMain" );
-        mMainForm.registerEventHandler( SystemMessages::UI_OnClose, "frmVideoOptions_OnClose", this );
-        
+        // Open main game menu.
+        openMainMenu();
+
         // Play menu music.
         getAppAudioDriver().loadAmbientTrack( "Music", "Music/The Descent.ogg", 0.3f, 0.3f );
         // Mechanolith
@@ -127,6 +146,7 @@ class MainMenu : IScriptedAppState
         {
             Timer @ timer = getAppTimer();
             mBackgroundCycle = timer.getTime( false ) * 0.05f;
+            mBackgroundPlanet.rotateLocal( 0, 1 * timer.getTimeElapsed(), 0 );
 
         } // End if !suspended
     }
@@ -157,7 +177,10 @@ class MainMenu : IScriptedAppState
                                   centerPoint.x + float(screenSize.width), centerPoint.y + float(screenSize.height) );
 
             // Draw the main menu background image
-            interfaceManager.drawImage( backgroundRect, "MainMenuElements", "menu_background", ColorValue(0xFFFFFFFF), true );
+            //interfaceManager.drawImage( backgroundRect, "MainMenuElements", "menu_background", ColorValue(0xFFFFFFFF), true );
+
+            // Draw the main background scene.
+            mBackgroundScene.render();
 
             // Draw black bar at the top of the screen.
             int barHeight = screenSize.height / 9;
@@ -171,10 +194,13 @@ class MainMenu : IScriptedAppState
             // Draw the game title text
             Size titleSize = interfaceManager.getImageSize( "MainMenuElements", "title_text" );
             RectF titleRect( 0.7f, 0, 0.24f, 0.89f ); // Left, Automatic, Width, Bottom
+            //RectF titleRect( 0.76f, 0, 0.24f, 0.89f ); // Left, Automatic, Width, Bottom
             titleRect.left *= screenSize.width;
             titleRect.right = titleRect.left + titleRect.right * screenSize.width;
             titleRect.bottom *= screenSize.height;
             titleRect.top = titleRect.bottom - ((titleRect.right - titleRect.left) * (float(titleSize.height) / float(titleSize.width)));
+            //titleRect.left -= 520;
+            //titleRect.right -= 520;
             interfaceManager.drawImage( titleRect, "MainMenuElements", "title_text", ColorValue(0xFAFFFFFF), true );
 
             // Draw the menu page text
@@ -184,7 +210,7 @@ class MainMenu : IScriptedAppState
             renderDriver.drawRectangle( barRect, ColorValue( 0xFAFFFFFF ), false );
             barRect = Rect( 22, topBarRect.bottom + 12, 39, topBarRect.bottom + 39 );
             renderDriver.drawRectangle( barRect, ColorValue( 0xEAFFFFFF ), true );
-            interfaceManager.selectFont( "Nasalization" );
+            interfaceManager.selectFont( "ScreenFont_020" );
             interfaceManager.printText( Point( barRect.right + 10, barRect.top ), "Main Menu", 0, 0xFAFFFFFF );
             interfaceManager.selectDefaultFont();
 
@@ -198,13 +224,37 @@ class MainMenu : IScriptedAppState
     ///////////////////////////////////////////////////////////////////////////
 	// Public Methods
 	///////////////////////////////////////////////////////////////////////////
-    //-------------------------------------------------------------------------
-    // Name : frmVideoOptions_OnClose () (Event)
-    // Desc : Triggered when the video options form is closed.
-    //-------------------------------------------------------------------------
-    void frmVideoOptions_OnClose( UIControl @ control )
+    void beginNewGame( )
     {
+        if ( @mMainForm != null )
+            mMainForm.close();
+
         mState.raiseEvent( "New Game" );
+    }
+
+    void openVideoOptions( )
+    {
+        if ( @mMainForm != null )
+            mMainForm.close();
+
+        UIManager @ interfaceManager = getAppUIManager();
+        @mMainForm = interfaceManager.loadForm( "Scripts/ColonyVI/Forms/Options/VideoOptionsForm.frm", "frmMain" );
+        @cast<VideoOptionsForm>(mMainForm.getScriptObject()).parentState = this;
+    }
+
+    void openMainMenu( )
+    {
+        if ( @mMainForm != null )
+            mMainForm.close();
+
+        UIManager @ interfaceManager = getAppUIManager();
+        @mMainForm = interfaceManager.loadForm( "Scripts/ColonyVI/Forms/MainMenuForm.frm", "frmMain" );
+        @cast<MainMenuForm>(mMainForm.getScriptObject()).parentState = this;
+    }
+
+    void exit( )
+    {
+        mState.raiseEvent( "Exit" );
     }
 
     ///////////////////////////////////////////////////////////////////////////

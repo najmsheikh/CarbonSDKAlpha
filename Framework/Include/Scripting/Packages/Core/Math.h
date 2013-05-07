@@ -14,6 +14,7 @@
 #include "Math/Quaternion.h"
 #include "Math/Transform.h"
 #include "Math/BoundingBox.h"
+#include "Math/BoundingSphere.h"
 #include "Math/Types.h"
 
 // Parent hierarchy
@@ -35,6 +36,7 @@ namespace Math
             DECLARE_PACKAGE_CHILD( Quaternion )
             DECLARE_PACKAGE_CHILD( Transform )
             DECLARE_PACKAGE_CHILD( BoundingBox )
+            DECLARE_PACKAGE_CHILD( BoundingSphere )
             DECLARE_PACKAGE_CHILD( Types )
         END_SCRIPT_PACKAGE( )
 

@@ -25,6 +25,7 @@ namespace PhysicsEntity
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void clearForces( )", asMETHODPR(type, clearForces, (), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "Transform getTransform( double ) const", asMETHODPR(type, getTransform, ( cgDouble ) const, cgTransform ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void setTransform( const Transform &in )", asMETHODPR(type, setTransform, ( const cgTransform& ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "PhysicsWorld@+ getPhysicsWorld( ) const", asMETHODPR(type, getPhysicsWorld, ( ) const, cgPhysicsWorld* ), asCALL_THISCALL) );
     
     } // End Method registerEntityMethods<>
 

@@ -56,7 +56,7 @@ var classcg_light_object =
     [ "onComponentLoading", "classcg_light_object.html#a173a7117a101d5cd21c3b03572a8f5ab", null ],
     [ "prepareQueries", "classcg_light_object.html#a4602dc81081db90b33ffe0bd85d02c54", null ],
     [ "queryReferenceType", "classcg_light_object.html#a1025d4e682799834e3631cc34532bf7c", null ],
-    [ "sandboxRender", "classcg_light_object.html#a34f49f4b1090352bb5e445028aaf7a0d", null ],
+    [ "sandboxRender", "classcg_light_object.html#aac0ab741d7e3bcd66520e052f59bec7d", null ],
     [ "setAmbientColor", "classcg_light_object.html#a404a2df51340582e75f3980751e8ac9d", null ],
     [ "setAmbientFarColor", "classcg_light_object.html#a2c7ca269d997cb91c431e76427a3769e", null ],
     [ "setAmbientFarHDRScale", "classcg_light_object.html#a10b81035b8cd20ed8bf9ba47ebd09d63", null ],

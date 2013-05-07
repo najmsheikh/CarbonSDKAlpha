@@ -16,6 +16,7 @@ var classcg_skin_node =
     [ "onNodeLoading", "classcg_skin_node.html#a082004c2afeb53671d9090c621729398", null ],
     [ "prepareQueries", "classcg_skin_node.html#aa631ca5ce648b7635d7189b33ede85c9", null ],
     [ "queryReferenceType", "classcg_skin_node.html#a51d9c30f4d2d8bb900c651fb0e1d090c", null ],
+    [ "setShadowStage", "classcg_skin_node.html#aebbab06571d5592bd0956dd4144b411b", null ],
     [ "cgSkinObject", "classcg_skin_node.html#a52678666657d1bb3d5a8f1cf43fb3507", null ],
     [ "mBoneInstanceIdentifiers", "classcg_skin_node.html#aab26dafc24c3af2bdb35bcb4da6e9320", null ],
     [ "mBoneReferences", "classcg_skin_node.html#ab31fd13e2b9390d5ee5250ba04bac1f7", null ],

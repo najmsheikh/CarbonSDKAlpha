@@ -20,6 +20,7 @@ var classcg_texture_pool_resource =
     [ "initialize", "classcg_texture_pool_resource.html#a4721b23c8d7b3c83b63fbac66870bdaf", null ],
     [ "isAssignedType", "classcg_texture_pool_resource.html#a3304b629a476ec591157928d3e72bdf2", null ],
     [ "isResourceLost", "classcg_texture_pool_resource.html#a4d61b3ba1dc26e19586025568ae5b0ce", null ],
+    [ "setFiller", "classcg_texture_pool_resource.html#afa5c0800c0bf92dc4f5a80ea3ca5ad3a", null ],
     [ "unassign", "classcg_texture_pool_resource.html#af73205360ac6518947e69f6dac775023", null ],
     [ "wasPreviousOwner", "classcg_texture_pool_resource.html#a0e78c1f2d658d4397e9c180b88df0e2f", null ]
 ];

@@ -17,14 +17,9 @@
 //---------------------------------------------------------------------------//
 
 ///////////////////////////////////////////////////////////////////////////////
-// Global Functions
+// Includes
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef _PARENT_SCRIPT
-IScriptedForm @ createForm( Form @ owner )
-{
-    return MainMenuForm( owner );
-}
-#endif
+#include_once "../States/MainMenu.gs"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Class Definitions
@@ -39,9 +34,13 @@ shared class MainMenuForm : IScriptedForm
 	// Private Member Variables
 	///////////////////////////////////////////////////////////////////////////
     private Form@               mForm;
+
+    ///////////////////////////////////////////////////////////////////////////
+	// Public Member Variables
+	///////////////////////////////////////////////////////////////////////////
+    MainMenu@                   parentState;
     
     // Controls
-    AppState@                   parentState;
     Button@                     buttonNewGame;
     Button@                     buttonOptions;
     Button@                     buttonCredits;
@@ -94,8 +93,8 @@ shared class MainMenuForm : IScriptedForm
 
         // Configure controls - Main form first.
         mForm.minimumSize       = Size( 290, 290 );
-        mForm.size              = Size( screenSize.width / 2, screenSize.height - (((screenSize.height/9) * 2) + 50) );
-        mForm.position          = Point( 16, (screenSize.height / 9) + 50 );
+        mForm.size              = Size( screenSize.width / 3, screenSize.height - (((screenSize.height/9) * 2) + 50) );
+        mForm.position          = Point( 30, (screenSize.height / 9) + 50 );
         mForm.controlText       = "Main Menu";
         mForm.padding           = Rect( 10, 10, 10, 10 );
         mForm.backgroundOpacity = 0.85f;
@@ -111,19 +110,20 @@ shared class MainMenuForm : IScriptedForm
         buttonNewGame.registerEventHandler( SystemMessages::UI_Button_OnClick, "buttonNewGame_OnClick", this );
 
         @buttonOptions= createButton( "buttonOptions", mForm );
-        buttonOptions.position = Point( 0, 55 );
+        buttonOptions.position = Point( 0, 65 );
         buttonOptions.size = Size( clientArea.width, 50 );
         buttonOptions.controlText = "Options";
         buttonOptions.registerEventHandler( SystemMessages::UI_Button_OnClick, "buttonOptions_OnClick", this );
 
         @buttonCredits= createButton( "buttonCredits", mForm );
-        buttonCredits.position = Point( 0, 110 );
+        buttonCredits.position = Point( 0, 130 );
         buttonCredits.size = Size( clientArea.width, 50 );
         buttonCredits.controlText = "View Credits";
         buttonCredits.registerEventHandler( SystemMessages::UI_Button_OnClick, "buttonCredits_OnClick", this );
+        buttonCredits.enabled = false;
 
         @buttonExit= createButton( "buttonExit", mForm );
-        buttonExit.position = Point( 0, 165 );
+        buttonExit.position = Point( 0, 195 );
         buttonExit.size = Size( clientArea.width, 50 );
         buttonExit.controlText = "Exit Game";
         buttonExit.registerEventHandler( SystemMessages::UI_Button_OnClick, "buttonExit_OnClick", this );
@@ -152,11 +152,11 @@ shared class MainMenuForm : IScriptedForm
         Rect clientArea = control.getClientArea();
         buttonNewGame.position = Point( 0, 0 );
         buttonNewGame.size = Size( clientArea.width, 50 );
-        buttonOptions.position = Point( 0, 55 );
+        buttonOptions.position = Point( 0, 65 );
         buttonOptions.size = Size( clientArea.width, 50 );
-        buttonCredits.position = Point( 0, 110 );
+        buttonCredits.position = Point( 0, 130 );
         buttonCredits.size = Size( clientArea.width, 50 );
-        buttonExit.position = Point( 0, 165 );
+        buttonExit.position = Point( 0, 195 );
         buttonExit.size = Size( clientArea.width, 50 );
     }
 
@@ -171,8 +171,8 @@ shared class MainMenuForm : IScriptedForm
         // and we should resize our form appropriately.
         RenderDriver @ driver = getAppRenderDriver();
         Size screenSize = driver.getScreenSize();
-        mForm.size     = Size( screenSize.width / 2, screenSize.height - (((screenSize.height/9) * 2) + 50) );
-        mForm.position = Point( 16, (screenSize.height / 9) + 50 );
+        mForm.size     = Size( screenSize.width / 3, screenSize.height - (((screenSize.height/9) * 2) + 50) );
+        mForm.position = Point( 30, (screenSize.height / 9) + 50 );
     }
 
     //-------------------------------------------------------------------------
@@ -181,8 +181,7 @@ shared class MainMenuForm : IScriptedForm
     //-------------------------------------------------------------------------
     void buttonNewGame_OnClick( UIControl @ control )
     {
-        mForm.close();
-        parentState.raiseEvent( "New Game" );
+        parentState.beginNewGame();
     }
 
     //-------------------------------------------------------------------------
@@ -191,6 +190,7 @@ shared class MainMenuForm : IScriptedForm
     //-------------------------------------------------------------------------
     void buttonOptions_OnClick( UIControl @ control )
     {
+        parentState.openVideoOptions();
     }
 
     //-------------------------------------------------------------------------
@@ -207,7 +207,7 @@ shared class MainMenuForm : IScriptedForm
     //-------------------------------------------------------------------------
     void buttonExit_OnClick( UIControl @ control )
     {
-        parentState.raiseEvent( "Exit" );
+        parentState.exit();
     }
 
 } // End Class MainMenuForm

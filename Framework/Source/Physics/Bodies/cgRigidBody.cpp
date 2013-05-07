@@ -17,7 +17,7 @@
 //        derive.                                                            //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -176,6 +176,9 @@ void cgRigidBody::initialize( cgPhysicsWorld * pWorld, const cgRigidBodyCreatePa
     cgTransform InitTransform;
     InitTransform.compose( mEntityRotation, mWorld->toPhysicsScale( mEntityPosition ) );
     mBody = NewtonCreateBody( mWorld->getInternalWorld(), pShape, (cgMatrix)InitTransform ); 
+
+    // Set the default material
+    NewtonBodySetMaterialGroupID( mBody, mWorld->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Standard ) );
 
     // Save this rigid body object as the user data for this body.
 	NewtonBodySetUserData( mBody, this );

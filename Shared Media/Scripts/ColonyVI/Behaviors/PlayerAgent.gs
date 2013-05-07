@@ -142,10 +142,12 @@ shared class PlayerAgent : Agent
 
         // Offset the camera to "eye" level based on the configured height
         // of the character controller prior to attaching to the player.
+        Transform playerTransform = object.getWorldTransform();
         mLastBobOffset = Vector2(0,0);
-        mLastCamPos = object.getPosition();
+        mLastCamPos = playerTransform.position();
         mLastCamPos.y += CharacterHeight * 0.95f;
         mCamera.setPosition( mLastCamPos );
+        mCamera.setOrientation( playerTransform.orientation() );
         
         // Attach the camera as a child of the player object.
         mCamera.setParent( object );
@@ -531,8 +533,10 @@ shared class PlayerAgent : Agent
         setAlive( false );
 
         // Switch away weapon and hide FP actor entirely.
-        mFPActor.requestWeaponSwitch( WeaponType::None );
-        mFPActorNode.showNode( false, true );
+        if ( @mFPActor != null )
+            mFPActor.requestWeaponSwitch( WeaponType::None );
+        if ( @mFPActorNode != null )
+            mFPActorNode.showNode( false, true );
 
         // Destroy controller.
         mNode.setPhysicsController( null );

@@ -12,6 +12,7 @@ var classcg_actor_object =
     [ "getAnimationSetCount", "classcg_actor_object.html#a1fb8ba5997cf1360982aaf3d0cc502d1", null ],
     [ "getDatabaseTable", "classcg_actor_object.html#aa7f3d2b39835f3166e206455ba129a33", null ],
     [ "getReferenceType", "classcg_actor_object.html#a90c717aa95c45b27de1157d7104a52d4", null ],
+    [ "getSubElementCategories", "classcg_actor_object.html#a8fde088b2e3f8e9d22c41c2f76551eab", null ],
     [ "insertComponentData", "classcg_actor_object.html#abc3648d754c07793b25da5d14dedb69f", null ],
     [ "onComponentCreated", "classcg_actor_object.html#a370045ceeb403fa93db0de9b92de2f72", null ],
     [ "onComponentDeleted", "classcg_actor_object.html#aded3000b3de44bee1e2e3dd3baeeba48", null ],
@@ -19,11 +20,9 @@ var classcg_actor_object =
     [ "prepareQueries", "classcg_actor_object.html#a63516218299fd6bcc9a44e3ae024afe1", null ],
     [ "queryReferenceType", "classcg_actor_object.html#a203818f72c2eeb68409f75181130ffeb", null ],
     [ "setOpen", "classcg_actor_object.html#a3a7842f9dac76c9dc54bd5216c0499fc", null ],
+    [ "supportsSubElement", "classcg_actor_object.html#a6dbf7aa9079b024250787d25b82d0c59", null ],
     [ "cgActorNode", "classcg_actor_object.html#a23a53845172093c521cf33b33268ad13", null ],
-    [ "mAnimationSets", "classcg_actor_object.html#a76b25aade72da0632e3160dca7b67be3", null ],
     [ "mInsertActor", "classcg_actor_object.html#ad28f0fae3ebce335c34639178d4b1032", null ],
-    [ "mInsertSetReference", "classcg_actor_object.html#ab5cc49d1fac021610c122e6d4d922932", null ],
     [ "mLoadActor", "classcg_actor_object.html#adefa58e59d093fe57c7b8b6eb3ddcfc2", null ],
-    [ "mLoadSetReferences", "classcg_actor_object.html#a6006f0fe9ed2a84210d3bfb1d8fe8b63", null ],
     [ "mUpdateOpen", "classcg_actor_object.html#a537d3dcbb1672e64a504d0a0eaabfbe2", null ]
 ];

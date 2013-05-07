@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -122,10 +122,11 @@ Inheritance diagram for cgObjectSubElement:</div>
  <div class="center">
   <img src="classcg_object_sub_element.png" usemap="#cgObjectSubElement_map" alt=""/>
   <map id="cgObjectSubElement_map" name="cgObjectSubElement_map">
-<area href="classcg_world_component.html" title="The basic representation of all components that make up the world. Typical derived classes would be o..." alt="cgWorldComponent" shape="rect" coords="615,168,851,192"/>
-<area href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat..." alt="cgReference" shape="rect" coords="615,112,851,136"/>
-<area href="classcg_event_dispatcher.html" title="Base class from which other classes may derive if they want to be able to have listeners register wit..." alt="cgEventDispatcher" shape="rect" coords="615,56,851,80"/>
-<area href="classcg_script_interop_1_1_disposable_script_object.html" title="Base class from which objects should be derived if they need to be passed to a script by reference as..." alt="cgScriptInterop::DisposableScriptObject" shape="rect" coords="615,0,851,24"/>
+<area href="classcg_world_component.html" title="The basic representation of all components that make up the world. Typical derived classes would be o..." alt="cgWorldComponent" shape="rect" coords="307,168,543,192"/>
+<area href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat..." alt="cgReference" shape="rect" coords="307,112,543,136"/>
+<area href="classcg_event_dispatcher.html" title="Base class from which other classes may derive if they want to be able to have listeners register wit..." alt="cgEventDispatcher" shape="rect" coords="307,56,543,80"/>
+<area href="classcg_script_interop_1_1_disposable_script_object.html" title="Base class from which objects should be derived if they need to be passed to a script by reference as..." alt="cgScriptInterop::DisposableScriptObject" shape="rect" coords="307,0,543,24"/>
+<area href="classcg_animation_set_element.html" title="Class that provides an object assigned animation set exposed as an object sub-element. This provides the integration between the application (such as the editing environment) and the relevant sub-component of the selected object. " alt="cgAnimationSetElement" shape="rect" coords="0,280,236,304"/>
 <area href="classcg_collision_shape_element.html" title="Class that provides a collision shape primitive exposed as an object sub-element. This provides the i..." alt="cgCollisionShapeElement" shape="rect" coords="615,280,851,304"/>
 <area href="classcg_box_collision_shape_element.html" title="Class that provides a box shaped collision primitive exposed as an object sub-element. This provides the integration between the application (such as the editing environment) and the relevant sub-component of the selected object. " alt="cgBoxCollisionShapeElement" shape="rect" coords="0,336,236,360"/>
 <area href="classcg_capsule_collision_shape_element.html" title="Class that provides a capsule shaped collision primitive exposed as an object sub-element. This provides the integration between the application (such as the editing environment) and the relevant sub-component of the selected object. " alt="cgCapsuleCollisionShapeElement" shape="rect" coords="246,336,482,360"/>
@@ -147,6 +148,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adefceb91635b858a77e12e7f7407dc36"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_sub_element.html#adefceb91635b858a77e12e7f7407dc36">~cgObjectSubElement</a> ()</td></tr>
 <tr class="memdesc:adefceb91635b858a77e12e7f7407dc36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for this class.  <a href="#adefceb91635b858a77e12e7f7407dc36"></a><br/></td></tr>
 <tr class="separator:adefceb91635b858a77e12e7f7407dc36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49622cb389b24ccdd53fd08b5830528d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_world_object.html">cgWorldObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_sub_element.html#a49622cb389b24ccdd53fd08b5830528d">getParentObject</a> () const </td></tr>
+<tr class="memdesc:a49622cb389b24ccdd53fd08b5830528d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a reference to the object to which this sub-element belongs.  <a href="#a49622cb389b24ccdd53fd08b5830528d"></a><br/></td></tr>
+<tr class="separator:a49622cb389b24ccdd53fd08b5830528d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c980b15d3a540023e004b5ac47ff9e3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_sub_element.html#a9c980b15d3a540023e004b5ac47ff9e3">clone</a> (<a class="el" href="classcg_world_object.html">cgWorldObject</a> *object, bool internal, <a class="el" href="classcg_object_sub_element.html">cgObjectSubElement</a> *&amp;objectSubElementOut)</td></tr>
 <tr class="memdesc:a9c980b15d3a540023e004b5ac47ff9e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make a duplicate of this object sub-element.  <a href="#a9c980b15d3a540023e004b5ac47ff9e3"></a><br/></td></tr>
 <tr class="separator:a9c980b15d3a540023e004b5ac47ff9e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -156,9 +160,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aaf1a9523121eccebb1adf763a5eea50a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_sub_element.html#aaf1a9523121eccebb1adf763a5eea50a">isSelected</a> () const </td></tr>
 <tr class="memdesc:aaf1a9523121eccebb1adf763a5eea50a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is the shape currently selected for manipulation?  <a href="#aaf1a9523121eccebb1adf763a5eea50a"></a><br/></td></tr>
 <tr class="separator:aaf1a9523121eccebb1adf763a5eea50a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40570d6e6f1468b7080d0457802acb0f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_sub_element.html#a40570d6e6f1468b7080d0457802acb0f">sandboxRender</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, bool wireframe, const <a class="el" href="classcg_plane.html">cgPlane</a> &amp;gridPlane, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer)</td></tr>
-<tr class="memdesc:a40570d6e6f1468b7080d0457802acb0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the sub element to render its 'sandbox' representation &ndash; that is the representation to be displayed within an editing environment assuming element editing for this type is active.  <a href="#a40570d6e6f1468b7080d0457802acb0f"></a><br/></td></tr>
-<tr class="separator:a40570d6e6f1468b7080d0457802acb0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa770c3318237037455730d7ae89112e4"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classcg_string.html">cgString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_sub_element.html#aa770c3318237037455730d7ae89112e4">getDisplayName</a> () const </td></tr>
+<tr class="memdesc:aa770c3318237037455730d7ae89112e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the name that will be displayed in the sub element list for this particular object sub element. By default this will simply return "&lt;Unnamed&gt;", but derived classes can override this behavior when required.  <a href="#aa770c3318237037455730d7ae89112e4"></a><br/></td></tr>
+<tr class="separator:aa770c3318237037455730d7ae89112e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17da7a6b646a87a21f9a6e78d3f14ca3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_sub_element.html#a17da7a6b646a87a21f9a6e78d3f14ca3">sandboxRender</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, <a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, const <a class="el" href="classcg_plane.html">cgPlane</a> &amp;gridPlane, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer)</td></tr>
+<tr class="memdesc:a17da7a6b646a87a21f9a6e78d3f14ca3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the sub element to render its 'sandbox' representation &ndash; that is the representation to be displayed within an editing environment assuming element editing for this type is active.  <a href="#a17da7a6b646a87a21f9a6e78d3f14ca3"></a><br/></td></tr>
+<tr class="separator:a17da7a6b646a87a21f9a6e78d3f14ca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f715f02a9457447f3b2571f658358e1"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_sub_element.html#a3f715f02a9457447f3b2571f658358e1">getElementCategory</a> () const =0</td></tr>
 <tr class="separator:a3f715f02a9457447f3b2571f658358e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc9b9ae00ee9bd6bb5b8b9f34641c599"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_sub_element.html#adc9b9ae00ee9bd6bb5b8b9f34641c599">applyElementRescale</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> fScale)</td></tr>
@@ -240,9 +247,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#abc11be6582c83be070816daf60d96781">isInternalReference</a> () const </td></tr>
 <tr class="memdesc:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this reference is either an internal or serialized reference.  <a href="#abc11be6582c83be070816daf60d96781"></a><br/></td></tr>
 <tr class="separator:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#af002aedbdfca5e97c3a7263425a60dac">isDisposed</a> ()</td></tr>
-<tr class="memdesc:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#af002aedbdfca5e97c3a7263425a60dac"></a><br/></td></tr>
-<tr class="separator:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a34951860e42866aff9b890d704bccbc4">isDisposed</a> () const </td></tr>
+<tr class="memdesc:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#a34951860e42866aff9b890d704bccbc4"></a><br/></td></tr>
+<tr class="separator:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#aecf67c7fc72ba0d465096b4584e1caba">isDisposing</a> () const </td></tr>
 <tr class="memdesc:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object is in the process of being disposed.  <a href="#aecf67c7fc72ba0d465096b4584e1caba"></a><br/></td></tr>
 <tr class="separator:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -514,7 +521,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcg_world_component.html#ad5396853c5709cecf144c5889fe31280">cgWorldComponent</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_collision_shape_element.html#a647cc2d94d1e0d136dfca68878208710">cgCollisionShapeElement</a>, <a class="el" href="classcg_capsule_collision_shape_element.html#a35ed06218b001121356e539b66753cf0">cgCapsuleCollisionShapeElement</a>, <a class="el" href="classcg_hull_collision_shape_element.html#ad4a6afbbe599b1d96eac94a3dedf5c9a">cgHullCollisionShapeElement</a>, <a class="el" href="classcg_box_collision_shape_element.html#ac6217823e8b3bcfbdbe9a74eff46a42d">cgBoxCollisionShapeElement</a>, <a class="el" href="classcg_cone_collision_shape_element.html#a3561ab63c8ffc137a645978be7fbe831">cgConeCollisionShapeElement</a>, <a class="el" href="classcg_cylinder_collision_shape_element.html#a5b1d04bbe2efa47d0cb5ddcd4c3a699e">cgCylinderCollisionShapeElement</a>, and <a class="el" href="classcg_sphere_collision_shape_element.html#a623de71c907ec6d42c96467ff9b4957e">cgSphereCollisionShapeElement</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_collision_shape_element.html#a647cc2d94d1e0d136dfca68878208710">cgCollisionShapeElement</a>, <a class="el" href="classcg_capsule_collision_shape_element.html#a35ed06218b001121356e539b66753cf0">cgCapsuleCollisionShapeElement</a>, <a class="el" href="classcg_animation_set_element.html#ad7f1b9f5b001eb57b045951119cabb73">cgAnimationSetElement</a>, <a class="el" href="classcg_hull_collision_shape_element.html#ad4a6afbbe599b1d96eac94a3dedf5c9a">cgHullCollisionShapeElement</a>, <a class="el" href="classcg_box_collision_shape_element.html#ac6217823e8b3bcfbdbe9a74eff46a42d">cgBoxCollisionShapeElement</a>, <a class="el" href="classcg_cone_collision_shape_element.html#a3561ab63c8ffc137a645978be7fbe831">cgConeCollisionShapeElement</a>, <a class="el" href="classcg_cylinder_collision_shape_element.html#a5b1d04bbe2efa47d0cb5ddcd4c3a699e">cgCylinderCollisionShapeElement</a>, and <a class="el" href="classcg_sphere_collision_shape_element.html#a623de71c907ec6d42c96467ff9b4957e">cgSphereCollisionShapeElement</a>.</p>
 
 </div>
 </div>
@@ -543,7 +550,34 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classcg_world_component.html#a9ba0461969e9adb2fbe48b8a38d7d365">cgWorldComponent</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_capsule_collision_shape_element.html#a7b66e23ead0cc4487ba96262458c5387">cgCapsuleCollisionShapeElement</a>, <a class="el" href="classcg_hull_collision_shape_element.html#afbb3b43a3fd427d54d7956fc0a4d5f49">cgHullCollisionShapeElement</a>, <a class="el" href="classcg_box_collision_shape_element.html#a3cc74de13c2237e9b6f16f970ca49675">cgBoxCollisionShapeElement</a>, <a class="el" href="classcg_cone_collision_shape_element.html#a389d8c7517b762d8f1c3df024239f1c1">cgConeCollisionShapeElement</a>, <a class="el" href="classcg_cylinder_collision_shape_element.html#a5053a6cca9baadcc676f956624bbadbc">cgCylinderCollisionShapeElement</a>, and <a class="el" href="classcg_sphere_collision_shape_element.html#a7efdcd64d3ae6302f0764f5b42c6c331">cgSphereCollisionShapeElement</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_capsule_collision_shape_element.html#a7b66e23ead0cc4487ba96262458c5387">cgCapsuleCollisionShapeElement</a>, <a class="el" href="classcg_hull_collision_shape_element.html#afbb3b43a3fd427d54d7956fc0a4d5f49">cgHullCollisionShapeElement</a>, <a class="el" href="classcg_box_collision_shape_element.html#a3cc74de13c2237e9b6f16f970ca49675">cgBoxCollisionShapeElement</a>, <a class="el" href="classcg_cone_collision_shape_element.html#a389d8c7517b762d8f1c3df024239f1c1">cgConeCollisionShapeElement</a>, <a class="el" href="classcg_cylinder_collision_shape_element.html#a5053a6cca9baadcc676f956624bbadbc">cgCylinderCollisionShapeElement</a>, <a class="el" href="classcg_sphere_collision_shape_element.html#a7efdcd64d3ae6302f0764f5b42c6c331">cgSphereCollisionShapeElement</a>, and <a class="el" href="classcg_animation_set_element.html#aeadc74c87b9990d73f393851a6d9ede8">cgAnimationSetElement</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa770c3318237037455730d7ae89112e4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_string.html">cgString</a> cgObjectSubElement::getDisplayName </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the name that will be displayed in the sub element list for this particular object sub element. By default this will simply return "&lt;Unnamed&gt;", but derived classes can override this behavior when required. </p>
+
+<p>Reimplemented in <a class="el" href="classcg_animation_set_element.html#ab1833f54d46f9b8c697eb7e2a39f06ea">cgAnimationSetElement</a>.</p>
 
 </div>
 </div>
@@ -568,7 +602,24 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classcg_collision_shape_element.html#abcac4f6a5ebe2899738fbecabcc605ae">cgCollisionShapeElement</a>.</p>
+<p>Implemented in <a class="el" href="classcg_collision_shape_element.html#abcac4f6a5ebe2899738fbecabcc605ae">cgCollisionShapeElement</a>, and <a class="el" href="classcg_animation_set_element.html#aa1aa0d15081a45d43fb2dc82ccc44928">cgAnimationSetElement</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a49622cb389b24ccdd53fd08b5830528d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_world_object.html">cgWorldObject</a> * cgObjectSubElement::getParentObject </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve a reference to the object to which this sub-element belongs. </p>
 
 </div>
 </div>
@@ -595,7 +646,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcg_world_component.html#a2661ad55ef2e8ebaf2c0ce7e04c8432d">cgWorldComponent</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_collision_shape_element.html#a73fac250f5bde5bc12fb4f63cc5aa160">cgCollisionShapeElement</a>, <a class="el" href="classcg_capsule_collision_shape_element.html#a44aa68c83702385bfc27ec324ac77650">cgCapsuleCollisionShapeElement</a>, <a class="el" href="classcg_hull_collision_shape_element.html#a7e704aaddc158c1c7bf0aa5ca7dde968">cgHullCollisionShapeElement</a>, <a class="el" href="classcg_box_collision_shape_element.html#a935cb62e55dfe5364e5a2c182089476d">cgBoxCollisionShapeElement</a>, <a class="el" href="classcg_cone_collision_shape_element.html#a0e723d226df133f4be069793687730cd">cgConeCollisionShapeElement</a>, <a class="el" href="classcg_cylinder_collision_shape_element.html#a943f067a81ed250481042ce590bdae44">cgCylinderCollisionShapeElement</a>, and <a class="el" href="classcg_sphere_collision_shape_element.html#a261bc4c133ace799877a52ee0187edf5">cgSphereCollisionShapeElement</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_collision_shape_element.html#a73fac250f5bde5bc12fb4f63cc5aa160">cgCollisionShapeElement</a>, <a class="el" href="classcg_animation_set_element.html#a3cfee1e644382a2fb7c6a49d4068133f">cgAnimationSetElement</a>, <a class="el" href="classcg_capsule_collision_shape_element.html#a44aa68c83702385bfc27ec324ac77650">cgCapsuleCollisionShapeElement</a>, <a class="el" href="classcg_hull_collision_shape_element.html#a7e704aaddc158c1c7bf0aa5ca7dde968">cgHullCollisionShapeElement</a>, <a class="el" href="classcg_box_collision_shape_element.html#a935cb62e55dfe5364e5a2c182089476d">cgBoxCollisionShapeElement</a>, <a class="el" href="classcg_cone_collision_shape_element.html#a0e723d226df133f4be069793687730cd">cgConeCollisionShapeElement</a>, <a class="el" href="classcg_cylinder_collision_shape_element.html#a943f067a81ed250481042ce590bdae44">cgCylinderCollisionShapeElement</a>, and <a class="el" href="classcg_sphere_collision_shape_element.html#a261bc4c133ace799877a52ee0187edf5">cgSphereCollisionShapeElement</a>.</p>
 
 </div>
 </div>
@@ -667,7 +718,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcg_world_component.html#ab128b263c5609518817cefb37cd168bd">cgWorldComponent</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_collision_shape_element.html#a7bc3bae1fb424a907d8f874387d0bc2f">cgCollisionShapeElement</a>, <a class="el" href="classcg_capsule_collision_shape_element.html#ad61c97981a7ce385a4b03685cc8a75ac">cgCapsuleCollisionShapeElement</a>, <a class="el" href="classcg_hull_collision_shape_element.html#a3f28d137384d7f5e3e43f74cc0d9d33f">cgHullCollisionShapeElement</a>, <a class="el" href="classcg_box_collision_shape_element.html#aa53f0959e1947c4179d52ba03b7a0348">cgBoxCollisionShapeElement</a>, <a class="el" href="classcg_cone_collision_shape_element.html#a34e19cef36fb8f52397a6a0ba6d54a24">cgConeCollisionShapeElement</a>, <a class="el" href="classcg_cylinder_collision_shape_element.html#ac142af5fab9b7e4dc412b74375012f00">cgCylinderCollisionShapeElement</a>, and <a class="el" href="classcg_sphere_collision_shape_element.html#a378d12f074d683b6f630445e5b169a58">cgSphereCollisionShapeElement</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_collision_shape_element.html#a7bc3bae1fb424a907d8f874387d0bc2f">cgCollisionShapeElement</a>, <a class="el" href="classcg_animation_set_element.html#a1c1d81d6271eb8a6f7d9f09e3e1e2c8d">cgAnimationSetElement</a>, <a class="el" href="classcg_capsule_collision_shape_element.html#ad61c97981a7ce385a4b03685cc8a75ac">cgCapsuleCollisionShapeElement</a>, <a class="el" href="classcg_hull_collision_shape_element.html#a3f28d137384d7f5e3e43f74cc0d9d33f">cgHullCollisionShapeElement</a>, <a class="el" href="classcg_box_collision_shape_element.html#aa53f0959e1947c4179d52ba03b7a0348">cgBoxCollisionShapeElement</a>, <a class="el" href="classcg_cone_collision_shape_element.html#a34e19cef36fb8f52397a6a0ba6d54a24">cgConeCollisionShapeElement</a>, <a class="el" href="classcg_cylinder_collision_shape_element.html#ac142af5fab9b7e4dc412b74375012f00">cgCylinderCollisionShapeElement</a>, and <a class="el" href="classcg_sphere_collision_shape_element.html#a378d12f074d683b6f630445e5b169a58">cgSphereCollisionShapeElement</a>.</p>
 
 </div>
 </div>
@@ -719,7 +770,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a40570d6e6f1468b7080d0457802acb0f"></a>
+<a class="anchor" id="a17da7a6b646a87a21f9a6e78d3f14ca3"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -729,6 +780,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void cgObjectSubElement::sandboxRender </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>flags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="classcg_camera_node.html">cgCameraNode</a> *&#160;</td>
           <td class="paramname"><em>pCamera</em>, </td>
         </tr>
@@ -737,12 +794,6 @@ Additional Inherited Members</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *&#160;</td>
           <td class="paramname"><em>pVisData</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>bWireframe</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -771,7 +822,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Allow the sub element to render its 'sandbox' representation &ndash; that is the representation to be displayed within an editing environment assuming element editing for this type is active. </p>
 
-<p>Reimplemented in <a class="el" href="classcg_collision_shape_element.html#ac0acfb71c16a29b75d150448345ee277">cgCollisionShapeElement</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_collision_shape_element.html#a92c85d45eeeeaabf920056bbae1f8720">cgCollisionShapeElement</a>.</p>
 
 </div>
 </div>
@@ -844,7 +895,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_object_sub_element.html">cgObjectSubElement</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:42 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:39 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

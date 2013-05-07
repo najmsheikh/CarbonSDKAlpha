@@ -5,6 +5,7 @@ var classcg_u_i_manager =
     [ "addFont", "classcg_u_i_manager.html#a8a365d8dcdb48c9b5eb6065f2551397a", null ],
     [ "addImage", "classcg_u_i_manager.html#ac3cc3a65c906893d3bd2beafa7b0359b", null ],
     [ "addImageLibrary", "classcg_u_i_manager.html#adb62dc4b9fafe1216019d5b914cef891", null ],
+    [ "addLayer", "classcg_u_i_manager.html#a6201a246a2901eb9dd90e711bb494140", null ],
     [ "addSkin", "classcg_u_i_manager.html#a4246e09693fb3ae6a2dcac13d65f881e", null ],
     [ "begin", "classcg_u_i_manager.html#a80a9c591dad41cf246706de884b4dcd6", null ],
     [ "bringLayerToFront", "classcg_u_i_manager.html#a3219003003e995b0863c680ffc4f6260", null ],
@@ -65,6 +66,7 @@ var classcg_u_i_manager =
     [ "processMessage", "classcg_u_i_manager.html#a53bf1f6d6b05e2f8f64a4f17b1c398af", null ],
     [ "queryReferenceType", "classcg_u_i_manager.html#ab505505a0c061b6e75585a6e3147bc99", null ],
     [ "removeImageLibrary", "classcg_u_i_manager.html#a89a6430659dfac5041743e5b6ef578c7", null ],
+    [ "removeLayer", "classcg_u_i_manager.html#ad43ea13cad7c732633d3713034efe371", null ],
     [ "render", "classcg_u_i_manager.html#a8fa72f780602055578caba13e5559564", null ],
     [ "selectCursor", "classcg_u_i_manager.html#a45b4d52f69f9667db745f4d7deb893b3", null ],
     [ "selectDefaultFont", "classcg_u_i_manager.html#a6e772022f345f7d93be07e8fec3eadd3", null ],
@@ -73,5 +75,6 @@ var classcg_u_i_manager =
     [ "sendLayerToBack", "classcg_u_i_manager.html#ac7dbae6f357f1770a9e534000b925eb6", null ],
     [ "setCapture", "classcg_u_i_manager.html#a279ff5ed09935b1a538d8c1e0e65b7d2", null ],
     [ "setDefaultFont", "classcg_u_i_manager.html#a89b879727258558ee3dafbf35eeb270e", null ],
-    [ "setFocus", "classcg_u_i_manager.html#ab9f2bf9b9c8fdea08305ee657c4d53ae", null ]
+    [ "setFocus", "classcg_u_i_manager.html#ab9f2bf9b9c8fdea08305ee657c4d53ae", null ],
+    [ "cgUIForm", "classcg_u_i_manager.html#a115c5880c7d4e3900ecefe0987003500", null ]
 ];

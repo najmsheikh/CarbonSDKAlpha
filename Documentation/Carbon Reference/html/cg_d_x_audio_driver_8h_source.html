@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -172,51 +172,52 @@ $(document).ready(function(){initNavTree('cg_d_x_audio_driver_8h_source.html',''
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="comment">// 3D Audio</span></div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>                    <a class="code" href="classcg_d_x_audio_driver.html#a9f3258537e38b998d4d2585dfe7533dd" title="Set the scale of the world in which the sounds exist. ">set3DWorldScale</a>         ( <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> unitsPerMeter );</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>                    <a class="code" href="classcg_d_x_audio_driver.html#a6ac201e67bc9e0c3a524a085ecfeddf6" title="Set the position and orientation of the listener relative to the world. ">set3DListenerTransform</a>  ( <span class="keyword">const</span> <a class="code" href="classcg_transform.html" title="General purpose transformation class designed to maintain each component of the transformation separa...">cgTransform</a> &amp; t );</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">// Public Methods</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="comment">// Internal Methods</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    IDirectSound8                 * <a class="code" href="classcg_d_x_audio_driver.html#a5a6f8139a34fc0aec51217be85a1cc89" title="Retrieve the internal IDirectSound8 object. ">getDirectSound</a>          ( );</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides cgReference)</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno"><a class="code" href="classcg_d_x_audio_driver.html#a299b77a55040d3296158ddd83e3bf352">   83</a></span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a>           &amp; <a class="code" href="classcg_d_x_audio_driver.html#a299b77a55040d3296158ddd83e3bf352">getReferenceType</a>        ( )<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="cg_audio_driver_8h.html#a1662b6d95951227f8762ee60e4c04752">RTID_AudioDriver</a>; }</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span>                    <a class="code" href="classcg_d_x_audio_driver.html#a9bdcb60a9118cd2fa31ab5e70f82a707" title="Allows the application to determine if the inheritance hierarchy supports a particular interface...">queryReferenceType</a>      ( <span class="keyword">const</span> <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a> &amp; type ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides DisposableScriptObject)</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>                    <a class="code" href="classcg_d_x_audio_driver.html#a0b61e2aa13b3bda0568b3703451fecff" title="Release any memory, references or resources allocated by this object. ">dispose</a>                 ( <span class="keywordtype">bool</span> disposeBase );</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="comment">// Protected Methods</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    IDirectSound3DListener        * <a class="code" href="classcg_d_x_audio_driver.html#a7c0505c31261529e4eac3bbf780b24d2" title="Internal function make accessing the DirectSound 3D interfaces much less painful. ...">get3DListenerInterface</a>  ( );</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="comment">// Protected Virtual Methods</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>                    <a class="code" href="classcg_d_x_audio_driver.html#a6ca44eb738e4233132cf1d5f4db8775e" title="Apply any 3D settings that were specified after the last application. ">apply3DSettings</a>         ( );</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="comment">// Private Variables</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno"><a class="code" href="classcg_d_x_audio_driver.html#a432a25b293aed6e29dd66c31ddf574f6">  105</a></span>&#160;    IDirectSound8             * <a class="code" href="classcg_d_x_audio_driver.html#a432a25b293aed6e29dd66c31ddf574f6">mDS</a>;            <span class="comment">// Main DirectSound object</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno"><a class="code" href="classcg_d_x_audio_driver.html#af6f732652a01a959c2f90dfc82b0272c">  106</a></span>&#160;    IDirectSound3DListener    * <a class="code" href="classcg_d_x_audio_driver.html#af6f732652a01a959c2f90dfc82b0272c">m3DListener</a>;    <span class="comment">// Cached reference to the 3D listener interface.</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;};</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">#endif // !_CGE_CGDXAUDIODRIVER_H_</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>                    <a class="code" href="classcg_d_x_audio_driver.html#a6ffcb1a197f0c3abec18cc7caa6a7dc9" title="Set the rate at which audio is attenuated based on distance. 1.0 = real world, 0.0 = no attenuation...">set3DRolloffFactor</a>      ( <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> factor );</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>                    <a class="code" href="classcg_d_x_audio_driver.html#a6ac201e67bc9e0c3a524a085ecfeddf6" title="Set the position and orientation of the listener relative to the world. ">set3DListenerTransform</a>  ( <span class="keyword">const</span> <a class="code" href="classcg_transform.html" title="General purpose transformation class designed to maintain each component of the transformation separa...">cgTransform</a> &amp; t );</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">// Public Methods</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// Internal Methods</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    IDirectSound8                 * <a class="code" href="classcg_d_x_audio_driver.html#a5a6f8139a34fc0aec51217be85a1cc89" title="Retrieve the internal IDirectSound8 object. ">getDirectSound</a>          ( );</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides cgReference)</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno"><a class="code" href="classcg_d_x_audio_driver.html#a299b77a55040d3296158ddd83e3bf352">   84</a></span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a>           &amp; <a class="code" href="classcg_d_x_audio_driver.html#a299b77a55040d3296158ddd83e3bf352">getReferenceType</a>        ( )<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="cg_audio_driver_8h.html#a1662b6d95951227f8762ee60e4c04752">RTID_AudioDriver</a>; }</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span>                    <a class="code" href="classcg_d_x_audio_driver.html#a9bdcb60a9118cd2fa31ab5e70f82a707" title="Allows the application to determine if the inheritance hierarchy supports a particular interface...">queryReferenceType</a>      ( <span class="keyword">const</span> <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a> &amp; type ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides DisposableScriptObject)</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>                    <a class="code" href="classcg_d_x_audio_driver.html#a0b61e2aa13b3bda0568b3703451fecff" title="Release any memory, references or resources allocated by this object. ">dispose</a>                 ( <span class="keywordtype">bool</span> disposeBase );</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="comment">// Protected Methods</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    IDirectSound3DListener        * <a class="code" href="classcg_d_x_audio_driver.html#a7c0505c31261529e4eac3bbf780b24d2" title="Internal function make accessing the DirectSound 3D interfaces much less painful. ...">get3DListenerInterface</a>  ( );</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="comment">// Protected Virtual Methods</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>                    <a class="code" href="classcg_d_x_audio_driver.html#a6ca44eb738e4233132cf1d5f4db8775e" title="Apply any 3D settings that were specified after the last application. ">apply3DSettings</a>         ( );</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="comment">// Private Variables</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno"><a class="code" href="classcg_d_x_audio_driver.html#a432a25b293aed6e29dd66c31ddf574f6">  106</a></span>&#160;    IDirectSound8             * <a class="code" href="classcg_d_x_audio_driver.html#a432a25b293aed6e29dd66c31ddf574f6">mDS</a>;            <span class="comment">// Main DirectSound object</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno"><a class="code" href="classcg_d_x_audio_driver.html#af6f732652a01a959c2f90dfc82b0272c">  107</a></span>&#160;    IDirectSound3DListener    * <a class="code" href="classcg_d_x_audio_driver.html#af6f732652a01a959c2f90dfc82b0272c">m3DListener</a>;    <span class="comment">// Cached reference to the 3D listener interface.</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;};</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#endif // !_CGE_CGDXAUDIODRIVER_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_8d819f45d6de5bd8ca8530ce84b744df.html">Audio</a></li><li class="navelem"><a class="el" href="dir_62aeedcd58c692640ca9e1ddf817f330.html">Platform</a></li><li class="navelem"><a class="el" href="cg_d_x_audio_driver_8h.html">cgDXAudioDriver.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:14 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:47:52 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

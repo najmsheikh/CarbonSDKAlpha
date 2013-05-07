@@ -14,7 +14,7 @@
 //        types of pooled textures.                                          //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 #pragma once
 #if !defined( _CGE_CGTEXTUREPOOL_H_ )

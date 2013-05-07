@@ -804,7 +804,7 @@ class StandardRenderControl : IScriptedRenderControl
 				mDrawSSAO			   = false;
 				mDrawILR               = false;
 				
-			    mHDRGlare              = mDrawHDR && true;
+			    mHDRGlare              = mDrawHDR && false;
 				mHDRDepthOfField       = mDrawHDR && false;
 				mHDRMotionBlur         = mDrawHDR && false;				
 				mHDRILR                = mDrawHDR && false;
@@ -813,14 +813,14 @@ class StandardRenderControl : IScriptedRenderControl
 			{
 				mDrawGlare             = true;
 				mDrawAnamorphic        = true;
-				mDrawILR               = true;
+				mDrawILR               = false;
 				mDrawDepthOfField      = true;
 				mDrawMotionBlur        = true;
 				mDrawSSAO			   = true;
 				
 			    mHDRGlare              = mDrawHDR && true;
-				mHDRDepthOfField       = mDrawHDR && true;
-				mHDRMotionBlur         = mDrawHDR && true;				
+				mHDRDepthOfField       = mDrawHDR && false;
+				mHDRMotionBlur         = mDrawHDR && false;				
 				mHDRILR                = mDrawHDR && false;
 			}
 			else if( mPostProcessQuality == PostProcessQuality::Ultra )
@@ -1105,7 +1105,9 @@ class StandardRenderControl : IScriptedRenderControl
 					renderDriver.clear( ClearFlags::Target, 0, 0, 0 );
 			
 				// Compute lighting (deferred)
+                //mApplyShadows = false;
 				mLightingManager.processLights( activeCamera, true, mApplyShadows, mViewSpaceLighting, "onLightProcess", "onPassProcess" );
+                //mApplyShadows = true;
 
 				// End target render			
 				renderDriver.endTargetRender();
@@ -1754,6 +1756,9 @@ class StandardRenderControl : IScriptedRenderControl
 		{
             VisibilitySet @ cameraVis = activeCamera.getVisibilitySet();
             ObjectRenderQueue @ queue = ObjectRenderQueue( mScene );
+
+            // Set the depth buffer for soft particle rendering where applicable.
+            mDepthSampler.apply( 10, mDepthBuffer );
 
             // Draw effect geometry
             if ( mScene.beginRenderPass( "particles" ) )

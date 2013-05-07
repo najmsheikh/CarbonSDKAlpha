@@ -8,7 +8,6 @@ var classcg_label_control =
     [ "getHorizontalAlignment", "classcg_label_control.html#ab0ab20fc0c64e16956a5edd8b039f3a9", null ],
     [ "getMultiline", "classcg_label_control.html#a9b377896fd74c8104dc4cd68d90bd6e8", null ],
     [ "getReferenceType", "classcg_label_control.html#a83889883b09ae6e0f0f2f51f6c962a05", null ],
-    [ "getTextColor", "classcg_label_control.html#adcc4706d3d67226da9cf5a772dab9a2e", null ],
     [ "getTruncationMode", "classcg_label_control.html#a9f8001d6cd772e2f16eb7a9073892948", null ],
     [ "getVerticalAlignment", "classcg_label_control.html#ad2df75f23514dad6424737928e4596bb", null ],
     [ "onSize", "classcg_label_control.html#a5d3f1aade938b8ba1f910f5d6ca2ab73", null ],
@@ -27,7 +26,6 @@ var classcg_label_control =
     [ "mAutoSize", "classcg_label_control.html#a8d7cd3f0a37de68f491f4f2ccb9f84e1", null ],
     [ "mHorizontalAlign", "classcg_label_control.html#a0dcb9f21412b75355672dc63f69f2417", null ],
     [ "mMultiline", "classcg_label_control.html#a3e355705c8c53acff40f485bc7e5a182", null ],
-    [ "mTextColor", "classcg_label_control.html#a66685e791b0a96042f86fddce188e01a", null ],
     [ "mTextMetrics", "classcg_label_control.html#a64fe58809bacc32f846c0793d9fc9bb3", null ],
     [ "mTruncationMode", "classcg_label_control.html#ab6eed059305900c4dacb5cd54ef231cb", null ],
     [ "mVerticalAlign", "classcg_label_control.html#ad20cf713368a328c09a516cfd4140dca", null ]

@@ -13,7 +13,6 @@ var classcg_text_box_control =
     [ "getSelectedText", "classcg_text_box_control.html#afd341f34f03deee133c4948f9b9f1930", null ],
     [ "getTextArea", "classcg_text_box_control.html#aa5c3c00ec407b9890acee33bd56fc69d", null ],
     [ "getTextArea", "classcg_text_box_control.html#a6fa00eedf606f82b505f1ae01996276c", null ],
-    [ "getTextColor", "classcg_text_box_control.html#a935379a128633e0f681ac030e87b457e", null ],
     [ "hasSelection", "classcg_text_box_control.html#aea1dc54943c94f7a7b31386965e42588", null ],
     [ "insertString", "classcg_text_box_control.html#a5006ff040843ee506b25465d15b7a0fe", null ],
     [ "onKeyPressed", "classcg_text_box_control.html#ab9990fa32c37f5a19f7fcd505a5025fe", null ],
@@ -53,7 +52,6 @@ var classcg_text_box_control =
     [ "mSelectionRef", "classcg_text_box_control.html#a0074b7318502a8921ce6e97daccb6f05", null ],
     [ "mSelectionStart", "classcg_text_box_control.html#ad662cda2cc5e1f2c5ff984b882402116", null ],
     [ "mShowCaret", "classcg_text_box_control.html#a796e1696276c31affaf362e70afbf7cd", null ],
-    [ "mTextColor", "classcg_text_box_control.html#a89c829cd50cfc9ef766619381bca9018", null ],
     [ "mTextMetrics", "classcg_text_box_control.html#acf61d5bc8862cdc24ffacfcf3ba1fbd1", null ],
     [ "mVerticalScrollAmount", "classcg_text_box_control.html#a8e5ab892ddf4e582f9e6e3290e9c6fa9", null ],
     [ "mVerticalScrollBar", "classcg_text_box_control.html#a2bf8fc90f61104ed15b070e49c92b9ff", null ]

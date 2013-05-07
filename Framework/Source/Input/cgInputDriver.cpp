@@ -15,7 +15,7 @@
 //        destruction of our DirectInput devices and associated resources.   //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -99,10 +99,6 @@ void cgInputDriver::Dispose( bool bDisposeBase )
     if ( mInitialized == true )
         ClipCursor( CG_NULL );
 
-    // Re-show the cursor.
-    if ( mInitialized == true && mConfig.hideSystemCursor == true )
-        ShowCursor( TRUE );
-    
     // Reset any variables
     mConfigLoaded = false;
     mInitialized  = false;
@@ -205,7 +201,6 @@ cgConfigResult::Base cgInputDriver::loadConfig( const cgString & strFileName )
         mConfig.keyRepeatRate      = GetPrivateProfileInt( strSection, _T("KeyRepeatRate"), 50, strFileName.c_str() );
         mConfig.keyboardBufferSize = max( 0, GetPrivateProfileInt( strSection, _T("KeyboardBufferSize"), 512, strFileName.c_str() ) );
         mConfig.mouseSensitivity   = cgStringUtility::getPrivateProfileFloat( strSection, _T("MouseSensitivity"), 1.0f, strFileName.c_str() );
-        mConfig.hideSystemCursor   = GetPrivateProfileInt( strSection, _T("HideSystemCursor"), true, strFileName.c_str() ) > 0;
 
     } // End if config provided
 
@@ -243,7 +238,6 @@ cgConfigResult::Base cgInputDriver::loadDefaultConfig( )
     mConfig.keyRepeatDelay     = 500;
     mConfig.keyRepeatRate      = 50;
     mConfig.keyboardBufferSize = 512;
-    mConfig.hideSystemCursor   = true;
     
     // Pass through to the loadConfig function
     return loadConfig( _T("") );
@@ -275,7 +269,6 @@ bool cgInputDriver::saveConfig( const cgString & strFileName )
     writePrivateProfileIntEx( strSection, _T("KeyRepeatRate")     , mConfig.keyRepeatRate     , strFileName.c_str() );
     writePrivateProfileIntEx( strSection, _T("KeyboardBufferSize"), mConfig.keyboardBufferSize, strFileName.c_str() );
     writePrivateProfileFloat( strSection, _T("MouseSensitivity")  , mConfig.mouseSensitivity  , strFileName.c_str() );
-    writePrivateProfileIntEx( strSection, _T("HideSystemCursor")  , mConfig.hideSystemCursor  , strFileName.c_str() );
 
     // Success!!
     return true;
@@ -314,8 +307,17 @@ void cgInputDriver::setMouseMode( cgMouseHandlerMode::Base Mode )
         ::ClipCursor( CG_NULL );
         cgPoint ptScreen = mFocusWnd->clientToScreen( mMousePosition );
         ::SetCursorPos( ptScreen.x, ptScreen.y );
+
+        // Re-enable cursor.
+        mFocusWnd->showCursor( true );
     
     } // End if to cursor
+    else
+    {
+        // Hide cursor
+        mFocusWnd->showCursor( false );
+
+    } // End if direct
 }
 
 //-----------------------------------------------------------------------------
@@ -469,10 +471,6 @@ bool cgInputDriver::initialize( cgAppWindow * pFocusWnd, bool bWindowed )
     // Acquire the newly created devices
     mDIMouse->Acquire();
     mDIKeyboard->Acquire();
-
-    // Hide the cursor
-    if ( mConfig.hideSystemCursor == true )
-        ShowCursor( FALSE );
 
     // Success!
     mInitialized = true;

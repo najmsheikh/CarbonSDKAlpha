@@ -47,6 +47,7 @@ var classcg_render_driver =
       [ "NormalizedDistance", "classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3a22788149c6b1a98d6fee0422db0a7f30", null ],
       [ "SurfaceNormals", "classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3ae7af9ece2c0c5a46d365eb524175e2dc", null ],
       [ "PackedDepth", "classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3ab9849783919db76fa610c0e3c9fd2fa1", null ],
+      [ "DepthStencilReads", "classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3aee94bad64ac95e1215958fe1e675e588", null ],
       [ "ColorWrites", "classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3a8f0fc5c2007f9d0f1bbf950de4a9fcdf", null ],
       [ "CullMode", "classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3a65210ac381fac6b70d29b5d531aa3dd1", null ]
     ] ],
@@ -255,6 +256,7 @@ var classcg_render_driver =
     [ "stretchRect", "classcg_render_driver.html#ac0faa0f37c37c859cbdb802eda60609c", null ],
     [ "stretchRect", "classcg_render_driver.html#aa3ddaef13d321254252a541fc53fc03b", null ],
     [ "stretchRect", "classcg_render_driver.html#aaaffc42b974edfe4927c56e898fc12c7", null ],
+    [ "updateDisplayMode", "classcg_render_driver.html#a798c00808b06a6c67819a34acdecf651", null ],
     [ "useHardwareTnL", "classcg_render_driver.html#a9d58aab65019e97d7d64a88e8965c0b8", null ],
     [ "validQuery", "classcg_render_driver.html#a7b9587be3b31ff34c4ac1bca9df30ded", null ],
     [ "windowResized", "classcg_render_driver.html#aa9d7b6ede9fba9a02aafb9c35babc5e0", null ],
@@ -320,6 +322,7 @@ var classcg_render_driver =
     [ "mScreenSpaceFormat", "classcg_render_driver.html#aad67a562d527fbe8d5bcccf7395d17cc", null ],
     [ "mSingleton", "classcg_render_driver.html#a2b77f0285e68d6c2b39f3d5de558a51e", null ],
     [ "mStateFilteringEnabled", "classcg_render_driver.html#a80e2d84070e1f1122c050864330a0f8a", null ],
+    [ "mSuppressResizeEvent", "classcg_render_driver.html#a2353f9502ead923af5f7a9fc0e607148", null ],
     [ "mSystemExports", "classcg_render_driver.html#abce9b8fb6894d0d9b8316d238241340e", null ],
     [ "mSystemExportScript", "classcg_render_driver.html#aa6cebaef06a5d3ab37567f10e12e77d2", null ],
     [ "mSystemExportVars", "classcg_render_driver.html#a73bee7155376216e61eecbe6195c1730", null ],

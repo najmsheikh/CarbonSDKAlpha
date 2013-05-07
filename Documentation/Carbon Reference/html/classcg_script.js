@@ -19,6 +19,7 @@ var classcg_script =
     [ "executeFunctionVoid", "classcg_script.html#a5a89f23832e8e627cc3462a2706cd95a", null ],
     [ "executeFunctionVoid", "classcg_script.html#adb0c989ffe57b027eee79324fa231aec", null ],
     [ "getFunctionHandle", "classcg_script.html#a81471c979a927b8b055b84b4448aeb11", null ],
+    [ "getInputStream", "classcg_script.html#ae940719b8c280031a164e47302225848", null ],
     [ "getReferenceType", "classcg_script.html#a3df4d4048bab302752abcad5ca533980", null ],
     [ "getScriptEngine", "classcg_script.html#af00d2867a4d8bfc044d2aa89f40164aa", null ],
     [ "getSourceInfo", "classcg_script.html#ac40740386f9a1ecde7b0ac312848d948", null ],

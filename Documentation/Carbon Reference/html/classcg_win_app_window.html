@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -170,6 +170,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a762a1c605ef24622bd32b95557e6169b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#a762a1c605ef24622bd32b95557e6169b">setTitle</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;title)</td></tr>
 <tr class="memdesc:a762a1c605ef24622bd32b95557e6169b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a new title for the window caption.  <a href="#a762a1c605ef24622bd32b95557e6169b"></a><br/></td></tr>
 <tr class="separator:a762a1c605ef24622bd32b95557e6169b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdfbaa77df43cbf8f54aac3265c83d8f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#acdfbaa77df43cbf8f54aac3265c83d8f">setSize</a> (const <a class="el" href="structcg_size.html">cgSize</a> &amp;size)</td></tr>
+<tr class="memdesc:acdfbaa77df43cbf8f54aac3265c83d8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alter the size of the window such that its outer dimensions (including non-client regions such as caption and border) match those supplied.  <a href="#acdfbaa77df43cbf8f54aac3265c83d8f"></a><br/></td></tr>
+<tr class="separator:acdfbaa77df43cbf8f54aac3265c83d8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7ebae472112c2a151ba30bb73695ccb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#ab7ebae472112c2a151ba30bb73695ccb">setClientSize</a> (const <a class="el" href="structcg_size.html">cgSize</a> &amp;size)</td></tr>
+<tr class="memdesc:ab7ebae472112c2a151ba30bb73695ccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alter the size of the window such that its inner client area dimensions (excluding non-client regions such as caption and border) match those supplied.  <a href="#ab7ebae472112c2a151ba30bb73695ccb"></a><br/></td></tr>
+<tr class="separator:ab7ebae472112c2a151ba30bb73695ccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab972a150a0fe2a2b5e4591d97517453a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#ab972a150a0fe2a2b5e4591d97517453a">setFullScreenMode</a> (bool fullScreen)</td></tr>
+<tr class="memdesc:ab972a150a0fe2a2b5e4591d97517453a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alter the styling of the window to match the requested full screen mode.  <a href="#ab972a150a0fe2a2b5e4591d97517453a"></a><br/></td></tr>
+<tr class="separator:ab972a150a0fe2a2b5e4591d97517453a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addd4a7b0c2454839edb3143fb653228d"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#addd4a7b0c2454839edb3143fb653228d">getReferenceType</a> () const </td></tr>
 <tr class="separator:addd4a7b0c2454839edb3143fb653228d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea7dc301e7e08dd4865acee351960f28"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#aea7dc301e7e08dd4865acee351960f28">queryReferenceType</a> (const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;type) const </td></tr>
@@ -231,9 +240,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#abc11be6582c83be070816daf60d96781">isInternalReference</a> () const </td></tr>
 <tr class="memdesc:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this reference is either an internal or serialized reference.  <a href="#abc11be6582c83be070816daf60d96781"></a><br/></td></tr>
 <tr class="separator:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#af002aedbdfca5e97c3a7263425a60dac">isDisposed</a> ()</td></tr>
-<tr class="memdesc:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#af002aedbdfca5e97c3a7263425a60dac"></a><br/></td></tr>
-<tr class="separator:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a34951860e42866aff9b890d704bccbc4">isDisposed</a> () const </td></tr>
+<tr class="memdesc:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#a34951860e42866aff9b890d704bccbc4"></a><br/></td></tr>
+<tr class="separator:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#aecf67c7fc72ba0d465096b4584e1caba">isDisposing</a> () const </td></tr>
 <tr class="memdesc:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object is in the process of being disposed.  <a href="#aecf67c7fc72ba0d465096b4584e1caba"></a><br/></td></tr>
 <tr class="separator:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -282,6 +291,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a1cf199d4f7b7e256227a243c66b9f2f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af03dc8593774268f149f82281b767096"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#af03dc8593774268f149f82281b767096">mOwnsWindow</a></td></tr>
 <tr class="separator:af03dc8593774268f149f82281b767096"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1610bf153d53e670760726a503e856b7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#a1610bf153d53e670760726a503e856b7">mFullScreen</a></td></tr>
+<tr class="separator:a1610bf153d53e670760726a503e856b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac15b70bd6d699f0eda6598937a181cc2"><td class="memItemLeft" align="right" valign="top">WNDCLASS&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#ac15b70bd6d699f0eda6598937a181cc2">mWndClass</a></td></tr>
 <tr class="separator:ac15b70bd6d699f0eda6598937a181cc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ed914644bca6a8b192b27f2cc7f755b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_string.html">cgString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#a0ed914644bca6a8b192b27f2cc7f755b">mClassName</a></td></tr>
@@ -651,6 +662,90 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ab7ebae472112c2a151ba30bb73695ccb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgWinAppWindow::setClientSize </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structcg_size.html">cgSize</a> &amp;&#160;</td>
+          <td class="paramname"><em>size</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Alter the size of the window such that its inner client area dimensions (excluding non-client regions such as caption and border) match those supplied. </p>
+
+<p>Implements <a class="el" href="classcg_app_window.html#a20663a4b24dc364377b3b6f6f8b37732">cgAppWindow</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab972a150a0fe2a2b5e4591d97517453a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgWinAppWindow::setFullScreenMode </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>fullScreen</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Alter the styling of the window to match the requested full screen mode. </p>
+
+<p>Implements <a class="el" href="classcg_app_window.html#a6632ebe5c88ae027ee9ea90753116cd5">cgAppWindow</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="acdfbaa77df43cbf8f54aac3265c83d8f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgWinAppWindow::setSize </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structcg_size.html">cgSize</a> &amp;&#160;</td>
+          <td class="paramname"><em>size</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Alter the size of the window such that its outer dimensions (including non-client regions such as caption and border) match those supplied. </p>
+
+<p>Implements <a class="el" href="classcg_app_window.html#a494d38f509f4aded0ab65c0c2a755e19">cgAppWindow</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a762a1c605ef24622bd32b95557e6169b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -775,6 +870,26 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a1610bf153d53e670760726a503e856b7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgWinAppWindow::mFullScreen</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="af03dc8593774268f149f82281b767096"></a>
 <div class="memitem">
 <div class="memproto">
@@ -845,7 +960,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_win_app_window.html">cgWinAppWindow</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:54 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:59 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

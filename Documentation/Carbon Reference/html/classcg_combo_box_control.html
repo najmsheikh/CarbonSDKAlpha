@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -103,6 +103,7 @@ $(document).ready(function(){initNavTree('classcg_combo_box_control.html','');})
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classcg_combo_box_control-members.html">List of all members</a>  </div>
@@ -128,6 +129,11 @@ Inheritance diagram for cgComboBoxControl:</div>
 </map>
  </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_combo_box_control_1_1_u_i___combo_box___on_selected_index_change_args.html">UI_ComboBox_OnSelectedIndexChangeArgs</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a3c8c873b84f27078cf59fe3b94b1a63e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a3c8c873b84f27078cf59fe3b94b1a63e">cgComboBoxControl</a> ()</td></tr>
@@ -136,20 +142,53 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a258ed4bfac20019fb0926dcda2ba20c1"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a258ed4bfac20019fb0926dcda2ba20c1">~cgComboBoxControl</a> ()</td></tr>
 <tr class="memdesc:a258ed4bfac20019fb0926dcda2ba20c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for this class.  <a href="#a258ed4bfac20019fb0926dcda2ba20c1"></a><br/></td></tr>
 <tr class="separator:a258ed4bfac20019fb0926dcda2ba20c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41ee5bc93aad13f65b0fd0207a5bd348"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a41ee5bc93aad13f65b0fd0207a5bd348">setControlText</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;text)</td></tr>
-<tr class="memdesc:a41ee5bc93aad13f65b0fd0207a5bd348"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the common text string for the control (i.e. Caption for a form, button text for a button etc.)  <a href="#a41ee5bc93aad13f65b0fd0207a5bd348"></a><br/></td></tr>
-<tr class="separator:a41ee5bc93aad13f65b0fd0207a5bd348"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a555937a5262568ff3e4425c3fa4c762a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a555937a5262568ff3e4425c3fa4c762a">addItem</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;value)</td></tr>
+<tr class="memdesc:a555937a5262568ff3e4425c3fa4c762a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a new string to the list box item array. Returns the index of the newly added item.  <a href="#a555937a5262568ff3e4425c3fa4c762a"></a><br/></td></tr>
+<tr class="separator:a555937a5262568ff3e4425c3fa4c762a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27e357aaae945da894332dbee301409b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a27e357aaae945da894332dbee301409b">setSelectedIndex</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> index)</td></tr>
+<tr class="memdesc:a27e357aaae945da894332dbee301409b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select a new item from the list by supplying a valid index in the range 0 through </p>
+<ul>
+</ul>
+<p>1. Specifying a value of -1 will deselect the currently selected item.  <a href="#a27e357aaae945da894332dbee301409b"></a><br/></td></tr>
+<tr class="separator:a27e357aaae945da894332dbee301409b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16f41b54494b434701308dbc7f2f690e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a16f41b54494b434701308dbc7f2f690e">getSelectedIndex</a> () const </td></tr>
+<tr class="memdesc:a16f41b54494b434701308dbc7f2f690e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the index of the currently selected item, or -1 if nothing is currently selected.  <a href="#a16f41b54494b434701308dbc7f2f690e"></a><br/></td></tr>
+<tr class="separator:a16f41b54494b434701308dbc7f2f690e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f1c9b425088439bab54f97b8d569e17"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a0f1c9b425088439bab54f97b8d569e17">showDropDown</a> (bool show)</td></tr>
+<tr class="memdesc:a0f1c9b425088439bab54f97b8d569e17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show or hide the drop down list overlay control.  <a href="#a0f1c9b425088439bab54f97b8d569e17"></a><br/></td></tr>
+<tr class="separator:a0f1c9b425088439bab54f97b8d569e17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44edf899a9cab818b3978799860eac57"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a44edf899a9cab818b3978799860eac57">isDropDownVisible</a> () const </td></tr>
+<tr class="memdesc:a44edf899a9cab818b3978799860eac57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the drop down list overlay control is currently visible.  <a href="#a44edf899a9cab818b3978799860eac57"></a><br/></td></tr>
+<tr class="separator:a44edf899a9cab818b3978799860eac57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a5007194bb58c04ee56c4fff66ab1c6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a1a5007194bb58c04ee56c4fff66ab1c6">onSelectedIndexChange</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> oldIndex, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> newIndex)</td></tr>
+<tr class="memdesc:a1a5007194bb58c04ee56c4fff66ab1c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered whenever a new list box item / row is selected in some way.  <a href="#a1a5007194bb58c04ee56c4fff66ab1c6"></a><br/></td></tr>
+<tr class="separator:a1a5007194bb58c04ee56c4fff66ab1c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4adaa2b07d89a9f6596f71c6519f4544"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a4adaa2b07d89a9f6596f71c6519f4544">onInitControl</a> ()</td></tr>
 <tr class="memdesc:a4adaa2b07d89a9f6596f71c6519f4544"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered whenever the control has been initialized.  <a href="#a4adaa2b07d89a9f6596f71c6519f4544"></a><br/></td></tr>
 <tr class="separator:a4adaa2b07d89a9f6596f71c6519f4544"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88c1c151910721a397d1b3cfd502687e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a88c1c151910721a397d1b3cfd502687e">onSize</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> width, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> height)</td></tr>
 <tr class="memdesc:a88c1c151910721a397d1b3cfd502687e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called in response to a resize event.  <a href="#a88c1c151910721a397d1b3cfd502687e"></a><br/></td></tr>
 <tr class="separator:a88c1c151910721a397d1b3cfd502687e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af67eb4c63165087b8bc336b8893e05be"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#af67eb4c63165087b8bc336b8893e05be">onParentAttach</a> (<a class="el" href="classcg_u_i_control.html">cgUIControl</a> *parent)</td></tr>
+<tr class="memdesc:af67eb4c63165087b8bc336b8893e05be"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method is called when a control is first attached to a new parent control.  <a href="#af67eb4c63165087b8bc336b8893e05be"></a><br/></td></tr>
+<tr class="separator:af67eb4c63165087b8bc336b8893e05be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8991abc38fa54cdd256c6fcea13fcc0e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a8991abc38fa54cdd256c6fcea13fcc0e">setFont</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;fontName)</td></tr>
+<tr class="memdesc:a8991abc38fa54cdd256c6fcea13fcc0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the font to use when rendering this control.  <a href="#a8991abc38fa54cdd256c6fcea13fcc0e"></a><br/></td></tr>
+<tr class="separator:a8991abc38fa54cdd256c6fcea13fcc0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add300cc00a4419dfe990913d869b55aa"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#add300cc00a4419dfe990913d869b55aa">setTextColor</a> (const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;color)</td></tr>
+<tr class="memdesc:add300cc00a4419dfe990913d869b55aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the default color of any text rendered for this control.  <a href="#add300cc00a4419dfe990913d869b55aa"></a><br/></td></tr>
+<tr class="separator:add300cc00a4419dfe990913d869b55aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7652be440b981f3ea24be09c604fa75b"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a7652be440b981f3ea24be09c604fa75b">getReferenceType</a> () const </td></tr>
 <tr class="separator:a7652be440b981f3ea24be09c604fa75b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa78da4dd60aee27372dd57b38ce818b6"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#aa78da4dd60aee27372dd57b38ce818b6">queryReferenceType</a> (const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;type) const </td></tr>
 <tr class="memdesc:aa78da4dd60aee27372dd57b38ce818b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows the application to determine if the inheritance hierarchy supports a particular interface.  <a href="#aa78da4dd60aee27372dd57b38ce818b6"></a><br/></td></tr>
 <tr class="separator:aa78da4dd60aee27372dd57b38ce818b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7698df35924f92b14e9a8bd2de7daab9"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a7698df35924f92b14e9a8bd2de7daab9">processMessage</a> (<a class="el" href="classcg_message.html">cgMessage</a> *pMessage)</td></tr>
+<tr class="memdesc:a7698df35924f92b14e9a8bd2de7daab9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process any messages sent to us from other objects, or other parts of the system via the reference messaging system (<a class="el" href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat...">cgReference</a>).  <a href="#a7698df35924f92b14e9a8bd2de7daab9"></a><br/></td></tr>
+<tr class="separator:a7698df35924f92b14e9a8bd2de7daab9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6db772f0362ece23477c5edf189c8d4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#ad6db772f0362ece23477c5edf189c8d4">dispose</a> (bool disposeBase)</td></tr>
+<tr class="memdesc:ad6db772f0362ece23477c5edf189c8d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any memory, references or resources allocated by this object.  <a href="#ad6db772f0362ece23477c5edf189c8d4"></a><br/></td></tr>
+<tr class="separator:ad6db772f0362ece23477c5edf189c8d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classcg_u_i_control"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcg_u_i_control')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcg_u_i_control.html">cgUIControl</a></td></tr>
 <tr class="memitem:a29ab284baa69502ea974316b1b0ebb7f inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a29ab284baa69502ea974316b1b0ebb7f">cgUIControl</a> (<a class="el" href="classcg_u_i_control.html#a60d6b4b0e23ce6d1ca173cb8789a87d6">ControlMode</a> mode, const <a class="el" href="classcg_string.html">cgString</a> &amp;skinElementName)</td></tr>
 <tr class="memdesc:a29ab284baa69502ea974316b1b0ebb7f inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for this class.  <a href="#a29ab284baa69502ea974316b1b0ebb7f"></a><br/></td></tr>
@@ -157,11 +196,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aaebd31e60a540b975ba0172835ea2fc7 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#aaebd31e60a540b975ba0172835ea2fc7">~cgUIControl</a> ()</td></tr>
 <tr class="memdesc:aaebd31e60a540b975ba0172835ea2fc7 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for this class.  <a href="#aaebd31e60a540b975ba0172835ea2fc7"></a><br/></td></tr>
 <tr class="separator:aaebd31e60a540b975ba0172835ea2fc7 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dfbe844581c1a7e1c12785b0ecb8d71 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a1dfbe844581c1a7e1c12785b0ecb8d71">dispose</a> (bool disposeBase)</td></tr>
-<tr class="memdesc:a1dfbe844581c1a7e1c12785b0ecb8d71 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any memory, references or resources allocated by this object.  <a href="#a1dfbe844581c1a7e1c12785b0ecb8d71"></a><br/></td></tr>
-<tr class="separator:a1dfbe844581c1a7e1c12785b0ecb8d71 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ea84a7ebe92e9d11c786f90f69e624c inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_u_i_form.html">cgUIForm</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a7ea84a7ebe92e9d11c786f90f69e624c">getRootForm</a> () const </td></tr>
 <tr class="separator:a7ea84a7ebe92e9d11c786f90f69e624c inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34c807ad80a1581ca8c331c820a3d27d inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_u_i_control_layer.html">cgUIControlLayer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a34c807ad80a1581ca8c331c820a3d27d">getControlLayer</a> () const </td></tr>
+<tr class="separator:a34c807ad80a1581ca8c331c820a3d27d inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa1606e43a86fd6a4f680ecb884b3f5e inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_u_i_manager.html">cgUIManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#afa1606e43a86fd6a4f680ecb884b3f5e">getUIManager</a> () const </td></tr>
+<tr class="separator:afa1606e43a86fd6a4f680ecb884b3f5e inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a745b02ba827b0cacfafc141375144268 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a745b02ba827b0cacfafc141375144268">getName</a> () const </td></tr>
 <tr class="separator:a745b02ba827b0cacfafc141375144268 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a537d31497e3ba00ffdf19931af0cdc0f inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a537d31497e3ba00ffdf19931af0cdc0f">setName</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;name)</td></tr>
@@ -226,6 +266,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae3b6043230c443405954ef7a40cf2098 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73bfb34533dc168647a9f4675298bc57 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_rect.html">cgRect</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a73bfb34533dc168647a9f4675298bc57">getPadding</a> () const </td></tr>
 <tr class="separator:a73bfb34533dc168647a9f4675298bc57 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2d2aacf209fcfc2efd8ade49a70df3a inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#ae2d2aacf209fcfc2efd8ade49a70df3a">canGainFocus</a> () const </td></tr>
+<tr class="memdesc:ae2d2aacf209fcfc2efd8ade49a70df3a inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this control can currently gain focus. This will include the parent focus enabled status by default.  <a href="#ae2d2aacf209fcfc2efd8ade49a70df3a"></a><br/></td></tr>
+<tr class="separator:ae2d2aacf209fcfc2efd8ade49a70df3a inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78dd99fd92628313281ce17b11d94397 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a78dd99fd92628313281ce17b11d94397">canGainFocus</a> (bool includeParentState) const </td></tr>
+<tr class="memdesc:a78dd99fd92628313281ce17b11d94397 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this control can currently gain focus. This will include the parent focus enabled status by default.  <a href="#a78dd99fd92628313281ce17b11d94397"></a><br/></td></tr>
+<tr class="separator:a78dd99fd92628313281ce17b11d94397 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e766393b6cccfa799430ff4746d78b4 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a2e766393b6cccfa799430ff4746d78b4">setCanGainFocus</a> (bool enabled)</td></tr>
+<tr class="memdesc:a2e766393b6cccfa799430ff4746d78b4 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the flag that dictates whether or not this control can receive input focus.  <a href="#a2e766393b6cccfa799430ff4746d78b4"></a><br/></td></tr>
+<tr class="separator:a2e766393b6cccfa799430ff4746d78b4 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a554f92ad1d57b93a690524617e461353 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a554f92ad1d57b93a690524617e461353">isVisible</a> () const </td></tr>
 <tr class="memdesc:a554f92ad1d57b93a690524617e461353 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this control is considered visible. This will include the parent visibility status by default.  <a href="#a554f92ad1d57b93a690524617e461353"></a><br/></td></tr>
 <tr class="separator:a554f92ad1d57b93a690524617e461353 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -244,6 +293,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae6a368baab7bca9eda6b40ab6e51c35d inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_string.html">cgString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#ae6a368baab7bca9eda6b40ab6e51c35d">getFont</a> () const </td></tr>
 <tr class="memdesc:ae6a368baab7bca9eda6b40ab6e51c35d inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retreive the the font in use when rendering this control.  <a href="#ae6a368baab7bca9eda6b40ab6e51c35d"></a><br/></td></tr>
 <tr class="separator:ae6a368baab7bca9eda6b40ab6e51c35d inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0840575ff2461a37b9f603a5c3edae13 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a0840575ff2461a37b9f603a5c3edae13">getTextColor</a> () const </td></tr>
+<tr class="memdesc:a0840575ff2461a37b9f603a5c3edae13 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retreive the default color of any text rendered for this control.  <a href="#a0840575ff2461a37b9f603a5c3edae13"></a><br/></td></tr>
+<tr class="separator:a0840575ff2461a37b9f603a5c3edae13 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02c763e4eb91f8dca96be54ea6763ae5 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a02c763e4eb91f8dca96be54ea6763ae5">setBackgroundOpacity</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> opacity)</td></tr>
 <tr class="memdesc:a02c763e4eb91f8dca96be54ea6763ae5 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the level of opacity for the background elements of this control 0 = completely transparent, 1 = completely opaque.  <a href="#a02c763e4eb91f8dca96be54ea6763ae5"></a><br/></td></tr>
 <tr class="separator:a02c763e4eb91f8dca96be54ea6763ae5 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -271,15 +323,23 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4893330be21a23a2f1b95e6106223a02 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a4893330be21a23a2f1b95e6106223a02">raiseEvent</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> message, <a class="el" href="structcg_u_i_control_1_1_u_i_event_args.html">UIEventArgs</a> *data)</td></tr>
 <tr class="memdesc:a4893330be21a23a2f1b95e6106223a02 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method can be called in order to raise an event of the specified type and pass the message on to the registered event target.  <a href="#a4893330be21a23a2f1b95e6106223a02"></a><br/></td></tr>
 <tr class="separator:a4893330be21a23a2f1b95e6106223a02 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0cb1558545bf525f0ea028ab33c4557b inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a0cb1558545bf525f0ea028ab33c4557b">setManagementData</a> (<a class="el" href="classcg_u_i_control.html">cgUIControl</a> *parent, <a class="el" href="classcg_u_i_form.html">cgUIForm</a> *rootForm)</td></tr>
-<tr class="memdesc:a0cb1558545bf525f0ea028ab33c4557b inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set all of the data required for the control to function. This will also recurse into any already attached children and populate them.  <a href="#a0cb1558545bf525f0ea028ab33c4557b"></a><br/></td></tr>
-<tr class="separator:a0cb1558545bf525f0ea028ab33c4557b inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2047a240a45844d4f26838747a9c9472 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a2047a240a45844d4f26838747a9c9472">setManagementData</a> (<a class="el" href="classcg_u_i_manager.html">cgUIManager</a> *manager, <a class="el" href="classcg_u_i_control_layer.html">cgUIControlLayer</a> *layer, <a class="el" href="classcg_u_i_control.html">cgUIControl</a> *parent, <a class="el" href="classcg_u_i_form.html">cgUIForm</a> *rootForm)</td></tr>
+<tr class="memdesc:a2047a240a45844d4f26838747a9c9472 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set all of the data required for the control to function. This will also recurse into any already attached children and populate them.  <a href="#a2047a240a45844d4f26838747a9c9472"></a><br/></td></tr>
+<tr class="separator:a2047a240a45844d4f26838747a9c9472 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5958df10da291ec3d9c077779086e295 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a5958df10da291ec3d9c077779086e295">setParentEnabled</a> (bool enabled)</td></tr>
 <tr class="memdesc:a5958df10da291ec3d9c077779086e295 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parent status and child status are treated differently. Because the status of the parent should not affect the original status of the child, this is tracked separately.  <a href="#a5958df10da291ec3d9c077779086e295"></a><br/></td></tr>
 <tr class="separator:a5958df10da291ec3d9c077779086e295 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d18b9918d5785d97a0c40bab282e054 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a3d18b9918d5785d97a0c40bab282e054">setFont</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;name)</td></tr>
-<tr class="memdesc:a3d18b9918d5785d97a0c40bab282e054 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the font to use when rendering this control.  <a href="#a3d18b9918d5785d97a0c40bab282e054"></a><br/></td></tr>
-<tr class="separator:a3d18b9918d5785d97a0c40bab282e054 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b69d14f328fd37f888fb1fc7a3246fa inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a4b69d14f328fd37f888fb1fc7a3246fa">setParentCanGainFocus</a> (bool enabled)</td></tr>
+<tr class="memdesc:a4b69d14f328fd37f888fb1fc7a3246fa inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parent status and child status are treated differently. Because the status of the parent should not affect the original status of the child, this is tracked separately.  <a href="#a4b69d14f328fd37f888fb1fc7a3246fa"></a><br/></td></tr>
+<tr class="separator:a4b69d14f328fd37f888fb1fc7a3246fa inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade3de7dc463d31512e8395fe6fe8cc66 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#ade3de7dc463d31512e8395fe6fe8cc66">setRenderMode</a> (<a class="el" href="classcg_u_i_control.html#aaece26be16b6c4ed6c5b9aea429dd63a">ControlRenderMode</a> mode)</td></tr>
+<tr class="memdesc:ade3de7dc463d31512e8395fe6fe8cc66 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current rendering mode of the control (i.e. hover/pressed)  <a href="#ade3de7dc463d31512e8395fe6fe8cc66"></a><br/></td></tr>
+<tr class="separator:ade3de7dc463d31512e8395fe6fe8cc66 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85e5f1f5ea9d816ea3ca0ff004bd5063 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a85e5f1f5ea9d816ea3ca0ff004bd5063">build</a> ()</td></tr>
+<tr class="memdesc:a85e5f1f5ea9d816ea3ca0ff004bd5063 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the control's render data after loading, or after selecting a new skin for instance.  <a href="#a85e5f1f5ea9d816ea3ca0ff004bd5063"></a><br/></td></tr>
+<tr class="separator:a85e5f1f5ea9d816ea3ca0ff004bd5063 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a521c217616946c87680bac7497162247 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a521c217616946c87680bac7497162247">setControlText</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;text)</td></tr>
+<tr class="separator:a521c217616946c87680bac7497162247 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7057d64b47f291969b49ba5515fc2c32 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a7057d64b47f291969b49ba5515fc2c32">setMinimumSize</a> (const <a class="el" href="structcg_size.html">cgSize</a> &amp;size)</td></tr>
 <tr class="memdesc:a7057d64b47f291969b49ba5515fc2c32 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the minimum allowable size of this control in screen space pixels  <a href="#a7057d64b47f291969b49ba5515fc2c32"></a><br/></td></tr>
 <tr class="separator:a7057d64b47f291969b49ba5515fc2c32 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -343,6 +403,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a92f2f6e6fd514e59e7de03d496b4c045 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a92f2f6e6fd514e59e7de03d496b4c045">onKeyPressed</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> keyCode, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> modifiers)</td></tr>
 <tr class="memdesc:a92f2f6e6fd514e59e7de03d496b4c045 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method is called whenever a key is pressed, and subsequent times if the key is held taking into account repeat delay and rate.  <a href="#a92f2f6e6fd514e59e7de03d496b4c045"></a><br/></td></tr>
 <tr class="separator:a92f2f6e6fd514e59e7de03d496b4c045 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0e8a7e9ef01e5c71fa01502436de405 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#ae0e8a7e9ef01e5c71fa01502436de405">onLostFocus</a> ()</td></tr>
+<tr class="memdesc:ae0e8a7e9ef01e5c71fa01502436de405 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered whenever the control loses user input focus.  <a href="#ae0e8a7e9ef01e5c71fa01502436de405"></a><br/></td></tr>
+<tr class="separator:ae0e8a7e9ef01e5c71fa01502436de405 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f2b7a8e9729a9e32908d8cafaa13722 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a5f2b7a8e9729a9e32908d8cafaa13722">onGainFocus</a> ()</td></tr>
+<tr class="memdesc:a5f2b7a8e9729a9e32908d8cafaa13722 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered whenever the control gains user input focus.  <a href="#a5f2b7a8e9729a9e32908d8cafaa13722"></a><br/></td></tr>
+<tr class="separator:a5f2b7a8e9729a9e32908d8cafaa13722 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae03ebb2be90420ce9d41d94e3637825 inherit pub_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#aae03ebb2be90420ce9d41d94e3637825">onScreenLayoutChange</a> ()</td></tr>
+<tr class="memdesc:aae03ebb2be90420ce9d41d94e3637825 inherit pub_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method is called whenever the render driver reports that the layout of the screen may have changes (its size, etc.)  <a href="#aae03ebb2be90420ce9d41d94e3637825"></a><br/></td></tr>
+<tr class="separator:aae03ebb2be90420ce9d41d94e3637825 inherit pub_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classcg_reference"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcg_reference')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcg_reference.html">cgReference</a></td></tr>
 <tr class="memitem:aa8f452d66f4666a9b79f1c00d65c6fc6 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#aa8f452d66f4666a9b79f1c00d65c6fc6">cgReference</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> referenceId)</td></tr>
 <tr class="separator:aa8f452d66f4666a9b79f1c00d65c6fc6 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -362,9 +431,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4089bc9fc24b2e0bcc96376abd6c041c inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a4089bc9fc24b2e0bcc96376abd6c041c">deleteReference</a> ()</td></tr>
 <tr class="memdesc:a4089bc9fc24b2e0bcc96376abd6c041c inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force the deletion of this reference target.  <a href="#a4089bc9fc24b2e0bcc96376abd6c041c"></a><br/></td></tr>
 <tr class="separator:a4089bc9fc24b2e0bcc96376abd6c041c inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c78842232c529fe509dedebb1cecf6b inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a2c78842232c529fe509dedebb1cecf6b">processMessage</a> (<a class="el" href="classcg_message.html">cgMessage</a> *message)</td></tr>
-<tr class="memdesc:a2c78842232c529fe509dedebb1cecf6b inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process any messages sent to us from other objects, or other parts of the system via the reference messaging system (<a class="el" href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat...">cgReference</a>).  <a href="#a2c78842232c529fe509dedebb1cecf6b"></a><br/></td></tr>
-<tr class="separator:a2c78842232c529fe509dedebb1cecf6b inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d0ce63a0c603addc66b2736cbdc5443 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a4d0ce63a0c603addc66b2736cbdc5443">onReferenceAdded</a> (<a class="el" href="classcg_reference.html">cgReference</a> *holder, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> holderReferences, bool reconnecting)</td></tr>
 <tr class="memdesc:a4d0ce63a0c603addc66b2736cbdc5443 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered whenever a new reference to this object is added by a holder. Derived objects may override this virtual if they need to be informed for any reason.  <a href="#a4d0ce63a0c603addc66b2736cbdc5443"></a><br/></td></tr>
 <tr class="separator:a4d0ce63a0c603addc66b2736cbdc5443 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -374,9 +440,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#abc11be6582c83be070816daf60d96781">isInternalReference</a> () const </td></tr>
 <tr class="memdesc:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this reference is either an internal or serialized reference.  <a href="#abc11be6582c83be070816daf60d96781"></a><br/></td></tr>
 <tr class="separator:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#af002aedbdfca5e97c3a7263425a60dac">isDisposed</a> ()</td></tr>
-<tr class="memdesc:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#af002aedbdfca5e97c3a7263425a60dac"></a><br/></td></tr>
-<tr class="separator:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a34951860e42866aff9b890d704bccbc4">isDisposed</a> () const </td></tr>
+<tr class="memdesc:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#a34951860e42866aff9b890d704bccbc4"></a><br/></td></tr>
+<tr class="separator:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#aecf67c7fc72ba0d465096b4584e1caba">isDisposing</a> () const </td></tr>
 <tr class="memdesc:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object is in the process of being disposed.  <a href="#aecf67c7fc72ba0d465096b4584e1caba"></a><br/></td></tr>
 <tr class="separator:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -419,9 +485,23 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a46d8554b58ee46fd86c79bf24bd35425"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13d1f1fcd3471b89f9dc248571a33740"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_text_box_control.html">cgTextBoxControl</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a13d1f1fcd3471b89f9dc248571a33740">mTextBox</a></td></tr>
 <tr class="separator:a13d1f1fcd3471b89f9dc248571a33740"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c25c268a23839dd31b0b8e60877082f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_list_box_control.html">cgListBoxControl</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a5c25c268a23839dd31b0b8e60877082f">mDropDownList</a></td></tr>
+<tr class="separator:a5c25c268a23839dd31b0b8e60877082f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57391b486e97337b0b132fdfc5a1dc85"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_u_i_control_layer.html">cgUIControlLayer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a57391b486e97337b0b132fdfc5a1dc85">mDropDownLayer</a></td></tr>
+<tr class="separator:a57391b486e97337b0b132fdfc5a1dc85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff5c77f3db87068112e0fd6db6ef2a29"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#aff5c77f3db87068112e0fd6db6ef2a29">mDropDownVisible</a></td></tr>
+<tr class="separator:aff5c77f3db87068112e0fd6db6ef2a29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b85eca31e61e0e7b4158ac555219b33"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a6b85eca31e61e0e7b4158ac555219b33">mSelectedIndex</a></td></tr>
+<tr class="separator:a6b85eca31e61e0e7b4158ac555219b33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8da596aa7a2b0942de5a1bf00b51ecc2"><td class="memItemLeft" align="right" valign="top">cgStringArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_combo_box_control.html#a8da596aa7a2b0942de5a1bf00b51ecc2">mItems</a></td></tr>
+<tr class="separator:a8da596aa7a2b0942de5a1bf00b51ecc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classcg_u_i_control"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_u_i_control')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_u_i_control.html">cgUIControl</a></td></tr>
 <tr class="memitem:a84d3ceb884c4a04d2a86fc151168c7f5 inherit pro_attribs_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a84d3ceb884c4a04d2a86fc151168c7f5">EventHandler</a></td></tr>
 <tr class="separator:a84d3ceb884c4a04d2a86fc151168c7f5 inherit pro_attribs_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8872d9c2fa9b48437df7a60d3ac82f04 inherit pro_attribs_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_u_i_manager.html">cgUIManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a8872d9c2fa9b48437df7a60d3ac82f04">mUIManager</a></td></tr>
+<tr class="separator:a8872d9c2fa9b48437df7a60d3ac82f04 inherit pro_attribs_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0438b42d7659af2e00255e10b327abdf inherit pro_attribs_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_u_i_control_layer.html">cgUIControlLayer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a0438b42d7659af2e00255e10b327abdf">mUILayer</a></td></tr>
+<tr class="separator:a0438b42d7659af2e00255e10b327abdf inherit pro_attribs_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5a2ab84fe88f7692e3477129d1ffa59 inherit pro_attribs_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_u_i_form.html">cgUIForm</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#af5a2ab84fe88f7692e3477129d1ffa59">mRootForm</a></td></tr>
 <tr class="separator:af5a2ab84fe88f7692e3477129d1ffa59 inherit pro_attribs_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb25b923636dfd127499018cb4f02e53 inherit pro_attribs_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_u_i_control.html">cgUIControl</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#acb25b923636dfd127499018cb4f02e53">mParent</a></td></tr>
@@ -468,12 +548,18 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:af1983f9a39a07de7c6903334cde208e1 inherit pro_attribs_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18abcbcc01673be141ffb684e3695a2f inherit pro_attribs_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a18abcbcc01673be141ffb684e3695a2f">mParentEnabled</a></td></tr>
 <tr class="separator:a18abcbcc01673be141ffb684e3695a2f inherit pro_attribs_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60d88565b2b5b34744861b915a751209 inherit pro_attribs_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a60d88565b2b5b34744861b915a751209">mCanGainFocus</a></td></tr>
+<tr class="separator:a60d88565b2b5b34744861b915a751209 inherit pro_attribs_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8f54b9d8d8978d0ef2de1e827191ed2 inherit pro_attribs_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#aa8f54b9d8d8978d0ef2de1e827191ed2">mParentCanGainFocus</a></td></tr>
+<tr class="separator:aa8f54b9d8d8978d0ef2de1e827191ed2 inherit pro_attribs_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add1185a60060a6712e4b0727461446c4 inherit pro_attribs_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_string.html">cgString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#add1185a60060a6712e4b0727461446c4">mFontName</a></td></tr>
 <tr class="separator:add1185a60060a6712e4b0727461446c4 inherit pro_attribs_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaedc63cceb2d7e37538dec21b24dc4fb inherit pro_attribs_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#aaedc63cceb2d7e37538dec21b24dc4fb">mBuilt</a></td></tr>
 <tr class="separator:aaedc63cceb2d7e37538dec21b24dc4fb inherit pro_attribs_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a72f28f22976f33f43abf7db62b779e inherit pro_attribs_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a2a72f28f22976f33f43abf7db62b779e">mBackgroundOpacity</a></td></tr>
 <tr class="separator:a2a72f28f22976f33f43abf7db62b779e inherit pro_attribs_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0e2abfc2250ff58310ed0ed9500e856 inherit pro_attribs_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_color_value.html">cgColorValue</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#af0e2abfc2250ff58310ed0ed9500e856">mControlTextColor</a></td></tr>
+<tr class="separator:af0e2abfc2250ff58310ed0ed9500e856 inherit pro_attribs_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classcg_reference"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_reference')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_reference.html">cgReference</a></td></tr>
 <tr class="memitem:a58ab53765ddfa978c2ef51a3a75bab63 inherit pro_attribs_classcg_reference"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a58ab53765ddfa978c2ef51a3a75bab63">mReferenceId</a></td></tr>
 <tr class="separator:a58ab53765ddfa978c2ef51a3a75bab63 inherit pro_attribs_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -503,6 +589,12 @@ Additional Inherited Members</h2></td></tr>
 <a class="el" href="classcg_u_i_control.html#a60d6b4b0e23ce6d1ca173cb8789a87d6a4100eae323c2b8503f864842bb030e9b">Complex</a>
  }</td></tr>
 <tr class="separator:a60d6b4b0e23ce6d1ca173cb8789a87d6 inherit pub_types_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaece26be16b6c4ed6c5b9aea429dd63a inherit pub_types_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#aaece26be16b6c4ed6c5b9aea429dd63a">ControlRenderMode</a> { <a class="el" href="classcg_u_i_control.html#aaece26be16b6c4ed6c5b9aea429dd63aaa1582efa6560b5cdf6126ad0f4ce5326">RenderMode_Normal</a> = 0, 
+<a class="el" href="classcg_u_i_control.html#aaece26be16b6c4ed6c5b9aea429dd63aa86e30262e81df4a64e2984b32ad63d6d">RenderMode_Hover</a> = 1, 
+<a class="el" href="classcg_u_i_control.html#aaece26be16b6c4ed6c5b9aea429dd63aaa872b85cb1d07e8ba0948d45772b26a0">RenderMode_Pressed</a> = 2, 
+<a class="el" href="classcg_u_i_control.html#aaece26be16b6c4ed6c5b9aea429dd63aaa2f365669912863e0c9cd00c1391c4be">RenderMode_Disabled</a> = 3
+ }</td></tr>
+<tr class="separator:aaece26be16b6c4ed6c5b9aea429dd63a inherit pub_types_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01569d03afe6f5448c4a67694dde3067 inherit pub_types_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">typedef <br class="typebreak"/>
 <a class="el" href="structcg_u_i_control_1_1_u_i___mouse_button_args.html">cgUIControl::UI_MouseButtonArgs</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a01569d03afe6f5448c4a67694dde3067">UI_OnMouseButtonDownArgs</a></td></tr>
 <tr class="separator:a01569d03afe6f5448c4a67694dde3067 inherit pub_types_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -550,19 +642,10 @@ Additional Inherited Members</h2></td></tr>
 <a class="el" href="classcg_u_i_control.html#a577ae670be538b7ca9170c0bacf28a0fa011a5e4ec5ad4f478f9055cc6dd7939f">State_Inactive</a> = 1
  }</td></tr>
 <tr class="separator:a577ae670be538b7ca9170c0bacf28a0f inherit pro_types_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaece26be16b6c4ed6c5b9aea429dd63a inherit pro_types_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#aaece26be16b6c4ed6c5b9aea429dd63a">ControlRenderMode</a> { <a class="el" href="classcg_u_i_control.html#aaece26be16b6c4ed6c5b9aea429dd63aaa1582efa6560b5cdf6126ad0f4ce5326">RenderMode_Normal</a> = 0, 
-<a class="el" href="classcg_u_i_control.html#aaece26be16b6c4ed6c5b9aea429dd63aa86e30262e81df4a64e2984b32ad63d6d">RenderMode_Hover</a> = 1, 
-<a class="el" href="classcg_u_i_control.html#aaece26be16b6c4ed6c5b9aea429dd63aaa872b85cb1d07e8ba0948d45772b26a0">RenderMode_Pressed</a> = 2, 
-<a class="el" href="classcg_u_i_control.html#aaece26be16b6c4ed6c5b9aea429dd63aaa2f365669912863e0c9cd00c1391c4be">RenderMode_Disabled</a> = 3
- }</td></tr>
-<tr class="separator:aaece26be16b6c4ed6c5b9aea429dd63a inherit pro_types_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classcg_u_i_control"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classcg_u_i_control')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classcg_u_i_control.html">cgUIControl</a></td></tr>
 <tr class="memitem:a65769cd81356fc33cc25c57d3c2b1eea inherit pro_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a65769cd81356fc33cc25c57d3c2b1eea">CGE_MAP_DECLARE</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>, <a class="el" href="classcg_u_i_control.html">cgUIControl</a> *, ControlIndexMap) CGE_MAP_DECLARE(<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a></td></tr>
 <tr class="separator:a65769cd81356fc33cc25c57d3c2b1eea inherit pro_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85e5f1f5ea9d816ea3ca0ff004bd5063 inherit pro_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">virtual EventHandlerMap bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a85e5f1f5ea9d816ea3ca0ff004bd5063">build</a> ()</td></tr>
-<tr class="memdesc:a85e5f1f5ea9d816ea3ca0ff004bd5063 inherit pro_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the control's render data after loading, or after selecting a new skin for instance.  <a href="#a85e5f1f5ea9d816ea3ca0ff004bd5063"></a><br/></td></tr>
-<tr class="separator:a85e5f1f5ea9d816ea3ca0ff004bd5063 inherit pro_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86cbe32d9b18a7a36ced30284b310c5b inherit pro_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a86cbe32d9b18a7a36ced30284b310c5b">buildComplex</a> ()</td></tr>
+<tr class="memitem:a86cbe32d9b18a7a36ced30284b310c5b inherit pro_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">EventHandlerMap bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a86cbe32d9b18a7a36ced30284b310c5b">buildComplex</a> ()</td></tr>
 <tr class="memdesc:a86cbe32d9b18a7a36ced30284b310c5b inherit pro_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct this control using the 'Complex' control logic (i.e. this is a high level control type which owns several 'Simple' controls which make up the background with sizable borders etc.)  <a href="#a86cbe32d9b18a7a36ced30284b310c5b"></a><br/></td></tr>
 <tr class="separator:a86cbe32d9b18a7a36ced30284b310c5b inherit pro_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a383ca68b8ba5e7a20ed407087a15b29d inherit pro_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a383ca68b8ba5e7a20ed407087a15b29d">buildSimple</a> ()</td></tr>
@@ -577,9 +660,6 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a2be2366bb2c7469178143e3bd287e8ef inherit pro_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_u_i_control.html">cgUIControl</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a2be2366bb2c7469178143e3bd287e8ef">getControlElement</a> (<a class="el" href="classcg_u_i_control.html#af33e6df65fe8a6730e7db54d3b27755f">ControlElements</a> element) const </td></tr>
 <tr class="memdesc:a2be2366bb2c7469178143e3bd287e8ef inherit pro_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the control element. If it does not exist, just return CG_NULL. Note : Provides const pointer.  <a href="#a2be2366bb2c7469178143e3bd287e8ef"></a><br/></td></tr>
 <tr class="separator:a2be2366bb2c7469178143e3bd287e8ef inherit pro_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade3de7dc463d31512e8395fe6fe8cc66 inherit pro_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#ade3de7dc463d31512e8395fe6fe8cc66">setRenderMode</a> (<a class="el" href="classcg_u_i_control.html#aaece26be16b6c4ed6c5b9aea429dd63a">ControlRenderMode</a> mode)</td></tr>
-<tr class="memdesc:ade3de7dc463d31512e8395fe6fe8cc66 inherit pro_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current rendering mode of the control (i.e. hover/pressed)  <a href="#ade3de7dc463d31512e8395fe6fe8cc66"></a><br/></td></tr>
-<tr class="separator:ade3de7dc463d31512e8395fe6fe8cc66 inherit pro_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cf9c359c73530b91d8cc00ff4f1aff2 inherit pro_methods_classcg_u_i_control"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_control.html#a3cf9c359c73530b91d8cc00ff4f1aff2">constructRegions</a> (<a class="el" href="structcg_u_i_control_1_1_render_frame_desc.html">RenderFrameDesc</a> &amp;desc, const <a class="el" href="classcg_string.html">cgString</a> &amp;elementName)</td></tr>
 <tr class="memdesc:a3cf9c359c73530b91d8cc00ff4f1aff2 inherit pro_methods_classcg_u_i_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this element has any region points, build the region information to allow us to perform more accurate 'pointInControl' detection etc.  <a href="#a3cf9c359c73530b91d8cc00ff4f1aff2"></a><br/></td></tr>
 <tr class="separator:a3cf9c359c73530b91d8cc00ff4f1aff2 inherit pro_methods_classcg_u_i_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -642,6 +722,53 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a555937a5262568ff3e4425c3fa4c762a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> cgComboBoxControl::addItem </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add a new string to the list box item array. Returns the index of the newly added item. </p>
+
+</div>
+</div>
+<a class="anchor" id="ad6db772f0362ece23477c5edf189c8d4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgComboBoxControl::dispose </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>disposeBase</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Release any memory, references or resources allocated by this object. </p>
+<p>&lt;copydetails cref="cgScriptInterop::DisposableScriptObject::dispose()"&gt; </p>
+
+<p>Reimplemented from <a class="el" href="classcg_u_i_control.html#a1dfbe844581c1a7e1c12785b0ecb8d71">cgUIControl</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a7652be440b981f3ea24be09c604fa75b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -664,6 +791,40 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented from <a class="el" href="classcg_u_i_control.html#a448664c448d47641a7454e9747e4a5e5">cgUIControl</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a16f41b54494b434701308dbc7f2f690e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> cgComboBoxControl::getSelectedIndex </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the index of the currently selected item, or -1 if nothing is currently selected. </p>
+
+</div>
+</div>
+<a class="anchor" id="a44edf899a9cab818b3978799860eac57"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgComboBoxControl::isDropDownVisible </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Determine if the drop down list overlay control is currently visible. </p>
 
 </div>
 </div>
@@ -691,6 +852,70 @@ Additional Inherited Members</h2></td></tr>
 <p>Triggered whenever the control has been initialized. </p>
 
 <p>Reimplemented from <a class="el" href="classcg_u_i_control.html#a04accb712dcc52834f97536634310f7c">cgUIControl</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af67eb4c63165087b8bc336b8893e05be"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgComboBoxControl::onParentAttach </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_u_i_control.html">cgUIControl</a> *&#160;</td>
+          <td class="paramname"><em>parent</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This method is called when a control is first attached to a new parent control. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_u_i_control.html#a2d13c56448b63e63cbec12c1df65ecd4">cgUIControl</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1a5007194bb58c04ee56c4fff66ab1c6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgComboBoxControl::onSelectedIndexChange </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
+          <td class="paramname"><em>oldIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
+          <td class="paramname"><em>newIndex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Triggered whenever a new list box item / row is selected in some way. </p>
 
 </div>
 </div>
@@ -732,6 +957,34 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a7698df35924f92b14e9a8bd2de7daab9"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgComboBoxControl::processMessage </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_message.html">cgMessage</a> *&#160;</td>
+          <td class="paramname"><em>pMessage</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Process any messages sent to us from other objects, or other parts of the system via the reference messaging system (<a class="el" href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat...">cgReference</a>). </p>
+
+<p>Reimplemented from <a class="el" href="classcg_reference.html#a2c78842232c529fe509dedebb1cecf6b">cgReference</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="aa78da4dd60aee27372dd57b38ce818b6"></a>
 <div class="memitem">
 <div class="memproto">
@@ -760,7 +1013,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a41ee5bc93aad13f65b0fd0207a5bd348"></a>
+<a class="anchor" id="a8991abc38fa54cdd256c6fcea13fcc0e"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -768,10 +1021,10 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void cgComboBoxControl::setControlText </td>
+          <td class="memname">void cgComboBoxControl::setFont </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
-          <td class="paramname"><em>strText</em></td><td>)</td>
+          <td class="paramname"><em>strFont</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -782,9 +1035,76 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Update the common text string for the control (i.e. Caption for a form, button text for a button etc.) </p>
+<p>Set the font to use when rendering this control. </p>
 
-<p>Reimplemented from <a class="el" href="classcg_u_i_control.html#a521c217616946c87680bac7497162247">cgUIControl</a>.</p>
+<p>Reimplemented from <a class="el" href="classcg_u_i_control.html#a3d18b9918d5785d97a0c40bab282e054">cgUIControl</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a27e357aaae945da894332dbee301409b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgComboBoxControl::setSelectedIndex </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Select a new item from the list by supplying a valid index in the range 0 through </p>
+<ul>
+</ul>
+<p>1. Specifying a value of -1 will deselect the currently selected item. </p>
+
+</div>
+</div>
+<a class="anchor" id="add300cc00a4419dfe990913d869b55aa"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgComboBoxControl::setTextColor </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;&#160;</td>
+          <td class="paramname"><em>Color</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set the default color of any text rendered for this control. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_u_i_control.html#af4c4b53c9d7acf7fd80624df06f9c4ad">cgUIControl</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0f1c9b425088439bab54f97b8d569e17"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgComboBoxControl::showDropDown </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>show</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Show or hide the drop down list overlay control. </p>
 
 </div>
 </div>
@@ -798,6 +1118,106 @@ Additional Inherited Members</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classcg_button_control.html">cgButtonControl</a>* cgComboBoxControl::mDropButton</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a57391b486e97337b0b132fdfc5a1dc85"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_u_i_control_layer.html">cgUIControlLayer</a>* cgComboBoxControl::mDropDownLayer</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a5c25c268a23839dd31b0b8e60877082f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_list_box_control.html">cgListBoxControl</a>* cgComboBoxControl::mDropDownList</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aff5c77f3db87068112e0fd6db6ef2a29"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgComboBoxControl::mDropDownVisible</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a8da596aa7a2b0942de5a1bf00b51ecc2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cgStringArray cgComboBoxControl::mItems</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a6b85eca31e61e0e7b4158ac555219b33"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> cgComboBoxControl::mSelectedIndex</td>
         </tr>
       </table>
   </td>
@@ -839,7 +1259,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_combo_box_control.html">cgComboBoxControl</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:30 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:19 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -179,6 +179,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8b78558f0aec9126c98bfd23953735ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a8b78558f0aec9126c98bfd23953735ea">releaseOwnedResources</a> ()</td></tr>
 <tr class="memdesc:a8b78558f0aec9126c98bfd23953735ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any resources that are OWNED by the resource manager (i.e. AlwaysResident flag set).  <a href="#a8b78558f0aec9126c98bfd23953735ea"></a><br/></td></tr>
 <tr class="separator:a8b78558f0aec9126c98bfd23953735ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abaa0f7fac9f0530842661677fa7d6285"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#abaa0f7fac9f0530842661677fa7d6285">enableDestruction</a> (bool enable)</td></tr>
+<tr class="memdesc:abaa0f7fac9f0530842661677fa7d6285"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use this method to enable / disable the destruction of resources. When disabled, all resources that are due to be destroyed will be automatically added to the garbage queue instead where they will await destruction until enabled once again via this method.  <a href="#abaa0f7fac9f0530842661677fa7d6285"></a><br/></td></tr>
+<tr class="separator:abaa0f7fac9f0530842661677fa7d6285"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92fd499b18b6e1ee094f53dcb5e17f30"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a92fd499b18b6e1ee094f53dcb5e17f30">isDestructionEnabled</a> () const </td></tr>
+<tr class="memdesc:a92fd499b18b6e1ee094f53dcb5e17f30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if automatic resource destruction is enabled. When disabled, all resources that are due to be destroyed will be automatically added to the garbage queue instead where they will await destruction until enabled once again via this method.  <a href="#a92fd499b18b6e1ee094f53dcb5e17f30"></a><br/></td></tr>
+<tr class="separator:a92fd499b18b6e1ee094f53dcb5e17f30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef2a2c58efd583c1253e1ef47efc0fe2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#aef2a2c58efd583c1253e1ef47efc0fe2">addTexture</a> (<a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> *resourceOut, <a class="el" href="classcg_texture.html">cgTexture</a> *texture, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags=0, const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName=<a class="el" href="cg_string_8h.html#ae936e4c15227768f7da4e0951def89c8">_T</a>(&quot;&quot;), const <a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a> &amp;_debugSource=<a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a>(<a class="el" href="cg_string_8h.html#ae936e4c15227768f7da4e0951def89c8">_T</a>(&quot;&quot;), 0))</td></tr>
 <tr class="memdesc:aef2a2c58efd583c1253e1ef47efc0fe2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simply add a texture to the resource database.  <a href="#aef2a2c58efd583c1253e1ef47efc0fe2"></a><br/></td></tr>
 <tr class="separator:aef2a2c58efd583c1253e1ef47efc0fe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -443,9 +449,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#abc11be6582c83be070816daf60d96781">isInternalReference</a> () const </td></tr>
 <tr class="memdesc:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this reference is either an internal or serialized reference.  <a href="#abc11be6582c83be070816daf60d96781"></a><br/></td></tr>
 <tr class="separator:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#af002aedbdfca5e97c3a7263425a60dac">isDisposed</a> ()</td></tr>
-<tr class="memdesc:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#af002aedbdfca5e97c3a7263425a60dac"></a><br/></td></tr>
-<tr class="separator:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a34951860e42866aff9b890d704bccbc4">isDisposed</a> () const </td></tr>
+<tr class="memdesc:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#a34951860e42866aff9b890d704bccbc4"></a><br/></td></tr>
+<tr class="separator:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#aecf67c7fc72ba0d465096b4584e1caba">isDisposing</a> () const </td></tr>
 <tr class="memdesc:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object is in the process of being disposed.  <a href="#aecf67c7fc72ba0d465096b4584e1caba"></a><br/></td></tr>
 <tr class="separator:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2191,6 +2197,24 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="abaa0f7fac9f0530842661677fa7d6285"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgResourceManager::enableDestruction </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Use this method to enable / disable the destruction of resources. When disabled, all resources that are due to be destroyed will be automatically added to the garbage queue instead where they will await destruction until enabled once again via this method. </p>
+
+</div>
+</div>
 <a class="anchor" id="aa67374e55d33dfd29a42dddbaed8b8d1"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2714,6 +2738,23 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Initialize the resource manager with required properties. </p>
+
+</div>
+</div>
+<a class="anchor" id="a92fd499b18b6e1ee094f53dcb5e17f30"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgResourceManager::isDestructionEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Determine if automatic resource destruction is enabled. When disabled, all resources that are due to be destroyed will be automatically added to the garbage queue instead where they will await destruction until enabled once again via this method. </p>
 
 </div>
 </div>
@@ -4073,7 +4114,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_resource_manager.html">cgResourceManager</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:45 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:45 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

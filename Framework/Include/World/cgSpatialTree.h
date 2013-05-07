@@ -15,7 +15,7 @@
 //        structure.                                                         //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -26,6 +26,7 @@
 // cgSpatialTree Header Includes
 //-----------------------------------------------------------------------------
 #include <cgBase.h>
+#include <Math/cgBoundingBox.h>
 #include <Math/cgBoundingBox.h>
 #include <Scripting/cgScriptInterop.h>
 
@@ -66,22 +67,23 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    const cgSceneLeafArray        & getLeaves           ( ) const;
-    cgSpatialTreeSubNode          * getRootNode         ( );
+    const cgSceneLeafArray        & getLeaves               ( ) const;
+    cgSpatialTreeSubNode          * getRootNode             ( );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
-    virtual cgSpatialTreeSubNode  * allocateNode        ( cgSpatialTreeSubNode * init = CG_NULL );
-    virtual cgSpatialTreeLeaf     * allocateLeaf        ( cgSpatialTreeLeaf * init = CG_NULL );
-    virtual void                    computeVisibility   ( const cgFrustum & frustum, cgVisibilitySet * visibilityData, cgUInt32 flags, cgSpatialTreeInstance * issuer );
-    virtual void                    computeVisibility   ( const cgBoundingBox & bounds, cgVisibilitySet * visibilityData, cgUInt32 flags, cgSpatialTreeInstance * issuer );
-    virtual bool                    CollectLeaves       ( cgSceneLeafArray & leaves, const cgBoundingBox & bounds, cgSpatialTreeInstance * issuer );
+    virtual cgSpatialTreeSubNode  * allocateNode            ( cgSpatialTreeSubNode * init = CG_NULL );
+    virtual cgSpatialTreeLeaf     * allocateLeaf            ( cgSpatialTreeLeaf * init = CG_NULL );
+    virtual void                    computeVisibility       ( const cgFrustum & frustum, cgVisibilitySet * visibilityData, cgUInt32 flags, cgSpatialTreeInstance * issuer );
+    virtual void                    computeVisibility       ( const cgBoundingBox & bounds, cgVisibilitySet * visibilityData, cgUInt32 flags, cgSpatialTreeInstance * issuer );
+    virtual bool                    collectLeaves           ( cgSceneLeafArray & leaves, const cgBoundingBox & bounds, cgSpatialTreeInstance * issuer );
+    virtual bool                    updateObjectOwnership   ( cgObjectNode * object, const cgBoundingBox & objectBounds, cgSpatialTreeInstance * issuer, bool testOnly );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
     //-------------------------------------------------------------------------
-    virtual void                    dispose             ( bool disposeBase );
+    virtual void                    dispose                 ( bool disposeBase );
 
 protected:
     //-------------------------------------------------------------------------
@@ -109,13 +111,14 @@ public:
     // Constructors & Destructors
     //-------------------------------------------------------------------------
              cgSpatialTreeInstance( );
+             cgSpatialTreeInstance( cgSpatialTree * tree );
              cgSpatialTreeInstance( cgSpatialTreeInstance * init );
     virtual ~cgSpatialTreeInstance( );
 
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    void                        addObjectOwnership      ( cgUInt32 leafIndex, cgObjectNode * object );
+    bool                        addObjectOwnership      ( cgUInt32 leafIndex, cgObjectNode * object );
     void                        removeObjectOwnership   ( cgUInt32 leafIndex, cgObjectNode * object );
     const cgObjectNodeSet     & getOwnedObjects         ( cgUInt32 leafIndex ) const;
     
@@ -127,9 +130,7 @@ public:
     virtual bool                collectLeaves           ( cgSceneLeafArray & leaves, const cgBoundingBox & bounds );
     virtual bool                updateObjectOwnership   ( cgObjectNode * node, bool testOnly = false );
     virtual void                clearTreeData           ( );
-
-    // Pure
-    virtual void                getInstanceTransform    ( const cgMatrix & transform ) = 0;
+    virtual void                getInstanceTransform    ( cgMatrix & transform );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
@@ -242,19 +243,22 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    void                    setBoundingBox      ( const cgBoundingBox & nodeBounds );
-    void                    setNodeDepth        ( cgUInt32 depth );
-    bool                    setChildNode        ( cgUInt32 childIndex, cgSpatialTreeSubNode * childNode, bool deleteExisting = true );
-    void                    setChildNodeCount   ( cgUInt32 childCount );
-    void                    setLeaf             ( cgUInt32 leafIndex );
+    void                    setBoundingBox          ( const cgBoundingBox & nodeBounds );
+    void                    setNodeDepth            ( cgUInt32 depth );
+    bool                    setChildNode            ( cgUInt32 childIndex, cgSpatialTreeSubNode * childNode, bool deleteExisting = true );
+    void                    setChildNodeCount       ( cgUInt32 childCount );
+    void                    setLeaf                 ( cgUInt32 leafIndex );
+
+    // Default implementations
+    bool                    collectLeaves           ( cgSpatialTreeInstance * issuer, cgSpatialTree * tree, cgSceneLeafArray & leaves, const cgBoundingBox & bounds, bool autoCollect = false );
+    void                    computeVisibility       ( cgSpatialTreeInstance * issuer, cgSpatialTree * tree, const cgFrustum & frustum, cgVisibilitySet * visibilityData, cgUInt32 flags, cgUInt8 frustumBits = 0x0, bool autoVisible = false );
+    void                    computeVisibility       ( cgSpatialTreeInstance * issuer, cgSpatialTree * tree, const cgBoundingBox & testBounds, cgVisibilitySet * visibilityData, cgUInt32 flags, bool autoVisible = false );
+    bool                    updateObjectOwnership   ( cgSpatialTreeInstance * issuer, cgSpatialTree * tree, cgObjectNode * object, const cgBoundingBox & objectBounds, bool testOnly, bool autoAdd, size_t & leafCount );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
-    virtual void            nodeConstructed     ( ) {};
-    virtual bool            collectLeaves       ( cgSpatialTreeInstance * issuer, cgSpatialTree * tree, cgSceneLeafArray & leaves, const cgBoundingBox & bounds, bool autoCollect = false );
-    virtual void            computeVisibility   ( cgSpatialTreeInstance * issuer, cgSpatialTree * tree, const cgFrustum & frustum, cgVisibilitySet * visibilityData, cgUInt32 flags = false, cgUInt8 frustumBits = 0x0, bool autoVisible = false );
-    virtual void            computeVisibility   ( cgSpatialTreeInstance * issuer, cgSpatialTree * tree, const cgBoundingBox & testBounds, cgVisibilitySet * visibilityData, cgUInt32 flags = false, bool autoVisible = false );
+    virtual void            nodeConstructed         ( ) {};
 
     //-------------------------------------------------------------------------
     // Public Inline Methods

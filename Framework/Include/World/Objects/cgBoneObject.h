@@ -16,7 +16,7 @@
 //        mesh to which they are assigned.                                   //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -75,22 +75,15 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    void                        setWidth                ( cgFloat width );
-    void                        setHeight               ( cgFloat height );
-    void                        setLength               ( cgFloat length );
-    void                        setTaper                ( cgFloat taper );
-    cgFloat                     getWidth                ( ) const;
-    cgFloat                     getHeight               ( ) const;
-    cgFloat                     getLength               ( ) const;
-    cgFloat                     getTaper                ( ) const;
-
+    void                        enableCollisionVolume   ( bool enable );
+    bool                        hasCollisionVolume      ( ) const;
+    
     //-------------------------------------------------------------------------
     // Public Virtual Methods (cgWorldObject)
     //-------------------------------------------------------------------------
     virtual void                sandboxRender           ( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer );
     virtual bool                pick                    ( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut );
     virtual cgBoundingBox       getLocalBoundingBox     ( );
-    virtual void                applyObjectRescale      ( cgFloat scale );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldComponent)
@@ -105,21 +98,25 @@ public:
     virtual const cgUID       & getReferenceType        ( ) const { return RTID_BoneObject; }
     virtual bool                queryReferenceType      ( const cgUID & type ) const;
 
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods (Overrides DisposableScriptObject)
+    //-------------------------------------------------------------------------
+    virtual void                dispose                 ( bool disposeBase );
+
 protected:
     //-------------------------------------------------------------------------
     // Protected Methods
     //-------------------------------------------------------------------------
     void                        prepareQueries          ( );
     bool                        insertComponentData     ( );
-    bool                        createSandboxMesh       ( );
+    bool                        createSandboxMeshes     ( );
 
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    cgFloat         mWidth, mHeight;    // Size of the bounding representation of the bone (pre-scale) in meters (fixed units).
-    cgFloat         mLength;            // Length of the bounding representation of the bone (pre-scale) in meters (fixed units).
-    cgFloat         mTaper;             // Taper percentage.
-    cgMeshHandle    mSandboxMesh;       // Representation of this bone for sandbox rendering.
+    bool            mHasCollisionVolume;    // Bone should be included in collision testing (i.e., for ray tests).
+    cgMeshHandle    mSandboxMesh;           // Representation of this bone for sandbox rendering.
+    cgMeshHandle    mSandboxLinkMesh;       // Representation of this bone for sandbox rendering.
 
     //-------------------------------------------------------------------------
     // Protected Static Variables
@@ -160,19 +157,8 @@ public:
     //-------------------------------------------------------------------------
     cgVector3                   getDirection            ( );
     void                        setBoneOrientation      ( const cgVector3 & source, const cgVector3 & destination, const cgVector3 & up );
-    bool                        recomputeDimensions     ( cgMesh * mesh, bool updateLength, cgFloat radialScale, cgUInt32 boneIndex = cgUInt32(-1) );
-    bool                        recomputeLength         ( );
     void                        enableChildUpdates      ( bool enable );
-
-    // Object Property 'Set' Routing
-    void                        setWidth                ( cgFloat width );
-    void                        setHeight               ( cgFloat height );
-    void                        setLength               ( cgFloat length );
-    
-    // Object Property 'Get' Routing
-    cgFloat                     getWidth                ( );
-    cgFloat                     getHeight               ( );
-    cgFloat                     getLength               ( );
+    bool                        generateCollisionShape  ( cgMesh * mesh, cgUInt32 boneIndex = cgUInt32(-1) );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgObjectNode)
@@ -180,6 +166,8 @@ public:
     virtual void                onComponentModified     ( cgComponentModifiedEventArgs * e );
     virtual void                move                    ( const cgVector3 & amount );
     virtual void                moveLocal               ( const cgVector3 & amount );
+    virtual bool                getSubElementCategories ( cgObjectSubElementCategory::Map & categoriesOut ) const;
+    virtual void                buildPhysicsBody        ( );
 
     // Promote remaining base class method overloads.
     using cgObjectNode::move;
@@ -189,15 +177,15 @@ public:
     // Public Inline Methods
     //-------------------------------------------------------------------------
     // Object Property 'Set' Routing
-    inline void setTaper( cgFloat taper )
+    inline void enableCollisionVolume( bool enable )
     {
-        ((cgBoneObject*)mReferencedObject)->setTaper( taper );
+        ((cgBoneObject*)mReferencedObject)->enableCollisionVolume( enable );
     }
-    
+
     // Object Property 'Get' Routing
-    inline cgFloat getTaper( ) const
+    inline bool hasCollisionVolume( ) const
     {
-        return ((cgBoneObject*)mReferencedObject)->getTaper( );
+        return ((cgBoneObject*)mReferencedObject)->hasCollisionVolume();
     }
     
     //-------------------------------------------------------------------------

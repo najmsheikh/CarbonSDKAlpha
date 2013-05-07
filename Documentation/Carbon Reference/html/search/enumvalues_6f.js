@@ -4,6 +4,7 @@ var searchData=
   ['object',['Object',['../namespacecg_script_argument_type.html#a5650d75b4dfb5bdcafcbab0cc6aacd0fae39fcfcc25e3d6204e51a9b95397c2b7',1,'cgScriptArgumentType']]],
   ['objectinstance',['ObjectInstance',['../namespacecg_clone_method.html#a9c3d9d845b3fb56c57f151799de5b4feacee6ef423ba6f3704c445ee4801b69e5',1,'cgCloneMethod']]],
   ['objectonly',['ObjectOnly',['../namespacecg_transform_method.html#ac1b4ada063217ae9d88dda91c4d44055af27d91f8c4c7d88ec25df12cf7187068',1,'cgTransformMethod']]],
+  ['objectrenderclass',['ObjectRenderClass',['../namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a6a493f32cfedbdcb7337b484d41ffd1a',1,'cgSystemState']]],
   ['obscuranceao',['ObscuranceAO',['../classcg_s_s_a_o_processor.html#add3bf4f289df3fde28a3d83b3a986198a731dd637330b8cbf7d73b36dce0ede21',1,'cgSSAOProcessor']]],
   ['occlusion2d',['Occlusion2D',['../namespacecg_indirect_lighting_method.html#a5f92d698d36b65d30f11a2bcf12806f7a837564ff74cf59ba01aad8e7615d55f2',1,'cgIndirectLightingMethod']]],
   ['occlusion3d',['Occlusion3D',['../namespacecg_indirect_lighting_method.html#a5f92d698d36b65d30f11a2bcf12806f7afb0d68edfa8ef9e46e1c6e357a55892c',1,'cgIndirectLightingMethod']]],

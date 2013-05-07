@@ -18,6 +18,11 @@
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
+// Script Includes
+//-----------------------------------------------------------------------------
+#include_once "../States/GamePlay.gs"
+
+//-----------------------------------------------------------------------------
 // Class Definitions
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -30,10 +35,13 @@ shared class Objective : IScriptedObjectBehavior
     ///////////////////////////////////////////////////////////////////////////
 	// Private Member Variables
 	///////////////////////////////////////////////////////////////////////////
-    private ObjectNode@     mNode;              // The node to which we are attached.
+    private GamePlay@       mGamePlayState;         // Top level application state driving gameplay.
+    private ObjectNode@     mNode;                  // The node to which we are attached.
 
     // Objective description.
-    private float           mMaxTriggerRange;   // Maximum range at which this objective can be triggered.
+    private float           mMaxTriggerRange;       // Maximum range at which this objective can be triggered.
+    private uint            mNextObjectiveId;       // Reference ID of next objective.
+    private String          mSequenceIdentifier;    // Name of the game-play sequence triggered when the objective is activated.
 
     ///////////////////////////////////////////////////////////////////////////
 	// Constructors & Destructors
@@ -62,6 +70,15 @@ shared class Objective : IScriptedObjectBehavior
         // Get properties
         PropertyContainer @ properties = object.getCustomProperties();
         mMaxTriggerRange = float(properties.getProperty( "trigger_range", 2.0f ));
+        mSequenceIdentifier = String(properties.getProperty( "sequence_id", "" ));
+        mNextObjectiveId = uint(properties.getProperty( "next_objective", uint(0) ));
+
+        // Get the currently active state (GamePlay)
+        AppStateManager @ stateManager = getAppStateManager();
+        AppState @ state = stateManager.getActiveState();
+        if ( @state != null )
+            @mGamePlayState = cast<GamePlay>( state.getScriptObject() );
+
 	}
 
     //-------------------------------------------------------------------------

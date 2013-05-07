@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -101,7 +101,6 @@ $(document).ready(function(){initNavTree('namespacecg_image_operation.html','');
 
 <div class="header">
   <div class="summary">
-<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -109,11 +108,6 @@ $(document).ready(function(){initNavTree('namespacecg_image_operation.html','');
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:ab8bc7e4d9d3a7ffb148fbd665d0c0f5d"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98">Base</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_image_operation.html#ab8bc7e4d9d3a7ffb148fbd665d0c0f5d">Array</a></td></tr>
-<tr class="separator:ab8bc7e4d9d3a7ffb148fbd665d0c0f5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:aba9f133ddf90648b8fbe232df8af0a98"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98">Base</a> { <br/>
@@ -163,18 +157,23 @@ Enumerations</h2></td></tr>
 <a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98ad1df4a309624c9f9aaa29b3e699f1e42">BilateralBlur</a> = 33, 
 <br/>
 &#160;&#160;<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a9ca70617ef016ea410ac26291bac9b0d">Blur</a> = 34, 
-<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a5e0f0e313119c348a16d3b733b31cf77">Exposure</a> = 100, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a270ec1a123288869197bc6bdbb6828ba">ScaleUserColorRGBA</a> = 40, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a525ff2659820da220685bf14a4e50392">ScaleUserColorRGB</a> = 41, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a63f9c48aaad324a258a7d91d444c8007">ScaleUserColorA</a> = 42, 
+<br/>
+&#160;&#160;<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a5e0f0e313119c348a16d3b733b31cf77">Exposure</a> = 100, 
 <a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98ae7aa1475b9c6781d1dcdc0dbb5574dab">Saturation</a> = 101, 
-<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a9343a572240a0264f720cfd432cdbd9e">LevelsIn</a> = 102, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a394c7c26077283359b87184b8db692fa">Contrast</a> = 102, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a9343a572240a0264f720cfd432cdbd9e">LevelsIn</a> = 103, 
 <br/>
-&#160;&#160;<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a643bf68d55debb1dfef7cf6753449975">LevelsOut</a> = 103, 
-<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a6142bbd50eb9c2c93d407a2f72d1f5ae">Gamma</a> = 104, 
-<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98ad4b688aaceeb5a4bc9a25537835ac492">ColorRemap</a> = 105, 
-<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98aed8d447de9f3cd3b7c735eb2b3529991">TintAndBrightness</a> = 106, 
+&#160;&#160;<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a643bf68d55debb1dfef7cf6753449975">LevelsOut</a> = 104, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a6142bbd50eb9c2c93d407a2f72d1f5ae">Gamma</a> = 105, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98ad4b688aaceeb5a4bc9a25537835ac492">ColorRemap</a> = 106, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98aed8d447de9f3cd3b7c735eb2b3529991">TintAndBrightness</a> = 107, 
 <br/>
-&#160;&#160;<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a4bbf71d225916119ae46ce0fcb1a9d37">Grain</a> = 107, 
-<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98afed1cd602f7575b1474b8d854c07035f">Vignette</a> = 108, 
-<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a17a9bab9160328db4eabd703c70f6864">BlueShift</a> = 109, 
+&#160;&#160;<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a4bbf71d225916119ae46ce0fcb1a9d37">Grain</a> = 108, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98afed1cd602f7575b1474b8d854c07035f">Vignette</a> = 109, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a17a9bab9160328db4eabd703c70f6864">BlueShift</a> = 110, 
 <a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98afe2927824784f93175b6716838d0a867">LinearZToDistance</a> = 200, 
 <br/>
 &#160;&#160;<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98afa6f240c67b6837430963414e8987780">DistanceToLinearZ</a> = 201, 
@@ -200,19 +199,6 @@ Variables</h2></td></tr>
 <tr class="memitem:aa494c4a7a99235404a41b0f16650149f"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_image_operation.html#aa494c4a7a99235404a41b0f16650149f">ColorOnlyOperationsEnd</a> = (<a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a>)<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a1d576b304566c06cbfc609de61beeed6">SetColorA</a></td></tr>
 <tr class="separator:aa494c4a7a99235404a41b0f16650149f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Typedef Documentation</h2>
-<a class="anchor" id="ab8bc7e4d9d3a7ffb148fbd665d0c0f5d"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef std::vector&lt;<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98">Base</a>&gt; <a class="el" href="namespacecg_image_operation.html#ab8bc7e4d9d3a7ffb148fbd665d0c0f5d">cgImageOperation::Array</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a class="anchor" id="aba9f133ddf90648b8fbe232df8af0a98"></a>
 <div class="memitem">
@@ -298,9 +284,17 @@ Variables</h2></td></tr>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="aba9f133ddf90648b8fbe232df8af0a98a9ca70617ef016ea410ac26291bac9b0d"></a>Blur</em>&nbsp;</td><td>
 </td></tr>
+<tr><td valign="top"><em><a class="anchor" id="aba9f133ddf90648b8fbe232df8af0a98a270ec1a123288869197bc6bdbb6828ba"></a>ScaleUserColorRGBA</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="aba9f133ddf90648b8fbe232df8af0a98a525ff2659820da220685bf14a4e50392"></a>ScaleUserColorRGB</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="aba9f133ddf90648b8fbe232df8af0a98a63f9c48aaad324a258a7d91d444c8007"></a>ScaleUserColorA</em>&nbsp;</td><td>
+</td></tr>
 <tr><td valign="top"><em><a class="anchor" id="aba9f133ddf90648b8fbe232df8af0a98a5e0f0e313119c348a16d3b733b31cf77"></a>Exposure</em>&nbsp;</td><td>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="aba9f133ddf90648b8fbe232df8af0a98ae7aa1475b9c6781d1dcdc0dbb5574dab"></a>Saturation</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="aba9f133ddf90648b8fbe232df8af0a98a394c7c26077283359b87184b8db692fa"></a>Contrast</em>&nbsp;</td><td>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="aba9f133ddf90648b8fbe232df8af0a98a9343a572240a0264f720cfd432cdbd9e"></a>LevelsIn</em>&nbsp;</td><td>
 </td></tr>
@@ -427,7 +421,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacecg_image_operation.html">cgImageOperation</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:56 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:49:03 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

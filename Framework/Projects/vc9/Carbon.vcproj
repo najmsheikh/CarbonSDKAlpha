@@ -220,6 +220,7 @@
 				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
 				OutputFile="$(OutDir)\$(ProjectName)d.dll"
 				AdditionalLibraryDirectories="$(DXSDK_DIR)Lib\x86"
+				GenerateDebugInformation="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -889,6 +890,10 @@
 				</File>
 				<File
 					RelativePath="..\..\Source\Math\cgBoundingBox.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Math\cgBoundingSphere.cpp"
 					>
 				</File>
 				<File
@@ -1563,11 +1568,31 @@
 					Name="Elements"
 					>
 					<File
+						RelativePath="..\..\Source\World\Elements\cgBSPVisTreeElement.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\Source\World\Elements\cgNavigationMeshElement.cpp"
 						>
 					</File>
 					<File
 						RelativePath="..\..\Source\World\Elements\cgSkyElement.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Graphs"
+					>
+					<File
+						RelativePath="..\..\Source\World\cgBSPVisTree.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\World\cgOctree.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\World\cgSphereTree.cpp"
 						>
 					</File>
 				</Filter>
@@ -3748,6 +3773,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Source\System\cgCursor.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Source\System\cgEventDispatcher.cpp"
 					>
 				</File>
@@ -3812,6 +3841,10 @@
 					>
 					<File
 						RelativePath="..\..\Source\System\Platform\cgWinAppWindow.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\System\Platform\cgWinCursor.cpp"
 						>
 					</File>
 					<File
@@ -5630,6 +5663,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Include\Math\cgBoundingSphere.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Include\Math\cgChecksum.h"
 					>
 				</File>
@@ -6241,11 +6278,31 @@
 					Name="Elements"
 					>
 					<File
+						RelativePath="..\..\Include\World\Elements\cgBSPVisTreeElement.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\Include\World\Elements\cgNavigationMeshElement.h"
 						>
 					</File>
 					<File
 						RelativePath="..\..\Include\World\Elements\cgSkyElement.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Graphs"
+					>
+					<File
+						RelativePath="..\..\Include\World\cgBSPVisTree.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Include\World\cgOctree.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Include\World\cgSphereTree.h"
 						>
 					</File>
 				</Filter>
@@ -6472,6 +6529,10 @@
 							>
 							<File
 								RelativePath="..\..\Include\Scripting\Packages\Core\Math\BoundingBox.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Include\Scripting\Packages\Core\Math\BoundingSphere.h"
 								>
 							</File>
 							<File
@@ -7118,6 +7179,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Include\System\cgCursor.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Include\System\cgEventDispatcher.h"
 					>
 				</File>
@@ -7194,6 +7259,10 @@
 					>
 					<File
 						RelativePath="..\..\Include\System\Platform\cgWinAppWindow.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Include\System\Platform\cgWinCursor.h"
 						>
 					</File>
 					<File

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -131,6 +131,8 @@ Inheritance diagram for cgToneMapProcessor:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_tone_map_processor_1_1__cb_downsample.html">_cbDownsample</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_tone_map_processor_1_1__cb_luminance.html">_cbLuminance</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_tone_map_processor_1_1__cb_tone_mapping.html">_cbToneMapping</a></td></tr>
@@ -138,9 +140,15 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a30de65786dee713ae3c791a42d6e4a79"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#a30de65786dee713ae3c791a42d6e4a79">ToneMapMethod</a> { <a class="el" href="classcg_tone_map_processor.html#a30de65786dee713ae3c791a42d6e4a79aca1462627aa3e5305f4f8e70c9cf8ad9">Photographic</a> = 0, 
-<a class="el" href="classcg_tone_map_processor.html#a30de65786dee713ae3c791a42d6e4a79a87bdb077b19cd6ff075cd5e88b822daf">Filmic</a> = 1, 
-<a class="el" href="classcg_tone_map_processor.html#a30de65786dee713ae3c791a42d6e4a79ae877bc03cce42f37b194e463a08b7f90">ExponentialTM</a> = 2
+<tr class="memitem:a30de65786dee713ae3c791a42d6e4a79"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#a30de65786dee713ae3c791a42d6e4a79">ToneMapMethod</a> { <br/>
+&#160;&#160;<a class="el" href="classcg_tone_map_processor.html#a30de65786dee713ae3c791a42d6e4a79aca1462627aa3e5305f4f8e70c9cf8ad9">Photographic</a> = 0, 
+<a class="el" href="classcg_tone_map_processor.html#a30de65786dee713ae3c791a42d6e4a79a970157d1f9de879765d2de49e5a022a1">PhotographicWhitePoint</a> = 1, 
+<a class="el" href="classcg_tone_map_processor.html#a30de65786dee713ae3c791a42d6e4a79a87bdb077b19cd6ff075cd5e88b822daf">Filmic</a> = 2, 
+<a class="el" href="classcg_tone_map_processor.html#a30de65786dee713ae3c791a42d6e4a79af7cfc6af7ebe21bc729c743c979f9916">FilmicHable</a> = 3, 
+<br/>
+&#160;&#160;<a class="el" href="classcg_tone_map_processor.html#a30de65786dee713ae3c791a42d6e4a79aeaa054ab2ab4f4815dde4a835a29bf6d">Exponential</a> = 4, 
+<a class="el" href="classcg_tone_map_processor.html#a30de65786dee713ae3c791a42d6e4a79acddf2580da5a5c96de44477df2c9ccb2">ExponentialWhitePoint</a> = 5
+<br/>
  }</td></tr>
 <tr class="separator:a30de65786dee713ae3c791a42d6e4a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -179,6 +187,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa63f775df372916c4f17a4b612b397d1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#aa63f775df372916c4f17a4b612b397d1">execute</a> (<a class="el" href="classcg_render_view.html">cgRenderView</a> *activeView, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> timeDelta, const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;source, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;destination)</td></tr>
 <tr class="memdesc:aa63f775df372916c4f17a4b612b397d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Post-processes the rendered scene data in order to compute adaptive average luminance terms used as input for the subsequent tone-mapping operations designed to convert HDR rendered data into LDR for display.  <a href="#aa63f775df372916c4f17a4b612b397d1"></a><br/></td></tr>
 <tr class="separator:aa63f775df372916c4f17a4b612b397d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18b57e1582cc99c69d6067fc5c3b3bc3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#a18b57e1582cc99c69d6067fc5c3b3bc3">getMethod</a> ()</td></tr>
+<tr class="separator:a18b57e1582cc99c69d6067fc5c3b3bc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e3a94c17cae061868eeb87ac2a9dba6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#a4e3a94c17cae061868eeb87ac2a9dba6">getLuminanceData</a> ()</td></tr>
+<tr class="separator:a4e3a94c17cae061868eeb87ac2a9dba6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a860c2d3fdbece094d048ddd7a495de67"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#a860c2d3fdbece094d048ddd7a495de67">initialize</a> (<a class="el" href="classcg_render_driver.html">cgRenderDriver</a> *driver)</td></tr>
 <tr class="memdesc:a860c2d3fdbece094d048ddd7a495de67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the image processor class and allow it to create any internal resources that may be necessary to execute requested operations.  <a href="#a860c2d3fdbece094d048ddd7a495de67"></a><br/></td></tr>
 <tr class="separator:a860c2d3fdbece094d048ddd7a495de67"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -216,6 +228,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1a84439cb2af8a642c4ce9b224a083ce inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae91aa63f0c22316ff6bb423cb1a2c210 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#ae91aa63f0c22316ff6bb423cb1a2c210">setSaturation</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> f)</td></tr>
 <tr class="separator:ae91aa63f0c22316ff6bb423cb1a2c210 inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada65525746d11deea1bcd4f4fc45d340 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#ada65525746d11deea1bcd4f4fc45d340">setContrast</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> f)</td></tr>
+<tr class="separator:ada65525746d11deea1bcd4f4fc45d340 inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae762f1e00c7d47b30cc8c8f2504f9315 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#ae762f1e00c7d47b30cc8c8f2504f9315">setGrain</a> (const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;texture, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> strength)</td></tr>
 <tr class="separator:ae762f1e00c7d47b30cc8c8f2504f9315 inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee0f780330cee0ea73c5348c4a77cf59 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#aee0f780330cee0ea73c5348c4a77cf59">setVignette</a> (const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;texture, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> scale, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> bias, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> strength)</td></tr>
@@ -242,13 +256,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0cba8bbf944d530e65c693c754fecb28 inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa062743f9d8f7bed01321d41c9f1050d inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#aa062743f9d8f7bed01321d41c9f1050d">processColorImage</a> (const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;source, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;destination, <a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98">cgImageOperation::Base</a> operation, const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;c)</td></tr>
 <tr class="separator:aa062743f9d8f7bed01321d41c9f1050d inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30a9b0e714c0d506d28e2a9747ff9223 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#a30a9b0e714c0d506d28e2a9747ff9223">processColorImageMulti</a> (const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;destination, const <a class="el" href="namespacecg_image_operation.html#ab8bc7e4d9d3a7ffb148fbd665d0c0f5d">cgImageOperation::Array</a> &amp;operations)</td></tr>
+<tr class="memitem:a30a9b0e714c0d506d28e2a9747ff9223 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#a30a9b0e714c0d506d28e2a9747ff9223">processColorImageMulti</a> (const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;destination, const cgImageOperation::Array &amp;operations)</td></tr>
 <tr class="separator:a30a9b0e714c0d506d28e2a9747ff9223 inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a188497dfcaee72739c460d9bcc5a85 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#a1a188497dfcaee72739c460d9bcc5a85">processColorImageMulti</a> (const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;destination, const <a class="el" href="namespacecg_image_operation.html#ab8bc7e4d9d3a7ffb148fbd665d0c0f5d">cgImageOperation::Array</a> &amp;operations, const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;c)</td></tr>
+<tr class="memitem:a1a188497dfcaee72739c460d9bcc5a85 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#a1a188497dfcaee72739c460d9bcc5a85">processColorImageMulti</a> (const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;destination, const cgImageOperation::Array &amp;operations, const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;c)</td></tr>
 <tr class="separator:a1a188497dfcaee72739c460d9bcc5a85 inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb1a108ae35bb2dbeafe99617b771a70 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#acb1a108ae35bb2dbeafe99617b771a70">processColorImageMulti</a> (const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;source, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;destination, const <a class="el" href="namespacecg_image_operation.html#ab8bc7e4d9d3a7ffb148fbd665d0c0f5d">cgImageOperation::Array</a> &amp;operations)</td></tr>
+<tr class="memitem:acb1a108ae35bb2dbeafe99617b771a70 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#acb1a108ae35bb2dbeafe99617b771a70">processColorImageMulti</a> (const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;source, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;destination, const cgImageOperation::Array &amp;operations)</td></tr>
 <tr class="separator:acb1a108ae35bb2dbeafe99617b771a70 inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0a65c8c3e17568c9cbb3d3456c1b131 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#af0a65c8c3e17568c9cbb3d3456c1b131">processColorImageMulti</a> (const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;source, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;destination, const <a class="el" href="namespacecg_image_operation.html#ab8bc7e4d9d3a7ffb148fbd665d0c0f5d">cgImageOperation::Array</a> &amp;operations, const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;c)</td></tr>
+<tr class="memitem:af0a65c8c3e17568c9cbb3d3456c1b131 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#af0a65c8c3e17568c9cbb3d3456c1b131">processColorImageMulti</a> (const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;source, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;destination, const cgImageOperation::Array &amp;operations, const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;c)</td></tr>
 <tr class="separator:af0a65c8c3e17568c9cbb3d3456c1b131 inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98fa9facf81417b9dd297c93ebabf7d5 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#a98fa9facf81417b9dd297c93ebabf7d5">processDepthImage</a> (const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;source, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;destination, <a class="el" href="namespacecg_depth_type.html#a43bd26615743e8fac92755d133e9cc52">cgDepthType::Base</a> inputType, <a class="el" href="namespacecg_depth_type.html#a43bd26615743e8fac92755d133e9cc52">cgDepthType::Base</a> outputType)</td></tr>
 <tr class="memdesc:a98fa9facf81417b9dd297c93ebabf7d5 inherit pub_methods_classcg_image_processor"><td class="mdescLeft">&#160;</td><td class="mdescRight">Entry point for depth image processing. Can read from a packed source texture and output to a packed destination texture.  <a href="#a98fa9facf81417b9dd297c93ebabf7d5"></a><br/></td></tr>
@@ -286,9 +300,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a98af6ff161f96147a62a7cbb2fa129a4 inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8149c1c5a4b4c36504d8f8bf9212f1f inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#af8149c1c5a4b4c36504d8f8bf9212f1f">blur</a> (const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;source, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;scratch, const <a class="el" href="structcg_blur_op_desc.html">cgBlurOpDesc</a> &amp;description)</td></tr>
 <tr class="separator:af8149c1c5a4b4c36504d8f8bf9212f1f inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12f54f8df1203bfaf2adc210ee94377f inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#a12f54f8df1203bfaf2adc210ee94377f">blur</a> (const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;source, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;scratch, const <a class="el" href="structcg_blur_op_desc.html#aaeb14705480ee86bf0f64eb9068ab4ec">cgBlurOpDesc::Array</a> &amp;steps)</td></tr>
+<tr class="memitem:a12f54f8df1203bfaf2adc210ee94377f inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#a12f54f8df1203bfaf2adc210ee94377f">blur</a> (const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;source, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;scratch, const cgBlurOpDesc::Array &amp;steps)</td></tr>
 <tr class="separator:a12f54f8df1203bfaf2adc210ee94377f inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a14edee8c792e77505ffd516d6f2dab inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#a5a14edee8c792e77505ffd516d6f2dab">blur</a> (const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;source, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;scratch, const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;depth, const <a class="el" href="structcg_blur_op_desc.html#aaeb14705480ee86bf0f64eb9068ab4ec">cgBlurOpDesc::Array</a> &amp;steps)</td></tr>
+<tr class="memitem:a5a14edee8c792e77505ffd516d6f2dab inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#a5a14edee8c792e77505ffd516d6f2dab">blur</a> (const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;source, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;scratch, const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;depth, const cgBlurOpDesc::Array &amp;steps)</td></tr>
 <tr class="separator:a5a14edee8c792e77505ffd516d6f2dab inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15fd17289293b142cb1647e903cd6ab4 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#a15fd17289293b142cb1647e903cd6ab4">bilateralBlur</a> (const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;source, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;scratch, const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;depth, const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;normal, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> pixelRadius, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> distanceFactor, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> passCount, bool compareDepth, bool compareNormal, <a class="el" href="namespacecg_depth_type.html#a43bd26615743e8fac92755d133e9cc52">cgDepthType::Base</a> depthType)</td></tr>
 <tr class="memdesc:a15fd17289293b142cb1647e903cd6ab4 inherit pub_methods_classcg_image_processor"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs M passes of NxN box or gaussian blur filter. For box filter, just provide a distanceFactor value of 0. Note: Valid src and scratch must both be provided and the sizes must match.  <a href="#a15fd17289293b142cb1647e903cd6ab4"></a><br/></td></tr>
@@ -334,6 +348,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aed8ae3d0d2a1df3adaca8fca010e934f inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#aed8ae3d0d2a1df3adaca8fca010e934f">blendFrames</a> (const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;currentColor, const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;prevColor, const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;currentDepth, const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;prevDepth, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;destination, const <a class="el" href="classcg_matrix.html">cgMatrix</a> &amp;reprojection, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> depthTolerance, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> blendAmount)</td></tr>
 <tr class="memdesc:aed8ae3d0d2a1df3adaca8fca010e934f inherit pub_methods_classcg_image_processor"><td class="mdescLeft">&#160;</td><td class="mdescRight">TOO: 6767  <a href="#aed8ae3d0d2a1df3adaca8fca010e934f"></a><br/></td></tr>
 <tr class="separator:aed8ae3d0d2a1df3adaca8fca010e934f inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a603292f90e914f4a688e7bcacacc23ef inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#a603292f90e914f4a688e7bcacacc23ef">compositeLighting</a> (const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;hDiffuseReflectance, const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;hSpecularReflectance, const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;hDiffuseLighting, const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;hSpecularLighting, const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;hPrecomputedLighting, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;hDest, bool specularMaterialColor, bool specularLightColor, bool hdrLighting, bool compressOutput)</td></tr>
+<tr class="memdesc:a603292f90e914f4a688e7bcacacc23ef inherit pub_methods_classcg_image_processor"><td class="mdescLeft">&#160;</td><td class="mdescRight">Composites precomputed and dynamic deferred lighting.  <a href="#a603292f90e914f4a688e7bcacacc23ef"></a><br/></td></tr>
+<tr class="separator:a603292f90e914f4a688e7bcacacc23ef inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae56728fee056d253e426e1e1fdd8be97 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#ae56728fee056d253e426e1e1fdd8be97">drawClipQuad</a> ()</td></tr>
 <tr class="separator:ae56728fee056d253e426e1e1fdd8be97 inherit pub_methods_classcg_image_processor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7b998d871ec5cc84ec960de99b39bb8 inherit pub_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#ab7b998d871ec5cc84ec960de99b39bb8">drawClipQuad</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> z)</td></tr>
@@ -383,6 +400,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a59137b09965a97d86ba6f53e5d532d80"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#a59137b09965a97d86ba6f53e5d532d80">toneMap</a> (const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;source, const <a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> &amp;destination)</td></tr>
 <tr class="memdesc:a59137b09965a97d86ba6f53e5d532d80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts HDR colors to LDR colors  <a href="#a59137b09965a97d86ba6f53e5d532d80"></a><br/></td></tr>
 <tr class="separator:a59137b09965a97d86ba6f53e5d532d80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2acc140a81ccbc4303d4b39de443aaf2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#a2acc140a81ccbc4303d4b39de443aaf2">openLuminanceBuffers</a> (<a class="el" href="classcg_render_view.html">cgRenderView</a> *activeView)</td></tr>
+<tr class="memdesc:a2acc140a81ccbc4303d4b39de443aaf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets access to the render view relative luminance buffers needed for tonemapping  <a href="#a2acc140a81ccbc4303d4b39de443aaf2"></a><br/></td></tr>
+<tr class="separator:a2acc140a81ccbc4303d4b39de443aaf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae994265d8ec7a2917cbe99e8e6db96f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#ae994265d8ec7a2917cbe99e8e6db96f5">closeLuminanceBuffers</a> ()</td></tr>
+<tr class="memdesc:ae994265d8ec7a2917cbe99e8e6db96f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Releases access to the buffers retrieved during the openLuminanceBuffers call.  <a href="#ae994265d8ec7a2917cbe99e8e6db96f5"></a><br/></td></tr>
+<tr class="separator:ae994265d8ec7a2917cbe99e8e6db96f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classcg_image_processor"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classcg_image_processor')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classcg_image_processor.html">cgImageProcessor</a></td></tr>
 <tr class="memitem:ad2ecfd2e9650b7c46adcccef4710a014 inherit pro_methods_classcg_image_processor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_image_processor.html#ad2ecfd2e9650b7c46adcccef4710a014">setBlendState</a> (<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98">cgImageOperation::Base</a> operation)</td></tr>
 <tr class="memdesc:ad2ecfd2e9650b7c46adcccef4710a014 inherit pro_methods_classcg_image_processor"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up the blend state for an operation  <a href="#ad2ecfd2e9650b7c46adcccef4710a014"></a><br/></td></tr>
@@ -399,6 +422,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a88d5c220e84161ba11fae51933a9c3f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad25d25bce9e3d6260c83c813472dcea4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#ab97540de7c37a6f14dc75aee9c04dd3f">cgConstantBufferHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#ad25d25bce9e3d6260c83c813472dcea4">mLuminanceConstants</a></td></tr>
 <tr class="separator:ad25d25bce9e3d6260c83c813472dcea4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac974c1947e679fa9345af7c6448436fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#ab97540de7c37a6f14dc75aee9c04dd3f">cgConstantBufferHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#ac974c1947e679fa9345af7c6448436fe">mDownsampleConstants</a></td></tr>
+<tr class="separator:ac974c1947e679fa9345af7c6448436fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acda21e2b915e4671b7b8098f9ce9cc71"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#acda21e2b915e4671b7b8098f9ce9cc71">mLuminanceCacheTarget</a></td></tr>
 <tr class="separator:acda21e2b915e4671b7b8098f9ce9cc71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86d00a7da6b40b9f385a064ae104f782"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#a86d00a7da6b40b9f385a064ae104f782">mLuminanceAvgTarget</a></td></tr>
@@ -407,6 +432,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:ac186c966071241ae60e0b46205f6621e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af77f6f046b6ce480ce331845a7da7e2e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#af77f6f046b6ce480ce331845a7da7e2e">mLuminancePrevTarget</a></td></tr>
 <tr class="separator:af77f6f046b6ce480ce331845a7da7e2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf37f354fd52e52f73fed1152215fcba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#aaf37f354fd52e52f73fed1152215fcba">mLuminanceBuffer</a></td></tr>
+<tr class="separator:aaf37f354fd52e52f73fed1152215fcba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ad6362ad5bc2856aab1a08b020384f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_sampler.html">cgSampler</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#a9ad6362ad5bc2856aab1a08b020384f0">mLightingSampler</a></td></tr>
 <tr class="separator:a9ad6362ad5bc2856aab1a08b020384f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac1f1d02f302c6e0f0dbb08320007324"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_sampler.html">cgSampler</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_tone_map_processor.html#aac1f1d02f302c6e0f0dbb08320007324">mLightingPointSampler</a></td></tr>
@@ -553,9 +580,15 @@ Protected Attributes</h2></td></tr>
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" id="a30de65786dee713ae3c791a42d6e4a79aca1462627aa3e5305f4f8e70c9cf8ad9"></a>Photographic</em>&nbsp;</td><td>
 </td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a30de65786dee713ae3c791a42d6e4a79a970157d1f9de879765d2de49e5a022a1"></a>PhotographicWhitePoint</em>&nbsp;</td><td>
+</td></tr>
 <tr><td valign="top"><em><a class="anchor" id="a30de65786dee713ae3c791a42d6e4a79a87bdb077b19cd6ff075cd5e88b822daf"></a>Filmic</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a30de65786dee713ae3c791a42d6e4a79ae877bc03cce42f37b194e463a08b7f90"></a>ExponentialTM</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" id="a30de65786dee713ae3c791a42d6e4a79af7cfc6af7ebe21bc729c743c979f9916"></a>FilmicHable</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a30de65786dee713ae3c791a42d6e4a79aeaa054ab2ab4f4815dde4a835a29bf6d"></a>Exponential</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a30de65786dee713ae3c791a42d6e4a79acddf2580da5a5c96de44477df2c9ccb2"></a>ExponentialWhitePoint</em>&nbsp;</td><td>
 </td></tr>
 </table>
 </dd>
@@ -629,6 +662,31 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Blends between previous and current luminance values to smooth transitions between differing light intensities as viewing conditions change. </p>
+
+</div>
+</div>
+<a class="anchor" id="ae994265d8ec7a2917cbe99e8e6db96f5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgToneMapProcessor::closeLuminanceBuffers </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Releases access to the buffers retrieved during the openLuminanceBuffers call. </p>
 
 </div>
 </div>
@@ -780,6 +838,52 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a4e3a94c17cae061868eeb87ac2a9dba6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a>&amp; cgToneMapProcessor::getLuminanceData </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a18b57e1582cc99c69d6067fc5c3b3bc3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> cgToneMapProcessor::getMethod </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a860c2d3fdbece094d048ddd7a495de67"></a>
 <div class="memitem">
 <div class="memproto">
@@ -805,6 +909,32 @@ Protected Attributes</h2></td></tr>
 <p>Initialize the image processor class and allow it to create any internal resources that may be necessary to execute requested operations. </p>
 
 <p>Reimplemented from <a class="el" href="classcg_image_processor.html#a113f9bd051e73468e0947e299e466df8">cgImageProcessor</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2acc140a81ccbc4303d4b39de443aaf2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgToneMapProcessor::openLuminanceBuffers </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_render_view.html">cgRenderView</a> *&#160;</td>
+          <td class="paramname"><em>activeView</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets access to the render view relative luminance buffers needed for tonemapping </p>
 
 </div>
 </div>
@@ -1102,6 +1232,26 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ac974c1947e679fa9345af7c6448436fe"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_resource_handles_8h.html#ab97540de7c37a6f14dc75aee9c04dd3f">cgConstantBufferHandle</a> cgToneMapProcessor::mDownsampleConstants</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="aac1f1d02f302c6e0f0dbb08320007324"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1171,6 +1321,26 @@ Protected Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> cgToneMapProcessor::mLuminanceAvgTarget</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aaf37f354fd52e52f73fed1152215fcba"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_resource_handles_8h.html#a15e8293595d045e1c4d2b6595fa2b9c9">cgRenderTargetHandle</a> cgToneMapProcessor::mLuminanceBuffer</td>
         </tr>
       </table>
   </td>
@@ -1512,7 +1682,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_tone_map_processor.html">cgToneMapProcessor</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:52 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:56 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

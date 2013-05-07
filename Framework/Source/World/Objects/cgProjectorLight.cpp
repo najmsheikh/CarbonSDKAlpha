@@ -13,7 +13,7 @@
 // Desc : Projector / area light source classes.                             //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -2374,32 +2374,6 @@ bool cgProjectorLightNode::testObjectShadowVolume( cgObjectNode * pObject, const
 
     // Cannot cast a shadow into the view frustum
     return false;
-}
-
-//-----------------------------------------------------------------------------
-//  Name : computeVisibility () (Virtual)
-/// <summary>
-/// Compute the visibility set from the point of view of this light.
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgProjectorLightNode::computeVisibility( )
-{
-    // If it was determined that we should calculate shadows,
-    // attempt to refine this further to see if we /really/
-    // need to based on the state(s) of our shadow frustums.
-    if ( isShadowSource() )
-    {
-        // Allow the frustum to compute its own local shadow set information.
-        // This will return 'true' if it is deemed necessary to compute shadows
-        // or at least render from a pool shadow map.
-        // ToDo: 6767 - Reintroduce!
-        /*if ( !mShadowFrustum->ComputeVisibilitySet( pCamera ) )*/
-            mComputeShadows = false;
-
-    } // End if mComputeShadows
-
-    // Call base class implementation last
-    cgLightNode::computeVisibility();
 }
 
 //-----------------------------------------------------------------------------

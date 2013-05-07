@@ -4,6 +4,8 @@ var cg_world_types_8h =
     [ "cgObjectSubElementCategory", "structcg_object_sub_element_category.html", "structcg_object_sub_element_category" ],
     [ "cgWorldObjectTypeDesc", "structcg_world_object_type_desc.html", "structcg_world_object_type_desc" ],
     [ "cgObjectSubElementTypeDesc", "structcg_object_sub_element_type_desc.html", "structcg_object_sub_element_type_desc" ],
+    [ "cgSceneElementTypeDesc", "structcg_scene_element_type_desc.html", "structcg_scene_element_type_desc" ],
+    [ "cgSceneCollisionContact", "structcg_scene_collision_contact.html", "structcg_scene_collision_contact" ],
     [ "_CGE_CGWORLDTYPES_H_", "cg_world_types_8h.html#a03ecc33873c281c83dc745e65a9f56da", null ],
     [ "Base", "cg_world_types_8h.html#aacddd7c62cdb30987592f70d05b3b247", [
       [ "MustRender", "cg_world_types_8h.html#aacddd7c62cdb30987592f70d05b3b247a17352d61a064da6118668e51354aaebe", null ],
@@ -20,6 +22,10 @@ var cg_world_types_8h =
       [ "Runtime", "cg_world_types_8h.html#ade37f1c2f263b515f00fe02b7945a3fba0edf0994976b452d02ce24bc7142636c", null ],
       [ "SandboxRender", "cg_world_types_8h.html#ade37f1c2f263b515f00fe02b7945a3fba7dfb7ed88ea8f05d8503b1af1de45a8b", null ],
       [ "SandboxMaterial", "cg_world_types_8h.html#ade37f1c2f263b515f00fe02b7945a3fba71341082bbcd008d45c02dfa34957a76", null ]
+    ] ],
+    [ "Base", "cg_world_types_8h.html#aa7d91d49ec0d1b28a2557b23e15aa188", [
+      [ "Wireframe", "cg_world_types_8h.html#aa7d91d49ec0d1b28a2557b23e15aa188a7dffd663a2808c75d7ea288063694079", null ],
+      [ "PostDepthClear", "cg_world_types_8h.html#aa7d91d49ec0d1b28a2557b23e15aa188a7501423b0bddfb6aa38554616449a030", null ]
     ] ],
     [ "Base", "cg_world_types_8h.html#a0da2807d89bc281aaedc56c1edbdbd24", [
       [ "Never", "cg_world_types_8h.html#a0da2807d89bc281aaedc56c1edbdbd24ae2284e67ee6fee13e79f8ae95a98c317", null ],
@@ -44,6 +50,11 @@ var cg_world_types_8h =
       [ "Master", "cg_world_types_8h.html#ae25700bef3e243c265450227a0ceb796ab227bfac303f615dbe65bd5dcfd0c88b", null ],
       [ "Merge", "cg_world_types_8h.html#ae25700bef3e243c265450227a0ceb796a5398a2a673a02cb75b4e170fae43789c", null ],
       [ "Data", "cg_world_types_8h.html#ae25700bef3e243c265450227a0ceb796a685a9d6a57b7b48dd0303f2c578f9938", null ]
+    ] ],
+    [ "Base", "cg_world_types_8h.html#aa5a2c78726e22bd70f3b7bc626271a80", [
+      [ "Valid", "cg_world_types_8h.html#aa5a2c78726e22bd70f3b7bc626271a80a3a380008bae45aac53952971fdd412c8", null ],
+      [ "LayoutUpdated", "cg_world_types_8h.html#aa5a2c78726e22bd70f3b7bc626271a80a102883adbb4cb2d1c52f69dffa33d96d", null ],
+      [ "LegacyLayout", "cg_world_types_8h.html#aa5a2c78726e22bd70f3b7bc626271a80a8c63bb20f5740ea70513540fe175c62f", null ]
     ] ],
     [ "Base", "cg_world_types_8h.html#a344d305ea77fddca96f09c1e455d2979", [
       [ "Standard", "cg_world_types_8h.html#a344d305ea77fddca96f09c1e455d2979ae9e27ef109263ebd9bed85bded95db22", null ],
@@ -86,6 +97,7 @@ var cg_world_types_8h =
     [ "Base", "cg_world_types_8h.html#aa39c63df0b3694bc72e0f5197d24b743", [
       [ "Standard", "cg_world_types_8h.html#aa39c63df0b3694bc72e0f5197d24b743a841745f1cdedcd69df8584c756dd3038", null ],
       [ "Dynamics", "cg_world_types_8h.html#aa39c63df0b3694bc72e0f5197d24b743a284d2075cb7ac8fc0a570bfeb55a3c9f", null ],
+      [ "Navigation", "cg_world_types_8h.html#aa39c63df0b3694bc72e0f5197d24b743ad10dc85e9d3f37297f74e2f3cc54f4d6", null ],
       [ "TransformResolve", "cg_world_types_8h.html#aa39c63df0b3694bc72e0f5197d24b743acd487d355b91cd3e40bc12a7ce6e5023", null ]
     ] ],
     [ "Base", "cg_world_types_8h.html#a81978683cf2b0cfa0713cbbb85d46861", [
@@ -94,5 +106,12 @@ var cg_world_types_8h =
       [ "Transforms", "cg_world_types_8h.html#a81978683cf2b0cfa0713cbbb85d46861ae10c09dec0ef1dbdbd14d1c7dd1184c2", null ],
       [ "All", "cg_world_types_8h.html#a81978683cf2b0cfa0713cbbb85d46861a03cedf263b0c3b8c5c0f059c99349ab0", null ]
     ] ],
+    [ "Base", "cg_world_types_8h.html#a3e8f1fd058e5a576d4b3bf4be9fb3228", [
+      [ "Visible", "cg_world_types_8h.html#a3e8f1fd058e5a576d4b3bf4be9fb3228acbb3f751cf242619a1d79742f4a10247", null ],
+      [ "Selected", "cg_world_types_8h.html#a3e8f1fd058e5a576d4b3bf4be9fb3228a71e96320ea8c0464603a0ecc1d55736c", null ],
+      [ "DelayUnload", "cg_world_types_8h.html#a3e8f1fd058e5a576d4b3bf4be9fb3228a23c762cba013116573990168cda6c5ca", null ],
+      [ "UnloadPending", "cg_world_types_8h.html#a3e8f1fd058e5a576d4b3bf4be9fb3228a95ec08d3dd54bd9649563589ea680773", null ]
+    ] ],
+    [ "OSECID_AnimationSets", "cg_world_types_8h.html#a5cc80e4416cf3a5a28c3121f2bebc3de", null ],
     [ "OSECID_CollisionShapes", "cg_world_types_8h.html#a23bcc182741c6178f572d7d29dc4cdc2", null ]
 ];

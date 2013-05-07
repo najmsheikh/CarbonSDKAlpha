@@ -15,7 +15,7 @@
 //        structure.                                                         //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -135,11 +135,21 @@ cgSpatialTreeLeaf * cgSpatialTree::allocateLeaf( cgSpatialTreeLeaf * pInit /* = 
 /// frustum.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgSpatialTree::computeVisibility( const cgFrustum & Frustum, cgVisibilitySet * pVisData, cgUInt32 nFlags, cgSpatialTreeInstance * pIssuer )
+void cgSpatialTree::computeVisibility( const cgFrustum & frustum, cgVisibilitySet * visibilityData, cgUInt32 flags, cgSpatialTreeInstance * issuer )
 {
-    // Recurse through the hierarchy.
+    /*// Recurse through the hierarchy.
     if ( mRootNode != CG_NULL )
-        mRootNode->computeVisibility( pIssuer, this, Frustum, pVisData, nFlags );
+        mRootNode->computeVisibility( issuer, this, frustum, visibilityData, flags );*/
+
+    // Start the traversal.
+    if ( mRootNode )
+    {
+        const cgBoundingBox & nodeBounds = mRootNode->getBoundingBox();
+        cgVolumeQuery::Class classification = frustum.classifyAABB( nodeBounds );
+        if ( classification != cgVolumeQuery::Outside )
+            mRootNode->computeVisibility( issuer, this, frustum, visibilityData, flags );
+    
+    } // End if valid root
 }
 
 //-----------------------------------------------------------------------------
@@ -162,14 +172,39 @@ void cgSpatialTree::computeVisibility( const cgBoundingBox & Bounds, cgVisibilit
 }
 
 //-----------------------------------------------------------------------------
-//  Name : CollectLeaves ()
+//  Name : updateObjectOwnership () (Virtual)
+/// <summary>
+/// Allows the spatial tree to determine if it can / wants to own the
+/// specified object and optionally inserts it into the relevant leaf.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgSpatialTree::updateObjectOwnership( cgObjectNode * pObject, const cgBoundingBox & ObjectSpaceBounds, cgSpatialTreeInstance * pIssuer, bool bTestOnly )
+{
+    if ( !mRootNode )
+        return false;
+
+    // Recurse through the hierarchy.
+    bool rootContained = false;
+    if ( ObjectSpaceBounds.intersect( mRootNode->getBoundingBox(), rootContained ) )
+    {
+        size_t leafCount = 0;
+        return mRootNode->updateObjectOwnership( pIssuer, this, pObject, ObjectSpaceBounds, bTestOnly, rootContained, leafCount );
+    
+    } // End if intersects
+
+    // No ownership
+    return false;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : collectLeaves ()
 /// <summary>
 /// This default implementation can called by the application to retrieve 
 /// a list of all of the leaves that were intersected by the specified 
 /// object space bounding box.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgSpatialTree::CollectLeaves( cgSceneLeafArray & Leaves, const cgBoundingBox & Bounds, cgSpatialTreeInstance * pIssuer )
+bool cgSpatialTree::collectLeaves( cgSceneLeafArray & Leaves, const cgBoundingBox & Bounds, cgSpatialTreeInstance * pIssuer )
 {
     if ( mRootNode == CG_NULL )
         return false;
@@ -213,6 +248,18 @@ cgSpatialTreeInstance::cgSpatialTreeInstance( )
 {
     // Initialize variables to sensible defaults.
     mTree = CG_NULL;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : cgSpatialTreeInstance () (Constructor)
+/// <summary>
+/// Constructor for this class.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgSpatialTreeInstance::cgSpatialTreeInstance( cgSpatialTree * tree )
+{
+    // Initialize variables to sensible defaults.
+    mTree = tree;
 }
 
 //-----------------------------------------------------------------------------
@@ -276,10 +323,20 @@ void cgSpatialTreeInstance::clearTreeData( )
 //-----------------------------------------------------------------------------
 bool cgSpatialTreeInstance::updateObjectOwnership( cgObjectNode * pObject, bool bTestOnly /* = false */ )
 {
-    // ToDo: 9999 - Process child spatial trees
+    // ToDo: 9999 - Process child spatial trees first
 
-    // We do not take ownership by default
-    return false;
+    // Anything to do?
+    if ( !mTree )
+        return false;
+
+    // Get the bounding box of the object in local space.
+    cgMatrix mtxInv;
+    getInstanceTransform( mtxInv );
+    cgMatrix::inverse( mtxInv, mtxInv );
+    cgBoundingBox ObjectSpaceBounds = cgBoundingBox::transform( pObject->getBoundingBox(), mtxInv );
+
+    // Pass message on to our tree last.
+    return mTree->updateObjectOwnership( pObject, ObjectSpaceBounds, this, bTestOnly );
 }
 
 //-----------------------------------------------------------------------------
@@ -349,7 +406,7 @@ bool cgSpatialTreeInstance::collectLeaves( cgSceneLeafArray & Leaves, const cgBo
     cgBoundingBox ObjectSpaceBounds = cgBoundingBox::transform( Bounds, mtxInv );
 
     // Pass to referenced tree object.
-    return mTree->CollectLeaves( Leaves, ObjectSpaceBounds, this );
+    return mTree->collectLeaves( Leaves, ObjectSpaceBounds, this );
 }
 
 
@@ -357,14 +414,15 @@ bool cgSpatialTreeInstance::collectLeaves( cgSceneLeafArray & Leaves, const cgBo
 //  Name : addObjectOwnership ()
 /// <summary>
 /// Mark the specified object as being owned by the specified leaf within this
-/// instance of the spatial tree.
+/// instance of the spatial tree. Returns 'true' only if the object was
+/// actually inserted (duplicates are rejected).
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgSpatialTreeInstance::addObjectOwnership( cgUInt32 nLeafIndex, cgObjectNode * pObject )
+bool cgSpatialTreeInstance::addObjectOwnership( cgUInt32 nLeafIndex, cgObjectNode * pObject )
 {
     // Valid spatial tree?
     if ( !mTree )
-        return;
+        return false;
 
     // Ownership array is valid?
     size_t nNumLeaves = mTree->getLeaves().size();
@@ -377,10 +435,13 @@ void cgSpatialTreeInstance::addObjectOwnership( cgUInt32 nLeafIndex, cgObjectNod
 
     // Out of bounds?
     if ( nLeafIndex >= nNumLeaves )
-        return;
+        return false;
 
     // Store in the list (will automatically overwrite if already exists).
-    mObjectOwnership[nLeafIndex].insert( pObject );
+    std::pair<cgObjectNodeSet::iterator,bool> ret = mObjectOwnership[nLeafIndex].insert( pObject );
+
+    // Was it actually inserted?
+    return ret.second;
 }
 
 //-----------------------------------------------------------------------------
@@ -421,6 +482,18 @@ const cgObjectNodeSet & cgSpatialTreeInstance::getOwnedObjects( cgUInt32 nLeafIn
     
     // Retrieve the set.
     return mObjectOwnership[nLeafIndex];
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getInstanceTransform ()
+/// <summary>
+/// Retrieve the transform that describes the position, orientation and scale
+/// of this specific instance of the spatial tree.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgSpatialTreeInstance::getInstanceTransform( cgMatrix & transform )
+{
+    transform = cgMatrix::Identity;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -612,7 +685,58 @@ void cgSpatialTreeSubNode::setLeaf( cgUInt32 nLeafIndex )
 }
 
 //-----------------------------------------------------------------------------
-//  Name : collectLeaves () (Virtual, Recursive)
+//  Name : updateObjectOwnership () (Recursive)
+/// <summary>
+/// The default recursive function which traverses the tree nodes in
+/// order to update the issuer's object ownership list.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgSpatialTreeSubNode::updateObjectOwnership( cgSpatialTreeInstance * issuer, cgSpatialTree * tree, cgObjectNode * object, const cgBoundingBox & objectBounds, bool testOnly, bool autoAdd, size_t & leafCount )
+{
+    // Is there a leaf here, add it to the list
+    if ( isLeafNode() )
+    {
+        ++leafCount;
+        if ( !testOnly )
+        {
+            // ToDo:
+        
+        } // End if !testOnly
+        return true;
+    
+    } // End if leaf node
+
+    // Test all children for intersection
+    bool result = false;
+    for ( size_t i = 0; i < mChildNodeCount; ++i )
+    {
+        cgSpatialTreeSubNode * childNode = mChildNodes[i];
+        if ( childNode )
+        {
+            if ( !autoAdd )
+            {
+                // Does the specified box intersect this node?
+                bool childContained = false;
+                if ( objectBounds.intersect( childNode->getBoundingBox(), childContained ) )
+                    result |= childNode->updateObjectOwnership( issuer, tree, object, objectBounds, testOnly, childContained, leafCount );
+
+            } // End if test
+            else
+            {
+                result |= childNode->updateObjectOwnership( issuer, tree, object, objectBounds, testOnly, true, leafCount );
+
+            } // End if !test
+
+        } // End if valid child
+
+    } // Next child
+
+    // No ownership
+    return result;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : collectLeaves () (Recursive)
 /// <summary>
 /// The default recursive function which traverses the tree nodes in
 /// order to build a list of intersecting leaves.
@@ -658,14 +782,68 @@ bool cgSpatialTreeSubNode::collectLeaves( cgSpatialTreeInstance * pIssuer, cgSpa
 /// the node hierarchy and updates the visibility set as appropriate.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgSpatialTreeSubNode::computeVisibility( cgSpatialTreeInstance * pIssuer, cgSpatialTree * pTree, const cgFrustum & Frustum, cgVisibilitySet * pVisData, cgUInt32 nFlags, cgUInt8 FrustumBits /* = 0x0 */, bool bAutoVisible /* = false */ )
+void cgSpatialTreeSubNode::computeVisibility( cgSpatialTreeInstance * issuer, cgSpatialTree * tree, const cgFrustum & frustum, cgVisibilitySet * visibilityData, cgUInt32 flags, cgUInt8 frustumBits /* = 0x0 */, bool autoVisible /* = false */ )
 {
-    bool bNodeVisible = false;
+    // Process the leaf if there is one stored here
+    if ( isLeafNode() )
+    {
+        // Are there any objects stored in this leaf?
+        if ( issuer )
+        {
+            const cgObjectNodeSet & leafObjects = issuer->getOwnedObjects( getLeaf() );
+            if ( !leafObjects.empty() )
+            {
+                // Iterate through each object in the leaf and request that they register
+                // their visibility (assuming they pass the final frustum test).
+                cgObjectNodeSet::const_iterator itObject;
+                for ( itObject = leafObjects.begin(); itObject != leafObjects.end(); ++itObject )
+                {
+                    cgObjectNode * objectNode = *itObject;
+                    if ( frustum.testAABB( objectNode->getBoundingBox() ) )
+                        objectNode->registerVisibility( visibilityData );
+
+                } // Next object
+
+            } // End if any objects to cull
+
+        } // End if valid issuer
+
+        // No further recursion required
+        return;
+
+    } // End if process leaf
+
+    // Recurse into visible children.
+    for ( cgUInt i = 0; i < mChildNodeCount; ++i )
+    {
+        cgSpatialTreeSubNode * childNode = mChildNodes[i];
+        if ( childNode )
+        {
+            // Classify the node bounding box against the frustum if required
+            if ( !autoVisible )
+            {
+                const cgBoundingBox & nodeBounds = childNode->getBoundingBox();
+                cgVolumeQuery::Class classification = frustum.classifyAABB( nodeBounds, frustumBits, mLastFrustumPlane );
+                if ( classification != cgVolumeQuery::Outside )
+                    childNode->computeVisibility( issuer, tree, frustum, visibilityData, flags, frustumBits, (classification == cgVolumeQuery::Inside) );
+            
+            } // End if test
+            else
+            {
+                childNode->computeVisibility( issuer, tree, frustum, visibilityData, flags, frustumBits, true );
+
+            } // End if !test
+        
+        } // End if valid
+
+    } // Next child
+
+    /*bool bNodeVisible = false;
 
     // Perform full test?
     if ( bAutoVisible == false )
     {
-        cgVolumeQuery::Class Result = Frustum.classifyAABB( getBoundingBox(), CG_NULL, &FrustumBits, &mLastFrustumPlane );
+        cgVolumeQuery::Class Result = Frustum.classifyAABB( getBoundingBox(), FrustumBits, mLastFrustumPlane );
 
         // Test result of frustum collide
         switch ( Result )
@@ -698,8 +876,8 @@ void cgSpatialTreeSubNode::computeVisibility( cgSpatialTreeInstance * pIssuer, c
         if ( pIssuer )
         {
             const cgObjectNodeSet & LeafObjects = pIssuer->getOwnedObjects( mLeaf );
-            for ( cgObjectNodeSet::const_iterator itObject = LeafObjects.begin(); itObject != LeafObjects.end(); ++itObject )
-                (*itObject)->registerVisibility( pVisData, nFlags );
+            //for ( cgObjectNodeSet::const_iterator itObject = LeafObjects.begin(); itObject != LeafObjects.end(); ++itObject )
+                //(*itObject)->registerVisibility( pVisData, nFlags );
         
         } // End if issuer
         return;
@@ -713,7 +891,7 @@ void cgSpatialTreeSubNode::computeVisibility( cgSpatialTreeInstance * pIssuer, c
         if ( mChildNodes[i] != CG_NULL )
             mChildNodes[i]->computeVisibility( pIssuer, pTree,Frustum, pVisData, nFlags, FrustumBits, bAutoVisible );
         
-    } // Next child node
+    } // Next child node*/
 }
 
 //-----------------------------------------------------------------------------
@@ -742,7 +920,7 @@ void cgSpatialTreeSubNode::computeVisibility( cgSpatialTreeInstance * pIssuer, c
         {
             const cgObjectNodeSet & LeafObjects = pIssuer->getOwnedObjects( mLeaf );
             for ( cgObjectNodeSet::const_iterator itObject = LeafObjects.begin(); itObject != LeafObjects.end(); ++itObject )
-                (*itObject)->registerVisibility( pVisData, nFlags );
+                (*itObject)->registerVisibility( pVisData );
         
         } // End if issuer
         return;

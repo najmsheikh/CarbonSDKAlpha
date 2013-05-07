@@ -1,5 +1,6 @@
 var cg_animation_types_8h =
 [
+    [ "cgAnimationTrackDesc", "structcg_animation_track_desc.html", "structcg_animation_track_desc" ],
     [ "cgAnimationChannel", "classcg_animation_channel.html", "classcg_animation_channel" ],
     [ "cgFloatCurveAnimationChannel", "classcg_float_curve_animation_channel.html", "classcg_float_curve_animation_channel" ],
     [ "cgQuaternionAnimationChannel", "classcg_quaternion_animation_channel.html", "classcg_quaternion_animation_channel" ],
@@ -21,5 +22,9 @@ var cg_animation_types_8h =
     [ "Base", "cg_animation_types_8h.html#a4c09eb009b508894314ed707374d32bf", [
       [ "BezierSpline", "cg_animation_types_8h.html#a4c09eb009b508894314ed707374d32bfa3789a678ea537cf1d54d7716f19a106b", null ],
       [ "CustomKeys", "cg_animation_types_8h.html#a4c09eb009b508894314ed707374d32bfad9e7a236c8dde6955456cd33b9f68a4d", null ]
+    ] ],
+    [ "Base", "cg_animation_types_8h.html#ad05c8be8e2aff0c06edfcb75ebae06df", [
+      [ "Loop", "cg_animation_types_8h.html#ad05c8be8e2aff0c06edfcb75ebae06dfabb6cc8f4f0b1a57287dc0d5d9b5c8cd4", null ],
+      [ "PlayOnce", "cg_animation_types_8h.html#ad05c8be8e2aff0c06edfcb75ebae06dfa927d7b30022c6d89fd38ef85f916520a", null ]
     ] ]
 ];

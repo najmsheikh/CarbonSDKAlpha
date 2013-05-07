@@ -18,7 +18,7 @@
 //        effect file architecture analogue.                                 //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -61,8 +61,8 @@ cgString * cgSurfaceShader::mShaderGlobalCodeOutput = CG_NULL;
 cgSurfaceShader::cgSurfaceShader( cgUInt32 nReferenceId, const cgInputStream & ShaderScript ) : cgResource( nReferenceId )
 {
     // Initialize variables to sensible defaults
-    mShaderScriptFile          = ShaderScript;
-    mIdentifier           = new cgShaderIdentifier();
+    mShaderScriptFile     = ShaderScript;
+    mIdentifier           = CG_NULL;
     mScriptObject         = CG_NULL;
     mShaderCode           = CG_NULL;
     mShaderInputs         = CG_NULL;
@@ -100,10 +100,6 @@ cgSurfaceShader::~cgSurfaceShader( )
 {
     // Clean up
     dispose( false );
-
-    // Destroy life-long objects.
-    delete mIdentifier;
-    mIdentifier = CG_NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -161,73 +157,86 @@ bool cgSurfaceShader::loadResource( )
 
     // Load the script
     if ( mManager->loadSurfaceShaderScript( &mScript, mShaderScriptFile, 0, cgDebugSource() ) == false )
-        return false;
-    
-    // Convert the module name we're going to use to a standard ANSI
-    // string if the application is currently using unicode.
+    {
+        // Only bail at this point if we're in sandbox mode.
+        if ( cgGetSandboxMode() == cgSandboxMode::Disabled )
+            return false;
+
+    } // End if failed to load script
+
+    // Script can only be invalid at this point when in sandbox mode if the
+    // file was not found (to ensure that information about the resource file
+    // is not lost).
     cgScript * pScript = mScript.getResource(true);
-    const cgChar * strModuleName = stringConvertT2CA( pScript->getResourceName().c_str() );
-
-    // Retrieve the module resposible for managing this script.
-    cgScriptEngine  * pScriptEngine = pScript->getScriptEngine();
-    asIScriptEngine * pInternalEngine = pScriptEngine->getInternalEngine();
-    asIScriptModule * pModule = pInternalEngine->GetModule( strModuleName );
-    
-    // Retrieve indices for the global shader compilation variables
-    // (__shx, __shi, __sho etc.)
-    int nSHX = pModule->GetGlobalVarIndexByName( "__shx" ); // Shader code
-    int nSHI = pModule->GetGlobalVarIndexByName( "__shi" ); // Shader inputs
-    int nSHO = pModule->GetGlobalVarIndexByName( "__sho" ); // Shader outputs
-    int nSHG = pModule->GetGlobalVarIndexByName( "__shg" ); // Shader globals
-    int nCBR = pModule->GetGlobalVarIndexByName( "__cbr" ); // Constant buffer references
-    int nSBR = pModule->GetGlobalVarIndexByName( "__sbr" ); // Sampler block references
-
-    // Resolve to their addresses.
-    mShaderCode           = (cgString*)pModule->GetAddressOfGlobalVar( nSHX );
-    mShaderInputs         = (cgString*)pModule->GetAddressOfGlobalVar( nSHI );
-    mShaderOutputs        = (cgString*)pModule->GetAddressOfGlobalVar( nSHO );
-    mShaderGlobals        = (cgString*)pModule->GetAddressOfGlobalVar( nSHG );
-    mConstantBufferRefs   = (cgString*)pModule->GetAddressOfGlobalVar( nCBR );
-    mSamplerBlockRefs     = (cgString*)pModule->GetAddressOfGlobalVar( nSBR );
-    
-    // Ask the script to create the script side ISurfaceShader object via the 
-    // (non-optional) global 'createSurfaceShader' function.
-    try
+    if ( pScript )
     {
-        cgScriptArgument::Array ScriptArgs;
-        ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("SurfaceShader@+"), (void*)this ) );
-        ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("RenderDriver@+"), (void*)mManager->getRenderDriver() ) );
-        ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("ResourceManager@+"), (void*)mManager ) );
-        mScriptObject = pScript->executeFunctionObject( _T("ISurfaceShader"), _T("createSurfaceShader"), ScriptArgs );
+        // Convert the module name we're going to use to a standard ANSI
+        // string if the application is currently using unicode.
+        const cgChar * strModuleName = stringConvertT2CA( pScript->getResourceName().c_str() );
 
-    } // End try to execute
+        // Retrieve the module resposible for managing this script.
+        cgScriptEngine  * pScriptEngine = pScript->getScriptEngine();
+        asIScriptEngine * pInternalEngine = pScriptEngine->getInternalEngine();
+        asIScriptModule * pModule = pInternalEngine->GetModule( strModuleName );
+        
+        // Retrieve indices for the global shader compilation variables
+        // (__shx, __shi, __sho etc.)
+        int nSHX = pModule->GetGlobalVarIndexByName( "__shx" ); // Shader code
+        int nSHI = pModule->GetGlobalVarIndexByName( "__shi" ); // Shader inputs
+        int nSHO = pModule->GetGlobalVarIndexByName( "__sho" ); // Shader outputs
+        int nSHG = pModule->GetGlobalVarIndexByName( "__shg" ); // Shader globals
+        int nCBR = pModule->GetGlobalVarIndexByName( "__cbr" ); // Constant buffer references
+        int nSBR = pModule->GetGlobalVarIndexByName( "__sbr" ); // Sampler block references
 
-    catch ( cgScriptInterop::Exceptions::ExecuteException & e )
-    {
-        cgAppLog::write( cgAppLog::Error, _T("Failed to execute createSurfaceShader() function in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
-        return false;
+        // Resolve to their addresses.
+        mShaderCode           = (cgString*)pModule->GetAddressOfGlobalVar( nSHX );
+        mShaderInputs         = (cgString*)pModule->GetAddressOfGlobalVar( nSHI );
+        mShaderOutputs        = (cgString*)pModule->GetAddressOfGlobalVar( nSHO );
+        mShaderGlobals        = (cgString*)pModule->GetAddressOfGlobalVar( nSHG );
+        mConstantBufferRefs   = (cgString*)pModule->GetAddressOfGlobalVar( nCBR );
+        mSamplerBlockRefs     = (cgString*)pModule->GetAddressOfGlobalVar( nSBR );
+        
+        // Ask the script to create the script side ISurfaceShader object via the 
+        // (non-optional) global 'createSurfaceShader' function.
+        try
+        {
+            cgScriptArgument::Array ScriptArgs;
+            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("SurfaceShader@+"), (void*)this ) );
+            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("RenderDriver@+"), (void*)mManager->getRenderDriver() ) );
+            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("ResourceManager@+"), (void*)mManager ) );
+            mScriptObject = pScript->executeFunctionObject( _T("ISurfaceShader"), _T("createSurfaceShader"), ScriptArgs );
 
-    } // End catch exception
+        } // End try to execute
 
-    if ( mScriptObject == CG_NULL )
-    {
-        cgAppLog::write( cgAppLog::Error, _T("No valid shader object was returned from createSurfaceShader() function in '%s'.\n"), pScript->getResourceName().c_str() );
-        return false;
-    
-    } // End if failed
+        catch ( cgScriptInterop::Exceptions::ExecuteException & e )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to execute createSurfaceShader() function in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+            return false;
 
-    // Cache pixel/vertex shader selection data to save having to do it
-    // constantly at runtime.
-    mDriver = mManager->getRenderDriver();
-    mShaderClass = mScriptObject->getTypeName();
-    const cgScript::SourceFileArray & ScriptFiles = pScript->getSourceInfo();
-    mIdentifier->sourceFiles.resize( ScriptFiles.size() );
-    for ( size_t i = 0; i < ScriptFiles.size(); ++i )
-    {
-        mIdentifier->sourceFiles[i].name = ScriptFiles[i].name;
-        memcpy( mIdentifier->sourceFiles[i].hash, ScriptFiles[i].hash, 5 * sizeof(cgUInt32) );
-    
-    } // Next File
+        } // End catch exception
+
+        if ( mScriptObject == CG_NULL )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("No valid shader object was returned from createSurfaceShader() function in '%s'.\n"), pScript->getResourceName().c_str() );
+            return false;
+        
+        } // End if failed
+
+        // Cache pixel/vertex shader selection data to save having to do it
+        // constantly at runtime.
+        mDriver = mManager->getRenderDriver();
+        mShaderClass = mScriptObject->getTypeName();
+        mIdentifier = new cgShaderIdentifier();
+        const cgScript::SourceFileArray & ScriptFiles = pScript->getSourceInfo();
+        mIdentifier->sourceFiles.resize( ScriptFiles.size() );
+        for ( size_t i = 0; i < ScriptFiles.size(); ++i )
+        {
+            mIdentifier->sourceFiles[i].name = ScriptFiles[i].name;
+            memcpy( mIdentifier->sourceFiles[i].hash, ScriptFiles[i].hash, 5 * sizeof(cgUInt32) );
+        
+        } // Next File
+
+    } // End if valid script
 
     // Resource is now loaded
     mResourceLoaded = true;
@@ -249,6 +258,9 @@ bool cgSurfaceShader::unloadResource( )
     if ( mScriptObject != CG_NULL )
         mScriptObject->release();
 
+    // Destroy objects.
+    delete mIdentifier;
+
     // Clear out failed shader list for next load attempt.
     mFailedVertexShaders.clear();
     mFailedPixelShaders.clear();
@@ -260,6 +272,7 @@ bool cgSurfaceShader::unloadResource( )
     mScript.close();
 
     // Clear variables
+    mIdentifier           = CG_NULL;
     mScriptObject         = CG_NULL;
     mShaderCode           = CG_NULL;
     mShaderInputs         = CG_NULL;
@@ -276,6 +289,20 @@ bool cgSurfaceShader::unloadResource( )
 
     // Success!
     return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getShaderIdentifier ()
+/// <summary>
+/// Retrieve the unique shader identifier that was generated for this
+/// surface shader, based on the hash of the source file and all of its
+/// included dependencies. Returns NULL if the shader was not successfully
+/// created.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgShaderIdentifier * cgSurfaceShader::getShaderIdentifier( ) const
+{
+    return mIdentifier;
 }
 
 //-----------------------------------------------------------------------------

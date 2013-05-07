@@ -14,7 +14,7 @@
 //        interact with individual loaded script modules.                    //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -98,6 +98,7 @@ public:
     cgScriptObject        * executeFunctionObject   ( const cgString & objectType, const cgString & functionName, const cgScriptCompatibleStruct & argumentStruct, bool optional = false, bool * successOut = CG_NULL );
     cgScriptObject        * executeFunctionObject   ( const cgString & objectType, const cgString & functionName, const cgScriptArgument::Array & arguments, bool optional = false, bool * successOut = CG_NULL );
     cgScriptObject        * createObjectInstance    ( const cgString & objectType );
+    cgScriptObject        * createObjectInstance    ( const cgString & objectType, const cgScriptArgument::Array & arguments );
     bool                    setThisObject           ( void * value );
     const SourceFileArray & getSourceInfo           ( ) const;
     const cgString        & getThisType             ( ) const;

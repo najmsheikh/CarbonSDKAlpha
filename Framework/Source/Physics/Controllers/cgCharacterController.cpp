@@ -14,7 +14,7 @@
 //        class objects such as the player or other NPCs.                    //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -110,7 +110,10 @@ namespace
     {
         // Ignore any bodies that we cannot collide with.
         cgPhysicsWorld * world = ((PreFilterData*)userData)->world;
-        if ( NewtonBodyGetMaterialGroupID( body ) == world->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Ragdoll ) )
+        cgInt materialId = NewtonBodyGetMaterialGroupID( body );
+        if ( materialId != world->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Standard ) &&
+             materialId != world->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Character ) &&
+             materialId != world->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::PlayerCharacter ) )
             return 0;
 
         // Skip any bodies that occur in the set.
@@ -135,7 +138,10 @@ namespace
 
         // Ignore any bodies that we cannot collide with.
         cgPhysicsWorld * world = ((PreFilterData*)userData)->world;
-        if ( NewtonBodyGetMaterialGroupID( body ) == world->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Ragdoll ) )
+        cgInt materialId = NewtonBodyGetMaterialGroupID( body );
+        if ( materialId != world->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Standard ) &&
+             materialId != world->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Character ) &&
+             materialId != world->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::PlayerCharacter ) )
             return 0;
         
         // Skip any bodies that occur in the set.
@@ -160,7 +166,10 @@ namespace
 
         // Ignore any bodies that we cannot collide with.
         cgPhysicsWorld * world = ((PreFilterData*)userData)->world;
-        if ( NewtonBodyGetMaterialGroupID( body ) == world->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Ragdoll ) )
+        cgInt materialId = NewtonBodyGetMaterialGroupID( body );
+        if ( materialId != world->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Standard ) &&
+             materialId != world->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Character ) &&
+             materialId != world->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::PlayerCharacter ) )
             return 0;
         
         // Skip any bodies that occur in the set.
@@ -366,7 +375,10 @@ bool cgCharacterController::initialize(  )
     mUpJoint->addReference( CG_NULL );
 
     // Assign body to the character material group.
-    NewtonBodySetMaterialGroupID( mBody->getInternalBody(), mWorld->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Character ) );
+    if ( !mPlayerControlled )
+        NewtonBodySetMaterialGroupID( mBody->getInternalBody(), mWorld->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Character ) );
+    else
+        NewtonBodySetMaterialGroupID( mBody->getInternalBody(), mWorld->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::PlayerCharacter ) );
 
     // Construct a custom navigation agent if this is an NPC character.
     if ( !mPlayerControlled )
@@ -904,6 +916,7 @@ void cgCharacterController::postStepPlayer( cgFloat timeDelta )
     mVelocity.x = mBody->getVelocity().x;
     mVelocity.z = mBody->getVelocity().z;
     cgVector3 currentPosition = bodyTransform.position();
+    //cgVector3 currentPosition = mOriginalPosition + mVelocity * timeDelta;
 
     // Different collision handling is used depending on the current state of the
     // character. Let's apply these now. Note: We use the /actual/ current state

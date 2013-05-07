@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -111,6 +111,7 @@ $(document).ready(function(){initNavTree('cg_world_types_8h.html','');});
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;<a class="el" href="cg_base_types_8h_source.html">cgBaseTypes.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="cg_physics_types_8h_source.html">Physics/cgPhysicsTypes.h</a>&gt;</code><br/>
 </div>
 <p><a href="cg_world_types_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -124,6 +125,10 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_object_sub_element_type_desc.html">cgObjectSubElementTypeDesc</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_scene_element_type_desc.html">cgSceneElementTypeDesc</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_scene_collision_contact.html">cgSceneCollisionContact</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -133,9 +138,13 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecg_scene_render_context"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_scene_render_context.html">cgSceneRenderContext</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespacecg_sandbox_render_flags"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_sandbox_render_flags.html">cgSandboxRenderFlags</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecg_update_rate"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_update_rate.html">cgUpdateRate</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecg_world_type"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_world_type.html">cgWorldType</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespacecg_world_database_status"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_world_database_status.html">cgWorldDatabaseStatus</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecg_scene_type"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_scene_type.html">cgSceneType</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,6 +163,8 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacecg_transform_source"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_transform_source.html">cgTransformSource</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecg_deferred_update_flags"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_deferred_update_flags.html">cgDeferredUpdateFlags</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespacecg_object_node_flags"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_object_node_flags.html">cgObjectNodeFlags</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
@@ -179,6 +190,10 @@ Enumerations</h2></td></tr>
 <a class="el" href="namespacecg_scene_render_context.html#ade37f1c2f263b515f00fe02b7945a3fba71341082bbcd008d45c02dfa34957a76">cgSceneRenderContext::SandboxMaterial</a> = 2
  }</td></tr>
 <tr class="separator:ade37f1c2f263b515f00fe02b7945a3fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7d91d49ec0d1b28a2557b23e15aa188"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_sandbox_render_flags.html#aa7d91d49ec0d1b28a2557b23e15aa188">cgSandboxRenderFlags::Base</a> { <a class="el" href="namespacecg_sandbox_render_flags.html#aa7d91d49ec0d1b28a2557b23e15aa188a7dffd663a2808c75d7ea288063694079">cgSandboxRenderFlags::Wireframe</a> = 0x1, 
+<a class="el" href="namespacecg_sandbox_render_flags.html#aa7d91d49ec0d1b28a2557b23e15aa188a7501423b0bddfb6aa38554616449a030">cgSandboxRenderFlags::PostDepthClear</a> = 0x10
+ }</td></tr>
+<tr class="separator:aa7d91d49ec0d1b28a2557b23e15aa188"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0da2807d89bc281aaedc56c1edbdbd24"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_update_rate.html#a0da2807d89bc281aaedc56c1edbdbd24">cgUpdateRate::Base</a> { <br/>
 &#160;&#160;<a class="el" href="namespacecg_update_rate.html#a0da2807d89bc281aaedc56c1edbdbd24ae2284e67ee6fee13e79f8ae95a98c317">cgUpdateRate::Never</a> = 0, 
 <a class="el" href="namespacecg_update_rate.html#a0da2807d89bc281aaedc56c1edbdbd24afb0920becbef155be3563752b65b4361">cgUpdateRate::Always</a>, 
@@ -209,6 +224,11 @@ Enumerations</h2></td></tr>
 <a class="el" href="namespacecg_world_type.html#ae25700bef3e243c265450227a0ceb796a685a9d6a57b7b48dd0303f2c578f9938">cgWorldType::Data</a>
  }</td></tr>
 <tr class="separator:ae25700bef3e243c265450227a0ceb796"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5a2c78726e22bd70f3b7bc626271a80"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_world_database_status.html#aa5a2c78726e22bd70f3b7bc626271a80">cgWorldDatabaseStatus::Base</a> { <a class="el" href="namespacecg_world_database_status.html#aa5a2c78726e22bd70f3b7bc626271a80a3a380008bae45aac53952971fdd412c8">cgWorldDatabaseStatus::Valid</a> = 0, 
+<a class="el" href="namespacecg_world_database_status.html#aa5a2c78726e22bd70f3b7bc626271a80a102883adbb4cb2d1c52f69dffa33d96d">cgWorldDatabaseStatus::LayoutUpdated</a> = 1, 
+<a class="el" href="namespacecg_world_database_status.html#aa5a2c78726e22bd70f3b7bc626271a80a8c63bb20f5740ea70513540fe175c62f">cgWorldDatabaseStatus::LegacyLayout</a> = 2
+ }</td></tr>
+<tr class="separator:aa5a2c78726e22bd70f3b7bc626271a80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a344d305ea77fddca96f09c1e455d2979"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_scene_type.html#a344d305ea77fddca96f09c1e455d2979">cgSceneType::Base</a> { <a class="el" href="namespacecg_scene_type.html#a344d305ea77fddca96f09c1e455d2979ae9e27ef109263ebd9bed85bded95db22">cgSceneType::Standard</a> = 0, 
 <a class="el" href="namespacecg_scene_type.html#a344d305ea77fddca96f09c1e455d2979a3fe2ddbb7e3016e6b3a1e344f143d056">cgSceneType::Exterior</a>, 
 <a class="el" href="namespacecg_scene_type.html#a344d305ea77fddca96f09c1e455d2979a4a5a9abb1c7f2b36b6af32198d275c4a">cgSceneType::Construct</a>
@@ -252,7 +272,8 @@ Enumerations</h2></td></tr>
 <tr class="separator:ac1b4ada063217ae9d88dda91c4d44055"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa39c63df0b3694bc72e0f5197d24b743"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_transform_source.html#aa39c63df0b3694bc72e0f5197d24b743">cgTransformSource::Base</a> { <a class="el" href="namespacecg_transform_source.html#aa39c63df0b3694bc72e0f5197d24b743a841745f1cdedcd69df8584c756dd3038">cgTransformSource::Standard</a> = 0, 
 <a class="el" href="namespacecg_transform_source.html#aa39c63df0b3694bc72e0f5197d24b743a284d2075cb7ac8fc0a570bfeb55a3c9f">cgTransformSource::Dynamics</a> = 1, 
-<a class="el" href="namespacecg_transform_source.html#aa39c63df0b3694bc72e0f5197d24b743acd487d355b91cd3e40bc12a7ce6e5023">cgTransformSource::TransformResolve</a> = 2
+<a class="el" href="namespacecg_transform_source.html#aa39c63df0b3694bc72e0f5197d24b743ad10dc85e9d3f37297f74e2f3cc54f4d6">cgTransformSource::Navigation</a> = 2, 
+<a class="el" href="namespacecg_transform_source.html#aa39c63df0b3694bc72e0f5197d24b743acd487d355b91cd3e40bc12a7ce6e5023">cgTransformSource::TransformResolve</a> = 3
  }</td></tr>
 <tr class="separator:aa39c63df0b3694bc72e0f5197d24b743"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81978683cf2b0cfa0713cbbb85d46861"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_deferred_update_flags.html#a81978683cf2b0cfa0713cbbb85d46861">cgDeferredUpdateFlags::Base</a> { <a class="el" href="namespacecg_deferred_update_flags.html#a81978683cf2b0cfa0713cbbb85d46861ae9b0d698d9ac080c6a5a63143c6ec35d">cgDeferredUpdateFlags::BoundingBox</a> = 0x1, 
@@ -261,11 +282,19 @@ Enumerations</h2></td></tr>
 <a class="el" href="namespacecg_deferred_update_flags.html#a81978683cf2b0cfa0713cbbb85d46861a03cedf263b0c3b8c5c0f059c99349ab0">cgDeferredUpdateFlags::All</a> = 0x7FFFFFFF
  }</td></tr>
 <tr class="separator:a81978683cf2b0cfa0713cbbb85d46861"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e8f1fd058e5a576d4b3bf4be9fb3228"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_object_node_flags.html#a3e8f1fd058e5a576d4b3bf4be9fb3228">cgObjectNodeFlags::Base</a> { <a class="el" href="namespacecg_object_node_flags.html#a3e8f1fd058e5a576d4b3bf4be9fb3228acbb3f751cf242619a1d79742f4a10247">cgObjectNodeFlags::Visible</a> = 0x1, 
+<a class="el" href="namespacecg_object_node_flags.html#a3e8f1fd058e5a576d4b3bf4be9fb3228a71e96320ea8c0464603a0ecc1d55736c">cgObjectNodeFlags::Selected</a> = 0x2, 
+<a class="el" href="namespacecg_object_node_flags.html#a3e8f1fd058e5a576d4b3bf4be9fb3228a23c762cba013116573990168cda6c5ca">cgObjectNodeFlags::DelayUnload</a> = 0x4, 
+<a class="el" href="namespacecg_object_node_flags.html#a3e8f1fd058e5a576d4b3bf4be9fb3228a95ec08d3dd54bd9649563589ea680773">cgObjectNodeFlags::UnloadPending</a> = 0x8
+ }</td></tr>
+<tr class="separator:a3e8f1fd058e5a576d4b3bf4be9fb3228"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a23bcc182741c6178f572d7d29dc4cdc2"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_u_i_d.html">cgUID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cg_world_types_8h.html#a23bcc182741c6178f572d7d29dc4cdc2">OSECID_CollisionShapes</a> = {0xFF337EAC, 0xC68E, 0x4C21, {0x84, 0x45, 0x3A, 0x5B, 0x4, 0x2A, 0x82, 0xEF}}</td></tr>
 <tr class="separator:a23bcc182741c6178f572d7d29dc4cdc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cc80e4416cf3a5a28c3121f2bebc3de"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_u_i_d.html">cgUID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cg_world_types_8h.html#a5cc80e4416cf3a5a28c3121f2bebc3de">OSECID_AnimationSets</a> = {0xAF077C13, 0xAD53, 0x4AC3, {0xA2, 0x31, 0x5C, 0x0A, 0x3B, 0x60, 0x2A, 0x0B}}</td></tr>
+<tr class="separator:a5cc80e4416cf3a5a28c3121f2bebc3de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a class="anchor" id="a03ecc33873c281c83dc745e65a9f56da"></a>
@@ -281,6 +310,18 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a class="anchor" id="a5cc80e4416cf3a5a28c3121f2bebc3de"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classcg_u_i_d.html">cgUID</a> OSECID_AnimationSets = {0xAF077C13, 0xAD53, 0x4AC3, {0xA2, 0x31, 0x5C, 0x0A, 0x3B, 0x60, 0x2A, 0x0B}}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a23bcc182741c6178f572d7d29dc4cdc2"></a>
 <div class="memitem">
 <div class="memproto">
@@ -299,7 +340,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_cace410e69155a0a769d51256a788445.html">World</a></li><li class="navelem"><a class="el" href="cg_world_types_8h.html">cgWorldTypes.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:27 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:09 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

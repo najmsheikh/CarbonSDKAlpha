@@ -21,6 +21,7 @@ var class_resource_handle =
     [ "operator=", "class_resource_handle.html#a1ce0354d9b5b7607f7949b8ea56e2116", null ],
     [ "operator==", "class_resource_handle.html#a4c3b81f98eb235b302d197bfdeb9e4af", null ],
     [ "operator>", "class_resource_handle.html#a7e190e0e0dd9f41627d47c2be02c540f", null ],
+    [ "swap", "class_resource_handle.html#a70d7b0c1d6876081ed2772e067414911", null ],
     [ "cgResourceManager", "class_resource_handle.html#aaa8caa4108e4fcfe9e6f628dfd804db3", null ],
     [ "Null", "class_resource_handle.html#a270c7da9a120fd22b5d15029a578dd4b", null ]
 ];

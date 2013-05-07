@@ -13,7 +13,7 @@ var classcg_group_object =
     [ "onComponentLoading", "classcg_group_object.html#aebdbce2b77ee4f65df601bb26214c104", null ],
     [ "prepareQueries", "classcg_group_object.html#a45be73053a0171fa59ca9d18beeb6bef", null ],
     [ "queryReferenceType", "classcg_group_object.html#a9df2ce1b56f46398f53ef2d183595b4f", null ],
-    [ "sandboxRender", "classcg_group_object.html#a710f8b67c4c6523f91226a10013fb022", null ],
+    [ "sandboxRender", "classcg_group_object.html#a75eca87cd3894d45d2e40854d49ae04f", null ],
     [ "setOpen", "classcg_group_object.html#aa8309407209d5cf0f5215866e6103c36", null ],
     [ "mInsertGroup", "classcg_group_object.html#aff3a9d6a422ccd5f9cfa54574fcf4877", null ],
     [ "mLoadGroup", "classcg_group_object.html#ac377c35712f1aeb4310a0663d3039ee9", null ],

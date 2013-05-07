@@ -15,7 +15,7 @@
 //        most commonly includes bodies and joints for instance.             //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -148,4 +148,15 @@ void cgPhysicsEntity::setTransform( const cgTransform & Transform )
 void cgPhysicsEntity::clearForces( )
 {
     // Nothing in base implementation.
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getPhysicsWorld ()
+/// <summary>
+/// Get the physics world in which this body was created.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgPhysicsWorld * cgPhysicsEntity::getPhysicsWorld( ) const
+{
+    return mWorld;
 }

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -111,9 +111,9 @@ $(document).ready(function(){initNavTree('classcg_spatial_tree_sub_node.html',''
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#a2c6f191cb5d31fda45a0929b4fed320f">cgSpatialTreeSubNode</a>()</td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#a5ba68934265a1c8094982e7022b9ba58">cgSpatialTreeSubNode</a>(cgSpatialTreeSubNode *init, cgSpatialTree *parent)</td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#a7ae4997fe7d20ecfa5fc171ddb605ef1">collectLeaves</a>(cgSpatialTreeInstance *issuer, cgSpatialTree *tree, cgSceneLeafArray &amp;leaves, const cgBoundingBox &amp;bounds, bool autoCollect=false)</td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#a1079e82565c7d6c3760fc89483fe5c0d">computeVisibility</a>(cgSpatialTreeInstance *issuer, cgSpatialTree *tree, const cgFrustum &amp;frustum, cgVisibilitySet *visibilityData, cgUInt32 flags=false, cgUInt8 frustumBits=0x0, bool autoVisible=false)</td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#accfb75c8c42f7853bc68eb432762538d">computeVisibility</a>(cgSpatialTreeInstance *issuer, cgSpatialTree *tree, const cgBoundingBox &amp;testBounds, cgVisibilitySet *visibilityData, cgUInt32 flags=false, bool autoVisible=false)</td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#a7ae4997fe7d20ecfa5fc171ddb605ef1">collectLeaves</a>(cgSpatialTreeInstance *issuer, cgSpatialTree *tree, cgSceneLeafArray &amp;leaves, const cgBoundingBox &amp;bounds, bool autoCollect=false)</td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#a52dc1daf113492036d08696c44da4862">computeVisibility</a>(cgSpatialTreeInstance *issuer, cgSpatialTree *tree, const cgFrustum &amp;frustum, cgVisibilitySet *visibilityData, cgUInt32 flags, cgUInt8 frustumBits=0x0, bool autoVisible=false)</td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#aa0bf299cc420c5f849f85449084e00e5">computeVisibility</a>(cgSpatialTreeInstance *issuer, cgSpatialTree *tree, const cgBoundingBox &amp;testBounds, cgVisibilitySet *visibilityData, cgUInt32 flags, bool autoVisible=false)</td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#a800e1b37b6e2eccae1b3b6c907d95c9b">getBoundingBox</a>() const </td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#a6686f26c2224e5651262ff1a1930e4f7">getChildNode</a>(cgUInt32 childIndex)</td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#a28a7cfa16c8b8cf879378feb174e0571">getChildNodeCount</a>() const </td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
@@ -132,13 +132,14 @@ $(document).ready(function(){initNavTree('classcg_spatial_tree_sub_node.html',''
   <tr class="even"><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#aacb3c50f041d488ccf83e60d454c3623">setChildNodeCount</a>(cgUInt32 childCount)</td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#ad23965791b76707e82d86a92bb8c7bee">setLeaf</a>(cgUInt32 leafIndex)</td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#aac5327810038c89af71fdbd3732c13a4">setNodeDepth</a>(cgUInt32 depth)</td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#a3af9a54514d7488cc009dab7b2a780eb">~cgSpatialTreeSubNode</a>()</td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#a1f52ed246265260923ef2eef78c1965e">updateObjectOwnership</a>(cgSpatialTreeInstance *issuer, cgSpatialTree *tree, cgObjectNode *object, const cgBoundingBox &amp;objectBounds, bool testOnly, bool autoAdd, size_t &amp;leafCount)</td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html#a3af9a54514d7488cc009dab7b2a780eb">~cgSpatialTreeSubNode</a>()</td><td class="entry"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:50 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:51 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -152,9 +152,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a7b3de5a5cde57335df5213674e4ae11a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_preprocessor.html#a7b3de5a5cde57335df5213674e4ae11a">expandStatement</a> (<a class="el" href="structcg_script_preprocessor_1_1_token_data.html">TokenData</a> &amp;t, std::string &amp;statement)</td></tr>
 <tr class="memdesc:a7b3de5a5cde57335df5213674e4ae11a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recursively resolve the specified statement until all defined words and macros are expanded  <a href="#a7b3de5a5cde57335df5213674e4ae11a"></a><br/></td></tr>
 <tr class="separator:a7b3de5a5cde57335df5213674e4ae11a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3b6942290d283307d340c5ee93dab4a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_preprocessor.html#ad3b6942290d283307d340c5ee93dab4a">loadScriptSection</a> (asIScriptModule *module, <a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp;stream, cgScript::SourceFileArray &amp;sourceFiles)</td></tr>
-<tr class="memdesc:ad3b6942290d283307d340c5ee93dab4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the referenced script data, perform pre-processor step, and then add to the specified module  <a href="#ad3b6942290d283307d340c5ee93dab4a"></a><br/></td></tr>
-<tr class="separator:ad3b6942290d283307d340c5ee93dab4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acaa8c685e0a968a5ea7d8c2435fba493"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_preprocessor.html#acaa8c685e0a968a5ea7d8c2435fba493">loadScriptSection</a> (asIScriptModule *module, <a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp;stream, cgScript::SourceFileArray &amp;sourceFiles, bool includeOnce)</td></tr>
+<tr class="memdesc:acaa8c685e0a968a5ea7d8c2435fba493"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the referenced script data, perform pre-processor step, and then add to the specified module  <a href="#acaa8c685e0a968a5ea7d8c2435fba493"></a><br/></td></tr>
+<tr class="separator:acaa8c685e0a968a5ea7d8c2435fba493"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e76434708886bd689037c709a332f8b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_preprocessor.html#a5e76434708886bd689037c709a332f8b">processScriptSection</a> (asIScriptModule *module, const std::string &amp;inputCode, const <a class="el" href="classcg_string.html">cgString</a> &amp;sectionName, cgScript::SourceFileArray &amp;sourceFiles)</td></tr>
 <tr class="memdesc:a5e76434708886bd689037c709a332f8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform pre-processor pass on the script to include any referenced headers, defines, etc.  <a href="#a5e76434708886bd689037c709a332f8b"></a><br/></td></tr>
 <tr class="separator:a5e76434708886bd689037c709a332f8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -170,9 +170,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a8488227f4413bb2c2b5093efec4e9a69"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_preprocessor.html#a8488227f4413bb2c2b5093efec4e9a69">parsePreprocessorDirective</a> (<a class="el" href="structcg_script_preprocessor_1_1_token_data.html">TokenData</a> &amp;t, std::string &amp;script, std::stack&lt; bool &gt; &amp;conditionStack, asIScriptModule *module, const <a class="el" href="classcg_string.html">cgString</a> &amp;sectionName, cgScript::SourceFileArray &amp;sourceFiles)</td></tr>
 <tr class="memdesc:a8488227f4413bb2c2b5093efec4e9a69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the pre-processor directive at the specified location and take any appropriate action (i.e. handle #if, #else, #elif, #endif, #define, etc.)  <a href="#a8488227f4413bb2c2b5093efec4e9a69"></a><br/></td></tr>
 <tr class="separator:a8488227f4413bb2c2b5093efec4e9a69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9d8d0d3e5b16f66e52a6cdc07720f18"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_preprocessor.html#aa9d8d0d3e5b16f66e52a6cdc07720f18">parseScriptString</a> (<a class="el" href="structcg_script_preprocessor_1_1_token_data.html">TokenData</a> &amp;t, std::string &amp;script)</td></tr>
-<tr class="memdesc:aa9d8d0d3e5b16f66e52a6cdc07720f18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse an angel script side string literal value and resolve any references that it contains. For instance "Welcome $name" will inject code to resolve '$name' to include the actual contents of angel script variable 'name'. This only applies to surface shader scripts.  <a href="#aa9d8d0d3e5b16f66e52a6cdc07720f18"></a><br/></td></tr>
-<tr class="separator:aa9d8d0d3e5b16f66e52a6cdc07720f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6a9c1e8fe4797fae5db8aaaa8ce10c8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_preprocessor.html#ac6a9c1e8fe4797fae5db8aaaa8ce10c8">parseScriptString</a> (<a class="el" href="structcg_script_preprocessor_1_1_token_data.html">TokenData</a> &amp;t, std::string &amp;script, bool shaderParameter, bool addParentheses=false)</td></tr>
+<tr class="memdesc:ac6a9c1e8fe4797fae5db8aaaa8ce10c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse an angel script side string literal value and resolve any references that it contains. For instance "Welcome $name" will inject code to resolve '$name' to include the actual contents of angel script variable 'name'. This only applies to surface shader scripts.  <a href="#ac6a9c1e8fe4797fae5db8aaaa8ce10c8"></a><br/></td></tr>
+<tr class="separator:ac6a9c1e8fe4797fae5db8aaaa8ce10c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f60bae1a94d0087fe7bb192bd0f5bd7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_preprocessor.html#a7f60bae1a94d0087fe7bb192bd0f5bd7">parseShaderBlock</a> (<a class="el" href="structcg_script_preprocessor_1_1_token_data.html">TokenData</a> &amp;t, std::string &amp;script, const std::string &amp;parentNamespace, bool shaderCallFunction)</td></tr>
 <tr class="memdesc:a7f60bae1a94d0087fe7bb192bd0f5bd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse any included shader script replacement block '&lt;?[type] block ?&gt;' and generate the appropriate angel script code to put in its place.  <a href="#a7f60bae1a94d0087fe7bb192bd0f5bd7"></a><br/></td></tr>
 <tr class="separator:a7f60bae1a94d0087fe7bb192bd0f5bd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -409,7 +409,7 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ad3b6942290d283307d340c5ee93dab4a"></a>
+<a class="anchor" id="acaa8c685e0a968a5ea7d8c2435fba493"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -432,7 +432,13 @@ Static Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">cgScript::SourceFileArray &amp;&#160;</td>
-          <td class="paramname"><em>aSourceFiles</em>&#160;</td>
+          <td class="paramname"><em>aSourceFiles</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bIncludeOnce</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -649,7 +655,7 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aa9d8d0d3e5b16f66e52a6cdc07720f18"></a>
+<a class="anchor" id="ac6a9c1e8fe4797fae5db8aaaa8ce10c8"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -666,7 +672,19 @@ Static Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::string &amp;&#160;</td>
-          <td class="paramname"><em>strScript</em>&#160;</td>
+          <td class="paramname"><em>strScript</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>shaderParameter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>addParentheses</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1116,7 +1134,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_script_preprocessor.html">cgScriptPreprocessor</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:46 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:48 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

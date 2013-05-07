@@ -14,7 +14,7 @@
 //        managed and controlled in the same way as any other object.        //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -321,8 +321,6 @@ public:
     virtual void                    renderShape                 ( cgCameraNode * camera, cgUInt32 subsetId = 0, cgMesh * meshOverride = CG_NULL ); 
 
     virtual void                    computeShadowSets           ( cgCameraNode * camera );
-	// ToDo: 6767 - Remove
-    virtual void                    computeVisibility           ( );
     virtual void                    setRenderOptimizations      ( bool stencilMask = true, bool userClipPlanes = true, bool scissorRect = true );
 
     // Direct lighting
@@ -359,7 +357,8 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgObjectNode)
     //-------------------------------------------------------------------------
-    virtual bool                    registerVisibility          ( cgVisibilitySet * visibilityData, cgUInt32 flags );
+    virtual bool                    registerVisibility          ( cgVisibilitySet * visibilityData );
+    virtual void                    unregisterVisibility        ( cgVisibilitySet * visibilityData );
     virtual void                    computeLevelOfDetail        ( cgCameraNode * camera );
     virtual bool                    canScale                    ( ) const;
     virtual bool                    setCellTransform            ( const cgTransform & transform, cgTransformSource::Base source = cgTransformSource::Standard );

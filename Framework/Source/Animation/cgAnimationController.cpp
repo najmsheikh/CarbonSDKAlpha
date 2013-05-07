@@ -15,7 +15,7 @@
 //        or custom controller / script generated keys.                      //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -165,7 +165,7 @@ void cgAnimationController::updateTargets( const TargetMap & Targets )
             AnimationData & data = TrackTransforms[i];
             cgAnimationSet * pSet = Item.set.getResource(true);
             if ( pSet->getSRT( Item.desc.position * (cgDouble)pSet->getFrameRate(), Item.desc.playbackMode, *itTargetId, 
-                               Item.desc.firstFrame, Item.desc.lastFrame, data.scale, data.rotation, data.translation ) )
+                               Item.desc.firstFrame, Item.desc.lastFrame, pTarget, data.scale, data.rotation, data.translation ) )
             {
                 // Include in final blend.
                 fWeightTheta   += Item.desc.weight;

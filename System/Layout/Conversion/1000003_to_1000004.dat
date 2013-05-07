@@ -2,3 +2,17 @@
 //  Master world database conversion from v1.0.3 to v1.0.4
 // *************************************************************
 #include "1.00.0004.dat"
+
+// *************************************************************
+//  Upgrade Stub
+// *************************************************************
+bool upgrade( World @ world, uint sourceVersion, uint destinationVersion )
+{
+    // Check supported versions
+    if ( sourceVersion != 0x1000003 || destinationVersion != 0x1000004 ) // v1.00.0003 -> v1.00.0004
+        return false;
+
+    // Upgrade to v1.00.0004
+    if ( !upgrade_1000003_to_1000004( world ) )
+        return false;
+}

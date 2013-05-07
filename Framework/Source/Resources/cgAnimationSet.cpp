@@ -15,7 +15,7 @@
 //        available.                                                         //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -481,8 +481,10 @@ bool cgAnimationSet::loadSet( cgUInt32 nSourceRefId, cgResourceManager * pManage
                 mLoadTargetControllers.getColumn( _T("ControllerType"), (cgInt32&)Type );
                 
                 // Create a new controller instance and deserialize the data.
+                void * customData;
+                cgUInt32 customDataSize;
                 cgAnimationTargetController * pController = cgAnimationTargetController::createInstance( Type );
-                if ( !pController->deserialize( mLoadTargetControllers, bCloneData, mFirstFrame, mLastFrame ) )
+                if ( !pController->deserialize( mLoadTargetControllers, bCloneData, mFirstFrame, mLastFrame, customData, customDataSize ) )
                 {
                     pController->scriptSafeDispose();
                     throw cgExceptions::ResultException( _T("Failed to load animation set controller or channel data."), cgDebugSource() );
@@ -701,11 +703,11 @@ bool cgAnimationSet::serializeSet( )
                 // Ask each of the target controllers assigned to the target entry to 
                 // serialize itself and any of its channels.
                 if ( Data.scaleController )
-                    Data.scaleController->serialize( Data.databaseId, _T("_sc"), mWorld );
+                    Data.scaleController->serialize( Data.databaseId, _T("_sc"), mWorld, CG_NULL, 0 );
                 if ( Data.rotationController )
-                    Data.rotationController->serialize( Data.databaseId, _T("_r"), mWorld );
+                    Data.rotationController->serialize( Data.databaseId, _T("_r"), mWorld, CG_NULL, 0 );
                 if ( Data.translationController )
-                    Data.translationController->serialize( Data.databaseId, _T("_t"), mWorld );
+                    Data.translationController->serialize( Data.databaseId, _T("_t"), mWorld, CG_NULL, 0 );
 
             } // Next target
 
@@ -865,12 +867,349 @@ cgRange cgAnimationSet::getFrameRange( ) const
 //-----------------------------------------------------------------------------
 //  Name : getTargetData ()
 /// <summary>
-/// Retrieve the animation target data contained in this set.
+/// Retrieve the full dictionary containing animation data for all targets 
+/// contained in this set.
 /// </summary>
 //-----------------------------------------------------------------------------
 const cgAnimationSet::TargetDataMap & cgAnimationSet::getTargetData() const
 {
     return mTargetData;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getTargetData ()
+/// <summary>
+/// Retrieve the animation data for the single target registered with the 
+/// specified identifier, or CG_NULL if it could not be found.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgAnimationSet::TargetData * cgAnimationSet::getTargetData( const cgString & targetId ) const
+{
+    TargetDataMap::const_iterator itTarget = mTargetData.find( targetId );
+    if ( itTarget == mTargetData.end() )
+        return CG_NULL;
+    return &itTarget->second;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getTargetData ()
+/// <summary>
+/// Retrieve the animation data for the single target registered with the 
+/// specified identifier, or CG_NULL if it could not be found.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgAnimationSet::TargetData * cgAnimationSet::getTargetData( const cgString & targetId )
+{
+    TargetDataMap::iterator itTarget = mTargetData.find( targetId );
+    if ( itTarget == mTargetData.end() )
+        return CG_NULL;
+    return &itTarget->second;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getTargetData ()
+/// <summary>
+/// Retrieve the animation data for the single target registered with the 
+/// specified identifier. If no target could be found, this method will either
+/// return CG_NULL if 'createTargetData' is set to false, or will create a new
+/// target data entry if set to true.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgAnimationSet::TargetData * cgAnimationSet::getTargetData( const cgString & targetId, bool createTargetData )
+{
+    TargetDataMap::iterator itTarget = mTargetData.find( targetId );
+    if ( itTarget == mTargetData.end() )
+    {
+        if ( !createTargetData )
+            return CG_NULL;
+        else
+            return &mTargetData.insert( TargetDataMap::value_type( targetId, TargetData() ) ).first->second;
+    
+    } // End if not found
+    
+    // Return data associated with the registered target
+    return &itTarget->second;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : targetDataUpdated ()
+/// <summary>
+/// Call this method in order to trigger serialization and optionally 
+/// recompute the animation set frame range when target data is added or
+/// adjusted manually.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgAnimationSet::targetDataUpdated( bool recomputeRange )
+{
+    if ( recomputeRange )
+    {
+        mFirstFrame = INT_MAX;
+        mLastFrame  = INT_MIN;
+
+        // Compute bounding frames.
+        TargetDataMap::iterator itTarget;
+        for ( itTarget = mTargetData.begin(); itTarget != mTargetData.end(); ++itTarget )
+        {
+            TargetData & Data = itTarget->second;
+
+            // Translation
+            cgAnimationTargetController * pController = Data.translationController;
+            if ( pController )
+            {
+                switch ( pController->getControllerType() )
+                {
+                    case cgAnimationTargetControllerType::PositionXYZ:
+                    {
+                        // X
+                        const cgFloatCurveAnimationChannel * pChannel = &((cgPositionXYZTargetController*)pController)->getAnimationChannel(0);
+                        if ( pChannel )
+                        {
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            if ( !Keys.empty() )
+                            {
+                                cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
+                                cgInt nLast  = cgAnimationChannel::integerFrameIndex( Keys.back().point.x );
+                                if ( nFirst < mFirstFrame )
+                                    mFirstFrame = nFirst;
+                                if ( nLast > mLastFrame )
+                                    mLastFrame = nLast;
+
+                            } // End if has points
+                        
+                        } // End if has channel
+
+                        // Y
+                        pChannel = &((cgPositionXYZTargetController*)pController)->getAnimationChannel(1);
+                        if ( pChannel )
+                        {
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            if ( !Keys.empty() )
+                            {
+                                cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
+                                cgInt nLast  = cgAnimationChannel::integerFrameIndex( Keys.back().point.x );
+                                if ( nFirst < mFirstFrame )
+                                    mFirstFrame = nFirst;
+                                if ( nLast > mLastFrame )
+                                    mLastFrame = nLast;
+
+                            } // End if has points
+                        
+                        } // End if has channel
+
+                        // Z
+                        pChannel = &((cgPositionXYZTargetController*)pController)->getAnimationChannel(2);
+                        if ( pChannel )
+                        {
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            if ( !Keys.empty() )
+                            {
+                                cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
+                                cgInt nLast  = cgAnimationChannel::integerFrameIndex( Keys.back().point.x );
+                                if ( nFirst < mFirstFrame )
+                                    mFirstFrame = nFirst;
+                                if ( nLast > mLastFrame )
+                                    mLastFrame = nLast;
+
+                            } // End if has points
+                        
+                        } // End if has channel
+                        break;
+                    
+                    } // End case PositionXYZ
+
+                } // End switch type
+
+            } // End if has translation
+
+            // Rotation
+            pController = Data.rotationController;
+            if ( pController )
+            {
+                switch ( pController->getControllerType() )
+                {
+                    case cgAnimationTargetControllerType::Quaternion:
+                    {
+                        const cgQuaternionAnimationChannel * pChannel = &((cgQuaternionTargetController*)pController)->getAnimationChannel();
+                        if ( pChannel )
+                        {
+                            const cgQuaternionAnimationChannel::QuaternionKeyArray & Keys = pChannel->data;
+                            if ( !Keys.empty() )
+                            {
+                                cgInt nFirst = Keys.front().frame;
+                                cgInt nLast  = Keys.back().frame;
+                                if ( nFirst < mFirstFrame )
+                                    mFirstFrame = nFirst;
+                                if ( nLast > mLastFrame )
+                                    mLastFrame = nLast;
+
+                            } // End if has points
+                        
+                        } // End if has channel
+                        break;
+
+                    } // End case Quaternion
+                    case cgAnimationTargetControllerType::EulerAngles:
+                    {
+                        // X
+                        const cgFloatCurveAnimationChannel * pChannel = &((cgEulerAnglesTargetController*)pController)->getAnimationChannel(0);
+                        if ( pChannel )
+                        {
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            if ( !Keys.empty() )
+                            {
+                                cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
+                                cgInt nLast  = cgAnimationChannel::integerFrameIndex( Keys.back().point.x );
+                                if ( nFirst < mFirstFrame )
+                                    mFirstFrame = nFirst;
+                                if ( nLast > mLastFrame )
+                                    mLastFrame = nLast;
+
+                            } // End if has points
+                        
+                        } // End if has channel
+
+                        // Y
+                        pChannel = &((cgEulerAnglesTargetController*)pController)->getAnimationChannel(1);
+                        if ( pChannel )
+                        {
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            if ( !Keys.empty() )
+                            {
+                                cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
+                                cgInt nLast  = cgAnimationChannel::integerFrameIndex( Keys.back().point.x );
+                                if ( nFirst < mFirstFrame )
+                                    mFirstFrame = nFirst;
+                                if ( nLast > mLastFrame )
+                                    mLastFrame = nLast;
+
+                            } // End if has points
+                        
+                        } // End if has channel
+
+                        // Z
+                        pChannel = &((cgEulerAnglesTargetController*)pController)->getAnimationChannel(2);
+                        if ( pChannel )
+                        {
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            if ( !Keys.empty() )
+                            {
+                                cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
+                                cgInt nLast  = cgAnimationChannel::integerFrameIndex( Keys.back().point.x );
+                                if ( nFirst < mFirstFrame )
+                                    mFirstFrame = nFirst;
+                                if ( nLast > mLastFrame )
+                                    mLastFrame = nLast;
+
+                            } // End if has points
+                        
+                        } // End if has channel
+                        break;
+
+                    } // End case EulerAngles
+
+                } // End switch type
+
+            } // End if has rotation
+
+            // Scale
+            pController = Data.scaleController;
+            if ( pController )
+            {
+                switch ( pController->getControllerType() )
+                {
+                    case cgAnimationTargetControllerType::ScaleXYZ:
+                    {
+                        // X
+                        const cgFloatCurveAnimationChannel * pChannel = &((cgScaleXYZTargetController*)pController)->getAnimationChannel(0);
+                        if ( pChannel )
+                        {
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            if ( !Keys.empty() )
+                            {
+                                cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
+                                cgInt nLast  = cgAnimationChannel::integerFrameIndex( Keys.back().point.x );
+                                if ( nFirst < mFirstFrame )
+                                    mFirstFrame = nFirst;
+                                if ( nLast > mLastFrame )
+                                    mLastFrame = nLast;
+
+                            } // End if has points
+                        
+                        } // End if has channel
+
+                        // Y
+                        pChannel = &((cgScaleXYZTargetController*)pController)->getAnimationChannel(1);
+                        if ( pChannel )
+                        {
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            if ( !Keys.empty() )
+                            {
+                                cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
+                                cgInt nLast  = cgAnimationChannel::integerFrameIndex( Keys.back().point.x );
+                                if ( nFirst < mFirstFrame )
+                                    mFirstFrame = nFirst;
+                                if ( nLast > mLastFrame )
+                                    mLastFrame = nLast;
+
+                            } // End if has points
+                        
+                        } // End if has channel
+
+                        // Z
+                        pChannel = &((cgScaleXYZTargetController*)pController)->getAnimationChannel(2);
+                        if ( pChannel )
+                        {
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            if ( !Keys.empty() )
+                            {
+                                cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
+                                cgInt nLast  = cgAnimationChannel::integerFrameIndex( Keys.back().point.x );
+                                if ( nFirst < mFirstFrame )
+                                    mFirstFrame = nFirst;
+                                if ( nLast > mLastFrame )
+                                    mLastFrame = nLast;
+
+                            } // End if has points
+                        
+                        } // End if has channel
+                        break;
+
+                    } // End case ScaleXYZ
+                    case cgAnimationTargetControllerType::UniformScale:
+                    {
+                        const cgFloatCurveAnimationChannel * pChannel = &((cgUniformScaleTargetController*)pController)->getAnimationChannel();
+                        if ( pChannel )
+                        {
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            if ( !Keys.empty() )
+                            {
+                                cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
+                                cgInt nLast  = cgAnimationChannel::integerFrameIndex( Keys.back().point.x );
+                                if ( nFirst < mFirstFrame )
+                                    mFirstFrame = nFirst;
+                                if ( nLast > mLastFrame )
+                                    mLastFrame = nLast;
+
+                            } // End if has points
+                        
+                        } // End if has channel
+                        break;
+
+                    } // End case UniformScale
+
+                } // End switch type
+
+            } // End if has scale
+
+        } // Next target
+
+    } // End if recompute range
+
+    // Mark target data as dirty.
+    mDBDirtyFlags |= TargetDataDirty;
+    
+    // Process
+    serializeSet();
 }
 
 //-----------------------------------------------------------------------------
@@ -1100,7 +1439,7 @@ bool cgAnimationSet::getSRT( cgDouble framePosition, cgAnimationPlaybackMode::Ba
     static const cgVector3 DefaultScale( 1, 1, 1 );
     static const cgQuaternion DefaultRotation( 0, 0, 0, 1 );
     static const cgVector3 DefaultTranslation( 0, 0, 0 );
-    return getSRT( framePosition, mode, strTargetId, nMinFrame, nMaxFrame, DefaultScale, DefaultRotation, DefaultTranslation, Scale, Rotation, Translation );
+    return getSRT( framePosition, mode, strTargetId, nMinFrame, nMaxFrame, CG_NULL, Scale, Rotation, Translation );
 }
 
 //-----------------------------------------------------------------------------
@@ -1110,15 +1449,22 @@ bool cgAnimationSet::getSRT( cgDouble framePosition, cgAnimationPlaybackMode::Ba
 /// target at the specified position (in seconds).
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgAnimationSet::getSRT( cgDouble fFramePosition, cgAnimationPlaybackMode::Base mode, const cgString & strTargetId, cgInt32 nMinFrame, cgInt32 nMaxFrame, const cgVector3 & DefaultScale, const cgQuaternion & DefaultRotation, const cgVector3 & DefaultTranslation, cgVector3 & Scale, cgQuaternion & Rotation, cgVector3 & Translation )
+bool cgAnimationSet::getSRT( cgDouble fFramePosition, cgAnimationPlaybackMode::Base mode, const cgString & strTargetId, cgInt32 nMinFrame, cgInt32 nMaxFrame, cgAnimationTarget * pDefaultsTarget, cgVector3 & Scale, cgQuaternion & Rotation, cgVector3 & Translation )
 {
+    cgVector3 DefaultScale( 1, 1, 1 ), DefaultTranslation( 0, 0, 0 );
+    cgQuaternion DefaultRotation( 0, 0, 0, 1 );
+    bool bDefaultsDecomposed = false;
+
     // Any target matching this identifier?
     TargetDataMap::iterator itTargetData = mTargetData.find( strTargetId );
     if ( itTargetData == mTargetData.end() )
     {
-        Scale = DefaultScale;
-        Rotation = DefaultRotation;
-        Translation = DefaultTranslation;
+        if ( pDefaultsTarget )
+        {
+            cgTransform defaults;
+            pDefaultsTarget->getAnimationTransform( defaults );
+            defaults.decompose( Scale, Rotation, Translation );
+        }
         return false;
     
     } // End if no matching target
@@ -1151,84 +1497,191 @@ bool cgAnimationSet::getSRT( cgDouble fFramePosition, cgAnimationPlaybackMode::B
     } // End switch playback mode
 
     // Evaluate scale
+    bool bUseDefaultTransform = true;
     if ( Data.scaleController )
     {
         switch ( Data.scaleController->getControllerType() )
         {
             case cgAnimationTargetControllerType::ScaleXYZ:
-                ((cgScaleXYZTargetController*)Data.scaleController)->evaluate( fPeriodic, Scale, DefaultScale );
-                break;
+            {   
+                bool bAllChannelsEmpty = ((cgScaleXYZTargetController*)Data.scaleController)->isEmpty( );
+                if ( !bAllChannelsEmpty )
+                {
+                    bool bAnyChannelEmpty = ((cgScaleXYZTargetController*)Data.scaleController)->isEmpty( true );
+                    if ( bAnyChannelEmpty )
+                    {
+                        if ( pDefaultsTarget && !bDefaultsDecomposed )
+                        {
+                            cgTransform defaults;
+                            pDefaultsTarget->getAnimationTransform( defaults );
+                            defaults.decompose( DefaultScale, DefaultRotation, DefaultTranslation );
+                            bDefaultsDecomposed = true;
+                        
+                        } // End if decompose defaults
+                        
+                    } // End if any of the channels are empty.
 
+                    ((cgScaleXYZTargetController*)Data.scaleController)->evaluate( fPeriodic, Scale, DefaultScale );
+                    bUseDefaultTransform = false;
+                
+                } // End if !empty
+                break;
+            
+            } // End case ScaleXYZ
             case cgAnimationTargetControllerType::UniformScale:
             {
-                // Find the largest of the default scales for the.
-                // evaluate method's default parameter.
-                cgFloat fDefaultScale = max( DefaultScale.x, DefaultScale.y );
-                fDefaultScale = max( fDefaultScale, DefaultScale.z );
-
-                // Evaluate.
-                ((cgUniformScaleTargetController*)Data.scaleController)->evaluate( fPeriodic, Scale.x, fDefaultScale );
-                Scale.y = Scale.z = Scale.x;
+                // Decompose target's current animation tranform to use as the default if
+                // there is currently no scaling data.
+                if ( !((cgUniformScaleTargetController*)Data.scaleController)->isEmpty() )
+                {
+                    // Evaluate.
+                    ((cgUniformScaleTargetController*)Data.scaleController)->evaluate( fPeriodic, Scale.x, 1 );
+                    Scale.y = Scale.z = Scale.x;
+                    bUseDefaultTransform = false;
+                
+                } // End if !empty
                 break;
             
             } // End case UniformScale
 
-            default:
-                Scale = DefaultScale;
-                break;
-
         } // End switch type
 
     } // End if has scale
-    else
+    
+    if ( bUseDefaultTransform )
+    {
+        // Decompose target's current animation tranform to use as the default if
+        // there is currently no scaling data.
+        if ( pDefaultsTarget && !bDefaultsDecomposed )
+        {
+            cgTransform defaults;
+            pDefaultsTarget->getAnimationTransform( defaults );
+            defaults.decompose( DefaultScale, DefaultRotation, DefaultTranslation );
+            bDefaultsDecomposed = true;
+        
+        } // End if decompose defaults
         Scale = DefaultScale;
+    
+    } // End if use default
 
     // Evaluate rotation
+    bUseDefaultTransform = true;
     if ( Data.rotationController )
     {
         switch ( Data.rotationController->getControllerType() )
         {
             case cgAnimationTargetControllerType::EulerAngles:
             {
-                cgEulerAngles Euler;
-                ((cgEulerAnglesTargetController*)Data.rotationController)->evaluate( fPeriodic, Euler, DefaultRotation );
-                Euler.toQuaternion( Rotation );
+                bool bAllChannelsEmpty = ((cgEulerAnglesTargetController*)Data.rotationController)->isEmpty( );
+                if ( !bAllChannelsEmpty )
+                {
+                    cgEulerAngles DefaultEuler;
+                    bool bAnyChannelEmpty = ((cgEulerAnglesTargetController*)Data.rotationController)->isEmpty( true );
+                    if ( bAnyChannelEmpty )
+                    {
+                        if ( pDefaultsTarget && !bDefaultsDecomposed )
+                        {
+                            cgTransform defaults;
+                            pDefaultsTarget->getAnimationTransform( defaults );
+                            defaults.decompose( DefaultScale, DefaultRotation, DefaultTranslation );
+                            bDefaultsDecomposed = true;
+                        
+                        } // End if decompose defaults
+                        DefaultEuler.fromQuaternion( DefaultRotation, ((cgEulerAnglesTargetController*)Data.rotationController)->getRotationOrder() );
+                    
+                    } // End if any of the channels are empty.
+                        
+                    cgEulerAngles Euler;
+                    ((cgEulerAnglesTargetController*)Data.rotationController)->evaluate( fPeriodic, Euler, DefaultEuler );
+                    Euler.toQuaternion( Rotation );
+                    bUseDefaultTransform = false;
+                
+                } // End if !empty
                 break;
             
             } // End case EulerAngles
 
             case cgAnimationTargetControllerType::Quaternion:
-                ((cgQuaternionTargetController*)Data.rotationController)->evaluate( fPeriodic, Rotation, DefaultRotation );
-                break;
-            
-            default:
-                Rotation = DefaultRotation;
+                
+                if ( !((cgQuaternionTargetController*)Data.rotationController)->isEmpty() )
+                {
+                    ((cgQuaternionTargetController*)Data.rotationController)->evaluate( fPeriodic, Rotation, DefaultRotation );
+                    bUseDefaultTransform = false;
+                
+                } // End if !empty
                 break;
 
         } // End switch type
 
-    } // End if has scale
-    else
+    } // End if has rotation
+
+    if ( bUseDefaultTransform )
+    {
+        // Decompose target's current animation tranform to use as the default if
+        // there is currently no scaling data.
+        if ( pDefaultsTarget && !bDefaultsDecomposed )
+        {
+            cgTransform defaults;
+            pDefaultsTarget->getAnimationTransform( defaults );
+            defaults.decompose( DefaultScale, DefaultRotation, DefaultTranslation );
+            bDefaultsDecomposed = true;
+        
+        } // End if decompose defaults
         Rotation = DefaultRotation;
+    
+    } // End if use default
 
     // Evaluate translation
+    bUseDefaultTransform = true;
     if ( Data.translationController )
     {
         switch ( Data.translationController->getControllerType() )
         {
             case cgAnimationTargetControllerType::PositionXYZ:
-                ((cgPositionXYZTargetController*)Data.translationController)->evaluate( fPeriodic, Translation, DefaultTranslation );
-                break;
-            
-            default:
-                Translation = DefaultTranslation;
+
+                bool bAllChannelsEmpty = ((cgPositionXYZTargetController*)Data.translationController)->isEmpty( );
+                if ( !bAllChannelsEmpty )
+                {
+                    bool bAnyChannelEmpty = ((cgPositionXYZTargetController*)Data.translationController)->isEmpty( true );
+                    if ( bAnyChannelEmpty )
+                    {
+                        if ( pDefaultsTarget && !bDefaultsDecomposed )
+                        {
+                            cgTransform defaults;
+                            pDefaultsTarget->getAnimationTransform( defaults );
+                            defaults.decompose( DefaultScale, DefaultRotation, DefaultTranslation );
+                            bDefaultsDecomposed = true;
+                        
+                        } // End if decompose defaults
+                        
+                    } // End if any of the channels are empty.
+
+                    ((cgPositionXYZTargetController*)Data.translationController)->evaluate( fPeriodic, Translation, DefaultTranslation );
+                    bUseDefaultTransform = false;
+                
+                } // End if !empty
                 break;
 
         } // End switch type
 
     } // End if has scale
-    else
+
+    if ( bUseDefaultTransform )
+    {
+        // Decompose target's current animation tranform to use as the default if
+        // there is currently no scaling data.
+        if ( pDefaultsTarget && !bDefaultsDecomposed )
+        {
+            cgTransform defaults;
+            pDefaultsTarget->getAnimationTransform( defaults );
+            defaults.decompose( DefaultScale, DefaultRotation, DefaultTranslation );
+            bDefaultsDecomposed = true;
+        
+        } // End if decompose defaults
         Translation = DefaultTranslation;
+    
+    } // End if use default
+
 
     // Success!
     return true;

@@ -13,7 +13,7 @@
 // Desc : Custom derived window class specific to the Windows(tm) platform.  //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//      Copyright (c) 1997 - 2008 Game Institute. All Rights Reserved.       //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -23,7 +23,6 @@
 //-----------------------------------------------------------------------------
 // cgWinAppWindow Header Includes
 //-----------------------------------------------------------------------------
-#include <cgBase.h>
 #include <System/cgAppWindow.h>
 
 // Windows platform includes
@@ -76,12 +75,18 @@ public:
     virtual void            setSize             ( const cgSize & size );
     virtual void            setClientSize       ( const cgSize & size );
     virtual void            setFullScreenMode   ( bool fullScreen );
+    virtual void            setCursor           ( cgCursor * cursor );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
     //-------------------------------------------------------------------------
     virtual const cgUID   & getReferenceType    ( ) const { return RTID_WinAppWindow; }
     virtual bool            queryReferenceType  ( const cgUID & type ) const;
+
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods (Overrides DisposableScriptObject)
+    //-------------------------------------------------------------------------
+    virtual void            dispose             ( bool disposeBase );
 
 protected:
     //-------------------------------------------------------------------------

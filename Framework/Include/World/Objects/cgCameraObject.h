@@ -15,7 +15,7 @@
 //        an object node.                                                    //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -194,13 +194,11 @@ public:
 	void                        setJitterAA                 ( const cgVector2 & jitter );
 	cgVector2                   getJitterAA                 ( );
 
-    // ToDo: 6767 - Is visibility application even required any more?
-    void                        applyVisibility             ( );
-    void                        computeVisibility           ( cgUInt32 flags = cgVisibilitySearchFlags::MustRender | cgVisibilitySearchFlags::CollectMaterials, bool autoApply = false );
+    void                        computeVisibility           ( );
     cgVisibilitySet           * getVisibilitySet            ( );
 
-    cgVolumeQuery::Class        boundsInFrustum             ( const cgBoundingBox & bounds, cgUInt8 * frustumBits = CG_NULL, cgInt8 * lastOutside = CG_NULL );
-    cgVolumeQuery::Class        boundsInFrustum             ( const cgBoundingBox & bounds, const cgTransform & transform, cgUInt8 * frustumBits = CG_NULL, cgInt8 * lastOutside = CG_NULL );
+    cgVolumeQuery::Class        boundsInFrustum             ( const cgBoundingBox & bounds );
+    cgVolumeQuery::Class        boundsInFrustum             ( const cgBoundingBox & bounds, const cgTransform & transform );
     bool                        viewportToRay               ( const cgSize & viewportSize, const cgVector2 & point, cgVector3 & rayOriginOut, cgVector3 & rayDirectionOut );
     bool                        viewportToWorld             ( const cgSize & viewportSize, const cgVector2 & point, const cgPlane & plane, cgVector3 & positionOut );
     bool                        viewportToMajorAxis         ( const cgSize & viewportSize, const cgVector2 & point, const cgVector3 & axisOrigin, cgVector3 & positionOut, cgVector3 & majorAxisOut );

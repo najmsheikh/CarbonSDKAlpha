@@ -15,7 +15,7 @@
 //        most commonly includes bodies and joints for instance.             //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -61,6 +61,11 @@ public:
     //-------------------------------------------------------------------------
              cgPhysicsEntity( cgPhysicsWorld * world );
     virtual ~cgPhysicsEntity( );
+
+    //-------------------------------------------------------------------------
+    // Public Methods
+    //-------------------------------------------------------------------------
+    cgPhysicsWorld            * getPhysicsWorld         ( ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods

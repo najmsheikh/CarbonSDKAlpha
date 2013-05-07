@@ -14,7 +14,7 @@
 //        functions.                                                         //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -50,6 +50,7 @@ namespace cgMathUtility
     cgInt              CGE_API  compareVectors              ( const cgVector2 & v1, const cgVector2 & v2, cgFloat tolerance = 0.0f );
     cgInt              CGE_API  compareVectors              ( const cgVector3 & v1, const cgVector3 & v2, cgFloat tolerance = 0.0f );
     cgInt              CGE_API  compareVectors              ( const cgVector4 & v1, const cgVector4 & v2, cgFloat tolerance = 0.0f );
+    bool               CGE_API  dynamicEpsilonTest          ( cgFloat value1, cgFloat value2, cgInt32 maxUlps );
     const cgColorValue CGE_API& randomColor                 ( );
     cgFloat            CGE_API  distanceToPlane             ( const cgVector3 & point, const cgPlane & plane, const cgVector3 & direction );
     cgMatrix           CGE_API* matrixSwapYZ                ( cgMatrix * out, const cgMatrix * in );

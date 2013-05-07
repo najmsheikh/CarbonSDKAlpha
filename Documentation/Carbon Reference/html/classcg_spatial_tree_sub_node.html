@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -122,6 +122,7 @@ Inheritance diagram for cgSpatialTreeSubNode:</div>
   <img src="classcg_spatial_tree_sub_node.png" usemap="#cgSpatialTreeSubNode_map" alt=""/>
   <map id="cgSpatialTreeSubNode_map" name="cgSpatialTreeSubNode_map">
 <area href="classcg_landscape_sub_node.html" title="The node class specific to the spatial tree type implemented by the landscape system. " alt="cgLandscapeSubNode" shape="rect" coords="0,56,142,80"/>
+<area href="classcg_octree_sub_node.html" title="The node class specific to the octree spatial tree type. " alt="cgOctreeSubNode" shape="rect" coords="152,56,294,80"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -151,17 +152,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad23965791b76707e82d86a92bb8c7bee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree_sub_node.html#ad23965791b76707e82d86a92bb8c7bee">setLeaf</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> leafIndex)</td></tr>
 <tr class="memdesc:ad23965791b76707e82d86a92bb8c7bee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store the index to the required leaf for this node.  <a href="#ad23965791b76707e82d86a92bb8c7bee"></a><br/></td></tr>
 <tr class="separator:ad23965791b76707e82d86a92bb8c7bee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c78adec81c61253327e42d3238c3947"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree_sub_node.html#a9c78adec81c61253327e42d3238c3947">nodeConstructed</a> ()</td></tr>
-<tr class="separator:a9c78adec81c61253327e42d3238c3947"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ae4997fe7d20ecfa5fc171ddb605ef1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree_sub_node.html#a7ae4997fe7d20ecfa5fc171ddb605ef1">collectLeaves</a> (<a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *issuer, <a class="el" href="classcg_spatial_tree.html">cgSpatialTree</a> *tree, cgSceneLeafArray &amp;leaves, const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;bounds, bool autoCollect=false)</td></tr>
+<tr class="memitem:a7ae4997fe7d20ecfa5fc171ddb605ef1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree_sub_node.html#a7ae4997fe7d20ecfa5fc171ddb605ef1">collectLeaves</a> (<a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *issuer, <a class="el" href="classcg_spatial_tree.html">cgSpatialTree</a> *tree, cgSceneLeafArray &amp;leaves, const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;bounds, bool autoCollect=false)</td></tr>
 <tr class="memdesc:a7ae4997fe7d20ecfa5fc171ddb605ef1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default recursive function which traverses the tree nodes in order to build a list of intersecting leaves.  <a href="#a7ae4997fe7d20ecfa5fc171ddb605ef1"></a><br/></td></tr>
 <tr class="separator:a7ae4997fe7d20ecfa5fc171ddb605ef1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1079e82565c7d6c3760fc89483fe5c0d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree_sub_node.html#a1079e82565c7d6c3760fc89483fe5c0d">computeVisibility</a> (<a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *issuer, <a class="el" href="classcg_spatial_tree.html">cgSpatialTree</a> *tree, const <a class="el" href="classcg_frustum.html">cgFrustum</a> &amp;frustum, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags=false, <a class="el" href="cg_base_types_8h.html#a7516feeebd4cc41b809f7a6a363c32bd">cgUInt8</a> frustumBits=0x0, bool autoVisible=false)</td></tr>
-<tr class="memdesc:a1079e82565c7d6c3760fc89483fe5c0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The DEFAULT recursive function (for frustum testing) which traverses the node hierarchy and updates the visibility set as appropriate.  <a href="#a1079e82565c7d6c3760fc89483fe5c0d"></a><br/></td></tr>
-<tr class="separator:a1079e82565c7d6c3760fc89483fe5c0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:accfb75c8c42f7853bc68eb432762538d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree_sub_node.html#accfb75c8c42f7853bc68eb432762538d">computeVisibility</a> (<a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *issuer, <a class="el" href="classcg_spatial_tree.html">cgSpatialTree</a> *tree, const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;testBounds, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags=false, bool autoVisible=false)</td></tr>
-<tr class="memdesc:accfb75c8c42f7853bc68eb432762538d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The DEFAULT recursive function (for AABB testing) which traverses the node hierarchy and updates the visibility set as appropriate.  <a href="#accfb75c8c42f7853bc68eb432762538d"></a><br/></td></tr>
-<tr class="separator:accfb75c8c42f7853bc68eb432762538d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52dc1daf113492036d08696c44da4862"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree_sub_node.html#a52dc1daf113492036d08696c44da4862">computeVisibility</a> (<a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *issuer, <a class="el" href="classcg_spatial_tree.html">cgSpatialTree</a> *tree, const <a class="el" href="classcg_frustum.html">cgFrustum</a> &amp;frustum, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, <a class="el" href="cg_base_types_8h.html#a7516feeebd4cc41b809f7a6a363c32bd">cgUInt8</a> frustumBits=0x0, bool autoVisible=false)</td></tr>
+<tr class="memdesc:a52dc1daf113492036d08696c44da4862"><td class="mdescLeft">&#160;</td><td class="mdescRight">The DEFAULT recursive function (for frustum testing) which traverses the node hierarchy and updates the visibility set as appropriate.  <a href="#a52dc1daf113492036d08696c44da4862"></a><br/></td></tr>
+<tr class="separator:a52dc1daf113492036d08696c44da4862"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0bf299cc420c5f849f85449084e00e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree_sub_node.html#aa0bf299cc420c5f849f85449084e00e5">computeVisibility</a> (<a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *issuer, <a class="el" href="classcg_spatial_tree.html">cgSpatialTree</a> *tree, const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;testBounds, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, bool autoVisible=false)</td></tr>
+<tr class="memdesc:aa0bf299cc420c5f849f85449084e00e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">The DEFAULT recursive function (for AABB testing) which traverses the node hierarchy and updates the visibility set as appropriate.  <a href="#aa0bf299cc420c5f849f85449084e00e5"></a><br/></td></tr>
+<tr class="separator:aa0bf299cc420c5f849f85449084e00e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f52ed246265260923ef2eef78c1965e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree_sub_node.html#a1f52ed246265260923ef2eef78c1965e">updateObjectOwnership</a> (<a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *issuer, <a class="el" href="classcg_spatial_tree.html">cgSpatialTree</a> *tree, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *object, const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;objectBounds, bool testOnly, bool autoAdd, size_t &amp;leafCount)</td></tr>
+<tr class="memdesc:a1f52ed246265260923ef2eef78c1965e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default recursive function which traverses the tree nodes in order to update the issuer's object ownership list.  <a href="#a1f52ed246265260923ef2eef78c1965e"></a><br/></td></tr>
+<tr class="separator:a1f52ed246265260923ef2eef78c1965e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c78adec81c61253327e42d3238c3947"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree_sub_node.html#a9c78adec81c61253327e42d3238c3947">nodeConstructed</a> ()</td></tr>
+<tr class="separator:a9c78adec81c61253327e42d3238c3947"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28a7cfa16c8b8cf879378feb174e0571"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree_sub_node.html#a28a7cfa16c8b8cf879378feb174e0571">getChildNodeCount</a> () const </td></tr>
 <tr class="memdesc:a28a7cfa16c8b8cf879378feb174e0571"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the total number of child nodes stored here.  <a href="#a28a7cfa16c8b8cf879378feb174e0571"></a><br/></td></tr>
 <tr class="separator:a28a7cfa16c8b8cf879378feb174e0571"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -273,9 +277,6 @@ Protected Attributes</h2></td></tr>
 <a class="anchor" id="a7ae4997fe7d20ecfa5fc171ddb605ef1"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">bool cgSpatialTreeSubNode::collectLeaves </td>
@@ -313,67 +314,57 @@ Protected Attributes</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>The default recursive function which traverses the tree nodes in order to build a list of intersecting leaves. </p>
 
-<p>Reimplemented in <a class="el" href="classcg_landscape_sub_node.html#ac0da7d34630427a4101a4252984e730e">cgLandscapeSubNode</a>.</p>
-
 </div>
 </div>
-<a class="anchor" id="a1079e82565c7d6c3760fc89483fe5c0d"></a>
+<a class="anchor" id="a52dc1daf113492036d08696c44da4862"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void cgSpatialTreeSubNode::computeVisibility </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *&#160;</td>
-          <td class="paramname"><em>pIssuer</em>, </td>
+          <td class="paramname"><em>issuer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classcg_spatial_tree.html">cgSpatialTree</a> *&#160;</td>
-          <td class="paramname"><em>pTree</em>, </td>
+          <td class="paramname"><em>tree</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classcg_frustum.html">cgFrustum</a> &amp;&#160;</td>
-          <td class="paramname"><em>Frustum</em>, </td>
+          <td class="paramname"><em>frustum</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *&#160;</td>
-          <td class="paramname"><em>pVisData</em>, </td>
+          <td class="paramname"><em>visibilityData</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
-          <td class="paramname"><em>nFlags</em> = <code>false</code>, </td>
+          <td class="paramname"><em>flags</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a7516feeebd4cc41b809f7a6a363c32bd">cgUInt8</a>&#160;</td>
-          <td class="paramname"><em>FrustumBits</em> = <code>0x0</code>, </td>
+          <td class="paramname"><em>frustumBits</em> = <code>0x0</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>bAutoVisible</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>autoVisible</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -381,23 +372,15 @@ Protected Attributes</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>The DEFAULT recursive function (for frustum testing) which traverses the node hierarchy and updates the visibility set as appropriate. </p>
 
 </div>
 </div>
-<a class="anchor" id="accfb75c8c42f7853bc68eb432762538d"></a>
+<a class="anchor" id="aa0bf299cc420c5f849f85449084e00e5"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void cgSpatialTreeSubNode::computeVisibility </td>
@@ -427,7 +410,7 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
-          <td class="paramname"><em>nFlags</em> = <code>false</code>, </td>
+          <td class="paramname"><em>nFlags</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -441,11 +424,6 @@ Protected Attributes</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>The DEFAULT recursive function (for AABB testing) which traverses the node hierarchy and updates the visibility set as appropriate. </p>
@@ -624,7 +602,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classcg_landscape_sub_node.html#a6f9887b6074678532c8c61d70531b525">cgLandscapeSubNode</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_landscape_sub_node.html#a6f9887b6074678532c8c61d70531b525">cgLandscapeSubNode</a>, and <a class="el" href="classcg_octree_sub_node.html#a171bbd713cf2f8f79eb9c9de2f1bec0e">cgOctreeSubNode</a>.</p>
 
 </div>
 </div>
@@ -731,6 +709,64 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set the depth value of this node (its position in the tree hierarchy) to the value specified. </p>
+
+</div>
+</div>
+<a class="anchor" id="a1f52ed246265260923ef2eef78c1965e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgSpatialTreeSubNode::updateObjectOwnership </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *&#160;</td>
+          <td class="paramname"><em>issuer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcg_spatial_tree.html">cgSpatialTree</a> *&#160;</td>
+          <td class="paramname"><em>tree</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcg_object_node.html">cgObjectNode</a> *&#160;</td>
+          <td class="paramname"><em>object</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;&#160;</td>
+          <td class="paramname"><em>objectBounds</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>testOnly</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>autoAdd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t &amp;&#160;</td>
+          <td class="paramname"><em>leafCount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The default recursive function which traverses the tree nodes in order to update the issuer's object ownership list. </p>
 
 </div>
 </div>
@@ -865,7 +901,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_spatial_tree_sub_node.html">cgSpatialTreeSubNode</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:50 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:51 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

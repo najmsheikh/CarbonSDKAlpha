@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -131,8 +131,6 @@ Inheritance diagram for cgAnimationController:</div>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_animation_controller_1_1_track.html">Track</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_animation_controller_1_1_track_desc.html">TrackDesc</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -145,9 +143,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a63d247eed46a6ac8efec7bda2fd07625"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a63d247eed46a6ac8efec7bda2fd07625">advanceTime</a> (<a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> timeDelta, const TargetMap &amp;targets)</td></tr>
 <tr class="memdesc:a63d247eed46a6ac8efec7bda2fd07625"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance the animation playhead by the specified amount (in seconds) and update any relevant animation targets.  <a href="#a63d247eed46a6ac8efec7bda2fd07625"></a><br/></td></tr>
 <tr class="separator:a63d247eed46a6ac8efec7bda2fd07625"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5b8b469e3267fec5043877303c54f6b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#ab5b8b469e3267fec5043877303c54f6b">getTime</a> () const </td></tr>
-<tr class="memdesc:ab5b8b469e3267fec5043877303c54f6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the current time (in seconds) of the animation playhead.  <a href="#ab5b8b469e3267fec5043877303c54f6b"></a><br/></td></tr>
-<tr class="separator:ab5b8b469e3267fec5043877303c54f6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5e3a40257e6287eed2785a1e9d5a83d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#af5e3a40257e6287eed2785a1e9d5a83d">resetTime</a> ()</td></tr>
 <tr class="memdesc:af5e3a40257e6287eed2785a1e9d5a83d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the global playhead time to zero.  <a href="#af5e3a40257e6287eed2785a1e9d5a83d"></a><br/></td></tr>
 <tr class="separator:af5e3a40257e6287eed2785a1e9d5a83d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -157,9 +152,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acddc50d36925fa4b563dab67a3d57823"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#acddc50d36925fa4b563dab67a3d57823">setTrackAnimationSet</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track, const <a class="el" href="cg_resource_handles_8h.html#aed6a734bd819c8bac81d120096eddc7f">cgAnimationSetHandle</a> &amp;set)</td></tr>
 <tr class="memdesc:acddc50d36925fa4b563dab67a3d57823"><td class="mdescLeft">&#160;</td><td class="mdescRight">Place the specified animation set in the required track for playback.  <a href="#acddc50d36925fa4b563dab67a3d57823"></a><br/></td></tr>
 <tr class="separator:acddc50d36925fa4b563dab67a3d57823"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a281fd2e7de755fa687f650ec20c6c63e"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cg_resource_handles_8h.html#aed6a734bd819c8bac81d120096eddc7f">cgAnimationSetHandle</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a281fd2e7de755fa687f650ec20c6c63e">getTrackAnimationSet</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track) const </td></tr>
-<tr class="memdesc:a281fd2e7de755fa687f650ec20c6c63e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the animation set that is currently bound to the specified track for playback.  <a href="#a281fd2e7de755fa687f650ec20c6c63e"></a><br/></td></tr>
-<tr class="separator:a281fd2e7de755fa687f650ec20c6c63e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bddbf358cbe616fe11a70ec49cc9f34"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a5bddbf358cbe616fe11a70ec49cc9f34">setTrackWeight</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> weight)</td></tr>
 <tr class="memdesc:a5bddbf358cbe616fe11a70ec49cc9f34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the blending weight of the specified track (i.e. how much it will contribute to the final controller output)  <a href="#a5bddbf358cbe616fe11a70ec49cc9f34"></a><br/></td></tr>
 <tr class="separator:a5bddbf358cbe616fe11a70ec49cc9f34"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,15 +161,51 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8b10c33352dfeb6e16dff0cf099dca2a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a8b10c33352dfeb6e16dff0cf099dca2a">setTrackPosition</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track, <a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> position)</td></tr>
 <tr class="memdesc:a8b10c33352dfeb6e16dff0cf099dca2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current position (in seconds) of the track playhead. This value is independant from the global time / position.  <a href="#a8b10c33352dfeb6e16dff0cf099dca2a"></a><br/></td></tr>
 <tr class="separator:a8b10c33352dfeb6e16dff0cf099dca2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a125f506f89f4532f9e6f529519672abf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a125f506f89f4532f9e6f529519672abf">setTrackFrameLimits</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> minFrame, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> maxFrame)</td></tr>
+<tr class="memdesc:a125f506f89f4532f9e6f529519672abf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supply frame indices that describe the boundaries within which the animation set sampler will be limited. Specify both as 0x7FFFFFFF to disable limits.  <a href="#a125f506f89f4532f9e6f529519672abf"></a><br/></td></tr>
+<tr class="separator:a125f506f89f4532f9e6f529519672abf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f098300ca88ab5156a1c80901c28313"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a5f098300ca88ab5156a1c80901c28313">setTrackFrameLimits</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track, const <a class="el" href="structcg_range.html">cgRange</a> &amp;range)</td></tr>
+<tr class="memdesc:a5f098300ca88ab5156a1c80901c28313"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supply frame indices that describe the boundaries within which the animation set sampler will be limited. Specify both as 0x7FFFFFFF to disable limits.  <a href="#a5f098300ca88ab5156a1c80901c28313"></a><br/></td></tr>
+<tr class="separator:a5f098300ca88ab5156a1c80901c28313"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40d1057beebb33a4c3126a18f1deb268"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a40d1057beebb33a4c3126a18f1deb268">setTrackPlaybackMode</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track, <a class="el" href="namespacecg_animation_playback_mode.html#ad05c8be8e2aff0c06edfcb75ebae06df">cgAnimationPlaybackMode::Base</a> mode)</td></tr>
+<tr class="memdesc:a40d1057beebb33a4c3126a18f1deb268"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the mode that will be used to play the animation data assigned to this track (i.e. Loop, PlayOnce, etc.)  <a href="#a40d1057beebb33a4c3126a18f1deb268"></a><br/></td></tr>
+<tr class="separator:a40d1057beebb33a4c3126a18f1deb268"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab56bcddb9ad8eae25eb0c43e1245688"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#aab56bcddb9ad8eae25eb0c43e1245688">setTrackEnabled</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track, bool enabled)</td></tr>
+<tr class="memdesc:aab56bcddb9ad8eae25eb0c43e1245688"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable the specified track. When disabled, the animation controller will not process the track during animation updates.  <a href="#aab56bcddb9ad8eae25eb0c43e1245688"></a><br/></td></tr>
+<tr class="separator:aab56bcddb9ad8eae25eb0c43e1245688"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a9bdd61815e9476478b1cb89e90868f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a4a9bdd61815e9476478b1cb89e90868f">setTrackDesc</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track, const <a class="el" href="structcg_animation_track_desc.html">cgAnimationTrackDesc</a> &amp;desc)</td></tr>
+<tr class="memdesc:a4a9bdd61815e9476478b1cb89e90868f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set all of the track playback properties in one go.  <a href="#a4a9bdd61815e9476478b1cb89e90868f"></a><br/></td></tr>
+<tr class="separator:a4a9bdd61815e9476478b1cb89e90868f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5b8b469e3267fec5043877303c54f6b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#ab5b8b469e3267fec5043877303c54f6b">getTime</a> () const </td></tr>
+<tr class="memdesc:ab5b8b469e3267fec5043877303c54f6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the current time (in seconds) of the animation playhead.  <a href="#ab5b8b469e3267fec5043877303c54f6b"></a><br/></td></tr>
+<tr class="separator:ab5b8b469e3267fec5043877303c54f6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee18450f93fbe0c1d187007db3c896fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#aee18450f93fbe0c1d187007db3c896fc">getTrackLimit</a> () const </td></tr>
+<tr class="memdesc:aee18450f93fbe0c1d187007db3c896fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the maximum number of tracks that are available for blending with this animation controller. Can be altered with '<a class="el" href="classcg_animation_controller.html#a7e422e6aa95bf73fcc5c79ce82f3c476" title="Set the maximum number of tracks that will be required by this animation controller (defaults to 1) ...">setTrackLimit()</a>'.  <a href="#aee18450f93fbe0c1d187007db3c896fc"></a><br/></td></tr>
+<tr class="separator:aee18450f93fbe0c1d187007db3c896fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a281fd2e7de755fa687f650ec20c6c63e"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cg_resource_handles_8h.html#aed6a734bd819c8bac81d120096eddc7f">cgAnimationSetHandle</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a281fd2e7de755fa687f650ec20c6c63e">getTrackAnimationSet</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track) const </td></tr>
+<tr class="memdesc:a281fd2e7de755fa687f650ec20c6c63e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the animation set that is currently bound to the specified track for playback.  <a href="#a281fd2e7de755fa687f650ec20c6c63e"></a><br/></td></tr>
+<tr class="separator:a281fd2e7de755fa687f650ec20c6c63e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5d51b09e7594949169193f600d01c82"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#ac5d51b09e7594949169193f600d01c82">getTrackWeight</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track) const </td></tr>
+<tr class="memdesc:ac5d51b09e7594949169193f600d01c82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the blending weight of the specified track (i.e. how much it will contribute to the final controller output)  <a href="#ac5d51b09e7594949169193f600d01c82"></a><br/></td></tr>
+<tr class="separator:ac5d51b09e7594949169193f600d01c82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9408d08d341b9f330e611b771d1f9fd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#ae9408d08d341b9f330e611b771d1f9fd">getTrackSpeed</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track) const </td></tr>
+<tr class="memdesc:ae9408d08d341b9f330e611b771d1f9fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the playback speed of this track (1.0 is normal speed).  <a href="#ae9408d08d341b9f330e611b771d1f9fd"></a><br/></td></tr>
+<tr class="separator:ae9408d08d341b9f330e611b771d1f9fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e7eb962ca612a30d5079218d104b790"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a6e7eb962ca612a30d5079218d104b790">getTrackPosition</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track) const </td></tr>
 <tr class="memdesc:a6e7eb962ca612a30d5079218d104b790"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current position (in seconds) of the track playhead. This value is independant from the global time / position.  <a href="#a6e7eb962ca612a30d5079218d104b790"></a><br/></td></tr>
 <tr class="separator:a6e7eb962ca612a30d5079218d104b790"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a125f506f89f4532f9e6f529519672abf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a125f506f89f4532f9e6f529519672abf">setTrackFrameLimits</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> minFrame, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> maxFrame)</td></tr>
-<tr class="memdesc:a125f506f89f4532f9e6f529519672abf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indices of the frames to limit the animation set sampler to. Specify both as 0x7FFFFFFF to disable limits.  <a href="#a125f506f89f4532f9e6f529519672abf"></a><br/></td></tr>
-<tr class="separator:a125f506f89f4532f9e6f529519672abf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ae327b2da21ffacdf94e03fbcfd2662"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a8ae327b2da21ffacdf94e03fbcfd2662">setTrackDesc</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track, const <a class="el" href="structcg_animation_controller_1_1_track_desc.html">TrackDesc</a> &amp;desc)</td></tr>
-<tr class="memdesc:a8ae327b2da21ffacdf94e03fbcfd2662"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set all of the track playback properties in one go.  <a href="#a8ae327b2da21ffacdf94e03fbcfd2662"></a><br/></td></tr>
-<tr class="separator:a8ae327b2da21ffacdf94e03fbcfd2662"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d95ba9d8cde8c6a575c673813e11d97"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_range.html">cgRange</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a9d95ba9d8cde8c6a575c673813e11d97">getTrackFrameLimits</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track) const </td></tr>
+<tr class="memdesc:a9d95ba9d8cde8c6a575c673813e11d97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the frame indices that describe the boundaries within which the animation set sampler is being limited. Frame indices of 0x7FFFFFFF indicate that limits are disabled.  <a href="#a9d95ba9d8cde8c6a575c673813e11d97"></a><br/></td></tr>
+<tr class="separator:a9d95ba9d8cde8c6a575c673813e11d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4eb606e9012897aa3dba2f02d210b983"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_animation_playback_mode.html#ad05c8be8e2aff0c06edfcb75ebae06df">cgAnimationPlaybackMode::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a4eb606e9012897aa3dba2f02d210b983">getTrackPlaybackMode</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track) const </td></tr>
+<tr class="memdesc:a4eb606e9012897aa3dba2f02d210b983"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the mode that will be used to play the animation data assigned to this track (i.e. Loop, PlayOnce, etc.)  <a href="#a4eb606e9012897aa3dba2f02d210b983"></a><br/></td></tr>
+<tr class="separator:a4eb606e9012897aa3dba2f02d210b983"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a940af9e5a7083021c56e26c8383447d5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a940af9e5a7083021c56e26c8383447d5">getTrackEnabled</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track) const </td></tr>
+<tr class="memdesc:a940af9e5a7083021c56e26c8383447d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the state that indicates whether or not the specified track is currently enabled. When disabled, the animation controller will not process the track during animation updates.  <a href="#a940af9e5a7083021c56e26c8383447d5"></a><br/></td></tr>
+<tr class="separator:a940af9e5a7083021c56e26c8383447d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c4913049b49a909d12b0b80e09dc9bb"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_animation_track_desc.html">cgAnimationTrackDesc</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a6c4913049b49a909d12b0b80e09dc9bb">getTrackDesc</a> (<a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> track) const </td></tr>
+<tr class="memdesc:a6c4913049b49a909d12b0b80e09dc9bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve all of the track playback properties in one go.  <a href="#a6c4913049b49a909d12b0b80e09dc9bb"></a><br/></td></tr>
+<tr class="separator:a6c4913049b49a909d12b0b80e09dc9bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40bb7c5511578e3fd39de96ca453a267"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_controller.html#a40bb7c5511578e3fd39de96ca453a267">update</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> timeDelta)</td></tr>
 <tr class="memdesc:a40bb7c5511578e3fd39de96ca453a267"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classcg_scene_controller.html" title="Base class for controllers that will manipulate / control any loaded scene. ">cgSceneController</a> 'update' functionality. Simply advances time automatically while enabled.  <a href="#a40bb7c5511578e3fd39de96ca453a267"></a><br/></td></tr>
 <tr class="separator:a40bb7c5511578e3fd39de96ca453a267"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -354,6 +382,95 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a6c4913049b49a909d12b0b80e09dc9bb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structcg_animation_track_desc.html">cgAnimationTrackDesc</a> &amp; cgAnimationController::getTrackDesc </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a>&#160;</td>
+          <td class="paramname"><em>track</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve all of the track playback properties in one go. </p>
+
+</div>
+</div>
+<a class="anchor" id="a940af9e5a7083021c56e26c8383447d5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgAnimationController::getTrackEnabled </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a>&#160;</td>
+          <td class="paramname"><em>track</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the state that indicates whether or not the specified track is currently enabled. When disabled, the animation controller will not process the track during animation updates. </p>
+
+</div>
+</div>
+<a class="anchor" id="a9d95ba9d8cde8c6a575c673813e11d97"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcg_range.html">cgRange</a> cgAnimationController::getTrackFrameLimits </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a>&#160;</td>
+          <td class="paramname"><em>track</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the frame indices that describe the boundaries within which the animation set sampler is being limited. Frame indices of 0x7FFFFFFF indicate that limits are disabled. </p>
+
+</div>
+</div>
+<a class="anchor" id="aee18450f93fbe0c1d187007db3c896fc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> cgAnimationController::getTrackLimit </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the maximum number of tracks that are available for blending with this animation controller. Can be altered with '<a class="el" href="classcg_animation_controller.html#a7e422e6aa95bf73fcc5c79ce82f3c476" title="Set the maximum number of tracks that will be required by this animation controller (defaults to 1) ...">setTrackLimit()</a>'. </p>
+
+</div>
+</div>
+<a class="anchor" id="a4eb606e9012897aa3dba2f02d210b983"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacecg_animation_playback_mode.html#ad05c8be8e2aff0c06edfcb75ebae06df">cgAnimationPlaybackMode::Base</a> cgAnimationController::getTrackPlaybackMode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a>&#160;</td>
+          <td class="paramname"><em>track</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the mode that will be used to play the animation data assigned to this track (i.e. Loop, PlayOnce, etc.) </p>
+
+</div>
+</div>
 <a class="anchor" id="a6e7eb962ca612a30d5079218d104b790"></a>
 <div class="memitem">
 <div class="memproto">
@@ -362,13 +479,49 @@ Protected Attributes</h2></td></tr>
           <td class="memname"><a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> cgAnimationController::getTrackPosition </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a>&#160;</td>
-          <td class="paramname"><em>nTrack</em></td><td>)</td>
+          <td class="paramname"><em>track</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Get the current position (in seconds) of the track playhead. This value is independant from the global time / position. </p>
+
+</div>
+</div>
+<a class="anchor" id="ae9408d08d341b9f330e611b771d1f9fd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgAnimationController::getTrackSpeed </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a>&#160;</td>
+          <td class="paramname"><em>track</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the playback speed of this track (1.0 is normal speed). </p>
+
+</div>
+</div>
+<a class="anchor" id="ac5d51b09e7594949169193f600d01c82"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgAnimationController::getTrackWeight </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a>&#160;</td>
+          <td class="paramname"><em>track</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the blending weight of the specified track (i.e. how much it will contribute to the final controller output) </p>
 
 </div>
 </div>
@@ -417,7 +570,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a8ae327b2da21ffacdf94e03fbcfd2662"></a>
+<a class="anchor" id="a4a9bdd61815e9476478b1cb89e90868f"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -430,7 +583,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structcg_animation_controller_1_1_track_desc.html">TrackDesc</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structcg_animation_track_desc.html">cgAnimationTrackDesc</a> &amp;&#160;</td>
           <td class="paramname"><em>Desc</em>&#160;</td>
         </tr>
         <tr>
@@ -442,6 +595,34 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set all of the track playback properties in one go. </p>
+
+</div>
+</div>
+<a class="anchor" id="aab56bcddb9ad8eae25eb0c43e1245688"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgAnimationController::setTrackEnabled </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a>&#160;</td>
+          <td class="paramname"><em>nTrack</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enabled</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable or disable the specified track. When disabled, the animation controller will not process the track during animation updates. </p>
 
 </div>
 </div>
@@ -475,7 +656,35 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Indices of the frames to limit the animation set sampler to. Specify both as 0x7FFFFFFF to disable limits. </p>
+<p>Supply frame indices that describe the boundaries within which the animation set sampler will be limited. Specify both as 0x7FFFFFFF to disable limits. </p>
+
+</div>
+</div>
+<a class="anchor" id="a5f098300ca88ab5156a1c80901c28313"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgAnimationController::setTrackFrameLimits </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a>&#160;</td>
+          <td class="paramname"><em>nTrack</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_range.html">cgRange</a> &amp;&#160;</td>
+          <td class="paramname"><em>range</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Supply frame indices that describe the boundaries within which the animation set sampler will be limited. Specify both as 0x7FFFFFFF to disable limits. </p>
 
 </div>
 </div>
@@ -494,6 +703,34 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set the maximum number of tracks that will be required by this animation controller (defaults to 1) </p>
+
+</div>
+</div>
+<a class="anchor" id="a40d1057beebb33a4c3126a18f1deb268"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgAnimationController::setTrackPlaybackMode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a>&#160;</td>
+          <td class="paramname"><em>nTrack</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacecg_animation_playback_mode.html#ad05c8be8e2aff0c06edfcb75ebae06df">cgAnimationPlaybackMode::Base</a>&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the mode that will be used to play the animation data assigned to this track (i.e. Loop, PlayOnce, etc.) </p>
 
 </div>
 </div>
@@ -704,7 +941,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_animation_controller.html">cgAnimationController</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:29 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:11 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -195,7 +195,7 @@ $(document).ready(function(){initNavTree('cg_script_preprocessor_8h_source.html'
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">bool</span>    getNextToken                ( <a class="code" href="structcg_script_preprocessor_1_1_token_data.html">TokenData</a> &amp; t, <span class="keyword">const</span> std::string &amp; strScript, <span class="keywordtype">bool</span> skipCommentAndWS );</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">bool</span>    expandStatement             ( <a class="code" href="structcg_script_preprocessor_1_1_token_data.html">TokenData</a> &amp; t, std::string &amp; statement );</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">bool</span>    loadScriptSection           ( asIScriptModule * module, <a class="code" href="classcg_input_stream.html" title="Core file system class which provides largely seamless access to data irrespective of the location of...">cgInputStream</a> &amp; stream, cgScript::SourceFileArray &amp; sourceFiles );</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">bool</span>    loadScriptSection           ( asIScriptModule * module, <a class="code" href="classcg_input_stream.html" title="Core file system class which provides largely seamless access to data irrespective of the location of...">cgInputStream</a> &amp; stream, cgScript::SourceFileArray &amp; sourceFiles, <span class="keywordtype">bool</span> includeOnce );</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">bool</span>    processScriptSection        ( asIScriptModule * module, <span class="keyword">const</span> std::string &amp; inputCode, <span class="keyword">const</span> <a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a> &amp; sectionName, cgScript::SourceFileArray &amp; sourceFiles );</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">void</span>    skipStatement               ( <a class="code" href="structcg_script_preprocessor_1_1_token_data.html">TokenData</a> &amp; t, <span class="keyword">const</span> std::string &amp; script );</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordtype">void</span>    excludeCode                 ( <a class="code" href="structcg_script_preprocessor_1_1_token_data.html">TokenData</a> &amp; t, std::string &amp; script );</div>
@@ -203,7 +203,7 @@ $(document).ready(function(){initNavTree('cg_script_preprocessor_8h_source.html'
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    </div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="comment">// Script code parsers</span></div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">bool</span>    parsePreprocessorDirective  ( <a class="code" href="structcg_script_preprocessor_1_1_token_data.html">TokenData</a> &amp; t, std::string &amp; script, std::stack&lt;bool&gt; &amp; conditionStack, asIScriptModule * module, <span class="keyword">const</span> <a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a> &amp; sectionName, cgScript::SourceFileArray &amp; sourceFiles );</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordtype">bool</span>    parseScriptString           ( <a class="code" href="structcg_script_preprocessor_1_1_token_data.html">TokenData</a> &amp; t, std::string &amp; script );</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordtype">bool</span>    parseScriptString           ( <a class="code" href="structcg_script_preprocessor_1_1_token_data.html">TokenData</a> &amp; t, std::string &amp; script, <span class="keywordtype">bool</span> shaderParameter, <span class="keywordtype">bool</span> addParentheses = <span class="keyword">false</span> );</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">bool</span>    parseShaderBlock            ( <a class="code" href="structcg_script_preprocessor_1_1_token_data.html">TokenData</a> &amp; t, std::string &amp; script, <span class="keyword">const</span> std::string &amp; parentNamespace, <span class="keywordtype">bool</span> shaderCallFunction );</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">bool</span>    parseShaderCallDeclaration  ( <a class="code" href="structcg_script_preprocessor_1_1_token_data.html">TokenData</a> &amp; t, std::string &amp; script, <a class="code" href="structcg_shader_call_function_desc.html">cgShaderCallFunctionDesc</a> &amp; description, <span class="keyword">const</span> std::string &amp; parentNamespace );</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
@@ -238,7 +238,7 @@ $(document).ready(function(){initNavTree('cg_script_preprocessor_8h_source.html'
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_036efea8fd6b39c1f1fd2dd7f1be4325.html">Scripting</a></li><li class="navelem"><a class="el" href="cg_script_preprocessor_8h.html">cgScriptPreprocessor.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:15 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:47:55 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

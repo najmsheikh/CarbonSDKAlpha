@@ -13,7 +13,7 @@
 // Desc : Hemisphere light source classes.                                   //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -176,7 +176,6 @@ public:
     virtual bool                    frustumInVolume         ( const cgFrustum & frustum );
     virtual bool                    testObjectShadowVolume  ( cgObjectNode * object, const cgFrustum & viewFrustum );
     
-    virtual void                    computeVisibility       ( );
     virtual void                    computeLevelOfDetail    ( cgCameraNode * camera );
 
     virtual cgInt32                 beginLighting           ( cgTexturePool * pool, bool applyShadows, bool deferred );
@@ -295,7 +294,7 @@ protected:
 // Desc : Hemisphere light source classes.                                   //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once

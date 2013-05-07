@@ -16,7 +16,7 @@
 //        render control "techniques".                                       //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -386,11 +386,12 @@ void cgObjectRenderQueue::renderClassDefault( cgUInt32 classId, cgQueueMaterialH
     else if ( lightingHandler == cgQueueLightingHandler::Default )
     {
         // Process the lights in the visibility set.
-        cgObjectNodeArray & visibleLights = mCurrentVisibilitySet->getVisibleLights();
+        cgObjectNodeList::iterator itLight;
+        cgObjectNodeList & visibleLights = mCurrentVisibilitySet->getVisibleLights();
         context->mLights.reserve( context->mLights.size() + visibleLights.size() );
-        for ( size_t i = 0; i < visibleLights.size(); ++i )
+        for ( itLight = visibleLights.begin(); itLight != visibleLights.end(); ++itLight )
         {
-            cgLightNode * light = (cgLightNode*)visibleLights[i];
+            cgLightNode * light = (cgLightNode*)(*itLight);
 
             // Immediately reject all visible nodes with this render class if their
             // combined bounding box does not intersect the light's volume.
@@ -419,12 +420,13 @@ void cgObjectRenderQueue::renderClassDefault( cgUInt32 classId, cgQueueMaterialH
                 } // End if filtering
 
                 // Build a list of all nodes which intersect the light source volume.
-                cgObjectNodeArray outputNodes;
-                const cgObjectNodeArray & inputNodes = itMaterial->second.objectNodes;
-                for ( size_t i = 0; i < inputNodes.size(); ++i )
+                cgObjectNodeList outputNodes;
+                cgObjectNodeList::const_iterator itObject;
+                const cgObjectNodeList & inputNodes = itMaterial->second.objectNodes;
+                for ( itObject = inputNodes.begin(); itObject != inputNodes.end(); ++itObject )
                 {
-                    if ( light->boundsInVolume( inputNodes[i]->getBoundingBox() ) )
-                        outputNodes.push_back( inputNodes[i] );
+                    if ( light->boundsInVolume( (*itObject)->getBoundingBox() ) )
+                        outputNodes.push_back( (*itObject) );
 
                 } // Next input node
 
@@ -452,7 +454,7 @@ void cgObjectRenderQueue::renderClassDefault( cgUInt32 classId, cgQueueMaterialH
 void cgObjectRenderQueue::renderClassDepthSortedBlending( cgUInt32 classId, cgQueueMaterialHandler::Base materialHandler, cgQueueLightingHandler::Base lightingHandler, const cgString& callback )
 {
     // Get list of visible lights in case we need it.
-    cgObjectNodeArray & visibleLights = mCurrentVisibilitySet->getVisibleLights();
+    cgObjectNodeList & visibleLights = mCurrentVisibilitySet->getVisibleLights();
 
     // Find the referenced render class from the main visibility set.
     cgVisibilitySet::RenderClassMap & renderClasses = mCurrentVisibilitySet->getVisibleRenderClasses();
@@ -461,15 +463,16 @@ void cgObjectRenderQueue::renderClassDepthSortedBlending( cgUInt32 classId, cgQu
         return;
 
     // Process the visible objects in this render class.
+    cgObjectNodeList::const_iterator itObject;
     cgVector3 sortOrigin = mCurrentVisibilitySet->getVolume().position;
-    cgObjectNodeArray & objectNodes = itClass->second.objectNodes;
-    for ( size_t i = 0; i < objectNodes.size(); ++i )
+    cgObjectNodeList & objectNodes = itClass->second.objectNodes;
+    for ( itObject = objectNodes.begin(); itObject != objectNodes.end(); ++itObject )
     {
         // Create a new rendering context
         cgObjectRenderContext * context = new cgObjectRenderContext( this, materialHandler, lightingHandler, callback );
 
         // Render with this object 
-        cgObjectNode * objectNode = objectNodes[i];
+        cgObjectNode * objectNode = (*itObject);
         context->insertObject( objectNode );
 
         // Compute distance for sorting based on the closest point on its bounding box
@@ -483,9 +486,10 @@ void cgObjectRenderQueue::renderClassDepthSortedBlending( cgUInt32 classId, cgQu
             context->mLights.reserve( context->mLights.size() + visibleLights.size() );
             
             // Process for each light.
-            for ( size_t j = 0; j < visibleLights.size(); ++j )
+            cgObjectNodeList::const_iterator itLight;
+            for ( itLight = visibleLights.begin(); itLight != visibleLights.end(); ++itLight )
             {
-                cgLightNode * light = (cgLightNode*)visibleLights[j];
+                cgLightNode * light = (cgLightNode*)(*itLight);
 
                 // Immediately reject this light source if it doesn't even intersect the 
                 // combined bounding box of the render class.

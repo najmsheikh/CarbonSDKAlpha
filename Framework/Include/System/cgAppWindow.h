@@ -14,7 +14,7 @@
 //        engine and any platform specific window handling logic.            //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//      Copyright (c) 1997 - 2008 Game Institute. All Rights Reserved.       //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -32,6 +32,11 @@
 //-----------------------------------------------------------------------------
 // {989C5A6B-CC6B-49AD-B17B-B0E44C437955}
 const cgUID RTID_AppWindow = {0x989C5A6B, 0xCC6B, 0x49AD, {0xB1, 0x7B, 0xB0, 0xE4, 0x4C, 0x43, 0x79, 0x55}};
+
+//-----------------------------------------------------------------------------
+// Forward Declarations
+//-----------------------------------------------------------------------------
+class cgCursor;
 
 //-----------------------------------------------------------------------------
 // Common Global Structures
@@ -77,6 +82,7 @@ public:
 	//-------------------------------------------------------------------------
     cgRect                  screenToClient          ( const cgRect & screenRectangle );
     cgRect                  clientToScreen          ( const cgRect & clientRectangle );
+    void                    showCursor              ( bool show );
 
     //-------------------------------------------------------------------------
 	// Public Virtual Methods
@@ -93,17 +99,32 @@ public:
     virtual void            setSize                 ( const cgSize & size ) = 0;
     virtual void            setClientSize           ( const cgSize & size ) = 0;
     virtual void            setFullScreenMode       ( bool fullScreen ) = 0;
+    virtual void            setCursor               ( cgCursor * cursor );
 
     // Events
     virtual void            onSize                  ( const cgSize & size, bool minimized );
     virtual void            onCreate                ( );
     virtual void            onClose                 ( );
+    virtual bool            onUpdateCursor          ( );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
     //-------------------------------------------------------------------------
     virtual const cgUID   & getReferenceType        ( ) const { return RTID_AppWindow; }
     virtual bool            queryReferenceType      ( const cgUID & type ) const;
+
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods (Overrides DisposableScriptObject)
+    //-------------------------------------------------------------------------
+    virtual void            dispose                 ( bool disposeBase );
+
+protected:
+    //-------------------------------------------------------------------------
+    // Public Variables
+    //-------------------------------------------------------------------------
+    cgCursor  * mCursor;            // Cursor icon to be applied automatically when the user's cursor is over this window.
+    cgInt       mCursorVisCount;    // Hidden <= 0 < Visible
+
 };
 
 #endif // !_CGE_CGAPPWINDOW_H_

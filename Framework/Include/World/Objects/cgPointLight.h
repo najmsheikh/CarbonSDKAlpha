@@ -13,7 +13,7 @@
 // Desc : Point / omni-directional light source classes.                     //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -188,8 +188,6 @@ public:
     virtual bool                    testObjectShadowVolume  ( cgObjectNode * object, const cgFrustum & viewFrustum );
     
     virtual void                    computeShadowSets       ( cgCameraNode * camera );
-    // ToDo: 6767 Remove
-    virtual void                    computeVisibility       ( );
     virtual void                    computeLevelOfDetail    ( cgCameraNode * camera );
 
     // Direct lighting
@@ -225,6 +223,7 @@ public:
     virtual bool                    setCellTransform        ( const cgTransform & transform, cgTransformSource::Base source = cgTransformSource::Standard );
     virtual bool                    canScale                ( ) const;
     virtual bool                    canRotate               ( ) const;
+    virtual cgBoundingSphere        getBoundingSphere       ( );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldComponentEventListener)

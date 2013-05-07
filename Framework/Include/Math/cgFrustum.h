@@ -13,7 +13,7 @@
 // Desc : Frustum class. Simple but efficient frustum processing.            //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -60,11 +60,15 @@ public:
     void                    update              ( const cgMatrix & view, const cgMatrix & proj );
     void                    setPlanes           ( const cgPlane newPlanes[] );
     void                    recomputePoints     ( );
-    cgVolumeQuery::Class    classifyAABB        ( const cgBoundingBox & bounds, const cgTransform * transform = CG_NULL, cgUInt8 * frustumBits = CG_NULL, cgInt8 * lastOutside = CG_NULL ) const;
+    cgVolumeQuery::Class    classifyAABB        ( const cgBoundingBox & bounds ) const;
+    cgVolumeQuery::Class    classifyAABB        ( const cgBoundingBox & bounds, const cgTransform & transform ) const;
+    cgVolumeQuery::Class    classifyAABB        ( const cgBoundingBox & bounds, cgUInt8 & frustumBits, cgInt8 & lastOutside ) const;
+    cgVolumeQuery::Class    classifyAABB        ( const cgBoundingBox & bounds, const cgTransform & transform, cgUInt8 & frustumBits, cgInt8 & lastOutside ) const;
     cgVolumeQuery::Class    classifySphere      ( const cgVector3 & center, cgFloat radius ) const;
 	cgVolumeQuery::Class    classifyPlane       ( const cgPlane & plane ) const;
     bool                    testPoint           ( const cgVector3 & point) const;
-    bool                    testAABB            ( const cgBoundingBox & bounds, const cgTransform * transform = CG_NULL ) const;
+    bool                    testAABB            ( const cgBoundingBox & bounds ) const;
+    bool                    testAABB            ( const cgBoundingBox & bounds, const cgTransform & transform ) const;
     bool                    testExtrudedAABB    ( const cgExtrudedBoundingBox & box ) const;
     bool                    testSphere          ( const cgVector3 & center, cgFloat radius ) const;
     bool                    testSweptSphere     ( const cgVector3 & center, cgFloat radius, const cgVector3 & sweepDirection ) const;

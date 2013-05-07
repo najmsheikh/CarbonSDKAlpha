@@ -14,7 +14,7 @@
 //        dynamic or collidable objects will be registered here.             //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -135,17 +135,37 @@ bool cgPhysicsWorld::initialize( const cgBoundingBox & WorldSize )
     //NewtonMaterialSetSurfaceThickness( mWorld, defaultMaterialId, defaultMaterialId, 0.001f );
 
     // Retrieve / create default material group Ids
-    mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Standard ]  = NewtonMaterialGetDefaultGroupID( mWorld );
-    mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Character ] = NewtonMaterialCreateGroupID( mWorld );
-    mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Ragdoll ]   = NewtonMaterialCreateGroupID( mWorld );
+    mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Standard ]        = NewtonMaterialGetDefaultGroupID( mWorld );
+    mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Character ]       = NewtonMaterialCreateGroupID( mWorld );
+    mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::PlayerCharacter ] = NewtonMaterialCreateGroupID( mWorld );
+    mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::CastOnly ]        = NewtonMaterialCreateGroupID( mWorld );
+    mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Ragdoll ]         = NewtonMaterialCreateGroupID( mWorld );
 
     // Setup default properties.
     NewtonMaterialSetDefaultElasticity( mWorld, mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Character ], 
+                                        mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Standard ], -1000 );
+    NewtonMaterialSetDefaultElasticity( mWorld, mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::PlayerCharacter ], 
                                         mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Standard ], -1000 );
 
     // Disable interaction between certain groups.
     NewtonMaterialSetDefaultCollidable( mWorld, mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Character ],
                                         mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Ragdoll ], 0 );
+    NewtonMaterialSetDefaultCollidable( mWorld, mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::PlayerCharacter ],
+                                        mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Ragdoll ], 0 );
+    NewtonMaterialSetDefaultCollidable( mWorld, mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Ragdoll ],
+                                        mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Ragdoll ], 0 );
+    
+    // Cast only type (ray cast, convex cast) does not interact with anything by default.
+    NewtonMaterialSetDefaultCollidable( mWorld, mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Character ],
+                                        mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::CastOnly ], 0 );
+    NewtonMaterialSetDefaultCollidable( mWorld, mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::PlayerCharacter ],
+                                        mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::CastOnly ], 0 );
+    NewtonMaterialSetDefaultCollidable( mWorld, mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Standard ],
+                                        mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::CastOnly ], 0 );
+    NewtonMaterialSetDefaultCollidable( mWorld, mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Ragdoll ],
+                                        mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::CastOnly ], 0 );
+    NewtonMaterialSetDefaultCollidable( mWorld, mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::CastOnly ],
+                                        mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::CastOnly ], 0 );
 
     // Success!
     return true;
@@ -528,6 +548,13 @@ cgUInt cgPhysicsWorld::rayCastPreFilter( const NewtonBody* const body, const New
     cgPhysicsBody * outBody = static_cast<cgPhysicsBody*>(NewtonBodyGetUserData( body ));
     cgPhysicsShape * outShape = CG_NULL; //static_cast<cgPhysicsShape*>(NewtonCollisionGetUserData( collision ));
     RayCastFilterCallbackData * outData = static_cast<RayCastFilterCallbackData*>(userData);
+
+    // ToDo: Temporary.
+    // Ray casting ignores all non player character materials, but
+    // allows for intersection with player characters and others.
+    if ( !outBody || 
+        NewtonBodyGetMaterialGroupID(body) == outBody->getPhysicsWorld()->getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Character ) )
+        return false;
 
     // Pass through to user callback.
     return (outData->preFilterCallback( outBody, outShape, outData->userData ) != 0);

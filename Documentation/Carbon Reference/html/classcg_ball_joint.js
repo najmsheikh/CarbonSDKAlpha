@@ -1,0 +1,27 @@
+var classcg_ball_joint =
+[
+    [ "cgBallJoint", "classcg_ball_joint.html#a9914affda835dc626d95f3a0a9efc54c", null ],
+    [ "~cgBallJoint", "classcg_ball_joint.html#aad11701927c5409dbe5051e72871a3e5", null ],
+    [ "dispose", "classcg_ball_joint.html#adcb31dda844d82a627f25696d7f641b3", null ],
+    [ "enableLimits", "classcg_ball_joint.html#a126e2709a6f8b441ec8ab52133e9dd67", null ],
+    [ "getInfo", "classcg_ball_joint.html#af0ab987272355338251125688ceac252", null ],
+    [ "getPivotTransform", "classcg_ball_joint.html#a37358879ded9e4796ff7edb96c553824", null ],
+    [ "getReferenceType", "classcg_ball_joint.html#a9819ce6149ace62dff3153ca8fc2f4dc", null ],
+    [ "onPhysicsBodyTransformed", "classcg_ball_joint.html#a70e1de6eede41d1e25abce8244be0bf0", null ],
+    [ "queryReferenceType", "classcg_ball_joint.html#a35596a71a0ffb89109ccc58e97e07a4b", null ],
+    [ "setConeLimit", "classcg_ball_joint.html#a175ebdb08eebccceb5d75e31c3806a8c", null ],
+    [ "setPivotTransform", "classcg_ball_joint.html#abea1624916488e1c13da369412804e2c", null ],
+    [ "setTwistLimits", "classcg_ball_joint.html#a43992fc6a61ee1720b676bf9a4e89e9f", null ],
+    [ "submitConstraints", "classcg_ball_joint.html#a54273f77e4236a102a50824197e9231f", null ],
+    [ "mConeAngleCos", "classcg_ball_joint.html#a156fa92a742970465652d802c5ccc9a1", null ],
+    [ "mConeAngleHalfCos", "classcg_ball_joint.html#af6de28669e956409905ee38be7705a7d", null ],
+    [ "mConeAngleHalfSin", "classcg_ball_joint.html#ac54f449ed24e5f87fa3aa5a6ccd457b1", null ],
+    [ "mConeAngleSin", "classcg_ball_joint.html#a69a532851eb64601b8e4e1ab47a7454f", null ],
+    [ "mGlobalPivotFrame", "classcg_ball_joint.html#a04f119b15ed31ff65ae0c9b1df1c2338", null ],
+    [ "mLocalPivotFrame0", "classcg_ball_joint.html#a781696f85ab922a3f04760288894be17", null ],
+    [ "mLocalPivotFrame1", "classcg_ball_joint.html#a133bac948394243aeb834bdb6cdf2649", null ],
+    [ "mMaximumConeAngle", "classcg_ball_joint.html#a6c2d2c1d528f7cc1b2efeac029764f92", null ],
+    [ "mMaximumTwistAngle", "classcg_ball_joint.html#a4eebf5e96b5c4af978651548c83b73c4", null ],
+    [ "mMinimumTwistAngle", "classcg_ball_joint.html#a119758b1e4a50c8b387f8f529fe01a97", null ],
+    [ "mUseLimits", "classcg_ball_joint.html#a853654ecab1f0749775a57041dd9d33f", null ]
+];

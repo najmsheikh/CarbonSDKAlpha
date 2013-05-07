@@ -14,7 +14,7 @@
 //        skinned mesh data.                                                 //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -710,12 +710,12 @@ void cgSkinObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisi
                 // Apply the bone palette.
                 cgBonePalette * pPalette = Palettes[i];
                 pPalette->apply( aBones, pMesh->getSkinBindData(), false, pDriver );
-
+                
                 // Have the currently assigned surface shader re-select its states and or shaders based on
                 // the modifications that were made by the palette apply method (primarily 'MaxBlendIndex')
                 if ( currentMaxBlendIndex != pPalette->getMaximumBlendIndex() )
                 {
-                    pDriver->commitChanges( );
+                    pShader->commitChanges( );
                     currentMaxBlendIndex = pPalette->getMaximumBlendIndex();
                 
                 } // End if max index changed
@@ -921,6 +921,30 @@ bool cgSkinNode::attachBone( cgBoneNode * pBone )
 
     // Success!
     return true;
+}
+
+//-----------------------------------------------------------------------------
+// Name : generateBoneShapes ( )
+/// <summary>
+/// Generate collision shapes for all bones attached to this skin.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgSkinNode::generateBoneShapes( )
+{
+    // Get the skinned mesh
+    cgMesh * pMesh = getMesh().getResource(true);
+    if ( !pMesh )
+        return;
+
+    // Process all attached bones.
+    cgUInt32Set::const_iterator itBoneRef;
+    for ( itBoneRef = mBoneReferences.begin(); itBoneRef != mBoneReferences.end(); ++itBoneRef )
+    {
+        cgBoneNode * pBone = (cgBoneNode*)cgReferenceManager::getReference( *itBoneRef );
+        if ( pBone )
+            pBone->generateCollisionShape( pMesh );
+    
+    } // Next bone
 }
 
 //-----------------------------------------------------------------------------

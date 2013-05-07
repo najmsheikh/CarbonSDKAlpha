@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -176,42 +176,46 @@ $(document).ready(function(){initNavTree('cg_win_app_window_8h_source.html','');
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="structcg_point.html">cgPoint</a>         <a class="code" href="classcg_app_window.html#a5c86ee3855bbefe3cff3337a11840644" title="Convert a rectangle currently expressed in screen space coordinates into the space of this window&#39;s c...">screenToClient</a>      ( <span class="keyword">const</span> <a class="code" href="structcg_point.html">cgPoint</a> &amp; screenPoint );</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="structcg_point.html">cgPoint</a>         <a class="code" href="classcg_app_window.html#ac1851989b20b89b5c090c6f85ab28b88" title="Convert a rectangle currently expressed in the space of this window&#39;s client area into screen space...">clientToScreen</a>      ( <span class="keyword">const</span> <a class="code" href="structcg_point.html">cgPoint</a> &amp; clientPoint );</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>            <a class="code" href="classcg_app_window.html#a86ba2ba57ed7f411ef7f15aef9ead108">setTitle</a>            ( <span class="keyword">const</span> <a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a> &amp; title );</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides cgReference)</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno"><a class="code" href="classcg_win_app_window.html#addd4a7b0c2454839edb3143fb653228d">   80</a></span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a>   &amp; <a class="code" href="classcg_win_app_window.html#addd4a7b0c2454839edb3143fb653228d">getReferenceType</a>    ( )<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="cg_win_app_window_8h.html#a3ff313284e08a1120039be135de88177">RTID_WinAppWindow</a>; }</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span>            <a class="code" href="classcg_app_window.html#a2f8b3bf79425c44580b4f57341350425" title="Allows the application to determine if the inheritance hierarchy supports a particular interface...">queryReferenceType</a>  ( <span class="keyword">const</span> <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a> &amp; type ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="comment">// Protected Methods</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    LRESULT WndProc ( HWND wnd, UINT message, WPARAM wparam, LPARAM lparam );</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>            <a class="code" href="classcg_app_window.html#a494d38f509f4aded0ab65c0c2a755e19">setSize</a>             ( <span class="keyword">const</span> <a class="code" href="structcg_size.html">cgSize</a> &amp; size );</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>            <a class="code" href="classcg_app_window.html#a20663a4b24dc364377b3b6f6f8b37732">setClientSize</a>       ( <span class="keyword">const</span> <a class="code" href="structcg_size.html">cgSize</a> &amp; size );</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>            <a class="code" href="classcg_app_window.html#a6632ebe5c88ae027ee9ea90753116cd5">setFullScreenMode</a>   ( <span class="keywordtype">bool</span> fullScreen );</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides cgReference)</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="code" href="classcg_win_app_window.html#addd4a7b0c2454839edb3143fb653228d">   83</a></span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a>   &amp; <a class="code" href="classcg_win_app_window.html#addd4a7b0c2454839edb3143fb653228d">getReferenceType</a>    ( )<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="cg_win_app_window_8h.html#a3ff313284e08a1120039be135de88177">RTID_WinAppWindow</a>; }</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span>            <a class="code" href="classcg_app_window.html#a2f8b3bf79425c44580b4f57341350425" title="Allows the application to determine if the inheritance hierarchy supports a particular interface...">queryReferenceType</a>  ( <span class="keyword">const</span> <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a> &amp; type ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="comment">// Protected Methods</span></div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="comment">// Protected Variables;</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno"><a class="code" href="classcg_win_app_window.html#a1cf199d4f7b7e256227a243c66b9f2f3">   92</a></span>&#160;    HWND        <a class="code" href="classcg_win_app_window.html#a1cf199d4f7b7e256227a243c66b9f2f3">mWnd</a>;               <span class="comment">// OS window being wrapped.</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno"><a class="code" href="classcg_win_app_window.html#af03dc8593774268f149f82281b767096">   93</a></span>&#160;    <span class="keywordtype">bool</span>        <a class="code" href="classcg_win_app_window.html#af03dc8593774268f149f82281b767096">mOwnsWindow</a>;        <span class="comment">// Were we responsible for creating the above window handle?</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno"><a class="code" href="classcg_win_app_window.html#ac15b70bd6d699f0eda6598937a181cc2">   94</a></span>&#160;    WNDCLASS    <a class="code" href="classcg_win_app_window.html#ac15b70bd6d699f0eda6598937a181cc2">mWndClass</a>;</div>
-<div class="line"><a name="l00095"></a><span class="lineno"><a class="code" href="classcg_win_app_window.html#a0ed914644bca6a8b192b27f2cc7f755b">   95</a></span>&#160;    <a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a>    <a class="code" href="classcg_win_app_window.html#a0ed914644bca6a8b192b27f2cc7f755b">mClassName</a>;         <span class="comment">// Name assigned to the window class.</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="comment">// Private Static Functions</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keyword">static</span> LRESULT CALLBACK staticWndProc   ( HWND wnd, UINT message, WPARAM wparam, LPARAM lparam );</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;};</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">#endif // !_CGE_CGWINAPPWINDOW_H_</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    LRESULT WndProc ( HWND wnd, UINT message, WPARAM wparam, LPARAM lparam );</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="comment">// Protected Variables;</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno"><a class="code" href="classcg_win_app_window.html#a1cf199d4f7b7e256227a243c66b9f2f3">   95</a></span>&#160;    HWND        <a class="code" href="classcg_win_app_window.html#a1cf199d4f7b7e256227a243c66b9f2f3">mWnd</a>;               <span class="comment">// OS window being wrapped.</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="code" href="classcg_win_app_window.html#af03dc8593774268f149f82281b767096">   96</a></span>&#160;    <span class="keywordtype">bool</span>        <a class="code" href="classcg_win_app_window.html#af03dc8593774268f149f82281b767096">mOwnsWindow</a>;        <span class="comment">// Were we responsible for creating the above window handle?</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno"><a class="code" href="classcg_win_app_window.html#a1610bf153d53e670760726a503e856b7">   97</a></span>&#160;    <span class="keywordtype">bool</span>        <a class="code" href="classcg_win_app_window.html#a1610bf153d53e670760726a503e856b7">mFullScreen</a>;        <span class="comment">// Is the window currently in fullscreen mode?</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno"><a class="code" href="classcg_win_app_window.html#ac15b70bd6d699f0eda6598937a181cc2">   98</a></span>&#160;    WNDCLASS    <a class="code" href="classcg_win_app_window.html#ac15b70bd6d699f0eda6598937a181cc2">mWndClass</a>;</div>
+<div class="line"><a name="l00099"></a><span class="lineno"><a class="code" href="classcg_win_app_window.html#a0ed914644bca6a8b192b27f2cc7f755b">   99</a></span>&#160;    <a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a>    <a class="code" href="classcg_win_app_window.html#a0ed914644bca6a8b192b27f2cc7f755b">mClassName</a>;         <span class="comment">// Name assigned to the window class.</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="comment">// Private Static Functions</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">static</span> LRESULT CALLBACK staticWndProc   ( HWND wnd, UINT message, WPARAM wparam, LPARAM lparam );</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;};</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">#endif // !_CGE_CGWINAPPWINDOW_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_c33361510b5d8458f9ad99ec7c35be6a.html">System</a></li><li class="navelem"><a class="el" href="dir_47583f625e3faaff56871c266873ad97.html">Platform</a></li><li class="navelem"><a class="el" href="cg_win_app_window_8h.html">cgWinAppWindow.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:16 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:47:57 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

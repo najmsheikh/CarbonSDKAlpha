@@ -13,6 +13,7 @@ var classcg_d_x_audio_driver =
     [ "queryReferenceType", "classcg_d_x_audio_driver.html#a9bdcb60a9118cd2fa31ab5e70f82a707", null ],
     [ "saveConfig", "classcg_d_x_audio_driver.html#ac3cbf1e382b869354913d14ca19bd8e4", null ],
     [ "set3DListenerTransform", "classcg_d_x_audio_driver.html#a6ac201e67bc9e0c3a524a085ecfeddf6", null ],
+    [ "set3DRolloffFactor", "classcg_d_x_audio_driver.html#a6ffcb1a197f0c3abec18cc7caa6a7dc9", null ],
     [ "set3DWorldScale", "classcg_d_x_audio_driver.html#a9f3258537e38b998d4d2585dfe7533dd", null ],
     [ "m3DListener", "classcg_d_x_audio_driver.html#af6f732652a01a959c2f90dfc82b0272c", null ],
     [ "mDS", "classcg_d_x_audio_driver.html#a432a25b293aed6e29dd66c31ddf574f6", null ]

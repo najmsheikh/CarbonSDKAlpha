@@ -13,7 +13,7 @@
 // Desc : Spot light source classes.                                         //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -1815,33 +1815,6 @@ bool cgSpotLightNode::testObjectShadowVolume( cgObjectNode * pObject, const cgFr
 
     // Cannot cast a shadow into the view frustum
     return false;
-}
-
-//-----------------------------------------------------------------------------
-//  Name : computeVisibility () (Virtual)
-/// <summary>
-/// Compute any necessary visibility information that this light source may
-/// need (from its point of view).
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgSpotLightNode::computeVisibility( )
-{
-    /*// If it was determined that we should calculate shadows,
-    // attempt to refine this further to see if we /really/
-    // need to based on the state(s) of our shadow frustums.
-    if ( isShadowSource() )
-    {
-        // Allow the frustum to compute its own local shadow set information.
-        // This will return 'true' if it is deemed necessary to compute shadows
-        // or at least render from a pool shadow map.
-        // ToDo: 6767: Re-enable!
-        if ( !mShadowFrustum->computeVisibilitySet( ) )
-            mComputeShadows = false;
-    
-    } // End if shadow caster*/
-
-    // Call base class implementation last
-    cgLightNode::computeVisibility();
 }
 
 //-----------------------------------------------------------------------------

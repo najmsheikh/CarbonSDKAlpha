@@ -9,5 +9,5 @@ var classcg_spatial_tree_node =
     [ "onNodeCreated", "classcg_spatial_tree_node.html#af9d44ebf7125cd49cd921bcee2d897ce", null ],
     [ "onNodeLoading", "classcg_spatial_tree_node.html#a84ccb2810f01d236c8c6ed9c756bb7f6", null ],
     [ "queryReferenceType", "classcg_spatial_tree_node.html#a38dc19856a3ed5d631b0ae587b87941f", null ],
-    [ "registerVisibility", "classcg_spatial_tree_node.html#adb02147536b0065322a5a56cd9caf68d", null ]
+    [ "registerVisibility", "classcg_spatial_tree_node.html#a304e6bc3b5f3602364b4d61ad40b13af", null ]
 ];

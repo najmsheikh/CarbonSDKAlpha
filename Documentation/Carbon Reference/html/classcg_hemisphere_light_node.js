@@ -9,7 +9,6 @@ var classcg_hemisphere_light_node =
     [ "beginLightingPass", "classcg_hemisphere_light_node.html#a60741f93a34b2f6d2dc8d6887e4b7cab", null ],
     [ "boundsInVolume", "classcg_hemisphere_light_node.html#a83195cb1537c4e8651f9170368782c33", null ],
     [ "computeLevelOfDetail", "classcg_hemisphere_light_node.html#ab9aa451549904c3d81838ebf56ede7fc", null ],
-    [ "computeVisibility", "classcg_hemisphere_light_node.html#a48bb1fde11eec785715d15bbf5854f87", null ],
     [ "dispose", "classcg_hemisphere_light_node.html#a4102dfc2c80bcd8c5ea4af579938699e", null ],
     [ "endLighting", "classcg_hemisphere_light_node.html#a5098d60736db59cbeaf13b3ba079cd4d", null ],
     [ "endLightingPass", "classcg_hemisphere_light_node.html#ad7e3e57457517b0a01b8f8dd7d4da51f", null ],

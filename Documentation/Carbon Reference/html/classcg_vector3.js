@@ -35,6 +35,7 @@ var classcg_vector3 =
     [ "transform", "classcg_vector3.html#a012a39954c6b671a177730be528b4ce6", null ],
     [ "transformCoord", "classcg_vector3.html#a6c265b348e7efd0a829c72c21d4f4349", null ],
     [ "transformNormal", "classcg_vector3.html#ab75fbfa808b765957b98d1adfc25fbb2", null ],
+    [ "xy", "classcg_vector3.html#af1e18fbdc0bebf188c8393b7eb83ed9a", null ],
     [ "operator*", "classcg_vector3.html#abd6c56a7ae7c56086fa5f47603c600d9", null ],
     [ "x", "classcg_vector3.html#afd70f3aff5cf9930964ac5a4ff15d3e1", null ],
     [ "y", "classcg_vector3.html#a3ad8646d8ff021f621f58e10cb119676", null ],

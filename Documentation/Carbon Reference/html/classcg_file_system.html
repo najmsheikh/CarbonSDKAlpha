@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -117,6 +117,9 @@ $(document).ready(function(){initNavTree('classcg_file_system.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a0bf38cbb4b046cd0ba290f4b6fc08059"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_file_system.html#a0bf38cbb4b046cd0ba290f4b6fc08059">shutdown</a> ()</td></tr>
+<tr class="memdesc:a0bf38cbb4b046cd0ba290f4b6fc08059"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shut down the file system and clean up allocated data.  <a href="#a0bf38cbb4b046cd0ba290f4b6fc08059"></a><br/></td></tr>
+<tr class="separator:a0bf38cbb4b046cd0ba290f4b6fc08059"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf79eec8b35f1964471919712f9457b1"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_file_system.html#abf79eec8b35f1964471919712f9457b1">setRootDirectory</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;directoryName)</td></tr>
 <tr class="memdesc:abf79eec8b35f1964471919712f9457b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the directory that the file system will consider to be its root. When indexing, this will be the base path in which we recurse.  <a href="#abf79eec8b35f1964471919712f9457b1"></a><br/></td></tr>
 <tr class="separator:abf79eec8b35f1964471919712f9457b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,6 +162,12 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ab1d38d5a4eafd19ec0b075539e7c82d4"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_string.html">cgString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_file_system.html#ab1d38d5a4eafd19ec0b075539e7c82d4">getAppDirectory</a> ()</td></tr>
 <tr class="memdesc:ab1d38d5a4eafd19ec0b075539e7c82d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the directory of the currently running application.  <a href="#ab1d38d5a4eafd19ec0b075539e7c82d4"></a><br/></td></tr>
 <tr class="separator:ab1d38d5a4eafd19ec0b075539e7c82d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4caf98446cd40c23060e5ba0b09f29bb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_string.html">cgString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_file_system.html#a4caf98446cd40c23060e5ba0b09f29bb">getTemporaryFile</a> ()</td></tr>
+<tr class="memdesc:a4caf98446cd40c23060e5ba0b09f29bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a new (empty) temporary file located in the system's configured temporary file directory and return the full path to that file. Returns an empty string if a suitable temporary file name or associated empty file failed to be generated.  <a href="#a4caf98446cd40c23060e5ba0b09f29bb"></a><br/></td></tr>
+<tr class="separator:a4caf98446cd40c23060e5ba0b09f29bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d546b593665b9f6dae898300693580b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_string.html">cgString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_file_system.html#a5d546b593665b9f6dae898300693580b">getTemporaryFile</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;basePath)</td></tr>
+<tr class="memdesc:a5d546b593665b9f6dae898300693580b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a new (empty) temporary file located in the specified directory and return the full path to that file. Returns an empty string if a suitable temporary file name or associated empty file failed to be generated.  <a href="#a5d546b593665b9f6dae898300693580b"></a><br/></td></tr>
+<tr class="separator:a5d546b593665b9f6dae898300693580b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abbf5b23fbf6e9ec86af9e88ff4ed05d8"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_file_system.html#abbf5b23fbf6e9ec86af9e88ff4ed05d8">fileExists</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;pathFile)</td></tr>
 <tr class="memdesc:abbf5b23fbf6e9ec86af9e88ff4ed05d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a full path name, determine if it exists (and is a file).  <a href="#abbf5b23fbf6e9ec86af9e88ff4ed05d8"></a><br/></td></tr>
 <tr class="separator:abbf5b23fbf6e9ec86af9e88ff4ed05d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,6 +180,21 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ad383b69d40f99f9fe08c9ca85d862ce6"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_file_system.html#ad383b69d40f99f9fe08c9ca85d862ce6">pathProtocolDefined</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;protocol)</td></tr>
 <tr class="memdesc:ad383b69d40f99f9fe08c9ca85d862ce6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if a path protocol with the specified name has been defined.  <a href="#ad383b69d40f99f9fe08c9ca85d862ce6"></a><br/></td></tr>
 <tr class="separator:ad383b69d40f99f9fe08c9ca85d862ce6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a252b2841bf1b24ffd04724135284b3f4"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_file_system.html#a252b2841bf1b24ffd04724135284b3f4">copyFile</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;source, const <a class="el" href="classcg_string.html">cgString</a> &amp;destination, bool overwriteExisting)</td></tr>
+<tr class="memdesc:a252b2841bf1b24ffd04724135284b3f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the specified source file to a new location. If the destination file already exists and the caller supplies a value of 'false' to the 'overwriteExisting', the call will fail. Otherwise, the destination file will be overwritten (where possible). Returns false if the copy operation failed for this or any other reason.  <a href="#a252b2841bf1b24ffd04724135284b3f4"></a><br/></td></tr>
+<tr class="separator:a252b2841bf1b24ffd04724135284b3f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab897703914775150625156d75b409ee2"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_file_system.html#ab897703914775150625156d75b409ee2">moveFile</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;source, const <a class="el" href="classcg_string.html">cgString</a> &amp;destination, bool overwriteExisting)</td></tr>
+<tr class="memdesc:ab897703914775150625156d75b409ee2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move the specified source file to a new location. This function can also be used to rename a file. Returns false if the move / rename operation failed for any reason.  <a href="#ab897703914775150625156d75b409ee2"></a><br/></td></tr>
+<tr class="separator:ab897703914775150625156d75b409ee2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52e4f2a640b752b965b1460cf71e8362"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_file_system.html#a52e4f2a640b752b965b1460cf71e8362">deleteFile</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;pathFile)</td></tr>
+<tr class="memdesc:a52e4f2a640b752b965b1460cf71e8362"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete the specified file. Returns false if the delete operation failed for any reason, i.e. the file was not found, or access was denied.  <a href="#a52e4f2a640b752b965b1460cf71e8362"></a><br/></td></tr>
+<tr class="separator:a52e4f2a640b752b965b1460cf71e8362"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2929d540246d374ca6ee7ac3e3f0769"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_file_system.html#ad2929d540246d374ca6ee7ac3e3f0769">isSameFile</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;file1, const <a class="el" href="classcg_string.html">cgString</a> &amp;file2)</td></tr>
+<tr class="memdesc:ad2929d540246d374ca6ee7ac3e3f0769"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempt to determine if the two specified paths / files reference the same file on disk. User must have sufficient permissions to access both files in order for this function to succeed. Returns false on failure for this or any other reason, or if the files don't reference the same file. See alternative version of this function if you need explicit success / failure information. Note: May return 'false' when paths reference the same file via two separate network shares.  <a href="#ad2929d540246d374ca6ee7ac3e3f0769"></a><br/></td></tr>
+<tr class="separator:ad2929d540246d374ca6ee7ac3e3f0769"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd49f144b3425efa40588bfb6ac26e17"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_file_system.html#afd49f144b3425efa40588bfb6ac26e17">isSameFile</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;file1, const <a class="el" href="classcg_string.html">cgString</a> &amp;file2, bool &amp;success)</td></tr>
+<tr class="memdesc:afd49f144b3425efa40588bfb6ac26e17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempt to determine if the two specified paths / files reference the same file on disk. User must have sufficient permissions to access both files in order for this function to succeed. This version of the function returns extended success or failure information via its third parameter. Note: May return 'false' when paths reference the same file via two separate network shares.  <a href="#afd49f144b3425efa40588bfb6ac26e17"></a><br/></td></tr>
+<tr class="separator:afd49f144b3425efa40588bfb6ac26e17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that contains our core file system handling functionality. Access is via entirely static methods to provide support application wide. </p>
@@ -237,6 +261,48 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a252b2841bf1b24ffd04724135284b3f4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgFileSystem::copyFile </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>source</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>destination</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>overwriteExisting</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copy the specified source file to a new location. If the destination file already exists and the caller supplies a value of 'false' to the 'overwriteExisting', the call will fail. Otherwise, the destination file will be overwritten (where possible). Returns false if the copy operation failed for this or any other reason. </p>
+
+</div>
+</div>
 <a class="anchor" id="ad15f00c8372e9df7feec35cebd77cb0b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -260,6 +326,32 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Create the specified directory, including any full parent sub-tree as required. </p>
+
+</div>
+</div>
+<a class="anchor" id="a52e4f2a640b752b965b1460cf71e8362"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgFileSystem::deleteFile </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>pathFile</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Delete the specified file. Returns false if the delete operation failed for any reason, i.e. the file was not found, or access was denied. </p>
 
 </div>
 </div>
@@ -562,6 +654,57 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a4caf98446cd40c23060e5ba0b09f29bb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_string.html">cgString</a> cgFileSystem::getTemporaryFile </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generate a new (empty) temporary file located in the system's configured temporary file directory and return the full path to that file. Returns an empty string if a suitable temporary file name or associated empty file failed to be generated. </p>
+
+</div>
+</div>
+<a class="anchor" id="a5d546b593665b9f6dae898300693580b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_string.html">cgString</a> cgFileSystem::getTemporaryFile </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>basePath</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generate a new (empty) temporary file located in the specified directory and return the full path to that file. Returns an empty string if a suitable temporary file name or associated empty file failed to be generated. </p>
+
+</div>
+</div>
 <a class="anchor" id="a1509ac325b4b530ef03531c2d60ec1ae"></a>
 <div class="memitem">
 <div class="memproto">
@@ -598,6 +741,84 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ad2929d540246d374ca6ee7ac3e3f0769"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgFileSystem::isSameFile </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>file1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>file2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Attempt to determine if the two specified paths / files reference the same file on disk. User must have sufficient permissions to access both files in order for this function to succeed. Returns false on failure for this or any other reason, or if the files don't reference the same file. See alternative version of this function if you need explicit success / failure information. Note: May return 'false' when paths reference the same file via two separate network shares. </p>
+
+</div>
+</div>
+<a class="anchor" id="afd49f144b3425efa40588bfb6ac26e17"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgFileSystem::isSameFile </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>file1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>file2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;&#160;</td>
+          <td class="paramname"><em>success</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Attempt to determine if the two specified paths / files reference the same file on disk. User must have sufficient permissions to access both files in order for this function to succeed. This version of the function returns extended success or failure information via its third parameter. Note: May return 'false' when paths reference the same file via two separate network shares. </p>
+
+</div>
+</div>
 <a class="anchor" id="a6839fadf837f33e18a1327c62501720d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -621,6 +842,48 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Load a string with the contents of the specified file, be that file in a package or in the main file system. </p>
+
+</div>
+</div>
+<a class="anchor" id="ab897703914775150625156d75b409ee2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgFileSystem::moveFile </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>source</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>destination</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>overwriteExisting</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move the specified source file to a new location. This function can also be used to rename a file. Returns false if the move / rename operation failed for any reason. </p>
 
 </div>
 </div>
@@ -702,6 +965,31 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a0bf38cbb4b046cd0ba290f4b6fc08059"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgFileSystem::shutdown </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Shut down the file system and clean up allocated data. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="cg_file_system_8h_source.html">cgFileSystem.h</a></li>
 <li><a class="el" href="cg_file_system_8cpp.html">cgFileSystem.cpp</a></li>
@@ -712,7 +1000,7 @@ Static Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_file_system.html">cgFileSystem</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:32 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:25 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

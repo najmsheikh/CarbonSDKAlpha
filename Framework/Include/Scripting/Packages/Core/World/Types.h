@@ -20,7 +20,7 @@ namespace Types
         void declare( cgScriptEngine * engine )
         {
             // Value Types / Structures
-            BINDSUCCESS( engine->registerObjectType( "SceneCollisionContact", sizeof(cgSceneCollisionContact), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CDA ) );
+            BINDSUCCESS( engine->registerObjectType( "SceneCollisionContact", sizeof(cgSceneCollisionContact), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
 
             // Enumerations
             BINDSUCCESS( engine->registerEnum( "WorldComponentType" ) );

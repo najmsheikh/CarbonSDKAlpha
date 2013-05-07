@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -261,22 +261,27 @@ $(document).ready(function(){initNavTree('cg_transform_8h_source.html','');});
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keyword">static</span> <a class="code" href="classcg_transform.html" title="General purpose transformation class designed to maintain each component of the transformation separa...">cgTransform</a>&amp; rotationAxis                ( <a class="code" href="classcg_transform.html" title="General purpose transformation class designed to maintain each component of the transformation separa...">cgTransform</a> &amp; out, <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> angle, <span class="keyword">const</span> <a class="code" href="classcg_vector3.html" title="Storage for three dimensional coordinates. ">cgVector3</a> &amp; axis );</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keyword">static</span> <a class="code" href="classcg_transform.html" title="General purpose transformation class designed to maintain each component of the transformation separa...">cgTransform</a>&amp; translation                 ( <a class="code" href="classcg_transform.html" title="General purpose transformation class designed to maintain each component of the transformation separa...">cgTransform</a> &amp; out, <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> x, <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> y, <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> z );</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keyword">static</span> <a class="code" href="classcg_transform.html" title="General purpose transformation class designed to maintain each component of the transformation separa...">cgTransform</a>&amp; translation                 ( <a class="code" href="classcg_transform.html" title="General purpose transformation class designed to maintain each component of the transformation separa...">cgTransform</a> &amp; out, <span class="keyword">const</span> <a class="code" href="classcg_vector3.html" title="Storage for three dimensional coordinates. ">cgVector3</a> &amp; v );</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    </div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="comment">// Protected Variables</span></div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00168"></a><span class="lineno"><a class="code" href="classcg_transform.html#a3256be1bcf809082f020693ac7f8e270">  168</a></span>&#160;    <a class="code" href="classcg_matrix.html" title="Storage for 4x4 matrix. ">cgMatrix</a> <a class="code" href="classcg_transform.html#a3256be1bcf809082f020693ac7f8e270">_m</a>;</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;};</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="preprocessor">#endif // !_CGE_CGTRANSFORM_H_</span></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="comment">// Public Static Variables</span></div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00167"></a><span class="lineno"><a class="code" href="classcg_transform.html#a9ab36e560f97ff98a535132f996092a0">  167</a></span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classcg_transform.html" title="General purpose transformation class designed to maintain each component of the transformation separa...">cgTransform</a> <a class="code" href="classcg_transform.html#a9ab36e560f97ff98a535132f996092a0">Identity</a>;</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    </div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="comment">// Protected Variables</span></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00173"></a><span class="lineno"><a class="code" href="classcg_transform.html#a3256be1bcf809082f020693ac7f8e270">  173</a></span>&#160;    <a class="code" href="classcg_matrix.html" title="Storage for 4x4 matrix. ">cgMatrix</a> <a class="code" href="classcg_transform.html#a3256be1bcf809082f020693ac7f8e270">_m</a>;</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;};</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="preprocessor">#endif // !_CGE_CGTRANSFORM_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_13d8de717a37bdb6f14ed3839b90aaac.html">Math</a></li><li class="navelem"><a class="el" href="cg_transform_8h.html">cgTransform.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:16 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:47:56 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

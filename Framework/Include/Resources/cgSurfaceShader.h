@@ -18,7 +18,7 @@
 //        effect file architecture analogue.                                 //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -95,6 +95,7 @@ public:
     bool                    getConstantTypeDesc     ( const cgString & sourceNamespace, const cgString & name, cgConstantTypeDesc & description ) const;
     const ConstTypeArray  & getConstantTypes        ( ) const;
     cgConstantBufferLinker* getConstantBufferLinker ( ) const;
+    cgShaderIdentifier    * getShaderIdentifier     ( ) const;
 
     // Permutation Selection
     bool                    selectVertexShader      ( const cgVertexShaderHandle & shader );

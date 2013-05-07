@@ -16,7 +16,7 @@
 //        scripts and surface material information.                          //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -490,8 +490,12 @@ bool cgResourceManager::loadTexture( cgTextureHandle * hResOut, const cgInputStr
     // Allow textures with no source file to remain resident only if we're in sandbox mode
     // (preview or full). This ensures that even if a texture is not found, its information 
     // will not be lost.
-    if ( (cgGetSandboxMode() != cgSandboxMode::Disabled) && (Stream.getType() == cgStreamType::None) )
+    if ( (cgGetSandboxMode() == cgSandboxMode::Disabled) && (Stream.getType() == cgStreamType::None) )
+    {
+        cgAppLog::write( cgAppLog::Warning, _T("Unable to load texture from stream '%s' because the file or resource was not found.\n"), Stream.getName().c_str() );
         return false;
+    
+    } // End if not found
 
     // No texture found, so lets build a new texture resource.
     cgTexture * pNewTexture = cgTexture::createInstance( cgReferenceManager::generateInternalRefId(), Stream, getRenderDriver(), mConfig.textureMipLevels );
@@ -644,160 +648,126 @@ bool cgResourceManager::createTexture( cgTextureHandle * hResOut, cgBufferType::
 //-----------------------------------------------------------------------------
 bool cgResourceManager::cloneTexture( cgTextureHandle * hResOut, cgTextureHandle hSourceTexture, cgBufferFormat::Base NewFormat /* = cgBufferFormat::Unknown */, cgUInt32 nFlags /* = 0 */, const cgString & strResourceName /* = _T("") */, const cgDebugSourceInfo & _debugSource /* = cgDebugSourceInfo(_T(""),0) */ )
 {
-    cgToDoAssert( "DX11", "Re-implement in an API independant fashion!" );
-    
-    /*// Validate requirements
-    if ( strResourceName.empty() == false && 
-        (nFlags & cgResourceFlags::ForceNew) == 0 &&
-        (nFlags & cgResourceFlags::ForceUnique) == 0 )
-    {
-        // Attempt to find the texture if it already exists
-        cgTexture * pExistingTexture = (cgTexture*)findTexture( strResourceName );
-        if ( pExistingTexture != CG_NULL && pExistingTexture->IsUnique() == false ) 
-            return processExistingResource( hResOut, pExistingTexture, nFlags );
+    return cloneTexture( hResOut, hSourceTexture, cgRect(0,0,0,0), cgSize(0,0), false, NewFormat, nFlags, strResourceName, _debugSource );
+}
 
-    } // End if resource name provided
+//-----------------------------------------------------------------------------
+//  Name : cloneTexture ()
+/// <summary>
+/// Clone an existing texture using the specified details.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgResourceManager::cloneTexture( cgTextureHandle * hResOut, cgTextureHandle hSourceTexture, const cgRect & rcSource, cgBufferFormat::Base NewFormat /* = cgBufferFormat::Unknown */, cgUInt32 nFlags /* = 0 */, const cgString & strResourceName /* = _T("") */, const cgDebugSourceInfo & _debugSource /* = cgDebugSourceInfo(_T(""),0) */ )
+{
+    return cloneTexture( hResOut, hSourceTexture, rcSource, cgSize(0,0), false, NewFormat, nFlags, strResourceName, _debugSource );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : cloneTexture ()
+/// <summary>
+/// Clone an existing texture using the specified details.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgResourceManager::cloneTexture( cgTextureHandle * hResOut, cgTextureHandle hSourceTexture, cgRect rcSource, cgSize TextureSize, bool stretch, cgBufferFormat::Base NewFormat /* = cgBufferFormat::Unknown */, cgUInt32 nFlags /* = 0 */, const cgString & strResourceName /* = _T("") */, const cgDebugSourceInfo & _debugSource /* = cgDebugSourceInfo(_T(""),0) */ )
+{
+    //cgToDoAssert( "DX11", "Re-implement in an API independant fashion!" );
 
     // Access to the source texture and ensure that this is a valid clone.
     cgTexture * pSourceTexture = hSourceTexture.getResource(true);
-    if ( pSourceTexture == CG_NULL )
+    if ( !pSourceTexture )
         return false;
 
     // Auto-detect cloned format if none supplied.
-    cgImageInfo Description = pSourceTexture->GetInfo();
+    cgImageInfo Description = pSourceTexture->getInfo();
     if ( NewFormat != cgBufferFormat::Unknown )
         Description.format = NewFormat;
 
-    // Create a new texture into which data can be cloned.
-    cgTexture * pNewTexture = cgTexture::createInstance( cgReferenceManager::generateInternalRefId(), Description );
+    // Cannot current crop a region or resize if this is a volume
+    // or cube target.
+    if ( TextureSize.width != 0 || TextureSize.height != 0 || !rcSource.isEmpty() )
+    {
+        if ( Description.type == cgBufferType::Texture3D || Description.type == cgBufferType::TextureCube ||
+             Description.type == cgBufferType::RenderTargetCube )
+        {
+            cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("It is not possible to clone a specific region of a cube or volume texture in this version of the framework.\n") );
+            return false;
+        
+        } // End if invalid type
+    
+    } // End if region specified
 
-    // Process the new resource
-    if ( processNewResource( hResOut, pNewTexture, mTextures, strResourceName, cgStreamType::Memory, nFlags, _debugSource ) == false )
+    // Full source rectangle is used if none was supplied.
+    if ( rcSource.isEmpty() )
+    {
+        rcSource.right = Description.width;
+        rcSource.bottom = Description.height;
+    
+    } // End if no source provided
+
+    // Source rectangle size is used as the size of the texture if not overriden.
+    if ( TextureSize.width <= 0 )
+        TextureSize.width = rcSource.width();
+    if ( TextureSize.height <= 0 )
+        TextureSize.height = rcSource.height();
+
+    // If we're not stretching, and the source rectangle is smaller than
+    // the selected destination texture size, truncate the source rectangle.
+    if ( !stretch )
+    {
+        if ( rcSource.width() < TextureSize.width )
+            rcSource.right = rcSource.left + TextureSize.width;
+        if ( rcSource.height() < TextureSize.height )
+            rcSource.bottom = rcSource.top + TextureSize.height;
+    
+    } // End if !stretching
+
+    // Start to build the destination rectangle.
+    cgRect rcDestination( 0, 0, TextureSize.width, TextureSize.height );
+
+    // If we're not stretching, destination rectangle should be no larger
+    // than the source rectangle.
+    if ( !stretch )
+    {
+        if ( rcDestination.width() > rcSource.width() )
+            rcDestination.right = rcDestination.left + rcSource.width();
+        if ( rcDestination.height() > rcSource.height() )
+            rcDestination.bottom = rcDestination.top + rcSource.height();
+    
+    } // End if !stretch
+    
+    // Create a new texture into which data can be cloned.
+    Description.width = TextureSize.width;
+    Description.height = TextureSize.height;
+    cgTexture * pNewTexture = cgTexture::createInstance( cgReferenceManager::generateInternalRefId(), Description );    
+
+    // Process the new resource so that it is created, and added to the management lists.
+    if ( !processNewResource( hResOut, pNewTexture, mTextures, strResourceName, cgStreamType::Memory, nFlags, _debugSource ) )
         return false;
 
     // Force new texture to generate itself in case it deferred loading.
-    if ( pNewTexture->GuaranteedLoad() == false )
+    if ( !pNewTexture->loadResource() || !pNewTexture->isLoaded() )
     {
         if ( hResOut )
-            hResOut->close( true );
+            hResOut->close();
+        else
+            pNewTexture->deleteReference();
         return false;
     
     } // End if failed
 
-    cgToDoAssert( "Carbon General", "DepthStencil cannot always be cloned and this will fail in such cases. This should also ideally move into a platform specific texture method." );
-
-    // Perform the clone.
-    switch ( Description.Type )
+    // Perform the clone into the new texture
+    if ( !pSourceTexture->clone( pNewTexture, rcSource, rcDestination ) )
     {
-        case cgBufferType::Texture:
-        case cgBufferType::RenderTarget:
-        case cgBufferType::DepthStencil:
-        case cgBufferType::ShadowMap:
-        {
-            LPDIRECT3DTEXTURE9 pSrcTexture = CG_NULL, pDstTexture = CG_NULL;
-            LPDIRECT3DSURFACE9 pSrcSurface = CG_NULL, pDstSurface = CG_NULL;
-            
-            // Retrieve both textures.
-            pSrcTexture = (LPDIRECT3DTEXTURE9)pSourceTexture->GetManagedData();
-            pDstTexture = (LPDIRECT3DTEXTURE9)pNewTexture->GetManagedData();
-
-            // Clone all mip levels
-            for ( cgUInt32 i = 0; i < pSrcTexture->GetLevelCount(); ++i )
-            {
-                pSrcTexture->GetSurfaceLevel( i, &pSrcSurface );
-                pDstTexture->GetSurfaceLevel( i, &pDstSurface );
-
-                // Perform the clone.
-                D3DXLoadSurfaceFromSurface( pDstSurface, CG_NULL, CG_NULL, pSrcSurface, CG_NULL, CG_NULL, D3DX_DEFAULT, 0 );
-
-                // Clean up
-                pSrcSurface->Release();
-                pDstSurface->Release();
-
-            } // Next mip level
-
-            // Clean up
-            pSrcTexture->Release();
-            pDstTexture->Release();
-            break;
-
-        } // End Case Standard | RenderTarget | DepthStencil
-        case cgBufferType::CubeMap:
-        case cgBufferType::CubeRenderTarget:
-        {
-            LPDIRECT3DCUBETEXTURE9 pSrcTexture = CG_NULL, pDstTexture = CG_NULL;
-            LPDIRECT3DSURFACE9     pSrcSurface = CG_NULL, pDstSurface = CG_NULL;
-            
-            // Retrieve both textures.
-            pSrcTexture = (LPDIRECT3DCUBETEXTURE9)pSourceTexture->GetManagedData();
-            pDstTexture = (LPDIRECT3DCUBETEXTURE9)pNewTexture->GetManagedData();
-
-            // Clone all faces at all mip levels
-            for ( cgUInt32 i = 0; i < 6; ++i )
-            {
-                for ( cgUInt32 j = 0; j < pSrcTexture->GetLevelCount(); ++j )
-                {
-
-                    pSrcTexture->GetCubeMapSurface( (D3DCUBEMAP_FACES)i, j, &pSrcSurface );
-                    pDstTexture->GetCubeMapSurface( (D3DCUBEMAP_FACES)i, j, &pDstSurface );
-
-                    // Perform the clone.
-                    D3DXLoadSurfaceFromSurface( pDstSurface, CG_NULL, CG_NULL, pSrcSurface, CG_NULL, CG_NULL, D3DX_DEFAULT, 0 );
-
-                    // Clean up
-                    pSrcSurface->Release();
-                    pDstSurface->Release();
-
-                } // Next mip level
-
-            } // Next cube face
-
-            // Clean up
-            pSrcTexture->Release();
-            pDstTexture->Release();
-            break;
-
-        } // End Case CubeMap | CubeRenderTarget
-        case cgBufferType::Volume:
-        {
-            LPDIRECT3DVOLUMETEXTURE9 pSrcTexture = CG_NULL, pDstTexture = CG_NULL;
-            LPDIRECT3DVOLUME9        pSrcVolume  = CG_NULL, pDstVolume  = CG_NULL;
-            
-            // Retrieve both textures.
-            pSrcTexture = (LPDIRECT3DVOLUMETEXTURE9)pSourceTexture->GetManagedData();
-            pDstTexture = (LPDIRECT3DVOLUMETEXTURE9)pNewTexture->GetManagedData();
-
-            // Clone all mip levels
-            for ( cgUInt32 i = 0; i < pSrcTexture->GetLevelCount(); ++i )
-            {
-                pSrcTexture->GetVolumeLevel( i, &pSrcVolume );
-                pDstTexture->GetVolumeLevel( i, &pDstVolume );
-
-                // Perform the clone.
-                D3DXLoadVolumeFromVolume( pDstVolume, CG_NULL, CG_NULL, pSrcVolume, CG_NULL, CG_NULL, D3DX_DEFAULT, 0 );
-
-                // Clean up
-                pSrcVolume->Release();
-                pDstVolume->Release();
-
-            } // Next mip level
-
-            // Clean up
-            pSrcTexture->Release();
-            pDstTexture->Release();
-            break;
-        
-        } // End Case Volume
-        default:
-            cgAppLog::write( cgAppLog::Debug | cgAppLog::Error, _T("Unable to clone texture '%s' into new texture '%s'. Unknown type detected.\n"), pSourceTexture->getResourceName().c_str(), strResourceName.c_str() );
-            return false;
+        if ( hResOut )
+            hResOut->close();
+        else
+            pNewTexture->deleteReference();
+        return false;
     
-    } // End Switch Type
+    } // End if failed
 
     // Success!
-    return true;*/
-
-    return false;
+    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -1310,9 +1280,20 @@ bool cgResourceManager::loadSurfaceShaderScript( cgScriptHandle * hResOut, const
     
     } // End if !ForceNew
 
-    // Validate requirements
+    // Valid file?
     if ( Stream.getType() == cgStreamType::None )
-        return false;
+    {
+        // Allow shader with no valid source file to remain resident only if we're in sandbox mode
+        // (preview or full). This ensures that even if a shader is not found, its information 
+        // will not be lost.
+        if ( cgGetSandboxMode() == cgSandboxMode::Disabled )
+        {
+            cgAppLog::write( cgAppLog::Warning, _T("Unable to load surface shader script from stream '%s' because the file or resource was not found.\n"), Stream.getName().c_str() );
+            return false;
+        
+        } // End if !sandbox
+
+    } // End if not found
 
     // No script found, so lets allocate a new one.
     cgScript * pNewScript = new cgSurfaceShaderScript( cgReferenceManager::generateInternalRefId(), Stream, cgString::Empty, cgScriptEngine::getInstance() );
@@ -1371,9 +1352,16 @@ bool cgResourceManager::createSurfaceShader( cgSurfaceShaderHandle * hResOut, co
     // Valid file?
     if ( Stream.getType() == cgStreamType::None )
     {
-        cgAppLog::write( cgAppLog::Warning, _T("Unable to create surface shader from stream '%s' because the file or resource was not found.\n"), Stream.getName().c_str() );
-        return false;
-    
+        // Allow shader with no valid source file to remain resident only if we're in sandbox mode
+        // (preview or full). This ensures that even if a shader is not found, its information 
+        // will not be lost.
+        if ( cgGetSandboxMode() == cgSandboxMode::Disabled )
+        {
+            cgAppLog::write( cgAppLog::Warning, _T("Unable to create surface shader from stream '%s' because the file or resource was not found.\n"), Stream.getName().c_str() );
+            return false;
+        
+        } // End if !sandbox
+
     } // End if not found
 
     // Build the new shader resource.

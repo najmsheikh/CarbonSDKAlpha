@@ -8,6 +8,7 @@ var classcg_scene_cell =
     [ "getBoundingBox", "classcg_scene_cell.html#a7ff7071b4b108602f066b818bb3a8c2e", null ],
     [ "getCellId", "classcg_scene_cell.html#a30665e743d26d89f48d7e9c3d94b53be", null ],
     [ "getGridOffsets", "classcg_scene_cell.html#a11abf112baaabc9ea5cd1085eaf66ab7", null ],
+    [ "getNodes", "classcg_scene_cell.html#ac927d1c5119e34591d9abdb1e94c75b4", null ],
     [ "getParentScene", "classcg_scene_cell.html#a2974a49ecb58d2cc0499900b51fb73f8", null ],
     [ "getWorldOrigin", "classcg_scene_cell.html#aa60b1996626f6e914f66a316a54440cf", null ],
     [ "insert", "classcg_scene_cell.html#ac364c5c93461f4a68f7f7724c4ffa4f1", null ],
@@ -22,6 +23,7 @@ var classcg_scene_cell =
     [ "mCellOffsetZ", "classcg_scene_cell.html#a0c1a2426649b21cce1698019702a3116", null ],
     [ "mDeleteCell", "classcg_scene_cell.html#a73d05ca66e5f7990b04e48037e50fa33", null ],
     [ "mInsertCell", "classcg_scene_cell.html#a778d01d763d92bfda45c96c139eb2a79", null ],
+    [ "mNavigationTiles", "classcg_scene_cell.html#a899332a0c4432d33173aef525b0b7343", null ],
     [ "mNodes", "classcg_scene_cell.html#ab86ad46eaac2b1b00912ca0641de14d9", null ],
     [ "mParentScene", "classcg_scene_cell.html#a3c853493ac84b16656412c91cd5efbe6", null ]
 ];

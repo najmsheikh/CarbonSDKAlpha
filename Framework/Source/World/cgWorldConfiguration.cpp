@@ -17,7 +17,7 @@
 //        and more.                                                          //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -179,6 +179,14 @@ bool cgWorldConfiguration::newConfiguration( cgWorldType::Base type )
     if ( !insertRenderClass( _T("Default"), _T("Default render class. Usually reserved for standard, non-special effect related objects such as meshes.") ) ||
          !insertRenderClass( _T("Transparent"), _T("Transparent / translucent meshes.") ) ||
          !insertRenderClass( _T("Effects"), _T("Special effect related objects such as particle emitters and billboards.") ) )
+        return false;
+
+    // Insert default editor user asset filters.
+    queryString.str(cgString());
+    queryString << _T("INSERT INTO [Editor::UserAssets] VALUES(NULL, 2, 0, 0, 'Textures', '', 'dds;png;tga;bmp;jpg;jpeg', '{63E328FB-5B3D-47B3-82B1-02F588F57687}',  1);");
+    queryString << _T("INSERT INTO [Editor::UserAssets] VALUES(NULL, 2, 0, 0, 'Scripts', '', 'frm;gs;gsh;sh;shh', '{6F5673BF-E7C2-46A9-83E5-E46DE8A3DB2B}',  1);");
+    queryString << _T("INSERT INTO [Editor::UserAssets] VALUES(NULL, 2, 0, 0, 'Shaders', '', 'sh;shh;fx;fxh', '{7AC38DF3-435A-4BCC-8910-2060C9DB342A}',  1);");
+    if ( !mWorld->executeQuery( queryString.str(), false ) )
         return false;
 
     // Populate our local object type lists with the list of types registered
@@ -594,9 +602,7 @@ bool cgWorldConfiguration::loadSceneTable( )
         query.reset();
 
     } // End if success
-
-    // Any scene's found?
-    if ( mSceneDescriptors.empty() )
+    else
     {
         cgAppLog::write( cgAppLog::Error, _T("World database did not contain any valid scenes or the scene descriptor query failed.\n") );
         return false;

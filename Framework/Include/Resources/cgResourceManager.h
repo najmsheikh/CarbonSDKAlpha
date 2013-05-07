@@ -16,7 +16,7 @@
 //        scripts and surface material information.                          //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -175,6 +175,8 @@ public:
     bool                        createTexture               ( cgTextureHandle * resourceOut, cgBufferType::Base type, cgUInt32 width, cgUInt32 height, cgUInt32 depth, cgUInt32 mipLevels, cgBufferFormat::Base format, cgMemoryPool::Base pool, bool autoGenMips = false, cgUInt32 flags = 0, const cgString & resourceName = _T(""), const cgDebugSourceInfo & _debugSource = cgDebugSourceInfo(_T(""),0) );
     bool                        createTexture               ( cgTextureHandle * resourceOut, cgBezierSpline2 & spline, cgUInt32 width, cgUInt32 mipLevels, bool rightToLeft = false, cgUInt32 flags = 0, const cgString & resourceName = _T(""), const cgDebugSourceInfo & _debugSource = cgDebugSourceInfo(_T(""),0) );
     bool                        cloneTexture                ( cgTextureHandle * resourceOut, cgTextureHandle sourceTexture, cgBufferFormat::Base newFormat = cgBufferFormat::Unknown, cgUInt32 flags = 0, const cgString & resourceName = _T(""), const cgDebugSourceInfo & _debugSource = cgDebugSourceInfo(_T(""),0) );
+    bool                        cloneTexture                ( cgTextureHandle * resourceOut, cgTextureHandle sourceTexture, const cgRect & sourceRectangle, cgBufferFormat::Base newFormat = cgBufferFormat::Unknown, cgUInt32 flags = 0, const cgString & resourceName = _T(""), const cgDebugSourceInfo & _debugSource = cgDebugSourceInfo(_T(""),0) );
+    bool                        cloneTexture                ( cgTextureHandle * resourceOut, cgTextureHandle sourceTexture, cgRect sourceRectangle, cgSize TextureSize, bool stretch, cgBufferFormat::Base newFormat = cgBufferFormat::Unknown, cgUInt32 flags = 0, const cgString & resourceName = _T(""), const cgDebugSourceInfo & _debugSource = cgDebugSourceInfo(_T(""),0) );
     
     // Vertex / Index buffers
     bool                        createVertexBuffer          ( cgVertexBufferHandle * resourceOut, cgUInt32 length, cgUInt32 usage, cgVertexFormat * format, cgMemoryPool::Base pool, const cgDebugSourceInfo & _debugSource = cgDebugSourceInfo(_T(""),0) );

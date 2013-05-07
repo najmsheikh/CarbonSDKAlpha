@@ -15,7 +15,7 @@
 //        attached to the root of the hierarchy to ragdoll.                  //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -34,6 +34,7 @@
 #include <Physics/Bodies/cgRigidBody.h>
 #include <Physics/Joints/cgBallJoint.h>
 #include <World/Objects/cgBoneObject.h>
+#include <World/Objects/cgDummyObject.h>
 
 // Newton Game Dynamics
 #include <Newton.h>
@@ -237,7 +238,8 @@ void cgRagdollController::applyImpulseTo( cgObjectNode * boneNode, const cgVecto
 void cgRagdollController::constructHierarchy( cgObjectNode * currentNode, cgInt parentBoneIndex )
 {
     // Do nothing for now unless this is a bone.
-    if ( !currentNode->queryObjectType( RTID_BoneObject ) )
+    if ( !currentNode->queryObjectType( RTID_BoneObject ) &&
+         !currentNode->queryObjectType( RTID_DummyObject ) )
         return;
 
     // Allows ragdoll?

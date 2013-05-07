@@ -14,7 +14,7 @@
 //        and two dimensional (pre-transformed), screen oriented billboards. //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -543,6 +543,17 @@ cgInt16 cgBillboardBuffer::addFrame( cgInt16 groupIndex, const cgRect & pixelBou
 cgSurfaceShaderHandle cgBillboardBuffer::getSurfaceShader( ) const
 {
     return mRenderShader;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getTExture ()
+/// <summary>
+/// Retrieve the texture associated with this billboard buffer.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgTextureHandle cgBillboardBuffer::getTexture( ) const
+{
+    return mTexture;
 }
 
 //-----------------------------------------------------------------------------

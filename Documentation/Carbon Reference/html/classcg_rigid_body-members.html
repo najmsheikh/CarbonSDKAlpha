@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -122,8 +122,8 @@ $(document).ready(function(){initNavTree('classcg_rigid_body.html','');});
   <tr class="even"><td class="entry"><a class="el" href="classcg_physics_body.html#a2ef3f19c9c47a5b44d642cc83775c2ff">cgPhysicsBody</a>(cgPhysicsWorld *world, cgPhysicsShape *shape)</td><td class="entry"><a class="el" href="classcg_physics_body.html">cgPhysicsBody</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_physics_entity.html#a8929dd44d0fd7ac2d18cef0d4d5047b5">cgPhysicsEntity</a>(cgPhysicsWorld *world)</td><td class="entry"><a class="el" href="classcg_physics_entity.html">cgPhysicsEntity</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_reference.html#aa8f452d66f4666a9b79f1c00d65c6fc6">cgReference</a>(cgUInt32 referenceId)</td><td class="entry"><a class="el" href="classcg_reference.html">cgReference</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_rigid_body.html#ab6c65e99fe098d07e85285eea0374178">cgRigidBody</a>(cgPhysicsWorld *world, cgPhysicsShape *shape, const ConstructData &amp;data)</td><td class="entry"><a class="el" href="classcg_rigid_body.html">cgRigidBody</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classcg_rigid_body.html#ad0b5f93b6608b592017cca9389c78211">cgRigidBody</a>(cgPhysicsWorld *world, cgPhysicsShape *shape, const ConstructData &amp;data, cgPhysicsBody *initBody)</td><td class="entry"><a class="el" href="classcg_rigid_body.html">cgRigidBody</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_rigid_body.html#a044649025db260a001c928c582b8cbcc">cgRigidBody</a>(cgPhysicsWorld *world, cgPhysicsShape *shape, const cgRigidBodyCreateParams &amp;params)</td><td class="entry"><a class="el" href="classcg_rigid_body.html">cgRigidBody</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_rigid_body.html#acaad68324cf0c21a7c54403e89582eae">cgRigidBody</a>(cgPhysicsWorld *world, cgPhysicsShape *shape, const cgRigidBodyCreateParams &amp;params, cgPhysicsBody *initBody)</td><td class="entry"><a class="el" href="classcg_rigid_body.html">cgRigidBody</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_physics_body.html#a3de9ccb4539be6391d5af18698de4f6f">clearForces</a>()</td><td class="entry"><a class="el" href="classcg_physics_body.html">cgPhysicsBody</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_reference.html#a4089bc9fc24b2e0bcc96376abd6c041c">deleteReference</a>()</td><td class="entry"><a class="el" href="classcg_reference.html">cgReference</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a815b9a991113bb99acea9e15af2920a2">DisposableScriptObject</a>()</td><td class="entry"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html">cgScriptInterop::DisposableScriptObject</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
@@ -142,11 +142,11 @@ $(document).ready(function(){initNavTree('classcg_rigid_body.html','');});
   <tr class="even"><td class="entry"><a class="el" href="classcg_physics_body.html#a3820ac7b62dfa0d0bf274cc54a835c56">getShape</a>() const </td><td class="entry"><a class="el" href="classcg_physics_body.html">cgPhysicsBody</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_rigid_body.html#a5add633105ab446a19450f6e93d4c7d2">getTransform</a>(cgDouble interp=1.0) const </td><td class="entry"><a class="el" href="classcg_rigid_body.html">cgRigidBody</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_physics_body.html#a6b0030cef0cbc2bceb7629908c0a7fd0">getVelocity</a>() const </td><td class="entry"><a class="el" href="classcg_physics_body.html">cgPhysicsBody</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_rigid_body.html#a42bf8ae551b7dcca11e141e66d557e43">initialize</a>(cgPhysicsWorld *world, const ConstructData &amp;data, cgPhysicsBody *initBody)</td><td class="entry"><a class="el" href="classcg_rigid_body.html">cgRigidBody</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_rigid_body.html#ac1fa1395b0885e6b679825b3bb369bf0">initialize</a>(cgPhysicsWorld *world, const cgRigidBodyCreateParams &amp;params, cgPhysicsBody *initBody)</td><td class="entry"><a class="el" href="classcg_rigid_body.html">cgRigidBody</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_physics_body.html#af543b1d176f8244306fb0b3944ba635e">isAutoSleepEnabled</a>() const </td><td class="entry"><a class="el" href="classcg_physics_body.html">cgPhysicsBody</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_physics_body.html#ae672a362a1e0900f3d3c2e59b27961a9">isContinuousCollisionEnabled</a>() const </td><td class="entry"><a class="el" href="classcg_physics_body.html">cgPhysicsBody</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_physics_body.html#ac5a5ddf62324c52b18551531491e7657">isCustomGravityEnabled</a>() const </td><td class="entry"><a class="el" href="classcg_physics_body.html">cgPhysicsBody</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_reference.html#af002aedbdfca5e97c3a7263425a60dac">isDisposed</a>()</td><td class="entry"><a class="el" href="classcg_reference.html">cgReference</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_reference.html#a34951860e42866aff9b890d704bccbc4">isDisposed</a>() const </td><td class="entry"><a class="el" href="classcg_reference.html">cgReference</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_reference.html#aecf67c7fc72ba0d465096b4584e1caba">isDisposing</a>() const </td><td class="entry"><a class="el" href="classcg_reference.html">cgReference</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_reference.html#abc11be6582c83be070816daf60d96781">isInternalReference</a>() const </td><td class="entry"><a class="el" href="classcg_reference.html">cgReference</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_physics_body.html#a5360e2c6df5936a51bc73bfeb4a98419">mBody</a></td><td class="entry"><a class="el" href="classcg_physics_body.html">cgPhysicsBody</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
@@ -203,7 +203,7 @@ $(document).ready(function(){initNavTree('classcg_rigid_body.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:45 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:45 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

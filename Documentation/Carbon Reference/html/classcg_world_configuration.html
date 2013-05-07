@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -142,6 +142,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa5760f27c060bdeb15d524a670201b63"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#aa5760f27c060bdeb15d524a670201b63">getSceneCount</a> () const </td></tr>
 <tr class="memdesc:aa5760f27c060bdeb15d524a670201b63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the total number of scenes contained within the loaded world configuration.  <a href="#aa5760f27c060bdeb15d524a670201b63"></a><br/></td></tr>
 <tr class="separator:aa5760f27c060bdeb15d524a670201b63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a198d49eb4e7e9cfecdcf294f1ee4139a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_world_database_status.html#aa5a2c78726e22bd70f3b7bc626271a80">cgWorldDatabaseStatus::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a198d49eb4e7e9cfecdcf294f1ee4139a">getLayoutStatus</a> () const </td></tr>
+<tr class="memdesc:a198d49eb4e7e9cfecdcf294f1ee4139a"><td class="mdescLeft">&#160;</td><td class="mdescRight">When the database configuration is loaded, version testing is performed and the layout of the database is potentially updated. The layout status returned by this method indicates the action (if any) that was taken during this process when the configuration was first loaded.  <a href="#a198d49eb4e7e9cfecdcf294f1ee4139a"></a><br/></td></tr>
+<tr class="separator:a198d49eb4e7e9cfecdcf294f1ee4139a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb22dc76cce9075aca2f2e5f5f637306"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_scene_descriptor.html">cgSceneDescriptor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#acb22dc76cce9075aca2f2e5f5f637306">getSceneDescriptor</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> index) const </td></tr>
 <tr class="memdesc:acb22dc76cce9075aca2f2e5f5f637306"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the physical descriptor structure for a scene as it was described by the world configuration. This particular method allows the caller to retrieve a descriptor by index.  <a href="#acb22dc76cce9075aca2f2e5f5f637306"></a><br/></td></tr>
 <tr class="separator:acb22dc76cce9075aca2f2e5f5f637306"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -163,6 +166,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4eeb55c657f25f6adb642ea7932c0a1a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_object_sub_element_type_desc.html">cgObjectSubElementTypeDesc</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a4eeb55c657f25f6adb642ea7932c0a1a">getObjectSubElementTypeByLocalId</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> localIdentifier) const </td></tr>
 <tr class="memdesc:a4eeb55c657f25f6adb642ea7932c0a1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve details for the specified object sub-element type based on its local (database) identifier.  <a href="#a4eeb55c657f25f6adb642ea7932c0a1a"></a><br/></td></tr>
 <tr class="separator:a4eeb55c657f25f6adb642ea7932c0a1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94278dfb8e25701f34ac6fa78e32fb25"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_scene_element_type_desc.html">cgSceneElementTypeDesc</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a94278dfb8e25701f34ac6fa78e32fb25">getSceneElementType</a> (const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;globalIdentifier) const </td></tr>
+<tr class="memdesc:a94278dfb8e25701f34ac6fa78e32fb25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve details for the specified scene element type based on its global identifier.  <a href="#a94278dfb8e25701f34ac6fa78e32fb25"></a><br/></td></tr>
+<tr class="separator:a94278dfb8e25701f34ac6fa78e32fb25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a756cde090f91bfc7d4c834fa3978b586"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_scene_element_type_desc.html">cgSceneElementTypeDesc</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a756cde090f91bfc7d4c834fa3978b586">getSceneElementTypeByLocalId</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> localIdentifier) const </td></tr>
+<tr class="memdesc:a756cde090f91bfc7d4c834fa3978b586"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve details for the specified scene element type based on its local (database) identifier.  <a href="#a756cde090f91bfc7d4c834fa3978b586"></a><br/></td></tr>
+<tr class="separator:a756cde090f91bfc7d4c834fa3978b586"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a237eea1526706b546e1720d5439f5870"><td class="memItemLeft" align="right" valign="top">const <br class="typebreak"/>
 cgFilterExpression::IdentifierArray &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a237eea1526706b546e1720d5439f5870">getMaterialPropertyIdentifiers</a> () const </td></tr>
 <tr class="memdesc:a237eea1526706b546e1720d5439f5870"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the pre-constructed list of identifiers (compatible with <a class="el" href="classcg_filter_expression.html" title="A utility class that allows for complex (string based) boolean style expressions to be supplied that ...">cgFilterExpression</a>) for the various user defined material properties types.  <a href="#a237eea1526706b546e1720d5439f5870"></a><br/></td></tr>
@@ -185,9 +194,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a84b89f3dc8e8ac440c800c9bd44105d7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a84b89f3dc8e8ac440c800c9bd44105d7">newConfiguration</a> (<a class="el" href="namespacecg_world_type.html#ae25700bef3e243c265450227a0ceb796">cgWorldType::Base</a> type)</td></tr>
 <tr class="memdesc:a84b89f3dc8e8ac440c800c9bd44105d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new 'default' world file configuration ready for modification.  <a href="#a84b89f3dc8e8ac440c800c9bd44105d7"></a><br/></td></tr>
 <tr class="separator:a84b89f3dc8e8ac440c800c9bd44105d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2dae8c2012d77440bf92d7eed9169f7d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_config_result.html#a1a15b934741f7881e1754b0873a91bd9">cgConfigResult::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a2dae8c2012d77440bf92d7eed9169f7d">loadConfiguration</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> minSupportedVersion=0, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> maxSupportedVersion=0xFFFFFFFF)</td></tr>
-<tr class="memdesc:a2dae8c2012d77440bf92d7eed9169f7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the current world configuration from the recently opened world database file.  <a href="#a2dae8c2012d77440bf92d7eed9169f7d"></a><br/></td></tr>
-<tr class="separator:a2dae8c2012d77440bf92d7eed9169f7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a070818b65a5f45942e98a29348dc1e4b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_config_result.html#a1a15b934741f7881e1754b0873a91bd9">cgConfigResult::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a070818b65a5f45942e98a29348dc1e4b">loadConfiguration</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> minSupportedVersion=0, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> maxSupportedVersion=0xFFFFFFFF, bool autoUpgrade=false)</td></tr>
+<tr class="memdesc:a070818b65a5f45942e98a29348dc1e4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the current world configuration from the recently opened world database file.  <a href="#a070818b65a5f45942e98a29348dc1e4b"></a><br/></td></tr>
+<tr class="separator:a070818b65a5f45942e98a29348dc1e4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e64c661d3dc376a6855ab85c32048c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a1e64c661d3dc376a6855ab85c32048c9">insertScene</a> (const <a class="el" href="classcg_scene_descriptor.html">cgSceneDescriptor</a> &amp;description)</td></tr>
 <tr class="memdesc:a1e64c661d3dc376a6855ab85c32048c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert the specified scene descripter into the database if required. Returns 0 on failure.  <a href="#a1e64c661d3dc376a6855ab85c32048c9"></a><br/></td></tr>
 <tr class="separator:a1e64c661d3dc376a6855ab85c32048c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -203,6 +212,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a7d251a8f556a98faed415cfedffaedb7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a7d251a8f556a98faed415cfedffaedb7">insertObjectSubElementType</a> (const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;typeIdentifier, const <a class="el" href="classcg_string.html">cgString</a> &amp;databaseTable)</td></tr>
 <tr class="memdesc:a7d251a8f556a98faed415cfedffaedb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert the specified object sub-element type into the world configuration table(s).  <a href="#a7d251a8f556a98faed415cfedffaedb7"></a><br/></td></tr>
 <tr class="separator:a7d251a8f556a98faed415cfedffaedb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f5fbc8d0fa18633b187f0571faeaca1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a9f5fbc8d0fa18633b187f0571faeaca1">insertSceneElementType</a> (const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;typeIdentifier, const <a class="el" href="classcg_string.html">cgString</a> &amp;databaseTable)</td></tr>
+<tr class="memdesc:a9f5fbc8d0fa18633b187f0571faeaca1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert the specified scene element type into the world configuration table(s).  <a href="#a9f5fbc8d0fa18633b187f0571faeaca1"></a><br/></td></tr>
+<tr class="separator:a9f5fbc8d0fa18633b187f0571faeaca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e8b2947a1a5d760611d66d86c3d9f18"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a5e8b2947a1a5d760611d66d86c3d9f18">loadSceneTable</a> ()</td></tr>
 <tr class="memdesc:a5e8b2947a1a5d760611d66d86c3d9f18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the local list of scene descriptors populated from the currently opened world database.  <a href="#a5e8b2947a1a5d760611d66d86c3d9f18"></a><br/></td></tr>
 <tr class="separator:a5e8b2947a1a5d760611d66d86c3d9f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -212,6 +224,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a26b0b544526e09d1763fd9ceb625a51f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a26b0b544526e09d1763fd9ceb625a51f">loadObjectSubElementTypeTable</a> ()</td></tr>
 <tr class="memdesc:a26b0b544526e09d1763fd9ceb625a51f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the local object sub-element type table by combining the list of known registered object types defined by the application, and those defined within the database. This new type list is specific to the opened world.  <a href="#a26b0b544526e09d1763fd9ceb625a51f"></a><br/></td></tr>
 <tr class="separator:a26b0b544526e09d1763fd9ceb625a51f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a310f4f6b36b5cf1c8946aeda49149e3a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a310f4f6b36b5cf1c8946aeda49149e3a">loadSceneElementTypeTable</a> ()</td></tr>
+<tr class="memdesc:a310f4f6b36b5cf1c8946aeda49149e3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the local scene element type table by combining the list of known registered element types defined by the application, and those defined within the database. This new type list is specific to the opened world.  <a href="#a310f4f6b36b5cf1c8946aeda49149e3a"></a><br/></td></tr>
+<tr class="separator:a310f4f6b36b5cf1c8946aeda49149e3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a923f351d5d3896c9aabac1f8c5fa6318"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a923f351d5d3896c9aabac1f8c5fa6318">loadMaterialPropertiesTable</a> ()</td></tr>
 <tr class="memdesc:a923f351d5d3896c9aabac1f8c5fa6318"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the local list of material properties populated from the currently opened world database.  <a href="#a923f351d5d3896c9aabac1f8c5fa6318"></a><br/></td></tr>
 <tr class="separator:a923f351d5d3896c9aabac1f8c5fa6318"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -230,14 +245,20 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:ae7f90ab6d28c23c0ed37628f2a57f87a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7fe2f4b0402ba64a1ac15f3a99883e6e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a7fe2f4b0402ba64a1ac15f3a99883e6e">mVersion</a></td></tr>
 <tr class="separator:a7fe2f4b0402ba64a1ac15f3a99883e6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a789164452862dae6f03de446b0e457d3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_world_database_status.html#aa5a2c78726e22bd70f3b7bc626271a80">cgWorldDatabaseStatus::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a789164452862dae6f03de446b0e457d3">mLayoutStatus</a></td></tr>
+<tr class="separator:a789164452862dae6f03de446b0e457d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a00499a61c66378ffaa43d0f8dbc413"><td class="memItemLeft" align="right" valign="top">cgWorldObjectTypeDesc::Map&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a2a00499a61c66378ffaa43d0f8dbc413">mObjectTypes</a></td></tr>
 <tr class="separator:a2a00499a61c66378ffaa43d0f8dbc413"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad48c1e0579c130c9788c45c14f4e74f9"><td class="memItemLeft" align="right" valign="top">ObjectTypeLUT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#ad48c1e0579c130c9788c45c14f4e74f9">mObjectTypeLUT</a></td></tr>
-<tr class="separator:ad48c1e0579c130c9788c45c14f4e74f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6d92fb5fd40779d7299416a7b381597"><td class="memItemLeft" align="right" valign="top">ComponentTypeLUT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#ad6d92fb5fd40779d7299416a7b381597">mObjectTypeLUT</a></td></tr>
+<tr class="separator:ad6d92fb5fd40779d7299416a7b381597"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af40d836dcbb80e578207d2ea2b88e3dd"><td class="memItemLeft" align="right" valign="top">cgObjectSubElementTypeDesc::Map&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#af40d836dcbb80e578207d2ea2b88e3dd">mObjectSubElementTypes</a></td></tr>
 <tr class="separator:af40d836dcbb80e578207d2ea2b88e3dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2439b37b9807ef03c5ab928b1106206e"><td class="memItemLeft" align="right" valign="top">ObjectTypeLUT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a2439b37b9807ef03c5ab928b1106206e">mObjectSubElementTypeLUT</a></td></tr>
-<tr class="separator:a2439b37b9807ef03c5ab928b1106206e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54e875aca6fc9af19ed8dc13c6557552"><td class="memItemLeft" align="right" valign="top">ComponentTypeLUT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a54e875aca6fc9af19ed8dc13c6557552">mObjectSubElementTypeLUT</a></td></tr>
+<tr class="separator:a54e875aca6fc9af19ed8dc13c6557552"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0de1c534f1ad260007f2c8e5f45d0e39"><td class="memItemLeft" align="right" valign="top">cgSceneElementTypeDesc::Map&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a0de1c534f1ad260007f2c8e5f45d0e39">mSceneElementTypes</a></td></tr>
+<tr class="separator:a0de1c534f1ad260007f2c8e5f45d0e39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3aa3b732bd659c04108001b5c57bee4d"><td class="memItemLeft" align="right" valign="top">ComponentTypeLUT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a3aa3b732bd659c04108001b5c57bee4d">mSceneElementTypeLUT</a></td></tr>
+<tr class="separator:a3aa3b732bd659c04108001b5c57bee4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad86b5c0d0a3450583f77b5e213674f58"><td class="memItemLeft" align="right" valign="top">SceneDescriptorArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#ad86b5c0d0a3450583f77b5e213674f58">mSceneDescriptors</a></td></tr>
 <tr class="separator:ad86b5c0d0a3450583f77b5e213674f58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aedea5c5fab9b42993af2cbc0db44e7b7"><td class="memItemLeft" align="right" valign="top">SceneDescriptorLUT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#aedea5c5fab9b42993af2cbc0db44e7b7">mSceneDescriptorLUT</a></td></tr>
@@ -312,6 +333,23 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Generate a new unique reference identifier that can be assigned to a reference object. </p>
+
+</div>
+</div>
+<a class="anchor" id="a198d49eb4e7e9cfecdcf294f1ee4139a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacecg_world_database_status.html#aa5a2c78726e22bd70f3b7bc626271a80">cgWorldDatabaseStatus::Base</a> cgWorldConfiguration::getLayoutStatus </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>When the database configuration is loaded, version testing is performed and the layout of the database is potentially updated. The layout status returned by this method indicates the action (if any) that was taken during this process when the configuration was first loaded. </p>
 
 </div>
 </div>
@@ -527,6 +565,42 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a94278dfb8e25701f34ac6fa78e32fb25"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structcg_scene_element_type_desc.html">cgSceneElementTypeDesc</a> * cgWorldConfiguration::getSceneElementType </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;&#160;</td>
+          <td class="paramname"><em>globalIdentifier</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve details for the specified scene element type based on its global identifier. </p>
+
+</div>
+</div>
+<a class="anchor" id="a756cde090f91bfc7d4c834fa3978b586"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structcg_scene_element_type_desc.html">cgSceneElementTypeDesc</a> * cgWorldConfiguration::getSceneElementTypeByLocalId </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>localIdentifier</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve details for the specified scene element type based on its local (database) identifier. </p>
+
+</div>
+</div>
 <a class="anchor" id="a94212ad864c452eed35534634abfb3d3"></a>
 <div class="memitem">
 <div class="memproto">
@@ -726,7 +800,43 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a2dae8c2012d77440bf92d7eed9169f7d"></a>
+<a class="anchor" id="a9f5fbc8d0fa18633b187f0571faeaca1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgWorldConfiguration::insertSceneElementType </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;&#160;</td>
+          <td class="paramname"><em>typeIdentifier</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>databaseTable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Insert the specified scene element type into the world configuration table(s). </p>
+
+</div>
+</div>
+<a class="anchor" id="a070818b65a5f45942e98a29348dc1e4b"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -743,7 +853,13 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
-          <td class="paramname"><em>maxSupportedVersion</em> = <code>0xFFFFFFFF</code>&#160;</td>
+          <td class="paramname"><em>maxSupportedVersion</em> = <code>0xFFFFFFFF</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>autoUpgrade</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -862,6 +978,31 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a310f4f6b36b5cf1c8946aeda49149e3a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgWorldConfiguration::loadSceneElementTypeTable </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Build the local scene element type table by combining the list of known registered element types defined by the application, and those defined within the database. This new type list is specific to the opened world. </p>
+
+</div>
+</div>
 <a class="anchor" id="a5e8b2947a1a5d760611d66d86c3d9f18"></a>
 <div class="memitem">
 <div class="memproto">
@@ -967,6 +1108,26 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a789164452862dae6f03de446b0e457d3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacecg_world_database_status.html#aa5a2c78726e22bd70f3b7bc626271a80">cgWorldDatabaseStatus::Base</a> cgWorldConfiguration::mLayoutStatus</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="ab0879bc29f355d545208766f19e087d6"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1007,7 +1168,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a2439b37b9807ef03c5ab928b1106206e"></a>
+<a class="anchor" id="a54e875aca6fc9af19ed8dc13c6557552"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1015,7 +1176,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">ObjectTypeLUT cgWorldConfiguration::mObjectSubElementTypeLUT</td>
+          <td class="memname">ComponentTypeLUT cgWorldConfiguration::mObjectSubElementTypeLUT</td>
         </tr>
       </table>
   </td>
@@ -1047,7 +1208,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ad48c1e0579c130c9788c45c14f4e74f9"></a>
+<a class="anchor" id="ad6d92fb5fd40779d7299416a7b381597"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1055,7 +1216,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">ObjectTypeLUT cgWorldConfiguration::mObjectTypeLUT</td>
+          <td class="memname">ComponentTypeLUT cgWorldConfiguration::mObjectTypeLUT</td>
         </tr>
       </table>
   </td>
@@ -1167,6 +1328,46 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a3aa3b732bd659c04108001b5c57bee4d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ComponentTypeLUT cgWorldConfiguration::mSceneElementTypeLUT</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0de1c534f1ad260007f2c8e5f45d0e39"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cgSceneElementTypeDesc::Map cgWorldConfiguration::mSceneElementTypes</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a7fe2f4b0402ba64a1ac15f3a99883e6e"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1237,7 +1438,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_world_configuration.html">cgWorldConfiguration</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:55 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:59 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

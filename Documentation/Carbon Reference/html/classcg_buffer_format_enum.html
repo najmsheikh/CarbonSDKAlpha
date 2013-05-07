@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -137,9 +137,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9e0bae714c83794984160a76c5e302bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_buffer_format_enum.html#a9e0bae714c83794984160a76c5e302bd">initialize</a> ()</td></tr>
 <tr class="memdesc:a9e0bae714c83794984160a76c5e302bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize this class, all modes initially unsupported.  <a href="#a9e0bae714c83794984160a76c5e302bd"></a><br/></td></tr>
 <tr class="separator:a9e0bae714c83794984160a76c5e302bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14d458f3bbce6308d84f8c59417d06c0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_buffer_format_enum.html#a14d458f3bbce6308d84f8c59417d06c0">isFormatSupported</a> (<a class="el" href="namespacecg_buffer_type.html#abb80324b86cad34bb6200716229decad">cgBufferType::Base</a> type, <a class="el" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24">cgBufferFormat::Base</a> format) const </td></tr>
-<tr class="memdesc:a14d458f3bbce6308d84f8c59417d06c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns status of whether or not this format is supported at all (irrespective of its physical capabilities).  <a href="#a14d458f3bbce6308d84f8c59417d06c0"></a><br/></td></tr>
-<tr class="separator:a14d458f3bbce6308d84f8c59417d06c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27f748ccdbddfda17e5fe0a1ed9e5131"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_buffer_format_enum.html#a27f748ccdbddfda17e5fe0a1ed9e5131">isFormatSupported</a> (<a class="el" href="namespacecg_buffer_type.html#abb80324b86cad34bb6200716229decad">cgBufferType::Base</a> type, <a class="el" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24">cgBufferFormat::Base</a> format, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> requiredCaps=<a class="el" href="namespacecg_buffer_format_caps.html#ab4e9511e4a2905347cbef40034493753a4326985cd1fa51eda88bdbd0443c408f">cgBufferFormatCaps::CanSample</a>) const </td></tr>
+<tr class="memdesc:a27f748ccdbddfda17e5fe0a1ed9e5131"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns status of whether or not this format is supported at all (irrespective of its physical capabilities).  <a href="#a27f748ccdbddfda17e5fe0a1ed9e5131"></a><br/></td></tr>
+<tr class="separator:a27f748ccdbddfda17e5fe0a1ed9e5131"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae48b0527e7140ec6365e045e50c78a85"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_buffer_format_enum.html#ae48b0527e7140ec6365e045e50c78a85">getFormatCaps</a> (<a class="el" href="namespacecg_buffer_type.html#abb80324b86cad34bb6200716229decad">cgBufferType::Base</a> type, <a class="el" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24">cgBufferFormat::Base</a> format) const </td></tr>
 <tr class="memdesc:ae48b0527e7140ec6365e045e50c78a85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the capabilities exposed by the hardware for the specified buffer type and format combination.  <a href="#ae48b0527e7140ec6365e045e50c78a85"></a><br/></td></tr>
 <tr class="separator:ae48b0527e7140ec6365e045e50c78a85"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -786,7 +786,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a14d458f3bbce6308d84f8c59417d06c0"></a>
+<a class="anchor" id="a27f748ccdbddfda17e5fe0a1ed9e5131"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -800,7 +800,13 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24">cgBufferFormat::Base</a>&#160;</td>
-          <td class="paramname"><em>Format</em>&#160;</td>
+          <td class="paramname"><em>Format</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>requiredCaps</em> = <code><a class="el" href="namespacecg_buffer_format_caps.html#ab4e9511e4a2905347cbef40034493753a4326985cd1fa51eda88bdbd0443c408f">cgBufferFormatCaps::CanSample</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -971,7 +977,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_buffer_format_enum.html">cgBufferFormatEnum</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:30 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:16 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

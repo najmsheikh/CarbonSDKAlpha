@@ -28,7 +28,7 @@ namespace CursorLayer
             using namespace cgScriptInterop::Utils;
 
             ///////////////////////////////////////////////////////////////////////
-            // cgUILayer (Class)
+            // cgUICursorLayer (Class)
             ///////////////////////////////////////////////////////////////////////
 
             // Register the reference/object handle support for the objects.
@@ -39,7 +39,7 @@ namespace CursorLayer
 
             // Register object methods
             BINDSUCCESS( engine->registerObjectMethod( "CursorLayer", "bool initialize( )", asMETHODPR(cgUICursorLayer, initialize, ( ), bool), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "CursorLayer", "void selectCursor( const String&in )", asMETHODPR(cgUICursorLayer, selectCursor, ( const cgString& ), void), asCALL_THISCALL) );
+            //BINDSUCCESS( engine->registerObjectMethod( "CursorLayer", "void selectCursor( const String&in )", asMETHODPR(cgUICursorLayer, selectCursor, ( const cgString& ), void), asCALL_THISCALL) );
         }
 
     }; // End Class : Package

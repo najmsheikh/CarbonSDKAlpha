@@ -14,7 +14,7 @@
 //        implementation as used by the system provided light source types.  //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -107,6 +107,11 @@ cgShadowGenerator::cgShadowGenerator( cgLightNode * pParentLight, cgUInt32 nFrus
     // A reference identifier of '0' is required to denote these temporary objects.
     mCamera = new cgCameraNode( 0, pParentLight->getScene() );
     mCamera->onNodeCreated( RTID_CameraObject, cgCloneMethod::None );
+
+    // Select the search filtering flags for the camera's visibility set.
+    cgUInt32 flags = cgVisibilitySearchFlags::MustRender | cgVisibilitySearchFlags::MustCastShadows |
+                     cgVisibilitySearchFlags::CollectMaterials;
+    mCamera->getVisibilitySet()->setSearchFlags( flags );
 
     // Build a good default name for the generator (for debug purposes)
     if ( pParentLight && !pParentLight->getName().empty() )
@@ -907,9 +912,6 @@ void cgShadowGenerator::releaseResources( )
 //-----------------------------------------------------------------------------
 bool cgShadowGenerator::computeVisibilitySet( cgCameraNode * pSceneCamera, bool bParallelSplit /* = false */, cgFloat fNearSplitDistance /* = 0.0f */, cgFloat fFarSplitDistance /* = 0.0f */ )
 {
-    // Get access to required systems.
-    cgScene * pScene = mParent->getScene();
-
     // Do not regenerate shadow map until we know something has changed.
     mRegenerate = false;
 
@@ -919,36 +921,8 @@ bool cgShadowGenerator::computeVisibilitySet( cgCameraNode * pSceneCamera, bool 
     // If the light source moved or was updated, we can immediately
     // consider this frustum to be dirty.
     if ( !mLastVisibilityFrame || mParent->isNodeDirtySince( mLastVisibilityFrame ) )
-    {
         mRegenerate = true;
     
-    } // End if light source altered
-    else
-    {
-        // The light source wasn't altered in any way, check shadow casting objects.
-        cgObjectNodeSet::const_iterator itObject;
-        const cgObjectNodeArray & Objects = pFrustumVis->getVisibleObjects();
-        for ( size_t i = 0; i < Objects.size(); ++i )
-        {
-            // If the object was deleted, or has been altered (moved, animated etc.)
-            // then we must also regenerate the shadow map.
-            
-            // ToDo: We can probably replace isValidReference() (as well as 
-            // removing the 'm_ValidReferences' set in the reference manager) with
-            // a call to 'GetReference( id )' if we stored the original reference 
-            // id in the visibility set (i.e. m_ObjectNodes is a map instead of a set).
-            cgObjectNode * pObject = Objects[i];
-            if ( !cgReferenceManager::isValidReference( pObject ) || pObject->isNodeDirtySince( mLastVisibilityFrame ) )
-            {
-                mRegenerate = true;
-                break;
-
-            } // End if object altered
-
-        } // Next object
-
-    } // End if light source static
-
     // If the light source is employing an orthographic parallel split
     // rendering approach, we need to compute a new projection matrix.
     if ( bParallelSplit )
@@ -1002,14 +976,15 @@ bool cgShadowGenerator::computeVisibilitySet( cgCameraNode * pSceneCamera, bool 
     } // End if Parallel Split
     else
     {
-        // Build our object filter for choosing casters to render into the shadowmap
-        cgUInt32 nFlags = cgVisibilitySearchFlags::MustRender | cgVisibilitySearchFlags::MustCastShadows |
-                          cgVisibilitySearchFlags::CollectMaterials;
+        // Compute the new filtered visibility set for this frustum.
+		mCamera->computeVisibility( );
 
-		// Compute the new filtered visibility set for this frustum.
-		mCamera->computeVisibility( nFlags );
+        // If the set was actually modified (objects added or removed)
+        // then force regenerate.
+        if ( pFrustumVis->isSetModifiedSince( mLastVisibilityFrame ) )
+            mRegenerate = true;
 
-        // ToDo: Figure out how to filter objects that can't cast a shadow
+        // ToDo: Potentially need to filter objects that can't cast a shadow
         // into the camera's frustum (i.e. perspective extrude AABB?). 
 
     } // End if Standard
@@ -1030,12 +1005,12 @@ bool cgShadowGenerator::computeVisibilitySet( cgCameraNode * pSceneCamera, bool 
     // or moved recently such that it now exists in the new view?
     if ( !mRegenerate )
     {
-        cgObjectNodeSet::const_iterator itObject;
-        const cgObjectNodeArray & Objects = pFrustumVis->getVisibleObjects();
-		for ( size_t i = 0; i < Objects.size(); ++i )
+        cgObjectNodeList::const_iterator itObject;
+        const cgObjectNodeList & Objects = pFrustumVis->getVisibleObjects();
+		for ( itObject = Objects.begin(); itObject != Objects.end(); ++itObject )
         {
             // If the object is dirty, we must regenerate!
-            if ( Objects[i]->isNodeDirtySince( mLastVisibilityFrame ) )
+            if ( (*itObject)->isNodeDirtySince( mLastVisibilityFrame ) )
             {
                 mRegenerate = true;
                 break;
@@ -1044,7 +1019,7 @@ bool cgShadowGenerator::computeVisibilitySet( cgCameraNode * pSceneCamera, bool 
 
         } // Next object
 
-    } // End if !bRegenerate
+    } // End if !regenerate
 
     // Casters are visible!
     return true;
@@ -2780,18 +2755,14 @@ bool cgReflectanceGenerator::computeVisibilitySet( cgCameraNode * pSceneCamera, 
     else
     {
         // The light source wasn't altered in any way, check shadow casting objects.
-        cgObjectNodeSet::const_iterator itObject;
-        const cgObjectNodeArray & Objects = pFrustumVis->getVisibleObjects();
-        for ( size_t i = 0; i < Objects.size(); ++i )
+        cgObjectNodeList::const_iterator itObject;
+        const cgObjectNodeList & Objects = pFrustumVis->getVisibleObjects();
+        for ( itObject = Objects.begin(); itObject != Objects.end(); ++itObject )
         {
             // If the object was deleted, or has been altered (moved, animated etc.)
             // then we must also regenerate the shadow map.
-            
-            // ToDo: We can probably replace isValidReference() (as well as 
-            // removing the 'm_ValidReferences' set in the reference manager) with
-            // a call to 'GetReference( id )' if we stored the original reference 
-            // id in the visibility set (i.e. m_ObjectNodes is a map instead of a set).
-            cgObjectNode * pNode = Objects[i];
+            // ToDo: isValidReference() can be omitted when objects are automatically removed from the visibility set on destruction.
+            cgObjectNode * pNode = (*itObject);
             if ( !cgReferenceManager::isValidReference( pNode ) || pNode->isNodeDirtySince( mLastVisibilityFrame ) )
             {
                 mRegenerate = true;
@@ -2855,12 +2826,8 @@ bool cgReflectanceGenerator::computeVisibilitySet( cgCameraNode * pSceneCamera, 
     } // End if Parallel Split
     else
     {
-        // Build our object filter for choosing casters to render into the shadowmap
-        cgUInt32 nFlags = cgVisibilitySearchFlags::MustRender | cgVisibilitySearchFlags::MustCastShadows |
-                          cgVisibilitySearchFlags::CollectMaterials;
-
 		// Compute the new filtered visibility set for this frustum.
-		mCamera->computeVisibility( nFlags );
+		mCamera->computeVisibility( );
 
         // ToDo: Figure out how to filter objects that can't cast a shadow
         // into the camera's frustum (i.e. perspective extrude AABB?). 
@@ -2883,11 +2850,12 @@ bool cgReflectanceGenerator::computeVisibilitySet( cgCameraNode * pSceneCamera, 
     // or moved recently such that it now exists in the new view?
     if ( !mRegenerate )
     {
-        const cgObjectNodeArray & Objects = pFrustumVis->getVisibleObjects();
-        for ( size_t i = 0; i < Objects.size(); ++i )
+        cgObjectNodeList::const_iterator itObject;
+        const cgObjectNodeList & Objects = pFrustumVis->getVisibleObjects();
+        for ( itObject = Objects.begin(); itObject != Objects.end(); ++itObject )
         {
             // If the object is dirty, we must regenerate!
-            if ( Objects[i]->isNodeDirtySince( mLastVisibilityFrame ) )
+            if ( (*itObject)->isNodeDirtySince( mLastVisibilityFrame ) )
             {
                 mRegenerate = true;
                 break;

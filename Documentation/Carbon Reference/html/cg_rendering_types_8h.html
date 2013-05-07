@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -104,7 +104,6 @@ $(document).ready(function(){initNavTree('cg_rendering_types_8h.html','');});
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#define-members">Macros</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -135,6 +134,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_material_terms.html">cgMaterialTerms</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_blur_op_desc.html">cgBlurOpDesc</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_display_mode.html">cgDisplayMode</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -193,16 +194,13 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecg_antialiasing_method"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_antialiasing_method.html">cgAntialiasingMethod</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespacecg_render_class"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_render_class.html">cgRenderClass</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a6155e921e6f0f1483be8dc6c4a792844"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cg_rendering_types_8h.html#a6155e921e6f0f1483be8dc6c4a792844">_CGE_CGRENDERINGTYPES_H_</a></td></tr>
 <tr class="separator:a6155e921e6f0f1483be8dc6c4a792844"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:ab8bc7e4d9d3a7ffb148fbd665d0c0f5d"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; Base &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_image_operation.html#ab8bc7e4d9d3a7ffb148fbd665d0c0f5d">cgImageOperation::Array</a></td></tr>
-<tr class="separator:ab8bc7e4d9d3a7ffb148fbd665d0c0f5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -221,69 +219,74 @@ Enumerations</h2></td></tr>
 <tr class="separator:a84225a557a40180a18c28e78593c58f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b957e4e2ce6cfb3e220e9eeffeea8c8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8">cgSystemState::Base</a> { <br/>
 &#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a64c0396ca190674f389a850a944f6f8e">cgSystemState::ShadingQuality</a> = 0, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a475e29e01a8c24208ef1e26d7b48f4be">cgSystemState::PostProcessQuality</a>, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a97f3ddb40aa7915d1395d07aa0a24608">cgSystemState::AntiAliasingQuality</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ad96f6c7ddd8850c257a6262b9c2f3c9b">cgSystemState::OrthographicCamera</a>, 
-<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a9d1e027e8027f05ef1d2feeaa0141a8f">cgSystemState::OutputEncodingType</a>, 
+<br/>
+&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a9d1e027e8027f05ef1d2feeaa0141a8f">cgSystemState::OutputEncodingType</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a81093014afa219ecf9fd6c053cbbd90b">cgSystemState::FogModel</a>, 
-<br/>
-&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a3e5f5efa9e3d9cd0f1bd51f5ee0389ae">cgSystemState::HDRLighting</a>, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a3e5f5efa9e3d9cd0f1bd51f5ee0389ae">cgSystemState::HDRLighting</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a944f236146e435a60468e21780fdd9a5">cgSystemState::ViewSpaceLighting</a>, 
-<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8acf5c3dae45183272493a71cbf84724c7">cgSystemState::DeferredRendering</a>, 
+<br/>
+&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8acf5c3dae45183272493a71cbf84724c7">cgSystemState::DeferredRendering</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ad31c7cc25c6dc4aba011f564416d6422">cgSystemState::DeferredLighting</a>, 
-<br/>
-&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a1f2a97b05dc4de8ca89401687ee44847">cgSystemState::SpecularColorOutput</a>, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a1f2a97b05dc4de8ca89401687ee44847">cgSystemState::SpecularColorOutput</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8aabd115100a51c83c26cfdcd8a261dc0f">cgSystemState::GBufferSRGB</a>, 
-<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ad6a0e8a471f22078d7aa1b52217fcef3">cgSystemState::NonLinearZ</a>, 
-<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8afa77e76d503b6149db12dd452892d933">cgSystemState::NormalizedDistance</a>, 
 <br/>
-&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ac5e8d166a465f148106169705e1928a6">cgSystemState::SurfaceNormals</a>, 
+&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ad6a0e8a471f22078d7aa1b52217fcef3">cgSystemState::NonLinearZ</a>, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8afa77e76d503b6149db12dd452892d933">cgSystemState::NormalizedDistance</a>, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ac5e8d166a465f148106169705e1928a6">cgSystemState::SurfaceNormals</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a4624bfc56cfa726a48825129bb9c7b3c">cgSystemState::PackedDepth</a>, 
+<br/>
+&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a381e9505ded9a58484ead14066074ad0">cgSystemState::DepthStencilReads</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ad3930074c01483f0ac31ad608a7b79da">cgSystemState::ColorWrites</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a90e9251c82e07b311643bedc7968a1c9">cgSystemState::CullMode</a>, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8acf6952fd844522a670f60fd8bb6d2f21">cgSystemState::MaximumBlendIndex</a>, 
 <br/>
-&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8acf6952fd844522a670f60fd8bb6d2f21">cgSystemState::MaximumBlendIndex</a>, 
-<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ac75aede3951845906b08ddfd0d08312c">cgSystemState::DepthType</a>, 
+&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ac75aede3951845906b08ddfd0d08312c">cgSystemState::DepthType</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a308462a16da4f5a42a0eb2653ef26edd">cgSystemState::SurfaceNormalType</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8aa42d79c1a1604eb8b059434e372b3609">cgSystemState::LightType</a>, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a93c72d4cceca9c34489bd55dfeffe6f0">cgSystemState::ShadowMethod</a>, 
 <br/>
-&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a93c72d4cceca9c34489bd55dfeffe6f0">cgSystemState::ShadowMethod</a>, 
-<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a5a416d81e759e09b5397f0c1ea25d28a">cgSystemState::PrimaryTaps</a>, 
+&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a5a416d81e759e09b5397f0c1ea25d28a">cgSystemState::PrimaryTaps</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a031d8352a577bf4c7844639e47665f70">cgSystemState::SecondaryTaps</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ad46a7bdb7278177c7b24a57f6e1cfbad">cgSystemState::SampleAttenuation</a>, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8abe69d2f83bb096f0c197c0de9551de54">cgSystemState::SampleDistanceAttenuation</a>, 
 <br/>
-&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8abe69d2f83bb096f0c197c0de9551de54">cgSystemState::SampleDistanceAttenuation</a>, 
-<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a8b76d19783e8eacf7535bc4b84296044">cgSystemState::ColorTexture3D</a>, 
+&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a8b76d19783e8eacf7535bc4b84296044">cgSystemState::ColorTexture3D</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8aebbfa76e1163a9b2e854051264e85873">cgSystemState::DiffuseIBL</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ab5611a634b8049a4bfe12fb103c97a41">cgSystemState::SpecularIBL</a>, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8af854e73b12bbc42dbb59b14b94e63fd7">cgSystemState::ComputeAmbient</a>, 
 <br/>
-&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8af854e73b12bbc42dbb59b14b94e63fd7">cgSystemState::ComputeAmbient</a>, 
-<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a5c53d5cbe8f0f30bb02a21d339bd6a0f">cgSystemState::ComputeDiffuse</a>, 
+&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a5c53d5cbe8f0f30bb02a21d339bd6a0f">cgSystemState::ComputeDiffuse</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8aaca2f3529017ef07f3a35eb2c2570dba">cgSystemState::ComputeSpecular</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ab466b75c88af59b726a29c665a603312">cgSystemState::UseSSAO</a>, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ab209f82d9625ede81dbd7d2c174acf30">cgSystemState::Trilighting</a>, 
 <br/>
-&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ab209f82d9625ede81dbd7d2c174acf30">cgSystemState::Trilighting</a>, 
-<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a36c91752a3b3aa6aad55a6da5c340ae1">cgSystemState::NormalSource</a>, 
+&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a36c91752a3b3aa6aad55a6da5c340ae1">cgSystemState::NormalSource</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a18dcc34e5188cdd25f829036ad786f67">cgSystemState::ReflectionMode</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ad8f33b6a9be02334d07a49797fa80dc8">cgSystemState::LightTextureType</a>, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8af707e3943a61c8978a3d178fa0e15c91">cgSystemState::SampleDiffuseTexture</a>, 
 <br/>
-&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8af707e3943a61c8978a3d178fa0e15c91">cgSystemState::SampleDiffuseTexture</a>, 
-<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a36c2b6c42df0a4b7522fc23b88ab24ab">cgSystemState::SampleSpecularColor</a>, 
+&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a36c2b6c42df0a4b7522fc23b88ab24ab">cgSystemState::SampleSpecularColor</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a5400f1a0230363736e97ff31adc18664">cgSystemState::SampleSpecularMask</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ae6c0bc82d0f14e1a86c88acd80478b56">cgSystemState::SampleGlossTexture</a>, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a5cec74d57c50d555180fd7999f5a4f82">cgSystemState::SampleEmissiveTexture</a>, 
 <br/>
-&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a5cec74d57c50d555180fd7999f5a4f82">cgSystemState::SampleEmissiveTexture</a>, 
-<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a02816986c0a4470b06c49a095f7b1ab0">cgSystemState::SampleOpacityTexture</a>, 
+&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a02816986c0a4470b06c49a095f7b1ab0">cgSystemState::SampleOpacityTexture</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8aa576a5f33ff4657918ed9e0865b0f291">cgSystemState::DecodeSRGB</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a59c513878810930a81966dc15631ec60">cgSystemState::ComputeToksvig</a>, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a0810b81e4dac758be1cd43527ad61124">cgSystemState::CorrectNormals</a>, 
 <br/>
-&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a0810b81e4dac758be1cd43527ad61124">cgSystemState::CorrectNormals</a>, 
-<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a5d441ef0e3652860cfcf4331f2252ff0">cgSystemState::OpacityInDiffuse</a>, 
+&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a5d441ef0e3652860cfcf4331f2252ff0">cgSystemState::OpacityInDiffuse</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a2f9d0b38cfd165c6ec0690a3baab295c">cgSystemState::SurfaceFresnel</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a47f14b7cd0aaf33a7e9b95e855849712">cgSystemState::Metal</a>, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a9b79cb970c667abc3fe3d73e0a765c47">cgSystemState::Transmissive</a>, 
 <br/>
-&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a9b79cb970c667abc3fe3d73e0a765c47">cgSystemState::Transmissive</a>, 
-<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8afb2ed8865ba54483b2f6fbf42e17e4f9">cgSystemState::Translucent</a>, 
+&#160;&#160;<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8afb2ed8865ba54483b2f6fbf42e17e4f9">cgSystemState::Translucent</a>, 
 <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8adc4417162fdcbb7181cfa0bc47a2fbbb">cgSystemState::AlphaTest</a>, 
-<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a9856523f535e2b11068e65676c859b6e">cgSystemState::Emissive</a>
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a9856523f535e2b11068e65676c859b6e">cgSystemState::Emissive</a>, 
+<a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a6a493f32cfedbdcb7337b484d41ffd1a">cgSystemState::ObjectRenderClass</a>
 <br/>
  }</td></tr>
 <tr class="separator:a5b957e4e2ce6cfb3e220e9eeffeea8c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -518,18 +521,23 @@ Enumerations</h2></td></tr>
 <a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98ad1df4a309624c9f9aaa29b3e699f1e42">cgImageOperation::BilateralBlur</a> = 33, 
 <br/>
 &#160;&#160;<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a9ca70617ef016ea410ac26291bac9b0d">cgImageOperation::Blur</a> = 34, 
-<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a5e0f0e313119c348a16d3b733b31cf77">cgImageOperation::Exposure</a> = 100, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a270ec1a123288869197bc6bdbb6828ba">cgImageOperation::ScaleUserColorRGBA</a> = 40, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a525ff2659820da220685bf14a4e50392">cgImageOperation::ScaleUserColorRGB</a> = 41, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a63f9c48aaad324a258a7d91d444c8007">cgImageOperation::ScaleUserColorA</a> = 42, 
+<br/>
+&#160;&#160;<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a5e0f0e313119c348a16d3b733b31cf77">cgImageOperation::Exposure</a> = 100, 
 <a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98ae7aa1475b9c6781d1dcdc0dbb5574dab">cgImageOperation::Saturation</a> = 101, 
-<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a9343a572240a0264f720cfd432cdbd9e">cgImageOperation::LevelsIn</a> = 102, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a394c7c26077283359b87184b8db692fa">cgImageOperation::Contrast</a> = 102, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a9343a572240a0264f720cfd432cdbd9e">cgImageOperation::LevelsIn</a> = 103, 
 <br/>
-&#160;&#160;<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a643bf68d55debb1dfef7cf6753449975">cgImageOperation::LevelsOut</a> = 103, 
-<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a6142bbd50eb9c2c93d407a2f72d1f5ae">cgImageOperation::Gamma</a> = 104, 
-<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98ad4b688aaceeb5a4bc9a25537835ac492">cgImageOperation::ColorRemap</a> = 105, 
-<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98aed8d447de9f3cd3b7c735eb2b3529991">cgImageOperation::TintAndBrightness</a> = 106, 
+&#160;&#160;<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a643bf68d55debb1dfef7cf6753449975">cgImageOperation::LevelsOut</a> = 104, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a6142bbd50eb9c2c93d407a2f72d1f5ae">cgImageOperation::Gamma</a> = 105, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98ad4b688aaceeb5a4bc9a25537835ac492">cgImageOperation::ColorRemap</a> = 106, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98aed8d447de9f3cd3b7c735eb2b3529991">cgImageOperation::TintAndBrightness</a> = 107, 
 <br/>
-&#160;&#160;<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a4bbf71d225916119ae46ce0fcb1a9d37">cgImageOperation::Grain</a> = 107, 
-<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98afed1cd602f7575b1474b8d854c07035f">cgImageOperation::Vignette</a> = 108, 
-<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a17a9bab9160328db4eabd703c70f6864">cgImageOperation::BlueShift</a> = 109, 
+&#160;&#160;<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a4bbf71d225916119ae46ce0fcb1a9d37">cgImageOperation::Grain</a> = 108, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98afed1cd602f7575b1474b8d854c07035f">cgImageOperation::Vignette</a> = 109, 
+<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a17a9bab9160328db4eabd703c70f6864">cgImageOperation::BlueShift</a> = 110, 
 <a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98afe2927824784f93175b6716838d0a867">cgImageOperation::LinearZToDistance</a> = 200, 
 <br/>
 &#160;&#160;<a class="el" href="namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98afa6f240c67b6837430963414e8987780">cgImageOperation::DistanceToLinearZ</a> = 201, 
@@ -665,6 +673,11 @@ Enumerations</h2></td></tr>
 <a class="el" href="namespacecg_antialiasing_method.html#a98766240440ca4f9eaa771e4538faaa1ab9afd7302ceeb424de7111ee322b5376">cgAntialiasingMethod::FXAA_T2x</a> = 2
  }</td></tr>
 <tr class="separator:a98766240440ca4f9eaa771e4538faaa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7d53b47107030618f168ca11e52a4ed"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_render_class.html#af7d53b47107030618f168ca11e52a4ed">cgRenderClass::Base</a> { <a class="el" href="namespacecg_render_class.html#af7d53b47107030618f168ca11e52a4edab502aff3d7224db3fa6c442bf00ae2ce">cgRenderClass::Static</a> = 0, 
+<a class="el" href="namespacecg_render_class.html#af7d53b47107030618f168ca11e52a4edaf027321695c301f5733387c0c4f73ac9">cgRenderClass::Dynamic</a> = 1, 
+<a class="el" href="namespacecg_render_class.html#af7d53b47107030618f168ca11e52a4eda2570208d43eb6bd7313c2705725d21d2">cgRenderClass::FirstPerson</a> = 2
+ }</td></tr>
+<tr class="separator:af7d53b47107030618f168ca11e52a4ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -696,7 +709,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_367fc5490f641a53521a809d3b81b462.html">Rendering</a></li><li class="navelem"><a class="el" href="cg_rendering_types_8h.html">cgRenderingTypes.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:27 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:04 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

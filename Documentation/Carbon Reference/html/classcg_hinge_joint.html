@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -149,6 +149,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a929e50f96ef37f4ed78a4701b112643c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_hinge_joint.html#a929e50f96ef37f4ed78a4701b112643c">setPivotTransform</a> (const <a class="el" href="classcg_transform.html">cgTransform</a> &amp;pivotTransform)</td></tr>
 <tr class="memdesc:a929e50f96ef37f4ed78a4701b112643c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a new transform for the pivot frame (position and orientation). Hinge will operate about the X axis of the specified transform.  <a href="#a929e50f96ef37f4ed78a4701b112643c"></a><br/></td></tr>
 <tr class="separator:a929e50f96ef37f4ed78a4701b112643c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc96fd42ac4364fdf7d990cace11cc37"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_transform.html">cgTransform</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_hinge_joint.html#acc96fd42ac4364fdf7d990cace11cc37">getPivotTransform</a> (bool original) const </td></tr>
+<tr class="memdesc:acc96fd42ac4364fdf7d990cace11cc37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get either the original specified transform for the pivot frame (position and orientation), or the current transform relative to the current location of the attached bodies.  <a href="#acc96fd42ac4364fdf7d990cace11cc37"></a><br/></td></tr>
+<tr class="separator:acc96fd42ac4364fdf7d990cace11cc37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b83117e3b0ec6247543689ab49c5653"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_hinge_joint.html#a1b83117e3b0ec6247543689ab49c5653">getAngle</a> () const </td></tr>
 <tr class="memdesc:a1b83117e3b0ec6247543689ab49c5653"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current angle of rotation for the joint in degrees.  <a href="#a1b83117e3b0ec6247543689ab49c5653"></a><br/></td></tr>
 <tr class="separator:a1b83117e3b0ec6247543689ab49c5653"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,9 +222,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#abc11be6582c83be070816daf60d96781">isInternalReference</a> () const </td></tr>
 <tr class="memdesc:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this reference is either an internal or serialized reference.  <a href="#abc11be6582c83be070816daf60d96781"></a><br/></td></tr>
 <tr class="separator:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#af002aedbdfca5e97c3a7263425a60dac">isDisposed</a> ()</td></tr>
-<tr class="memdesc:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#af002aedbdfca5e97c3a7263425a60dac"></a><br/></td></tr>
-<tr class="separator:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a34951860e42866aff9b890d704bccbc4">isDisposed</a> () const </td></tr>
+<tr class="memdesc:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#a34951860e42866aff9b890d704bccbc4"></a><br/></td></tr>
+<tr class="separator:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#aecf67c7fc72ba0d465096b4584e1caba">isDisposing</a> () const </td></tr>
 <tr class="memdesc:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object is in the process of being disposed.  <a href="#aecf67c7fc72ba0d465096b4584e1caba"></a><br/></td></tr>
 <tr class="separator:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -555,6 +558,24 @@ Additional Inherited Members</h2></td></tr>
 <p>Retrieve information about the joint for serialization. Internal newton requirement. </p>
 
 <p>Implements <a class="el" href="classcg_physics_joint.html#a15669ae58a813da8d877c5ae266707e0">cgPhysicsJoint</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="acc96fd42ac4364fdf7d990cace11cc37"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_transform.html">cgTransform</a> cgHingeJoint::getPivotTransform </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>original</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get either the original specified transform for the pivot frame (position and orientation), or the current transform relative to the current location of the attached bodies. </p>
 
 </div>
 </div>
@@ -921,7 +942,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_hinge_joint.html">cgHingeJoint</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:33 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:28 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -7,6 +7,7 @@ var classcg_resample_chain =
     [ "getLevel", "classcg_resample_chain.html#a2c780ebd0b08ecdc49159e5d9f9642a9", null ],
     [ "getLevelCount", "classcg_resample_chain.html#a1b496095f7941d7f2ac50a4455e7fd67", null ],
     [ "getLevelIndex", "classcg_resample_chain.html#a5d5f443b46f8051e20ff266283e46550", null ],
+    [ "hasOddDimensions", "classcg_resample_chain.html#a2885c2b676187212213d458168a6962f", null ],
     [ "restoreLevel", "classcg_resample_chain.html#a08cac9303d171d477a24fbdf0fe9708f", null ],
     [ "restoreLevels", "classcg_resample_chain.html#a733a5081d58548baf6af14766d7861c2", null ],
     [ "setLevel", "classcg_resample_chain.html#a8a0580692bdfbbd67dc9fcda70a1c2ee", null ],

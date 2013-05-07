@@ -15,7 +15,7 @@
 //        functionality required for this type of interface item.            //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -223,21 +223,24 @@ bool cgUIForm::loadForm( cgInputStream FormScriptStream, const cgString & strNam
     // Cache the pointer to the underlying script object
     mFormScriptRes = (cgScript*)mFormScript.getResource(true);
 
-    // Attempt to instantiate a form script object
-    try
+    // Attempt to create the IScriptedForm 
+    // object whose name matches the name of the file.
+    if ( mFormScriptRes )
     {
         cgScriptArgument::Array ScriptArgs;
         ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("Form@+"), (void*)this ) );
-        mFormScriptObject = mFormScriptRes->executeFunctionObject( _T("IScriptedForm"), _T("createForm"), ScriptArgs );
+        cgString strObjectType = cgFileSystem::getFileName(FormScriptStream.getName(), true);
+        mFormScriptObject = mFormScriptRes->createObjectInstance( strObjectType, ScriptArgs );
 
     } // End try to execute
 
-    catch ( cgScriptInterop::Exceptions::ExecuteException & e )
+    // New script object created?
+    if ( !mFormScriptObject )
     {
-        cgAppLog::write( cgAppLog::Error, _T("Failed to execute createForm() function in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+        cgAppLog::write( cgAppLog::Error, _T("Failed to instantiate new form object in '%s'.\n"), FormScriptStream.getName().c_str() );
         return false;
-
-    } // End catch exception
+    
+    } // End if failed
 
     // Pass through to standard form creation.
     return createForm( strName );

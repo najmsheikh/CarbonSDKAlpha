@@ -91,11 +91,14 @@ shared class NPCAgent : Agent
     float                           minVisTestRange;            // Range within which visibility tests are not required.
     bool                            supportsRagdoll;            // Should a ragdoll be created when the agent dies (Default=true)?
     bool                            dynamicDamageAnimation;     // Use the dynamics system (ragdoll) for the agent animation when hit by projectiles, etc.
+    bool                            canFireWhileMoving;         // Agent can fire while moving?
     String                          idleAnimationName;
     String                          reloadAnimationName;
     String                          walkAnimationName;
     String                          strafeLeftAnimationName;
     String                          strafeRightAnimationName;
+    String                          firingAnimationName;
+    String                          ragdollRootJoint;
 
     // Debug
     NPCAgentDebug                   debugStats;
@@ -122,6 +125,7 @@ shared class NPCAgent : Agent
         minVisTestRange             = 2.0f;
         supportsRagdoll             = true;
         dynamicDamageAnimation      = false;
+        canFireWhileMoving          = true;
         idleAnimationName           = "Weapon Idle";
         reloadAnimationName         = "Weapon Reload";
         walkAnimationName           = "";
@@ -142,6 +146,9 @@ shared class NPCAgent : Agent
         Scene @ scene = object.getScene();
         @actor = cast<ActorNode>(object);
 
+        // Setup actor states
+        //actor.setTrackFadeTimes( 0.1f, 0.1f );
+
         // Initialize variables
         timeSinceTargetCheck    = 0;
         timeSinceTargetAcquire  = 0;
@@ -150,6 +157,12 @@ shared class NPCAgent : Agent
         targetAcquired          = false;
         damageRecoveryPhase     = 0;
         requestedOrientation    = object.getWorldTransform().orientation();
+
+        // Get properties
+        PropertyContainer @ properties = object.getCustomProperties();
+        ragdollRootJoint = String(properties.getProperty( "ragdoll_root", "" ));
+        if ( ragdollRootJoint == "" )
+            supportsRagdoll = false;
 
         // Call base class implementation to update base members.
         Agent::onAttach( object );
@@ -608,28 +621,33 @@ shared class NPCAgent : Agent
 
             } // End if !acquired
 
-             // If the player has fired recently, update known position
-            // if it's within audio detection range.
-            Weapon @ playerWeapon = playerAgent.getCurrentWeapon();
-            if ( @playerWeapon != null && playerWeapon.getTimeSinceFired() < 1.0f )
+            // If the player has fired recently, update known position
+            // if it's within audio detection range (unless acquired, and
+            // then we don't need to know).
+            if ( !targetAcquired )
             {
-                float distanceToTarget = vec3Length( playerNode.getPosition() - mNode.getPosition() );
-                if ( distanceToTarget <= maxAudioDetectionRange )
+                Weapon @ playerWeapon = playerAgent.getCurrentWeapon();
+                if ( @playerWeapon != null && playerWeapon.getTimeSinceFired() < 1.0f )
                 {
-                    // Range is 50% if the line of sight is blocked. We may have already
-                    // performed the LoS check above, so re-use its results if we can.
-                    if ( !performedLoS )
-                        targetVisibilityScore = lineOfSightToTarget();
-                    if ( (targetVisibilityScore > CGE_EPSILON) || (distanceToTarget <= (maxAudioDetectionRange * 0.5f)) )
+                    float distanceToTarget = vec3Length( playerNode.getPosition() - mNode.getPosition() );
+                    if ( distanceToTarget <= maxAudioDetectionRange )
                     {
-                        timeSinceTargetHeard = 0.0f;
-                        targetLastKnownPos = playerNode.getPosition();
+                        // Range is 50% if the line of sight is blocked. We may have already
+                        // performed the LoS check above, so re-use its results if we can.
+                        if ( !performedLoS )
+                            targetVisibilityScore = lineOfSightToTarget();
+                        if ( (targetVisibilityScore > CGE_EPSILON) || (distanceToTarget <= (maxAudioDetectionRange * 0.5f)) )
+                        {
+                            timeSinceTargetHeard = 0.0f;
+                            targetLastKnownPos = playerNode.getPosition();
+                        
+                        } // End if LoS check
                     
-                    } // End if LoS check
+                    }  // End if within range
                 
-                }  // End if within range
-            
-            } // End if recently fired weapon
+                } // End if recently fired weapon
+
+            } // End if !acquired
 
         } // End if update due
 

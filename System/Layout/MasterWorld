@@ -111,6 +111,20 @@ CREATE TABLE [Cells] (
   [LocationY] integer DEFAULT 0,
   [LocationZ] integer DEFAULT 0);
 
+--Table: Editor::UserAssets
+
+CREATE TABLE [Editor::UserAssets] (
+  [AssetId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [EntryType] smallint DEFAULT 0, 
+  [ParentId] integer,
+  [Level] integer, 
+  [Name] TEXT,
+  [Path] path, 
+  [Param] TEXT,
+  [UID] TEXT,
+  [Expanded] tinyint DEFAULT(1));
+CREATE INDEX [Editor::UserAssets_LevelIndex] ON [Editor::UserAssets] ([Level]);
+
 --Table: Configuration
 
 CREATE TABLE [Configuration] (

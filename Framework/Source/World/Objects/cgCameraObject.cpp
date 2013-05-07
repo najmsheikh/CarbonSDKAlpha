@@ -15,7 +15,7 @@
 //        an object node.                                                    //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -580,7 +580,8 @@ cgCameraNode::cgCameraNode( cgUInt32 nReferenceId, cgScene * pScene ) : cgObject
     // rather than statically with the object. This allows the camera
     // to be destroyed but the visibility set to remain active i.e.
     // in a script.
-    mVisibility = new cgVisibilitySet();
+    mVisibility = new cgVisibilitySet( pScene );
+    mVisibility->setSearchFlags( cgVisibilitySearchFlags::MustRender | cgVisibilitySearchFlags::CollectMaterials );
 
     // Disable interlacing by default
     mInterlaceField = INTERLACING_OFF;
@@ -622,7 +623,7 @@ cgCameraNode::cgCameraNode( cgUInt32 nReferenceId, cgScene * pScene, cgObjectNod
     // rather than statically with the object. This allows the camera
     // to be destroyed but the visibility set to remain active i.e.
     // in a script.
-    mVisibility = new cgVisibilitySet();
+    mVisibility = new cgVisibilitySet( pScene );
 }
 
 //-----------------------------------------------------------------------------
@@ -956,13 +957,13 @@ const cgFrustum & cgCameraNode::getClippingVolume( )
 /// Determine whether or not the AABB specified falls within the frustum.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgVolumeQuery::Class cgCameraNode::boundsInFrustum( const cgBoundingBox & AABB, cgUInt8 * FrustumBits /* = CG_NULL */, cgInt8 * LastOutside /* = CG_NULL */ )
+cgVolumeQuery::Class cgCameraNode::boundsInFrustum( const cgBoundingBox & AABB )
 {
     // Recompute the frustum as necessary.
     const cgFrustum & Frustum = getFrustum();
 
     // Request that frustum classifies
-    return Frustum.classifyAABB( AABB, CG_NULL, FrustumBits, LastOutside );
+    return Frustum.classifyAABB( AABB );
 }
 
 //-----------------------------------------------------------------------------
@@ -971,13 +972,13 @@ cgVolumeQuery::Class cgCameraNode::boundsInFrustum( const cgBoundingBox & AABB, 
 /// Determine whether or not the OOBB specified is within the frustum.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgVolumeQuery::Class cgCameraNode::boundsInFrustum( const cgBoundingBox & AABB, const cgTransform & Transform, cgUInt8 * FrustumBits /* = CG_NULL */, cgInt8 * LastOutside /* = CG_NULL */ )
+cgVolumeQuery::Class cgCameraNode::boundsInFrustum( const cgBoundingBox & AABB, const cgTransform & Transform )
 {
     // Recompute the frustum as necessary.
     const cgFrustum & Frustum = getFrustum();
 
     // Request that frustum classifies
-    return Frustum.classifyAABB( AABB, &Transform, FrustumBits, LastOutside );
+    return Frustum.classifyAABB( AABB, Transform );
 }
 
 //-----------------------------------------------------------------------------
@@ -1361,20 +1362,9 @@ cgVisibilitySet * cgCameraNode::getVisibilitySet( )
 /// compute the visibility set from the point of view of this camera.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgCameraNode::computeVisibility( cgUInt32 nFlags /* = MustRender | CollectMaterials */, bool bAutoApply /* = false */ )
+void cgCameraNode::computeVisibility( )
 {
-    mVisibility->compute( mParentScene, getFrustum(), nFlags, bAutoApply );
-}
-
-//-----------------------------------------------------------------------------
-//  Name : applyVisibility ()
-/// <summary>
-/// Apply the visibility set from the point of view of this camera.
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgCameraNode::applyVisibility()
-{
-    mVisibility->apply();
+    mVisibility->compute( getFrustum() );
 }
 
 //-----------------------------------------------------------------------------

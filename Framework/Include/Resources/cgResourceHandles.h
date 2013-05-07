@@ -15,7 +15,7 @@
 //        the resource manager.                                              //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -698,6 +698,7 @@ typedef ResourceHandle<cgBlendState>                            cgBlendStateHand
 CGE_VECTOR_DECLARE( cgRenderTargetHandle, cgRenderTargetHandleArray )
 CGE_VECTOR_DECLARE( cgAnimationSetHandle, cgAnimationSetHandleArray )
 CGE_VECTOR_DECLARE( cgSamplerStateHandle, cgSamplerStateHandleArray )
+CGE_VECTOR_DECLARE( cgTextureHandle, cgTextureHandleArray )
 CGE_VECTOR_DECLARE( cgMeshHandle, cgMeshHandleArray )
 CGE_VECTOR_DECLARE( cgMaterialHandle, cgMaterialHandleArray )
 CGE_SET_DECLARE   ( cgMaterialHandle, cgMaterialHandleSet )

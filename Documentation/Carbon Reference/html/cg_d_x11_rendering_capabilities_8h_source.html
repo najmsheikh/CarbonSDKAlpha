@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -141,59 +141,72 @@ $(document).ready(function(){initNavTree('cg_d_x11_rendering_capabilities_8h_sou
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="cg_rendering_capabilities_8h.html">Rendering/cgRenderingCapabilities.h</a>&gt;</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// Main Class Definitions</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// Forward Declarations</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">//  Name : cgDX11RenderingCapabilities (Class)</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment"></span><span class="comment">//-----------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">class </span><a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a> cgDX11RenderingCapabilities : <span class="keyword">public</span> <a class="code" href="classcg_rendering_capabilities.html" title="Base interface through which rendering capabilities can be queried. Tested capabilities include suppo...">cgRenderingCapabilities</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="cg_script_interop_8h.html#a0910849ca274aeb43209d3a73a20a077">DECLARE_DERIVED_SCRIPTOBJECT</a>( cgDX11RenderingCapabilities, <a class="code" href="classcg_rendering_capabilities.html" title="Base interface through which rendering capabilities can be queried. Tested capabilities include suppo...">cgRenderingCapabilities</a>, <span class="stringliteral">&quot;RenderingCapabilities&quot;</span> )</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="comment">// Public Constants</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> MaxVBTSlotsVTF = 50; <span class="comment">// Vertex blending transformation matrices for vertex texture fetch</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> MaxVBTSlotsCB  = 20; <span class="comment">// Vertex blending transformation matrices for constant buffer.</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="comment">// Constructors &amp; Destructors</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;             cgDX11RenderingCapabilities( <a class="code" href="classcg_render_driver.html" title="Class that contains our core rendering / render initialization logic. ">cgRenderDriver</a> * driver );</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">virtual</span> ~cgDX11RenderingCapabilities( );</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides cgRenderingCapabilities)</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span>        <a class="code" href="classcg_rendering_capabilities.html#a45d27a02e1d2cd29f19008509d78c302" title="Run the capabilities enumeration for the specified device. ">enumerate</a>               ( );</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>    <a class="code" href="classcg_rendering_capabilities.html#a14a78df4c5dc0e8d01399e79d2a6aa12">getMaxBlendTransforms</a>   ( ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>    <a class="code" href="classcg_rendering_capabilities.html#a469904d5ab41f80ba6a9b35dee5b6d0a">getMaxAnisotropySamples</a> ( ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span>        <a class="code" href="classcg_rendering_capabilities.html#a500c49bfe5336e3be4fa2ef9bbebec93">supportsFastStencilFill</a> ( ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span>        <a class="code" href="classcg_rendering_capabilities.html#aa2bc234126435e1ce39b2df54fbf5734">supportsNonPow2Textures</a> ( ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span>        <a class="code" href="classcg_rendering_capabilities.html#a64ae7ee0a36b26ff3aecd9e2884c538b">supportsShaderModel</a>     ( <a class="code" href="namespacecg_shader_model.html#a723bcb710fc1fce42e427d8158f86e48">cgShaderModel::Base</a> model ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">class </span>cgDX11Initialize;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// Main Class Definitions</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">//  Name : cgDX11RenderingCapabilities (Class)</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"></span><span class="comment">//-----------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">class </span><a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a> cgDX11RenderingCapabilities : <span class="keyword">public</span> <a class="code" href="classcg_rendering_capabilities.html" title="Base interface through which rendering capabilities can be queried. Tested capabilities include suppo...">cgRenderingCapabilities</a></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="cg_script_interop_8h.html#a0910849ca274aeb43209d3a73a20a077">DECLARE_DERIVED_SCRIPTOBJECT</a>( cgDX11RenderingCapabilities, <a class="code" href="classcg_rendering_capabilities.html" title="Base interface through which rendering capabilities can be queried. Tested capabilities include suppo...">cgRenderingCapabilities</a>, <span class="stringliteral">&quot;RenderingCapabilities&quot;</span> )</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;public:</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="comment">// Public Constants</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    static const <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> MaxVBTSlotsVTF = 50; <span class="comment">// Vertex blending transformation matrices for vertex texture fetch</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    static const <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> MaxVBTSlotsCB  = 20; <span class="comment">// Vertex blending transformation matrices for constant buffer.</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">// Constructors &amp; Destructors</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;             cgDX11RenderingCapabilities( <a class="code" href="classcg_render_driver.html" title="Class that contains our core rendering / render initialization logic. ">cgRenderDriver</a> * driver );</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    virtual ~cgDX11RenderingCapabilities( );</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">// Public Methods</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">bool</span>                postInit                    ( cgDX11Initialize * data, <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> fullScreenAdapter, <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> fullScreenOutput );</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides DisposableScriptObject)</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides cgRenderingCapabilities)</span></div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>        <a class="code" href="classcg_rendering_capabilities.html#a81c245cd1852adc2df733e1dd5e5293c" title="Release any memory, references or resources allocated by this object. ">dispose</a>                 ( <span class="keywordtype">bool</span> disposeBase );</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Protected Member Variables</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;};</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#endif // CGE_DX11_RENDER_SUPPORT</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">#endif // !_CGE_CGDX11RENDERINGCAPABILITIES_H_</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    virtual <span class="keywordtype">bool</span>        enumerate                   ( );</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    virtual <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>    getMaxBlendTransforms       ( ) const;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    virtual <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>    getMaxAnisotropySamples     ( ) const;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    virtual <span class="keywordtype">bool</span>        supportsFastStencilFill     ( ) const;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    virtual <span class="keywordtype">bool</span>        supportsNonPow2Textures     ( ) const;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    virtual <span class="keywordtype">bool</span>        supportsDepthStencilReading ( ) const;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    virtual <span class="keywordtype">bool</span>        supportsShaderModel         ( cgShaderModel::<a class="code" href="namespacecg_animation_target_controller_type.html#a8a83988dfb5a843bf03e592d24f37617">Base</a> model ) const;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    virtual <span class="keywordtype">bool</span>        getDisplayModes             ( <a class="code" href="structcg_display_mode.html">cgDisplayMode</a>::<a class="code" href="namespacecg_script_argument_type.html#a5650d75b4dfb5bdcafcbab0cc6aacd0fa40cffdcbb1e9350cd512af0851ea3561">Array</a> &amp; modes ) const;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides DisposableScriptObject)</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    virtual <span class="keywordtype">void</span>        dispose                 ( <span class="keywordtype">bool</span> disposeBase );</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;protected:</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="comment">// Protected Member Variables</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <a class="code" href="structcg_display_mode.html">cgDisplayMode</a>::<a class="code" href="namespacecg_script_argument_type.html#a5650d75b4dfb5bdcafcbab0cc6aacd0fa40cffdcbb1e9350cd512af0851ea3561">Array</a>    mDisplayModes;      <span class="comment">// Enumerated full screen display modes available for selection.</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;};</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#endif // CGE_DX11_RENDER_SUPPORT</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#endif // !_CGE_CGDX11RENDERINGCAPABILITIES_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_367fc5490f641a53521a809d3b81b462.html">Rendering</a></li><li class="navelem"><a class="el" href="dir_23624af54ccc8279f970897986a44585.html">Platform</a></li><li class="navelem"><a class="el" href="cg_d_x11_rendering_capabilities_8h.html">cgDX11RenderingCapabilities.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:14 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:47:52 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -2,7 +2,9 @@ var classcg_file_system =
 [
     [ "addPackage", "classcg_file_system.html#a427e44b5273ea8c4cb53613bcc6425ca", null ],
     [ "addPathProtocol", "classcg_file_system.html#aa68fadf81954b62306786ceca8eeed23", null ],
+    [ "copyFile", "classcg_file_system.html#a252b2841bf1b24ffd04724135284b3f4", null ],
     [ "createDirectory", "classcg_file_system.html#ad15f00c8372e9df7feec35cebd77cb0b", null ],
+    [ "deleteFile", "classcg_file_system.html#a52e4f2a640b752b965b1460cf71e8362", null ],
     [ "directoryExists", "classcg_file_system.html#ae355059ab6a0c77299adcc2f9579ac87", null ],
     [ "fileExists", "classcg_file_system.html#abbf5b23fbf6e9ec86af9e88ff4ed05d8", null ],
     [ "getAbsolutePath", "classcg_file_system.html#af148049d539eaef8e5d3c1fe5cd4e66b", null ],
@@ -13,9 +15,15 @@ var classcg_file_system =
     [ "getFileNameExtension", "classcg_file_system.html#ab94f487c8ac40960dc7ac6fd0a91eecb", null ],
     [ "getPackageFile", "classcg_file_system.html#a3a1413d5a2e1fb4228ad786031b3200f", null ],
     [ "getRelativePath", "classcg_file_system.html#a928b20d011aa7cb24f33b1e55139153a", null ],
+    [ "getTemporaryFile", "classcg_file_system.html#a4caf98446cd40c23060e5ba0b09f29bb", null ],
+    [ "getTemporaryFile", "classcg_file_system.html#a5d546b593665b9f6dae898300693580b", null ],
     [ "index", "classcg_file_system.html#a1509ac325b4b530ef03531c2d60ec1ae", null ],
+    [ "isSameFile", "classcg_file_system.html#ad2929d540246d374ca6ee7ac3e3f0769", null ],
+    [ "isSameFile", "classcg_file_system.html#afd49f144b3425efa40588bfb6ac26e17", null ],
     [ "loadStringFromStream", "classcg_file_system.html#a6839fadf837f33e18a1327c62501720d", null ],
+    [ "moveFile", "classcg_file_system.html#ab897703914775150625156d75b409ee2", null ],
     [ "pathProtocolDefined", "classcg_file_system.html#ad383b69d40f99f9fe08c9ca85d862ce6", null ],
     [ "resolveFileLocation", "classcg_file_system.html#a1e7d46122ad65cfd6b4eddb12d1817be", null ],
-    [ "setRootDirectory", "classcg_file_system.html#abf79eec8b35f1964471919712f9457b1", null ]
+    [ "setRootDirectory", "classcg_file_system.html#abf79eec8b35f1964471919712f9457b1", null ],
+    [ "shutdown", "classcg_file_system.html#a0bf38cbb4b046cd0ba290f4b6fc08059", null ]
 ];

@@ -134,6 +134,12 @@ class Main : IScriptedAppState
         desc.toStateId  = "GamePlay";
         mainMenuState.registerEventAction( "New Game", desc );
 
+        // Register events for main menu
+        desc.actionType = AppStateEventActionType::EndRoot;
+        desc.flags      = 0;
+        desc.toStateId  = "";
+        mainMenuState.registerEventAction( "Exit", desc );
+
         // Construct a new application state for the main game play.
         AppState @ gamePlayState = AppState( "GamePlay", "Scripts/ColonyVI/States/GamePlay.gs", getAppResourceManager() );
         manager.registerState( gamePlayState );

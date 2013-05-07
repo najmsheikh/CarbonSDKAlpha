@@ -73,7 +73,6 @@ shared class Weapon_M16 : Weapon
         @mMuzzleFlashEmitter = cast<ParticleEmitterNode>(object.findChild( "Muzzle_Flash_M16" ));
         @mMuzzleFlashLight   = object.findChild( "Muzzle_Light_M16" );
         @mEjectionPortSpawn  = object.findChild( "Weapon_M16_Ejection" );
-        
 
         // Load sound effects.
         ResourceManager @ resources = object.getScene().getResourceManager();

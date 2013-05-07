@@ -14,7 +14,7 @@
 //        straight forward cgMesh objects.                                   //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -28,6 +28,7 @@
 #include <World/Objects/cgMeshObject.h>
 #include <World/cgVisibilitySet.h>
 #include <World/cgScene.h>
+#include <World/cgSphereTree.h>
 #include <World/Objects/Elements/cgHullCollisionShapeElement.h>
 #include <Rendering/cgRenderDriver.h>
 #include <Rendering/cgVertexFormats.h>
@@ -1427,12 +1428,24 @@ void cgMeshNode::onComponentModified( cgComponentModifiedEventArgs * e )
         // process if necessary.
         nodeUpdated( cgDeferredUpdateFlags::BoundingBox | cgDeferredUpdateFlags::OwnershipStatus, 0 );
 
+        // Invalidate visibility in the sphere tree in case 
+        // material data was altered (will affect frame coherent 
+        // batching similar to the show/hide case).
+        if ( mSceneTreeNode )
+            mSceneTreeNode->invalidateVisibility();
+
     } // End if MeshData | ApplyRescale
     else if ( e->context == _T("ShadowStage") )
     {
         // Mesh node is now 'dirty' and should re-trigger a shadow map fill 
         // during the next render process if necessary.
         nodeUpdated( 0, 0 );
+
+        // Invalidate visibility in the sphere tree to ensure that this object
+        // is removed from / added to the correct visibility sets during their
+        // next update.
+        if ( mSceneTreeNode )
+            mSceneTreeNode->invalidateVisibility();
     
     } // End if ShadowStage
 
@@ -1508,17 +1521,18 @@ bool cgMeshNode::onNodeCreated( const cgUID & objectType, cgCloneMethod::Base cl
 /// paying close attention to filtering rules.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgMeshNode::registerVisibility( cgVisibilitySet * pSet, cgUInt32 nFlags )
+bool cgMeshNode::registerVisibility( cgVisibilitySet * pSet )
 {
     // Allow base class to perform basic tests against filters and
     // add itself to the list of visible objects where necessary.
-    if ( !cgObjectNode::registerVisibility( pSet, nFlags ) )
+    if ( !cgObjectNode::registerVisibility( pSet ) )
         return false;
 
     // Since this node type supports material based subset rendering,
     // we should also register ourselves with the visible material list
     // in the visibility set. First get the list of materials used by
     // the referenced mesh object.
+    cgUInt32 nFlags = pSet->getSearchFlags();
     if ( nFlags & cgVisibilitySearchFlags::CollectMaterials )
     {
         cgMesh * pMesh = (cgMesh*)getMesh().getResource(false);

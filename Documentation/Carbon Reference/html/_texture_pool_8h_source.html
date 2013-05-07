@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -140,22 +140,28 @@ $(document).ready(function(){initNavTree('_texture_pool_8h_source.html','');});
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            <span class="comment">// Variable 32 / 64 bit registrations.</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            <span class="keywordflow">if</span> ( <span class="keyword">sizeof</span>(<span class="keywordtype">size_t</span>) == 4 )</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#a0254232e37283f1a585d9c71ae18ccbe" title="Registers a method for the object type. ">registerObjectMethod</a>( <span class="stringliteral">&quot;TexturePool&quot;</span>, <span class="stringliteral">&quot;uint GetMemoryConsumption( ) const&quot;</span>, asMETHODPR(<a class="code" href="classcg_texture_pool.html" title="A container class responsible for allocating, storing and rapidly retrieving texture resources from a...">cgTexturePool</a>,getMemoryConsumption,( ) <span class="keyword">const</span>, <span class="keywordtype">size_t</span>), asCALL_THISCALL) );</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#a0254232e37283f1a585d9c71ae18ccbe" title="Registers a method for the object type. ">registerObjectMethod</a>( <span class="stringliteral">&quot;TexturePool&quot;</span>, <span class="stringliteral">&quot;uint64 GetMemoryConsumption( ) const&quot;</span>, asMETHODPR(<a class="code" href="classcg_texture_pool.html" title="A container class responsible for allocating, storing and rapidly retrieving texture resources from a...">cgTexturePool</a>,getMemoryConsumption,( ) <span class="keyword">const</span>, <span class="keywordtype">size_t</span>), asCALL_THISCALL) );</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        }</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }; <span class="comment">// End Class : Package</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            {</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#a0254232e37283f1a585d9c71ae18ccbe" title="Registers a method for the object type. ">registerObjectMethod</a>( <span class="stringliteral">&quot;TexturePool&quot;</span>, <span class="stringliteral">&quot;uint getMemoryConsumption( ) const&quot;</span>, asMETHODPR(<a class="code" href="classcg_texture_pool.html" title="A container class responsible for allocating, storing and rapidly retrieving texture resources from a...">cgTexturePool</a>,getMemoryConsumption,( ) <span class="keyword">const</span>, <span class="keywordtype">size_t</span>), asCALL_THISCALL) );</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;            } <span class="comment">// End if 32bit</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            {</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#a0254232e37283f1a585d9c71ae18ccbe" title="Registers a method for the object type. ">registerObjectMethod</a>( <span class="stringliteral">&quot;TexturePool&quot;</span>, <span class="stringliteral">&quot;uint64 getMemoryConsumption( ) const&quot;</span>, asMETHODPR(<a class="code" href="classcg_texture_pool.html" title="A container class responsible for allocating, storing and rapidly retrieving texture resources from a...">cgTexturePool</a>,getMemoryConsumption,( ) <span class="keyword">const</span>, <span class="keywordtype">size_t</span>), asCALL_THISCALL) );</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;} } } } <span class="comment">// End Namespace : cgScriptPackages::Core::Resources::TexturePool</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            } <span class="comment">// End if 64bit</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        }</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }; <span class="comment">// End Class : Package</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;} } } } <span class="comment">// End Namespace : cgScriptPackages::Core::Resources::TexturePool</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_036efea8fd6b39c1f1fd2dd7f1be4325.html">Scripting</a></li><li class="navelem"><a class="el" href="dir_5f20ce7c1333a975792d65b7ff262c26.html">Packages</a></li><li class="navelem"><a class="el" href="dir_962f94cc32c03ad95281b0f22b8add17.html">Core</a></li><li class="navelem"><a class="el" href="dir_05c0b4a399e313e17c738f5fe43b49cf.html">Resources</a></li><li class="navelem"><a class="el" href="_texture_pool_8h.html">TexturePool.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:17 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:00 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

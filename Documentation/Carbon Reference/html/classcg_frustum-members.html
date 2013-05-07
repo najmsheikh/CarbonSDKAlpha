@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -113,16 +113,20 @@ $(document).ready(function(){initNavTree('classcg_frustum.html','');});
   <tr><td class="entry"><a class="el" href="classcg_frustum.html#a3edac59afabc7dad03f2f36e468bbe6d">cgFrustum</a>(const cgMatrix &amp;view, const cgMatrix &amp;proj)</td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_frustum.html#abcbdfd0985d4fe4b571b533a0543662e">cgFrustum</a>(const cgBoundingBox &amp;sourceBounds)</td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_frustum.html#ab89798f1ee68d888905c26eb91f068b4">cgFrustum</a>(cgUInt8 cubeFaceIndex, const cgVector3 &amp;origin, cgFloat farDistance, cgFloat nearDistance=1.0f)</td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classcg_frustum.html#a5229be1454584761a2797f5c2ff2a591">classifyAABB</a>(const cgBoundingBox &amp;bounds, const cgTransform *transform=CG_NULL, cgUInt8 *frustumBits=CG_NULL, cgInt8 *lastOutside=CG_NULL) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_frustum.html#a4a8e474b677fec8c81b8c4f19286c692">classifyPlane</a>(const cgPlane &amp;plane) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classcg_frustum.html#a94630d27238d9000bb1f459d1a4aa798">classifySphere</a>(const cgVector3 &amp;center, cgFloat radius) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_frustum.html#a62b17245e42359de8e1b556eb04ffa94">operator==</a>(const cgFrustum &amp;frustum) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classcg_frustum.html#a418581a85c1f206966bbd72868511304">planes</a></td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_frustum.html#a8851b8d5dd8a42e05ae5e9db04f20a86">points</a></td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classcg_frustum.html#a50c1a2a4da04662c09f29b2bb6627d0d">position</a></td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_frustum.html#ad3eef6df2f99dbbd7b6a409135a8697d">recomputePoints</a>()</td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classcg_frustum.html#a2e7e2191ab1aca54be0ac0ef317efb4f">setPlanes</a>(const cgPlane newPlanes[])</td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_frustum.html#a19b8729f9d5498e219f293f435eba25e">testAABB</a>(const cgBoundingBox &amp;bounds, const cgTransform *transform=CG_NULL) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_frustum.html#a59829d19e6350ad967d6ce33bdb3309a">classifyAABB</a>(const cgBoundingBox &amp;bounds) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_frustum.html#a0a8501bbb17d9ac3b944f3f4b0dd250a">classifyAABB</a>(const cgBoundingBox &amp;bounds, const cgTransform &amp;transform) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_frustum.html#ac07f44e64a7b80fa7559fbbc19d8540c">classifyAABB</a>(const cgBoundingBox &amp;bounds, cgUInt8 &amp;frustumBits, cgInt8 &amp;lastOutside) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_frustum.html#aef618f1b22b7ae2842b3927e8dd8e14f">classifyAABB</a>(const cgBoundingBox &amp;bounds, const cgTransform &amp;transform, cgUInt8 &amp;frustumBits, cgInt8 &amp;lastOutside) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_frustum.html#a4a8e474b677fec8c81b8c4f19286c692">classifyPlane</a>(const cgPlane &amp;plane) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_frustum.html#a94630d27238d9000bb1f459d1a4aa798">classifySphere</a>(const cgVector3 &amp;center, cgFloat radius) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_frustum.html#a62b17245e42359de8e1b556eb04ffa94">operator==</a>(const cgFrustum &amp;frustum) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_frustum.html#a418581a85c1f206966bbd72868511304">planes</a></td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_frustum.html#a8851b8d5dd8a42e05ae5e9db04f20a86">points</a></td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_frustum.html#a50c1a2a4da04662c09f29b2bb6627d0d">position</a></td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_frustum.html#ad3eef6df2f99dbbd7b6a409135a8697d">recomputePoints</a>()</td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_frustum.html#a2e7e2191ab1aca54be0ac0ef317efb4f">setPlanes</a>(const cgPlane newPlanes[])</td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_frustum.html#a9f6e2c3db045e8652c7554fe014442d1">testAABB</a>(const cgBoundingBox &amp;bounds) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_frustum.html#a4adbe961387a8bb487a85f7f39f38d5d">testAABB</a>(const cgBoundingBox &amp;bounds, const cgTransform &amp;transform) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_frustum.html#aae20c5da2ac8303d598ab494f634c279">testExtrudedAABB</a>(const cgExtrudedBoundingBox &amp;box) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_frustum.html#aaf6a6b44e709da2deb0fa31bd9f8d4b9">testFrustum</a>(const cgFrustum &amp;frustum) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_frustum.html#a3291f79adbbf46e35bcbc6ba519c2197">testLine</a>(const cgVector3 &amp;v1, const cgVector3 &amp;v2) const </td><td class="entry"><a class="el" href="classcg_frustum.html">cgFrustum</a></td><td class="entry"></td></tr>
@@ -137,7 +141,7 @@ $(document).ready(function(){initNavTree('classcg_frustum.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:33 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:26 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

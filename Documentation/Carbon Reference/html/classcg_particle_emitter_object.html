@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -103,6 +103,7 @@ $(document).ready(function(){initNavTree('classcg_particle_emitter_object.html',
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
@@ -132,6 +133,11 @@ Inheritance diagram for cgParticleEmitterObject:</div>
 </map>
  </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_particle_emitter_object_1_1_layer.html">Layer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a7b64cb6c3e498655752228da017a64d2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a7b64cb6c3e498655752228da017a64d2">cgParticleEmitterObject</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> referenceId, <a class="el" href="classcg_world.html">cgWorld</a> *world)</td></tr>
@@ -143,129 +149,177 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa2da08e268de0d4245a94721b2724e2f"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#aa2da08e268de0d4245a94721b2724e2f">~cgParticleEmitterObject</a> ()</td></tr>
 <tr class="memdesc:aa2da08e268de0d4245a94721b2724e2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for this class.  <a href="#aa2da08e268de0d4245a94721b2724e2f"></a><br/></td></tr>
 <tr class="separator:aa2da08e268de0d4245a94721b2724e2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a465d3a679b80aedfe058e3d43d864f9e"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_particle_emitter_properties.html">cgParticleEmitterProperties</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a465d3a679b80aedfe058e3d43d864f9e">getProperties</a> () const </td></tr>
-<tr class="memdesc:a465d3a679b80aedfe058e3d43d864f9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the configuration structure that describes how this emitter should be initialized and updated.  <a href="#a465d3a679b80aedfe058e3d43d864f9e"></a><br/></td></tr>
-<tr class="separator:a465d3a679b80aedfe058e3d43d864f9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a055a045d61d6b9089740226dc98362a6"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a055a045d61d6b9089740226dc98362a6">getScriptFile</a> () const </td></tr>
-<tr class="memdesc:a055a045d61d6b9089740226dc98362a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the file name of the particle emitter update script that has been assigned to this emitter (if any).  <a href="#a055a045d61d6b9089740226dc98362a6"></a><br/></td></tr>
-<tr class="separator:a055a045d61d6b9089740226dc98362a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c3187a09e8485344587d3c9bd9080c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a0c3187a09e8485344587d3c9bd9080c8">getInnerCone</a> () const </td></tr>
-<tr class="memdesc:a0c3187a09e8485344587d3c9bd9080c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the inner cone (Theta) angle of the emitter in degrees.  <a href="#a0c3187a09e8485344587d3c9bd9080c8"></a><br/></td></tr>
-<tr class="separator:a0c3187a09e8485344587d3c9bd9080c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53d80a8ec7d9acb6b29146c03d6012e2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a53d80a8ec7d9acb6b29146c03d6012e2">getOuterCone</a> () const </td></tr>
-<tr class="memdesc:a53d80a8ec7d9acb6b29146c03d6012e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the outer cone (Phi) angle of the emitter in degrees.  <a href="#a53d80a8ec7d9acb6b29146c03d6012e2"></a><br/></td></tr>
-<tr class="separator:a53d80a8ec7d9acb6b29146c03d6012e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6445a1ac2fd565cc85b2a7c4fbf316e9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a6445a1ac2fd565cc85b2a7c4fbf316e9">getEmissionRadius</a> () const </td></tr>
-<tr class="memdesc:a6445a1ac2fd565cc85b2a7c4fbf316e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the radius around the emitter position from which particles can be released.  <a href="#a6445a1ac2fd565cc85b2a7c4fbf316e9"></a><br/></td></tr>
-<tr class="separator:a6445a1ac2fd565cc85b2a7c4fbf316e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22556e132d5c5b93b4eb899bf6d290a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a22556e132d5c5b93b4eb899bf6d290a0">getDeadZoneRadius</a> () const </td></tr>
-<tr class="memdesc:a22556e132d5c5b93b4eb899bf6d290a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the radius around the emitter position from which particles cannot be released.  <a href="#a22556e132d5c5b93b4eb899bf6d290a0"></a><br/></td></tr>
-<tr class="separator:a22556e132d5c5b93b4eb899bf6d290a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a312610d615546302136061bca3cb9d47"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a312610d615546302136061bca3cb9d47">getMaxSimultaneousParticles</a> () const </td></tr>
-<tr class="memdesc:a312610d615546302136061bca3cb9d47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the maximum number of particles that can be alive at any point in time for this emitter.  <a href="#a312610d615546302136061bca3cb9d47"></a><br/></td></tr>
-<tr class="separator:a312610d615546302136061bca3cb9d47"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4c6a824190b5052d59b1438e29f8ff2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ac4c6a824190b5052d59b1438e29f8ff2">getBirthFrequency</a> () const </td></tr>
-<tr class="memdesc:ac4c6a824190b5052d59b1438e29f8ff2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the rate at which the emitter will create and release particles each second.  <a href="#ac4c6a824190b5052d59b1438e29f8ff2"></a><br/></td></tr>
-<tr class="separator:ac4c6a824190b5052d59b1438e29f8ff2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ec7472a2499121fa143792cd386f398"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a8ec7472a2499121fa143792cd386f398">getSortedRender</a> () const </td></tr>
-<tr class="memdesc:a8ec7472a2499121fa143792cd386f398"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the property that indicates whether the emitter should sort the particles in a back to front order based on distance to the camera during rendering.  <a href="#a8ec7472a2499121fa143792cd386f398"></a><br/></td></tr>
-<tr class="separator:a8ec7472a2499121fa143792cd386f398"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7daa5dd8fac6bf62aaa02bdfe00c78e9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a7daa5dd8fac6bf62aaa02bdfe00c78e9">getRandomizedRotation</a> () const </td></tr>
-<tr class="memdesc:a7daa5dd8fac6bf62aaa02bdfe00c78e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the property that, when enabled, causes each particle's rotation angle to be randomized upon its birth. Otherwise, all particles will default to a rotation angle of 0 degrees.  <a href="#a7daa5dd8fac6bf62aaa02bdfe00c78e9"></a><br/></td></tr>
-<tr class="separator:a7daa5dd8fac6bf62aaa02bdfe00c78e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:affe14a461e5c3530d0212bbe5551f95a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#affe14a461e5c3530d0212bbe5551f95a">setInnerCone</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> degrees)</td></tr>
-<tr class="memdesc:affe14a461e5c3530d0212bbe5551f95a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the inner cone (Theta) angle of the emitter in degrees.  <a href="#affe14a461e5c3530d0212bbe5551f95a"></a><br/></td></tr>
-<tr class="separator:affe14a461e5c3530d0212bbe5551f95a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b2e1e69efdb4180473dbf9e7b9e13aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a8b2e1e69efdb4180473dbf9e7b9e13aa">setOuterCone</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> degrees)</td></tr>
-<tr class="memdesc:a8b2e1e69efdb4180473dbf9e7b9e13aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the outer cone (Phi) angle of the emitter in degrees.  <a href="#a8b2e1e69efdb4180473dbf9e7b9e13aa"></a><br/></td></tr>
-<tr class="separator:a8b2e1e69efdb4180473dbf9e7b9e13aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1b93d10d8fcf8d397f9467cfcb14e87"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ab1b93d10d8fcf8d397f9467cfcb14e87">setEmissionRadius</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> radius)</td></tr>
-<tr class="memdesc:ab1b93d10d8fcf8d397f9467cfcb14e87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the radius around the emitter position from which particles can be released.  <a href="#ab1b93d10d8fcf8d397f9467cfcb14e87"></a><br/></td></tr>
-<tr class="separator:ab1b93d10d8fcf8d397f9467cfcb14e87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1590b3391cbb09240c4be3ad041ad01b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a1590b3391cbb09240c4be3ad041ad01b">setDeadZoneRadius</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> radius)</td></tr>
-<tr class="memdesc:a1590b3391cbb09240c4be3ad041ad01b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the radius around the emitter position from which particles cannot be released.  <a href="#a1590b3391cbb09240c4be3ad041ad01b"></a><br/></td></tr>
-<tr class="separator:a1590b3391cbb09240c4be3ad041ad01b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d39de2f731633fa6fbe838f054f8941"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a8d39de2f731633fa6fbe838f054f8941">setMaxSimultaneousParticles</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> amount)</td></tr>
-<tr class="memdesc:a8d39de2f731633fa6fbe838f054f8941"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the maximum number of particles that can be alive at any point in time for this emitter. Setting this value to 0 will cause the emitter to automatically compute the required number of particles based on maximum particle lifetime and rate of emission.  <a href="#a8d39de2f731633fa6fbe838f054f8941"></a><br/></td></tr>
-<tr class="separator:a8d39de2f731633fa6fbe838f054f8941"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae29060826115f0402740ca037a940402"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ae29060826115f0402740ca037a940402">setBirthFrequency</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> amount)</td></tr>
-<tr class="memdesc:ae29060826115f0402740ca037a940402"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the rate at which the emitter will create and release particles each second.  <a href="#ae29060826115f0402740ca037a940402"></a><br/></td></tr>
-<tr class="separator:ae29060826115f0402740ca037a940402"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ea58d0fbda206a0d919118950ac8d0c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a2ea58d0fbda206a0d919118950ac8d0c">enableSortedRender</a> (bool enabled)</td></tr>
-<tr class="memdesc:a2ea58d0fbda206a0d919118950ac8d0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the property that indicates whether the emitter should sort the particles in a back to front order based on distance to the camera during rendering.  <a href="#a2ea58d0fbda206a0d919118950ac8d0c"></a><br/></td></tr>
-<tr class="separator:a2ea58d0fbda206a0d919118950ac8d0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7d2c373db18a16e6081ef5860c293f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ac7d2c373db18a16e6081ef5860c293f2">enableRandomizedRotation</a> (bool enabled)</td></tr>
-<tr class="memdesc:ac7d2c373db18a16e6081ef5860c293f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the property that, when enabled, causes each particle's rotation angle to be randomized upon its birth. Otherwise, all particles will default to a rotation angle of 0 degrees.  <a href="#ac7d2c373db18a16e6081ef5860c293f2"></a><br/></td></tr>
-<tr class="separator:ac7d2c373db18a16e6081ef5860c293f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a054b31781b9796842a245fe3b6616a2b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a054b31781b9796842a245fe3b6616a2b">setParticleSpeed</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> minimum, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> maximum)</td></tr>
-<tr class="memdesc:a054b31781b9796842a245fe3b6616a2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of initial speed values that a particle can be assigned during its creation.  <a href="#a054b31781b9796842a245fe3b6616a2b"></a><br/></td></tr>
-<tr class="separator:a054b31781b9796842a245fe3b6616a2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af43a80dd056c51b75329cbe12f6c023a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#af43a80dd056c51b75329cbe12f6c023a">setParticleSpeed</a> (const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;range)</td></tr>
-<tr class="memdesc:af43a80dd056c51b75329cbe12f6c023a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of initial speed values that a particle can be assigned during its creation.  <a href="#af43a80dd056c51b75329cbe12f6c023a"></a><br/></td></tr>
-<tr class="separator:af43a80dd056c51b75329cbe12f6c023a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91de3e5292faf1dbc13b4496b273484e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a91de3e5292faf1dbc13b4496b273484e">setParticleMass</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> minimum, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> maximum)</td></tr>
-<tr class="memdesc:a91de3e5292faf1dbc13b4496b273484e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of mass values that a particle can be assigned during its creation.  <a href="#a91de3e5292faf1dbc13b4496b273484e"></a><br/></td></tr>
-<tr class="separator:a91de3e5292faf1dbc13b4496b273484e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a437ea4250cf1e28f3ec5d3157ce45bf9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a437ea4250cf1e28f3ec5d3157ce45bf9">setParticleMass</a> (const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;range)</td></tr>
-<tr class="memdesc:a437ea4250cf1e28f3ec5d3157ce45bf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of mass values that a particle can be assigned during its creation.  <a href="#a437ea4250cf1e28f3ec5d3157ce45bf9"></a><br/></td></tr>
-<tr class="separator:a437ea4250cf1e28f3ec5d3157ce45bf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb4e0ee4e0846a496cc1868447ded9bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#afb4e0ee4e0846a496cc1868447ded9bb">setParticleAngularSpeed</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> minimum, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> maximum)</td></tr>
-<tr class="memdesc:afb4e0ee4e0846a496cc1868447ded9bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of angular (rotation) speed values that a particle can be assigned during its creation in degrees per second.  <a href="#afb4e0ee4e0846a496cc1868447ded9bb"></a><br/></td></tr>
-<tr class="separator:afb4e0ee4e0846a496cc1868447ded9bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0488bd5d3caf62b7b4977a07b31b28b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a0488bd5d3caf62b7b4977a07b31b28b1">setParticleAngularSpeed</a> (const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;range)</td></tr>
-<tr class="memdesc:a0488bd5d3caf62b7b4977a07b31b28b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of angular (rotation) speed values that a particle can be assigned during its creation in degrees per second.  <a href="#a0488bd5d3caf62b7b4977a07b31b28b1"></a><br/></td></tr>
-<tr class="separator:a0488bd5d3caf62b7b4977a07b31b28b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a458de47ad56193f6c3223eeb8784caa7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a458de47ad56193f6c3223eeb8784caa7">setParticleBaseScale</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> minimum, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> maximum)</td></tr>
-<tr class="memdesc:a458de47ad56193f6c3223eeb8784caa7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of base scale values that a particle can be assigned during its creation where 1 represents a particle whose initial size matches that configured via the '<a class="el" href="classcg_particle_emitter_object.html#a11e65e258b6cd77ff809f38eb2de2bef" title="Set the initial size (pre-scale) of each particle in meters. ">setParticleSize()</a>' method.  <a href="#a458de47ad56193f6c3223eeb8784caa7"></a><br/></td></tr>
-<tr class="separator:a458de47ad56193f6c3223eeb8784caa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3fae1bc2dcf9a8cdfa29b69c14b593d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a3fae1bc2dcf9a8cdfa29b69c14b593d7">setParticleBaseScale</a> (const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;range)</td></tr>
-<tr class="memdesc:a3fae1bc2dcf9a8cdfa29b69c14b593d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of base scale values that a particle can be assigned during its creation where 1 represents a particle whose initial size matches that configured via the '<a class="el" href="classcg_particle_emitter_object.html#a11e65e258b6cd77ff809f38eb2de2bef" title="Set the initial size (pre-scale) of each particle in meters. ">setParticleSize()</a>' method.  <a href="#a3fae1bc2dcf9a8cdfa29b69c14b593d7"></a><br/></td></tr>
-<tr class="separator:a3fae1bc2dcf9a8cdfa29b69c14b593d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab64d50e0b48998c68245c31b3f357fef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ab64d50e0b48998c68245c31b3f357fef">setParticleLifetime</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> minimum, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> maximum)</td></tr>
-<tr class="memdesc:ab64d50e0b48998c68245c31b3f357fef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of lifetime (maximum age) values that a particle can be assigned during its creation in seconds.  <a href="#ab64d50e0b48998c68245c31b3f357fef"></a><br/></td></tr>
-<tr class="separator:ab64d50e0b48998c68245c31b3f357fef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69043917a06d3de89657cdd55a2dc5e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a69043917a06d3de89657cdd55a2dc5e9">setParticleLifetime</a> (const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;range)</td></tr>
-<tr class="memdesc:a69043917a06d3de89657cdd55a2dc5e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of lifetime (maximum age) values that a particle can be assigned during its creation in seconds.  <a href="#a69043917a06d3de89657cdd55a2dc5e9"></a><br/></td></tr>
-<tr class="separator:a69043917a06d3de89657cdd55a2dc5e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11e65e258b6cd77ff809f38eb2de2bef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a11e65e258b6cd77ff809f38eb2de2bef">setParticleSize</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> fWidth, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> fHeight)</td></tr>
-<tr class="memdesc:a11e65e258b6cd77ff809f38eb2de2bef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the initial size (pre-scale) of each particle in meters.  <a href="#a11e65e258b6cd77ff809f38eb2de2bef"></a><br/></td></tr>
-<tr class="separator:a11e65e258b6cd77ff809f38eb2de2bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7df36a9799889d27a75c58f132bd76dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a7df36a9799889d27a75c58f132bd76dd">setParticleSize</a> (const <a class="el" href="structcg_size_f.html">cgSizeF</a> &amp;size)</td></tr>
-<tr class="memdesc:a7df36a9799889d27a75c58f132bd76dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the initial size (pre-scale) of each particle in meters.  <a href="#a7df36a9799889d27a75c58f132bd76dd"></a><br/></td></tr>
-<tr class="separator:a7df36a9799889d27a75c58f132bd76dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13807b6eabe59fa58f69901a452706c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a13807b6eabe59fa58f69901a452706c9">setParticleAirResistance</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> value)</td></tr>
-<tr class="memdesc:a13807b6eabe59fa58f69901a452706c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the air resistance co-efficient used to compute drag for each particle during simulation.  <a href="#a13807b6eabe59fa58f69901a452706c9"></a><br/></td></tr>
-<tr class="separator:a13807b6eabe59fa58f69901a452706c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab804a95af5ec4e65173efb2c83a5c5a3"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ab804a95af5ec4e65173efb2c83a5c5a3">getParticleSpeed</a> () const </td></tr>
-<tr class="memdesc:ab804a95af5ec4e65173efb2c83a5c5a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the configured range of initial speed values that a particle can be assigned during its creation.  <a href="#ab804a95af5ec4e65173efb2c83a5c5a3"></a><br/></td></tr>
-<tr class="separator:ab804a95af5ec4e65173efb2c83a5c5a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9291cf8a1698fcc2415e6d3ef75ef2c"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ac9291cf8a1698fcc2415e6d3ef75ef2c">getParticleMass</a> () const </td></tr>
-<tr class="memdesc:ac9291cf8a1698fcc2415e6d3ef75ef2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the configured range of mass values that a particle can be assigned during its creation.  <a href="#ac9291cf8a1698fcc2415e6d3ef75ef2c"></a><br/></td></tr>
-<tr class="separator:ac9291cf8a1698fcc2415e6d3ef75ef2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a849877d72084104ae1336a298d82d768"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a849877d72084104ae1336a298d82d768">getParticleAngularSpeed</a> () const </td></tr>
-<tr class="memdesc:a849877d72084104ae1336a298d82d768"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the configured range of angular (rotation) speed values that a particle can be assigned during its creation in degrees per second.  <a href="#a849877d72084104ae1336a298d82d768"></a><br/></td></tr>
-<tr class="separator:a849877d72084104ae1336a298d82d768"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84aa31820d284a962eccedd3ba1a20f6"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a84aa31820d284a962eccedd3ba1a20f6">getParticleBaseScale</a> () const </td></tr>
-<tr class="memdesc:a84aa31820d284a962eccedd3ba1a20f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the configured range of base scale values that a particle can be assigned during its creation where 1 represents a particle whose initial size matches that configured via the '<a class="el" href="classcg_particle_emitter_object.html#a11e65e258b6cd77ff809f38eb2de2bef" title="Set the initial size (pre-scale) of each particle in meters. ">setParticleSize()</a>' method.  <a href="#a84aa31820d284a962eccedd3ba1a20f6"></a><br/></td></tr>
-<tr class="separator:a84aa31820d284a962eccedd3ba1a20f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a270fd91b9fe07eaee7f28500143472ec"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a270fd91b9fe07eaee7f28500143472ec">getParticleLifetime</a> () const </td></tr>
-<tr class="memdesc:a270fd91b9fe07eaee7f28500143472ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the configured range of lifetime (maximum age) values that a particle can be assigned during its creation in seconds.  <a href="#a270fd91b9fe07eaee7f28500143472ec"></a><br/></td></tr>
-<tr class="separator:a270fd91b9fe07eaee7f28500143472ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7887ea07a30c265f833f8a2fc88c7af3"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_size_f.html">cgSizeF</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a7887ea07a30c265f833f8a2fc88c7af3">getParticleSize</a> () const </td></tr>
-<tr class="memdesc:a7887ea07a30c265f833f8a2fc88c7af3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the configured initial size (pre-scale) of each particle in meters.  <a href="#a7887ea07a30c265f833f8a2fc88c7af3"></a><br/></td></tr>
-<tr class="separator:a7887ea07a30c265f833f8a2fc88c7af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea9198e603a6dfb8ba97c6fba0fd68c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#aea9198e603a6dfb8ba97c6fba0fd68c2">getParticleAirResistance</a> () const </td></tr>
-<tr class="memdesc:aea9198e603a6dfb8ba97c6fba0fd68c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the configured air resistance co-efficient used to compute drag for each particle during simulation.  <a href="#aea9198e603a6dfb8ba97c6fba0fd68c2"></a><br/></td></tr>
-<tr class="separator:aea9198e603a6dfb8ba97c6fba0fd68c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7b1decad76259377dfb49fe02f1fb7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ab7b1decad76259377dfb49fe02f1fb7e">getLayerCount</a> () const </td></tr>
+<tr class="memdesc:ab7b1decad76259377dfb49fe02f1fb7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the total number of emitter layers that have been defined.  <a href="#ab7b1decad76259377dfb49fe02f1fb7e"></a><br/></td></tr>
+<tr class="separator:ab7b1decad76259377dfb49fe02f1fb7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5f621de25585f486d14f9eeefc814ea"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_particle_emitter_properties.html">cgParticleEmitterProperties</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ab5f621de25585f486d14f9eeefc814ea">getLayerProperties</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:ab5f621de25585f486d14f9eeefc814ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the configuration structure that describes how the specified emitter layer should be initialized and updated.  <a href="#ab5f621de25585f486d14f9eeefc814ea"></a><br/></td></tr>
+<tr class="separator:ab5f621de25585f486d14f9eeefc814ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2266379819549c846ffcb236a248c9c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#aa2266379819549c846ffcb236a248c9c">getInnerCone</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:aa2266379819549c846ffcb236a248c9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the inner cone (Theta) angle of the emitter in degrees.  <a href="#aa2266379819549c846ffcb236a248c9c"></a><br/></td></tr>
+<tr class="separator:aa2266379819549c846ffcb236a248c9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba021392ef92976e0aeb56b792400531"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#aba021392ef92976e0aeb56b792400531">getOuterCone</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:aba021392ef92976e0aeb56b792400531"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the outer cone (Phi) angle of the emitter in degrees.  <a href="#aba021392ef92976e0aeb56b792400531"></a><br/></td></tr>
+<tr class="separator:aba021392ef92976e0aeb56b792400531"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a197d6b5c3c34b0ef2861e069fa9f09f7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a197d6b5c3c34b0ef2861e069fa9f09f7">getEmissionRadius</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a197d6b5c3c34b0ef2861e069fa9f09f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the radius around the emitter position from which particles can be released.  <a href="#a197d6b5c3c34b0ef2861e069fa9f09f7"></a><br/></td></tr>
+<tr class="separator:a197d6b5c3c34b0ef2861e069fa9f09f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11847613cc2c540e62d131c6adf0807e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a11847613cc2c540e62d131c6adf0807e">getDeadZoneRadius</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a11847613cc2c540e62d131c6adf0807e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the radius around the emitter position from which particles cannot be released.  <a href="#a11847613cc2c540e62d131c6adf0807e"></a><br/></td></tr>
+<tr class="separator:a11847613cc2c540e62d131c6adf0807e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fd008ee5efe71f48f0e2df1b83f52d1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a1fd008ee5efe71f48f0e2df1b83f52d1">getMaxSimultaneousParticles</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a1fd008ee5efe71f48f0e2df1b83f52d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the maximum number of particles that can be alive at any point in time for this emitter.  <a href="#a1fd008ee5efe71f48f0e2df1b83f52d1"></a><br/></td></tr>
+<tr class="separator:a1fd008ee5efe71f48f0e2df1b83f52d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec37943de14d58e87794b917ef65f80a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#aec37943de14d58e87794b917ef65f80a">getMaximumParticles</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:aec37943de14d58e87794b917ef65f80a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the maximum number of particles that this emitter can release before it is automatically destroyed / unloaded.  <a href="#aec37943de14d58e87794b917ef65f80a"></a><br/></td></tr>
+<tr class="separator:aec37943de14d58e87794b917ef65f80a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71b9f708d354cd38130d0e186a53f68a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a71b9f708d354cd38130d0e186a53f68a">getBirthFrequency</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a71b9f708d354cd38130d0e186a53f68a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the rate at which the emitter will create and release particles each second.  <a href="#a71b9f708d354cd38130d0e186a53f68a"></a><br/></td></tr>
+<tr class="separator:a71b9f708d354cd38130d0e186a53f68a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab9118b94db9c8e8e6167345fd14b4ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#aab9118b94db9c8e8e6167345fd14b4ed">getHDRScale</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:aab9118b94db9c8e8e6167345fd14b4ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the amount to scale particle color values when HDR rendering is enabled.  <a href="#aab9118b94db9c8e8e6167345fd14b4ed"></a><br/></td></tr>
+<tr class="separator:aab9118b94db9c8e8e6167345fd14b4ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6a7d1f2712ecdd254b031f1cbfd92f2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ae6a7d1f2712ecdd254b031f1cbfd92f2">getSortedRender</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:ae6a7d1f2712ecdd254b031f1cbfd92f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the property that indicates whether the emitter should sort the particles in a back to front order based on distance to the camera during rendering.  <a href="#ae6a7d1f2712ecdd254b031f1cbfd92f2"></a><br/></td></tr>
+<tr class="separator:ae6a7d1f2712ecdd254b031f1cbfd92f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50037eb91532d19f5bfb77a3eeb5c1f5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a50037eb91532d19f5bfb77a3eeb5c1f5">getRandomizedRotation</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a50037eb91532d19f5bfb77a3eeb5c1f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the property that, when enabled, causes each particle's rotation angle to be randomized upon its birth. Otherwise, all particles will default to a rotation angle of 0 degrees.  <a href="#a50037eb91532d19f5bfb77a3eeb5c1f5"></a><br/></td></tr>
+<tr class="separator:a50037eb91532d19f5bfb77a3eeb5c1f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72b0e578656c69eb7cf53512672401d5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a72b0e578656c69eb7cf53512672401d5">getInitialEnabledState</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a72b0e578656c69eb7cf53512672401d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the specified layer will begin to emit particles immediately upon initial creation. If this value is set to false, the emitter for this layer will need to be enabled manually before particles will be released.  <a href="#a72b0e578656c69eb7cf53512672401d5"></a><br/></td></tr>
+<tr class="separator:a72b0e578656c69eb7cf53512672401d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00b65356c834b66dce100ba04c1f5ea5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a00b65356c834b66dce100ba04c1f5ea5">getVelocityAlignment</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a00b65356c834b66dce100ba04c1f5ea5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the property that indicates whether the particles should be aligned and orientated to match their current velocities during rendering.  <a href="#a00b65356c834b66dce100ba04c1f5ea5"></a><br/></td></tr>
+<tr class="separator:a00b65356c834b66dce100ba04c1f5ea5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac00cdb8337e2d90ea4f14de71909163b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ac00cdb8337e2d90ea4f14de71909163b">getVelocityScaleStrength</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:ac00cdb8337e2d90ea4f14de71909163b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the amount by which the velocity of each particle will affect its scale (0 = no effect, 1 = full effect)  <a href="#ac00cdb8337e2d90ea4f14de71909163b"></a><br/></td></tr>
+<tr class="separator:ac00cdb8337e2d90ea4f14de71909163b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a673921191645f498070529d809885738"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a673921191645f498070529d809885738">isGravityEnabled</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a673921191645f498070529d809885738"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if gravity should be considered during particle updates.  <a href="#a673921191645f498070529d809885738"></a><br/></td></tr>
+<tr class="separator:a673921191645f498070529d809885738"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca8bdd709ee28eb990c1fbb03875957e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#aca8bdd709ee28eb990c1fbb03875957e">setInnerCone</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> degrees)</td></tr>
+<tr class="memdesc:aca8bdd709ee28eb990c1fbb03875957e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the inner cone (Theta) angle of the emitter in degrees.  <a href="#aca8bdd709ee28eb990c1fbb03875957e"></a><br/></td></tr>
+<tr class="separator:aca8bdd709ee28eb990c1fbb03875957e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29e4ffa81f1a51ede58d2ee80e5c675f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a29e4ffa81f1a51ede58d2ee80e5c675f">setOuterCone</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> degrees)</td></tr>
+<tr class="memdesc:a29e4ffa81f1a51ede58d2ee80e5c675f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the outer cone (Phi) angle of the emitter in degrees.  <a href="#a29e4ffa81f1a51ede58d2ee80e5c675f"></a><br/></td></tr>
+<tr class="separator:a29e4ffa81f1a51ede58d2ee80e5c675f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4be908a79441e61e02e2bdb60fda548f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a4be908a79441e61e02e2bdb60fda548f">setEmissionRadius</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> radius)</td></tr>
+<tr class="memdesc:a4be908a79441e61e02e2bdb60fda548f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the radius around the emitter position from which particles can be released.  <a href="#a4be908a79441e61e02e2bdb60fda548f"></a><br/></td></tr>
+<tr class="separator:a4be908a79441e61e02e2bdb60fda548f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac40d100038a90d677370660a4fdd436e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ac40d100038a90d677370660a4fdd436e">setDeadZoneRadius</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> radius)</td></tr>
+<tr class="memdesc:ac40d100038a90d677370660a4fdd436e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the radius around the emitter position from which particles cannot be released.  <a href="#ac40d100038a90d677370660a4fdd436e"></a><br/></td></tr>
+<tr class="separator:ac40d100038a90d677370660a4fdd436e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a4073834a00bf86145f7140e9e8f32b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a2a4073834a00bf86145f7140e9e8f32b">setMaxSimultaneousParticles</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> amount)</td></tr>
+<tr class="memdesc:a2a4073834a00bf86145f7140e9e8f32b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the maximum number of particles that can be alive at any point in time for this emitter. Setting this value to 0 will cause the emitter to automatically compute the required number of particles based on maximum particle lifetime and rate of emission.  <a href="#a2a4073834a00bf86145f7140e9e8f32b"></a><br/></td></tr>
+<tr class="separator:a2a4073834a00bf86145f7140e9e8f32b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf5c39d9628e4e45629839d4ba346235"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#adf5c39d9628e4e45629839d4ba346235">setMaximumParticles</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> amount)</td></tr>
+<tr class="memdesc:adf5c39d9628e4e45629839d4ba346235"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the maximum number of particles that this emitter can release before it is automatically destroyed / unloaded.  <a href="#adf5c39d9628e4e45629839d4ba346235"></a><br/></td></tr>
+<tr class="separator:adf5c39d9628e4e45629839d4ba346235"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d9023f4dd53c76282a5813f5da68af3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a0d9023f4dd53c76282a5813f5da68af3">setBirthFrequency</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> amount)</td></tr>
+<tr class="memdesc:a0d9023f4dd53c76282a5813f5da68af3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the rate at which the emitter will create and release particles each second.  <a href="#a0d9023f4dd53c76282a5813f5da68af3"></a><br/></td></tr>
+<tr class="separator:a0d9023f4dd53c76282a5813f5da68af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af33cdb271172251878d8cfdb7aeb8f9f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#af33cdb271172251878d8cfdb7aeb8f9f">setHDRScale</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> scale)</td></tr>
+<tr class="memdesc:af33cdb271172251878d8cfdb7aeb8f9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the amount to scale particle color values when HDR rendering is enabled.  <a href="#af33cdb271172251878d8cfdb7aeb8f9f"></a><br/></td></tr>
+<tr class="separator:af33cdb271172251878d8cfdb7aeb8f9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1487bd353782376517ec0c552f5bee3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ab1487bd353782376517ec0c552f5bee3">enableSortedRender</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, bool enabled)</td></tr>
+<tr class="memdesc:ab1487bd353782376517ec0c552f5bee3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the property that indicates whether the emitter should sort the particles in a back to front order based on distance to the camera during rendering.  <a href="#ab1487bd353782376517ec0c552f5bee3"></a><br/></td></tr>
+<tr class="separator:ab1487bd353782376517ec0c552f5bee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49b1f3f2194ee030fd07a83400d8fb49"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a49b1f3f2194ee030fd07a83400d8fb49">enableVelocityAlignment</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, bool enabled)</td></tr>
+<tr class="memdesc:a49b1f3f2194ee030fd07a83400d8fb49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the property that indicates whether the particles should be aligned and orientated to match their current velocities during rendering.  <a href="#a49b1f3f2194ee030fd07a83400d8fb49"></a><br/></td></tr>
+<tr class="separator:a49b1f3f2194ee030fd07a83400d8fb49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42c1544572462c5f60235ce7f554b41b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a42c1544572462c5f60235ce7f554b41b">enableRandomizedRotation</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, bool enabled)</td></tr>
+<tr class="memdesc:a42c1544572462c5f60235ce7f554b41b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the property that, when enabled, causes each particle's rotation angle to be randomized upon its birth. Otherwise, all particles will default to a rotation angle of 0 degrees.  <a href="#a42c1544572462c5f60235ce7f554b41b"></a><br/></td></tr>
+<tr class="separator:a42c1544572462c5f60235ce7f554b41b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40dddff1059ccfea4baad172e0de333f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a40dddff1059ccfea4baad172e0de333f">enableGravity</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, bool enabled)</td></tr>
+<tr class="memdesc:a40dddff1059ccfea4baad172e0de333f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable the application of gravity forces to particles throughout their lifetime.  <a href="#a40dddff1059ccfea4baad172e0de333f"></a><br/></td></tr>
+<tr class="separator:a40dddff1059ccfea4baad172e0de333f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14d269e15a2a1c272f753785a678bb19"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a14d269e15a2a1c272f753785a678bb19">setVelocityScaleStrength</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> strength)</td></tr>
+<tr class="memdesc:a14d269e15a2a1c272f753785a678bb19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the amount by which the velocity of each particle will affect its scale (0 = no effect, 1 = full effect)  <a href="#a14d269e15a2a1c272f753785a678bb19"></a><br/></td></tr>
+<tr class="separator:a14d269e15a2a1c272f753785a678bb19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb2d0c3a61931fcbc44b45a183d6588f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#adb2d0c3a61931fcbc44b45a183d6588f">setInitialEnabledState</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, bool enabled)</td></tr>
+<tr class="memdesc:adb2d0c3a61931fcbc44b45a183d6588f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the default emission state of the specified layer which will determine if the emitter will begin to emit particles immediately upon initial creation. If this value is set to false, the emitter for this layer will need to be enabled manually before particles will be released.  <a href="#adb2d0c3a61931fcbc44b45a183d6588f"></a><br/></td></tr>
+<tr class="separator:adb2d0c3a61931fcbc44b45a183d6588f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c29f5d0f58d7213e6c6722ffe33682d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a2c29f5d0f58d7213e6c6722ffe33682d">setParticleTexture</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, const <a class="el" href="classcg_string.html">cgString</a> &amp;textureFile)</td></tr>
+<tr class="memdesc:a2c29f5d0f58d7213e6c6722ffe33682d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the name of the particle texture (or texture atlas) to map to the billboards representing this emitters particles.  <a href="#a2c29f5d0f58d7213e6c6722ffe33682d"></a><br/></td></tr>
+<tr class="separator:a2c29f5d0f58d7213e6c6722ffe33682d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66726976e67706541a9b95af923cf8a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a66726976e67706541a9b95af923cf8a7">setParticleSpeed</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> minimum, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> maximum)</td></tr>
+<tr class="memdesc:a66726976e67706541a9b95af923cf8a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of initial speed values that a particle can be assigned during its creation.  <a href="#a66726976e67706541a9b95af923cf8a7"></a><br/></td></tr>
+<tr class="separator:a66726976e67706541a9b95af923cf8a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9de0553d511127a08ef8b3f248497b2e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a9de0553d511127a08ef8b3f248497b2e">setParticleSpeed</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;range)</td></tr>
+<tr class="memdesc:a9de0553d511127a08ef8b3f248497b2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of initial speed values that a particle can be assigned during its creation.  <a href="#a9de0553d511127a08ef8b3f248497b2e"></a><br/></td></tr>
+<tr class="separator:a9de0553d511127a08ef8b3f248497b2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa22c8867d5140d7ee45dfe2ab729a0f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#aa22c8867d5140d7ee45dfe2ab729a0f4">setParticleMass</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> minimum, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> maximum)</td></tr>
+<tr class="memdesc:aa22c8867d5140d7ee45dfe2ab729a0f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of mass values that a particle can be assigned during its creation.  <a href="#aa22c8867d5140d7ee45dfe2ab729a0f4"></a><br/></td></tr>
+<tr class="separator:aa22c8867d5140d7ee45dfe2ab729a0f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa80969f8e7ef60a878fa2ef1c75a369"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#aaa80969f8e7ef60a878fa2ef1c75a369">setParticleMass</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;range)</td></tr>
+<tr class="memdesc:aaa80969f8e7ef60a878fa2ef1c75a369"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of mass values that a particle can be assigned during its creation.  <a href="#aaa80969f8e7ef60a878fa2ef1c75a369"></a><br/></td></tr>
+<tr class="separator:aaa80969f8e7ef60a878fa2ef1c75a369"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabdd3afc574f8a8dd55ff1840ed8dc13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#aabdd3afc574f8a8dd55ff1840ed8dc13">setParticleAngularSpeed</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> minimum, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> maximum)</td></tr>
+<tr class="memdesc:aabdd3afc574f8a8dd55ff1840ed8dc13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of angular (rotation) speed values that a particle can be assigned during its creation in degrees per second.  <a href="#aabdd3afc574f8a8dd55ff1840ed8dc13"></a><br/></td></tr>
+<tr class="separator:aabdd3afc574f8a8dd55ff1840ed8dc13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc64f7af8f14caba01daa33e1360ce60"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#abc64f7af8f14caba01daa33e1360ce60">setParticleAngularSpeed</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;range)</td></tr>
+<tr class="memdesc:abc64f7af8f14caba01daa33e1360ce60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of angular (rotation) speed values that a particle can be assigned during its creation in degrees per second.  <a href="#abc64f7af8f14caba01daa33e1360ce60"></a><br/></td></tr>
+<tr class="separator:abc64f7af8f14caba01daa33e1360ce60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a670bf21103394fb304725ab6cc1eee45"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a670bf21103394fb304725ab6cc1eee45">setParticleBaseScale</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> minimum, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> maximum)</td></tr>
+<tr class="memdesc:a670bf21103394fb304725ab6cc1eee45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of base scale values that a particle can be assigned during its creation where 1 represents a particle whose initial size matches that configured via the '<a class="el" href="classcg_particle_emitter_object.html#af39adad99367a6cb76a6a1923139b7de" title="Set the initial size (pre-scale) of each particle in meters. ">setParticleSize()</a>' method.  <a href="#a670bf21103394fb304725ab6cc1eee45"></a><br/></td></tr>
+<tr class="separator:a670bf21103394fb304725ab6cc1eee45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9263cf202f70e16619759a37b88a2dfb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a9263cf202f70e16619759a37b88a2dfb">setParticleBaseScale</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;range)</td></tr>
+<tr class="memdesc:a9263cf202f70e16619759a37b88a2dfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of base scale values that a particle can be assigned during its creation where 1 represents a particle whose initial size matches that configured via the '<a class="el" href="classcg_particle_emitter_object.html#af39adad99367a6cb76a6a1923139b7de" title="Set the initial size (pre-scale) of each particle in meters. ">setParticleSize()</a>' method.  <a href="#a9263cf202f70e16619759a37b88a2dfb"></a><br/></td></tr>
+<tr class="separator:a9263cf202f70e16619759a37b88a2dfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53d1949188ce30ab1f31bf16f4291bcb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a53d1949188ce30ab1f31bf16f4291bcb">setParticleLifetime</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> minimum, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> maximum)</td></tr>
+<tr class="memdesc:a53d1949188ce30ab1f31bf16f4291bcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of lifetime (maximum age) values that a particle can be assigned during its creation in seconds.  <a href="#a53d1949188ce30ab1f31bf16f4291bcb"></a><br/></td></tr>
+<tr class="separator:a53d1949188ce30ab1f31bf16f4291bcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecf8a8d57a349cb01e26fec4c0945164"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#aecf8a8d57a349cb01e26fec4c0945164">setParticleLifetime</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;range)</td></tr>
+<tr class="memdesc:aecf8a8d57a349cb01e26fec4c0945164"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the range of lifetime (maximum age) values that a particle can be assigned during its creation in seconds.  <a href="#aecf8a8d57a349cb01e26fec4c0945164"></a><br/></td></tr>
+<tr class="separator:aecf8a8d57a349cb01e26fec4c0945164"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af39adad99367a6cb76a6a1923139b7de"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#af39adad99367a6cb76a6a1923139b7de">setParticleSize</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> width, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> height)</td></tr>
+<tr class="memdesc:af39adad99367a6cb76a6a1923139b7de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the initial size (pre-scale) of each particle in meters.  <a href="#af39adad99367a6cb76a6a1923139b7de"></a><br/></td></tr>
+<tr class="separator:af39adad99367a6cb76a6a1923139b7de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe9a3d8c3787d0997de3b2111ed29a40"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#abe9a3d8c3787d0997de3b2111ed29a40">setParticleSize</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, const <a class="el" href="structcg_size_f.html">cgSizeF</a> &amp;size)</td></tr>
+<tr class="memdesc:abe9a3d8c3787d0997de3b2111ed29a40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the initial size (pre-scale) of each particle in meters.  <a href="#abe9a3d8c3787d0997de3b2111ed29a40"></a><br/></td></tr>
+<tr class="separator:abe9a3d8c3787d0997de3b2111ed29a40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f7370e0f1613576c0be66e4cc6a7b2a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a7f7370e0f1613576c0be66e4cc6a7b2a">setParticleAirResistance</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> value)</td></tr>
+<tr class="memdesc:a7f7370e0f1613576c0be66e4cc6a7b2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the air resistance co-efficient used to compute drag for each particle during simulation.  <a href="#a7f7370e0f1613576c0be66e4cc6a7b2a"></a><br/></td></tr>
+<tr class="separator:a7f7370e0f1613576c0be66e4cc6a7b2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0e7b277f639a26135bdce7c11bf8961"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ab0e7b277f639a26135bdce7c11bf8961">setParticleBlendMethod</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, <a class="el" href="namespacecg_particle_blend_method.html#a54d685857738ae224e7c90b432001de0">cgParticleBlendMethod::Base</a> method)</td></tr>
+<tr class="memdesc:ab0e7b277f639a26135bdce7c11bf8961"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the technique used to blend the particles with the currently assigned render target (i.e., additive, screen, linear, etc.)  <a href="#ab0e7b277f639a26135bdce7c11bf8961"></a><br/></td></tr>
+<tr class="separator:ab0e7b277f639a26135bdce7c11bf8961"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfa468c892e7863196041972c3c3f7e7"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#adfa468c892e7863196041972c3c3f7e7">getParticleSpeed</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:adfa468c892e7863196041972c3c3f7e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the configured range of initial speed values that a particle can be assigned during its creation.  <a href="#adfa468c892e7863196041972c3c3f7e7"></a><br/></td></tr>
+<tr class="separator:adfa468c892e7863196041972c3c3f7e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa388cb1f273a078b3cadd501644454e6"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#aa388cb1f273a078b3cadd501644454e6">getParticleMass</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:aa388cb1f273a078b3cadd501644454e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the configured range of mass values that a particle can be assigned during its creation.  <a href="#aa388cb1f273a078b3cadd501644454e6"></a><br/></td></tr>
+<tr class="separator:aa388cb1f273a078b3cadd501644454e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafefbc4261e89bb72db256a8dc9551b6"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#aafefbc4261e89bb72db256a8dc9551b6">getParticleAngularSpeed</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:aafefbc4261e89bb72db256a8dc9551b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the configured range of angular (rotation) speed values that a particle can be assigned during its creation in degrees per second.  <a href="#aafefbc4261e89bb72db256a8dc9551b6"></a><br/></td></tr>
+<tr class="separator:aafefbc4261e89bb72db256a8dc9551b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2d7bfce60e0f8b1b1062b8e3548977e"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#aa2d7bfce60e0f8b1b1062b8e3548977e">getParticleBaseScale</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:aa2d7bfce60e0f8b1b1062b8e3548977e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the configured range of base scale values that a particle can be assigned during its creation where 1 represents a particle whose initial size matches that configured via the '<a class="el" href="classcg_particle_emitter_object.html#af39adad99367a6cb76a6a1923139b7de" title="Set the initial size (pre-scale) of each particle in meters. ">setParticleSize()</a>' method.  <a href="#aa2d7bfce60e0f8b1b1062b8e3548977e"></a><br/></td></tr>
+<tr class="separator:aa2d7bfce60e0f8b1b1062b8e3548977e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74e1430990d04badfdcc93b885f9a53e"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a74e1430990d04badfdcc93b885f9a53e">getParticleLifetime</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a74e1430990d04badfdcc93b885f9a53e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the configured range of lifetime (maximum age) values that a particle can be assigned during its creation in seconds.  <a href="#a74e1430990d04badfdcc93b885f9a53e"></a><br/></td></tr>
+<tr class="separator:a74e1430990d04badfdcc93b885f9a53e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a341b2a872ddad1be28b04009e81a0839"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_size_f.html">cgSizeF</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a341b2a872ddad1be28b04009e81a0839">getParticleSize</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a341b2a872ddad1be28b04009e81a0839"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the configured initial size (pre-scale) of each particle in meters.  <a href="#a341b2a872ddad1be28b04009e81a0839"></a><br/></td></tr>
+<tr class="separator:a341b2a872ddad1be28b04009e81a0839"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1917572e650b22353054882393da8126"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a1917572e650b22353054882393da8126">getParticleAirResistance</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a1917572e650b22353054882393da8126"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the configured air resistance co-efficient used to compute drag for each particle during simulation.  <a href="#a1917572e650b22353054882393da8126"></a><br/></td></tr>
+<tr class="separator:a1917572e650b22353054882393da8126"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32a6652ef56e6d66c767731fb82257ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_particle_blend_method.html#a54d685857738ae224e7c90b432001de0">cgParticleBlendMethod::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a32a6652ef56e6d66c767731fb82257ee">getParticleBlendMethod</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a32a6652ef56e6d66c767731fb82257ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the technique used to blend the particles with the currently assigned render target (i.e., additive, screen, linear, etc.)  <a href="#a32a6652ef56e6d66c767731fb82257ee"></a><br/></td></tr>
+<tr class="separator:a32a6652ef56e6d66c767731fb82257ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c259465286648dd322004ed77bf1b77"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a2c259465286648dd322004ed77bf1b77">getParticleTexture</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a2c259465286648dd322004ed77bf1b77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the name of the particle texture (or texture atlas) to map to the billboards representing this emitters particles.  <a href="#a2c259465286648dd322004ed77bf1b77"></a><br/></td></tr>
+<tr class="separator:a2c259465286648dd322004ed77bf1b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e49884a8a3fbc87270b2d34e7487e2d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a0e49884a8a3fbc87270b2d34e7487e2d">getLocalBoundingBox</a> ()</td></tr>
 <tr class="memdesc:a0e49884a8a3fbc87270b2d34e7487e2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the bounding box of this object.  <a href="#a0e49884a8a3fbc87270b2d34e7487e2d"></a><br/></td></tr>
 <tr class="separator:a0e49884a8a3fbc87270b2d34e7487e2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a523715dbb034da5be582d1424adc6881"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a523715dbb034da5be582d1424adc6881">sandboxRender</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, bool wireframe, const <a class="el" href="classcg_plane.html">cgPlane</a> &amp;gridPlane, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer)</td></tr>
-<tr class="memdesc:a523715dbb034da5be582d1424adc6881"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the object to render its 'sandbox' representation &ndash; that is the representation to be displayed within an editing environment.  <a href="#a523715dbb034da5be582d1424adc6881"></a><br/></td></tr>
-<tr class="separator:a523715dbb034da5be582d1424adc6881"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40245579f97f560414de09cd13611083"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a40245579f97f560414de09cd13611083">pick</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer, const <a class="el" href="structcg_size.html">cgSize</a> &amp;viewportSize, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, bool wireframe, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;wireTolerance, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;distanceOut)</td></tr>
-<tr class="memdesc:a40245579f97f560414de09cd13611083"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified object space ray, determine if this object is intersected and also compute the object space intersection distance.  <a href="#a40245579f97f560414de09cd13611083"></a><br/></td></tr>
-<tr class="separator:a40245579f97f560414de09cd13611083"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2398ee83e06982cbed902b4507e3e180"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a2398ee83e06982cbed902b4507e3e180">sandboxRender</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, <a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, const <a class="el" href="classcg_plane.html">cgPlane</a> &amp;gridPlane, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer)</td></tr>
+<tr class="memdesc:a2398ee83e06982cbed902b4507e3e180"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the object to render its 'sandbox' representation &ndash; that is the representation to be displayed within an editing environment.  <a href="#a2398ee83e06982cbed902b4507e3e180"></a><br/></td></tr>
+<tr class="separator:a2398ee83e06982cbed902b4507e3e180"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7be1ddadbb304b9cd89472a9666cb05"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ac7be1ddadbb304b9cd89472a9666cb05">pick</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer, const <a class="el" href="structcg_size.html">cgSize</a> &amp;viewportSize, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, bool wireframe, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> wireTolerance, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;distanceOut)</td></tr>
+<tr class="memdesc:ac7be1ddadbb304b9cd89472a9666cb05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified object space ray, determine if this object is intersected and also compute the object space intersection distance.  <a href="#ac7be1ddadbb304b9cd89472a9666cb05"></a><br/></td></tr>
+<tr class="separator:ac7be1ddadbb304b9cd89472a9666cb05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12c40573a341f2d5a285394105ef24a0"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a12c40573a341f2d5a285394105ef24a0">render</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer)</td></tr>
 <tr class="memdesc:a12c40573a341f2d5a285394105ef24a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render the emitter object.  <a href="#a12c40573a341f2d5a285394105ef24a0"></a><br/></td></tr>
 <tr class="separator:a12c40573a341f2d5a285394105ef24a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -320,15 +374,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae5426bd3b35f713f88fe157d3c555028 inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#ae5426bd3b35f713f88fe157d3c555028">getMassTransformAmount</a> () const </td></tr>
 <tr class="memdesc:ae5426bd3b35f713f88fe157d3c555028 inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">A [0..1] range value that describes the amount by which the object's base mass may be scaled up / down based on the scale component of any referencing node's transform.  <a href="#ae5426bd3b35f713f88fe157d3c555028"></a><br/></td></tr>
 <tr class="separator:ae5426bd3b35f713f88fe157d3c555028 inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecf9044f70ee3b915cea8c8d47619a7d inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_object_sub_element.html">cgObjectSubElement</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#aecf9044f70ee3b915cea8c8d47619a7d">createSubElement</a> (const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;category, const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;identifier)</td></tr>
+<tr class="memdesc:aecf9044f70ee3b915cea8c8d47619a7d inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new object sub-element of the specified type and add it to the object's internal list.  <a href="#aecf9044f70ee3b915cea8c8d47619a7d"></a><br/></td></tr>
+<tr class="separator:aecf9044f70ee3b915cea8c8d47619a7d inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7ff42f73e68829ec7ce6fbbed72c88f inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#ab7ff42f73e68829ec7ce6fbbed72c88f">isShadowCaster</a> () const </td></tr>
 <tr class="memdesc:ab7ff42f73e68829ec7ce6fbbed72c88f inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is the object capable of casting shadows? (i.e. a camera may not be)  <a href="#ab7ff42f73e68829ec7ce6fbbed72c88f"></a><br/></td></tr>
 <tr class="separator:ab7ff42f73e68829ec7ce6fbbed72c88f inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c7225a42faece2dde2882d6df2e9dda inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#a2c7225a42faece2dde2882d6df2e9dda">getSubElementCategories</a> (cgObjectSubElementCategory::Map &amp;categories) const </td></tr>
 <tr class="memdesc:a2c7225a42faece2dde2882d6df2e9dda inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerate the list of sub-element categories and types that can be accessed by the sandbox environment / application. Returns true if sub-elements are supported.  <a href="#a2c7225a42faece2dde2882d6df2e9dda"></a><br/></td></tr>
 <tr class="separator:a2c7225a42faece2dde2882d6df2e9dda inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aecf9044f70ee3b915cea8c8d47619a7d inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classcg_object_sub_element.html">cgObjectSubElement</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#aecf9044f70ee3b915cea8c8d47619a7d">createSubElement</a> (const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;category, const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;identifier)</td></tr>
-<tr class="memdesc:aecf9044f70ee3b915cea8c8d47619a7d inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new object sub-element of the specified type and add it to the object's internal list.  <a href="#aecf9044f70ee3b915cea8c8d47619a7d"></a><br/></td></tr>
-<tr class="separator:aecf9044f70ee3b915cea8c8d47619a7d inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afeae4422d692d6490ac669f3a70b177c inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#afeae4422d692d6490ac669f3a70b177c">supportsSubElement</a> (const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;Category, const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;Identifier) const </td></tr>
+<tr class="memdesc:afeae4422d692d6490ac669f3a70b177c inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the specified object sub element type is supported by this world object. Derived object types should implement this to extend the allowable sub element types.  <a href="#afeae4422d692d6490ac669f3a70b177c"></a><br/></td></tr>
+<tr class="separator:afeae4422d692d6490ac669f3a70b177c inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adef46e47c147e62019823499bf776b0f inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classcg_object_sub_element.html">cgObjectSubElement</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#adef46e47c147e62019823499bf776b0f">createSubElement</a> (bool internalElement, const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;category, const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;identifier)</td></tr>
+<tr class="memdesc:adef46e47c147e62019823499bf776b0f inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new object sub-element of the specified type and add it to the object's internal list. Optionally specify whether the element should be created as an internal, or serialized component.  <a href="#adef46e47c147e62019823499bf776b0f"></a><br/></td></tr>
+<tr class="separator:adef46e47c147e62019823499bf776b0f inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96da388d830179e6a8ea5a9a54654296 inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classcg_object_sub_element.html">cgObjectSubElement</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#a96da388d830179e6a8ea5a9a54654296">cloneSubElement</a> (<a class="el" href="classcg_object_sub_element.html">cgObjectSubElement</a> *element)</td></tr>
 <tr class="memdesc:a96da388d830179e6a8ea5a9a54654296 inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Duplicate the specified object sub-element and add it to the object's internal list.  <a href="#a96da388d830179e6a8ea5a9a54654296"></a><br/></td></tr>
 <tr class="separator:a96da388d830179e6a8ea5a9a54654296 inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -401,9 +461,9 @@ cgObjectSubElementArray &amp;&#160;</td><td class="memItemRight" valign="bottom"
 <tr class="memitem:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#abc11be6582c83be070816daf60d96781">isInternalReference</a> () const </td></tr>
 <tr class="memdesc:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this reference is either an internal or serialized reference.  <a href="#abc11be6582c83be070816daf60d96781"></a><br/></td></tr>
 <tr class="separator:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#af002aedbdfca5e97c3a7263425a60dac">isDisposed</a> ()</td></tr>
-<tr class="memdesc:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#af002aedbdfca5e97c3a7263425a60dac"></a><br/></td></tr>
-<tr class="separator:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a34951860e42866aff9b890d704bccbc4">isDisposed</a> () const </td></tr>
+<tr class="memdesc:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#a34951860e42866aff9b890d704bccbc4"></a><br/></td></tr>
+<tr class="separator:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#aecf67c7fc72ba0d465096b4584e1caba">isDisposing</a> () const </td></tr>
 <tr class="memdesc:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object is in the process of being disposed.  <a href="#aecf67c7fc72ba0d465096b4584e1caba"></a><br/></td></tr>
 <tr class="separator:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -459,6 +519,8 @@ cgWorldObjectTypeDesc::Map &amp;&#160;</td><td class="memItemRight" valign="bott
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:a6aee52da430a746d96a416b5b449b6ee"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a6aee52da430a746d96a416b5b449b6ee">CGE_VECTOR_DECLARE</a> (<a class="el" href="structcg_particle_emitter_object_1_1_layer.html">Layer</a>, LayerArray)</td></tr>
+<tr class="separator:a6aee52da430a746d96a416b5b449b6ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03eb48331a97c67db82f2518dbd2e81f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a03eb48331a97c67db82f2518dbd2e81f">prepareQueries</a> ()</td></tr>
 <tr class="memdesc:a03eb48331a97c67db82f2518dbd2e81f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepare any cached world queries as necessary.  <a href="#a03eb48331a97c67db82f2518dbd2e81f"></a><br/></td></tr>
 <tr class="separator:a03eb48331a97c67db82f2518dbd2e81f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -475,10 +537,8 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:ac77c81f046ff17442a02fba7dc9c45f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_string.html">cgString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ac77c81f046ff17442a02fba7dc9c45f8">mScriptFile</a></td></tr>
-<tr class="separator:ac77c81f046ff17442a02fba7dc9c45f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa80df2b2bd9dce78bd6bae3010baa10b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_particle_emitter_properties.html">cgParticleEmitterProperties</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#aa80df2b2bd9dce78bd6bae3010baa10b">mProperties</a></td></tr>
-<tr class="separator:aa80df2b2bd9dce78bd6bae3010baa10b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac412ec84058d5d56d1408fa83bf5e7c1"><td class="memItemLeft" align="right" valign="top">LayerArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ac412ec84058d5d56d1408fa83bf5e7c1">mLayers</a></td></tr>
+<tr class="separator:ac412ec84058d5d56d1408fa83bf5e7c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classcg_world_object"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_world_object')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_world_object.html">cgWorldObject</a></td></tr>
 <tr class="memitem:afe615eeabe0d2a3018f9a52ae04cb0d4 inherit pro_attribs_classcg_world_object"><td class="memItemLeft" align="right" valign="top">ElementCategoryMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#afe615eeabe0d2a3018f9a52ae04cb0d4">mSubElementCategories</a></td></tr>
 <tr class="separator:afe615eeabe0d2a3018f9a52ae04cb0d4 inherit pro_attribs_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -519,6 +579,10 @@ Protected Attributes</h2></td></tr>
 Static Protected Attributes</h2></td></tr>
 <tr class="memitem:a6a8c1cc56d49dda1548bb02bd5795930"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a6a8c1cc56d49dda1548bb02bd5795930">mInsertEmitter</a></td></tr>
 <tr class="separator:a6a8c1cc56d49dda1548bb02bd5795930"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae73f4f5475b51f210680e1effebad502"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ae73f4f5475b51f210680e1effebad502">mInsertEmitterLayer</a></td></tr>
+<tr class="separator:ae73f4f5475b51f210680e1effebad502"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0c8c8768bcdcdc5771a29e2cb97bcf5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ab0c8c8768bcdcdc5771a29e2cb97bcf5">mDeleteEmitterLayer</a></td></tr>
+<tr class="separator:ab0c8c8768bcdcdc5771a29e2cb97bcf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5a4698bdef3bd1e53726eca989877e7"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#af5a4698bdef3bd1e53726eca989877e7">mUpdateConeAngles</a></td></tr>
 <tr class="separator:af5a4698bdef3bd1e53726eca989877e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab96348be1a230fa60142466661ed5a67"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ab96348be1a230fa60142466661ed5a67">mUpdateEmissionRadii</a></td></tr>
@@ -533,6 +597,8 @@ Static Protected Attributes</h2></td></tr>
 <tr class="separator:ad8ae404ea8cdfcc66c99c32454655570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e68b227234b4f3760429709617855d1"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a6e68b227234b4f3760429709617855d1">mLoadEmitter</a></td></tr>
 <tr class="separator:a6e68b227234b4f3760429709617855d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fbf8f810fa26b3baa7140f9ce2ddb5f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a4fbf8f810fa26b3baa7140f9ce2ddb5f">mLoadEmitterLayers</a></td></tr>
+<tr class="separator:a4fbf8f810fa26b3baa7140f9ce2ddb5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_static_attribs_classcg_world_object"><td colspan="2" onclick="javascript:toggleInherit('pro_static_attribs_classcg_world_object')"><img src="closed.png" alt="-"/>&#160;Static Protected Attributes inherited from <a class="el" href="classcg_world_object.html">cgWorldObject</a></td></tr>
 <tr class="memitem:afa81d521cc5077173e3b1ea0b461008d inherit pro_static_attribs_classcg_world_object"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#afa81d521cc5077173e3b1ea0b461008d">mInsertBaseObject</a></td></tr>
 <tr class="separator:afa81d521cc5077173e3b1ea0b461008d inherit pro_static_attribs_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -770,6 +836,40 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a6aee52da430a746d96a416b5b449b6ee"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cgParticleEmitterObject::CGE_VECTOR_DECLARE </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcg_particle_emitter_object_1_1_layer.html">Layer</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">LayerArray&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="ac589daa8029da461c648b489d7b193e0"></a>
 <div class="memitem">
 <div class="memproto">
@@ -798,16 +898,54 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ac7d2c373db18a16e6081ef5860c293f2"></a>
+<a class="anchor" id="a40dddff1059ccfea4baad172e0de333f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::enableGravity </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable or disable the application of gravity forces to particles throughout their lifetime. </p>
+
+</div>
+</div>
+<a class="anchor" id="a42c1544572462c5f60235ce7f554b41b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::enableRandomizedRotation </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>bValue</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bValue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -816,16 +954,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a2ea58d0fbda206a0d919118950ac8d0c"></a>
+<a class="anchor" id="ab1487bd353782376517ec0c552f5bee3"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::enableSortedRender </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>bValue</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bValue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -834,14 +982,43 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ac4c6a824190b5052d59b1438e29f8ff2"></a>
+<a class="anchor" id="a49b1f3f2194ee030fd07a83400d8fb49"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::enableVelocityAlignment </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enabled</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the property that indicates whether the particles should be aligned and orientated to match their current velocities during rendering. </p>
+
+</div>
+</div>
+<a class="anchor" id="a71b9f708d354cd38130d0e186a53f68a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgParticleEmitterObject::getBirthFrequency </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -878,14 +1055,15 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a22556e132d5c5b93b4eb899bf6d290a0"></a>
+<a class="anchor" id="a11847613cc2c540e62d131c6adf0807e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgParticleEmitterObject::getDeadZoneRadius </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -895,14 +1073,15 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a6445a1ac2fd565cc85b2a7c4fbf316e9"></a>
+<a class="anchor" id="a197d6b5c3c34b0ef2861e069fa9f09f7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgParticleEmitterObject::getEmissionRadius </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -912,12 +1091,66 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a0c3187a09e8485344587d3c9bd9080c8"></a>
+<a class="anchor" id="aab9118b94db9c8e8e6167345fd14b4ed"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgParticleEmitterObject::getHDRScale </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the amount to scale particle color values when HDR rendering is enabled. </p>
+
+</div>
+</div>
+<a class="anchor" id="a72b0e578656c69eb7cf53512672401d5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgParticleEmitterObject::getInitialEnabledState </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Determine if the specified layer will begin to emit particles immediately upon initial creation. If this value is set to false, the emitter for this layer will need to be enabled manually before particles will be released. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa2266379819549c846ffcb236a248c9c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgParticleEmitterObject::getInnerCone </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the inner cone (Theta) angle of the emitter in degrees. </p>
+
+</div>
+</div>
+<a class="anchor" id="ab7b1decad76259377dfb49fe02f1fb7e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> cgParticleEmitterObject::getLayerCount </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -925,7 +1158,25 @@ Static Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get the inner cone (Theta) angle of the emitter in degrees. </p>
+<p>Retrieve the total number of emitter layers that have been defined. </p>
+
+</div>
+</div>
+<a class="anchor" id="ab5f621de25585f486d14f9eeefc814ea"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structcg_particle_emitter_properties.html">cgParticleEmitterProperties</a> &amp; cgParticleEmitterObject::getLayerProperties </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the configuration structure that describes how the specified emitter layer should be initialized and updated. </p>
 
 </div>
 </div>
@@ -956,14 +1207,33 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a312610d615546302136061bca3cb9d47"></a>
+<a class="anchor" id="aec37943de14d58e87794b917ef65f80a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> cgParticleEmitterObject::getMaximumParticles </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the maximum number of particles that this emitter can release before it is automatically destroyed / unloaded. </p>
+
+</div>
+</div>
+<a class="anchor" id="a1fd008ee5efe71f48f0e2df1b83f52d1"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> cgParticleEmitterObject::getMaxSimultaneousParticles </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -973,14 +1243,15 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a53d80a8ec7d9acb6b29146c03d6012e2"></a>
+<a class="anchor" id="aba021392ef92976e0aeb56b792400531"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgParticleEmitterObject::getOuterCone </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -990,14 +1261,15 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aea9198e603a6dfb8ba97c6fba0fd68c2"></a>
+<a class="anchor" id="a1917572e650b22353054882393da8126"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgParticleEmitterObject::getParticleAirResistance </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1007,14 +1279,15 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a849877d72084104ae1336a298d82d768"></a>
+<a class="anchor" id="aafefbc4261e89bb72db256a8dc9551b6"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp; cgParticleEmitterObject::getParticleAngularSpeed </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1024,31 +1297,51 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a84aa31820d284a962eccedd3ba1a20f6"></a>
+<a class="anchor" id="aa2d7bfce60e0f8b1b1062b8e3548977e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp; cgParticleEmitterObject::getParticleBaseScale </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get the configured range of base scale values that a particle can be assigned during its creation where 1 represents a particle whose initial size matches that configured via the '<a class="el" href="classcg_particle_emitter_object.html#a11e65e258b6cd77ff809f38eb2de2bef" title="Set the initial size (pre-scale) of each particle in meters. ">setParticleSize()</a>' method. </p>
+<p>Get the configured range of base scale values that a particle can be assigned during its creation where 1 represents a particle whose initial size matches that configured via the '<a class="el" href="classcg_particle_emitter_object.html#af39adad99367a6cb76a6a1923139b7de" title="Set the initial size (pre-scale) of each particle in meters. ">setParticleSize()</a>' method. </p>
 
 </div>
 </div>
-<a class="anchor" id="a270fd91b9fe07eaee7f28500143472ec"></a>
+<a class="anchor" id="a32a6652ef56e6d66c767731fb82257ee"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacecg_particle_blend_method.html#a54d685857738ae224e7c90b432001de0">cgParticleBlendMethod::Base</a> cgParticleEmitterObject::getParticleBlendMethod </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the technique used to blend the particles with the currently assigned render target (i.e., additive, screen, linear, etc.) </p>
+
+</div>
+</div>
+<a class="anchor" id="a74e1430990d04badfdcc93b885f9a53e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp; cgParticleEmitterObject::getParticleLifetime </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1058,14 +1351,15 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ac9291cf8a1698fcc2415e6d3ef75ef2c"></a>
+<a class="anchor" id="aa388cb1f273a078b3cadd501644454e6"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp; cgParticleEmitterObject::getParticleMass </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1075,14 +1369,15 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a7887ea07a30c265f833f8a2fc88c7af3"></a>
+<a class="anchor" id="a341b2a872ddad1be28b04009e81a0839"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">const <a class="el" href="structcg_size_f.html">cgSizeF</a> &amp; cgParticleEmitterObject::getParticleSize </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1092,14 +1387,15 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab804a95af5ec4e65173efb2c83a5c5a3"></a>
+<a class="anchor" id="adfa468c892e7863196041972c3c3f7e7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp; cgParticleEmitterObject::getParticleSpeed </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1109,31 +1405,33 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a465d3a679b80aedfe058e3d43d864f9e"></a>
+<a class="anchor" id="a2c259465286648dd322004ed77bf1b77"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="structcg_particle_emitter_properties.html">cgParticleEmitterProperties</a> &amp; cgParticleEmitterObject::getProperties </td>
+          <td class="memname">const <a class="el" href="classcg_string.html">cgString</a> &amp; cgParticleEmitterObject::getParticleTexture </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retrieve the configuration structure that describes how this emitter should be initialized and updated. </p>
+<p>Get the name of the particle texture (or texture atlas) to map to the billboards representing this emitters particles. </p>
 
 </div>
 </div>
-<a class="anchor" id="a7daa5dd8fac6bf62aaa02bdfe00c78e9"></a>
+<a class="anchor" id="a50037eb91532d19f5bfb77a3eeb5c1f5"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">bool cgParticleEmitterObject::getRandomizedRotation </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1168,37 +1466,57 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a055a045d61d6b9089740226dc98362a6"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="classcg_string.html">cgString</a> &amp; cgParticleEmitterObject::getScriptFile </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Retrieve the file name of the particle emitter update script that has been assigned to this emitter (if any). </p>
-
-</div>
-</div>
-<a class="anchor" id="a8ec7472a2499121fa143792cd386f398"></a>
+<a class="anchor" id="ae6a7d1f2712ecdd254b031f1cbfd92f2"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">bool cgParticleEmitterObject::getSortedRender </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Get the property that indicates whether the emitter should sort the particles in a back to front order based on distance to the camera during rendering. </p>
+
+</div>
+</div>
+<a class="anchor" id="a00b65356c834b66dce100ba04c1f5ea5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgParticleEmitterObject::getVelocityAlignment </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the property that indicates whether the particles should be aligned and orientated to match their current velocities during rendering. </p>
+
+</div>
+</div>
+<a class="anchor" id="ac00cdb8337e2d90ea4f14de71909163b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgParticleEmitterObject::getVelocityScaleStrength </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the amount by which the velocity of each particle will affect its scale (0 = no effect, 1 = full effect) </p>
 
 </div>
 </div>
@@ -1224,6 +1542,24 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Insert new records into the world database to represent this object. </p>
+
+</div>
+</div>
+<a class="anchor" id="a673921191645f498070529d809885738"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgParticleEmitterObject::isGravityEnabled </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Determine if gravity should be considered during particle updates. </p>
 
 </div>
 </div>
@@ -1310,7 +1646,7 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a40245579f97f560414de09cd13611083"></a>
+<a class="anchor" id="ac7be1ddadbb304b9cd89472a9666cb05"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1356,8 +1692,8 @@ Static Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
-          <td class="paramname"><em>vWireTolerance</em>, </td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>fWireTolerance</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1380,7 +1716,7 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Given the specified object space ray, determine if this object is intersected and also compute the object space intersection distance. </p>
 
-<p>Reimplemented from <a class="el" href="classcg_world_object.html#a6e5fa2a72208dd387b400253f6718b64">cgWorldObject</a>.</p>
+<p>Reimplemented from <a class="el" href="classcg_world_object.html#a5b5f4cf514f6e22a6f6b62a8912fb73a">cgWorldObject</a>.</p>
 
 </div>
 </div>
@@ -1531,7 +1867,7 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a523715dbb034da5be582d1424adc6881"></a>
+<a class="anchor" id="a2398ee83e06982cbed902b4507e3e180"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1541,6 +1877,12 @@ Static Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">void cgParticleEmitterObject::sandboxRender </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>flags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="classcg_camera_node.html">cgCameraNode</a> *&#160;</td>
           <td class="paramname"><em>pCamera</em>, </td>
         </tr>
@@ -1549,12 +1891,6 @@ Static Protected Attributes</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *&#160;</td>
           <td class="paramname"><em>pVisData</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>bWireframe</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1583,20 +1919,30 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Allow the object to render its 'sandbox' representation &ndash; that is the representation to be displayed within an editing environment. </p>
 
-<p>Reimplemented from <a class="el" href="classcg_world_object.html#a11d096afdcf0090e4f50e019147e5362">cgWorldObject</a>.</p>
+<p>Reimplemented from <a class="el" href="classcg_world_object.html#a8f6e48bd7a0b2fc66baa8b46d756eca6">cgWorldObject</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae29060826115f0402740ca037a940402"></a>
+<a class="anchor" id="a0d9023f4dd53c76282a5813f5da68af3"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setBirthFrequency </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
-          <td class="paramname"><em>fValue</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>fValue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1605,16 +1951,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a1590b3391cbb09240c4be3ad041ad01b"></a>
+<a class="anchor" id="ac40d100038a90d677370660a4fdd436e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setDeadZoneRadius </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
-          <td class="paramname"><em>fValue</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>fValue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1623,16 +1979,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab1b93d10d8fcf8d397f9467cfcb14e87"></a>
+<a class="anchor" id="a4be908a79441e61e02e2bdb60fda548f"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setEmissionRadius </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
-          <td class="paramname"><em>fValue</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>fValue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1641,16 +2007,82 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="affe14a461e5c3530d0212bbe5551f95a"></a>
+<a class="anchor" id="af33cdb271172251878d8cfdb7aeb8f9f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::setHDRScale </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>scale</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the amount to scale particle color values when HDR rendering is enabled. </p>
+
+</div>
+</div>
+<a class="anchor" id="adb2d0c3a61931fcbc44b45a183d6588f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::setInitialEnabledState </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enabled</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the default emission state of the specified layer which will determine if the emitter will begin to emit particles immediately upon initial creation. If this value is set to false, the emitter for this layer will need to be enabled manually before particles will be released. </p>
+
+</div>
+</div>
+<a class="anchor" id="aca8bdd709ee28eb990c1fbb03875957e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setInnerCone </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
-          <td class="paramname"><em>fValue</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>fValue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1659,7 +2091,35 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a8d39de2f731633fa6fbe838f054f8941"></a>
+<a class="anchor" id="adf5c39d9628e4e45629839d4ba346235"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::setMaximumParticles </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>amount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the maximum number of particles that this emitter can release before it is automatically destroyed / unloaded. </p>
+
+</div>
+</div>
+<a class="anchor" id="a2a4073834a00bf86145f7140e9e8f32b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1667,8 +2127,18 @@ Static Protected Attributes</h2></td></tr>
           <td class="memname">void cgParticleEmitterObject::setMaxSimultaneousParticles </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
-          <td class="paramname"><em>nAmount</em></td><td>)</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>nAmount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1677,16 +2147,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a8b2e1e69efdb4180473dbf9e7b9e13aa"></a>
+<a class="anchor" id="a29e4ffa81f1a51ede58d2ee80e5c675f"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setOuterCone </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
-          <td class="paramname"><em>fValue</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>fValue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1695,16 +2175,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a13807b6eabe59fa58f69901a452706c9"></a>
+<a class="anchor" id="a7f7370e0f1613576c0be66e4cc6a7b2a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setParticleAirResistance </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
-          <td class="paramname"><em>fValue</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>fValue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1713,13 +2203,19 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="afb4e0ee4e0846a496cc1868447ded9bb"></a>
+<a class="anchor" id="aabdd3afc574f8a8dd55ff1840ed8dc13"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setParticleAngularSpeed </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
           <td class="paramname"><em>fMin</em>, </td>
         </tr>
@@ -1741,16 +2237,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a0488bd5d3caf62b7b4977a07b31b28b1"></a>
+<a class="anchor" id="abc64f7af8f14caba01daa33e1360ce60"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setParticleAngularSpeed </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td>
-          <td class="paramname"><em>Range</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td>
+          <td class="paramname"><em>Range</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1759,13 +2265,19 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a458de47ad56193f6c3223eeb8784caa7"></a>
+<a class="anchor" id="a670bf21103394fb304725ab6cc1eee45"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setParticleBaseScale </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
           <td class="paramname"><em>fMin</em>, </td>
         </tr>
@@ -1783,35 +2295,79 @@ Static Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set the range of base scale values that a particle can be assigned during its creation where 1 represents a particle whose initial size matches that configured via the '<a class="el" href="classcg_particle_emitter_object.html#a11e65e258b6cd77ff809f38eb2de2bef" title="Set the initial size (pre-scale) of each particle in meters. ">setParticleSize()</a>' method. </p>
+<p>Set the range of base scale values that a particle can be assigned during its creation where 1 represents a particle whose initial size matches that configured via the '<a class="el" href="classcg_particle_emitter_object.html#af39adad99367a6cb76a6a1923139b7de" title="Set the initial size (pre-scale) of each particle in meters. ">setParticleSize()</a>' method. </p>
 
 </div>
 </div>
-<a class="anchor" id="a3fae1bc2dcf9a8cdfa29b69c14b593d7"></a>
+<a class="anchor" id="a9263cf202f70e16619759a37b88a2dfb"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setParticleBaseScale </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td>
-          <td class="paramname"><em>Range</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td>
+          <td class="paramname"><em>Range</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set the range of base scale values that a particle can be assigned during its creation where 1 represents a particle whose initial size matches that configured via the '<a class="el" href="classcg_particle_emitter_object.html#a11e65e258b6cd77ff809f38eb2de2bef" title="Set the initial size (pre-scale) of each particle in meters. ">setParticleSize()</a>' method. </p>
+<p>Set the range of base scale values that a particle can be assigned during its creation where 1 represents a particle whose initial size matches that configured via the '<a class="el" href="classcg_particle_emitter_object.html#af39adad99367a6cb76a6a1923139b7de" title="Set the initial size (pre-scale) of each particle in meters. ">setParticleSize()</a>' method. </p>
 
 </div>
 </div>
-<a class="anchor" id="ab64d50e0b48998c68245c31b3f357fef"></a>
+<a class="anchor" id="ab0e7b277f639a26135bdce7c11bf8961"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::setParticleBlendMethod </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacecg_particle_blend_method.html#a54d685857738ae224e7c90b432001de0">cgParticleBlendMethod::Base</a>&#160;</td>
+          <td class="paramname"><em>method</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the technique used to blend the particles with the currently assigned render target (i.e., additive, screen, linear, etc.) </p>
+
+</div>
+</div>
+<a class="anchor" id="a53d1949188ce30ab1f31bf16f4291bcb"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setParticleLifetime </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
           <td class="paramname"><em>fMin</em>, </td>
         </tr>
@@ -1833,16 +2389,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a69043917a06d3de89657cdd55a2dc5e9"></a>
+<a class="anchor" id="aecf8a8d57a349cb01e26fec4c0945164"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setParticleLifetime </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td>
-          <td class="paramname"><em>Range</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td>
+          <td class="paramname"><em>Range</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1851,13 +2417,19 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a91de3e5292faf1dbc13b4496b273484e"></a>
+<a class="anchor" id="aa22c8867d5140d7ee45dfe2ab729a0f4"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setParticleMass </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
           <td class="paramname"><em>fMin</em>, </td>
         </tr>
@@ -1879,16 +2451,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a437ea4250cf1e28f3ec5d3157ce45bf9"></a>
+<a class="anchor" id="aaa80969f8e7ef60a878fa2ef1c75a369"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setParticleMass </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td>
-          <td class="paramname"><em>Range</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td>
+          <td class="paramname"><em>Range</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1897,13 +2479,19 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a11e65e258b6cd77ff809f38eb2de2bef"></a>
+<a class="anchor" id="af39adad99367a6cb76a6a1923139b7de"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setParticleSize </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
           <td class="paramname"><em>fWidth</em>, </td>
         </tr>
@@ -1925,16 +2513,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a7df36a9799889d27a75c58f132bd76dd"></a>
+<a class="anchor" id="abe9a3d8c3787d0997de3b2111ed29a40"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setParticleSize </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structcg_size_f.html">cgSizeF</a> &amp;&#160;</td>
-          <td class="paramname"><em>Size</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_size_f.html">cgSizeF</a> &amp;&#160;</td>
+          <td class="paramname"><em>Size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1943,13 +2541,19 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a054b31781b9796842a245fe3b6616a2b"></a>
+<a class="anchor" id="a66726976e67706541a9b95af923cf8a7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setParticleSpeed </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
           <td class="paramname"><em>fMin</em>, </td>
         </tr>
@@ -1971,16 +2575,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="af43a80dd056c51b75329cbe12f6c023a"></a>
+<a class="anchor" id="a9de0553d511127a08ef8b3f248497b2e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgParticleEmitterObject::setParticleSpeed </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td>
-          <td class="paramname"><em>Range</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td>
+          <td class="paramname"><em>Range</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1989,7 +2603,83 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a2c29f5d0f58d7213e6c6722ffe33682d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::setParticleTexture </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>textureFile</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the name of the particle texture (or texture atlas) to map to the billboards representing this emitters particles. </p>
+
+</div>
+</div>
+<a class="anchor" id="a14d269e15a2a1c272f753785a678bb19"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::setVelocityScaleStrength </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>strength</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the amount by which the velocity of each particle will affect its scale (0 = no effect, 1 = full effect) </p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="ab0c8c8768bcdcdc5771a29e2cb97bcf5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_world_query.html">cgWorldQuery</a> cgParticleEmitterObject::mDeleteEmitterLayer</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a6a8c1cc56d49dda1548bb02bd5795930"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2004,6 +2694,46 @@ Static Protected Attributes</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ae73f4f5475b51f210680e1effebad502"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_world_query.html">cgWorldQuery</a> cgParticleEmitterObject::mInsertEmitterLayer</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac412ec84058d5d56d1408fa83bf5e7c1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">LayerArray cgParticleEmitterObject::mLayers</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -2030,7 +2760,7 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aa80df2b2bd9dce78bd6bae3010baa10b"></a>
+<a class="anchor" id="a4fbf8f810fa26b3baa7140f9ce2ddb5f"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -2038,32 +2768,12 @@ Static Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structcg_particle_emitter_properties.html">cgParticleEmitterProperties</a> cgParticleEmitterObject::mProperties</td>
+          <td class="memname"><a class="el" href="classcg_world_query.html">cgWorldQuery</a> cgParticleEmitterObject::mLoadEmitterLayers</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ac77c81f046ff17442a02fba7dc9c45f8"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classcg_string.html">cgString</a> cgParticleEmitterObject::mScriptFile</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -2200,7 +2910,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_particle_emitter_object.html">cgParticleEmitterObject</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:43 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:40 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

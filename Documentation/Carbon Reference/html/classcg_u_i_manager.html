@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -236,6 +236,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1ffb5b0f66891480d76bf9a6a2656e04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_rect.html">cgRect</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#a1ffb5b0f66891480d76bf9a6a2656e04">printText</a> (const <a class="el" href="structcg_rect.html">cgRect</a> &amp;bounds, const <a class="el" href="classcg_string.html">cgString</a> &amp;text, const <a class="el" href="structcg_point.html">cgPoint</a> &amp;offset, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> color, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> kerning, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> lineSpacing)</td></tr>
 <tr class="memdesc:a1ffb5b0f66891480d76bf9a6a2656e04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Actually draw the text to the frame buffer. Note : This overload accepts a full rectangle and can be used for multiline or clipped text in addition to supplying a rendering offset.  <a href="#a1ffb5b0f66891480d76bf9a6a2656e04"></a><br/></td></tr>
 <tr class="separator:a1ffb5b0f66891480d76bf9a6a2656e04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6201a246a2901eb9dd90e711bb494140"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#a6201a246a2901eb9dd90e711bb494140">addLayer</a> (<a class="el" href="classcg_u_i_layer.html">cgUILayer</a> *layer)</td></tr>
+<tr class="memdesc:a6201a246a2901eb9dd90e711bb494140"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a new UI layer to the system for rendering / management.  <a href="#a6201a246a2901eb9dd90e711bb494140"></a><br/></td></tr>
+<tr class="separator:a6201a246a2901eb9dd90e711bb494140"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad43ea13cad7c732633d3713034efe371"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#ad43ea13cad7c732633d3713034efe371">removeLayer</a> (<a class="el" href="classcg_u_i_layer.html">cgUILayer</a> *layer, bool destroyLayer)</td></tr>
+<tr class="memdesc:ad43ea13cad7c732633d3713034efe371"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the specified UI layer from the system. The layer can optionally be destroyed.  <a href="#ad43ea13cad7c732633d3713034efe371"></a><br/></td></tr>
+<tr class="separator:ad43ea13cad7c732633d3713034efe371"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3219003003e995b0863c680ffc4f6260"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#a3219003003e995b0863c680ffc4f6260">bringLayerToFront</a> (<a class="el" href="classcg_u_i_layer.html">cgUILayer</a> *layer)</td></tr>
 <tr class="memdesc:a3219003003e995b0863c680ffc4f6260"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move the interface layer to the front of its class of layers.  <a href="#a3219003003e995b0863c680ffc4f6260"></a><br/></td></tr>
 <tr class="separator:a3219003003e995b0863c680ffc4f6260"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -363,9 +369,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#abc11be6582c83be070816daf60d96781">isInternalReference</a> () const </td></tr>
 <tr class="memdesc:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this reference is either an internal or serialized reference.  <a href="#abc11be6582c83be070816daf60d96781"></a><br/></td></tr>
 <tr class="separator:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#af002aedbdfca5e97c3a7263425a60dac">isDisposed</a> ()</td></tr>
-<tr class="memdesc:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#af002aedbdfca5e97c3a7263425a60dac"></a><br/></td></tr>
-<tr class="separator:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a34951860e42866aff9b890d704bccbc4">isDisposed</a> () const </td></tr>
+<tr class="memdesc:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#a34951860e42866aff9b890d704bccbc4"></a><br/></td></tr>
+<tr class="separator:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#aecf67c7fc72ba0d465096b4584e1caba">isDisposing</a> () const </td></tr>
 <tr class="memdesc:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object is in the process of being disposed.  <a href="#aecf67c7fc72ba0d465096b4584e1caba"></a><br/></td></tr>
 <tr class="separator:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -556,6 +562,24 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Add a series of images, packed into a single image, based on the image atlas definition file specified. </p>
+
+</div>
+</div>
+<a class="anchor" id="a6201a246a2901eb9dd90e711bb494140"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgUIManager::addLayer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_u_i_layer.html">cgUILayer</a> *&#160;</td>
+          <td class="paramname"><em>pLayer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add a new UI layer to the system for rendering / management. </p>
 
 </div>
 </div>
@@ -2503,6 +2527,34 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ad43ea13cad7c732633d3713034efe371"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgUIManager::removeLayer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_u_i_layer.html">cgUILayer</a> *&#160;</td>
+          <td class="paramname"><em>pLayer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>destroyLayer</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Remove the specified UI layer from the system. The layer can optionally be destroyed. </p>
+
+</div>
+</div>
 <a class="anchor" id="a8fa72f780602055578caba13e5559564"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2673,7 +2725,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_u_i_manager.html">cgUIManager</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:53 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:58 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

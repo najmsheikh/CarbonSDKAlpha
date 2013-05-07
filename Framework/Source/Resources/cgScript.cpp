@@ -14,7 +14,7 @@
 //        interact with individual loaded script modules.                    //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -774,6 +774,18 @@ asIScriptContext * cgScript::scriptExecute( cgScriptFunctionHandle pFunctionHand
 //-----------------------------------------------------------------------------
 cgScriptObject * cgScript::createObjectInstance( const cgString & strObjectType )
 {
+    return createObjectInstance( strObjectType, cgScriptArgument::Array() );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : createObjectInstance ()
+/// <summary>
+/// Create an instance of the specific script or application registered class
+/// or data type.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgScriptObject * cgScript::createObjectInstance( const cgString & strObjectType, const cgScriptArgument::Array & aArgs )
+{
     STRING_CONVERT;
     
     // Catch exceptions
@@ -805,14 +817,75 @@ cgScriptObject * cgScript::createObjectInstance( const cgString & strObjectType 
     
     } // End if no type
 
-    // Get the factory function id from the object type
-    std::stringstream strFactoryDecl;
-    strFactoryDecl << lpszObjectType << " @" << lpszObjectType << "()";
-    asIScriptFunction * pFactory = pType->GetFactoryByDecl(strFactoryDecl.str().c_str());
+    // Build declarator
+    cgString strFactoryDecl = strObjectType + _T(" @") + strObjectType + _T("(");
+    cgScriptArgument::Array::const_iterator itArguments;
+    for ( itArguments = aArgs.begin(); itArguments != aArgs.end(); ++itArguments )
+    {
+        const cgScriptArgument & Argument = *itArguments;
+
+        // Append type to declarator
+        if ( itArguments != aArgs.begin() ) strFactoryDecl += _T(",");
+        strFactoryDecl += Argument.declaration;
+
+    } // Next Argument
+
+    // Finish building declarator
+    strFactoryDecl += _T(")");
+
+    // Get the factory function id from the declarator
+    asIScriptFunction * pFactory = pType->GetFactoryByDecl(stringConvertT2CA(strFactoryDecl.c_str()));
 
     // Prepare the context to call the factory function
     asIScriptContext * pContext = pInternalEngine->CreateContext();
     pContext->Prepare( pFactory );
+
+    // Build all arguments that are required
+    int nArgIndex = 0;
+    for ( itArguments = aArgs.begin(); itArguments != aArgs.end(); ++itArguments )
+    {
+        const cgScriptArgument & Argument = *itArguments;
+
+        // Set to internal engine
+        switch ( Argument.type )
+        {
+            case cgScriptArgumentType::Object:
+                pContext->SetArgObject( nArgIndex++, (void*)Argument.data );
+                break;
+
+            case cgScriptArgumentType::Array:            
+            case cgScriptArgumentType::Address:
+                pContext->SetArgAddress( nArgIndex++, (void*)Argument.data );
+                break;
+
+            case cgScriptArgumentType::Byte:
+            case cgScriptArgumentType::Bool:
+                pContext->SetArgByte( nArgIndex++, *(asBYTE*)Argument.data );
+                break;
+
+            case cgScriptArgumentType::Word:
+                pContext->SetArgWord( nArgIndex++, *(asWORD*)Argument.data );
+                break;
+            
+            case cgScriptArgumentType::DWord:
+                pContext->SetArgDWord( nArgIndex++, *(asDWORD*)Argument.data );
+                break;
+
+            case cgScriptArgumentType::Float:
+                pContext->SetArgFloat( nArgIndex++, *(cgFloat*)Argument.data );
+                break;
+
+            case cgScriptArgumentType::Double:
+                pContext->SetArgDouble( nArgIndex++, *(cgDouble*)Argument.data );
+                break;
+
+            case cgScriptArgumentType::QWord:
+                pContext->SetArgQWord( nArgIndex++, *(asQWORD*)Argument.data );
+                break;
+
+        } // End switch argument type
+
+    } // Next Argument
 
     // Execute the call
     if ( pContext->Execute() != asSUCCESS )

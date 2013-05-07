@@ -14,7 +14,7 @@
 //        functions.                                                         //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -465,4 +465,32 @@ void cgMathUtility::solveCubic( cgDouble a, cgDouble b, cgDouble c, cgDouble d, 
         pSolutions[0] *= (R < 0.0) ? 1 : -1;
         pSolutions[0] -= a1/3.0;
     }
+}
+
+//-----------------------------------------------------------------------------
+// Name : dynamicEpsilonTest () (Static)
+/// <summary>
+/// Compare the two floating point values using a dynamic epsilon test that
+/// allows the caller to specify the 'epsilon' in terms of maximum allowable 
+/// difference in usable floating point values, irrespective of the value
+/// of the floating point number (large or small).
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgMathUtility::dynamicEpsilonTest( cgFloat value1, cgFloat value2, cgInt32 maxUlps )
+{
+    // Make sure maxUlps is non-negative and small enough that the
+    // default NAN won't compare as equal to anything.
+    cgAssert(maxUlps > 0 && maxUlps < 4 * 1024 * 1024);
+    cgInt aInt = *(cgInt*)&value1;
+    // Make aInt lexicographically ordered as a twos-complement int
+    if (aInt < 0)
+        aInt = 0x80000000 - aInt;
+    // Make bInt lexicographically ordered as a twos-complement int
+    cgInt bInt = *(cgInt*)&value2;
+    if (bInt < 0)
+        bInt = 0x80000000 - bInt;
+    cgInt intDiff = abs(aInt - bInt);
+    if (intDiff <= maxUlps)
+        return true;
+    return false;
 }

@@ -15,6 +15,7 @@ var classcg_u_i_layer =
     [ "onMouseButtonUp", "classcg_u_i_layer.html#a20ff084b3bafca8f07d9bad77f9c233a", null ],
     [ "onMouseMove", "classcg_u_i_layer.html#a7c0c1222a6464654921f15dfc410ff8e", null ],
     [ "onMouseWheelScroll", "classcg_u_i_layer.html#aff9dee3d9979846e9430c73963acb36d", null ],
+    [ "onScreenLayoutChange", "classcg_u_i_layer.html#a1204844983465af75dfe68693bc5508c", null ],
     [ "prepareLayer", "classcg_u_i_layer.html#a8e670f27f2a8f994597fd0d3ab82bb9f", null ],
     [ "render", "classcg_u_i_layer.html#a288832e148ebdd0712bb67cd58611a0f", null ],
     [ "sendToBack", "classcg_u_i_layer.html#a364dcb05974f7209eb23b995a02b2768", null ],

@@ -12,7 +12,7 @@ var classcg_reference =
     [ "getReferenceHolders", "classcg_reference.html#ab6515831ac3acc3bf0d9b866b425b941", null ],
     [ "getReferenceId", "classcg_reference.html#aa045c0d8acb58f600a5858b7e7e6ea0d", null ],
     [ "getReferenceType", "classcg_reference.html#a2d82a999b1c74fc4517bc41567bb4b53", null ],
-    [ "isDisposed", "classcg_reference.html#af002aedbdfca5e97c3a7263425a60dac", null ],
+    [ "isDisposed", "classcg_reference.html#a34951860e42866aff9b890d704bccbc4", null ],
     [ "isDisposing", "classcg_reference.html#aecf67c7fc72ba0d465096b4584e1caba", null ],
     [ "isInternalReference", "classcg_reference.html#abc11be6582c83be070816daf60d96781", null ],
     [ "onReferenceAdded", "classcg_reference.html#a4d0ce63a0c603addc66b2736cbdc5443", null ],

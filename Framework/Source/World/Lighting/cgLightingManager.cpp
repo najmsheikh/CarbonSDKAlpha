@@ -14,7 +14,7 @@
 //        lighting systems used by the engine.                               //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -448,9 +448,6 @@ cgScene * cgLightingManager::getParentScene( ) const
 //-----------------------------------------------------------------------------
 void cgLightingManager::processShadowMaps( cgCameraNode * pCamera, bool bReassignMaps, const cgString & strRenderCallback )
 {
-    cgVisibilitySet   * pSet          = pCamera->getVisibilitySet();
-    cgObjectNodeArray & VisibleLights = pSet->getVisibleLights();
-    
     // Validate requirements
     if ( !mScriptObject )
         return;
@@ -462,9 +459,12 @@ void cgLightingManager::processShadowMaps( cgCameraNode * pCamera, bool bReassig
     // TODO: 6767 - Confirm that this is a good place for this.
     // Update list of objects that need to cast and/or receive shadows 
     // based on both the light's and camera's visibility sets.
-    for ( size_t i = 0; i < VisibleLights.size(); ++i )
+    cgVisibilitySet  * pSet          = pCamera->getVisibilitySet();
+    cgObjectNodeList & VisibleLights = pSet->getVisibleLights();
+    cgObjectNodeList::const_iterator itLight;
+    for ( itLight = VisibleLights.begin(); itLight != VisibleLights.end(); ++itLight )
     {
-        cgLightNode * pLight = (cgLightNode*)VisibleLights[i];
+        cgLightNode * pLight = (cgLightNode*)(*itLight);
         pLight->computeShadowSets( pCamera );
     
     } // Next visible light
@@ -476,9 +476,9 @@ void cgLightingManager::processShadowMaps( cgCameraNode * pCamera, bool bReassig
         mShadowMapPool->resetAvailability( cgShadowGeneratorType::ShadowMap );
 
         // Attempt to re-assign the same shadow maps as last frame.
-        for ( size_t i = 0; i < VisibleLights.size(); ++i )
+        for ( itLight = VisibleLights.begin(); itLight != VisibleLights.end(); ++itLight )
         {
-            cgLightNode * pLight = (cgLightNode*)VisibleLights[i];
+            cgLightNode * pLight = (cgLightNode*)(*itLight);
             if ( pLight->isShadowSource() )
                 pLight->reassignShadowMaps( mShadowMapPool );
 
@@ -491,10 +491,10 @@ void cgLightingManager::processShadowMaps( cgCameraNode * pCamera, bool bReassig
         return;
 
     // Fill shadow map resources.
-    for ( size_t i = 0; i < VisibleLights.size(); ++i )
+    for ( itLight = VisibleLights.begin(); itLight != VisibleLights.end(); ++itLight )
     {
         // Skip lights that are not a shadow source.
-        cgLightNode * pLight = (cgLightNode*)VisibleLights[i];
+        cgLightNode * pLight = (cgLightNode*)(*itLight);
         if ( !pLight->isShadowSource() )
             continue;
 
@@ -773,13 +773,14 @@ void cgLightingManager::processLights( const cgRenderTargetHandle& hLightingBuff
     // Our first job is to categorize lights into appropriate sets such
     // as dynamic, static, etc. This allows us to process the required light
     // types in order.
+    cgObjectNodeList::const_iterator itLight;
     cgVisibilitySet * pSet = pCamera->getVisibilitySet();
-    cgObjectNodeArray & VisibleLights = pSet->getVisibleLights();
+    cgObjectNodeList & VisibleLights = pSet->getVisibleLights();
     std::list<cgLightNode*> ShadowCastingLights, NonShadowCastingLights;
-	for ( size_t i = 0; i < VisibleLights.size(); ++i )
+	for ( itLight = VisibleLights.begin(); itLight != VisibleLights.end(); ++itLight )
 	{
 		// Check the current light's stage settings
-        cgLightNode * pLight = (cgLightNode*)VisibleLights[i];
+        cgLightNode * pLight = (cgLightNode*)(*itLight);
 		cgSceneProcessStage::Base LightStage  = pLight->getLightingStage();
 		cgSceneProcessStage::Base ShadowStage = pLight->getShadowStage();
 

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -174,6 +174,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aff514705f012326a1cf2c5ef9f03910d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter.html#aff514705f012326a1cf2c5ef9f03910d">setGlobalForce</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;force)</td></tr>
 <tr class="memdesc:aff514705f012326a1cf2c5ef9f03910d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the global force vector used to adjust the velocities of the particles over time. In this case, forces might include wind etc.  <a href="#aff514705f012326a1cf2c5ef9f03910d"></a><br/></td></tr>
 <tr class="separator:aff514705f012326a1cf2c5ef9f03910d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abaaa4bd7f4cef1042bd0b6a6a96a146a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter.html#abaaa4bd7f4cef1042bd0b6a6a96a146a">enableEmission</a> (bool enable)</td></tr>
+<tr class="memdesc:abaaa4bd7f4cef1042bd0b6a6a96a146a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable the emission of new particles. Any existing particles that are alive will still be updated until the end of their lifetime.  <a href="#abaaa4bd7f4cef1042bd0b6a6a96a146a"></a><br/></td></tr>
+<tr class="separator:abaaa4bd7f4cef1042bd0b6a6a96a146a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5800cd6ac57b08b7941d3ea1096593c6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter.html#a5800cd6ac57b08b7941d3ea1096593c6">isEmissionEnabled</a> () const </td></tr>
+<tr class="memdesc:a5800cd6ac57b08b7941d3ea1096593c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the emission of new particles is currently enabled.  <a href="#a5800cd6ac57b08b7941d3ea1096593c6"></a><br/></td></tr>
+<tr class="separator:a5800cd6ac57b08b7941d3ea1096593c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa84984eb5b4dcbf5ffd9760415d9d837"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter.html#aa84984eb5b4dcbf5ffd9760415d9d837">dispose</a> (bool disposeBase)</td></tr>
 <tr class="memdesc:aa84984eb5b4dcbf5ffd9760415d9d837"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any resources allocated by this object.  <a href="#aa84984eb5b4dcbf5ffd9760415d9d837"></a><br/></td></tr>
 <tr class="separator:aa84984eb5b4dcbf5ffd9760415d9d837"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -268,6 +274,24 @@ Additional Inherited Members</h2></td></tr>
 <p>Release any resources allocated by this object. </p>
 
 <p>Reimplemented from <a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a607a22a9c1cb9252904e5097a1dab7a7">cgScriptInterop::DisposableScriptObject</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abaaa4bd7f4cef1042bd0b6a6a96a146a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitter::enableEmission </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable or disable the emission of new particles. Any existing particles that are alive will still be updated until the end of their lifetime. </p>
 
 </div>
 </div>
@@ -429,6 +453,23 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a5800cd6ac57b08b7941d3ea1096593c6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgParticleEmitter::isEmissionEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Determine if the emission of new particles is currently enabled. </p>
+
+</div>
+</div>
 <a class="anchor" id="a111e00e482c511f892bd05edca4aacef"></a>
 <div class="memitem">
 <div class="memproto">
@@ -581,7 +622,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_particle_emitter.html">cgParticleEmitter</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:42 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:39 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

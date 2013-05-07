@@ -16,7 +16,7 @@
 //        sub-component of the selected object.                              //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -82,6 +82,7 @@ public:
     //-------------------------------------------------------------------------
     const cgBoundingBox       & getShapeBoundingBox     ( ) const;
     const cgTransform         & getTransform            ( ) const;
+    void                        fitToBounds             ( const cgBoundingBox & bounds, AutoFitType type );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods
@@ -133,11 +134,12 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    cgBoundingBox           mBounds;        // Bounding box representing the overall object space dimensions of this shape.
-    cgTransform             mTransform;     // Parent relative offset / transform matrix for this collision shape.
+    cgBoundingBox           mBounds;            // Bounding box representing the overall object space dimensions of this shape.
+    bool                    mBoundsOverride;    // Is bounding box recomputation for auto fit currently disabled?
+    cgTransform             mTransform;         // Parent relative offset / transform matrix for this collision shape.
 
     // Sandbox Integration
-    cgMeshHandle            mSandboxMesh;   // Custom mesh object used to represent the collision shape during sandbox rendering.
+    cgMeshHandle            mSandboxMesh;       // Custom mesh object used to represent the collision shape during sandbox rendering.
 
     //-------------------------------------------------------------------------
     // Protected Static Variables

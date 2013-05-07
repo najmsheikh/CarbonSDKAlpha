@@ -15,7 +15,7 @@
 //        platform independant fashion.                                      //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -690,18 +690,21 @@ namespace cgUnitType
     enum Base
     {
         Meters = 0,
+        Decimeters,
         Centimeters,
         Millimeters,
+        Kilometers,
         Inches,
         Feet,
-        Yards
+        Yards,
+        Miles
     };
     inline const cgString & toString( cgUnitType::Base type )
     {
         static const cgString types[] =
         {
-            _T("Meters"), _T("Centimeters"), _T("Millimeters"),
-            _T("Inches"), _T("Feet"), _T("Yards")
+            _T("Meters"), _T("Decimeters"), _T("Centimeters"), _T("Millimeters"),
+            _T("Kilometers"), _T("Inches"), _T("Feet"), _T("Yards"), _T("Miles")
         };
         return types[(cgInt)type];
     }
@@ -709,34 +712,43 @@ namespace cgUnitType
     {
         static const cgString types[] =
         {
-            _T("m"), _T("cm"), _T("mm"),
-            _T("in"), _T("ft"), _T("yds")
+            _T("m"), _T("dm"), _T("cm"), _T("mm"), _T("m"),
+            _T("in"), _T("ft"), _T("yds"), _T("mi")
         };
         return types[(cgInt)type];
     }
 
     inline cgDouble convert( cgDouble value, cgUnitType::Base typeFrom, cgUnitType::Base typeTo )
     {
-        static const cgDouble conversionTable[6][6] = 
+        static const cgDouble conversionTable[9][9] = 
         {
             // Src = Meters
-            //     m,    cm,    mm,           in,           ft,          yds
-            {      1,   100,  1000,   39.3700787,    3.2808399,    1.0936133 },
+            //       m,       dm,       cm,      mm,        km,           in,           ft,          yds,                mi
+            {        1,       10,      100,    1000,     0.001,   39.3700787,    3.2808399,    1.0936133,    0.000621371192 },
+            // Src = Decimeters
+            //       m,       dm,       cm,      mm,        km,           in,           ft,          yds,                mi
+            {      0.1,        1,       10,     100,    0.0001,   3.93700787,   0.32808399,   0.10936133,     0.00006213712 },
             // Src = Centimeters
-            //     m,    cm,    mm,           in,           ft,          yds
-            {   0.01,     1,    10,  0.393700787,  0.032808399,  0.010936133 },
+            //       m,       dm,       cm,      mm,        km,           in,           ft,          yds,                mi
+            {     0.01,      0.1,        1,      10,   0.00001,  0.393700787,  0.032808399,  0.010936133,    0.000006213712 },
             // Src = Millimeters
-            //     m,    cm,    mm,           in,           ft,          yds
-            {  0.001,   0.1,     1, 0.0393700787, 0.0032808399, 0.0010936133 },
+            //       m,       dm,       cm,      mm,        km,           in,           ft,          yds,                mi
+            {    0.001,     0.01,      0.1,       1,  0.000001, 0.0393700787, 0.0032808399, 0.0010936133, 0.000000621371192 },
+            // Src = Kilometers
+            //       m,       dm,       cm,      mm,        km,           in,           ft,          yds,                mi
+            {     1000,    10000,   100000, 1000000,         1,   39370.0787,    3280.8399,    1093.6133,       0.621371192 },
             // Src = Inches
-            //     m,    cm,    mm,           in,           ft,          yds
-            { 0.0254,  2.54,  25.4,            1, 0.0833333333, 0.0277777778 },
+            //       m,       dm,       cm,      mm,        km,           in,           ft,          yds,                mi
+            {   0.0254,    0.254,     2.54,    25.4, 0.0000254,            1, 0.0833333333, 0.0277777778,      0.0000157828 },
             // Src = Feet
-            //     m,    cm,    mm,           in,           ft,          yds
-            { 0.3048, 30.48, 304.8,           12,            1,  0.333333333 },
+            //       m,       dm,       cm,      mm,        km,           in,           ft,          yds,                mi
+            {   0.3048,    3.048,    30.48,   304.8, 0.0003048,           12,            1,  0.333333333,       0.000189394 },
             // Src = Yards
-            //     m,    cm,    mm,           in,           ft,          yds
-            { 0.9144, 91.44, 914.4,           36,            3,            1 }
+            //       m,       dm,       cm,      mm,        km,           in,           ft,          yds,                mi
+            {   0.9144,    9.144,    91.44,   914.4, 0.0009144,           36,            3,            1,       0.000568182 },
+            // Src = Miles
+            //       m,       dm,       cm,      mm,        km,           in,           ft,          yds,                mi
+            { 1609.344, 16093.44, 160934.4, 1609344,  1.609344,        63360,         5280,         1760,                 1 }
         };
 
         // Convert!

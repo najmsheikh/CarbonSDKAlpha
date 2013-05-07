@@ -13,7 +13,7 @@
 // Desc : Directional light source classes.                                  //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -162,7 +162,6 @@ public:
     virtual bool                    frustumInVolume         ( const cgFrustum & frustum );
     virtual bool                    testObjectShadowVolume  ( cgObjectNode * object, const cgFrustum & viewFrustum );
 
-    virtual void                    computeVisibility       ( );
     virtual void                    computeLevelOfDetail    ( cgCameraNode * camera );
 	
     // Direct lighting
@@ -195,7 +194,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgObjectNode)
     //-------------------------------------------------------------------------
-    virtual bool                    registerVisibility          ( cgVisibilitySet * visibilityData, cgUInt32 flags );
+    virtual bool                    registerVisibility          ( cgVisibilitySet * visibilityData );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldComponentEventListener)

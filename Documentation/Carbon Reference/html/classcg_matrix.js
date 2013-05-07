@@ -74,5 +74,6 @@ var classcg_matrix =
     [ "_42", "classcg_matrix.html#aebc4497128f20bd7a8fcf1239951dec3", null ],
     [ "_43", "classcg_matrix.html#aca528233076daa5e0f732fbdc5fc851c", null ],
     [ "_44", "classcg_matrix.html#a8455234138b4bea57eff35f4281d2ac1", null ],
+    [ "Identity", "classcg_matrix.html#a1d8024239a5f1ec76ec985e016a0b93d", null ],
     [ "m", "classcg_matrix.html#a931ab5ac8112779c3810f3f916530a1c", null ]
 ];

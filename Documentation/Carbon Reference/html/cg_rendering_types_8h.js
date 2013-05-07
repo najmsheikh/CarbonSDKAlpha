@@ -9,8 +9,8 @@ var cg_rendering_types_8h =
     [ "cgDepthStencilStateDesc", "structcg_depth_stencil_state_desc.html", "structcg_depth_stencil_state_desc" ],
     [ "cgMaterialTerms", "structcg_material_terms.html", "structcg_material_terms" ],
     [ "cgBlurOpDesc", "structcg_blur_op_desc.html", "structcg_blur_op_desc" ],
+    [ "cgDisplayMode", "structcg_display_mode.html", "structcg_display_mode" ],
     [ "_CGE_CGRENDERINGTYPES_H_", "cg_rendering_types_8h.html#a6155e921e6f0f1483be8dc6c4a792844", null ],
-    [ "Array", "cg_rendering_types_8h.html#ab8bc7e4d9d3a7ffb148fbd665d0c0f5d", null ],
     [ "Base", "cg_rendering_types_8h.html#a84225a557a40180a18c28e78593c58f1", [
       [ "FastStencilFill", "cg_rendering_types_8h.html#a84225a557a40180a18c28e78593c58f1a2c0ca9594d87e8e782ae9d34f0633633", null ],
       [ "TexNonPow2", "cg_rendering_types_8h.html#a84225a557a40180a18c28e78593c58f1a217ce5994456d9a5f6d6f0f9b5792ddc", null ],
@@ -23,6 +23,8 @@ var cg_rendering_types_8h =
     ] ],
     [ "Base", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8", [
       [ "ShadingQuality", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a64c0396ca190674f389a850a944f6f8e", null ],
+      [ "PostProcessQuality", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a475e29e01a8c24208ef1e26d7b48f4be", null ],
+      [ "AntiAliasingQuality", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a97f3ddb40aa7915d1395d07aa0a24608", null ],
       [ "OrthographicCamera", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ad96f6c7ddd8850c257a6262b9c2f3c9b", null ],
       [ "OutputEncodingType", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a9d1e027e8027f05ef1d2feeaa0141a8f", null ],
       [ "FogModel", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a81093014afa219ecf9fd6c053cbbd90b", null ],
@@ -36,6 +38,7 @@ var cg_rendering_types_8h =
       [ "NormalizedDistance", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8afa77e76d503b6149db12dd452892d933", null ],
       [ "SurfaceNormals", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ac5e8d166a465f148106169705e1928a6", null ],
       [ "PackedDepth", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a4624bfc56cfa726a48825129bb9c7b3c", null ],
+      [ "DepthStencilReads", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a381e9505ded9a58484ead14066074ad0", null ],
       [ "ColorWrites", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8ad3930074c01483f0ac31ad608a7b79da", null ],
       [ "CullMode", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a90e9251c82e07b311643bedc7968a1c9", null ],
       [ "MaximumBlendIndex", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8acf6952fd844522a670f60fd8bb6d2f21", null ],
@@ -73,7 +76,8 @@ var cg_rendering_types_8h =
       [ "Transmissive", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a9b79cb970c667abc3fe3d73e0a765c47", null ],
       [ "Translucent", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8afb2ed8865ba54483b2f6fbf42e17e4f9", null ],
       [ "AlphaTest", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8adc4417162fdcbb7181cfa0bc47a2fbbb", null ],
-      [ "Emissive", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a9856523f535e2b11068e65676c859b6e", null ]
+      [ "Emissive", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a9856523f535e2b11068e65676c859b6e", null ],
+      [ "ObjectRenderClass", "cg_rendering_types_8h.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a6a493f32cfedbdcb7337b484d41ffd1a", null ]
     ] ],
     [ "Base", "cg_rendering_types_8h.html#a4df285081f4ac64c764512bbefa425da", [
       [ "LightingOff", "cg_rendering_types_8h.html#a4df285081f4ac64c764512bbefa425daa1fe66507146d2fe6d992201206a4ce28", null ],
@@ -261,8 +265,12 @@ var cg_rendering_types_8h =
       [ "BilateralResample", "cg_rendering_types_8h.html#aba9f133ddf90648b8fbe232df8af0a98a46ab6b93bce048b4e43eccf9577106d2", null ],
       [ "BilateralBlur", "cg_rendering_types_8h.html#aba9f133ddf90648b8fbe232df8af0a98ad1df4a309624c9f9aaa29b3e699f1e42", null ],
       [ "Blur", "cg_rendering_types_8h.html#aba9f133ddf90648b8fbe232df8af0a98a9ca70617ef016ea410ac26291bac9b0d", null ],
+      [ "ScaleUserColorRGBA", "cg_rendering_types_8h.html#aba9f133ddf90648b8fbe232df8af0a98a270ec1a123288869197bc6bdbb6828ba", null ],
+      [ "ScaleUserColorRGB", "cg_rendering_types_8h.html#aba9f133ddf90648b8fbe232df8af0a98a525ff2659820da220685bf14a4e50392", null ],
+      [ "ScaleUserColorA", "cg_rendering_types_8h.html#aba9f133ddf90648b8fbe232df8af0a98a63f9c48aaad324a258a7d91d444c8007", null ],
       [ "Exposure", "cg_rendering_types_8h.html#aba9f133ddf90648b8fbe232df8af0a98a5e0f0e313119c348a16d3b733b31cf77", null ],
       [ "Saturation", "cg_rendering_types_8h.html#aba9f133ddf90648b8fbe232df8af0a98ae7aa1475b9c6781d1dcdc0dbb5574dab", null ],
+      [ "Contrast", "cg_rendering_types_8h.html#aba9f133ddf90648b8fbe232df8af0a98a394c7c26077283359b87184b8db692fa", null ],
       [ "LevelsIn", "cg_rendering_types_8h.html#aba9f133ddf90648b8fbe232df8af0a98a9343a572240a0264f720cfd432cdbd9e", null ],
       [ "LevelsOut", "cg_rendering_types_8h.html#aba9f133ddf90648b8fbe232df8af0a98a643bf68d55debb1dfef7cf6753449975", null ],
       [ "Gamma", "cg_rendering_types_8h.html#aba9f133ddf90648b8fbe232df8af0a98a6142bbd50eb9c2c93d407a2f72d1f5ae", null ],
@@ -376,6 +384,11 @@ var cg_rendering_types_8h =
       [ "None", "cg_rendering_types_8h.html#a98766240440ca4f9eaa771e4538faaa1add014925574d7e4cf434c226cc97c84b", null ],
       [ "FXAA", "cg_rendering_types_8h.html#a98766240440ca4f9eaa771e4538faaa1a5f3d47b8675e5bd56a222d1b3c350592", null ],
       [ "FXAA_T2x", "cg_rendering_types_8h.html#a98766240440ca4f9eaa771e4538faaa1ab9afd7302ceeb424de7111ee322b5376", null ]
+    ] ],
+    [ "Base", "cg_rendering_types_8h.html#af7d53b47107030618f168ca11e52a4ed", [
+      [ "Static", "cg_rendering_types_8h.html#af7d53b47107030618f168ca11e52a4edab502aff3d7224db3fa6c442bf00ae2ce", null ],
+      [ "Dynamic", "cg_rendering_types_8h.html#af7d53b47107030618f168ca11e52a4edaf027321695c301f5733387c0c4f73ac9", null ],
+      [ "FirstPerson", "cg_rendering_types_8h.html#af7d53b47107030618f168ca11e52a4eda2570208d43eb6bd7313c2705725d21d2", null ]
     ] ],
     [ "ColorControlsEnd", "cg_rendering_types_8h.html#ac655c3bdcbe51cc71fdf1e95920fe81d", null ],
     [ "ColorControlsStart", "cg_rendering_types_8h.html#a03738a7323d354718d8784e02a4a6044", null ],

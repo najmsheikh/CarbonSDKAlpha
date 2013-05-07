@@ -97,8 +97,7 @@ namespace Camera
             BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "const Matrix & getPreviousViewMatrix( )", asMETHODPR(cgCameraNode, getPreviousViewMatrix, ( ) const, const cgMatrix&), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void recordCurrentMatrices( )", asMETHODPR(cgCameraNode, recordCurrentMatrices, ( ), void), asCALL_THISCALL) );
             
-            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void applyVisibility( )", asMETHODPR(cgCameraNode, applyVisibility, ( ), void), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void computeVisibility( uint, bool )", asMETHODPR(cgCameraNode, computeVisibility, ( cgUInt32, bool ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "void computeVisibility( )", asMETHODPR(cgCameraNode, computeVisibility, ( ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "CameraNode", "VisibilitySet @+ getVisibilitySet( )", asMETHODPR(cgCameraNode, getVisibilitySet, ( ), cgVisibilitySet*), asCALL_THISCALL) );
 
             // ToDo: cgVolumeQuery::Class        boundsInFrustum         ( const cgBoundingBox & AABB, const cgMatrix * mtxWorld = CG_NULL, cgUInt8 * FrustumBits = CG_NULL, cgInt8 * LastOutside = CG_NULL );

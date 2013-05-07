@@ -457,7 +457,10 @@ class SandboxElements : ISurfaceShader
         matrix worldTransform;
 		?>
         if ( maxBlendIndex >= 0 )
+        {
+			logWrite( "MaxBlendIndex = " + maxBlendIndex + ", UseVTFBlending = " + (useVTFBlending ? "true" : "false") + "\n" );
 		    <?getWorldMatrix( worldTransform, blendWeights, blendIndices, $maxBlendIndex, $useVTFBlending );?>
+		}
         else
             <?getWorldMatrix( worldTransform );?>
 

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -133,7 +133,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a494892b208725778d56f6083c77c4490"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add reference to script array object.  <a href="#a494892b208725778d56f6083c77c4490"></a><br/></td></tr>
 <tr class="separator:a494892b208725778d56f6083c77c4490"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83bef26dea1598c88d1ebf6ffcf8298b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a83bef26dea1598c88d1ebf6ffcf8298b">release</a> ()</td></tr>
-<tr class="memdesc:a83bef26dea1598c88d1ebf6ffcf8298b"><td class="mdescLeft">&#160;</td><td class="mdescRight">release reference to script array object.  <a href="#a83bef26dea1598c88d1ebf6ffcf8298b"></a><br/></td></tr>
+<tr class="memdesc:a83bef26dea1598c88d1ebf6ffcf8298b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release reference to script array object.  <a href="#a83bef26dea1598c88d1ebf6ffcf8298b"></a><br/></td></tr>
 <tr class="separator:a83bef26dea1598c88d1ebf6ffcf8298b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3ff8551922b4fba121165533f521c1a"><td class="memItemLeft" align="right" valign="top">asIObjectType *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#af3ff8551922b4fba121165533f521c1a">getArrayObjectType</a> () const </td></tr>
 <tr class="memdesc:af3ff8551922b4fba121165533f521c1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve information about the array object type.  <a href="#af3ff8551922b4fba121165533f521c1a"></a><br/></td></tr>
@@ -159,15 +159,21 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a55224ca665d584270b0a77b4f1a1108b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a55224ca665d584270b0a77b4f1a1108b">ScriptArrayFactory</a> (asIObjectType *objectType)</td></tr>
-<tr class="memdesc:a55224ca665d584270b0a77b4f1a1108b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new instance of the <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> class.  <a href="#a55224ca665d584270b0a77b4f1a1108b"></a><br/></td></tr>
-<tr class="separator:a55224ca665d584270b0a77b4f1a1108b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a533ab52cc340bb0e05da93304a5ccd5d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a533ab52cc340bb0e05da93304a5ccd5d">ScriptArrayFactory</a> (asIObjectType *objectType, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> length)</td></tr>
-<tr class="memdesc:a533ab52cc340bb0e05da93304a5ccd5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new instance of the <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> class with the specified length.  <a href="#a533ab52cc340bb0e05da93304a5ccd5d"></a><br/></td></tr>
-<tr class="separator:a533ab52cc340bb0e05da93304a5ccd5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d2face2106e312bf6d9f2e5d14f8082"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a4d2face2106e312bf6d9f2e5d14f8082">Register</a> (asIScriptEngine *engine)</td></tr>
-<tr class="memdesc:a4d2face2106e312bf6d9f2e5d14f8082"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register the script array template type.  <a href="#a4d2face2106e312bf6d9f2e5d14f8082"></a><br/></td></tr>
-<tr class="separator:a4d2face2106e312bf6d9f2e5d14f8082"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa084871cb7af8bd120173378b4a0608b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#aa084871cb7af8bd120173378b4a0608b">factory</a> (asIObjectType *objectType)</td></tr>
+<tr class="memdesc:aa084871cb7af8bd120173378b4a0608b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new instance of the <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> class.  <a href="#aa084871cb7af8bd120173378b4a0608b"></a><br/></td></tr>
+<tr class="separator:aa084871cb7af8bd120173378b4a0608b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c1cee13ebdd72587072fbf2012a83e7"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a7c1cee13ebdd72587072fbf2012a83e7">factory</a> (asIObjectType *objectType, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> length)</td></tr>
+<tr class="memdesc:a7c1cee13ebdd72587072fbf2012a83e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new instance of the <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> class with the specified length.  <a href="#a7c1cee13ebdd72587072fbf2012a83e7"></a><br/></td></tr>
+<tr class="separator:a7c1cee13ebdd72587072fbf2012a83e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6923c1087e02ba94188d8b7f6ddd36f8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a6923c1087e02ba94188d8b7f6ddd36f8">listFactory</a> (asIObjectType *objectType, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> length)</td></tr>
+<tr class="memdesc:a6923c1087e02ba94188d8b7f6ddd36f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new instance of the <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> class with the specified length used exclusively for initialization lists.  <a href="#a6923c1087e02ba94188d8b7f6ddd36f8"></a><br/></td></tr>
+<tr class="separator:a6923c1087e02ba94188d8b7f6ddd36f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfa33e7f4c990af8844a9e5057e217dc"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#adfa33e7f4c990af8844a9e5057e217dc">bind</a> (asIScriptEngine *engine)</td></tr>
+<tr class="memdesc:adfa33e7f4c990af8844a9e5057e217dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register the script array template type.  <a href="#adfa33e7f4c990af8844a9e5057e217dc"></a><br/></td></tr>
+<tr class="separator:adfa33e7f4c990af8844a9e5057e217dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaaac8dbb3869afc385d5655a49a0f902"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#aaaac8dbb3869afc385d5655a49a0f902">templateCallback</a> (asIObjectType *ot, bool &amp;dontGarbageCollect)</td></tr>
+<tr class="memdesc:aaaac8dbb3869afc385d5655a49a0f902"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validate whether the specified subtype is valid for this template.  <a href="#aaaac8dbb3869afc385d5655a49a0f902"></a><br/></td></tr>
+<tr class="separator:aaaac8dbb3869afc385d5655a49a0f902"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -186,11 +192,28 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:aac093562a688cfeef91fe9efc9ca8d70"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#aac093562a688cfeef91fe9efc9ca8d70">destruct</a> (<a class="el" href="structcg_script_interop_1_1_types_1_1_script_array_1_1_array_buffer.html">ArrayBuffer</a> *buffer, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> start, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> end)</td></tr>
 <tr class="memdesc:aac093562a688cfeef91fe9efc9ca8d70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call the destructor for specified elements in the array.  <a href="#aac093562a688cfeef91fe9efc9ca8d70"></a><br/></td></tr>
 <tr class="separator:aac093562a688cfeef91fe9efc9ca8d70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b663b4dcbeb577d866bc82f464f0060"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a3b663b4dcbeb577d866bc82f464f0060">getGCFlag</a> ()</td></tr>
+<tr class="memdesc:a3b663b4dcbeb577d866bc82f464f0060"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to get the current state of the garbage collection flag.  <a href="#a3b663b4dcbeb577d866bc82f464f0060"></a><br/></td></tr>
+<tr class="separator:a3b663b4dcbeb577d866bc82f464f0060"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a362c7045553e88b1c88c28a803c9b5d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a362c7045553e88b1c88c28a803c9b5d7">setGCFlag</a> ()</td></tr>
+<tr class="memdesc:a362c7045553e88b1c88c28a803c9b5d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to set the state of the garbage collection flag to 'true'.  <a href="#a362c7045553e88b1c88c28a803c9b5d7"></a><br/></td></tr>
+<tr class="separator:a362c7045553e88b1c88c28a803c9b5d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2f7b8b5ac43a033f0d7007ff1e1aa3b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#af2f7b8b5ac43a033f0d7007ff1e1aa3b">getRefCount</a> ()</td></tr>
+<tr class="memdesc:af2f7b8b5ac43a033f0d7007ff1e1aa3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the current number of references to this object.  <a href="#af2f7b8b5ac43a033f0d7007ff1e1aa3b"></a><br/></td></tr>
+<tr class="separator:af2f7b8b5ac43a033f0d7007ff1e1aa3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acab0705d0e4b0f2b82256c62638c6bc4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#acab0705d0e4b0f2b82256c62638c6bc4">releaseAllHandles</a> (asIScriptEngine *engine)</td></tr>
+<tr class="memdesc:acab0705d0e4b0f2b82256c62638c6bc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Garbage collector requests that we release all handles we own.  <a href="#acab0705d0e4b0f2b82256c62638c6bc4"></a><br/></td></tr>
+<tr class="separator:acab0705d0e4b0f2b82256c62638c6bc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a952f6309050bec945f5e67fbc932e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a2a952f6309050bec945f5e67fbc932e0">enumReferences</a> (asIScriptEngine *engine)</td></tr>
+<tr class="memdesc:a2a952f6309050bec945f5e67fbc932e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Garbage collector requests that we enumerate the handles we hold.  <a href="#a2a952f6309050bec945f5e67fbc932e0"></a><br/></td></tr>
+<tr class="separator:a2a952f6309050bec945f5e67fbc932e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a0ad17a7e87887c985a7bd70c28307e3e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a0ad17a7e87887c985a7bd70c28307e3e">mRefCount</a></td></tr>
-<tr class="separator:a0ad17a7e87887c985a7bd70c28307e3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a012ccfebb9c7dcb696225080a63abf8c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a012ccfebb9c7dcb696225080a63abf8c">mRefCount</a></td></tr>
+<tr class="separator:a012ccfebb9c7dcb696225080a63abf8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79b93db312dd89a0ab9e7cfee421d22a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a79b93db312dd89a0ab9e7cfee421d22a">mSubTypeId</a></td></tr>
+<tr class="separator:a79b93db312dd89a0ab9e7cfee421d22a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8ba7fa0d46c9dc121f776ec5b273e94"><td class="memItemLeft" align="right" valign="top">asIObjectType *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#aa8ba7fa0d46c9dc121f776ec5b273e94">mObjectType</a></td></tr>
 <tr class="separator:aa8ba7fa0d46c9dc121f776ec5b273e94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a002f0d73afaf2f4fd8040ebe013934d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_script_interop_1_1_types_1_1_script_array_1_1_array_buffer.html">ArrayBuffer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a002f0d73afaf2f4fd8040ebe013934d8">mBuffer</a></td></tr>
@@ -199,6 +222,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a815110dd4e66c29756a65a0322b503b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0372a74f6efa6b88f9a41ac51f30d1df"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a0372a74f6efa6b88f9a41ac51f30d1df">mElementSize</a></td></tr>
 <tr class="separator:a0372a74f6efa6b88f9a41ac51f30d1df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab31b28c9547f7a0818a232fc2ff36caf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#ab31b28c9547f7a0818a232fc2ff36caf">mGCFlag</a></td></tr>
+<tr class="separator:ab31b28c9547f7a0818a232fc2ff36caf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="aaa6b4ac86cf7985866c0199f402494e5"></a>
@@ -287,6 +312,32 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Retrieve a point to the array element, or CG_NULL if out of bounds. </p>
+
+</div>
+</div>
+<a class="anchor" id="adfa33e7f4c990af8844a9e5057e217dc"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ScriptArray::bind </td>
+          <td>(</td>
+          <td class="paramtype">asIScriptEngine *&#160;</td>
+          <td class="paramname"><em>pEngine</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Register the script array template type. </p>
 
 </div>
 </div>
@@ -472,6 +523,94 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a2a952f6309050bec945f5e67fbc932e0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ScriptArray::enumReferences </td>
+          <td>(</td>
+          <td class="paramtype">asIScriptEngine *&#160;</td>
+          <td class="paramname"><em>engine</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Garbage collector requests that we enumerate the handles we hold. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa084871cb7af8bd120173378b4a0608b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> * ScriptArray::factory </td>
+          <td>(</td>
+          <td class="paramtype">asIObjectType *&#160;</td>
+          <td class="paramname"><em>pObjectType</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct a new instance of the <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> class. </p>
+
+</div>
+</div>
+<a class="anchor" id="a7c1cee13ebdd72587072fbf2012a83e7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> * ScriptArray::factory </td>
+          <td>(</td>
+          <td class="paramtype">asIObjectType *&#160;</td>
+          <td class="paramname"><em>pObjectType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>nLength</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct a new instance of the <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> class with the specified length. </p>
+
+</div>
+</div>
 <a class="anchor" id="af3ff8551922b4fba121165533f521c1a"></a>
 <div class="memitem">
 <div class="memproto">
@@ -523,6 +662,56 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a3b663b4dcbeb577d866bc82f464f0060"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ScriptArray::getGCFlag </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Used to get the current state of the garbage collection flag. </p>
+
+</div>
+</div>
+<a class="anchor" id="af2f7b8b5ac43a033f0d7007ff1e1aa3b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a> ScriptArray::getRefCount </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieve the current number of references to this object. </p>
+
+</div>
+</div>
 <a class="anchor" id="a56cc6aac88509aac96c61b885322881c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -540,25 +729,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a8aee5e8da85fabd653b89788fdf8b4c9"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> &amp; ScriptArray::operator= </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> &amp;&#160;</td>
-          <td class="paramname"><em>Other</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Assignment operator for this class. </p>
-
-</div>
-</div>
-<a class="anchor" id="a4d2face2106e312bf6d9f2e5d14f8082"></a>
+<a class="anchor" id="a6923c1087e02ba94188d8b7f6ddd36f8"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -566,94 +737,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void ScriptArray::Register </td>
-          <td>(</td>
-          <td class="paramtype">asIScriptEngine *&#160;</td>
-          <td class="paramname"><em>pEngine</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Register the script array template type. </p>
-
-</div>
-</div>
-<a class="anchor" id="a83bef26dea1598c88d1ebf6ffcf8298b"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ScriptArray::release </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>release reference to script array object. </p>
-
-</div>
-</div>
-<a class="anchor" id="ab9f4373cf2241d1089d90aca9f2384bd"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ScriptArray::resize </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
-          <td class="paramname"><em>nElementCount</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Resize the array. </p>
-
-</div>
-</div>
-<a class="anchor" id="a55224ca665d584270b0a77b4f1a1108b"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> * ScriptArray::ScriptArrayFactory </td>
-          <td>(</td>
-          <td class="paramtype">asIObjectType *&#160;</td>
-          <td class="paramname"><em>pObjectType</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Construct a new instance of the <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> class. </p>
-
-</div>
-</div>
-<a class="anchor" id="a533ab52cc340bb0e05da93304a5ccd5d"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> * ScriptArray::ScriptArrayFactory </td>
+          <td class="memname"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> * ScriptArray::listFactory </td>
           <td>(</td>
           <td class="paramtype">asIObjectType *&#160;</td>
           <td class="paramname"><em>pObjectType</em>, </td>
@@ -677,7 +761,147 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Construct a new instance of the <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> class with the specified length. </p>
+<p>Construct a new instance of the <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> class with the specified length used exclusively for initialization lists. </p>
+
+</div>
+</div>
+<a class="anchor" id="a8aee5e8da85fabd653b89788fdf8b4c9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> &amp; ScriptArray::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a> &amp;&#160;</td>
+          <td class="paramname"><em>Other</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Assignment operator for this class. </p>
+
+</div>
+</div>
+<a class="anchor" id="a83bef26dea1598c88d1ebf6ffcf8298b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ScriptArray::release </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Release reference to script array object. </p>
+
+</div>
+</div>
+<a class="anchor" id="acab0705d0e4b0f2b82256c62638c6bc4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ScriptArray::releaseAllHandles </td>
+          <td>(</td>
+          <td class="paramtype">asIScriptEngine *&#160;</td>
+          <td class="paramname"><em>engine</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Garbage collector requests that we release all handles we own. </p>
+
+</div>
+</div>
+<a class="anchor" id="ab9f4373cf2241d1089d90aca9f2384bd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ScriptArray::resize </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>nElementCount</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Resize the array. </p>
+
+</div>
+</div>
+<a class="anchor" id="a362c7045553e88b1c88c28a803c9b5d7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ScriptArray::setGCFlag </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Used to set the state of the garbage collection flag to 'true'. </p>
+
+</div>
+</div>
+<a class="anchor" id="aaaac8dbb3869afc385d5655a49a0f902"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ScriptArray::templateCallback </td>
+          <td>(</td>
+          <td class="paramtype">asIObjectType *&#160;</td>
+          <td class="paramname"><em>ot</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;&#160;</td>
+          <td class="paramname"><em>dontGarbageCollect</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Validate whether the specified subtype is valid for this template. </p>
 
 </div>
 </div>
@@ -711,6 +935,26 @@ Protected Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> cgScriptInterop::Types::ScriptArray::mElementSize</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ab31b28c9547f7a0818a232fc2ff36caf"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgScriptInterop::Types::ScriptArray::mGCFlag</td>
         </tr>
       </table>
   </td>
@@ -762,7 +1006,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a0ad17a7e87887c985a7bd70c28307e3e"></a>
+<a class="anchor" id="a012ccfebb9c7dcb696225080a63abf8c"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -770,7 +1014,27 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> cgScriptInterop::Types::ScriptArray::mRefCount</td>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a> cgScriptInterop::Types::ScriptArray::mRefCount</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a79b93db312dd89a0ab9e7cfee421d22a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a> cgScriptInterop::Types::ScriptArray::mSubTypeId</td>
         </tr>
       </table>
   </td>
@@ -792,7 +1056,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacecg_script_interop.html">cgScriptInterop</a></li><li class="navelem"><a class="el" href="namespacecg_script_interop_1_1_types.html">Types</a></li><li class="navelem"><a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html">ScriptArray</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:57 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:49:04 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

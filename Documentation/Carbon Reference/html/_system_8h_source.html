@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -172,37 +172,73 @@ $(document).ready(function(){initNavTree('_system_8h_source.html','');});
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment"></span>            <span class="comment">// Register standard engine utilities (such as __FILE__ / __LINE__ analogs)</span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            engine-&gt;registerGlobalFunction( <span class="stringliteral">&quot;String executingFile()&quot;</span>, asFUNCTION(executingFile), asCALL_CDECL );</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            engine-&gt;registerGlobalFunction( <span class="stringliteral">&quot;uint executingLine()&quot;</span>, asFUNCTION(executingLine), asCALL_CDECL );</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        }</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="comment">//---------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="comment">//  Name : executingFile ()</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment"></span>        <span class="comment">//---------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keyword">static</span> <a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a> executingFile()</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        {</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <a class="code" href="classcg_script.html" title="An individual script item, loaded from disk or otherwise, that contains / manages all script code for...">cgScript</a> * script = (<a class="code" href="classcg_script.html" title="An individual script item, loaded from disk or otherwise, that contains / manages all script code for...">cgScript</a>*)asGetActiveContext()-&gt;GetUserData();</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            <span class="keywordflow">if</span> ( script != <a class="code" href="cg_base_types_8h.html#ae28f568db83e03f77e0d1f3d96b89449">CG_NULL</a> )</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                <span class="keywordflow">return</span> script-&gt;<a class="code" href="classcg_resource.html#ab9c6181c1b6c98823d30c44592a9b18c" title="Retrieve the internal string name associated with this resource. ">getResourceName</a>();</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classcg_string.html#a5beec1c2e58592a7ea02328d0729ffe9">cgString::Empty</a>;;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="comment">//---------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="comment">//  Name : executingLine ()</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment"></span>        <span class="comment">//---------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keyword">static</span> <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> executingLine()</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <span class="keywordflow">return</span> asGetActiveContext()-&gt;GetLineNumber();</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        }</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    }; <span class="comment">// End Class : Package</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;} } } <span class="comment">// End Namespace : cgScriptPackages::Core::System</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            engine-&gt;registerGlobalFunction( <span class="stringliteral">&quot;void decomposeVersion( uint, uint &amp;inout, uint &amp;inout, uint &amp;inout )&quot;</span>, asFUNCTION(decomposeVersion), asCALL_CDECL );</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            engine-&gt;registerGlobalFunction( <span class="stringliteral">&quot;uint makeVersion( uint, uint, uint )&quot;</span>, asFUNCTION(makeVersion), asCALL_CDECL );</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            engine-&gt;registerGlobalFunction( <span class="stringliteral">&quot;double getTime( )&quot;</span>, asFUNCTIONPR(getTime,(),<a class="code" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a>), asCALL_CDECL );</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            engine-&gt;registerGlobalFunction( <span class="stringliteral">&quot;double getTime( bool )&quot;</span>, asFUNCTIONPR(getTime,( <span class="keywordtype">bool</span> ),<a class="code" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a>), asCALL_CDECL );</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="comment">//---------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="comment">//  Name : executingFile ()</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment"></span>        <span class="comment">//---------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keyword">static</span> <a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a> executingFile()</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        {</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <a class="code" href="classcg_script.html" title="An individual script item, loaded from disk or otherwise, that contains / manages all script code for...">cgScript</a> * script = (<a class="code" href="classcg_script.html" title="An individual script item, loaded from disk or otherwise, that contains / manages all script code for...">cgScript</a>*)asGetActiveContext()-&gt;GetUserData();</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="keywordflow">if</span> ( script != <a class="code" href="cg_base_types_8h.html#ae28f568db83e03f77e0d1f3d96b89449">CG_NULL</a> )</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                <span class="keywordflow">return</span> script-&gt;<a class="code" href="classcg_resource.html#ab9c6181c1b6c98823d30c44592a9b18c" title="Retrieve the internal string name associated with this resource. ">getResourceName</a>();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classcg_string.html#a5beec1c2e58592a7ea02328d0729ffe9">cgString::Empty</a>;;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="comment">//---------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="comment">//  Name : executingLine ()</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment"></span>        <span class="comment">//---------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keyword">static</span> <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> executingLine()</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        {</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <span class="keywordflow">return</span> asGetActiveContext()-&gt;GetLineNumber();</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        }</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="comment">//---------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="comment">//  Name : decomposeVersion ()</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment"></span>        <span class="comment">//---------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> decomposeVersion( <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> packedVersion, <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> &amp; version, <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> &amp; subversion, <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> &amp; revision )</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        {</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            <a class="code" href="cg_a_p_i_8h.html#afc4b6ecea2a16bc0e88f1cbb07ed2383">cgDecomposeVersion</a>( packedVersion, version, subversion, revision );</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        }</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="comment">//---------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="comment">//  Name : makeVersion ()</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment"></span>        <span class="comment">//---------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keyword">static</span> <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> makeVersion( <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> version, <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> subversion, <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> revision )</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        {</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="cg_a_p_i_8h.html#a993a441af1b7f60ce10360444fa79a2e">cgMakeVersion</a>( version, subversion, revision );</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        }</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="comment">//---------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <span class="comment">//  Name : getTime ()</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="comment"></span>        <span class="comment">//---------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <span class="keyword">static</span> <a class="code" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> getTime( )</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        {</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classcg_timer.html#a980b4221a8ff6dd13d44cd4028f1d12a" title="Retrieve pointer for singleton timer object. ">cgTimer::getInstance</a>()-&gt;<a class="code" href="classcg_timer.html#aad65a13b39cccb12d35c304f71b7d192">getTime</a>();</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        }</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <span class="comment">//---------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        <span class="comment">//  Name : getTime ()</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="comment"></span>        <span class="comment">//---------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="keyword">static</span> <a class="code" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> getTime( <span class="keywordtype">bool</span> queryTimer )</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        {</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classcg_timer.html#a980b4221a8ff6dd13d44cd4028f1d12a" title="Retrieve pointer for singleton timer object. ">cgTimer::getInstance</a>()-&gt;<a class="code" href="classcg_timer.html#aad65a13b39cccb12d35c304f71b7d192">getTime</a>( queryTimer );</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        }</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    }; <span class="comment">// End Class : Package</span></div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;} } } <span class="comment">// End Namespace : cgScriptPackages::Core::System</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_036efea8fd6b39c1f1fd2dd7f1be4325.html">Scripting</a></li><li class="navelem"><a class="el" href="dir_5f20ce7c1333a975792d65b7ff262c26.html">Packages</a></li><li class="navelem"><a class="el" href="dir_962f94cc32c03ad95281b0f22b8add17.html">Core</a></li><li class="navelem"><a class="el" href="_system_8h.html">System.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:17 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:00 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -13,7 +13,7 @@
 // Desc : Frustum class. Simple but efficient frustum processing.            //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -303,46 +303,24 @@ void cgFrustum::recomputePoints( )
 /// Determine whether or not the box passed is within the frustum.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgVolumeQuery::Class cgFrustum::classifyAABB( const cgBoundingBox & AABB, const cgTransform * pTransform /*= CG_NULL*/, cgUInt8 * FrustumBits /* = CG_NULL */, cgInt8 * LastOutside /* = CG_NULL */ ) const
+cgVolumeQuery::Class cgFrustum::classifyAABB( const cgBoundingBox & AABB ) const
 {
-    cgVector3             NearPoint, FarPoint;
-    cgBoundingBox         Bounds       = AABB;
-    cgVolumeQuery::Class  Result       = cgVolumeQuery::Inside;
-    cgUInt8               nBits        = 0;
-    cgInt8                nLastOutside = -1;
-    cgUInt32              i;
-
-    // Has AABB been populated with valid data?
-    if ( AABB.isPopulated() == false )
-        return cgVolumeQuery::Outside;
-
-    // Make a copy of the bits passed in if provided
-    if (FrustumBits)
-        nBits = *FrustumBits;
-
-    // Make a copy of the 'last outside' value to prevent us having to dereference
-    if ( LastOutside )
-        nLastOutside = *LastOutside;
-
-    // Transform bounds if matrix provided
-    if ( pTransform )
-        Bounds.transform( *pTransform );
-
-    // If the 'last outside plane' index was specified, test it first!
-    if ( nLastOutside >= 0 && ( ((nBits >> nLastOutside) & 0x1) == 0x0 ) )
+    cgVolumeQuery::Class  Result = cgVolumeQuery::Inside;
+    cgVector3 NearPoint, FarPoint;
+    for ( size_t i = 0; i < 6; i++ )
     {
         // Store the plane
-        const cgPlane & Plane = planes[nLastOutside];
+        const cgPlane & Plane = planes[i];
 
         // Calculate near / far extreme points
-        if ( Plane.a > 0.0f ) { FarPoint.x  = Bounds.max.x; NearPoint.x = Bounds.min.x; }
-        else                  { FarPoint.x  = Bounds.min.x; NearPoint.x = Bounds.max.x; }
+        if ( Plane.a > 0.0f ) { FarPoint.x  = AABB.max.x; NearPoint.x = AABB.min.x; }
+        else                  { FarPoint.x  = AABB.min.x; NearPoint.x = AABB.max.x; }
 
-        if ( Plane.b > 0.0f ) { FarPoint.y  = Bounds.max.y; NearPoint.y = Bounds.min.y; }
-        else                  { FarPoint.y  = Bounds.min.y; NearPoint.y = Bounds.max.y; }
+        if ( Plane.b > 0.0f ) { FarPoint.y  = AABB.max.y; NearPoint.y = AABB.min.y; }
+        else                  { FarPoint.y  = AABB.min.y; NearPoint.y = AABB.max.y; }
 
-        if ( Plane.c > 0.0f ) { FarPoint.z  = Bounds.max.z; NearPoint.z = Bounds.min.z; }
-        else                  { FarPoint.z  = Bounds.min.z; NearPoint.z = Bounds.max.z; }
+        if ( Plane.c > 0.0f ) { FarPoint.z  = AABB.max.z; NearPoint.z = AABB.min.z; }
+        else                  { FarPoint.z  = AABB.min.z; NearPoint.z = AABB.max.z; }
 
         // If near extreme point is outside, then the AABB is totally outside the frustum
         if ( cgPlane::dotCoord( Plane, NearPoint ) > 0.0f )
@@ -351,20 +329,27 @@ cgVolumeQuery::Class cgFrustum::classifyAABB( const cgBoundingBox & AABB, const 
         // If far extreme point is outside, then the AABB is intersecting the frustum
         if ( cgPlane::dotCoord( Plane, FarPoint ) > 0.0f )
             Result = cgVolumeQuery::Intersect;
-        else
-            nBits |= (0x1 << nLastOutside); // We were totally inside this frustum plane, update our bit set
 
-    } // End if last outside plane specified
+    } // Next Plane
+    return Result;
+}
 
-    // Loop through all the planes
-    for ( i = 0; i < 6; i++ )
+//-----------------------------------------------------------------------------
+//  Name : classifyAABB ()
+/// <summary>
+/// Determine whether or not the box passed is within the frustum.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgVolumeQuery::Class cgFrustum::classifyAABB( const cgBoundingBox & AABB, const cgTransform & transform ) const
+{
+    // Transform bounding box as requested.
+    cgBoundingBox Bounds = cgBoundingBox::transform( AABB, transform );
+
+    // Process planes.
+    cgVolumeQuery::Class  Result = cgVolumeQuery::Inside;
+    cgVector3 NearPoint, FarPoint;
+    for ( size_t i = 0; i < 6; i++ )
     {
-        // Check the bit in the uchar passed to see if it should be tested (if it's 1, it's already passed)
-        if ( ((nBits >> i) & 0x1) == 0x1 ) continue;
-
-        // If 'last outside plane' index was specified, skip if it matches the plane index
-        if ( nLastOutside >= 0 && nLastOutside == (cgInt8)i ) continue;
-
         // Store the plane
         const cgPlane & Plane = planes[i];
 
@@ -378,14 +363,82 @@ cgVolumeQuery::Class cgFrustum::classifyAABB( const cgBoundingBox & AABB, const 
         if ( Plane.c > 0.0f ) { FarPoint.z  = Bounds.max.z; NearPoint.z = Bounds.min.z; }
         else                  { FarPoint.z  = Bounds.min.z; NearPoint.z = Bounds.max.z; }
 
+        // If near extreme point is outside, then the Bounds is totally outside the frustum
+        if ( cgPlane::dotCoord( Plane, NearPoint ) > 0.0f )
+            return cgVolumeQuery::Outside;
+
+        // If far extreme point is outside, then the Bounds is intersecting the frustum
+        if ( cgPlane::dotCoord( Plane, FarPoint ) > 0.0f )
+            Result = cgVolumeQuery::Intersect;
+
+    } // Next Plane
+    return Result;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : classifyAABB ()
+/// <summary>
+/// Determine whether or not the box passed is within the frustum.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgVolumeQuery::Class cgFrustum::classifyAABB( const cgBoundingBox & AABB, cgUInt8 & FrustumBits, cgInt8 & LastOutside ) const
+{
+    // If the 'last outside plane' index was specified, test it first!
+    cgVector3 NearPoint, FarPoint;
+    cgVolumeQuery::Class Result = cgVolumeQuery::Inside;
+    if ( LastOutside >= 0 && ( ((FrustumBits >> LastOutside) & 0x1) == 0x0 ) )
+    {
+        const cgPlane & Plane = planes[LastOutside];
+
+        // Calculate near / far extreme points
+        if ( Plane.a > 0.0f ) { FarPoint.x  = AABB.max.x; NearPoint.x = AABB.min.x; }
+        else                  { FarPoint.x  = AABB.min.x; NearPoint.x = AABB.max.x; }
+
+        if ( Plane.b > 0.0f ) { FarPoint.y  = AABB.max.y; NearPoint.y = AABB.min.y; }
+        else                  { FarPoint.y  = AABB.min.y; NearPoint.y = AABB.max.y; }
+
+        if ( Plane.c > 0.0f ) { FarPoint.z  = AABB.max.z; NearPoint.z = AABB.min.z; }
+        else                  { FarPoint.z  = AABB.min.z; NearPoint.z = AABB.max.z; }
+
+        // If near extreme point is outside, then the AABB is totally outside the frustum
+        if ( cgPlane::dotCoord( Plane, NearPoint ) > 0.0f )
+            return cgVolumeQuery::Outside;
+
+        // If far extreme point is outside, then the AABB is intersecting the frustum
+        if ( cgPlane::dotCoord( Plane, FarPoint ) > 0.0f )
+            Result = cgVolumeQuery::Intersect;
+        else
+            FrustumBits |= (0x1 << LastOutside); // We were totally inside this frustum plane, update our bit set
+
+    } // End if last outside plane specified
+
+    // Loop through all the planes
+    for ( size_t i = 0; i < 6; i++ )
+    {
+        // Check the bit in the uchar passed to see if it should be tested (if it's 1, it's already passed)
+        if ( ((FrustumBits >> i) & 0x1) == 0x1 )
+            continue;
+
+        // If 'last outside plane' index was specified, skip if it matches the plane index
+        if ( LastOutside >= 0 && LastOutside == (cgInt8)i )
+            continue;
+
+        // Calculate near / far extreme points
+        const cgPlane & Plane = planes[i];
+        if ( Plane.a > 0.0f ) { FarPoint.x  = AABB.max.x; NearPoint.x = AABB.min.x; }
+        else                  { FarPoint.x  = AABB.min.x; NearPoint.x = AABB.max.x; }
+
+        if ( Plane.b > 0.0f ) { FarPoint.y  = AABB.max.y; NearPoint.y = AABB.min.y; }
+        else                  { FarPoint.y  = AABB.min.y; NearPoint.y = AABB.max.y; }
+
+        if ( Plane.c > 0.0f ) { FarPoint.z  = AABB.max.z; NearPoint.z = AABB.min.z; }
+        else                  { FarPoint.z  = AABB.min.z; NearPoint.z = AABB.max.z; }
+
         // If near extreme point is outside, then the AABB is totally outside the frustum
         if ( cgPlane::dotCoord( Plane, NearPoint ) > 0.0f )
         {
-            // Store the 'last outside' index
-            if ( LastOutside ) *LastOutside = (cgInt8)i;
-
-            // Store the frustm bits so far and return
-            if (FrustumBits) *FrustumBits = nBits;
+            // Update the 'last outside' index and return.
+            LastOutside = (cgInt8)i;
             return cgVolumeQuery::Outside;
 
         } // End if outside frustum plane
@@ -394,17 +447,95 @@ cgVolumeQuery::Class cgFrustum::classifyAABB( const cgBoundingBox & AABB, const 
         if ( cgPlane::dotCoord( Plane, FarPoint ) > 0.0f )
             Result = cgVolumeQuery::Intersect;
         else
-            nBits |= (0x1 << i); // We were totally inside this frustum plane, update our bit set
+            FrustumBits |= (0x1 << i); // We were totally inside this frustum plane, update our bit set
 
     } // Next Plane
 
-    // Store none outside
-    if ( LastOutside )
-        *LastOutside = -1;
+    // None outside
+    LastOutside = -1;
+    return Result;
+}
 
-    // Return the result
-    if (FrustumBits)
-        *FrustumBits = nBits;
+//-----------------------------------------------------------------------------
+//  Name : classifyAABB ()
+/// <summary>
+/// Determine whether or not the box passed is within the frustum.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgVolumeQuery::Class cgFrustum::classifyAABB( const cgBoundingBox & AABB, const cgTransform & transform, cgUInt8 & FrustumBits, cgInt8 & LastOutside ) const
+{
+    cgBoundingBox Bounds = cgBoundingBox::transform( AABB, transform );
+
+    // If the 'last outside plane' index was specified, test it first!
+    cgVector3 NearPoint, FarPoint;
+    cgVolumeQuery::Class Result = cgVolumeQuery::Inside;
+    if ( LastOutside >= 0 && ( ((FrustumBits >> LastOutside) & 0x1) == 0x0 ) )
+    {
+        const cgPlane & Plane = planes[LastOutside];
+
+        // Calculate near / far extreme points
+        if ( Plane.a > 0.0f ) { FarPoint.x  = Bounds.max.x; NearPoint.x = Bounds.min.x; }
+        else                  { FarPoint.x  = Bounds.min.x; NearPoint.x = Bounds.max.x; }
+
+        if ( Plane.b > 0.0f ) { FarPoint.y  = Bounds.max.y; NearPoint.y = Bounds.min.y; }
+        else                  { FarPoint.y  = Bounds.min.y; NearPoint.y = Bounds.max.y; }
+
+        if ( Plane.c > 0.0f ) { FarPoint.z  = Bounds.max.z; NearPoint.z = Bounds.min.z; }
+        else                  { FarPoint.z  = Bounds.min.z; NearPoint.z = Bounds.max.z; }
+
+        // If near extreme point is outside, then the Bounds is totally outside the frustum
+        if ( cgPlane::dotCoord( Plane, NearPoint ) > 0.0f )
+            return cgVolumeQuery::Outside;
+
+        // If far extreme point is outside, then the Bounds is intersecting the frustum
+        if ( cgPlane::dotCoord( Plane, FarPoint ) > 0.0f )
+            Result = cgVolumeQuery::Intersect;
+        else
+            FrustumBits |= (0x1 << LastOutside); // We were totally inside this frustum plane, update our bit set
+
+    } // End if last outside plane specified
+
+    // Loop through all the planes
+    for ( size_t i = 0; i < 6; i++ )
+    {
+        // Check the bit in the uchar passed to see if it should be tested (if it's 1, it's already passed)
+        if ( ((FrustumBits >> i) & 0x1) == 0x1 )
+            continue;
+
+        // If 'last outside plane' index was specified, skip if it matches the plane index
+        if ( LastOutside >= 0 && LastOutside == (cgInt8)i )
+            continue;
+
+        // Calculate near / far extreme points
+        const cgPlane & Plane = planes[i];
+        if ( Plane.a > 0.0f ) { FarPoint.x  = Bounds.max.x; NearPoint.x = Bounds.min.x; }
+        else                  { FarPoint.x  = Bounds.min.x; NearPoint.x = Bounds.max.x; }
+
+        if ( Plane.b > 0.0f ) { FarPoint.y  = Bounds.max.y; NearPoint.y = Bounds.min.y; }
+        else                  { FarPoint.y  = Bounds.min.y; NearPoint.y = Bounds.max.y; }
+
+        if ( Plane.c > 0.0f ) { FarPoint.z  = Bounds.max.z; NearPoint.z = Bounds.min.z; }
+        else                  { FarPoint.z  = Bounds.min.z; NearPoint.z = Bounds.max.z; }
+
+        // If near extreme point is outside, then the Bounds is totally outside the frustum
+        if ( cgPlane::dotCoord( Plane, NearPoint ) > 0.0f )
+        {
+            // Update the 'last outside' index and return.
+            LastOutside = (cgInt8)i;
+            return cgVolumeQuery::Outside;
+
+        } // End if outside frustum plane
+
+        // If far extreme point is outside, then the Bounds is intersecting the frustum
+        if ( cgPlane::dotCoord( Plane, FarPoint ) > 0.0f )
+            Result = cgVolumeQuery::Intersect;
+        else
+            FrustumBits |= (0x1 << i); // We were totally inside this frustum plane, update our bit set
+
+    } // Next Plane
+
+    // None outside
+    LastOutside = -1;
     return Result;
 }
 
@@ -414,22 +545,48 @@ cgVolumeQuery::Class cgFrustum::classifyAABB( const cgBoundingBox & AABB, const 
 /// Determine whether or not the box passed is within the frustum.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgFrustum::testAABB( const cgBoundingBox & AABB, const cgTransform * pTransform /*= CG_NULL*/ ) const
+bool cgFrustum::testAABB( const cgBoundingBox & AABB ) const
 {
-    cgVector3       NearPoint;
-    cgBoundingBox   Bounds = AABB;
-    cgUInt32        i;
-
-    // Has AABB been populated with valid data?
-    if ( AABB.isPopulated() == false )
-        return false;
-
-    // Transform bounds if matrix provided
-    if ( pTransform != CG_NULL )
-        Bounds.transform( *pTransform );
-
     // Loop through all the planes
-    for ( i = 0; i < 6; i++ )
+    cgVector3 NearPoint;
+    for ( size_t i = 0; i < 6; i++ )
+    {
+        const cgPlane & Plane = planes[i];
+
+        // Calculate near / far extreme points
+        if ( Plane.a > 0.0f ) NearPoint.x = AABB.min.x;
+        else                  NearPoint.x = AABB.max.x;
+
+        if ( Plane.b > 0.0f ) NearPoint.y = AABB.min.y;
+        else                  NearPoint.y = AABB.max.y;
+
+        if ( Plane.c > 0.0f ) NearPoint.z = AABB.min.z;
+        else                  NearPoint.z = AABB.max.z;
+
+        // If near extreme point is outside, then the AABB is totally outside the frustum
+        if ( cgPlane::dotCoord( Plane, NearPoint ) > 0.0f )
+            return false;
+
+    } // Next Plane
+
+    // Intersecting / inside
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : testAABB ()
+/// <summary>
+/// Determine whether or not the box passed is within the frustum.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgFrustum::testAABB( const cgBoundingBox & AABB, const cgTransform & transform ) const
+{
+    // Transform bounds.
+    cgBoundingBox Bounds = cgBoundingBox::transform( AABB, transform );
+    
+    // Loop through all the planes
+    cgVector3 NearPoint;
+    for ( size_t i = 0; i < 6; i++ )
     {
         const cgPlane & Plane = planes[i];
 

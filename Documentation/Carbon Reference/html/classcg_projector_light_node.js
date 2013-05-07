@@ -16,7 +16,6 @@ var classcg_projector_light_node =
     [ "beginShadowFillPass", "classcg_projector_light_node.html#a5247e43cbbafed26b1ba2b50bd044d56", null ],
     [ "boundsInVolume", "classcg_projector_light_node.html#a5019f7f18dc76415128d526800bf63ad", null ],
     [ "computeLevelOfDetail", "classcg_projector_light_node.html#a88b9badea0067539e9397a428248c118", null ],
-    [ "computeVisibility", "classcg_projector_light_node.html#abe7bbf5742d878e04c12312d4857e8f1", null ],
     [ "createLightShape", "classcg_projector_light_node.html#a49902d28821acad5b3f9e39030a0651d", null ],
     [ "dispose", "classcg_projector_light_node.html#ad346777977a4faa7f40a401a8e916ef5", null ],
     [ "endIndirectFill", "classcg_projector_light_node.html#a76b17cf5b747d8ec67ad54f035e56a07", null ],

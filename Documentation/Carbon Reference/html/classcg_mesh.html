@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -235,11 +235,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a73f044dbaa2c61143b77de1f35d522cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#a73f044dbaa2c61143b77de1f35d522cf">endPrepare</a> (bool hardwareCopy=true, bool weld=true, bool optimize=true)</td></tr>
 <tr class="memdesc:a73f044dbaa2c61143b77de1f35d522cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">All data has been added to the mesh and we should now build the renderable data for the mesh.  <a href="#a73f044dbaa2c61143b77de1f35d522cf"></a><br/></td></tr>
 <tr class="separator:a73f044dbaa2c61143b77de1f35d522cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef09a08b5854d062ee3708b00160f7d9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#aef09a08b5854d062ee3708b00160f7d9">pick</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, bool wireframe, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;wireTolerance, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;distanceOut)</td></tr>
-<tr class="memdesc:aef09a08b5854d062ee3708b00160f7d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified object space ray, determine if the mesh data is intersected at all and also compute the intersection distance.  <a href="#aef09a08b5854d062ee3708b00160f7d9"></a><br/></td></tr>
-<tr class="separator:aef09a08b5854d062ee3708b00160f7d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a334dfd6cc6f7a87f5b321538c2ba2eaf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#a334dfd6cc6f7a87f5b321538c2ba2eaf">pick</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;distanceOut)</td></tr>
+<tr class="memdesc:a334dfd6cc6f7a87f5b321538c2ba2eaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified object space ray, determine if the mesh data is intersected at all and also compute the intersection distance.  <a href="#a334dfd6cc6f7a87f5b321538c2ba2eaf"></a><br/></td></tr>
+<tr class="separator:a334dfd6cc6f7a87f5b321538c2ba2eaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2113dc07d9907b13d81c04285a5c8bc4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#a2113dc07d9907b13d81c04285a5c8bc4">pick</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *pCamera, const <a class="el" href="structcg_size.html">cgSize</a> &amp;ViewportSize, const <a class="el" href="classcg_transform.html">cgTransform</a> &amp;ObjectTransform, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;vOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;vDir, bool bWireframe, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> fWireTolerance, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;fDistance)</td></tr>
+<tr class="memdesc:a2113dc07d9907b13d81c04285a5c8bc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified object space ray, determine if the mesh data is intersected at all and also compute the intersection distance. This overload supports both wireframe and solid picking.  <a href="#a2113dc07d9907b13d81c04285a5c8bc4"></a><br/></td></tr>
+<tr class="separator:a2113dc07d9907b13d81c04285a5c8bc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76206ec47227ce3ebfe2b422376d54fe"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#a76206ec47227ce3ebfe2b422376d54fe">pickFace</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;intersectionOut, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> &amp;intersectedFaceOut, <a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> &amp;intersectedMaterialOut)</td></tr>
-<tr class="memdesc:a76206ec47227ce3ebfe2b422376d54fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to <a class="el" href="classcg_mesh.html#aef09a08b5854d062ee3708b00160f7d9" title="Given the specified object space ray, determine if the mesh data is intersected at all and also compu...">pick()</a> but is used to simply determine which face was intersected and which material is assigned to it.  <a href="#a76206ec47227ce3ebfe2b422376d54fe"></a><br/></td></tr>
+<tr class="memdesc:a76206ec47227ce3ebfe2b422376d54fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to <a class="el" href="classcg_mesh.html#a334dfd6cc6f7a87f5b321538c2ba2eaf" title="Given the specified object space ray, determine if the mesh data is intersected at all and also compu...">pick()</a> but is used to simply determine which face was intersected and which material is assigned to it.  <a href="#a76206ec47227ce3ebfe2b422376d54fe"></a><br/></td></tr>
 <tr class="separator:a76206ec47227ce3ebfe2b422376d54fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0d6ddf0430a5cde9abc3b00c48e9780"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#ab0d6ddf0430a5cde9abc3b00c48e9780">setDefaultColor</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> color)</td></tr>
 <tr class="memdesc:ab0d6ddf0430a5cde9abc3b00c48e9780"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the 'default' color to use whenever the default material is invoked during rendering.  <a href="#ab0d6ddf0430a5cde9abc3b00c48e9780"></a><br/></td></tr>
@@ -250,9 +253,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5bde47f873e5e14e7e2bccb1827a8658"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#a5bde47f873e5e14e7e2bccb1827a8658">setFaceMaterial</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> faceIndex, const <a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> &amp;material)</td></tr>
 <tr class="memdesc:a5bde47f873e5e14e7e2bccb1827a8658"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply the specified material to the relevant face, replacing that previously assigned.  <a href="#a5bde47f873e5e14e7e2bccb1827a8658"></a><br/></td></tr>
 <tr class="separator:a5bde47f873e5e14e7e2bccb1827a8658"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a797ca83ef071a9a562aaa5a5f87e1116"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#a797ca83ef071a9a562aaa5a5f87e1116">replaceMaterial</a> (const <a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> &amp;oldMaterial, const <a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> &amp;newMaterial)</td></tr>
+<tr class="memdesc:a797ca83ef071a9a562aaa5a5f87e1116"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replace the specified material, with a new one.  <a href="#a797ca83ef071a9a562aaa5a5f87e1116"></a><br/></td></tr>
+<tr class="separator:a797ca83ef071a9a562aaa5a5f87e1116"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6a59ec61e5b5978e8f197a72b4ec87e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#af6a59ec61e5b5978e8f197a72b4ec87e">scaleMeshData</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> scale)</td></tr>
 <tr class="memdesc:af6a59ec61e5b5978e8f197a72b4ec87e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply the specified scale to all local mesh data (baked scale).  <a href="#af6a59ec61e5b5978e8f197a72b4ec87e"></a><br/></td></tr>
 <tr class="separator:af6a59ec61e5b5978e8f197a72b4ec87e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a373bd9b3f49a9613b2ad9cdc4ad326d7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#a373bd9b3f49a9613b2ad9cdc4ad326d7">generateAdjacency</a> (cgUInt32Array &amp;adjacency)</td></tr>
+<tr class="memdesc:a373bd9b3f49a9613b2ad9cdc4ad326d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates edge-triangle adjacency information for the mesh data either prior to, or after building the hardware buffers. Input array will be automatically sized, and will contain 3 values per triangle contained in the mesh representing the indices to adjacent faces for each edge in the triangle (or 0xFFFFFFFF if there is no adjacent face).  <a href="#a373bd9b3f49a9613b2ad9cdc4ad326d7"></a><br/></td></tr>
+<tr class="separator:a373bd9b3f49a9613b2ad9cdc4ad326d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac79112c3317fe817a8d22462c36973e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_render_driver.html">cgRenderDriver</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#ac79112c3317fe817a8d22462c36973e3">getRenderDriver</a> ()</td></tr>
 <tr class="memdesc:ac79112c3317fe817a8d22462c36973e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the render driver to which this mesh is associated.  <a href="#ac79112c3317fe817a8d22462c36973e3"></a><br/></td></tr>
 <tr class="separator:ac79112c3317fe817a8d22462c36973e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -271,15 +280,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3da6888db4a472a120b40a3391d9ef0c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_vertex_format.html">cgVertexFormat</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#a3da6888db4a472a120b40a3391d9ef0c">getVertexFormat</a> ()</td></tr>
 <tr class="memdesc:a3da6888db4a472a120b40a3391d9ef0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the format of the underlying mesh vertex data.  <a href="#a3da6888db4a472a120b40a3391d9ef0c"></a><br/></td></tr>
 <tr class="separator:a3da6888db4a472a120b40a3391d9ef0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af146446eb03f327b14333b9351074785"><td class="memItemLeft" align="right" valign="top">cgMaterialHandleArray &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#af146446eb03f327b14333b9351074785">getMaterials</a> ()</td></tr>
-<tr class="memdesc:af146446eb03f327b14333b9351074785"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a list of all of the materials used by this object for use during rendering.  <a href="#af146446eb03f327b14333b9351074785"></a><br/></td></tr>
-<tr class="separator:af146446eb03f327b14333b9351074785"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75c95d994b618d5e33d6a4fbc585b873"><td class="memItemLeft" align="right" valign="top">const cgMaterialHandleArray &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#a75c95d994b618d5e33d6a4fbc585b873">getMaterials</a> () const </td></tr>
+<tr class="memdesc:a75c95d994b618d5e33d6a4fbc585b873"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a list of all of the materials used by this object for use during rendering.  <a href="#a75c95d994b618d5e33d6a4fbc585b873"></a><br/></td></tr>
+<tr class="separator:a75c95d994b618d5e33d6a4fbc585b873"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a705755df6d547df729af8d1aeb75f3cc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_skin_bind_data.html">cgSkinBindData</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#a705755df6d547df729af8d1aeb75f3cc">getSkinBindData</a> ()</td></tr>
 <tr class="memdesc:a705755df6d547df729af8d1aeb75f3cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this mesh has been bound as a skin, this method can be called to retrieve the original data that was used to bind it.  <a href="#a705755df6d547df729af8d1aeb75f3cc"></a><br/></td></tr>
 <tr class="separator:a705755df6d547df729af8d1aeb75f3cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92a6bb6e71569e6972133596e5028435"><td class="memItemLeft" align="right" valign="top">const BonePaletteArray &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#a92a6bb6e71569e6972133596e5028435">getBonePalettes</a> () const </td></tr>
 <tr class="memdesc:a92a6bb6e71569e6972133596e5028435"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this mesh has been bound as a skin, this method can be called to retrieve the compiled bone combination palette data.  <a href="#a92a6bb6e71569e6972133596e5028435"></a><br/></td></tr>
 <tr class="separator:a92a6bb6e71569e6972133596e5028435"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac82fb0ad1273edd6923dd32bd495953a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_mesh_1_1_mesh_subset.html">MeshSubset</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#ac82fb0ad1273edd6923dd32bd495953a">getSubset</a> (const <a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> &amp;material, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> dataGroupId=0) const </td></tr>
+<tr class="memdesc:ac82fb0ad1273edd6923dd32bd495953a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve information about the subset of the mesh that is associated with the specified material and data group identifier.  <a href="#ac82fb0ad1273edd6923dd32bd495953a"></a><br/></td></tr>
+<tr class="separator:ac82fb0ad1273edd6923dd32bd495953a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1e543ee03cba3ff038468e90dfe9ec5"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#af1e543ee03cba3ff038468e90dfe9ec5">getBoundingBox</a> () const </td></tr>
 <tr class="separator:af1e543ee03cba3ff038468e90dfe9ec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1d6324b3df012462c3fef8c7d50205f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_mesh_status.html#a574e543a10903ad4c3a8c668ecb3e615">cgMeshStatus::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#ad1d6324b3df012462c3fef8c7d50205f">getPrepareStatus</a> () const </td></tr>
@@ -409,9 +421,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#abc11be6582c83be070816daf60d96781">isInternalReference</a> () const </td></tr>
 <tr class="memdesc:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this reference is either an internal or serialized reference.  <a href="#abc11be6582c83be070816daf60d96781"></a><br/></td></tr>
 <tr class="separator:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#af002aedbdfca5e97c3a7263425a60dac">isDisposed</a> ()</td></tr>
-<tr class="memdesc:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#af002aedbdfca5e97c3a7263425a60dac"></a><br/></td></tr>
-<tr class="separator:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a34951860e42866aff9b890d704bccbc4">isDisposed</a> () const </td></tr>
+<tr class="memdesc:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#a34951860e42866aff9b890d704bccbc4"></a><br/></td></tr>
+<tr class="separator:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#aecf67c7fc72ba0d465096b4584e1caba">isDisposing</a> () const </td></tr>
 <tr class="memdesc:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object is in the process of being disposed.  <a href="#aecf67c7fc72ba0d465096b4584e1caba"></a><br/></td></tr>
 <tr class="separator:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -468,9 +480,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a081528b758c97213dda3ef3ee2dedad1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#a081528b758c97213dda3ef3ee2dedad1">generateVertexTangents</a> ()</td></tr>
 <tr class="memdesc:a081528b758c97213dda3ef3ee2dedad1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds the tangent space vectors for this polygon. Credit to Terathon Software - <a href="http://www.terathon.com/code/tangent.html">http://www.terathon.com/code/tangent.html</a>  <a href="#a081528b758c97213dda3ef3ee2dedad1"></a><br/></td></tr>
 <tr class="separator:a081528b758c97213dda3ef3ee2dedad1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a588622b9a9367d43bad534d35f06bdb4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#a588622b9a9367d43bad534d35f06bdb4">generateAdjacency</a> ()</td></tr>
-<tr class="memdesc:a588622b9a9367d43bad534d35f06bdb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates edge-triangle adjacency information for the pre-built data added prior to building the hardware buffers.  <a href="#a588622b9a9367d43bad534d35f06bdb4"></a><br/></td></tr>
-<tr class="separator:a588622b9a9367d43bad534d35f06bdb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ba1f98cc6e750abc77f3d2e0d43fb0e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#a5ba1f98cc6e750abc77f3d2e0d43fb0e">weldVertices</a> (cgUInt32Array *vertexRemap=<a class="el" href="cg_base_types_8h.html#ae28f568db83e03f77e0d1f3d96b89449">CG_NULL</a>)</td></tr>
 <tr class="memdesc:a5ba1f98cc6e750abc77f3d2e0d43fb0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Weld all of the vertices together that can be combined.  <a href="#a5ba1f98cc6e750abc77f3d2e0d43fb0e"></a><br/></td></tr>
 <tr class="separator:a5ba1f98cc6e750abc77f3d2e0d43fb0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -480,9 +489,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:ac9886baa9eb6b14f75d36632f8e767ec"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#ac9886baa9eb6b14f75d36632f8e767ec">restoreBuffers</a> ()</td></tr>
 <tr class="memdesc:ac9886baa9eb6b14f75d36632f8e767ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">If any hardware buffer resources have been lost, restore them.  <a href="#ac9886baa9eb6b14f75d36632f8e767ec"></a><br/></td></tr>
 <tr class="separator:ac9886baa9eb6b14f75d36632f8e767ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a213910d123264a5d1dfd30f547ea0eba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#a213910d123264a5d1dfd30f547ea0eba">pickMeshSubset</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> dataGroupId, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, bool wireframe, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;wireTolerance, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;distanceOut, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> &amp;intersectedFaceOut, <a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> &amp;intersectedMaterialOut)</td></tr>
-<tr class="memdesc:a213910d123264a5d1dfd30f547ea0eba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal mesh utility class designed for testing the mesh data against a ray for picking etc.  <a href="#a213910d123264a5d1dfd30f547ea0eba"></a><br/></td></tr>
-<tr class="separator:a213910d123264a5d1dfd30f547ea0eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0a7c7e328b2646fbf6f3bd20f827df6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#aa0a7c7e328b2646fbf6f3bd20f827df6">pickMeshSubset</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> dataGroupId, <a class="el" href="classcg_camera_node.html">cgCameraNode</a> *pCamera, const <a class="el" href="structcg_size.html">cgSize</a> &amp;ViewportSize, const <a class="el" href="classcg_transform.html">cgTransform</a> &amp;ObjectTransform, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, bool wireframe, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> wireTolerance, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;distanceOut, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> &amp;intersectedFaceOut, <a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> &amp;intersectedMaterialOut)</td></tr>
+<tr class="memdesc:aa0a7c7e328b2646fbf6f3bd20f827df6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal mesh utility class designed for testing the mesh data against a ray for picking etc.  <a href="#aa0a7c7e328b2646fbf6f3bd20f827df6"></a><br/></td></tr>
+<tr class="separator:aa0a7c7e328b2646fbf6f3bd20f827df6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabdcfed688c2a472c0870770ff64fab7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh.html#aabdcfed688c2a472c0870770ff64fab7">sortMeshData</a> (bool optimize, bool buildHardwareBuffers)</td></tr>
 <tr class="memdesc:aabdcfed688c2a472c0870770ff64fab7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sort the data in the mesh into material &amp; datagroup order.  <a href="#aabdcfed688c2a472c0870770ff64fab7"></a><br/></td></tr>
 <tr class="separator:aabdcfed688c2a472c0870770ff64fab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1701,28 +1710,21 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a588622b9a9367d43bad534d35f06bdb4"></a>
+<a class="anchor" id="a373bd9b3f49a9613b2ad9cdc4ad326d7"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> * cgMesh::generateAdjacency </td>
+          <td class="memname">bool cgMesh::generateAdjacency </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">cgUInt32Array &amp;&#160;</td>
+          <td class="paramname"><em>adjacency</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p>Generates edge-triangle adjacency information for the pre-built data added prior to building the hardware buffers. </p>
+<p>Generates edge-triangle adjacency information for the mesh data either prior to, or after building the hardware buffers. Input array will be automatically sized, and will contain 3 values per triangle contained in the mesh representing the indices to adjacent faces for each edge in the triangle (or 0xFFFFFFFF if there is no adjacent face). </p>
 
 </div>
 </div>
@@ -1922,15 +1924,15 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="af146446eb03f327b14333b9351074785"></a>
+<a class="anchor" id="a75c95d994b618d5e33d6a4fbc585b873"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">cgMaterialHandleArray &amp; cgMesh::getMaterials </td>
+          <td class="memname">const cgMaterialHandleArray &amp; cgMesh::getMaterials </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2018,6 +2020,34 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>If this mesh has been bound as a skin, this method can be called to retrieve the original data that was used to bind it. </p>
+
+</div>
+</div>
+<a class="anchor" id="ac82fb0ad1273edd6923dd32bd495953a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structcg_mesh_1_1_mesh_subset.html">cgMesh::MeshSubset</a> * cgMesh::getSubset </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> &amp;&#160;</td>
+          <td class="paramname"><em>material</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>dataGroupId</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve information about the subset of the mesh that is associated with the specified material and data group identifier. </p>
 
 </div>
 </div>
@@ -2150,7 +2180,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aef09a08b5854d062ee3708b00160f7d9"></a>
+<a class="anchor" id="a334dfd6cc6f7a87f5b321538c2ba2eaf"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -2169,14 +2199,66 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;&#160;</td>
+          <td class="paramname"><em>fDistance</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Given the specified object space ray, determine if the mesh data is intersected at all and also compute the intersection distance. </p>
+
+</div>
+</div>
+<a class="anchor" id="a2113dc07d9907b13d81c04285a5c8bc4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgMesh::pick </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_camera_node.html">cgCameraNode</a> *&#160;</td>
+          <td class="paramname"><em>pCamera</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_size.html">cgSize</a> &amp;&#160;</td>
+          <td class="paramname"><em>ViewportSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_transform.html">cgTransform</a> &amp;&#160;</td>
+          <td class="paramname"><em>ObjectTransform</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
+          <td class="paramname"><em>vOrigin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
+          <td class="paramname"><em>vDir</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>bWireframe</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
-          <td class="paramname"><em>vWireTolerance</em>, </td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>fWireTolerance</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2192,7 +2274,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Given the specified object space ray, determine if the mesh data is intersected at all and also compute the intersection distance. </p>
+<p>Given the specified object space ray, determine if the mesh data is intersected at all and also compute the intersection distance. This overload supports both wireframe and solid picking. </p>
 
 </div>
 </div>
@@ -2238,11 +2320,11 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Similar to <a class="el" href="classcg_mesh.html#aef09a08b5854d062ee3708b00160f7d9" title="Given the specified object space ray, determine if the mesh data is intersected at all and also compu...">pick()</a> but is used to simply determine which face was intersected and which material is assigned to it. </p>
+<p>Similar to <a class="el" href="classcg_mesh.html#a334dfd6cc6f7a87f5b321538c2ba2eaf" title="Given the specified object space ray, determine if the mesh data is intersected at all and also compu...">pick()</a> but is used to simply determine which face was intersected and which material is assigned to it. </p>
 
 </div>
 </div>
-<a class="anchor" id="a213910d123264a5d1dfd30f547ea0eba"></a>
+<a class="anchor" id="aa0a7c7e328b2646fbf6f3bd20f827df6"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -2254,6 +2336,24 @@ Friends</h2></td></tr>
           <td>(</td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
           <td class="paramname"><em>nDataGroupId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcg_camera_node.html">cgCameraNode</a> *&#160;</td>
+          <td class="paramname"><em>pCamera</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_size.html">cgSize</a> &amp;&#160;</td>
+          <td class="paramname"><em>ViewportSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_transform.html">cgTransform</a> &amp;&#160;</td>
+          <td class="paramname"><em>ObjectTransform</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2276,8 +2376,8 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
-          <td class="paramname"><em>vWireTolerance</em>, </td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>fWireTolerance</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2528,6 +2628,34 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Given the specified subset values, simply render the selected batch of primitives the required number of times based on their material. </p>
+
+</div>
+</div>
+<a class="anchor" id="a797ca83ef071a9a562aaa5a5f87e1116"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgMesh::replaceMaterial </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> &amp;&#160;</td>
+          <td class="paramname"><em>oldMaterial</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> &amp;&#160;</td>
+          <td class="paramname"><em>newMaterial</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Replace the specified material, with a new one. </p>
 
 </div>
 </div>
@@ -4018,7 +4146,7 @@ Friends</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_mesh.html">cgMesh</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:37 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:34 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

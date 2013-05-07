@@ -14,7 +14,7 @@
 //        animation related types, defines and macros.                       //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -27,6 +27,7 @@
 #include <cgBase.h>
 #include <World/cgWorldQuery.h>
 #include <Math/cgBezierSpline.h>
+#include <Math/cgEulerAngles.h>
 #include <Math/cgMathUtility.h>
 #include <Scripting/cgScriptInterop.h>
 
@@ -170,7 +171,7 @@ public:
     //-----------------------------------------------------------------------------
     // Public Inline Methods
     //-----------------------------------------------------------------------------
-    inline bool isEmpty     ( ) { return (data.getPointCount() == 0); }
+    inline bool isEmpty     ( ) const { return (data.getPointCount() == 0); }
 
     //-------------------------------------------------------------------------
 	// Public Variables
@@ -216,7 +217,7 @@ public:
     //-----------------------------------------------------------------------------
     // Public Inline Methods
     //-----------------------------------------------------------------------------
-    inline bool isEmpty     ( ) { return data.empty(); }
+    inline bool isEmpty     ( ) const { return data.empty(); }
     
     //-------------------------------------------------------------------------
 	// Public Variables
@@ -253,8 +254,8 @@ public:
     //-------------------------------------------------------------------------
 	// Public Virtual Methods
 	//-------------------------------------------------------------------------
-    virtual bool    serialize           ( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world );
-    virtual bool    deserialize         ( cgWorldQuery & controllerQuery, bool cloning, cgInt32 & minFrameOut, cgInt32 & maxFrameOut );
+    virtual bool    serialize           ( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world, void * customData, cgUInt32 customDataSize );
+    virtual bool    deserialize         ( cgWorldQuery & controllerQuery, bool cloning, cgInt32 & minFrameOut, cgInt32 & maxFrameOut, void *& customDataOut, cgUInt32 & customDataSizeOut );
     virtual bool    deserializeChannel  ( cgWorldQuery & channelQuery, cgInt32 channelIndex, bool cloning, cgInt32 & minFrameOut, cgInt32 & maxFrameOut ) { return true; }
 
     //-------------------------------------------------------------------------
@@ -307,11 +308,23 @@ public:
     void                                    evaluate            ( cgDouble position, cgVector3 & p, const cgVector3 & default );
     void                                    addLinearKey        ( cgInt32 frame, const cgVector3 & value );
     const cgFloatCurveAnimationChannel    & getAnimationChannel ( cgUInt32 index ) const;
+    cgFloatCurveAnimationChannel          & getAnimationChannel ( cgUInt32 index );
+    
+    //-------------------------------------------------------------------------
+	// Public Inline Methods
+	//-------------------------------------------------------------------------
+    inline bool isEmpty( bool anyChannelEmpty = false ) const
+    {
+        if ( anyChannelEmpty )
+            return mCurves[0].isEmpty() || mCurves[1].isEmpty() || mCurves[2].isEmpty();
+        else
+            return mCurves[0].isEmpty() && mCurves[1].isEmpty() && mCurves[2].isEmpty();
+    }
 
     //-------------------------------------------------------------------------
 	// Public Virtual Methods (Overrides cgAnimationTargetController)
 	//-------------------------------------------------------------------------
-    virtual bool    serialize           ( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world );
+    virtual bool    serialize           ( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world, void * customData, cgUInt32 customDataSize );
     virtual bool    deserializeChannel  ( cgWorldQuery & channelQuery, cgInt32 channelIndex, bool cloning, cgInt32 & minFrameOut, cgInt32 & maxFrameOut );
 
     // Pure virtual type descriptions
@@ -356,11 +369,23 @@ public:
     void                                    evaluate            ( cgDouble position, cgVector3 & s, const cgVector3 & default );
     void                                    addLinearKey        ( cgInt32 frame, const cgVector3 & value );
     const cgFloatCurveAnimationChannel    & getAnimationChannel ( cgUInt32 index ) const;
+    cgFloatCurveAnimationChannel          & getAnimationChannel ( cgUInt32 index );
+    
+    //-------------------------------------------------------------------------
+	// Public Inline Methods
+	//-------------------------------------------------------------------------
+    inline bool isEmpty( bool anyChannelEmpty = false ) const
+    {
+        if ( anyChannelEmpty )
+            return mCurves[0].isEmpty() || mCurves[1].isEmpty() || mCurves[2].isEmpty();
+        else
+            return mCurves[0].isEmpty() && mCurves[1].isEmpty() && mCurves[2].isEmpty();
+    }
 
     //-------------------------------------------------------------------------
 	// Public Virtual Methods (Overrides cgAnimationTargetController)
 	//-------------------------------------------------------------------------
-    virtual bool    serialize           ( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world );
+    virtual bool    serialize           ( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world, void * customData, cgUInt32 customDataSize );
     virtual bool    deserializeChannel  ( cgWorldQuery & channelQuery, cgInt32 channelIndex, bool cloning, cgInt32 & minFrameOut, cgInt32 & maxFrameOut );
 
     // Pure virtual type descriptions
@@ -402,13 +427,23 @@ public:
     //-------------------------------------------------------------------------
 	// Public Methods
 	//-------------------------------------------------------------------------
-    void            evaluate            ( cgDouble position, cgFloat & s, cgFloat default );
-    void            addLinearKey        ( cgInt32 frame, cgFloat value );
+    void                                evaluate            ( cgDouble position, cgFloat & s, cgFloat default );
+    void                                addLinearKey        ( cgInt32 frame, cgFloat value );
+    const cgFloatCurveAnimationChannel& getAnimationChannel ( ) const;
+    cgFloatCurveAnimationChannel      & getAnimationChannel ( );
+    
+    //-------------------------------------------------------------------------
+	// Public Inline Methods
+	//-------------------------------------------------------------------------
+    inline bool isEmpty( bool anyChannelEmpty = false ) const
+    {
+        return mCurve.isEmpty();
+    }
 
     //-------------------------------------------------------------------------
 	// Public Virtual Methods (Overrides cgAnimationTargetController)
 	//-------------------------------------------------------------------------
-    virtual bool    serialize           ( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world );
+    virtual bool    serialize           ( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world, void * customData, cgUInt32 customDataSize );
     virtual bool    deserializeChannel  ( cgWorldQuery & channelQuery, cgInt32 channelIndex, bool cloning, cgInt32 & minFrameOut, cgInt32 & maxFrameOut );
 
     // Pure virtual type descriptions
@@ -453,11 +488,20 @@ public:
     void                                evaluate            ( cgDouble position, cgQuaternion & q, const cgQuaternion & default );
     void                                addKey              ( cgInt32 frame, const cgQuaternion & value );
     const cgQuaternionAnimationChannel& getAnimationChannel ( ) const;
+    cgQuaternionAnimationChannel      & getAnimationChannel ( );
+    
+    //-------------------------------------------------------------------------
+	// Public Inline Methods
+	//-------------------------------------------------------------------------
+    inline bool isEmpty( bool anyChannelEmpty = false ) const
+    {
+        return mKeyFrames.isEmpty();
+    }
 
     //-------------------------------------------------------------------------
 	// Public Virtual Methods (Overrides cgAnimationTargetController)
 	//-------------------------------------------------------------------------
-    virtual bool    serialize           ( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world );
+    virtual bool    serialize           ( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world, void * customData, cgUInt32 customDataSize );
     virtual bool    deserializeChannel  ( cgWorldQuery & channelQuery, cgInt32 channelIndex, bool cloning, cgInt32 & minFrameOut, cgInt32 & maxFrameOut );
 
     // Pure virtual type descriptions
@@ -492,7 +536,7 @@ public:
     //-------------------------------------------------------------------------
 	// Constructors & Destructors
 	//-------------------------------------------------------------------------
-             cgEulerAnglesTargetController( );
+             cgEulerAnglesTargetController( cgEulerAnglesOrder::Base order = cgEulerAnglesOrder::YXZ );
              cgEulerAnglesTargetController( const cgEulerAnglesTargetController & init, const cgRange & frameRange );
 	virtual ~cgEulerAnglesTargetController( );
 
@@ -504,11 +548,29 @@ public:
     void                                    addLinearKey        ( cgInt32 frame, const cgEulerAngles & value );
     void                                    addLinearKey        ( cgInt32 frame, const cgQuaternion & value );
     const cgFloatCurveAnimationChannel    & getAnimationChannel ( cgUInt32 index ) const;
+    cgFloatCurveAnimationChannel          & getAnimationChannel ( cgUInt32 index );
+    
+    //-------------------------------------------------------------------------
+	// Public Inline Methods
+	//-------------------------------------------------------------------------
+    inline bool isEmpty( bool anyChannelEmpty = false ) const
+    {
+        if ( anyChannelEmpty )
+            return mCurves[0].isEmpty() || mCurves[1].isEmpty() || mCurves[2].isEmpty();
+        else
+            return mCurves[0].isEmpty() && mCurves[1].isEmpty() && mCurves[2].isEmpty();
+    }
+    
+    inline cgEulerAnglesOrder::Base getRotationOrder( ) const
+    {
+        return mRotationOrder;
+    }
 
     //-------------------------------------------------------------------------
 	// Public Virtual Methods (Overrides cgAnimationTargetController)
 	//-------------------------------------------------------------------------
-    virtual bool    serialize           ( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world );
+    virtual bool    serialize           ( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world, void * customData, cgUInt32 customDataSize );
+    virtual bool    deserialize         ( cgWorldQuery & controllerQuery, bool cloning, cgInt32 & minFrameOut, cgInt32 & maxFrameOut, void *& customDataOut, cgUInt32 & customDataSizeOut );
     virtual bool    deserializeChannel  ( cgWorldQuery & channelQuery, cgInt32 channelIndex, bool cloning, cgInt32 & minFrameOut, cgInt32 & maxFrameOut );
 
     // Pure virtual type descriptions
@@ -525,6 +587,7 @@ protected:
 	// Protected Members
 	//-------------------------------------------------------------------------
     cgFloatCurveAnimationChannel    mCurves[3];
+    cgEulerAnglesOrder::Base        mRotationOrder;
 };
 
 #endif // !_CGE_CGANIMATIONTYPES_H_

@@ -334,6 +334,12 @@
     <Filter Include="Header Files\Scripting\Packages\Core\Navigation">
       <UniqueIdentifier>{d07bf7c9-e3a4-4f4e-b95a-c0d4c025fa25}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\World\Graphs">
+      <UniqueIdentifier>{1e58c94e-ab7a-41a3-b450-cef7f2cc8a6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World\Graphs">
+      <UniqueIdentifier>{b197fdec-4c8b-4385-8ae5-38ee8ef43aad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\cgBase.cpp">
@@ -1124,6 +1130,24 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\World\Objects\cgBillboardObject.cpp">
       <Filter>Source Files\World\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\World\cgOctree.cpp">
+      <Filter>Source Files\World\Graphs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\World\cgBSPVisTree.cpp">
+      <Filter>Source Files\World\Graphs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\World\cgSphereTree.cpp">
+      <Filter>Source Files\World\Graphs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\World\Elements\cgBSPVisTreeElement.cpp">
+      <Filter>Source Files\World\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\System\Platform\cgWinCursor.cpp">
+      <Filter>Source Files\System\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\System\cgCursor.cpp">
+      <Filter>Source Files\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2458,6 +2482,24 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\World\Objects\cgBillboardObject.h">
       <Filter>Header Files\World\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\World\cgOctree.h">
+      <Filter>Header Files\World\Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\World\cgBSPVisTree.h">
+      <Filter>Header Files\World\Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\World\cgSphereTree.h">
+      <Filter>Header Files\World\Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\World\Elements\cgBSPVisTreeElement.h">
+      <Filter>Header Files\World\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\Platform\cgWinCursor.h">
+      <Filter>Header Files\System\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\cgCursor.h">
+      <Filter>Header Files\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

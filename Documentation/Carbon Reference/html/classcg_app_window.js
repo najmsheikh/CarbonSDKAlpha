@@ -18,6 +18,9 @@ var classcg_app_window =
     [ "queryReferenceType", "classcg_app_window.html#a2f8b3bf79425c44580b4f57341350425", null ],
     [ "screenToClient", "classcg_app_window.html#a5c86ee3855bbefe3cff3337a11840644", null ],
     [ "screenToClient", "classcg_app_window.html#a2664cd9e4736435ea19f5fdf84699373", null ],
+    [ "setClientSize", "classcg_app_window.html#a20663a4b24dc364377b3b6f6f8b37732", null ],
+    [ "setFullScreenMode", "classcg_app_window.html#a6632ebe5c88ae027ee9ea90753116cd5", null ],
+    [ "setSize", "classcg_app_window.html#a494d38f509f4aded0ab65c0c2a755e19", null ],
     [ "setTitle", "classcg_app_window.html#a86ba2ba57ed7f411ef7f15aef9ead108", null ],
     [ "show", "classcg_app_window.html#a60b4350b2704956f73f13e49d965a963", null ]
 ];

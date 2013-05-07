@@ -63,5 +63,6 @@ var classcg_sampler =
     [ "mUpdateFilterMethods", "classcg_sampler.html#ac89a71df360d40c819c83ffad4a727a7", null ],
     [ "mUpdateLODDetails", "classcg_sampler.html#a0c40d08371e0a07fefff64209e7ff683", null ],
     [ "mUpdateMaxAnisotropy", "classcg_sampler.html#a6c375a1859617a745a90eb8f66af7f05", null ],
+    [ "mUpdateStrength", "classcg_sampler.html#ab2c16c49a76f64225719df78bdee0a7e", null ],
     [ "mUpdateTexture", "classcg_sampler.html#acfe73060ebb108d2ec648eaca95c7e31", null ]
 ];

@@ -23,6 +23,7 @@ namespace AnimationTarget
 
         // Register the object methods
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void onAnimationTransformUpdated( const Transform &in )", asMETHODPR(type, onAnimationTransformUpdated, ( const cgTransform& ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void getAnimationTransform( Transform &inout ) const", asMETHODPR(type, getAnimationTransform, ( cgTransform& ) const, void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "const String & getInstanceIdentifier( ) const", asMETHODPR(type, getInstanceIdentifier, ( ) const, const cgString& ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void setInstanceIdentifier( const String &in )", asMETHODPR(type, setInstanceIdentifier, ( const cgString& ), void ), asCALL_THISCALL) );
         

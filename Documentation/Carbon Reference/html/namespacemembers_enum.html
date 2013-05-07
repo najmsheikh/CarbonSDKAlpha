@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -75,7 +75,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="namespacemembers.html"><span>All</span></a></li>
       <li><a href="namespacemembers_func.html"><span>Functions</span></a></li>
       <li><a href="namespacemembers_vars.html"><span>Variables</span></a></li>
-      <li><a href="namespacemembers_type.html"><span>Typedefs</span></a></li>
       <li class="current"><a href="namespacemembers_enum.html"><span>Enumerations</span></a></li>
       <li><a href="namespacemembers_eval.html"><span>Enumerator</span></a></li>
     </ul>
@@ -130,6 +129,8 @@ $(document).ready(function(){initNavTree('namespacemembers_enum.html','');});
 , <a class="el" href="namespacecg_shadow_resource_type.html#af7855c1bb881a57307b358bc20feaf90">cgShadowResourceType</a>
 , <a class="el" href="namespacecg_shadow_generator_type.html#a79a040a35bc7304224afce8db8334c17">cgShadowGeneratorType</a>
 , <a class="el" href="namespacecg_indirect_lighting_task_type.html#a390fc189673b81de11004bb6004c1619">cgIndirectLightingTaskType</a>
+, <a class="el" href="namespacecg_sky_element_type.html#a9820dbea10f1a9a4437df16d4554fb76">cgSkyElementType</a>
+, <a class="el" href="namespacecg_object_node_flags.html#a3e8f1fd058e5a576d4b3bf4be9fb3228">cgObjectNodeFlags</a>
 , <a class="el" href="namespacecg_deferred_update_flags.html#a81978683cf2b0cfa0713cbbb85d46861">cgDeferredUpdateFlags</a>
 , <a class="el" href="namespacecg_transform_source.html#aa39c63df0b3694bc72e0f5197d24b743">cgTransformSource</a>
 , <a class="el" href="namespacecg_transform_method.html#ac1b4ada063217ae9d88dda91c4d44055">cgTransformMethod</a>
@@ -139,8 +140,10 @@ $(document).ready(function(){initNavTree('namespacemembers_enum.html','');});
 , <a class="el" href="namespacecg_clone_method.html#a9c3d9d845b3fb56c57f151799de5b4fe">cgCloneMethod</a>
 , <a class="el" href="namespacecg_node_type.html#adacb2d67e53952e40b969ae12d7fcf9a">cgNodeType</a>
 , <a class="el" href="namespacecg_scene_type.html#a344d305ea77fddca96f09c1e455d2979">cgSceneType</a>
+, <a class="el" href="namespacecg_world_database_status.html#aa5a2c78726e22bd70f3b7bc626271a80">cgWorldDatabaseStatus</a>
 , <a class="el" href="namespacecg_world_type.html#ae25700bef3e243c265450227a0ceb796">cgWorldType</a>
 , <a class="el" href="namespacecg_update_rate.html#a0da2807d89bc281aaedc56c1edbdbd24">cgUpdateRate</a>
+, <a class="el" href="namespacecg_sandbox_render_flags.html#aa7d91d49ec0d1b28a2557b23e15aa188">cgSandboxRenderFlags</a>
 , <a class="el" href="namespacecg_scene_render_context.html#ade37f1c2f263b515f00fe02b7945a3fb">cgSceneRenderContext</a>
 , <a class="el" href="namespacecg_scene_process_stage.html#a10de22dd3a4008f10e36240e6839c114">cgSceneProcessStage</a>
 , <a class="el" href="namespacecg_visibility_search_flags.html#aacddd7c62cdb30987592f70d05b3b247">cgVisibilitySearchFlags</a>
@@ -167,6 +170,7 @@ $(document).ready(function(){initNavTree('namespacemembers_enum.html','');});
 , <a class="el" href="namespacecg_memory_pool.html#a5bcd88aad0c0fd64c7df879d2eb9567c">cgMemoryPool</a>
 , <a class="el" href="namespacecg_buffer_format_caps.html#ab4e9511e4a2905347cbef40034493753">cgBufferFormatCaps</a>
 , <a class="el" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24">cgBufferFormat</a>
+, <a class="el" href="namespacecg_render_class.html#af7d53b47107030618f168ca11e52a4ed">cgRenderClass</a>
 , <a class="el" href="namespacecg_antialiasing_method.html#a98766240440ca4f9eaa771e4538faaa1">cgAntialiasingMethod</a>
 , <a class="el" href="namespacecg_fog_model.html#a104e96f0ff3f3e8fcad106f73e7ed563">cgFogModel</a>
 , <a class="el" href="namespacecg_indirect_lighting_method.html#a5f92d698d36b65d30f11a2bcf12806f7">cgIndirectLightingMethod</a>
@@ -194,11 +198,19 @@ $(document).ready(function(){initNavTree('namespacemembers_enum.html','');});
 , <a class="el" href="namespacecg_stencil_id.html#a4df285081f4ac64c764512bbefa425da">cgStencilId</a>
 , <a class="el" href="namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8">cgSystemState</a>
 , <a class="el" href="namespacecg_driver_capabilities.html#a84225a557a40180a18c28e78593c58f1">cgDriverCapabilities</a>
+, <a class="el" href="namespacecg_particle_emitter_type.html#a18e5e2937c8569fba831f3306cbc6a3c">cgParticleEmitterType</a>
+, <a class="el" href="namespacecg_particle_blend_method.html#a54d685857738ae224e7c90b432001de0">cgParticleBlendMethod</a>
 , <a class="el" href="namespacecg_queue_lighting_handler.html#aece3c40050640b719d0e1c40c8e99488">cgQueueLightingHandler</a>
 , <a class="el" href="namespacecg_queue_material_handler.html#a8a42a473c9318daf091d14cea6454902">cgQueueMaterialHandler</a>
 , <a class="el" href="namespacecg_queue_process_handler.html#ac995ff99eaa393b476476ee3c67b6f36">cgQueueProcessHandler</a>
+, <a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181">cgDefaultPhysicsMaterialGroup</a>
 , <a class="el" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559">cgSimulationQuality</a>
 , <a class="el" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921">cgPhysicsModel</a>
+, <a class="el" href="namespacecg_navigation_target_state.html#a9fe8706a8535ad5f6e2062d082d4a74b">cgNavigationTargetState</a>
+, <a class="el" href="namespacecg_navigation_agent_state.html#a25fca29c965a742ded6f89c7da2c7610">cgNavigationAgentState</a>
+, <a class="el" href="namespacecg_navigation_avoidance_quality.html#a684959b5458c94192f10b76ef65c01f2">cgNavigationAvoidanceQuality</a>
+, <a class="el" href="namespacecg_navigation_poly_flags.html#aefeb166d18b4b3f01a31c70a9f6374f6">cgNavigationPolyFlags</a>
+, <a class="el" href="namespacecg_navigation_region_type.html#ad5f5465fd65f47e876aa6e7a304f2733">cgNavigationRegionType</a>
 , <a class="el" href="namespacecg_euler_angles_order.html#a8ae140b17f9651448be2c2b18a6c7623">cgEulerAnglesOrder</a>
 , <a class="el" href="namespacecg_dock_mode.html#a8baabc504c7e79d96135cf51b54d8c3d">cgDockMode</a>
 , <a class="el" href="namespacecg_text_truncation_mode.html#ac3b5904d9a76bff8bdd635b99dd2ff7e">cgTextTruncationMode</a>
@@ -223,6 +235,7 @@ $(document).ready(function(){initNavTree('namespacemembers_enum.html','');});
 , <a class="el" href="namespacecg_platform.html#a5d47fbf0f0fdb76b34e41d8cb052ac37">cgPlatform</a>
 , <a class="el" href="namespacecg_sandbox_mode.html#a446a0d273ff8b4f240f1f0f0d18c3e69">cgSandboxMode</a>
 , <a class="el" href="namespacecg_audio_buffer_flags.html#a4e3dfae4460796f8dee02fdecdea9226">cgAudioBufferFlags</a>
+, <a class="el" href="namespacecg_animation_playback_mode.html#ad05c8be8e2aff0c06edfcb75ebae06df">cgAnimationPlaybackMode</a>
 , <a class="el" href="namespacecg_animation_channel_data_type.html#a4c09eb009b508894314ed707374d32bf">cgAnimationChannelDataType</a>
 </li>
 </ul>
@@ -281,7 +294,7 @@ $(document).ready(function(){initNavTree('namespacemembers_enum.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:59 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:49:07 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

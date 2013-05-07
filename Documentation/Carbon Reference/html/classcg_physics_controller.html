@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -124,8 +124,9 @@ Inheritance diagram for cgPhysicsController:</div>
  <div class="center">
   <img src="classcg_physics_controller.png" usemap="#cgPhysicsController_map" alt=""/>
   <map id="cgPhysicsController_map" name="cgPhysicsController_map">
-<area href="classcg_script_interop_1_1_disposable_script_object.html" title="Base class from which objects should be derived if they need to be passed to a script by reference as..." alt="cgScriptInterop::DisposableScriptObject" shape="rect" coords="0,0,236,24"/>
+<area href="classcg_script_interop_1_1_disposable_script_object.html" title="Base class from which objects should be derived if they need to be passed to a script by reference as..." alt="cgScriptInterop::DisposableScriptObject" shape="rect" coords="123,0,359,24"/>
 <area href="classcg_character_controller.html" title="A physics controller class that provides physics simulation and collision detection / response for an..." alt="cgCharacterController" shape="rect" coords="0,112,236,136"/>
+<area href="classcg_ragdoll_controller.html" title="Contains classes which provide ragdoll physics behaviors for scene objects (usually bone hierarchies)..." alt="cgRagdollController" shape="rect" coords="246,112,482,136"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -160,6 +161,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3c78c5256ba8ecf7ee3e3a2724888a97"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_controller.html#a3c78c5256ba8ecf7ee3e3a2724888a97">setCollidable</a> (bool collidable)</td></tr>
 <tr class="memdesc:a3c78c5256ba8ecf7ee3e3a2724888a97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable / disable collision detection for this handled object.  <a href="#a3c78c5256ba8ecf7ee3e3a2724888a97"></a><br/></td></tr>
 <tr class="separator:a3c78c5256ba8ecf7ee3e3a2724888a97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a596dc38051fdd2c7059c9b40647ac5a7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_controller.html#a596dc38051fdd2c7059c9b40647ac5a7">dispose</a> (bool disposeBase)</td></tr>
+<tr class="memdesc:a596dc38051fdd2c7059c9b40647ac5a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any resources allocated by the physics world.  <a href="#a596dc38051fdd2c7059c9b40647ac5a7"></a><br/></td></tr>
+<tr class="separator:a596dc38051fdd2c7059c9b40647ac5a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classcg_script_interop_1_1_disposable_script_object"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcg_script_interop_1_1_disposable_script_object')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcg_script_interop_1_1_disposable_script_object.html">cgScriptInterop::DisposableScriptObject</a></td></tr>
 <tr class="memitem:a815b9a991113bb99acea9e15af2920a2 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a815b9a991113bb99acea9e15af2920a2">DisposableScriptObject</a> ()</td></tr>
 <tr class="separator:a815b9a991113bb99acea9e15af2920a2 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -173,9 +177,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6ac736e569233a8c1909bd5f3bdfbf6c inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36cc028af4f3b6480abfb1830dddc36d inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a36cc028af4f3b6480abfb1830dddc36d">scriptSafeDispose</a> ()</td></tr>
 <tr class="separator:a36cc028af4f3b6480abfb1830dddc36d inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a607a22a9c1cb9252904e5097a1dab7a7 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a607a22a9c1cb9252904e5097a1dab7a7">dispose</a> (bool disposeBase)</td></tr>
-<tr class="memdesc:a607a22a9c1cb9252904e5097a1dab7a7 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any memory, references or resources allocated by this object. Derived classes should implement this behavior.  <a href="#a607a22a9c1cb9252904e5097a1dab7a7"></a><br/></td></tr>
-<tr class="separator:a607a22a9c1cb9252904e5097a1dab7a7 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -326,6 +327,36 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a596dc38051fdd2c7059c9b40647ac5a7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgPhysicsController::dispose </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bDisposeBase</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Release any resources allocated by the physics world. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a607a22a9c1cb9252904e5097a1dab7a7">cgScriptInterop::DisposableScriptObject</a>.</p>
+
+<p>Reimplemented in <a class="el" href="classcg_character_controller.html#aadac11927c2eb01c153f3dee0c1e7268">cgCharacterController</a>, and <a class="el" href="classcg_ragdoll_controller.html#ac2aecc37179ed12f67d22183b20303f6">cgRagdollController</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a7bb362def12c2fa81b0fe66bdae43f6a"></a>
 <div class="memitem">
 <div class="memproto">
@@ -349,7 +380,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Allow the controller to initialize (called after setting up). </p>
 
-<p>Reimplemented in <a class="el" href="classcg_character_controller.html#a7723ac6cdbf6439cf58dab554688bfe6">cgCharacterController</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_character_controller.html#a7723ac6cdbf6439cf58dab554688bfe6">cgCharacterController</a>, and <a class="el" href="classcg_ragdoll_controller.html#a2f4a596e33dba9f260a578c80f772772">cgRagdollController</a>.</p>
 
 </div>
 </div>
@@ -595,7 +626,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_physics_controller.html">cgPhysicsController</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:43 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:41 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

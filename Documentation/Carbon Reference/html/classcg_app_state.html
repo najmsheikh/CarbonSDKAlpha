@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -134,6 +134,8 @@ Inheritance diagram for cgAppState:</div>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_app_state_1_1_event_action_desc.html">EventActionDesc</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_app_state_1_1_method_handles.html">MethodHandles</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -160,6 +162,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aef5c88b1b13e525dba24fd0d0ded3d0a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#aef5c88b1b13e525dba24fd0d0ded3d0a">cgAppState</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;stateId)</td></tr>
 <tr class="memdesc:aef5c88b1b13e525dba24fd0d0ded3d0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for this class.  <a href="#aef5c88b1b13e525dba24fd0d0ded3d0a"></a><br/></td></tr>
 <tr class="separator:aef5c88b1b13e525dba24fd0d0ded3d0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13c7ac1df377c2ed800f2a5f11b98a4b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a13c7ac1df377c2ed800f2a5f11b98a4b">cgAppState</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;stateId, const <a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp;scriptStream, <a class="el" href="classcg_resource_manager.html">cgResourceManager</a> *resourceManager)</td></tr>
+<tr class="memdesc:a13c7ac1df377c2ed800f2a5f11b98a4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for this class.  <a href="#a13c7ac1df377c2ed800f2a5f11b98a4b"></a><br/></td></tr>
+<tr class="separator:a13c7ac1df377c2ed800f2a5f11b98a4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af44981d8f51c84fb38649b1937ab3609"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#af44981d8f51c84fb38649b1937ab3609">~cgAppState</a> ()</td></tr>
 <tr class="memdesc:af44981d8f51c84fb38649b1937ab3609"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for this class.  <a href="#af44981d8f51c84fb38649b1937ab3609"></a><br/></td></tr>
 <tr class="separator:af44981d8f51c84fb38649b1937ab3609"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,6 +174,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae5aa9d9d342d2c2a499dea3c74c9225e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#ae5aa9d9d342d2c2a499dea3c74c9225e">isSuspended</a> () const </td></tr>
 <tr class="memdesc:ae5aa9d9d342d2c2a499dea3c74c9225e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this game state is currently suspended.  <a href="#ae5aa9d9d342d2c2a499dea3c74c9225e"></a><br/></td></tr>
 <tr class="separator:ae5aa9d9d342d2c2a499dea3c74c9225e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f78e12b558fc63460c5d2cfae8b3fe5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a4f78e12b558fc63460c5d2cfae8b3fe5">isScripted</a> () const </td></tr>
+<tr class="memdesc:a4f78e12b558fc63460c5d2cfae8b3fe5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the state is implemented through a script. Returns false if this behavior has a native application side implementation.  <a href="#a4f78e12b558fc63460c5d2cfae8b3fe5"></a><br/></td></tr>
+<tr class="separator:a4f78e12b558fc63460c5d2cfae8b3fe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd1ccad966f89ad35aa2293202e9bb5a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_app_transition_state.html">cgAppTransitionState</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#acd1ccad966f89ad35aa2293202e9bb5a">getOutgoingTransition</a> ()</td></tr>
 <tr class="memdesc:acd1ccad966f89ad35aa2293202e9bb5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this state is currently in the process of transitioning using a more comprehensive transitioning process, this will return the current object that is being used to transition this state out.  <a href="#acd1ccad966f89ad35aa2293202e9bb5a"></a><br/></td></tr>
 <tr class="separator:acd1ccad966f89ad35aa2293202e9bb5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -181,11 +189,30 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a99d3441348b891099aebbf84f8bb3fe9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_app_state.html">cgAppState</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a99d3441348b891099aebbf84f8bb3fe9">getTerminalState</a> ()</td></tr>
 <tr class="memdesc:a99d3441348b891099aebbf84f8bb3fe9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Irrespective of this state's position in the restorable history list, retrieve the state currently at the "tail" of the list.  <a href="#a99d3441348b891099aebbf84f8bb3fe9"></a><br/></td></tr>
 <tr class="separator:a99d3441348b891099aebbf84f8bb3fe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a8638ba6f90a49feef83d6dde00ef9b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_app_state.html">cgAppState</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a4a8638ba6f90a49feef83d6dde00ef9b">getParentState</a> ()</td></tr>
+<tr class="memdesc:a4a8638ba6f90a49feef83d6dde00ef9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the state object that is immediately above this state in the active state history list.  <a href="#a4a8638ba6f90a49feef83d6dde00ef9b"></a><br/></td></tr>
+<tr class="separator:a4a8638ba6f90a49feef83d6dde00ef9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ff4c9f982bcca2c614b55af4ef68bca"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a6ff4c9f982bcca2c614b55af4ef68bca">getStateId</a> () const </td></tr>
 <tr class="memdesc:a6ff4c9f982bcca2c614b55af4ef68bca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the state identifier for this registered state.  <a href="#a6ff4c9f982bcca2c614b55af4ef68bca"></a><br/></td></tr>
 <tr class="separator:a6ff4c9f982bcca2c614b55af4ef68bca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc11d72d9b93fd93e9bfdcaa01186cf0"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#abc11d72d9b93fd93e9bfdcaa01186cf0">initialize</a> ()</td></tr>
-<tr class="separator:abc11d72d9b93fd93e9bfdcaa01186cf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a916200d79af7809659fa50584994d72e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a916200d79af7809659fa50584994d72e">raiseEvent</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;eventName)</td></tr>
+<tr class="memdesc:a916200d79af7809659fa50584994d72e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the derived class (or potentially a child class) whenever an event has occured. Note : States which are not currently active may not raise events.  <a href="#a916200d79af7809659fa50584994d72e"></a><br/></td></tr>
+<tr class="separator:a916200d79af7809659fa50584994d72e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77e2dee24633cbbbc023f91012bcf659"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_app_state_manager.html">cgAppStateManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a77e2dee24633cbbbc023f91012bcf659">getManager</a> ()</td></tr>
+<tr class="memdesc:a77e2dee24633cbbbc023f91012bcf659"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the application state manager to which this state belongs.  <a href="#a77e2dee24633cbbbc023f91012bcf659"></a><br/></td></tr>
+<tr class="separator:a77e2dee24633cbbbc023f91012bcf659"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a087326fcace269fb20ca339a6c044dd5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a087326fcace269fb20ca339a6c044dd5">spawnChildState</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;stateId, bool suspendParent)</td></tr>
+<tr class="memdesc:a087326fcace269fb20ca339a6c044dd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spawn a new child state and, if requested, also suspend this state.  <a href="#a087326fcace269fb20ca339a6c044dd5"></a><br/></td></tr>
+<tr class="separator:a087326fcace269fb20ca339a6c044dd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a861de74f79eb056fcef57a46ba6e5ad8"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cg_resource_handles_8h.html#a118acf0914cb9c76815e189ac6f8a0c0">cgScriptHandle</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a861de74f79eb056fcef57a46ba6e5ad8">getScript</a> () const </td></tr>
+<tr class="memdesc:a861de74f79eb056fcef57a46ba6e5ad8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the handle the script containing the state logic if this is a scripted application state (see <a class="el" href="classcg_app_state.html#a4f78e12b558fc63460c5d2cfae8b3fe5" title="Returns true if the state is implemented through a script. Returns false if this behavior has a nativ...">cgAppState::isScripted()</a>).  <a href="#a861de74f79eb056fcef57a46ba6e5ad8"></a><br/></td></tr>
+<tr class="separator:a861de74f79eb056fcef57a46ba6e5ad8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1a0625331159bea10e8ec10180af60d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_script_object.html">cgScriptObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#ac1a0625331159bea10e8ec10180af60d">getScriptObject</a> ()</td></tr>
+<tr class="memdesc:ac1a0625331159bea10e8ec10180af60d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the script object referencing the specific instance of the application state class associated with this state if scripted (see <a class="el" href="classcg_app_state.html#a4f78e12b558fc63460c5d2cfae8b3fe5" title="Returns true if the state is implemented through a script. Returns false if this behavior has a nativ...">cgAppState::isScripted()</a>).  <a href="#ac1a0625331159bea10e8ec10180af60d"></a><br/></td></tr>
+<tr class="separator:ac1a0625331159bea10e8ec10180af60d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec5b6088a2de62f8550e505983450431"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#aec5b6088a2de62f8550e505983450431">initialize</a> ()</td></tr>
+<tr class="memdesc:aec5b6088a2de62f8550e505983450431"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the state to initialize (occurs during registration).  <a href="#aec5b6088a2de62f8550e505983450431"></a><br/></td></tr>
+<tr class="separator:aec5b6088a2de62f8550e505983450431"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a931b2337eb56b4976d711d5c4fbd8aae"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a931b2337eb56b4976d711d5c4fbd8aae">begin</a> ()</td></tr>
 <tr class="memdesc:a931b2337eb56b4976d711d5c4fbd8aae"><td class="mdescLeft">&#160;</td><td class="mdescRight">This signifies that the state has actually been selected and activated by the state management system. This will generally be the point at which any specific resources relevant for the execution of this state will be built/loaded.  <a href="#a931b2337eb56b4976d711d5c4fbd8aae"></a><br/></td></tr>
 <tr class="separator:a931b2337eb56b4976d711d5c4fbd8aae"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -204,9 +231,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8c16f57fd180c5b9c1732efec295c58b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a8c16f57fd180c5b9c1732efec295c58b">resume</a> ()</td></tr>
 <tr class="memdesc:a8c16f57fd180c5b9c1732efec295c58b"><td class="mdescLeft">&#160;</td><td class="mdescRight">If in the suspended state, this function will take the state object out of a suspended mode.  <a href="#a8c16f57fd180c5b9c1732efec295c58b"></a><br/></td></tr>
 <tr class="separator:a8c16f57fd180c5b9c1732efec295c58b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af58fb2f29c0cd52b3a3804fb88a427e7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#af58fb2f29c0cd52b3a3804fb88a427e7">raiseEvent</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;eventName, bool force=false)</td></tr>
-<tr class="memdesc:af58fb2f29c0cd52b3a3804fb88a427e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the derived class (or potentially a child class) whenever an event has occured. Note : States which are not currently active may not raise events.  <a href="#af58fb2f29c0cd52b3a3804fb88a427e7"></a><br/></td></tr>
-<tr class="separator:af58fb2f29c0cd52b3a3804fb88a427e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c92274e1d0ef5cf3bbc3c129e3b16e9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a3c92274e1d0ef5cf3bbc3c129e3b16e9">raiseEvent</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;eventName, bool force)</td></tr>
+<tr class="memdesc:a3c92274e1d0ef5cf3bbc3c129e3b16e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the derived class (or potentially a child class) whenever an event has occured. Note : States which are not currently active may not raise events.  <a href="#a3c92274e1d0ef5cf3bbc3c129e3b16e9"></a><br/></td></tr>
+<tr class="separator:a3c92274e1d0ef5cf3bbc3c129e3b16e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2253043c6632db19f07d33125c11df8"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#ac2253043c6632db19f07d33125c11df8">registerEventAction</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;eventName, const <a class="el" href="structcg_app_state_1_1_event_action_desc.html">EventActionDesc</a> &amp;description)</td></tr>
 <tr class="memdesc:ac2253043c6632db19f07d33125c11df8"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function should be called in order to add a specific action that should be performed whenever the specified event is raised by the game state object.  <a href="#ac2253043c6632db19f07d33125c11df8"></a><br/></td></tr>
 <tr class="separator:ac2253043c6632db19f07d33125c11df8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -222,6 +249,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac7545430336215a139f619e3cdcc9bd7"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#ac7545430336215a139f619e3cdcc9bd7">queryReferenceType</a> (const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;type) const </td></tr>
 <tr class="memdesc:ac7545430336215a139f619e3cdcc9bd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows the application to determine if the inheritance hierarchy supports a particular interface.  <a href="#ac7545430336215a139f619e3cdcc9bd7"></a><br/></td></tr>
 <tr class="separator:ac7545430336215a139f619e3cdcc9bd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec5468f986ac276cd51fdf6ffaca4d61"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#aec5468f986ac276cd51fdf6ffaca4d61">processMessage</a> (<a class="el" href="classcg_message.html">cgMessage</a> *message)</td></tr>
+<tr class="memdesc:aec5468f986ac276cd51fdf6ffaca4d61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows the state to respond to any incoming messages as it sees fit.  <a href="#aec5468f986ac276cd51fdf6ffaca4d61"></a><br/></td></tr>
+<tr class="separator:aec5468f986ac276cd51fdf6ffaca4d61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae024445dfbab8b43534881d322718192"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#ae024445dfbab8b43534881d322718192">dispose</a> (bool disposeBase)</td></tr>
 <tr class="memdesc:ae024445dfbab8b43534881d322718192"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any memory, references or resources allocated by this object.  <a href="#ae024445dfbab8b43534881d322718192"></a><br/></td></tr>
 <tr class="separator:ae024445dfbab8b43534881d322718192"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -244,9 +274,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4089bc9fc24b2e0bcc96376abd6c041c inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a4089bc9fc24b2e0bcc96376abd6c041c">deleteReference</a> ()</td></tr>
 <tr class="memdesc:a4089bc9fc24b2e0bcc96376abd6c041c inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force the deletion of this reference target.  <a href="#a4089bc9fc24b2e0bcc96376abd6c041c"></a><br/></td></tr>
 <tr class="separator:a4089bc9fc24b2e0bcc96376abd6c041c inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c78842232c529fe509dedebb1cecf6b inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a2c78842232c529fe509dedebb1cecf6b">processMessage</a> (<a class="el" href="classcg_message.html">cgMessage</a> *message)</td></tr>
-<tr class="memdesc:a2c78842232c529fe509dedebb1cecf6b inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process any messages sent to us from other objects, or other parts of the system via the reference messaging system (<a class="el" href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat...">cgReference</a>).  <a href="#a2c78842232c529fe509dedebb1cecf6b"></a><br/></td></tr>
-<tr class="separator:a2c78842232c529fe509dedebb1cecf6b inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d0ce63a0c603addc66b2736cbdc5443 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a4d0ce63a0c603addc66b2736cbdc5443">onReferenceAdded</a> (<a class="el" href="classcg_reference.html">cgReference</a> *holder, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> holderReferences, bool reconnecting)</td></tr>
 <tr class="memdesc:a4d0ce63a0c603addc66b2736cbdc5443 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered whenever a new reference to this object is added by a holder. Derived objects may override this virtual if they need to be informed for any reason.  <a href="#a4d0ce63a0c603addc66b2736cbdc5443"></a><br/></td></tr>
 <tr class="separator:a4d0ce63a0c603addc66b2736cbdc5443 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -256,9 +283,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#abc11be6582c83be070816daf60d96781">isInternalReference</a> () const </td></tr>
 <tr class="memdesc:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this reference is either an internal or serialized reference.  <a href="#abc11be6582c83be070816daf60d96781"></a><br/></td></tr>
 <tr class="separator:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#af002aedbdfca5e97c3a7263425a60dac">isDisposed</a> ()</td></tr>
-<tr class="memdesc:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#af002aedbdfca5e97c3a7263425a60dac"></a><br/></td></tr>
-<tr class="separator:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a34951860e42866aff9b890d704bccbc4">isDisposed</a> () const </td></tr>
+<tr class="memdesc:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#a34951860e42866aff9b890d704bccbc4"></a><br/></td></tr>
+<tr class="separator:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#aecf67c7fc72ba0d465096b4584e1caba">isDisposing</a> () const </td></tr>
 <tr class="memdesc:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object is in the process of being disposed.  <a href="#aecf67c7fc72ba0d465096b4584e1caba"></a><br/></td></tr>
 <tr class="separator:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -315,6 +342,16 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a322c41f2ff93d4019f0a7c3ff9a1cb8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27323cf2cc098ce9169c5aac42584c4f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a27323cf2cc098ce9169c5aac42584c4f">mBegun</a></td></tr>
 <tr class="separator:a27323cf2cc098ce9169c5aac42584c4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9166708ba48f9ce15450afea0b04b5c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_input_stream.html">cgInputStream</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#ac9166708ba48f9ce15450afea0b04b5c">mScriptStream</a></td></tr>
+<tr class="separator:ac9166708ba48f9ce15450afea0b04b5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a687e0c333c87d6a3fd23eb3ae92e2a5f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource_manager.html">cgResourceManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a687e0c333c87d6a3fd23eb3ae92e2a5f">mResourceManager</a></td></tr>
+<tr class="separator:a687e0c333c87d6a3fd23eb3ae92e2a5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad52d701d260ade012796c933f01c81a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#a118acf0914cb9c76815e189ac6f8a0c0">cgScriptHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#ad52d701d260ade012796c933f01c81a4">mScript</a></td></tr>
+<tr class="separator:ad52d701d260ade012796c933f01c81a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6db82804a5237cf47dd71750d97a8db1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_script_object.html">cgScriptObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a6db82804a5237cf47dd71750d97a8db1">mScriptObject</a></td></tr>
+<tr class="separator:a6db82804a5237cf47dd71750d97a8db1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94b0faaa656bbbcb37192be8e8445e7f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_app_state_1_1_method_handles.html">MethodHandles</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a94b0faaa656bbbcb37192be8e8445e7f">mScriptMethods</a></td></tr>
+<tr class="separator:a94b0faaa656bbbcb37192be8e8445e7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classcg_reference"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_reference')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_reference.html">cgReference</a></td></tr>
 <tr class="memitem:a58ab53765ddfa978c2ef51a3a75bab63 inherit pro_attribs_classcg_reference"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a58ab53765ddfa978c2ef51a3a75bab63">mReferenceId</a></td></tr>
 <tr class="separator:a58ab53765ddfa978c2ef51a3a75bab63 inherit pro_attribs_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -413,6 +450,40 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
           <td class="paramname"><em>strStateId</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructor for this class. </p>
+
+</div>
+</div>
+<a class="anchor" id="a13c7ac1df377c2ed800f2a5f11b98a4b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cgAppState::cgAppState </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>stateId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp;&#160;</td>
+          <td class="paramname"><em>scriptStream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcg_resource_manager.html">cgResourceManager</a> *&#160;</td>
+          <td class="paramname"><em>resourceManager</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -547,6 +618,23 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a77e2dee24633cbbbc023f91012bcf659"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_app_state_manager.html">cgAppStateManager</a> * cgAppState::getManager </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the application state manager to which this state belongs. </p>
+
+</div>
+</div>
 <a class="anchor" id="acd1ccad966f89ad35aa2293202e9bb5a"></a>
 <div class="memitem">
 <div class="memproto">
@@ -561,6 +649,23 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>If this state is currently in the process of transitioning using a more comprehensive transitioning process, this will return the current object that is being used to transition this state out. </p>
+
+</div>
+</div>
+<a class="anchor" id="a4a8638ba6f90a49feef83d6dde00ef9b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_app_state.html">cgAppState</a> * cgAppState::getParentState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the state object that is immediately above this state in the active state history list. </p>
 
 </div>
 </div>
@@ -608,6 +713,40 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a861de74f79eb056fcef57a46ba6e5ad8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cg_resource_handles_8h.html#a118acf0914cb9c76815e189ac6f8a0c0">cgScriptHandle</a> &amp; cgAppState::getScript </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the handle the script containing the state logic if this is a scripted application state (see <a class="el" href="classcg_app_state.html#a4f78e12b558fc63460c5d2cfae8b3fe5" title="Returns true if the state is implemented through a script. Returns false if this behavior has a nativ...">cgAppState::isScripted()</a>). </p>
+
+</div>
+</div>
+<a class="anchor" id="ac1a0625331159bea10e8ec10180af60d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_script_object.html">cgScriptObject</a> * cgAppState::getScriptObject </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the script object referencing the specific instance of the application state class associated with this state if scripted (see <a class="el" href="classcg_app_state.html#a4f78e12b558fc63460c5d2cfae8b3fe5" title="Returns true if the state is implemented through a script. Returns false if this behavior has a nativ...">cgAppState::isScripted()</a>). </p>
+
+</div>
+</div>
 <a class="anchor" id="a6ff4c9f982bcca2c614b55af4ef68bca"></a>
 <div class="memitem">
 <div class="memproto">
@@ -642,7 +781,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="abc11d72d9b93fd93e9bfdcaa01186cf0"></a>
+<a class="anchor" id="aec5b6088a2de62f8550e505983450431"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -650,7 +789,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool cgAppState::initialize </td>
+          <td class="memname">bool cgAppState::initialize </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -658,10 +797,12 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Allow the state to initialize (occurs during registration). </p>
 
 </div>
 </div>
@@ -702,6 +843,23 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a4f78e12b558fc63460c5d2cfae8b3fe5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgAppState::isScripted </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if the state is implemented through a script. Returns false if this behavior has a native application side implementation. </p>
 
 </div>
 </div>
@@ -747,6 +905,34 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aec5468f986ac276cd51fdf6ffaca4d61"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgAppState::processMessage </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_message.html">cgMessage</a> *&#160;</td>
+          <td class="paramname"><em>message</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allows the state to respond to any incoming messages as it sees fit. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_reference.html#a2c78842232c529fe509dedebb1cecf6b">cgReference</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ac7545430336215a139f619e3cdcc9bd7"></a>
 <div class="memitem">
 <div class="memproto">
@@ -777,7 +963,25 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="af58fb2f29c0cd52b3a3804fb88a427e7"></a>
+<a class="anchor" id="a916200d79af7809659fa50584994d72e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgAppState::raiseEvent </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strEventName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Called by the derived class (or potentially a child class) whenever an event has occured. Note : States which are not currently active may not raise events. </p>
+
+</div>
+</div>
+<a class="anchor" id="a3c92274e1d0ef5cf3bbc3c129e3b16e9"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -794,7 +998,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>bForce</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>bForce</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -896,6 +1100,34 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>If in the suspended state, this function will take the state object out of a suspended mode. </p>
+
+</div>
+</div>
+<a class="anchor" id="a087326fcace269fb20ca339a6c044dd5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgAppState::spawnChildState </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>stateId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>suspendParent</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Spawn a new child state and, if requested, also suspend this state. </p>
 
 </div>
 </div>
@@ -1096,6 +1328,106 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a687e0c333c87d6a3fd23eb3ae92e2a5f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource_manager.html">cgResourceManager</a>* cgAppState::mResourceManager</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad52d701d260ade012796c933f01c81a4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_resource_handles_8h.html#a118acf0914cb9c76815e189ac6f8a0c0">cgScriptHandle</a> cgAppState::mScript</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a94b0faaa656bbbcb37192be8e8445e7f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcg_app_state_1_1_method_handles.html">MethodHandles</a> cgAppState::mScriptMethods</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a6db82804a5237cf47dd71750d97a8db1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_script_object.html">cgScriptObject</a>* cgAppState::mScriptObject</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac9166708ba48f9ce15450afea0b04b5c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_input_stream.html">cgInputStream</a> cgAppState::mScriptStream</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a49a20588caf4d3de5e1af7868c564bd3"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1166,7 +1498,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_app_state.html">cgAppState</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:29 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:13 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

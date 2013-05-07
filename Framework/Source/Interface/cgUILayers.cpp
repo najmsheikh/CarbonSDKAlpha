@@ -17,7 +17,7 @@
 //        which display system specific items such as the cursor.            //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -32,8 +32,8 @@
 #include <Interface/cgUIManager.h>
 #include <Interface/cgUIControl.h>
 #include <Interface/cgUISkin.h>
-#include <Rendering/cgBillboardBuffer.h>
 #include <Input/cgInputDriver.h>
+#include <Rendering/cgBillboardBuffer.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 // cgUILayer Member Functions
@@ -389,12 +389,12 @@ bool cgUIControlLayer::onScreenLayoutChange( )
 cgUICursorLayer::cgUICursorLayer( cgUIManager * pManager ) : cgUILayer( pManager, cgUILayerType::SystemLayer )
 {
     // Initialize variables to sensible defaults
-    mCursor           = CG_NULL;
-    mCurrentType      = CG_NULL;
-    mCursorOffset.x    = 0;
-    mCursorOffset.y    = 0;
-    mNextCursor     = _T("");
-    mCurrentCursor  = _T("");
+    mCursor         = CG_NULL;
+    mCurrentType    = CG_NULL;
+    mCursorOffset.x = 0;
+    mCursorOffset.y = 0;
+    mCurrentFrame   = 0;
+    mCursorVisible  = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -419,12 +419,12 @@ cgUICursorLayer::~cgUICursorLayer()
 void cgUICursorLayer::dispose( bool bDisposeBase )
 {
     // Clear variables
-    mCursor           = CG_NULL;
-    mCurrentType      = CG_NULL;
-    mCursorOffset.x    = 0;
-    mCursorOffset.y    = 0;
-    mNextCursor     = _T("");
-    mCurrentCursor  = _T("");
+    mCursor         = CG_NULL;
+    mCurrentType    = CG_NULL;
+    mCursorOffset.x = 0;
+    mCursorOffset.y = 0;
+    mCurrentFrame   = 0;
+    mCursorVisible  = false;
 
     // Call base class implementation
     if ( bDisposeBase )
@@ -459,7 +459,8 @@ bool cgUICursorLayer::initialize( )
     } // End if failed to prepare
 
     // Add the frame information for the cursor
-    if ( pCurrentSkin->prepareCursorFrames( mBillboards ) == false )
+    cgRenderDriver * pDriver = getUIManager()->getRenderDriver();
+    if ( pCurrentSkin->prepareCursorFrames( mBillboards, pDriver ) == false )
     {
         cgAppLog::write( cgAppLog::Error, _T("Unable to populate render buffer frameset for cursor layer.\n") );
         return false;
@@ -472,7 +473,10 @@ bool cgUICursorLayer::initialize( )
     mCursor->setPosition( cgVector3( 0, 0, 0 ) );
     mCursor->setFrameGroup( 0 );
     mCursor->setFrame( 0, true );
+    mCursor->setVisible( false );
     mCursor->update();
+    mCursorDirty = false;
+    mCursorVisible = false;
 
      // Finalize the billboard buffer preparation
     if ( endPrepareLayer() == false )
@@ -482,11 +486,31 @@ bool cgUICursorLayer::initialize( )
 
     } // End if failed to prepare
 
-    // Select the default cursor
-    selectCursor( _T("Arrow") );
-
     // Success!
     return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : showCursor () (Virtual)
+/// <summary>
+/// Show / hide the emulated cursor.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUICursorLayer::showCursor( bool show )
+{
+    // No-op?
+    if ( mCursorVisible == show )
+        return;
+    mCursorVisible = show;
+
+    // Show / hide the cursor and update.
+    if ( mCursor )
+    {
+        mCursor->setVisible( (mCurrentType) ? show : false );
+        mCursor->update();
+        mCursorDirty = false;
+    
+    } // End if dirty
 }
 
 //-----------------------------------------------------------------------------
@@ -503,10 +527,7 @@ bool cgUICursorLayer::onMouseMove( const cgPoint & Position, const cgPointF & Of
 
     // Set the position of the billboard
     mCursor->setPosition( cgVector3( (cgFloat)(Position.x + mCursorOffset.x), (cgFloat)(Position.y + mCursorOffset.y), 0 ) );
-    mCursor->update();
-
-    // Whenever the cursor moves, we should switch back to the default
-    selectCursor( _T("Arrow") );
+    mCursorDirty = true;
 
     // This layer should never halt the mouse move message
     return false;
@@ -519,9 +540,65 @@ bool cgUICursorLayer::onMouseMove( const cgPoint & Position, const cgPointF & Of
 /// cursor definition.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgUICursorLayer::selectCursor( const cgString & strCursor )
+void cgUICursorLayer::selectCursor( const cgUICursorType * type, cgUInt32 frame )
 {
-    mNextCursor = strCursor;
+    if ( type != mCurrentType )
+    {
+        // Data has been updated.
+        mCurrentType  = type;
+        mCurrentFrame = (cgInt16)frame;
+        
+        // Update the position of the billboard in case the cursor offset changes
+        cgVector3 CursorPos = mCursor->getPosition();
+        if ( mCurrentType )
+        {
+            CursorPos += cgVector3( (-(cgFloat)mCurrentType->hotPoint.x) - (cgFloat)mCursorOffset.x, (-(cgFloat)mCurrentType->hotPoint.y) - (cgFloat)mCursorOffset.y, 0 ); 
+            mCursorOffset.x = -mCurrentType->hotPoint.x;
+            mCursorOffset.y = -mCurrentType->hotPoint.y;
+
+            // Select the correct frame data for the billboard
+            mCursor->setFrameGroup( mBillboards->getFrameGroupIndex( mCurrentType->name ) );
+            mCursor->setFrame( (cgInt16)frame, true );
+            mCursor->setVisible( (mCursorVisible) ? true : false );
+            mCursorDirty  = true;
+
+        } // End if selected type
+        else
+        {
+            CursorPos += cgVector3( -(cgFloat)mCursorOffset.x, -(cgFloat)mCursorOffset.y, 0 ); 
+            mCursorOffset = cgPoint(0,0);
+            mCursor->setFrameGroup( 0 );
+            mCursor->setFrame( 0, true );
+            mCursor->setVisible( false );
+            mCursorDirty = true;
+        
+        } // End if hiding.
+        mCursor->setPosition( CursorPos );
+    
+    } // End if type changing
+    else if ( frame != mCurrentFrame )
+    {
+        mCurrentFrame = (cgInt16)frame;
+        mCursor->setFrame( mCurrentFrame, false );
+        mCursorDirty  = true;
+        
+    } // End if frame changing
+}
+
+//-----------------------------------------------------------------------------
+//  Name : update () (Virtual)
+/// <summary>
+/// Allow the cursor billboard to be updated.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUICursorLayer::update( )
+{
+    if ( mCursor && mCursor->getVisible() && mCursorDirty )
+    {
+        mCursor->update();
+        mCursorDirty = false;
+    
+    } // End if dirty
 }
 
 //-----------------------------------------------------------------------------
@@ -532,88 +609,7 @@ void cgUICursorLayer::selectCursor( const cgString & strCursor )
 //-----------------------------------------------------------------------------
 void cgUICursorLayer::render( )
 {
-    // Get access to the global game timer
-    cgTimer * pTimer = cgTimer::getInstance();
-
-    // If the input driver is not in cursor mode, don't render a cursor
-    if ( cgInputDriver::getInstance()->getMouseMode() != cgMouseHandlerMode::Cursor )
-        return;
-
-    // Switch the cursor?
-    if ( mNextCursor.empty() == false && mNextCursor != mCurrentCursor )
-    {
-        cgUICursorType::Map::const_iterator itType;
-
-        // Retrieve the cursor definition from the skin
-        cgUISkin * pCurrentSkin = mUIManager->getCurrentSkin();
-        const cgUICursorDesc & Desc = pCurrentSkin->getCursorDefinition();
-
-        // Contains this new type?
-        itType = Desc.types.find( mNextCursor );
-
-        // If not, select the default "arrow" type
-        if ( itType == Desc.types.end() )
-        {
-            mNextCursor = _T("Arrow");
-            itType = Desc.types.find( _T("Arrow") );
-        
-        } // End if new type not found
-
-        // Store this as the current type
-        mCurrentType = &itType->second;
-
-        // Update the position of the billboard if the cursor offset changes
-        cgVector3 CursorPos = mCursor->getPosition();
-        CursorPos += cgVector3( (-(cgFloat)mCurrentType->hotPoint.x) - (cgFloat)mCursorOffset.x, (-(cgFloat)mCurrentType->hotPoint.y) - (cgFloat)mCursorOffset.y, 0 ); 
-        mCursor->setPosition( CursorPos );
-        mCursorOffset.x = -mCurrentType->hotPoint.x;
-        mCursorOffset.y = -mCurrentType->hotPoint.y;
-
-        // Select the correct frame data for the billboard
-        mCursor->setFrameGroup( mBillboards->getFrameGroupIndex( mNextCursor ) );
-        mCursor->setFrame( 0, true );
-        mCursor->update();
-
-        // Update status variables for next frame
-        mCurrentFrame    = 0;
-        mAnimBeginTime   = (cgFloat)pTimer->getTime();
-        mCurrentCursor = mNextCursor;
-        mNextCursor.clear();
-    
-    } // End if cursor changed
-    else if ( mCurrentType )
-    {
-        // Is this cursor an animating one?
-        if ( mCurrentType->animated )
-        {
-            int nCurrentFrame = 0;
-
-            // What frame should we be on?
-            nCurrentFrame = (int)(((cgFloat)pTimer->getTime() - mAnimBeginTime) / 
-                                  (mCurrentType->duration / (cgFloat)mCurrentType->frames.size()));
-
-            // Wrap round if looping, otherwise clamp
-            if ( mCurrentType->loop )
-                nCurrentFrame %= (int)mCurrentType->frames.size();
-            else
-                nCurrentFrame = min( nCurrentFrame, (int)mCurrentType->frames.size() - 1 );
-
-            // If the frame is different from our current frame, update the billboard
-            if ( (int)mCurrentFrame != nCurrentFrame )
-            {
-                // Select the correct frame data for the billboard
-                mCursor->setFrame( nCurrentFrame );
-                mCursor->update();
-
-                // Update data for next frame
-                mCurrentFrame = (cgInt16)nCurrentFrame;
-
-            } // End if select different frame
-
-        } // End if animated cursor
-
-    } // End if not switching to new type
-
     // Render the contents of the billboard buffer
-    cgUILayer::render();
+    if ( mCursor->getVisible() && cgInputDriver::getInstance()->getMouseMode() == cgMouseHandlerMode::Cursor )
+        mBillboards->render();
 }

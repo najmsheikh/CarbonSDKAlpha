@@ -14,7 +14,7 @@
 //        management of application interface objects.                       //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -67,6 +67,21 @@ class CGE_API cgUIManager : public cgReference
 
 public:
     //-------------------------------------------------------------------------
+    // Public Structures
+    //-------------------------------------------------------------------------
+    struct CGE_API InitConfig       // The selected interface configuration options
+    {
+        bool  useHardwareCursor;    // Enable support for vertex-texture-fetch for vertex blending (required for instancing).
+
+        // Constructor
+        InitConfig()
+        {
+            useHardwareCursor = false;
+        
+        } // End Constructor
+    };
+
+    //-------------------------------------------------------------------------
     // Constructors & Destructors
     //-------------------------------------------------------------------------
              cgUIManager( );
@@ -82,6 +97,9 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
+    cgConfigResult::Base    loadConfig          ( const cgString & fileName );
+    cgConfigResult::Base    loadDefaultConfig   ( );
+    bool                    saveConfig          ( const cgString & fileName );
     bool                    initialize          ( cgResourceManager * resourceManager );
     bool                    begin               ( );
     cgResourceManager     * getResourceManager  ( ) { return mResourceManager; }
@@ -169,8 +187,9 @@ public:
     // Cursors
     void                    selectCursor        ( const cgString & name );
 
-    // Rendering
+    // Rendering & Updates
     void                    render              ( );
+    void                    update              ( );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
@@ -204,26 +223,32 @@ private:
     //-------------------------------------------------------------------------
     // Private Variables
     //-------------------------------------------------------------------------
-    cgResourceManager * mResourceManager;   // The resource manager responsible for all interface resources
-    cgTextEngine      * mTextEngine;        // A text engine for this interface, allows us to draw text.
-    cgString            mDefaultFont;       // The default font to use for the interface.
-    FormList            mForms;             // List of all loaded forms
-    LayerList           mLayers;            // List containing all of the interface render layers currently being managed.
-    SkinMap             mSkins;             // Map containing all loaded skins keyed by name.
-    ImageLibraryMap     mImageLibraries;    // Map containing billboard buffers which provide support for image drawing.
-    cgUISkin          * mCurrentSkin;       // The currently selected skin
-    bool                mInitialized;       // Has the user interface manager been initialized?
-    cgUIControl       * mCapturedControl;   // The control that has currently been "captured" by the mouse.
-    cgUIControl       * mFocusControl;      // The control that currently has "focus".
-    cgUICursorLayer   * mCursorLayer;       // The system layer containing the cursor.
+    InitConfig              mConfig;            // Interface manager configuration settings
+    bool                    mConfigLoaded;      // Has the configuration been loaded yet?
+    cgResourceManager     * mResourceManager;   // The resource manager responsible for all interface resources
+    cgTextEngine          * mTextEngine;        // A text engine for this interface, allows us to draw text.
+    cgString                mDefaultFont;       // The default font to use for the interface.
+    FormList                mForms;             // List of all loaded forms
+    LayerList               mLayers;            // List containing all of the interface render layers currently being managed.
+    SkinMap                 mSkins;             // Map containing all loaded skins keyed by name.
+    ImageLibraryMap         mImageLibraries;    // Map containing billboard buffers which provide support for image drawing.
+    cgUISkin              * mCurrentSkin;       // The currently selected skin
+    bool                    mInitialized;       // Has the user interface manager been initialized?
+    cgUIControl           * mCapturedControl;   // The control that has currently been "captured" by the mouse.
+    cgUIControl           * mFocusControl;      // The control that currently has "focus".
+    cgUICursorLayer       * mCursorLayer;       // The system layer containing the cursor.
+    const cgUICursorType  * mCursorType;        // The currently selected cursor type.
+    const cgUICursorType  * mLastCursorType;    // The type of the cursor that was previously updated for animation.
+    cgInt16                 mCursorFrame;       // Current frame to select from the billboard group for an animating cursor
+    cgFloat                 mCursorAnimBegin;   // When did the animation start?
 
     // Garbage lists
-    FormList            mGarbageForms;      // List of all forms that are due to be unloaded.
+    FormList                mGarbageForms;      // List of all forms that are due to be unloaded.
 
     //-------------------------------------------------------------------------
     // Private Static Variables
     //-------------------------------------------------------------------------
-    static cgUIManager * mSingleton;        // Static singleton object instance.
+    static cgUIManager    * mSingleton;        // Static singleton object instance.
 };
 
 #endif // !_CGE_CGUIMANAGER_H_

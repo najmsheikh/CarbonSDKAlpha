@@ -78,6 +78,8 @@ struct giMediaInfo
     bool    containsVideo;      // Media contains video stream.
     giSize  frameDimensions;    // Dimensions, in pixels, of any video frames.
     bool    containsAudio;      // Media contains audio stream.
+    double  duration;           // Duration of the media in seconds.
+    double  frameRate;          // Frame rate of media
 };
 
 // Allows user to configure how the media will be decoded.
@@ -145,6 +147,7 @@ public:
     giEXResult  getCurrentVideoFrame( void * destination, unsigned long pitch );
     bool        isPlaying           (  );
     double      getPlayheadTime     (  );
+    void        setPlayheadTime     (  double position );
 
 private:
     //-------------------------------------------------------------------------

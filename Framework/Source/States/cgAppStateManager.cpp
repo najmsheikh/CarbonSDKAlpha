@@ -14,7 +14,7 @@
 //        the application i.e. Main menu, game play, game over, credits etc. //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -815,6 +815,7 @@ bool cgAppState::initialize()
                 mScriptMethods.render     = mScriptObject->getMethodHandle( _T("void render()") );
                 mScriptMethods.suspend    = mScriptObject->getMethodHandle( _T("void suspend()") );
                 mScriptMethods.resume     = mScriptObject->getMethodHandle( _T("void resume()") );
+                mScriptMethods.processMessage = mScriptObject->getMethodHandle( _T("bool processMessage( Message& )") );
 
                 // Attempt to call the 'initialize' method (optional).
                 if ( mScriptMethods.initialize )
@@ -1052,6 +1053,39 @@ void cgAppState::resume( )
         } // End catch exception
 
     } // End if valid
+}
+
+//-----------------------------------------------------------------------------
+//  Name : processMessage () (Virtual)
+/// <summary>
+/// Allows the state to respond to any incoming messages as it sees fit.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAppState::processMessage( cgMessage * message )
+{
+    // Notify the script (if any).
+    bool bResult = false;
+    if ( mScriptObject && mScriptMethods.processMessage )
+    {
+        try
+        {
+            cgScriptArgument::Array ScriptArgs(1);
+            static const cgString argType = _T("Message&");
+            ScriptArgs[0] = cgScriptArgument( cgScriptArgumentType::Address, argType, message );
+            bResult = *(bool*)mScriptObject->executeMethod( mScriptMethods.processMessage, ScriptArgs );
+        
+        } // End try to execute
+        catch ( cgScriptInterop::Exceptions::ExecuteException & e )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to execute processMessage() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+            return false;
+        
+        } // End catch exception
+
+    } // End if valid
+
+    // Processed the message?
+    return bResult;
 }
 
 //-----------------------------------------------------------------------------

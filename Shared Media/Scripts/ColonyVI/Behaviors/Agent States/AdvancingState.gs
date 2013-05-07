@@ -131,8 +131,8 @@ shared class AdvancingState : AgentState
     {
         Weapon @ weapon = mNPC.getCurrentWeapon();
 
-        // We still have a target?
-        if ( mNPC.targetAcquired )
+        // We still have a target and can fire while moving?
+        if ( mNPC.targetAcquired && mNPC.canFireWhileMoving )
         {
             // Target is still currently acquired. If it's inside around half our allowed 
             // firing range, or we have less than 75% visibility, stop advancing on them. 

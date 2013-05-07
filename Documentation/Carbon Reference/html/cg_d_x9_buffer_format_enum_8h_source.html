@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -172,30 +172,18 @@ $(document).ready(function(){initNavTree('cg_d_x9_buffer_format_enum_8h_source.h
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span>                    <a class="code" href="classcg_buffer_format_enum.html#a7f427268edfd21f1511eab3f366de28b">enumerate</a>           ( <a class="code" href="classcg_render_driver.html" title="Class that contains our core rendering / render initialization logic. ">cgRenderDriver</a> * driver );</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">size_t</span>                  <a class="code" href="classcg_buffer_format_enum.html#a08568091669d94798c5f5ba14ef2a41a">estimateBufferSize</a>  ( <span class="keyword">const</span> <a class="code" href="structcg_image_info.html">cgImageInfo</a> &amp; description ) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24">cgBufferFormat::Base</a>    <a class="code" href="classcg_buffer_format_enum.html#a5da55303c23f6d5ab42296fb84b0e2e7">getBestFormat</a>       ( <a class="code" href="namespacecg_buffer_type.html#abb80324b86cad34bb6200716229decad">cgBufferType::Base</a> type, <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> searchFlags ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// Protected Methods</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordtype">bool</span>                            testBilinearSupport ( cgDX9RenderDriver * driver );</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// Private Static Functions</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> __stdcall           fillLinearTestTexture( D3DXVECTOR4 * outputColor, <span class="keyword">const</span> D3DXVECTOR2 * texCoord, <span class="keyword">const</span> D3DXVECTOR2 * texelSize, <span class="keywordtype">void</span> * data );</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;};</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#endif // CGE_DX9_RENDER_SUPPORT</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif // !_CGE_CGDX9BUFFERFORMATENUM_H_</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;};</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#endif // CGE_DX9_RENDER_SUPPORT</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">#endif // !_CGE_CGDX9BUFFERFORMATENUM_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_818efbfd2f6cda0a268715d4985a1177.html">Resources</a></li><li class="navelem"><a class="el" href="dir_1b7e32cef437d3cdd2bce383b409b215.html">Platform</a></li><li class="navelem"><a class="el" href="cg_d_x9_buffer_format_enum_8h.html">cgDX9BufferFormatEnum.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:14 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:47:52 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

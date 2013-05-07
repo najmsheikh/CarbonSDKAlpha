@@ -14,7 +14,7 @@
 //       landscape / terrain data.                                           //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -3637,7 +3637,7 @@ void cgLandscape::updateTreeVisibility( cgSpatialTreeInstance * pIssuer, cgLands
                             // to register any information it needs to this visibility set if it 
                             // passes any tests it wants/needs to make.
                             if ( !bCull )
-                                pObject->registerVisibility( pVisData, nFlags );
+                                pObject->registerVisibility( pVisData );
 
                         } // Next Object
 
@@ -3790,7 +3790,7 @@ void cgLandscape::updateTreeVisibility( cgSpatialTreeInstance * pIssuer, cgLands
                             // to register any information it needs to this visibility set if it 
                             // passes any tests it wants/needs to make.
                             if ( !bCull )
-                                pObject->registerVisibility( pVisData, nFlags );
+                                pObject->registerVisibility( pVisData );
 
                         } // Next Object
 

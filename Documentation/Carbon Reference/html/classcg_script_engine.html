@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -156,6 +156,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4b4ca8905624f6e0c69c5eb94a25f3ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_engine.html#a4b4ca8905624f6e0c69c5eb94a25f3ed">enableVerboseOutput</a> (bool enable)</td></tr>
 <tr class="memdesc:a4b4ca8905624f6e0c69c5eb94a25f3ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Output compiler failures to log?  <a href="#a4b4ca8905624f6e0c69c5eb94a25f3ed"></a><br/></td></tr>
 <tr class="separator:a4b4ca8905624f6e0c69c5eb94a25f3ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33922535d4a0a20004ec7f5f9ce4f554"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_engine.html#a33922535d4a0a20004ec7f5f9ce4f554">garbageCollect</a> ()</td></tr>
+<tr class="memdesc:a33922535d4a0a20004ec7f5f9ce4f554"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process the garbage list and destroy any outstanding items.  <a href="#a33922535d4a0a20004ec7f5f9ce4f554"></a><br/></td></tr>
+<tr class="separator:a33922535d4a0a20004ec7f5f9ce4f554"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac79196a914ba67ba2ee24275da2fc4ac"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_engine.html#ac79196a914ba67ba2ee24275da2fc4ac">declarePackage</a> (<a class="el" href="classcg_script_package.html">cgScriptPackage</a> *package, bool declareChildren)</td></tr>
 <tr class="memdesc:ac79196a914ba67ba2ee24275da2fc4ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add the specified scripting package (collection of type bindings) to the scripting engine and allow it to declare its types in advance, optionally including its child packages.  <a href="#ac79196a914ba67ba2ee24275da2fc4ac"></a><br/></td></tr>
 <tr class="separator:ac79196a914ba67ba2ee24275da2fc4ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -425,6 +428,23 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Output compiler failures to log? </p>
+
+</div>
+</div>
+<a class="anchor" id="a33922535d4a0a20004ec7f5f9ce4f554"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgScriptEngine::garbageCollect </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Process the garbage list and destroy any outstanding items. </p>
 
 </div>
 </div>
@@ -1160,7 +1180,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_script_engine.html">cgScriptEngine</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:46 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:48 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

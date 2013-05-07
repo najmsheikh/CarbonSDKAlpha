@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -131,6 +131,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a963d2017721a7a4ded0dd4182aa64c24"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_quaternion_target_controller.html#a963d2017721a7a4ded0dd4182aa64c24">cgQuaternionTargetController</a> ()</td></tr>
 <tr class="memdesc:a963d2017721a7a4ded0dd4182aa64c24"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classcg_quaternion_target_controller.html" title="An implementation of the base &#39;cgAnimationTargetController&#39; class that allows the application to repr...">cgQuaternionTargetController</a> Class Constructor  <a href="#a963d2017721a7a4ded0dd4182aa64c24"></a><br/></td></tr>
 <tr class="separator:a963d2017721a7a4ded0dd4182aa64c24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f6a908bf1ca37da448c976cf2911ecf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_quaternion_target_controller.html#a5f6a908bf1ca37da448c976cf2911ecf">cgQuaternionTargetController</a> (const <a class="el" href="classcg_quaternion_target_controller.html">cgQuaternionTargetController</a> &amp;init, const <a class="el" href="structcg_range.html">cgRange</a> &amp;frameRange)</td></tr>
+<tr class="memdesc:a5f6a908bf1ca37da448c976cf2911ecf"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classcg_euler_angles_target_controller.html" title="An implementation of the base &#39;cgAnimationTargetController&#39; class that allows the application to repr...">cgEulerAnglesTargetController</a> Class Constructor  <a href="#a5f6a908bf1ca37da448c976cf2911ecf"></a><br/></td></tr>
+<tr class="separator:a5f6a908bf1ca37da448c976cf2911ecf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5ff6483b512558e2ebc8b06d70fdd58"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_quaternion_target_controller.html#af5ff6483b512558e2ebc8b06d70fdd58">~cgQuaternionTargetController</a> ()</td></tr>
 <tr class="memdesc:af5ff6483b512558e2ebc8b06d70fdd58"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classcg_quaternion_target_controller.html" title="An implementation of the base &#39;cgAnimationTargetController&#39; class that allows the application to repr...">cgQuaternionTargetController</a> Class Destructor  <a href="#af5ff6483b512558e2ebc8b06d70fdd58"></a><br/></td></tr>
 <tr class="separator:af5ff6483b512558e2ebc8b06d70fdd58"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -140,6 +143,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac35f8b75607eac2fd7047e7e7d646d3b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_quaternion_target_controller.html#ac35f8b75607eac2fd7047e7e7d646d3b">addKey</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> frame, const <a class="el" href="classcg_quaternion.html">cgQuaternion</a> &amp;value)</td></tr>
 <tr class="memdesc:ac35f8b75607eac2fd7047e7e7d646d3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert a new key-frame into the controller's animation channels to produce a linear interpolation between the previous and new keys.  <a href="#ac35f8b75607eac2fd7047e7e7d646d3b"></a><br/></td></tr>
 <tr class="separator:ac35f8b75607eac2fd7047e7e7d646d3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6addc3b455beccd38849c5807b62cba5"><td class="memItemLeft" align="right" valign="top">const <br class="typebreak"/>
+<a class="el" href="classcg_quaternion_animation_channel.html">cgQuaternionAnimationChannel</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_quaternion_target_controller.html#a6addc3b455beccd38849c5807b62cba5">getAnimationChannel</a> () const </td></tr>
+<tr class="memdesc:a6addc3b455beccd38849c5807b62cba5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the quaternion keyframe data associated with this controller.  <a href="#a6addc3b455beccd38849c5807b62cba5"></a><br/></td></tr>
+<tr class="separator:a6addc3b455beccd38849c5807b62cba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5087168ac3e10278cac3493bdd561ab5"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_quaternion_target_controller.html#a5087168ac3e10278cac3493bdd561ab5">serialize</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> targetDataId, const <a class="el" href="classcg_string.html">cgString</a> &amp;controllerIdentifier, <a class="el" href="classcg_world.html">cgWorld</a> *world)</td></tr>
 <tr class="memdesc:a5087168ac3e10278cac3493bdd561ab5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert (or update) the database entries associated with this animation target controller and any associated child animation channels.  <a href="#a5087168ac3e10278cac3493bdd561ab5"></a><br/></td></tr>
 <tr class="separator:a5087168ac3e10278cac3493bdd561ab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -224,6 +231,34 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="classcg_quaternion_target_controller.html" title="An implementation of the base &#39;cgAnimationTargetController&#39; class that allows the application to repr...">cgQuaternionTargetController</a> Class Constructor </p>
+
+</div>
+</div>
+<a class="anchor" id="a5f6a908bf1ca37da448c976cf2911ecf"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cgQuaternionTargetController::cgQuaternionTargetController </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_quaternion_target_controller.html">cgQuaternionTargetController</a> &amp;&#160;</td>
+          <td class="paramname"><em>init</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_range.html">cgRange</a> &amp;&#160;</td>
+          <td class="paramname"><em>frameRange</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classcg_euler_angles_target_controller.html" title="An implementation of the base &#39;cgAnimationTargetController&#39; class that allows the application to repr...">cgEulerAnglesTargetController</a> Class Constructor </p>
 
 </div>
 </div>
@@ -400,6 +435,23 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a6addc3b455beccd38849c5807b62cba5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classcg_quaternion_animation_channel.html">cgQuaternionAnimationChannel</a> &amp; cgQuaternionTargetController::getAnimationChannel </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the quaternion keyframe data associated with this controller. </p>
+
+</div>
+</div>
 <a class="anchor" id="ae32518ef3925adc613222df3db6dfd56"></a>
 <div class="memitem">
 <div class="memproto">
@@ -527,7 +579,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_quaternion_target_controller.html">cgQuaternionTargetController</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:44 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:43 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

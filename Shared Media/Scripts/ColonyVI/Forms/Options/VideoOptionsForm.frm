@@ -17,14 +17,9 @@
 //---------------------------------------------------------------------------//
 
 ///////////////////////////////////////////////////////////////////////////////
-// Global Functions
+// Includes
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef _PARENT_SCRIPT
-IScriptedForm @ createForm( Form @ owner )
-{
-    return VideoOptionsForm( owner );
-}
-#endif
+#include_once "../../States/MainMenu.gs"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Class Definitions
@@ -41,6 +36,11 @@ shared class VideoOptionsForm : IScriptedForm
     private Form@               mForm;
     private array<DisplayMode>  mDisplayModes;
     
+    ///////////////////////////////////////////////////////////////////////////
+	// Public Member Variables
+	///////////////////////////////////////////////////////////////////////////
+    MainMenu@                   parentState;
+
     // Controls
     GroupBox@                   groupDisplayModes;
     GroupBox@                   groupQuality;
@@ -55,6 +55,10 @@ shared class VideoOptionsForm : IScriptedForm
     ComboBox@                   comboPostProcessQuality;
     Label@                      labelAntiAliasQuality;
     ComboBox@                   comboAntiAliasQuality;
+    Label@                      labelVerticalSync;
+    CheckBox@                   checkVerticalSync;
+    Label@                      labelTripleBuffer;
+    CheckBox@                   checkTripleBuffer;
     
     ///////////////////////////////////////////////////////////////////////////
 	// Constructors & Destructors
@@ -103,7 +107,9 @@ shared class VideoOptionsForm : IScriptedForm
 
         // Configure controls - Main form first.
         mForm.minimumSize       = Size( 290, 290 );
-        mForm.size              = Size( screenSize.width - (screenSize.width / 4), screenSize.height - (screenSize.height / 4) );
+        //mForm.size              = Size( screenSize.width - (screenSize.width / 4), screenSize.height - (screenSize.height / 4) );
+        //mForm.position          = Point( (screenSize.width - mForm.size.width) / 2, (screenSize.height - mForm.size.height) / 2 );
+        mForm.size              = Size( 550, screenSize.height - (screenSize.height / 3) );
         mForm.position          = Point( (screenSize.width - mForm.size.width) / 2, (screenSize.height - mForm.size.height) / 2 );
         mForm.controlText       = "Video Options";
         mForm.padding           = Rect( 0, 10, 0, 0 );
@@ -154,7 +160,7 @@ shared class VideoOptionsForm : IScriptedForm
         comboShadingQuality.addItem( "Medium" );
         comboShadingQuality.addItem( "High" );
         comboShadingQuality.addItem( "Ultra" );
-        comboShadingQuality.selectedIndex = 4;
+        comboShadingQuality.selectedIndex = driver.getSystemState( SystemState::ShadingQuality );
 
         // Post processing quality.
         @labelPostProcessQuality = createLabel( "labelPostProcessQuality", groupQuality );
@@ -171,7 +177,8 @@ shared class VideoOptionsForm : IScriptedForm
         comboPostProcessQuality.addItem( "Medium" );
         comboPostProcessQuality.addItem( "High" );
         comboPostProcessQuality.addItem( "Ultra" );
-        comboPostProcessQuality.selectedIndex = 4;
+        comboPostProcessQuality.selectedIndex = driver.getSystemState( SystemState::PostProcessQuality );
+       
 
         // Post processing quality.
         @labelAntiAliasQuality = createLabel( "labelAntiAliasQuality", groupQuality );
@@ -188,7 +195,29 @@ shared class VideoOptionsForm : IScriptedForm
         comboAntiAliasQuality.addItem( "Medium" );
         comboAntiAliasQuality.addItem( "High" );
         comboAntiAliasQuality.addItem( "Ultra" );
-        comboAntiAliasQuality.selectedIndex = 4;
+        comboAntiAliasQuality.selectedIndex = driver.getSystemState( SystemState::AntiAliasingQuality );
+
+        // V-Sync
+        @labelVerticalSync = createLabel( "labelVerticalSync", groupQuality );
+        labelVerticalSync.position = Point( 0, 66 );
+        labelVerticalSync.size = Size( groupQuality.clientSize.width / 2, 17 );
+        labelVerticalSync.controlText = "V-sync";
+        @checkVerticalSync = createCheckBox( "checkVerticalSync", groupQuality );
+        checkVerticalSync.position = Point( groupQuality.clientSize.width / 2, 66 );
+        checkVerticalSync.size = Size( groupQuality.clientSize.width / 2, 17 );
+        checkVerticalSync.controlText = "";
+        checkVerticalSync.checked = driver.getConfig().useVSync;
+
+        // Triple Buffering
+        @labelTripleBuffer = createLabel( "labelTripleBuffer", groupQuality );
+        labelTripleBuffer.position = Point( 0, 88 );
+        labelTripleBuffer.size = Size( groupQuality.clientSize.width / 2, 17 );
+        labelTripleBuffer.controlText = "Triple Buffering";
+        @checkTripleBuffer = createCheckBox( "checkTripleBuffer", groupQuality );
+        checkTripleBuffer.position = Point( groupQuality.clientSize.width / 2, 88 );
+        checkTripleBuffer.size = Size( groupQuality.clientSize.width / 2, 17 );
+        checkTripleBuffer.controlText = "";
+        checkTripleBuffer.checked = driver.getConfig().useTripleBuffering;
 
         // Dialog buttons.
         @buttonApply = createButton( "buttonApply", mForm );
@@ -290,6 +319,18 @@ shared class VideoOptionsForm : IScriptedForm
         labelAntiAliasQuality.size = Size( groupQuality.clientSize.width / 2, 17 );
         comboAntiAliasQuality.position = Point( groupQuality.clientSize.width / 2, 44 );
         comboAntiAliasQuality.size = Size( groupQuality.clientSize.width / 2, 17 );
+        labelVerticalSync.position = Point( 0, 66 );
+        labelVerticalSync.size = Size( groupQuality.clientSize.width / 2, 17 );
+        //checkVerticalSync.position = Point( groupQuality.clientSize.width / 2, 66 );
+        //checkVerticalSync.size = Size( groupQuality.clientSize.width / 2, 17 );
+        checkVerticalSync.position = Point( groupQuality.clientSize.width - 14, 66 );
+        checkVerticalSync.size = Size( 17, 17 );
+        labelTripleBuffer.position = Point( 0, 88 );
+        labelTripleBuffer.size = Size( groupQuality.clientSize.width / 2, 17 );
+        //checkTripleBuffer.position = Point( groupQuality.clientSize.width / 2, 88 );
+        //checkTripleBuffer.size = Size( groupQuality.clientSize.width / 2, 17 );
+        checkTripleBuffer.position = Point( groupQuality.clientSize.width - 14, 88 );
+        checkTripleBuffer.size = Size( 17, 17 );
         
         // Reposition the dialog buttons
         buttonApply.position  = Point( clientArea.width - (70 * 3), clientArea.height - 25 );
@@ -308,8 +349,10 @@ shared class VideoOptionsForm : IScriptedForm
         // and we should resize our form appropriately.
         RenderDriver @ driver = getAppRenderDriver();
         Size screenSize = driver.getScreenSize();
-        mForm.size     = Size( screenSize.width - (screenSize.width / 4), screenSize.height - (screenSize.height / 4) );
-        mForm.position = Point( (screenSize.width - mForm.size.width) / 2, (screenSize.height - mForm.size.height) / 2 );
+        //mForm.size     = Size( screenSize.width - (screenSize.width / 4), screenSize.height - (screenSize.height / 4) );
+        //mForm.position = Point( (screenSize.width - mForm.size.width) / 2, (screenSize.height - mForm.size.height) / 2 );
+        mForm.size              = Size( 550, screenSize.height - (screenSize.height / 3) );
+        mForm.position          = Point( (screenSize.width - mForm.size.width) / 2, (screenSize.height - mForm.size.height) / 2 );
     }
 
     //-------------------------------------------------------------------------
@@ -324,7 +367,13 @@ shared class VideoOptionsForm : IScriptedForm
         {
             // Alter the display mode.
             DisplayMode mode = mDisplayModes[selectedModeIndex];
-            getAppRenderDriver().updateDisplayMode( mode, !checkFullScreen.checked );
+            RenderDriver @ driver = getAppRenderDriver();
+            driver.updateDisplayMode( mode, !checkFullScreen.checked, checkVerticalSync.checked );
+
+            // Set quality
+            driver.setSystemState( SystemState::ShadingQuality, comboShadingQuality.selectedIndex );
+            driver.setSystemState( SystemState::PostProcessQuality, comboPostProcessQuality.selectedIndex );
+            driver.setSystemState( SystemState::AntiAliasingQuality, comboAntiAliasQuality.selectedIndex );
 
         } // End if valid mode
     }
@@ -337,7 +386,8 @@ shared class VideoOptionsForm : IScriptedForm
     {
         // Trigger the 'apply' behavior then close the form.
         buttonApply_OnClick( buttonApply );
-        mForm.close();
+        //mForm.close();
+        parentState.openMainMenu();
     }
 
     //-------------------------------------------------------------------------
@@ -346,7 +396,7 @@ shared class VideoOptionsForm : IScriptedForm
     //-------------------------------------------------------------------------
     void buttonCancel_OnClick( UIControl @ control )
     {
-        mForm.close();
+        parentState.openMainMenu(); //.close();
     }
 
 } // End Class VideoOptionsForm

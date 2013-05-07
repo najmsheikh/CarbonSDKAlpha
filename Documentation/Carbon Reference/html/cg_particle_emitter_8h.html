@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -102,7 +102,9 @@ $(document).ready(function(){initNavTree('cg_particle_emitter_8h.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#define-members">Macros</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#define-members">Macros</a> &#124;
+<a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle">
 <div class="title">cgParticleEmitter.h File Reference</div>  </div>
 </div><!--header-->
@@ -125,10 +127,34 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A high level object responsible for building billboards and updating their properties based on a configurable particle simulation.  <a href="classcg_particle_emitter.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacecg_particle_blend_method"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_particle_blend_method.html">cgParticleBlendMethod</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespacecg_particle_emitter_type"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_particle_emitter_type.html">cgParticleEmitterType</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a40c31e4e5ff7684d79513ca514981bf0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cg_particle_emitter_8h.html#a40c31e4e5ff7684d79513ca514981bf0">_CGE_CGPARTICLEEMITTER_H_</a></td></tr>
 <tr class="separator:a40c31e4e5ff7684d79513ca514981bf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a54d685857738ae224e7c90b432001de0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_particle_blend_method.html#a54d685857738ae224e7c90b432001de0">cgParticleBlendMethod::Base</a> { <br/>
+&#160;&#160;<a class="el" href="namespacecg_particle_blend_method.html#a54d685857738ae224e7c90b432001de0a7d547193aceea8e3ded62d5ff65b5f35">cgParticleBlendMethod::Additive</a> = 0, 
+<a class="el" href="namespacecg_particle_blend_method.html#a54d685857738ae224e7c90b432001de0acd9ca961a069497c7152d5f868773022">cgParticleBlendMethod::Linear</a> = 1, 
+<a class="el" href="namespacecg_particle_blend_method.html#a54d685857738ae224e7c90b432001de0a788ccc2db6aee768dee30903ed43502b">cgParticleBlendMethod::Screen</a> = 2, 
+<a class="el" href="namespacecg_particle_blend_method.html#a54d685857738ae224e7c90b432001de0ac25b7aab8daf0a09dc896e4e7782c630">cgParticleBlendMethod::SoftAdditive</a> = 3, 
+<br/>
+&#160;&#160;<a class="el" href="namespacecg_particle_blend_method.html#a54d685857738ae224e7c90b432001de0a813ba819ba9fcb2b3858c6a38ecc7e9e">cgParticleBlendMethod::SoftLinear</a> = 4
+<br/>
+ }</td></tr>
+<tr class="separator:a54d685857738ae224e7c90b432001de0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18e5e2937c8569fba831f3306cbc6a3c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_particle_emitter_type.html#a18e5e2937c8569fba831f3306cbc6a3c">cgParticleEmitterType::Base</a> { <a class="el" href="namespacecg_particle_emitter_type.html#a18e5e2937c8569fba831f3306cbc6a3ca77ef0db1adec4ca5ec044d9666a80338">cgParticleEmitterType::Billboards</a> = 0, 
+<a class="el" href="namespacecg_particle_emitter_type.html#a18e5e2937c8569fba831f3306cbc6a3cab832ce9fa5bc4d4c51dd1038e609c47d">cgParticleEmitterType::LocalBillboards</a> = 1
+ }</td></tr>
+<tr class="separator:a18e5e2937c8569fba831f3306cbc6a3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a class="anchor" id="a40c31e4e5ff7684d79513ca514981bf0"></a>
@@ -149,7 +175,7 @@ Macros</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_367fc5490f641a53521a809d3b81b462.html">Rendering</a></li><li class="navelem"><a class="el" href="cg_particle_emitter_8h.html">cgParticleEmitter.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:26 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:03 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

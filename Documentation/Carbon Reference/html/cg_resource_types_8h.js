@@ -135,6 +135,8 @@ var cg_resource_types_8h =
       [ "CanCompare", "cg_resource_types_8h.html#ab4e9511e4a2905347cbef40034493753a318647bd2022a7ac6966b967f3936843", null ],
       [ "CanGather", "cg_resource_types_8h.html#ab4e9511e4a2905347cbef40034493753a3b59c7ae3ba8464689eba8ff3561303c", null ],
       [ "CanGatherCompare", "cg_resource_types_8h.html#ab4e9511e4a2905347cbef40034493753a205dea432e472f983e6dbd7dab992217", null ],
+      [ "CanLinearMagnify", "cg_resource_types_8h.html#ab4e9511e4a2905347cbef40034493753a58842852faf652a2302e9bda7e992467", null ],
+      [ "CanLinearMinify", "cg_resource_types_8h.html#ab4e9511e4a2905347cbef40034493753a10fccb45925fe60105441bf5bf3ccaa7", null ],
       [ "CanLinearFilter", "cg_resource_types_8h.html#ab4e9511e4a2905347cbef40034493753a9a673354a1c730e699de54ee9068ffcb", null ]
     ] ],
     [ "Base", "cg_resource_types_8h.html#a5bcd88aad0c0fd64c7df879d2eb9567c", [

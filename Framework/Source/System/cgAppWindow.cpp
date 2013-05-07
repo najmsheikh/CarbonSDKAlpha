@@ -14,7 +14,7 @@
 //        engine and any platform specific window handling logic.            //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//      Copyright (c) 1997 - 2008 Game Institute. All Rights Reserved.       //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 #include <System/cgAppWindow.h>
 #include <System/cgMessageTypes.h>
+#include <System/cgCursor.h>
 #include <System/Platform/cgWinAppWindow.h>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,6 +42,8 @@
 cgAppWindow::cgAppWindow( ) : cgReference( cgReferenceManager::generateInternalRefId( ) )
 {
     // Clear variables
+    mCursor         = CG_NULL;
+    mCursorVisCount = 1;
 }
 
 //-----------------------------------------------------------------------------
@@ -51,7 +54,26 @@ cgAppWindow::cgAppWindow( ) : cgReference( cgReferenceManager::generateInternalR
 //-----------------------------------------------------------------------------
 cgAppWindow::~cgAppWindow()
 {
-    // Clear variables
+    // Release allocated memory
+    dispose( false );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : dispose () (Virtual)
+/// <summary>
+/// Release any memory, references or resources allocated by this object.
+/// </summary>
+/// <copydetails cref="cgScriptInterop::DisposableScriptObject::dispose()" />
+//-----------------------------------------------------------------------------
+void cgAppWindow::dispose( bool bDisposeBase )
+{
+    // Release references to shared resources.
+    if ( mCursor )
+        mCursor->removeReference( this );
+
+    // Reset variables
+    mCursorVisCount = 1;
+    mCursor         = CG_NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -121,6 +143,44 @@ cgRect cgAppWindow::clientToScreen( const cgRect & rcClient )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : setCursor () (Virtual)
+/// <summary>
+/// Update the cursor image to be displayed when the user's cursor falls within
+/// this application window.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgAppWindow::setCursor( cgCursor * pCursor )
+{
+    // Add reference to new cursor first (in case it's the same reference)
+    if ( pCursor )
+        pCursor->addReference( this );
+
+    // Remove any prior cursor reference.
+    if ( mCursor )
+        mCursor->removeReference( this );
+
+    // Store.
+    mCursor = pCursor;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setCursor ()
+/// <summary>
+/// Show or hide the platform cursor for this window. This is implemented
+/// as a counter whereby multiple calls to show the cursor are counted and
+/// thus will require the same number of matching calls to hide the cursor 
+/// before it will be hidden.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgAppWindow::showCursor( bool show )
+{
+    if ( show )
+        ++mCursorVisCount;
+    else
+        --mCursorVisCount;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : onSize () (Virtual)
 /// <summary>
 /// Triggered whenever the size of the window changes.
@@ -162,6 +222,19 @@ void cgAppWindow::onCreate( )
     cgMessage Msg;
     Msg.messageId = cgSystemMessages::AppWindow_OnCreate;
     cgReferenceManager::sendMessageToGroup( getReferenceId(), cgSystemMessageGroups::MGID_AppWindow, &Msg );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onUpdateCursor () (Virtual)
+/// <summary>
+/// Triggered when the cursor associated with the window is about to be updated.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAppWindow::onUpdateCursor( )
+{
+    cgMessage Msg;
+    Msg.messageId = cgSystemMessages::AppWindow_OnUpdateCursor;
+    return cgReferenceManager::sendMessageToGroup( getReferenceId(), cgSystemMessageGroups::MGID_AppWindow, &Msg );
 }
 
 //-----------------------------------------------------------------------------

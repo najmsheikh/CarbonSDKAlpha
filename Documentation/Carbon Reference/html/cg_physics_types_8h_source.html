@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -128,44 +128,95 @@ $(document).ready(function(){initNavTree('cg_physics_types_8h_source.html','');}
 <div class="line"><a name="l00022"></a><span class="lineno"><a class="code" href="cg_physics_types_8h.html#af80cc762e30f77f9fc7c1bb6ad563420">   22</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _CGE_CGPHYSICSTYPES_H_</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// cgPhysicsTyoes Header Includes</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// cgPhysicsTypes Header Includes</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="cg_base_types_8h.html">cgBaseTypes.h</a>&gt;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// Common Global Enumerations</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// Forward Declarations</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="code" href="namespacecg_physics_model.html">   32</a></span>&#160;<span class="keyword">namespace </span>cgPhysicsModel</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921">   34</a></span>&#160;    <span class="keyword">enum</span> <a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921">Base</a></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    {</div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921ac7228a5fe6563c3cc7906dae5bfd674c">   36</a></span>&#160;        <a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921ac7228a5fe6563c3cc7906dae5bfd674c">None</a> = 0,</div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a8261236e45f7c433acc8487e9e5066b8">   37</a></span>&#160;        <a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a8261236e45f7c433acc8487e9e5066b8">CollisionOnly</a>,</div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a3c2a73cbb705a670f643799bd85be9a6">   38</a></span>&#160;        <a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a3c2a73cbb705a670f643799bd85be9a6">RigidStatic</a>,</div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a0af73ff74ab1c0711342524c7972bec2">   39</a></span>&#160;        <a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a0af73ff74ab1c0711342524c7972bec2">RigidDynamic</a>,</div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a8022039226121aa95c552cea64345a6a">   40</a></span>&#160;        <a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a8022039226121aa95c552cea64345a6a">Kinematic</a></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    };</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}; <span class="comment">// End Namespace : cgPhysicsModel</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="code" href="namespacecg_simulation_quality.html">   45</a></span>&#160;<span class="keyword">namespace </span>cgSimulationQuality</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="code" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559">   47</a></span>&#160;    <span class="keyword">enum</span> <a class="code" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559">Base</a></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    {</div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="code" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559a9283c3455e0a27a89addc0dff97b1a9d">   49</a></span>&#160;        <a class="code" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559a9283c3455e0a27a89addc0dff97b1a9d">Default</a> = 0,</div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="code" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559a2faaaa55356b4e956cf278988e34b9c3">   50</a></span>&#160;        <a class="code" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559a2faaaa55356b4e956cf278988e34b9c3">CCD</a> = 1</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    };</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}; <span class="comment">// End Namespace : cgSimulationQuality</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#endif // !_CGE_CGPHYSICSTYPES_H_</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">class </span><a class="code" href="classcg_physics_body.html" title="Base class from which specific types of physics bodys should derive. This base does not enforce any s...">cgPhysicsBody</a>;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// Common Global Enumerations</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="code" href="namespacecg_physics_model.html">   37</a></span>&#160;<span class="keyword">namespace </span>cgPhysicsModel</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921">   39</a></span>&#160;    <span class="keyword">enum</span> <a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921">Base</a></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    {</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921ac7228a5fe6563c3cc7906dae5bfd674c">   41</a></span>&#160;        <a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921ac7228a5fe6563c3cc7906dae5bfd674c">None</a> = 0,</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a8261236e45f7c433acc8487e9e5066b8">   42</a></span>&#160;        <a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a8261236e45f7c433acc8487e9e5066b8">CollisionOnly</a>,</div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a3c2a73cbb705a670f643799bd85be9a6">   43</a></span>&#160;        <a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a3c2a73cbb705a670f643799bd85be9a6">RigidStatic</a>,</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a0af73ff74ab1c0711342524c7972bec2">   44</a></span>&#160;        <a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a0af73ff74ab1c0711342524c7972bec2">RigidDynamic</a>,</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a8022039226121aa95c552cea64345a6a">   45</a></span>&#160;        <a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a8022039226121aa95c552cea64345a6a">Kinematic</a></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    };</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}; <span class="comment">// End Namespace : cgPhysicsModel</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="code" href="namespacecg_simulation_quality.html">   50</a></span>&#160;<span class="keyword">namespace </span>cgSimulationQuality</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="code" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559">   52</a></span>&#160;    <span class="keyword">enum</span> <a class="code" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559">Base</a></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    {</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="code" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559a9283c3455e0a27a89addc0dff97b1a9d">   54</a></span>&#160;        <a class="code" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559a9283c3455e0a27a89addc0dff97b1a9d">Default</a> = 0,</div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="code" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559a2faaaa55356b4e956cf278988e34b9c3">   55</a></span>&#160;        <a class="code" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559a2faaaa55356b4e956cf278988e34b9c3">CCD</a> = 1</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    };</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}; <span class="comment">// End Namespace : cgSimulationQuality</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="code" href="namespacecg_default_physics_material_group.html">   60</a></span>&#160;<span class="keyword">namespace </span>cgDefaultPhysicsMaterialGroup</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{</div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="code" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181">   62</a></span>&#160;    <span class="keyword">enum</span> <a class="code" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181">Base</a></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    {</div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="code" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a198236497ac8a945b57974fef079f5cf">   64</a></span>&#160;        <a class="code" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a198236497ac8a945b57974fef079f5cf">Standard</a> = 0,</div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="code" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a9ee0bffbb4c8d3bcd559e2dd89babaf4">   65</a></span>&#160;        <a class="code" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a9ee0bffbb4c8d3bcd559e2dd89babaf4">Character</a>,</div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="code" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a05066001366e4729494001eca4702cd1">   66</a></span>&#160;        <a class="code" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a05066001366e4729494001eca4702cd1">Ragdoll</a>,</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="code" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a9c646940bf3bb5e41c83f24b6de4bde8">   67</a></span>&#160;        <a class="code" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a9c646940bf3bb5e41c83f24b6de4bde8">Count</a></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    };</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}; <span class="comment">// End Namespace : cgDefaultPhysicsMaterialGroup</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">// Common Global Structures</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno"><a class="code" href="structcg_rigid_body_create_params.html">   75</a></span>&#160;<span class="keyword">struct </span><a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a> <a class="code" href="structcg_rigid_body_create_params.html">cgRigidBodyCreateParams</a></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;{</div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="code" href="structcg_rigid_body_create_params.html#a71ccd90209614f582ed1d3e4888924c8">   77</a></span>&#160;    <a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921">cgPhysicsModel::Base</a>        <a class="code" href="structcg_rigid_body_create_params.html#a71ccd90209614f582ed1d3e4888924c8">model</a>;              <span class="comment">// Type of motion (if any) to simulate.</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno"><a class="code" href="structcg_rigid_body_create_params.html#affbd5b98557786dcfe7e8ba39956e080">   78</a></span>&#160;    <a class="code" href="classcg_transform.html" title="General purpose transformation class designed to maintain each component of the transformation separa...">cgTransform</a>                 <a class="code" href="structcg_rigid_body_create_params.html#affbd5b98557786dcfe7e8ba39956e080">initialTransform</a>;   <span class="comment">// The starting transformation of this body.</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="code" href="structcg_rigid_body_create_params.html#a3658f678f159f0a6842879f4d5ae0702">   79</a></span>&#160;    <a class="code" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559">cgSimulationQuality::Base</a>   <a class="code" href="structcg_rigid_body_create_params.html#a3658f678f159f0a6842879f4d5ae0702">quality</a>;            <span class="comment">// The quality of the simulation (describes its relative expense).</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="code" href="structcg_rigid_body_create_params.html#a6a84136f822cd59bb24124fe39649d2b">   80</a></span>&#160;    <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>                     <a class="code" href="structcg_rigid_body_create_params.html#a6a84136f822cd59bb24124fe39649d2b">mass</a>;               <span class="comment">// Initial mass of the rigid body.</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno"><a class="code" href="structcg_rigid_body_create_params.html#ac9d94a324c02fa89ae388363518d962a">   81</a></span>&#160;    <a class="code" href="classcg_vector3.html" title="Storage for three dimensional coordinates. ">cgVector3</a>                   <a class="code" href="structcg_rigid_body_create_params.html#ac9d94a324c02fa89ae388363518d962a">centerOfMass</a>;       <span class="comment">// Offset to the body&#39;s center of mass relative to its position and orientation. </span></div>
+<div class="line"><a name="l00082"></a><span class="lineno"><a class="code" href="structcg_rigid_body_create_params.html#a82b1be5a61781f293146bbf84790730f">   82</a></span>&#160;    <a class="code" href="classcg_vector3.html" title="Storage for three dimensional coordinates. ">cgVector3</a>                   <a class="code" href="structcg_rigid_body_create_params.html#a82b1be5a61781f293146bbf84790730f">shapeOffset</a>;        <span class="comment">// Amount to offset the body&#39;s shape relative to the position.</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// Provide defaults</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno"><a class="code" href="structcg_rigid_body_create_params.html#a23cb1108235870ab8fbfb4d5fac8644d">   85</a></span>&#160;    <a class="code" href="structcg_rigid_body_create_params.html">cgRigidBodyCreateParams</a>() :</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        model( cgPhysicsModel::<a class="code" href="namespacecg_physics_model.html#afcd43a080fcdb8431c9b824310557921a0af73ff74ab1c0711342524c7972bec2">RigidDynamic</a> ), quality( cgSimulationQuality::<a class="code" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559a9283c3455e0a27a89addc0dff97b1a9d">Default</a> ),</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        mass( 1.0f ), centerOfMass(0,0,0), shapeOffset(0,0,0) {}</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}; <span class="comment">// End Struct : cgRigidBodyCreateParams</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno"><a class="code" href="structcg_collision_contact.html">   91</a></span>&#160;<span class="keyword">struct </span><a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a> <a class="code" href="structcg_collision_contact.html">cgCollisionContact</a></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;{</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( <a class="code" href="structcg_collision_contact.html">cgCollisionContact</a>, <a class="code" href="namespacecg_script_argument_type.html#a5650d75b4dfb5bdcafcbab0cc6aacd0fa40cffdcbb1e9350cd512af0851ea3561">Array</a> );</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno"><a class="code" href="structcg_collision_contact.html#a90545fd99a526a739c47c981f5c5461e">   95</a></span>&#160;    <a class="code" href="classcg_physics_body.html" title="Base class from which specific types of physics bodys should derive. This base does not enforce any s...">cgPhysicsBody</a> * <a class="code" href="structcg_collision_contact.html#a90545fd99a526a739c47c981f5c5461e">body</a>;               <span class="comment">// The intersected physics body.</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="code" href="structcg_collision_contact.html#aa05367a2266615293d41a8e19a021208">   96</a></span>&#160;    <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>         <a class="code" href="structcg_collision_contact.html#aa05367a2266615293d41a8e19a021208">intersectParam</a>;     <span class="comment">// Intersection &#39;t&#39; value along the specified path.</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno"><a class="code" href="structcg_collision_contact.html#a2773f71ac9aa532f50d90495b9099f5b">   97</a></span>&#160;    <a class="code" href="classcg_vector3.html" title="Storage for three dimensional coordinates. ">cgVector3</a>       <a class="code" href="structcg_collision_contact.html#a2773f71ac9aa532f50d90495b9099f5b">contactNormal</a>;      <span class="comment">// Surface normal at the point of contact.</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno"><a class="code" href="structcg_collision_contact.html#a28cb2b36cd57e07730271d3478087fe8">   98</a></span>&#160;    <a class="code" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>         <a class="code" href="structcg_collision_contact.html#a28cb2b36cd57e07730271d3478087fe8">collisionId</a>;        <span class="comment">// Custom identifier associated returned by the shape in contact.</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="comment">// Provide defaults</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno"><a class="code" href="structcg_collision_contact.html#a7693428ff2b8a8ac75a4975ef434b1a3">  101</a></span>&#160;    <a class="code" href="structcg_collision_contact.html">cgCollisionContact</a>() :</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        body(<a class="code" href="cg_base_types_8h.html#ae28f568db83e03f77e0d1f3d96b89449">CG_NULL</a>), intersectParam(FLT_MAX), contactNormal(0,0,0), collisionId(-1) {}</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;}; <span class="comment">// End Struct : cgCollisionContact</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">#endif // !_CGE_CGPHYSICSTYPES_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_c18f26b57cc8458db5e695aa3cb280ca.html">Physics</a></li><li class="navelem"><a class="el" href="cg_physics_types_8h.html">cgPhysicsTypes.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:15 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:47:54 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

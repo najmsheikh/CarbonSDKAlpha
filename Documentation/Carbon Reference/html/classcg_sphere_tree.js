@@ -1,0 +1,37 @@
+var classcg_sphere_tree =
+[
+    [ "NodeFlags", "classcg_sphere_tree.html#ab6eaf5142e0d1fde8a4745534182734c", [
+      [ "SuperSphere", "classcg_sphere_tree.html#ab6eaf5142e0d1fde8a4745534182734cacb9109127bb55377fe2d236ee8718559", null ],
+      [ "RootNode", "classcg_sphere_tree.html#ab6eaf5142e0d1fde8a4745534182734ca7c8cfa0949d9db53ebd23eac1da2b0c5", null ],
+      [ "Recompute", "classcg_sphere_tree.html#ab6eaf5142e0d1fde8a4745534182734ca4093061f6dfef2ba4eb4d711fc1fbbb5", null ],
+      [ "Integrate", "classcg_sphere_tree.html#ab6eaf5142e0d1fde8a4745534182734cae33503588a1194ed18027d1939fde058", null ],
+      [ "Terminal", "classcg_sphere_tree.html#ab6eaf5142e0d1fde8a4745534182734ca5335ba8cc6dd0b00055e207cb4040e5a", null ],
+      [ "UpdateLeaves", "classcg_sphere_tree.html#ab6eaf5142e0d1fde8a4745534182734cae41ef379480c1c1e1804017b3ff45025", null ],
+      [ "Hidden", "classcg_sphere_tree.html#ab6eaf5142e0d1fde8a4745534182734ca6e656fa63c39b950a79b1eb0e25bdae1", null ],
+      [ "Partial", "classcg_sphere_tree.html#ab6eaf5142e0d1fde8a4745534182734caa2afb218b52871363f5dd71bea84b1fd", null ],
+      [ "Inside", "classcg_sphere_tree.html#ab6eaf5142e0d1fde8a4745534182734cafb5bd3a2899af6889229948412472977", null ]
+    ] ],
+    [ "cgSphereTree", "classcg_sphere_tree.html#a633bac6fc91f3a93e17f2672fd3a73d0", null ],
+    [ "~cgSphereTree", "classcg_sphere_tree.html#a005a2728d4ef37439ab53bf2b5832da4", null ],
+    [ "addIntegrate", "classcg_sphere_tree.html#af8e676d22e6344d5e0f07ac62639472f", null ],
+    [ "addRecompute", "classcg_sphere_tree.html#a08535c612f4c26b0cbd81920735b73a4", null ],
+    [ "addSphere", "classcg_sphere_tree.html#a096a0a518c1f9d6cc30c44e4b4fc4d6a", null ],
+    [ "addVisibilitySet", "classcg_sphere_tree.html#a442387dc80b0c6855631d2d130c9db7b", null ],
+    [ "computeVisibility", "classcg_sphere_tree.html#aeb60d746efa7b3b4d2065057ea61ebda", null ],
+    [ "dispose", "classcg_sphere_tree.html#af6e25bda30e81b61d2ccc3a8ae5729ba", null ],
+    [ "getStaticVisTree", "classcg_sphere_tree.html#a76c675906e57a1981c98fbf7d696f2fb", null ],
+    [ "getVisibilitySetCount", "classcg_sphere_tree.html#a913a7bc08aea0d27873e3fe487397bfa", null ],
+    [ "getVisibilitySets", "classcg_sphere_tree.html#ad5cb724d325d188f6e37369b65cff596", null ],
+    [ "integrate", "classcg_sphere_tree.html#aa2ef98dfb9c5c25d7266e7c802a363ea", null ],
+    [ "process", "classcg_sphere_tree.html#a333302482dd49486842bc807d72e7eb6", null ],
+    [ "removeSphere", "classcg_sphere_tree.html#a1fbfa2299eea0ad017bf2c57bb4c462b", null ],
+    [ "removeVisibilitySet", "classcg_sphere_tree.html#a4015aac6e75fd40e2dfadf3c8952f4ac", null ],
+    [ "mIntegrationFIFO", "classcg_sphere_tree.html#ab6e0d4f9a9912a516d57651690a52631", null ],
+    [ "mMaximumLeafSize", "classcg_sphere_tree.html#aff9f1c5ae7089b017a0ce3ab48103ff0", null ],
+    [ "mNodePool", "classcg_sphere_tree.html#af95dc5288ce4de7b331e36c929754740", null ],
+    [ "mPadding", "classcg_sphere_tree.html#a366fdc7ccd76d5b771bc72eaa89adba4", null ],
+    [ "mRecomputeFIFO", "classcg_sphere_tree.html#a91ade1b8bab14cd484e19799abf1bf82", null ],
+    [ "mRoot", "classcg_sphere_tree.html#a4207a8a6339f93cba339d850259ee144", null ],
+    [ "mSets", "classcg_sphere_tree.html#acfd1d084d3f84a8e54271821562814e4", null ],
+    [ "mStaticVisTree", "classcg_sphere_tree.html#a8a19d44ffa5305c291f8d27c2966e33d", null ]
+];

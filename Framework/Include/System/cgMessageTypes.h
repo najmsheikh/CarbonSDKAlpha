@@ -16,7 +16,7 @@
 //        application to ensure that no collision occurs.                    //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -85,6 +85,7 @@ namespace cgSystemMessages
         AppWindow_OnCreate              = 6001,
         AppWindow_OnClose               = 6002,
         AppWindow_OnSize                = 6003,
+        AppWindow_OnUpdateCursor        = 6004,
 
         // Messages issued by cgWorld
         World_Disposing                 = 7001,

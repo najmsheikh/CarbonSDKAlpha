@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -153,15 +153,21 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7008e046d16afc4b2bebf4b61b9802ca"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a7008e046d16afc4b2bebf4b61b9802ca">cgCharacterController</a> (<a class="el" href="classcg_physics_world.html">cgPhysicsWorld</a> *world)</td></tr>
-<tr class="memdesc:a7008e046d16afc4b2bebf4b61b9802ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for this class.  <a href="#a7008e046d16afc4b2bebf4b61b9802ca"></a><br/></td></tr>
-<tr class="separator:a7008e046d16afc4b2bebf4b61b9802ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72dd640c4f258ba84c5a7acebca005db"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a72dd640c4f258ba84c5a7acebca005db">cgCharacterController</a> (<a class="el" href="classcg_physics_world.html">cgPhysicsWorld</a> *world, bool playerControlled)</td></tr>
+<tr class="memdesc:a72dd640c4f258ba84c5a7acebca005db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for this class.  <a href="#a72dd640c4f258ba84c5a7acebca005db"></a><br/></td></tr>
+<tr class="separator:a72dd640c4f258ba84c5a7acebca005db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7944f116dcbaae22c4461417c1d06685"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a7944f116dcbaae22c4461417c1d06685">~cgCharacterController</a> ()</td></tr>
 <tr class="memdesc:a7944f116dcbaae22c4461417c1d06685"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for this class.  <a href="#a7944f116dcbaae22c4461417c1d06685"></a><br/></td></tr>
 <tr class="separator:a7944f116dcbaae22c4461417c1d06685"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f65c444d1090cf758bac051e3074eed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_character_controller.html#a5d74045fd77726d0adb166051c2819af">CharacterState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a3f65c444d1090cf758bac051e3074eed">getCharacterState</a> () const </td></tr>
 <tr class="memdesc:a3f65c444d1090cf758bac051e3074eed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the current state of the character.  <a href="#a3f65c444d1090cf758bac051e3074eed"></a><br/></td></tr>
 <tr class="separator:a3f65c444d1090cf758bac051e3074eed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abac07f3262b9935bc4c4bde7a9929970"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_navigation_target_state.html#a9fe8706a8535ad5f6e2062d082d4a74b">cgNavigationTargetState::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#abac07f3262b9935bc4c4bde7a9929970">getNavigationState</a> () const </td></tr>
+<tr class="memdesc:abac07f3262b9935bc4c4bde7a9929970"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this is a non-player controlled character, retrieve the current state navigation request (i.e. waiting, moving, arrived, etc.)  <a href="#abac07f3262b9935bc4c4bde7a9929970"></a><br/></td></tr>
+<tr class="separator:abac07f3262b9935bc4c4bde7a9929970"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a7dbd7df0f5b599d6d62d1ce24e0046"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a3a7dbd7df0f5b599d6d62d1ce24e0046">applyImpulse</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;impulse)</td></tr>
+<tr class="memdesc:a3a7dbd7df0f5b599d6d62d1ce24e0046"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply an impulse to this character for integration during the next update. Note: When an impulse is applied, the character will automatically enter the airborne state.  <a href="#a3a7dbd7df0f5b599d6d62d1ce24e0046"></a><br/></td></tr>
+<tr class="separator:a3a7dbd7df0f5b599d6d62d1ce24e0046"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3a79517aa80143df645452c8a4466d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#ae3a79517aa80143df645452c8a4466d4">setKinematicCushion</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> value)</td></tr>
 <tr class="memdesc:ae3a79517aa80143df645452c8a4466d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the size of the 'cushion' that surrounds the character in order to help prevent penetrations with dynamics objects.  <a href="#ae3a79517aa80143df645452c8a4466d4"></a><br/></td></tr>
 <tr class="separator:ae3a79517aa80143df645452c8a4466d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,11 +190,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a3a95c36fb8b678732e0378eaacd92c12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the maximum height of obstacles that the character is allowed to automatically step onto / over without jumping.  <a href="#a3a95c36fb8b678732e0378eaacd92c12"></a><br/></td></tr>
 <tr class="separator:a3a95c36fb8b678732e0378eaacd92c12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9183a65df62fd8c55d7c308448ed3a1e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a9183a65df62fd8c55d7c308448ed3a1e">setMaximumWalkSpeed</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> value)</td></tr>
-<tr class="memdesc:a9183a65df62fd8c55d7c308448ed3a1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the maximum speed at which the character is able to walkDirection in any horizontal direction (does not limit vertical velocity).  <a href="#a9183a65df62fd8c55d7c308448ed3a1e"></a><br/></td></tr>
+<tr class="memdesc:a9183a65df62fd8c55d7c308448ed3a1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the maximum speed at which the character is able to walk in any horizontal direction (does not limit vertical velocity).  <a href="#a9183a65df62fd8c55d7c308448ed3a1e"></a><br/></td></tr>
 <tr class="separator:a9183a65df62fd8c55d7c308448ed3a1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f4f3a1789537f3178bfc4a1f0c2a495"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a6f4f3a1789537f3178bfc4a1f0c2a495">setMaximumFlySpeed</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> value)</td></tr>
+<tr class="memdesc:a6f4f3a1789537f3178bfc4a1f0c2a495"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the maximum speed at which the character is able to fly in any horizontal or vertical direction when fly mode is enabled (see <a class="el" href="classcg_character_controller.html#a40548c0ff3b20312e5d8c606b5dee389" title="Disable gravity and allow the character to fly using &#39;ClimbSink&#39; input state. ">cgCharacterController::enableFlyMode()</a>)  <a href="#a6f4f3a1789537f3178bfc4a1f0c2a495"></a><br/></td></tr>
+<tr class="separator:a6f4f3a1789537f3178bfc4a1f0c2a495"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7c7da297f9c810c0f074dab3f3f5bf5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#ae7c7da297f9c810c0f074dab3f3f5bf5">setWalkAcceleration</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> value)</td></tr>
 <tr class="memdesc:ae7c7da297f9c810c0f074dab3f3f5bf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the rate at which the character accelerates when input is received, or decelerates when no input is received.  <a href="#ae7c7da297f9c810c0f074dab3f3f5bf5"></a><br/></td></tr>
 <tr class="separator:ae7c7da297f9c810c0f074dab3f3f5bf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4debde1d85e162d5fe90ba6b8bb22ec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#ad4debde1d85e162d5fe90ba6b8bb22ec">setFlyAcceleration</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> value)</td></tr>
+<tr class="memdesc:ad4debde1d85e162d5fe90ba6b8bb22ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the rate at which the character accelerates when input is received, or decelerates when no input is received while fly mode is enabled.  <a href="#ad4debde1d85e162d5fe90ba6b8bb22ec"></a><br/></td></tr>
+<tr class="separator:ad4debde1d85e162d5fe90ba6b8bb22ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2c13e7d835d3c60a67ea97c60b2a719"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#ab2c13e7d835d3c60a67ea97c60b2a719">setGravity</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;gravity)</td></tr>
 <tr class="memdesc:ab2c13e7d835d3c60a67ea97c60b2a719"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the force of gravity that is applicable to this character.  <a href="#ab2c13e7d835d3c60a67ea97c60b2a719"></a><br/></td></tr>
 <tr class="separator:ab2c13e7d835d3c60a67ea97c60b2a719"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -201,9 +213,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aea4009822813e868fa1ba81487f382ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#aea4009822813e868fa1ba81487f382ad">setRampWalkDamping</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> value)</td></tr>
 <tr class="memdesc:aea4009822813e868fa1ba81487f382ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the scaling factor that will be applied to the walking forces when the character is on an 'illegal' ramp. This allows the application to configure the percentage of force that will be allowed whilst sliding for example.  <a href="#aea4009822813e868fa1ba81487f382ad"></a><br/></td></tr>
 <tr class="separator:aea4009822813e868fa1ba81487f382ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab82e1c3336200d7a52991d451bb48467"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#ab82e1c3336200d7a52991d451bb48467">setRampJumpDamping</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> value)</td></tr>
+<tr class="memdesc:ab82e1c3336200d7a52991d451bb48467"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the scaling factor that will be applied to the jumping forces when the character is on an 'illegal' ramp. This allows the application to configure the percentage of force that will be allowed whilst sliding for example.  <a href="#ab82e1c3336200d7a52991d451bb48467"></a><br/></td></tr>
+<tr class="separator:ab82e1c3336200d7a52991d451bb48467"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a652b3854dcada6b7b19c6d0fbfb1ba80"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a652b3854dcada6b7b19c6d0fbfb1ba80">requestStandingMode</a> (<a class="el" href="classcg_character_controller.html#ad30fcbfe78d7b711524a9efbc70f3bb6">StandingMode</a> mode)</td></tr>
 <tr class="memdesc:a652b3854dcada6b7b19c6d0fbfb1ba80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request that the character move into the specified standing mode; either standing, crouching or prone are supported. Returns true if the character was immediately able to switch to this mode, or false if it was not.  <a href="#a652b3854dcada6b7b19c6d0fbfb1ba80"></a><br/></td></tr>
 <tr class="separator:a652b3854dcada6b7b19c6d0fbfb1ba80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40548c0ff3b20312e5d8c606b5dee389"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a40548c0ff3b20312e5d8c606b5dee389">enableFlyMode</a> (bool enable)</td></tr>
+<tr class="memdesc:a40548c0ff3b20312e5d8c606b5dee389"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable gravity and allow the character to fly using 'ClimbSink' input state.  <a href="#a40548c0ff3b20312e5d8c606b5dee389"></a><br/></td></tr>
+<tr class="separator:a40548c0ff3b20312e5d8c606b5dee389"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bf9efe572e4cc2afad2089c6c33b0c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a3bf9efe572e4cc2afad2089c6c33b0c8">enableFlyMode</a> (bool enable, bool autoDisable)</td></tr>
+<tr class="memdesc:a3bf9efe572e4cc2afad2089c6c33b0c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable gravity and allow the character to fly using up/down input states. Optionally, fly mode can be automatically disabled when the character is no longer airborne.  <a href="#a3bf9efe572e4cc2afad2089c6c33b0c8"></a><br/></td></tr>
+<tr class="separator:a3bf9efe572e4cc2afad2089c6c33b0c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61a9f52873a4ee9d8721e13d212f0dee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a61a9f52873a4ee9d8721e13d212f0dee">getKinematicCushion</a> () const </td></tr>
 <tr class="memdesc:a61a9f52873a4ee9d8721e13d212f0dee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of the 'cushion' that surrounds the character in order to help prevent penetrations with dynamics objects.  <a href="#a61a9f52873a4ee9d8721e13d212f0dee"></a><br/></td></tr>
 <tr class="separator:a61a9f52873a4ee9d8721e13d212f0dee"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,11 +250,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a35d29b9e559c8fa4acb5f787b1640586"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the maximum height of obstacles that the character is allowed to automatically step onto / over without jumping.  <a href="#a35d29b9e559c8fa4acb5f787b1640586"></a><br/></td></tr>
 <tr class="separator:a35d29b9e559c8fa4acb5f787b1640586"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6194fd6ef5daa53cd60608d249bae39"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#aa6194fd6ef5daa53cd60608d249bae39">getMaximumWalkSpeed</a> () const </td></tr>
-<tr class="memdesc:aa6194fd6ef5daa53cd60608d249bae39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the maximum speed at which the character is able to walkDirection in any horizontal direction (does not limit vertical velocity).  <a href="#aa6194fd6ef5daa53cd60608d249bae39"></a><br/></td></tr>
+<tr class="memdesc:aa6194fd6ef5daa53cd60608d249bae39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the maximum speed at which the character is able to walk in any horizontal direction (does not limit vertical velocity).  <a href="#aa6194fd6ef5daa53cd60608d249bae39"></a><br/></td></tr>
 <tr class="separator:aa6194fd6ef5daa53cd60608d249bae39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69e68306e8b70d01c68d8c3cbde6159e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a69e68306e8b70d01c68d8c3cbde6159e">getMaximumFlySpeed</a> () const </td></tr>
+<tr class="memdesc:a69e68306e8b70d01c68d8c3cbde6159e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the maximum speed at which the character is able to fly in any horizontal or vertical direction when fly mode is enabled (see <a class="el" href="classcg_character_controller.html#a40548c0ff3b20312e5d8c606b5dee389" title="Disable gravity and allow the character to fly using &#39;ClimbSink&#39; input state. ">cgCharacterController::enableFlyMode()</a>)  <a href="#a69e68306e8b70d01c68d8c3cbde6159e"></a><br/></td></tr>
+<tr class="separator:a69e68306e8b70d01c68d8c3cbde6159e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0150a1e83e0f0809fdf5966a3844dc26"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a0150a1e83e0f0809fdf5966a3844dc26">getWalkAcceleration</a> () const </td></tr>
 <tr class="memdesc:a0150a1e83e0f0809fdf5966a3844dc26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the rate at which the character accelerates when input is received, or decelerates when no input is received.  <a href="#a0150a1e83e0f0809fdf5966a3844dc26"></a><br/></td></tr>
 <tr class="separator:a0150a1e83e0f0809fdf5966a3844dc26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff25961b6855ec87840609ac0555c1b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#aff25961b6855ec87840609ac0555c1b7">getFlyAcceleration</a> () const </td></tr>
+<tr class="memdesc:aff25961b6855ec87840609ac0555c1b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the rate at which the character accelerates when input is received, or decelerates when no input is received while fly mode is enabled.  <a href="#aff25961b6855ec87840609ac0555c1b7"></a><br/></td></tr>
+<tr class="separator:aff25961b6855ec87840609ac0555c1b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6905b916c3b15762f29526aa58429ea"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#ac6905b916c3b15762f29526aa58429ea">getGravity</a> () const </td></tr>
 <tr class="memdesc:ac6905b916c3b15762f29526aa58429ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the force of gravity that is applicable to this character.  <a href="#ac6905b916c3b15762f29526aa58429ea"></a><br/></td></tr>
 <tr class="separator:ac6905b916c3b15762f29526aa58429ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -249,12 +276,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adc800d96fae8e2331fa4278c3b8c134c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#adc800d96fae8e2331fa4278c3b8c134c">getRampWalkDamping</a> () const </td></tr>
 <tr class="memdesc:adc800d96fae8e2331fa4278c3b8c134c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the scaling factor that will be applied to the walking forces when the character is on an 'illegal' ramp. This allows the application to configure the percentage of force that will be allowed whilst sliding for example.  <a href="#adc800d96fae8e2331fa4278c3b8c134c"></a><br/></td></tr>
 <tr class="separator:adc800d96fae8e2331fa4278c3b8c134c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb8370ecfa35f9de4d6f91a3a7a0cf59"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#acb8370ecfa35f9de4d6f91a3a7a0cf59">getRampJumpDamping</a> () const </td></tr>
+<tr class="memdesc:acb8370ecfa35f9de4d6f91a3a7a0cf59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the scaling factor that will be applied to the jumping forces when the character is on an 'illegal' ramp. This allows the application to configure the percentage of force that will be allowed whilst sliding for example.  <a href="#acb8370ecfa35f9de4d6f91a3a7a0cf59"></a><br/></td></tr>
+<tr class="separator:acb8370ecfa35f9de4d6f91a3a7a0cf59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b5a1109221662d8cfb293f8dd200602"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_character_controller.html#ad30fcbfe78d7b711524a9efbc70f3bb6">StandingMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a1b5a1109221662d8cfb293f8dd200602">getRequestedStandingMode</a> () const </td></tr>
 <tr class="memdesc:a1b5a1109221662d8cfb293f8dd200602"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the most recently requested standing mode. Note that the character may not actually be able to switch to this mode at this time and will switch at the earliest opportunity. Use '<a class="el" href="classcg_character_controller.html#adaf4c5ac5ccada868eef9766179e575b" title="Retrieve the current standing mode of the character. ">getActualStandingMode()</a>' to determine the currently active mode.  <a href="#a1b5a1109221662d8cfb293f8dd200602"></a><br/></td></tr>
 <tr class="separator:a1b5a1109221662d8cfb293f8dd200602"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adaf4c5ac5ccada868eef9766179e575b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_character_controller.html#ad30fcbfe78d7b711524a9efbc70f3bb6">StandingMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#adaf4c5ac5ccada868eef9766179e575b">getActualStandingMode</a> () const </td></tr>
 <tr class="memdesc:adaf4c5ac5ccada868eef9766179e575b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the current standing mode of the character.  <a href="#adaf4c5ac5ccada868eef9766179e575b"></a><br/></td></tr>
 <tr class="separator:adaf4c5ac5ccada868eef9766179e575b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e2f3e63120fd75130c9aaea18065c10"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_quaternion.html">cgQuaternion</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a9e2f3e63120fd75130c9aaea18065c10">getSuggestedHeading</a> () const </td></tr>
+<tr class="memdesc:a9e2f3e63120fd75130c9aaea18065c10"><td class="mdescLeft">&#160;</td><td class="mdescRight">For non player character controllers, this method can be called in order to retrieve the requested heading that relates to the current navigation task. It may not always be the case that the object should be pointing in this direction (i.e. it may want to point at its target and strafe), so this is only a suggestion.  <a href="#a9e2f3e63120fd75130c9aaea18065c10"></a><br/></td></tr>
+<tr class="separator:a9e2f3e63120fd75130c9aaea18065c10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eb6c5509ce7d23ae5869587349ae9ac"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a7eb6c5509ce7d23ae5869587349ae9ac">isFlyModeEnabled</a> () const </td></tr>
+<tr class="memdesc:a7eb6c5509ce7d23ae5869587349ae9ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if fly mode is currently enabled (gravity disabled).  <a href="#a7eb6c5509ce7d23ae5869587349ae9ac"></a><br/></td></tr>
+<tr class="separator:a7eb6c5509ce7d23ae5869587349ae9ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3612e6d748950e49bf81a5c2c4268810"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a3612e6d748950e49bf81a5c2c4268810">navigateTo</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;position)</td></tr>
+<tr class="memdesc:a3612e6d748950e49bf81a5c2c4268810"><td class="mdescLeft">&#160;</td><td class="mdescRight">When navigation is enabled for this controller, use this method to request the object to autonomously navigate to the specified world space position if possible.  <a href="#a3612e6d748950e49bf81a5c2c4268810"></a><br/></td></tr>
+<tr class="separator:a3612e6d748950e49bf81a5c2c4268810"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc270d7794d749f31b201a63212e5f18"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#afc270d7794d749f31b201a63212e5f18">preStep</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> timeDelta)</td></tr>
 <tr class="memdesc:afc270d7794d749f31b201a63212e5f18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called just prior to the upcoming physics simulation step.  <a href="#afc270d7794d749f31b201a63212e5f18"></a><br/></td></tr>
 <tr class="separator:afc270d7794d749f31b201a63212e5f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -324,6 +363,18 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:ae24c296aead121f8a655d8c4d408caaf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#ae24c296aead121f8a655d8c4d408caaf">attemptStandingChange</a> ()</td></tr>
 <tr class="memdesc:ae24c296aead121f8a655d8c4d408caaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempt to change from the current standing mode to that requested by the application. There is no guarantee of success if, for instance, there is not enough room above the character.  <a href="#ae24c296aead121f8a655d8c4d408caaf"></a><br/></td></tr>
 <tr class="separator:ae24c296aead121f8a655d8c4d408caaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe595add58510337dc9a063b657390c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#afe595add58510337dc9a063b657390c2">preStepPlayer</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> timeDelta)</td></tr>
+<tr class="memdesc:afe595add58510337dc9a063b657390c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called just prior to the upcoming physics simulation step for player controlled characters.  <a href="#afe595add58510337dc9a063b657390c2"></a><br/></td></tr>
+<tr class="separator:afe595add58510337dc9a063b657390c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8d8c97e9fb0ed75e4141dc34ae460fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#aa8d8c97e9fb0ed75e4141dc34ae460fc">preStepNPC</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> timeDelta)</td></tr>
+<tr class="memdesc:aa8d8c97e9fb0ed75e4141dc34ae460fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called just prior to the upcoming physics simulation step for non player controlled characters.  <a href="#aa8d8c97e9fb0ed75e4141dc34ae460fc"></a><br/></td></tr>
+<tr class="separator:aa8d8c97e9fb0ed75e4141dc34ae460fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a661e36130156c6470bc5fa7ce9bce0c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a661e36130156c6470bc5fa7ce9bce0c7">postStepPlayer</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> timeDelta)</td></tr>
+<tr class="memdesc:a661e36130156c6470bc5fa7ce9bce0c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called just after the most recent physics simulation step for player controlled characters.  <a href="#a661e36130156c6470bc5fa7ce9bce0c7"></a><br/></td></tr>
+<tr class="separator:a661e36130156c6470bc5fa7ce9bce0c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ad5af40d34250f727dbbca2bc68f95a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a3ad5af40d34250f727dbbca2bc68f95a">postStepNPC</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> timeDelta)</td></tr>
+<tr class="memdesc:a3ad5af40d34250f727dbbca2bc68f95a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called just after the most recent physics simulation step for non player controlled characters.  <a href="#a3ad5af40d34250f727dbbca2bc68f95a"></a><br/></td></tr>
+<tr class="separator:a3ad5af40d34250f727dbbca2bc68f95a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a439549558a76340ec65b174cb0273c18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a439549558a76340ec65b174cb0273c18">preProcessAirborne</a> (<a class="el" href="classcg_vector3.html">cgVector3</a> &amp;currentPosition, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> timeDelta)</td></tr>
 <tr class="memdesc:a439549558a76340ec65b174cb0273c18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run pre-simulation character control process for when the body is airborne.  <a href="#a439549558a76340ec65b174cb0273c18"></a><br/></td></tr>
 <tr class="separator:a439549558a76340ec65b174cb0273c18"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -359,6 +410,12 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:aab5e8ebf4a4f3f85aeab9ffbed5d1fa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ca56154514c0dd28e578064c93002eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_physics_shape.html">cgPhysicsShape</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a5ca56154514c0dd28e578064c93002eb">mBodySensorShape</a></td></tr>
 <tr class="separator:a5ca56154514c0dd28e578064c93002eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46917d91c8441fbe6281420c385ca4b7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a46917d91c8441fbe6281420c385ca4b7">mPlayerControlled</a></td></tr>
+<tr class="separator:a46917d91c8441fbe6281420c385ca4b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc8564c3df1618b376e81af8b94b5cd6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#afc8564c3df1618b376e81af8b94b5cd6">mFlyModeEnabled</a></td></tr>
+<tr class="separator:afc8564c3df1618b376e81af8b94b5cd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa27f4fc86fc7d7f0842df5d199f41d44"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#aa27f4fc86fc7d7f0842df5d199f41d44">mAutoDisableFlyMode</a></td></tr>
+<tr class="separator:aa27f4fc86fc7d7f0842df5d199f41d44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac791c2a152ecf6185c7f8bf3a34064d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#ac791c2a152ecf6185c7f8bf3a34064d7">mKinematicCushion</a></td></tr>
 <tr class="separator:ac791c2a152ecf6185c7f8bf3a34064d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab218465e6adb912b10daa768774f8d63"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#ab218465e6adb912b10daa768774f8d63">mCharacterMass</a></td></tr>
@@ -375,16 +432,22 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a93eed999f98b5b39f46623cb021e0659"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81e3c18fea5c9a979c22785c5bc2ff76"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a81e3c18fea5c9a979c22785c5bc2ff76">mWalkSpeed</a></td></tr>
 <tr class="separator:a81e3c18fea5c9a979c22785c5bc2ff76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8073501cba7892df445d1fafa69a4c6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#ab8073501cba7892df445d1fafa69a4c6">mFlySpeed</a></td></tr>
+<tr class="separator:ab8073501cba7892df445d1fafa69a4c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a074051695511ed5dd48e9c78807bdb87"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_vector3.html">cgVector3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a074051695511ed5dd48e9c78807bdb87">mGravity</a></td></tr>
 <tr class="separator:a074051695511ed5dd48e9c78807bdb87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c7a094b848c44b3f3586c730d177b34"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a1c7a094b848c44b3f3586c730d177b34">mMaximumAcceleration</a></td></tr>
-<tr class="separator:a1c7a094b848c44b3f3586c730d177b34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52ea321816d54163efc91ad3e56fdd1d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a52ea321816d54163efc91ad3e56fdd1d">mWalkAcceleration</a></td></tr>
+<tr class="separator:a52ea321816d54163efc91ad3e56fdd1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d3c786ad9a479a09f99d8690a4f8cc9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a7d3c786ad9a479a09f99d8690a4f8cc9">mFlyAcceleration</a></td></tr>
+<tr class="separator:a7d3c786ad9a479a09f99d8690a4f8cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab16246a1d18f8699db7a674ee6cee51a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#ab16246a1d18f8699db7a674ee6cee51a">mJumpImpulse</a></td></tr>
 <tr class="separator:ab16246a1d18f8699db7a674ee6cee51a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7f0508ba9614d1674897f8f790ef973"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#ab7f0508ba9614d1674897f8f790ef973">mAirborneWalkDamping</a></td></tr>
 <tr class="separator:ab7f0508ba9614d1674897f8f790ef973"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b66563b2bd17e44af41fd7d8d037f56"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a5b66563b2bd17e44af41fd7d8d037f56">mRampWalkDamping</a></td></tr>
 <tr class="separator:a5b66563b2bd17e44af41fd7d8d037f56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad09fc4d772b552ac4f73112c05de9033"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#ad09fc4d772b552ac4f73112c05de9033">mRampJumpDamping</a></td></tr>
+<tr class="separator:ad09fc4d772b552ac4f73112c05de9033"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af47ca19e3e6ebb6cdc34162f07e98c23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_character_controller.html#ad30fcbfe78d7b711524a9efbc70f3bb6">StandingMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#af47ca19e3e6ebb6cdc34162f07e98c23">mRequestedStandMode</a></td></tr>
 <tr class="separator:af47ca19e3e6ebb6cdc34162f07e98c23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae3005da47f5540f975994de34e9c419"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_character_controller.html#ad30fcbfe78d7b711524a9efbc70f3bb6">StandingMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#aae3005da47f5540f975994de34e9c419">mActualStandMode</a></td></tr>
@@ -393,6 +456,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a03da5a2db31cc0172aa9a302490b6c6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad61a46cb50f1dda2a889701c2ac4245c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#ad61a46cb50f1dda2a889701c2ac4245c">mProneHeightScale</a></td></tr>
 <tr class="separator:ad61a46cb50f1dda2a889701c2ac4245c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20dbe66bc2d323ff17aa3c62d69bb20d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_navigation_agent.html">cgNavigationAgent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a20dbe66bc2d323ff17aa3c62d69bb20d">mNavAgent</a></td></tr>
+<tr class="separator:a20dbe66bc2d323ff17aa3c62d69bb20d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a98fd2f375b4fa82c2a330475189b48"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_vector3.html">cgVector3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a8a98fd2f375b4fa82c2a330475189b48">mUpAxis</a></td></tr>
 <tr class="separator:a8a98fd2f375b4fa82c2a330475189b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe9ff0566dcec05031c1fe82c5110ff1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_vector3.html">cgVector3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#abe9ff0566dcec05031c1fe82c5110ff1">mVelocity</a></td></tr>
@@ -403,6 +468,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:ab7b20d97e73c47e4d209e72fb9cfcc26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2802be594429b1d688ce7fb131f2e8a7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a2802be594429b1d688ce7fb131f2e8a7">mAirborneTime</a></td></tr>
 <tr class="separator:a2802be594429b1d688ce7fb131f2e8a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d7b61c2c96a39572e0525cbadeb092f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_quaternion.html">cgQuaternion</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a0d7b61c2c96a39572e0525cbadeb092f">mSuggestedHeading</a></td></tr>
+<tr class="separator:a0d7b61c2c96a39572e0525cbadeb092f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae80b7277ed65db52d1af9015e600f922"><td class="memItemLeft" align="right" valign="top">ContactDataArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#ae80b7277ed65db52d1af9015e600f922">mContacts</a></td></tr>
 <tr class="separator:ae80b7277ed65db52d1af9015e600f922"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1595a413977619248af5cecc84cb10e2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a1595a413977619248af5cecc84cb10e2">mElevation</a></td></tr>
@@ -468,7 +535,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a7008e046d16afc4b2bebf4b61b9802ca"></a>
+<a class="anchor" id="a72dd640c4f258ba84c5a7acebca005db"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -476,8 +543,18 @@ Protected Attributes</h2></td></tr>
           <td class="memname">cgCharacterController::cgCharacterController </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classcg_physics_world.html">cgPhysicsWorld</a> *&#160;</td>
-          <td class="paramname"><em>world</em></td><td>)</td>
+          <td class="paramname"><em>world</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>playerControlled</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -545,6 +622,24 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Allocate a physics controller of this specific type. </p>
+
+</div>
+</div>
+<a class="anchor" id="a3a7dbd7df0f5b599d6d62d1ce24e0046"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgCharacterController::applyImpulse </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
+          <td class="paramname"><em>impulse</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Apply an impulse to this character for integration during the next update. Note: When an impulse is applied, the character will automatically enter the airborne state. </p>
 
 </div>
 </div>
@@ -623,7 +718,53 @@ Protected Attributes</h2></td></tr>
 <p>Release any memory, references or resources allocated by this object. </p>
 <p>&lt;copydetails cref="cgScriptInterop::DisposableScriptObject::dispose()"&gt; </p>
 
-<p>Reimplemented from <a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a607a22a9c1cb9252904e5097a1dab7a7">cgScriptInterop::DisposableScriptObject</a>.</p>
+<p>Reimplemented from <a class="el" href="classcg_physics_controller.html#a596dc38051fdd2c7059c9b40647ac5a7">cgPhysicsController</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a40548c0ff3b20312e5d8c606b5dee389"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgCharacterController::enableFlyMode </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disable gravity and allow the character to fly using 'ClimbSink' input state. </p>
+
+</div>
+</div>
+<a class="anchor" id="a3bf9efe572e4cc2afad2089c6c33b0c8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgCharacterController::enableFlyMode </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>autoDisable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disable gravity and allow the character to fly using up/down input states. Optionally, fly mode can be automatically disabled when the character is no longer airborne. </p>
 
 </div>
 </div>
@@ -830,6 +971,23 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aff25961b6855ec87840609ac0555c1b7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgCharacterController::getFlyAcceleration </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the rate at which the character accelerates when input is received, or decelerates when no input is received while fly mode is enabled. </p>
+
+</div>
+</div>
 <a class="anchor" id="ac6905b916c3b15762f29526aa58429ea"></a>
 <div class="memitem">
 <div class="memproto">
@@ -881,6 +1039,23 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a69e68306e8b70d01c68d8c3cbde6159e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgCharacterController::getMaximumFlySpeed </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the maximum speed at which the character is able to fly in any horizontal or vertical direction when fly mode is enabled (see <a class="el" href="classcg_character_controller.html#a40548c0ff3b20312e5d8c606b5dee389" title="Disable gravity and allow the character to fly using &#39;ClimbSink&#39; input state. ">cgCharacterController::enableFlyMode()</a>) </p>
+
+</div>
+</div>
 <a class="anchor" id="a1dfe4e4f6ac584ac63a3cc33c5fddd0e"></a>
 <div class="memitem">
 <div class="memproto">
@@ -928,7 +1103,41 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get the maximum speed at which the character is able to walkDirection in any horizontal direction (does not limit vertical velocity). </p>
+<p>Get the maximum speed at which the character is able to walk in any horizontal direction (does not limit vertical velocity). </p>
+
+</div>
+</div>
+<a class="anchor" id="abac07f3262b9935bc4c4bde7a9929970"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacecg_navigation_target_state.html#a9fe8706a8535ad5f6e2062d082d4a74b">cgNavigationTargetState::Base</a> cgCharacterController::getNavigationState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>If this is a non-player controlled character, retrieve the current state navigation request (i.e. waiting, moving, arrived, etc.) </p>
+
+</div>
+</div>
+<a class="anchor" id="acb8370ecfa35f9de4d6f91a3a7a0cf59"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgCharacterController::getRampJumpDamping </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the scaling factor that will be applied to the jumping forces when the character is on an 'illegal' ramp. This allows the application to configure the percentage of force that will be allowed whilst sliding for example. </p>
 
 </div>
 </div>
@@ -963,6 +1172,23 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Retrieve the most recently requested standing mode. Note that the character may not actually be able to switch to this mode at this time and will switch at the earliest opportunity. Use '<a class="el" href="classcg_character_controller.html#adaf4c5ac5ccada868eef9766179e575b" title="Retrieve the current standing mode of the character. ">getActualStandingMode()</a>' to determine the currently active mode. </p>
+
+</div>
+</div>
+<a class="anchor" id="a9e2f3e63120fd75130c9aaea18065c10"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classcg_quaternion.html">cgQuaternion</a> &amp; cgCharacterController::getSuggestedHeading </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>For non player character controllers, this method can be called in order to retrieve the requested heading that relates to the current navigation task. It may not always be the case that the object should be pointing in this direction (i.e. it may want to point at its target and strafe), so this is only a suggestion. </p>
 
 </div>
 </div>
@@ -1022,8 +1248,44 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Allow the controller to initialize (called after setting up). </p>
+<p>mPlayerControlled; </p>
 
 <p>Reimplemented from <a class="el" href="classcg_physics_controller.html#a7bb362def12c2fa81b0fe66bdae43f6a">cgPhysicsController</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7eb6c5509ce7d23ae5869587349ae9ac"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgCharacterController::isFlyModeEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Determine if fly mode is currently enabled (gravity disabled). </p>
+
+</div>
+</div>
+<a class="anchor" id="a3612e6d748950e49bf81a5c2c4268810"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgCharacterController::navigateTo </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
+          <td class="paramname"><em>position</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>When navigation is enabled for this controller, use this method to request the object to autonomously navigate to the specified world space position if possible. </p>
 
 </div>
 </div>
@@ -1163,6 +1425,58 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a3ad5af40d34250f727dbbca2bc68f95a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgCharacterController::postStepNPC </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>timeDelta</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called just after the most recent physics simulation step for non player controlled characters. </p>
+
+</div>
+</div>
+<a class="anchor" id="a661e36130156c6470bc5fa7ce9bce0c7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgCharacterController::postStepPlayer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>timeDelta</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called just after the most recent physics simulation step for player controlled characters. </p>
+
+</div>
+</div>
 <a class="anchor" id="a439549558a76340ec65b174cb0273c18"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1299,6 +1613,58 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aa8d8c97e9fb0ed75e4141dc34ae460fc"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgCharacterController::preStepNPC </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>timeDelta</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called just prior to the upcoming physics simulation step for non player controlled characters. </p>
+
+</div>
+</div>
+<a class="anchor" id="afe595add58510337dc9a063b657390c2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgCharacterController::preStepPlayer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>timeDelta</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called just prior to the upcoming physics simulation step for player controlled characters. </p>
+
+</div>
+</div>
 <a class="anchor" id="a652b3854dcada6b7b19c6d0fbfb1ba80"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1407,6 +1773,24 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ad4debde1d85e162d5fe90ba6b8bb22ec"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgCharacterController::setFlyAcceleration </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the rate at which the character accelerates when input is received, or decelerates when no input is received while fly mode is enabled. </p>
+
+</div>
+</div>
 <a class="anchor" id="ab2c13e7d835d3c60a67ea97c60b2a719"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1461,6 +1845,24 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a6f4f3a1789537f3178bfc4a1f0c2a495"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgCharacterController::setMaximumFlySpeed </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the maximum speed at which the character is able to fly in any horizontal or vertical direction when fly mode is enabled (see <a class="el" href="classcg_character_controller.html#a40548c0ff3b20312e5d8c606b5dee389" title="Disable gravity and allow the character to fly using &#39;ClimbSink&#39; input state. ">cgCharacterController::enableFlyMode()</a>) </p>
+
+</div>
+</div>
 <a class="anchor" id="a8fe2354b9cad5aa0ea3786e582140461"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1511,7 +1913,25 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set the maximum speed at which the character is able to walkDirection in any horizontal direction (does not limit vertical velocity). </p>
+<p>Set the maximum speed at which the character is able to walk in any horizontal direction (does not limit vertical velocity). </p>
+
+</div>
+</div>
+<a class="anchor" id="ab82e1c3336200d7a52991d451bb48467"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgCharacterController::setRampJumpDamping </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the scaling factor that will be applied to the jumping forces when the character is on an 'illegal' ramp. This allows the application to configure the percentage of force that will be allowed whilst sliding for example. </p>
 
 </div>
 </div>
@@ -1676,6 +2096,26 @@ Protected Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgCharacterController::mAirborneWalkDamping</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa27f4fc86fc7d7f0842df5d199f41d44"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgCharacterController::mAutoDisableFlyMode</td>
         </tr>
       </table>
   </td>
@@ -1927,6 +2367,66 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a7d3c786ad9a479a09f99d8690a4f8cc9"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgCharacterController::mFlyAcceleration</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="afc8564c3df1618b376e81af8b94b5cd6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgCharacterController::mFlyModeEnabled</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ab8073501cba7892df445d1fafa69a4c6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgCharacterController::mFlySpeed</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a074051695511ed5dd48e9c78807bdb87"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1987,26 +2487,6 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a1c7a094b848c44b3f3586c730d177b34"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgCharacterController::mMaximumAcceleration</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="a93eed999f98b5b39f46623cb021e0659"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2047,6 +2527,26 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a20dbe66bc2d323ff17aa3c62d69bb20d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_navigation_agent.html">cgNavigationAgent</a>* cgCharacterController::mNavAgent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a0d4e8c59dcff75f6e848795977d8721d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2067,6 +2567,26 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a46917d91c8441fbe6281420c385ca4b7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgCharacterController::mPlayerControlled</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="ad61a46cb50f1dda2a889701c2ac4245c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2076,6 +2596,26 @@ Protected Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgCharacterController::mProneHeightScale</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad09fc4d772b552ac4f73112c05de9033"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgCharacterController::mRampJumpDamping</td>
         </tr>
       </table>
   </td>
@@ -2147,6 +2687,26 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a0d7b61c2c96a39572e0525cbadeb092f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_quaternion.html">cgQuaternion</a> cgCharacterController::mSuggestedHeading</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a8a98fd2f375b4fa82c2a330475189b48"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2207,6 +2767,26 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a52ea321816d54163efc91ad3e56fdd1d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgCharacterController::mWalkAcceleration</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a81e3c18fea5c9a979c22785c5bc2ff76"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2237,7 +2817,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_character_controller.html">cgCharacterController</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:30 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:17 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

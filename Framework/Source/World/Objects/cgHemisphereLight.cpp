@@ -13,7 +13,7 @@
 // Desc : Hemisphere light source classes.                                   //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -1405,21 +1405,6 @@ bool cgHemisphereLightNode::testObjectShadowVolume( cgObjectNode * pObject, cons
 {
     // Hemisphere light does not support shadow casting.
     return false;
-}
-
-//-----------------------------------------------------------------------------
-//  Name : computeVisibility () (Virtual)
-/// <summary>
-/// Compute the visibility set from the point of view of this light.
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgHemisphereLightNode::computeVisibility( )
-{
-    // Shadow casting is not supported for hemisphere lights.
-    mComputeShadows = false;
-    
-    // Call base class implementation last
-    cgLightNode::computeVisibility();
 }
 
 //-----------------------------------------------------------------------------

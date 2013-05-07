@@ -63,6 +63,7 @@ shared class Tracer
     Vector3         to;
     bool            hit;
     bool            active;
+    uint            hitEffect;
 };
 
 //-----------------------------------------------------------------------------
@@ -588,7 +589,7 @@ shared class Weapon : IScriptedObjectBehavior
 	// Name : emitTracer ()
 	// Desc : Event that is triggered when a tracer should be released.
 	//-------------------------------------------------------------------------
-    void emitTracer( bool hit, const Vector3 & from, const Vector3 & to )
+    void emitTracer( bool hit, const Vector3 & from, const Vector3 & to, uint hitEffectRefId )
     {
         // Find an available tracer.
         int availableTracer = -1;
@@ -613,6 +614,7 @@ shared class Weapon : IScriptedObjectBehavior
             tracer.hit      = hit;
             tracer.from     = from;
             tracer.to       = to;
+            tracer.hitEffect = (hitEffectRefId != 0) ? hitEffectRefId : 0x5ED;
 
             // Deviate the tracer direction by some random amount
             Transform tracerTransform;
@@ -668,11 +670,12 @@ shared class Weapon : IScriptedObjectBehavior
                 // Spawn a particle emitter if we hit.
                 if ( tracer.hit )
                 {
-                    Vector3 right, look = -tracer.direction;
-                    vec3Cross( right, look, Vector3(0,1,0) );
-                    ObjectNode @ sparks = scene.loadObjectNode( 0x5ED, CloneMethod::ObjectInstance, false );
+                    Vector3 right, up = Vector3(0,1,0), look = -tracer.direction;
+                    vec3Cross( right, look, up );
+                    vec3Cross( up, right, look );
+                    ObjectNode @ sparks = scene.loadObjectNode( tracer.hitEffect, CloneMethod::ObjectInstance, false );
                     sparks.setPosition( tracer.to );
-                    sparks.setOrientation( right, Vector3(0,1,0), look );
+                    sparks.setOrientation( right, up, look );
                 
                 } // End if hit
             
@@ -776,23 +779,23 @@ shared class Weapon : IScriptedObjectBehavior
             projectileTransform.rotateLocal( randomFloat(-CGEToRadian(mProjectileSpread*0.5f), CGEToRadian(mProjectileSpread*0.5f)), 0, 0 );
 
             // Ask the scene to retrieve the closest intersected object node.
+            SceneCollisionContact contact;
+            ObjectNode @ pickedNode = null;
             Vector3 intersection, rayOrigin = mAimFrom, rayDir = projectileTransform.normalizedZAxis();
-            ObjectNode @ pickedNode = scene.pickClosestNode( Size(0,0), rayOrigin, rayDir, intersection );
-
-            // ToDo: Temp - pickClosestNode is the only thing capable of detecting collisions
-            // with bones at the moment. If it found one, use it. Otherwise, use the scene's
-            // physics database.
-            if ( @pickedNode == null || !pickedNode.queryObjectType( RTID_BoneObject ) )
+            bool result = scene.rayCastClosest( rayOrigin, rayDir * 10000.0f, contact );
+            if ( result )
             {
-                SceneCollisionContact contact;
-                if ( scene.rayCastClosest( rayOrigin, rayDir * 10000.0f, contact ) )
-                    @pickedNode = contact.node;
+                @pickedNode = contact.node;
+                intersection = rayOrigin + (rayDir * 10000.0f * contact.intersectParam);
+                
+            } // End if scene cast
             
-            } // End if !bone
-
             // Take action based on the selected object node
+            uint hitEffectRefId = 0;
             if ( @pickedNode != null )
             {
+                hitEffectRefId = uint(pickedNode.getCustomProperties().getProperty( "projectile_hit_fx", uint(0) ));
+
                 // Push the object if it has a physics body
                 PhysicsBody @ body = pickedNode.getPhysicsBody();
                 if ( @body != null && body.getMass() > CGE_EPSILON )
@@ -808,7 +811,12 @@ shared class Weapon : IScriptedObjectBehavior
                 {
                     GroupNode @ group = pickedNode.getOwnerGroup();
                     if ( @group != null && group.getBehaviorCount() > 0 )
+                    {
                         @agent = cast<Agent>(group.getScriptedBehavior(0));
+                        if ( @agent != null )
+                            hitEffectRefId = uint(group.getCustomProperties().getProperty( "projectile_hit_fx", uint(0) ));
+                    
+                    } // End if has group with script
                  
                 } // End if try group
 
@@ -832,7 +840,7 @@ shared class Weapon : IScriptedObjectBehavior
 
             // Emit a tracer.
             bool hit = (@pickedNode!=null);
-            emitTracer( hit, mMuzzleFlashEmitter.getPosition(), (hit) ? intersection : rayOrigin + rayDir * 200 );
+            emitTracer( hit, mMuzzleFlashEmitter.getPosition(), (hit) ? intersection : rayOrigin + rayDir * 200, hitEffectRefId );
 
         } // Next projectile
     }

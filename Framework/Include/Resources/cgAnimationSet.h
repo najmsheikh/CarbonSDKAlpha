@@ -15,7 +15,7 @@
 //        available.                                                         //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -99,14 +99,18 @@ public:
     cgFloat                 getFrameRate        ( ) const;
     cgRange                 getFrameRange       ( ) const;
     const TargetDataMap   & getTargetData       ( ) const;
+    const TargetData      * getTargetData       ( const cgString & targetId ) const;
+    TargetData            * getTargetData       ( const cgString & targetId );
+    TargetData            * getTargetData       ( const cgString & targetId, bool createTargetData );
     bool                    getSRT              ( cgDouble framePosition, cgAnimationPlaybackMode::Base mode, const cgString & targetId, cgInt32 firstFrame, cgInt32 lastFrame, cgVector3 & scale, cgQuaternion & rotation, cgVector3 & translation );
-    bool                    getSRT              ( cgDouble framePosition, cgAnimationPlaybackMode::Base mode, const cgString & targetId, cgInt32 firstFrame, cgInt32 lastFrame, const cgVector3 & defaultScale, const cgQuaternion & defaultRotation, const cgVector3 & defaultTranslation, cgVector3 & scale, cgQuaternion & rotation, cgVector3 & translation );
+    bool                    getSRT              ( cgDouble framePosition, cgAnimationPlaybackMode::Base mode, const cgString & targetId, cgInt32 firstFrame, cgInt32 lastFrame, cgAnimationTarget * defaultsTarget, cgVector3 & scale, cgQuaternion & rotation, cgVector3 & translation );
     void                    addScaleKey         ( cgInt32 frame, const cgString & targetId, const cgVector3 & scale );
     void                    addRotationKey      ( cgInt32 frame, const cgString & targetId, const cgQuaternion & rotation );
     void                    addTranslationKey   ( cgInt32 frame, const cgString & targetId, const cgVector3 & translation );
     void                    addSRTKey           ( cgInt32 frame, const cgString & targetId, const cgVector3 & scale, const cgQuaternion & rotation, const cgVector3 & translation );
     void                    addMatrixKey        ( cgInt32 frame, const cgString & targetId, const cgMatrix & transform );
     cgInt32                 computeFrameIndex   ( cgDouble position );
+    void                    targetDataUpdated   ( bool recomputeRange );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgResource)

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -153,6 +153,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a18f080464af461f0d97b6597550f016a"><td class="memItemLeft" align="right" valign="top">const _RT *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_resource_handle.html#a18f080464af461f0d97b6597550f016a">getResourceSilent</a> () const </td></tr>
 <tr class="memdesc:a18f080464af461f0d97b6597550f016a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simply retrieve the underlying resource pointer without doing anything or informing anyone.  <a href="#a18f080464af461f0d97b6597550f016a"></a><br/></td></tr>
 <tr class="separator:a18f080464af461f0d97b6597550f016a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70d7b0c1d6876081ed2772e067414911"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_resource_handle.html">ResourceHandle</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_resource_handle.html#a70d7b0c1d6876081ed2772e067414911">swap</a> (<a class="el" href="class_resource_handle.html">ResourceHandle</a> &amp;handle)</td></tr>
+<tr class="memdesc:a70d7b0c1d6876081ed2772e067414911"><td class="mdescLeft">&#160;</td><td class="mdescRight">Swap the contents of the two resource handles without triggering any reference counting mechanisms or updates.  <a href="#a70d7b0c1d6876081ed2772e067414911"></a><br/></td></tr>
+<tr class="separator:a70d7b0c1d6876081ed2772e067414911"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c3f6859334d21c6143e664585a87a10"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_resource_handle.html#a9c3f6859334d21c6143e664585a87a10">exchangeResource</a> (<a class="el" href="class_resource_handle.html">ResourceHandle</a> &amp;resource)</td></tr>
 <tr class="memdesc:a9c3f6859334d21c6143e664585a87a10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Swap internal resource data with that maintained by the specified resource. Use with extreme care.  <a href="#a9c3f6859334d21c6143e664585a87a10"></a><br/></td></tr>
 <tr class="separator:a9c3f6859334d21c6143e664585a87a10"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -782,6 +785,34 @@ template&lt;class _RT, class _BaseClass = ResourceHandleBase&gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a70d7b0c1d6876081ed2772e067414911"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class _RT, class _BaseClass = ResourceHandleBase&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_resource_handle.html">ResourceHandle</a>&amp; <a class="el" href="class_resource_handle.html">ResourceHandle</a>&lt; _RT, _BaseClass &gt;::swap </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_resource_handle.html">ResourceHandle</a>&lt; _RT, _BaseClass &gt; &amp;&#160;</td>
+          <td class="paramname"><em>handle</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Swap the contents of the two resource handles without triggering any reference counting mechanisms or updates. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a class="anchor" id="a270c7da9a120fd22b5d15029a578dd4b"></a>
 <div class="memitem">
@@ -814,7 +845,7 @@ template&lt;class _RT, class _BaseClass = ResourceHandleBase&gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_resource_handle.html">ResourceHandle</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:55 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:49:01 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

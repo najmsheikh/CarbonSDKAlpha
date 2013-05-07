@@ -16,7 +16,7 @@
 //       which this is heavily based.                                        //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -41,19 +41,54 @@
 //-----------------------------------------------------------------------------
 cgEulerAngles & cgEulerAngles::fromQuaternion( const cgQuaternion & q, cgInt _Order )
 {
-    cgFloat sp = -2.0f * (q.y * q.z - q.w * q.x );
-    if ( fabs( sp ) > 0.9999f )
+    if ( _Order == cgEulerAnglesOrder::YXZ )
     {
-        x = 1.570796f * sp;
-        y = atan2f( -q.x*q.z + q.w*q.y, 0.5f - q.y*q.y - q.z*q.z );
-        z = 0.0f;
-    }
-    else
+        cgFloat sp = -2.0f * (q.y * q.z - q.w * q.x );
+        if ( fabs( sp ) > 0.9999f )
+        {
+            x = 1.570796f * sp;
+            y = atan2f( -q.x*q.z + q.w*q.y, 0.5f - q.y*q.y - q.z*q.z );
+            z = 0.0f;
+        }
+        else
+        {
+            x = asinf(sp);
+            y = atan2f( q.x*q.z + q.w*q.y, 0.5f - q.x*q.x - q.y*q.y );
+            z = atan2f( q.x*q.y + q.w*q.z, 0.5f - q.x*q.x - q.z*q.z );
+        }
+
+
+    } // End if YXZ
+    else if ( _Order == cgEulerAnglesOrder::XYZ )
     {
-        x = asinf(sp);
-        y = atan2f( q.x*q.z + q.w*q.y, 0.5f - q.x*q.x - q.y*q.y );
-        z = atan2f( q.x*q.y + q.w*q.z, 0.5f - q.x*q.x - q.z*q.z );
-    }
+        cgMatrix m;
+        cgMatrix::rotationQuaternion( m, q );
+        if (m(0,2) < 1.f)
+	    {
+		    if (m(0,2) > -1.f)
+		    {
+			    y = asinf(m(0,2));
+			    x = atan2f(-m(1,2), m(2,2));
+			    z = atan2f(-m(0,1), m(0,0));
+		    }
+		    else
+		    {
+			    // Not a unique solution: z - x = atan2(m[1][0], m[1][1]);
+			    y = -CGE_PI/2.f;
+			    x = -atan2f(m(1,0), m(1,1));
+			    z = 0.f;
+		    }
+	    }
+	    else
+	    {
+		    // Not a unique solution: z + x = atan2(m[1][0], m[1][1]);
+		    y = CGE_PI/2.f;
+		    x = atan2f(m(1,0), m(1,1));
+		    z = 0.f;
+	    }
+
+    } // End if XYZ
+
     order = _Order;
     return *this;
 }
@@ -92,7 +127,18 @@ cgEulerAngles & cgEulerAngles::fromTransform( const cgTransform & t, cgInt _Orde
 //-----------------------------------------------------------------------------
 cgQuaternion & cgEulerAngles::toQuaternion( cgQuaternion & q ) const
 {
-    cgQuaternion::rotationYawPitchRoll( q, y, x, z );
+    if ( order == cgEulerAnglesOrder::YXZ )
+        cgQuaternion::rotationYawPitchRoll( q, y, x, z );
+    else
+    {
+        cgQuaternion qx, qy, qz;
+        cgQuaternion::rotationAxis( qx, cgVector3(1,0,0), x );
+        cgQuaternion::rotationAxis( qy, cgVector3(0,1,0), y );
+        cgQuaternion::rotationAxis( qz, cgVector3(0,0,1), z );
+        if ( order == cgEulerAnglesOrder::XYZ )
+            q = qx * qy * qz;
+    
+    } // End if !YXZ
     return q;
 }
 
@@ -104,7 +150,18 @@ cgQuaternion & cgEulerAngles::toQuaternion( cgQuaternion & q ) const
 //-----------------------------------------------------------------------------
 cgMatrix & cgEulerAngles::toMatrix( cgMatrix & m ) const
 {
-    cgMatrix::rotationYawPitchRoll( m, y, x, z );
+    if ( order == cgEulerAnglesOrder::YXZ )
+        cgMatrix::rotationYawPitchRoll( m, y, x, z );
+    else
+    {
+        cgMatrix mx, my, mz;
+        cgMatrix::rotationAxis( mx, cgVector3(1,0,0), x );
+        cgMatrix::rotationAxis( my, cgVector3(0,1,0), y );
+        cgMatrix::rotationAxis( mz, cgVector3(0,0,1), z );
+        if ( order == cgEulerAnglesOrder::XYZ )
+            m = mx * my * mz;
+
+    } // End if !YXZ
     return m;
 }
 
@@ -117,6 +174,12 @@ cgMatrix & cgEulerAngles::toMatrix( cgMatrix & m ) const
 cgTransform & cgEulerAngles::toTransform( cgTransform & t ) const
 {
     // NB: 'cgTransform::rotation()' combines in YXZ order.
-    t.rotation( x, y, z );
+    if ( order == cgEulerAnglesOrder::YXZ )
+        t.rotation( x, y, z );
+    else
+    {
+        cgMatrix m;
+        t = toMatrix( m );
+    } // End if !YXZ
     return t;
 }

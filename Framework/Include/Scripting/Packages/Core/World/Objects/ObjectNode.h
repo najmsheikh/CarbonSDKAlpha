@@ -38,6 +38,7 @@ namespace ObjectNode
 
         // Register the object methods
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void unload( )", asMETHODPR(type,unload,(),void), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "void unload( bool )", asMETHODPR(type,unload,( bool ),void), asCALL_THISCALL) );
 
         // Properties
         BINDSUCCESS( engine->registerObjectMethod(typeName, "String getName( ) const", asMETHODPR(type,getName,() const,cgString), asCALL_THISCALL) );
@@ -69,6 +70,7 @@ namespace ObjectNode
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void moveLocal( const Vector3 &in )", asMETHODPR(type,moveLocal,( const cgVector3& ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void move( float, float, float )", asMETHODPR(type,move,( cgFloat, cgFloat, cgFloat ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void moveLocal( float, float, float )", asMETHODPR(type,moveLocal,( cgFloat, cgFloat, cgFloat ), void), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "void setPosition( float, float, float )", asMETHODPR(type,setPosition,( cgFloat, cgFloat, cgFloat ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void setPosition( const Vector3 &in )", asMETHODPR(type,setPosition,( const cgVector3& ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void rotate( float, float, float )", asMETHODPR(type,rotate,( cgFloat, cgFloat, cgFloat ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void rotate( float, float, float, const Vector3 &in )", asMETHODPR(type,rotate,( cgFloat, cgFloat, cgFloat, const cgVector3& ), void), asCALL_THISCALL) );
@@ -89,6 +91,7 @@ namespace ObjectNode
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void scale( float, float, float, bool )", asMETHODPR(type, scale, ( cgFloat, cgFloat, cgFloat, bool ), void), asCALL_THISCALL) );        
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void scale( float, float, float, const Vector3 &in, bool )", asMETHODPR(type, scale, ( cgFloat, cgFloat, cgFloat, const cgVector3&, bool ), void), asCALL_THISCALL) );        
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void scaleLocal( float, float, float )", asMETHODPR(type, scaleLocal, ( cgFloat, cgFloat, cgFloat ), void), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "void scaleLocal( float, float, float, const Vector3 &in )", asMETHODPR(type, scaleLocal, ( cgFloat, cgFloat, cgFloat, const cgVector3& ), void), asCALL_THISCALL) );
 
         // Visibility
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void showNode( bool, bool )", asMETHODPR(type,showNode,( bool, bool ), void), asCALL_THISCALL) );

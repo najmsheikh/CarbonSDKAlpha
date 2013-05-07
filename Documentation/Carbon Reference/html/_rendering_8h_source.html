@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -117,47 +117,51 @@ $(document).ready(function(){initNavTree('_rendering_8h_source.html','');});
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_sampler_8h.html">Rendering/Sampler.h</a>&quot;</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_image_processor_8h.html">Rendering/ImageProcessor.h</a>&quot;</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_render_control_8h.html">Rendering/RenderControl.h</a>&quot;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_object_render_context_8h.html">Rendering/ObjectRenderContext.h</a>&quot;</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_object_render_queue_8h.html">Rendering/ObjectRenderQueue.h</a>&quot;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_processors_8h.html">Rendering/Processors.h</a>&quot;</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">// Parent hierarchy</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">namespace </span>cgScriptPackages { <span class="keyword">namespace </span>Core {</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">// Package declaration</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">namespace </span>Rendering</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;{</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="comment">// Package descriptor</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">class </span>Package : <span class="keyword">public</span> <a class="code" href="classcg_script_package.html" title="Contains definitions for binding application functionality with any available script engine...">cgScriptPackage</a></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    {</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <a class="code" href="cg_script_package_8h.html#a1d2373da902fae6faa48a91ec65bfcb7">BEGIN_SCRIPT_PACKAGE</a>( <span class="stringliteral">&quot;Core.Rendering&quot;</span> )</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( Types )</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( RenderDriver )</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( RenderView )</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( Sampler )</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( RenderControl )</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( ResampleChain )</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( ImageProcessor )</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( ObjectRenderContext )</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( ObjectRenderQueue )</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( Processors )</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="cg_script_package_8h.html#afce01821e140df6dc77b688fdcdc2647">END_SCRIPT_PACKAGE</a>( )</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="comment">// Member bindings</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordtype">void</span> bind( <a class="code" href="classcg_script_engine.html" title="The scripting engine class is designed as a base class from which the engine or application can deriv...">cgScriptEngine</a> * engine )</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        {</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        }</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    }; <span class="comment">// End Class : Package</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;} } } <span class="comment">// End Namespace : cgScriptPackages::Core::Rendering</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_rendering_capabilities_8h.html">Rendering/RenderingCapabilities.h</a>&quot;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_object_render_context_8h.html">Rendering/ObjectRenderContext.h</a>&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_object_render_queue_8h.html">Rendering/ObjectRenderQueue.h</a>&quot;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_processors_8h.html">Rendering/Processors.h</a>&quot;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_billboard_buffer_8h.html">Rendering/BillboardBuffer.h</a>&quot;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">// Parent hierarchy</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">namespace </span>cgScriptPackages { <span class="keyword">namespace </span>Core {</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">// Package declaration</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">namespace </span>Rendering</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="comment">// Package descriptor</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">class </span>Package : <span class="keyword">public</span> <a class="code" href="classcg_script_package.html" title="Contains definitions for binding application functionality with any available script engine...">cgScriptPackage</a></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <a class="code" href="cg_script_package_8h.html#a1d2373da902fae6faa48a91ec65bfcb7">BEGIN_SCRIPT_PACKAGE</a>( <span class="stringliteral">&quot;Core.Rendering&quot;</span> )</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( Types )</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( RenderDriver )</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( RenderView )</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( Sampler )</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( RenderControl )</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( ResampleChain )</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( ImageProcessor )</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( ObjectRenderContext )</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( ObjectRenderQueue )</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( Processors )</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( RenderingCapabilities )</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            <a class="code" href="cg_script_package_8h.html#a3a9b62e915a7a49e64edd066d15fbe15">DECLARE_PACKAGE_CHILD</a>( BillboardBuffer )</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <a class="code" href="cg_script_package_8h.html#afce01821e140df6dc77b688fdcdc2647">END_SCRIPT_PACKAGE</a>( )</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="comment">// Member bindings</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordtype">void</span> bind( <a class="code" href="classcg_script_engine.html" title="The scripting engine class is designed as a base class from which the engine or application can deriv...">cgScriptEngine</a> * engine )</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        }</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }; <span class="comment">// End Class : Package</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;} } } <span class="comment">// End Namespace : cgScriptPackages::Core::Rendering</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_036efea8fd6b39c1f1fd2dd7f1be4325.html">Scripting</a></li><li class="navelem"><a class="el" href="dir_5f20ce7c1333a975792d65b7ff262c26.html">Packages</a></li><li class="navelem"><a class="el" href="dir_962f94cc32c03ad95281b0f22b8add17.html">Core</a></li><li class="navelem"><a class="el" href="_rendering_8h.html">Rendering.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:17 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:47:59 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

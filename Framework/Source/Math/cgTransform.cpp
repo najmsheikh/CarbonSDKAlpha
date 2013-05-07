@@ -16,7 +16,7 @@
 //        provided by standard matrices.                                     //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -409,6 +409,19 @@ cgTransform & cgTransform::identity( cgTransform & tOut )
 //-----------------------------------------------------------------------------
 //  Name : decompose()
 /// <summary>
+/// Decompose a transform into its component parts: scale, rotation and 
+/// translation.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgTransform::decompose( cgVector3 & vScale, cgQuaternion & qRotation, cgVector3 & vTranslation ) const
+{
+    cgVector3 vShear;
+    return decompose( vScale, vShear, qRotation, vTranslation );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : decompose()
+/// <summary>
 /// Decompose a transform into its component parts: rotation and translation.
 /// </summary>
 //-----------------------------------------------------------------------------
@@ -416,6 +429,19 @@ bool cgTransform::decompose( cgQuaternion & qRotation, cgVector3 & vTranslation 
 {
     cgVector3 vScale, vShear;
     return decompose( vScale, vShear, qRotation, vTranslation );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : decompose() (Static)
+/// <summary>
+/// Decompose a transform into its component parts: scale, rotation and 
+/// translation.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgTransform::decompose( cgVector3 & vScale, cgQuaternion & qRotation, cgVector3 & vTranslation, const cgTransform & t )
+{
+    cgVector3 vShear;
+    return t.decompose( vScale, vShear, qRotation, vTranslation );
 }
 
 //-----------------------------------------------------------------------------
@@ -1054,6 +1080,53 @@ cgTransform & cgTransform::scaleLocal( cgFloat x, cgFloat y, cgFloat z )
     cgMatrix mtxScale;
     cgMatrix::scaling( mtxScale, x, y, z );
     _m = mtxScale * _m;
+
+    // Return reference to self in order to allow multiple operations (i.e. a.rotate(...).scale(...))
+    return *this;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : scaleLocal ()
+/// <summary>
+/// Scale the transform along its own local axes.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgTransform & cgTransform::scaleLocal( cgFloat x, cgFloat y, cgFloat z, const cgVector3 & localCenter )
+{
+    // No - op?
+    if ( x == 1.0f && y == 1.0f && z == 1.0f )
+        return *this;
+
+    // Retrieve the current local scale (length of axes).
+    cgVector3 vCurrentLength = localScale();
+
+    // Compute the final length of the axes after
+    // scaling has been applied.
+    cgVector3 vFinalLength( vCurrentLength.x * fabsf(x), vCurrentLength.y * fabsf(y), vCurrentLength.z * fabsf(z) );
+
+    // If any fall below the minimum scale requirements, clamp the 
+    // scaling operation.
+    if ( (vFinalLength.x <= MinAxisLength) && vCurrentLength.x )
+        x = (x < 0) ? MinAxisLength / vCurrentLength.x : MinAxisLength / -vCurrentLength.x;
+    if ( vFinalLength.y <= MinAxisLength && vCurrentLength.y )
+        y = (y < 0) ? MinAxisLength / vCurrentLength.y : MinAxisLength / -vCurrentLength.y;
+    if ( (vFinalLength.z <= MinAxisLength) && vCurrentLength.z )
+        z = (z < 0) ? MinAxisLength / vCurrentLength.z : MinAxisLength / -vCurrentLength.z;
+
+    cgVector3 vOriginalCenter;
+    transformCoord( vOriginalCenter, localCenter );
+
+    // Apply scale
+    cgMatrix mtxScale;
+    cgMatrix::scaling( mtxScale, x, y, z );
+    _m = mtxScale * _m;
+
+    // Compute new scaled center position.
+    cgVector3 vScaledCenter;
+    transformCoord( vScaledCenter, localCenter );
+    
+    // Reposition the object
+    position() = position() - (vScaledCenter - vOriginalCenter);
 
     // Return reference to self in order to allow multiple operations (i.e. a.rotate(...).scale(...))
     return *this;

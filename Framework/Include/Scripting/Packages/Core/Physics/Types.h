@@ -21,7 +21,7 @@ namespace Types
         {
             // Value Types / Structures
             BINDSUCCESS( engine->registerObjectType( "RigidBodyCreateParams", sizeof(cgRigidBodyCreateParams), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CDA ) );
-            BINDSUCCESS( engine->registerObjectType( "CollisionContact"     , sizeof(cgCollisionContact), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CDA ) );
+            BINDSUCCESS( engine->registerObjectType( "CollisionContact"     , sizeof(cgCollisionContact), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
 
             // Enumerations
             BINDSUCCESS( engine->registerEnum( "PhysicsModel" ) );
@@ -61,9 +61,11 @@ namespace Types
             typeName = "DefaultPhysicsMaterialGroup";
 
             // Register values
-            BINDSUCCESS( engine->registerEnumValue( typeName, "Standard" , cgDefaultPhysicsMaterialGroup::Standard ) );
-            BINDSUCCESS( engine->registerEnumValue( typeName, "Character", cgDefaultPhysicsMaterialGroup::Character ) );
-            BINDSUCCESS( engine->registerEnumValue( typeName, "Ragdoll"  , cgDefaultPhysicsMaterialGroup::Ragdoll ) );
+            BINDSUCCESS( engine->registerEnumValue( typeName, "Standard"       , cgDefaultPhysicsMaterialGroup::Standard ) );
+            BINDSUCCESS( engine->registerEnumValue( typeName, "CastOnly"       , cgDefaultPhysicsMaterialGroup::CastOnly ) );
+            BINDSUCCESS( engine->registerEnumValue( typeName, "Character"      , cgDefaultPhysicsMaterialGroup::Character ) );
+            BINDSUCCESS( engine->registerEnumValue( typeName, "PlayerCharacter", cgDefaultPhysicsMaterialGroup::PlayerCharacter ) );
+            BINDSUCCESS( engine->registerEnumValue( typeName, "Ragdoll"        , cgDefaultPhysicsMaterialGroup::Ragdoll ) );
             
             ///////////////////////////////////////////////////////////////////////
             // cgRigidBodyCreateParams (Struct)

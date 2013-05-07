@@ -16,7 +16,7 @@
 //        resources.                                                         //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -638,7 +638,7 @@ bool cgDX11RenderDriver::initialize( cgResourceManager * pResources, const cgStr
 /// windowed and fullscreen mode.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgDX11RenderDriver::updateDisplayMode( const cgDisplayMode & mode, bool windowed )
+bool cgDX11RenderDriver::updateDisplayMode( const cgDisplayMode & mode, bool windowed, bool verticalSync )
 {
     // Is this a no-op?
     if ( mConfig.width == mode.width && mConfig.height == mode.height && mConfig.refreshRate == mode.refreshRate &&
@@ -661,6 +661,7 @@ bool cgDX11RenderDriver::updateDisplayMode( const cgDisplayMode & mode, bool win
         mConfig.height      = mode.height;
         mConfig.refreshRate = (cgInt32)mode.refreshRate;
         mConfig.windowed    = windowed;
+		mConfig.useVSync	= verticalSync;
 
         // Update the size of the focus window.
         mFocusWindow->setClientSize( cgSize( mode.width, mode.height ) );
@@ -676,6 +677,7 @@ bool cgDX11RenderDriver::updateDisplayMode( const cgDisplayMode & mode, bool win
             mConfig.height      = mode.height;
             mConfig.refreshRate = (cgInt32)mode.refreshRate;
             mConfig.windowed    = windowed;
+			mConfig.useVSync    = verticalSync;
 
             // Switch the focus window to the new mode and then set its size.
             // This will automatically trigger a window resize event that will
@@ -778,6 +780,7 @@ bool cgDX11RenderDriver::updateDisplayMode( const cgDisplayMode & mode, bool win
             mConfig.height      = mode.height;
             mConfig.refreshRate = (cgInt32)mode.refreshRate;
             mConfig.windowed    = windowed;
+			mConfig.useVSync    = verticalSync;
 
             // Perform final updates and notify listeners.
             cgRenderDriver::windowResized( mode.width, mode.height );

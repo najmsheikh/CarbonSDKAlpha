@@ -14,7 +14,7 @@
 //        managed and controlled in the same way as any other object.        //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -1714,6 +1714,10 @@ bool cgLightObject::onComponentLoading( cgComponentLoadingEventArgs * e )
     mLoadBaseLight.getColumn( _T("ShadowLODEnd"), mShadowLODMaxDistance );
     mLoadBaseLight.reset();
 
+    //mShadowMinDistance = 0;
+    //mShadowMaxDistance = 0;
+    //mShadowStage = cgSceneProcessStage::None;
+
     // Load the core integration shader.
     cgResourceManager * pResources = mWorld->getResourceManager();
     if ( !pResources->createSurfaceShader( &mShader, _T("sys://Shaders/LightSource.sh"), 0, cgDebugSource() ) )
@@ -3035,7 +3039,7 @@ bool cgLightNode::updateLightConstants()
     pLightData->clipDistance.w  = -pLightData->clipDistance.x / (pLightData->clipDistance.y - pLightData->clipDistance.x);
     cgToDo( "Carbon General", "Populate MipLevel.... x = atten/color tex, y = diffuse IBL max, z = specular IBL max" )
     pLightData->textureMipLevel = cgVector3( 0, 0, 0 );
-    cgToDo( "Carbon General", "I have no idea what this value is doing... The default eventually should be 0,0,1,0" )
+    cgToDo( "Carbon General", "The default eventually should be 0,0,1,0" )
     pLightData->ambientOcclusionAmount = cgVector4(0,0,0,0);
 	
     // ToDo: 6767 - WARNING! Specifies WRITEONLY flag, but reads here!
@@ -3156,17 +3160,6 @@ void cgLightNode::renderShape( cgCameraNode * pCamera, cgUInt32 nSubsetId /* = 0
 }
 
 //-----------------------------------------------------------------------------
-//  Name : computeVisibility () (Virtual)
-/// <summary>
-/// Compute any necessary visibility information that this light source may
-/// need (from its point of view).
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgLightNode::computeVisibility( )
-{
-}
-
-//-----------------------------------------------------------------------------
 //  Name : computeShadowSets( ) (Virtual)
 /// <summary>
 /// Creates the shadow mapping visibility sets that are also found within
@@ -3189,8 +3182,10 @@ void cgLightNode::computeShadowSets( cgCameraNode * pCamera )
 /// paying close attention to filtering rules.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgLightNode::registerVisibility( cgVisibilitySet * pSet, cgUInt32 nFlags )
+bool cgLightNode::registerVisibility( cgVisibilitySet * pSet )
 {
+    cgUInt32 nFlags = pSet->getSearchFlags();
+
     // First test filters.
     if ( (nFlags & cgVisibilitySearchFlags::MustCastShadows) )
         return false;
@@ -3203,85 +3198,23 @@ bool cgLightNode::registerVisibility( cgVisibilitySet * pSet, cgUInt32 nFlags )
     // Determine if the source position of the frustum falls inside 
     // the light volume and perform a frustum visibility test if it 
     // does not (narrow phase).
-    if ( pointInVolume( Frustum.position, 2.0f ) || frustumInVolume( Frustum ) )
-    {
-        // We're visible. Add to the set.
-        pSet->addVisibleLight( this );
-        return true;
-
-    } // End if pass narrow phase
+    //if ( pointInVolume( Frustum.position, 2.0f ) || frustumInVolume( Frustum ) )
+        return pSet->addVisibleLight( this );
     
     // We did not modify the visibility set.
     return false;
 }
 
-/*//-----------------------------------------------------------------------------
-//  Name : computeShadowSets( ) (Virtual)
+//-----------------------------------------------------------------------------
+//  Name : unregisterVisibility () (Virtual)
 /// <summary>
-/// Creates the shadow mapping visibility sets that are also found within
-/// the specified visibility set (i.e. main player camera). This 
-/// essentially narrows down the list of visible objects from the
-/// point of view of the light source to only those that can also be
-/// seen by the camera.
+/// Unregisters this oject from the specified visibility set.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgLightNode::computeShadowSets( cgCameraNode * pCamera )
+void cgLightNode::unregisterVisibility( cgVisibilitySet * visibilityData )
 {
-    // Is this a no-op (m_pLastShadowCamera is automatically cleared
-    // in the light's computeVisibility method)
-    if ( m_pLastShadowCamera == pCamera ) 
-        return;
-
-    // We last intersected our shadow visibility information with the specified camera
-    m_pLastShadowCamera = pCamera;
-
-    // Compute the visibility set for the purposes of shadowing.
-    m_pShadowSet->Clear( );
-    if ( isShadowSource() && !m_pVisibility->IsEmpty() )
-    {
-        // The shadow set is constructed based on those objects visible to
-        // the light source that potentially intersect the viewing volume.
-        // i.e. there is no need to render geometry that only casts a shadow
-        // onto objects that the player cannot see.
-        const cgFrustum & CameraFrustum = pCamera->GetFrustum();
-        const cgVisibilitySet * pCameraVisibility = pCamera->GetVisibilitySet();
-
-        // ToDo: Process spatial tree leaves.
-
-        // Process all objects visible to the light source.
-        cgObjectNode * pObject;
-        cgObjectNodeArray & VisibleObjects = m_pVisibility->GetVisibleObjects( );
-        for ( size_t i = 0; i < VisibleObjects.size(); ++i )
-        {
-            // ToDo: Skip spatial tree objects?
-
-            // If this object cannot participate in the shadowing process (i.e. it's 
-            // not a mesh of some kind), then we can skip it.
-            pObject = VisibleObjects[i];
-            if ( !pObject->IsShadowCaster() )
-                continue;
-
-            // If this object already exists in the camera's frustum (i.e. it will
-            // always cast and recieve shadows) then we can automatically add it.
-            if ( pCameraVisibility->Query( pObject ) )
-            {
-                m_pShadowSet->AddVisibleObject( pObject );
-                continue;
-            
-            } // End if already in camera frustum
-
-            // Can this object potentially cast a shadow into the view volume?
-            if ( TestObjectShadowVolume( pObject, CameraFrustum ) )
-                m_pShadowSet->AddVisibleObject( pObject );
-
-        } // Next Visible Object
-
-    } // End if isShadowSource
-
-    // It is no longer necessary to cast shadows if the shadow set was empty.
-    if ( m_pShadowSet->IsEmpty() )
-        mComputeShadows = false;
-}*/
+    visibilityData->removeVisibleLight( this );
+}
 
 //-----------------------------------------------------------------------------
 //  Name : computeLevelOfDetail() (Virtual)

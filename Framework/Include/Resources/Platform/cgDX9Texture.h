@@ -14,7 +14,7 @@
 //        resource data (DX9 implementation).                                //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -86,6 +86,7 @@ public:
     virtual void            unlock              ( bool updateMips = false );
     virtual bool            getImageData        ( cgImage & imageOut );
     virtual bool            updateMipLevels     ( );
+    virtual bool            clone               ( cgTexture * destinationTexture, const cgRect & sourceRectangle, const cgRect & destinationRectangle );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (cgResource)
@@ -951,6 +952,145 @@ bool cgDX9Texture<_BaseClass>::getImageData( cgImage & imageOut )
     // Clean up
     sourceSurface->UnlockRect( );
     sourceSurface->Release();
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : clone () (Virtual)
+/// <summary>
+/// Copy the specified region of this texture into the specified region of the
+/// destination texture.
+/// </summary>
+//-----------------------------------------------------------------------------
+template <class _BaseClass>
+bool cgDX9Texture<_BaseClass>::clone( cgTexture * destinationTexture, const cgRect & sourceRectangle, const cgRect & destinationRectangle )
+{
+    cgToDo( "Carbon General", "DepthStencil cannot always be cloned and this will fail in such cases." );
+
+    static int cloneCount = 0;
+
+    // Types must be equivalent.
+    if ( mInfo.type != destinationTexture->getInfo().type )
+    {
+        cgAppLog::write( cgAppLog::Debug | cgAppLog::Error, _T("Unable to clone texture '%s' into new texture '%s'. Types are not equivalent.\n"), this->getResourceName().c_str(), destinationTexture->getResourceName().c_str() );
+        return false;
+    
+    } // End if mismatched types
+    
+    // Perform the clone.
+    switch ( mInfo.type )
+    {
+        case cgBufferType::Texture1D:
+        case cgBufferType::Texture2D:
+        case cgBufferType::RenderTarget:
+        case cgBufferType::DepthStencil:
+        case cgBufferType::ShadowMap:
+        {
+            LPDIRECT3DTEXTURE9 sourceD3DTexture = CG_NULL, destinationD3DTexture = CG_NULL;
+            LPDIRECT3DSURFACE9 sourceSurface = CG_NULL, destinationSurface = CG_NULL;
+            
+            // Retrieve both textures.
+            sourceD3DTexture = (LPDIRECT3DTEXTURE9)getD3DTexture();
+            destinationD3DTexture = (LPDIRECT3DTEXTURE9)((cgDX9Texture<_BaseClass>*)destinationTexture)->getD3DTexture();
+
+            // Clone all mip levels
+            cgUInt32 minimumLevels = min( sourceD3DTexture->GetLevelCount(), destinationD3DTexture->GetLevelCount() );
+            for ( cgUInt32 i = 0; i < minimumLevels; ++i )
+            {
+                sourceD3DTexture->GetSurfaceLevel( i, &sourceSurface );
+                destinationD3DTexture->GetSurfaceLevel( i, &destinationSurface );
+
+                // Perform the clone.
+                D3DXLoadSurfaceFromSurface( destinationSurface, CG_NULL, (RECT*)&destinationRectangle, sourceSurface, CG_NULL, (RECT*)&sourceRectangle, D3DX_DEFAULT, 0 );
+
+                // Clean up
+                sourceSurface->Release();
+                destinationSurface->Release();
+
+            } // Next mip level
+
+            // Clean up
+            sourceD3DTexture->Release();
+            destinationD3DTexture->Release();
+            break;
+
+        } // End Case Texture1D | Texture2D | RenderTarget | DepthStencil
+        case cgBufferType::TextureCube:
+        case cgBufferType::RenderTargetCube:
+        {
+            LPDIRECT3DCUBETEXTURE9 sourceD3DTexture = CG_NULL, destinationD3DTexture = CG_NULL;
+            LPDIRECT3DSURFACE9 sourceSurface = CG_NULL, destinationSurface = CG_NULL;
+            
+            // Retrieve both textures.
+            sourceD3DTexture = (LPDIRECT3DCUBETEXTURE9)getD3DTexture();
+            destinationD3DTexture = (LPDIRECT3DCUBETEXTURE9)((cgDX9Texture<_BaseClass>*)destinationTexture)->getD3DTexture();
+
+            // Clone all faces at all mip levels
+            cgUInt32 minimumLevels = min( sourceD3DTexture->GetLevelCount(), destinationD3DTexture->GetLevelCount() );
+            for ( cgUInt32 i = 0; i < 6; ++i )
+            {
+                for ( cgUInt32 j = 0; j < minimumLevels; ++j )
+                {
+
+                    sourceD3DTexture->GetCubeMapSurface( (D3DCUBEMAP_FACES)i, j, &sourceSurface );
+                    destinationD3DTexture->GetCubeMapSurface( (D3DCUBEMAP_FACES)i, j, &destinationSurface );
+
+                    // Perform the clone.
+                    D3DXLoadSurfaceFromSurface( destinationSurface, CG_NULL, (RECT*)&destinationRectangle, sourceSurface, CG_NULL, (RECT*)&sourceRectangle, D3DX_DEFAULT, 0 );
+
+                    // Clean up
+                    sourceSurface->Release();
+                    destinationSurface->Release();
+
+                } // Next mip level
+
+            } // Next cube face
+
+            // Clean up
+            sourceD3DTexture->Release();
+            destinationD3DTexture->Release();
+            break;
+
+        } // End Case TextureCube | RenderTargetCube
+        case cgBufferType::Texture3D:
+        {
+            LPDIRECT3DVOLUMETEXTURE9 sourceD3DTexture = CG_NULL, destinationD3DTexture = CG_NULL;
+            LPDIRECT3DVOLUME9 sourceVolume = CG_NULL, destinationVolume = CG_NULL;
+            
+            // Retrieve both textures.
+            sourceD3DTexture = (LPDIRECT3DVOLUMETEXTURE9)getD3DTexture();
+            destinationD3DTexture = (LPDIRECT3DVOLUMETEXTURE9)((cgDX9Texture<_BaseClass>*)destinationTexture)->getD3DTexture();
+
+            // Clone all mip levels
+            cgUInt32 minimumLevels = min( sourceD3DTexture->GetLevelCount(), destinationD3DTexture->GetLevelCount() );
+            for ( cgUInt32 i = 0; i < minimumLevels; ++i )
+            {
+                sourceD3DTexture->GetVolumeLevel( i, &sourceVolume );
+                destinationD3DTexture->GetVolumeLevel( i, &destinationVolume );
+
+                // Perform the clone.
+                cgToDo( "Carbon General", "Support selectable regions for volume textures." );
+                D3DXLoadVolumeFromVolume( destinationVolume, CG_NULL, CG_NULL, sourceVolume, CG_NULL, CG_NULL, D3DX_DEFAULT, 0 );
+
+                // Clean up
+                sourceVolume->Release();
+                destinationVolume->Release();
+
+            } // Next mip level
+
+            // Clean up
+            sourceD3DTexture->Release();
+            destinationD3DTexture->Release();
+            break;
+        
+        } // End Case Volume
+        default:
+            cgAppLog::write( cgAppLog::Debug | cgAppLog::Error, _T("Unable to clone texture '%s' into new texture '%s'. Unknown type detected.\n"), this->getResourceName().c_str(), destinationTexture->getResourceName().c_str() );
+            return false;
+    
+    } // End Switch Type
 
     // Success!
     return true;

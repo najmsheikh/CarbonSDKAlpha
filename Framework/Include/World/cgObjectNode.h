@@ -16,7 +16,7 @@
 //        other common properties.                                           //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -36,6 +36,7 @@
 #include <Navigation/cgNavigationAgent.h>
 #include <System/cgPropertyContainer.h>
 #include <Math/cgBoundingBox.h>
+#include <Math/cgBoundingSphere.h>
 #include <Math/cgTransform.h>
 
 //-----------------------------------------------------------------------------
@@ -43,7 +44,7 @@
 //-----------------------------------------------------------------------------
 class cgSceneCell;
 class cgWorldObject;
-class cgSpatialTreeNode;
+class cgSphereTreeSubNode;
 class cgCameraNode;
 class cgGroupNode;
 class cgObjectBehavior;
@@ -133,6 +134,7 @@ public:
     //-------------------------------------------------------------------------
     // Management
     void                            unload                  ( );
+    void                            unload                  ( bool unloadChildren );
     bool                            clone                   ( cgCloneMethod::Base method, cgScene * scene, bool internalNode, cgObjectNode *& nodeOut, const cgTransform & initTransform );
     
     // Properties
@@ -188,12 +190,13 @@ public:
     cgObjectNode                  * getParent               ( ) const;
     cgScene                       * getScene                ( ) const;
     cgSceneCell                   * getCell                 ( ) const;
-    cgSpatialTreeNode             * getSpatialTree          ( ) const;
     cgGroupNode                   * getOwnerGroup           ( ) const;
     cgObjectNode                  * getParentOfType         ( const cgUID & typeIdentifier ) const;
     cgObjectNodeList              & getChildren             ( );
     cgNodeTargetMethod::Base        getTargetMethod         ( ) const;
     cgTargetNode                  * getTargetNode           ( ) const;
+    cgSphereTreeSubNode           * getSceneTreeNode        ( ) const;
+    void                            setSceneTreeNode        ( cgSphereTreeSubNode * sceneTreeNode );
     bool                            isMergedAsGroup         ( ) const;
     bool                            setParent               ( cgObjectNode * parent );
     bool                            setCell                 ( cgSceneCell * cell );
@@ -264,6 +267,7 @@ public:
     virtual void                    scale                   ( cgFloat x, cgFloat y, cgFloat z, bool positionOnly );
     virtual void                    scale                   ( cgFloat x, cgFloat y, cgFloat z, const cgVector3 & center, bool positionOnly );
     virtual void                    scaleLocal              ( cgFloat x, cgFloat y, cgFloat z );
+    virtual void                    scaleLocal              ( cgFloat x, cgFloat y, cgFloat z, const cgVector3 & localCenter );
     virtual void                    setOrientation          ( const cgVector3 & x, const cgVector3 & y, const cgVector3 & z );
     virtual void                    setOrientation          ( const cgQuaternion & rotation );
     virtual void                    resetOrientation        ( );
@@ -274,12 +278,14 @@ public:
     virtual void                    lookAt                  ( const cgVector3 & eye, const cgVector3 & at );
     virtual void                    lookAt                  ( const cgVector3 & eye, const cgVector3 & at, const cgVector3 & up );
     virtual bool                    reloadTransforms        ( bool reloadChildren );
+    virtual cgBoundingSphere        getBoundingSphere       ( );
 
     // Visibility
     virtual void                    showNode                ( bool visible = true, bool updateChildren = false );
     virtual bool                    isRenderable            ( ) const;
     virtual bool                    isShadowCaster          ( ) const;
-    virtual bool                    registerVisibility      ( cgVisibilitySet * visibilityData, cgUInt32 flags );
+    virtual bool                    registerVisibility      ( cgVisibilitySet * visibilityData );
+    virtual void                    unregisterVisibility    ( cgVisibilitySet * visibilityData );
     
     // Update Process
     virtual void                    computeLevelOfDetail    ( cgCameraNode * camera );
@@ -292,8 +298,6 @@ public:
     // Relationship Management
     virtual bool                    setParent               ( cgObjectNode * parent, bool constructing );
     virtual bool                    setCell                 ( cgSceneCell * cell, bool constructing );
-    virtual void                    setSpatialTree          ( cgSpatialTreeNode * tree );
-    virtual void                    setSpatialTreeLeaves    ( cgSceneLeafArray & leaves );
     virtual bool                    setOwnerGroup           ( cgGroupNode * group );
     virtual void                    setTargetMethod         ( cgNodeTargetMethod::Base mode );
 
@@ -364,6 +368,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgAnimationTarget)
     //-------------------------------------------------------------------------
+    virtual void                    getAnimationTransform       ( cgTransform & transform ) const;
     virtual void                    onAnimationTransformUpdated ( const cgTransform & transform );
     virtual void                    setInstanceIdentifier       ( const cgString & identifier );
 
@@ -375,6 +380,16 @@ public:
     //-------------------------------------------------------------------------
     // Public Inline Methods
     //-------------------------------------------------------------------------
+    // Access Methods
+    inline void setPendingUpdateEntry( cgObjectNode ** entry )
+    {
+        mPendingUpdateFIFO = entry;
+    }
+    inline cgObjectNode ** getPendingUpdateEntry( ) const
+    {
+        return mPendingUpdateFIFO;
+    }
+
     // Object Method Routing
     inline cgObjectSubElement * createSubElement( const cgUID & category, const cgUID & identifier )
     {
@@ -469,15 +484,15 @@ protected:
     cgUpdateRate::Base          mUpdateRate;                // The rate at which the node is currently set to update
     cgUInt32                    mLastDirtyFrame;            // The most recent frame on which this node was updated (moved, animated etc.)
     cgUInt32                    mPendingUpdates;            // Describes pending updates such as child hierarchy transformation adjustments.
+    cgObjectNode             ** mPendingUpdateFIFO;         // This node's position in the main scene's pending update FIFO buffer.
     
     // Relationship Management
     cgObjectNodeList            mChildren;                  // List of attached child nodes in the relationship hierarchy.
     cgObjectNode              * mParentNode;                // Parent hierarchy node if any.
     cgScene                   * mParentScene;               // The parent scene in which this node exists.
     cgSceneCell               * mParentCell;                // The scene cell in which this node exists. Transformation data is relative to the center of this cell.
-    cgSpatialTreeNode         * mParentTree;                // The parent graph / spatial tree in which this object is contained.
     cgGroupNode               * mOwnerGroup;                // This node belongs to a group?
-    cgSceneLeafArray            mParentTreeLeaves;          // List of parent spatial tree leaves in which this object node exists.
+    cgSphereTreeSubNode       * mSceneTreeNode;             // The sub-node to which this object belongs within the main scene's broadphase / scene tree.
     cgTargetNode              * mTargetNode;                // The special 'target' node that allows the user to easily manipulate this node's orientation using a positionable target.
     cgUInt16                    mNodeLevel;                 // Our level in the node hierarchy (0=root).
 

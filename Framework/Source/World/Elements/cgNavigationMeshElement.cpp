@@ -16,7 +16,7 @@
 //        environment) and the relevant components of the navigation system. //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -51,8 +51,9 @@ cgWorldQuery cgNavigationMeshElement::mLoadMeshParams;
 cgNavigationMeshElement::cgNavigationMeshElement( cgUInt32 referenceId, cgScene * scene ) : cgSceneElement( referenceId, scene )
 {
     // Initialize variables to sensible defaults
-    mNavMesh    = CG_NULL;
-    mHandler    = CG_NULL;
+    mNavMesh                = CG_NULL;
+    mHandler                = CG_NULL;
+    mSandboxRenderMethod    = ShowAll;
 }
 
 //-----------------------------------------------------------------------------
@@ -86,8 +87,9 @@ void cgNavigationMeshElement::dispose( bool disposeBase )
         mNavMesh->scriptSafeDispose();
 
     // Clear variables.
-    mNavMesh    = CG_NULL;
-    mHandler    = CG_NULL;
+    mNavMesh                = CG_NULL;
+    mHandler                = CG_NULL;
+    mSandboxRenderMethod    = ShowAll;
     
     // Dispose base class if requested.
     if ( disposeBase == true )
@@ -243,7 +245,7 @@ cgNavigationAgent * cgNavigationMeshElement::createAgent( const cgNavigationAgen
 void cgNavigationMeshElement::sandboxRender( cgUInt32 flags, cgCameraNode * camera )
 {
     // No post-clear operation.
-    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+    if ( flags & cgSandboxRenderFlags::PostDepthClear || mSandboxRenderMethod == Hidden )
         return;
 
     // Render the navigation mesh.
@@ -292,7 +294,7 @@ bool cgNavigationMeshElement::insertComponentData( )
         mInsertMeshParams.bindParameter( 11, mParams.verticesPerPoly );
         mInsertMeshParams.bindParameter( 12, mParams.detailSampleDistance );
         mInsertMeshParams.bindParameter( 13, mParams.detailSampleMaximumError );
-        mInsertMeshParams.bindParameter( 14, (cgUInt32)0 ); // SandboxRenderMethod
+        mInsertMeshParams.bindParameter( 14, (cgUInt32)mSandboxRenderMethod );
         mInsertMeshParams.bindParameter( 15, (cgUInt32)0 ); // ManualRebuild
         mInsertMeshParams.bindParameter( 16, mSoftRefCount );
         
@@ -347,6 +349,7 @@ bool cgNavigationMeshElement::onComponentLoading( cgComponentLoadingEventArgs * 
     e->componentData = &mLoadMeshParams;
 
     // Load parameters
+    cgUInt32 valueUInt32;
     mParams = cgNavigationMeshCreateParams(); // Defaults
     mLoadMeshParams.getColumn( _T("AgentRadius"), mParams.agentRadius );
     mLoadMeshParams.getColumn( _T("AgentHeight"), mParams.agentHeight );
@@ -359,6 +362,8 @@ bool cgNavigationMeshElement::onComponentLoading( cgComponentLoadingEventArgs * 
     mLoadMeshParams.getColumn( _T("VertsPerPoly"), mParams.verticesPerPoly );
     mLoadMeshParams.getColumn( _T("DetailSampleDistance"), mParams.detailSampleDistance );
     mLoadMeshParams.getColumn( _T("DetailSampleMaxError"), mParams.detailSampleMaximumError );
+    mLoadMeshParams.getColumn( _T("SandboxRenderMethod"), valueUInt32 );
+    mSandboxRenderMethod = (SandboxRenderMethod)valueUInt32;
 
     // Call base class implementation to read remaining data.
     if ( !cgSceneElement::onComponentLoading( e ) )
@@ -417,6 +422,71 @@ void cgNavigationMeshElement::prepareQueries()
     // Read queries
     if ( !mLoadMeshParams.isPrepared() )
         mLoadMeshParams.prepare( mWorld, _T("SELECT * FROM 'SceneElements::NavigationMesh' WHERE RefId=?1"), true );
+}
+
+//-----------------------------------------------------------------------------
+// Name : setSandboxRenderMethod ( )
+/// <summary>
+/// Set the approach used when rendering this navigation mesh element within
+/// the sandbox / world editor.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgNavigationMeshElement::setSandboxRenderMethod( SandboxRenderMethod method )
+{
+    // Is this a no-op?
+    if ( mSandboxRenderMethod == method )
+        return;
+    
+    // Update database.
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateMeshParams.bindParameter( 1, _T("") );
+        mUpdateMeshParams.bindParameter( 2, mParams.agentRadius );
+        mUpdateMeshParams.bindParameter( 3, mParams.agentHeight );
+        mUpdateMeshParams.bindParameter( 4, mParams.agentMaximumSlope );
+        mUpdateMeshParams.bindParameter( 5, mParams.agentMaximumStepHeight );
+        mUpdateMeshParams.bindParameter( 6, mParams.edgeMaximumLength );
+        mUpdateMeshParams.bindParameter( 7, mParams.edgeMaximumError );
+        mUpdateMeshParams.bindParameter( 8, mParams.regionMinimumSize );
+        mUpdateMeshParams.bindParameter( 9, mParams.regionMergedSize );
+        mUpdateMeshParams.bindParameter( 10, mParams.verticesPerPoly );
+        mUpdateMeshParams.bindParameter( 11, mParams.detailSampleDistance );
+        mUpdateMeshParams.bindParameter( 12, mParams.detailSampleMaximumError );
+        mUpdateMeshParams.bindParameter( 13, (cgUInt32)method );
+        mUpdateMeshParams.bindParameter( 14, (cgUInt32)0 ); // ManualRebuild
+        mUpdateMeshParams.bindParameter( 15, mReferenceId );
+
+        // Execute
+        if ( !mUpdateMeshParams.step( true ) )
+        {
+            cgString error;
+            mUpdateMeshParams.getLastError( error );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update sandbox render method for navigation mesh element '0x%x'. Error: %s\n"), mReferenceId, error.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
+    // Update local member.
+    mSandboxRenderMethod = method;
+
+    // Notify any listeners of this change.
+    static const cgString strContext = _T("SandboxRenderMethod");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
+}
+
+//-----------------------------------------------------------------------------
+// Name : getSandboxRenderMethod ( )
+/// <summary>
+/// Retrieve the approach used when rendering this navigation mesh element
+/// within the sandbox / world editor.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgNavigationMeshElement::SandboxRenderMethod cgNavigationMeshElement::getSandboxRenderMethod( ) const
+{
+    return mSandboxRenderMethod;
 }
 
 //-----------------------------------------------------------------------------
@@ -515,7 +585,7 @@ void cgNavigationMeshElement::setParameters( const cgNavigationMeshCreateParams 
         mUpdateMeshParams.bindParameter( 10, params.verticesPerPoly );
         mUpdateMeshParams.bindParameter( 11, params.detailSampleDistance );
         mUpdateMeshParams.bindParameter( 12, params.detailSampleMaximumError );
-        mUpdateMeshParams.bindParameter( 13, (cgUInt32)0 ); // SandboxRenderMethod
+        mUpdateMeshParams.bindParameter( 13, (cgUInt32)mSandboxRenderMethod );
         mUpdateMeshParams.bindParameter( 14, (cgUInt32)0 ); // ManualRebuild
         mUpdateMeshParams.bindParameter( 15, mReferenceId );
 

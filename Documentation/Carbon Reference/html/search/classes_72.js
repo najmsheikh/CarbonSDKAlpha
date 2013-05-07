@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['raycastfiltercallbackdata',['RayCastFilterCallbackData',['../structcg_physics_world_1_1_ray_cast_filter_callback_data.html',1,'cgPhysicsWorld']]],
+  ['raycastfilterdata',['RayCastFilterData',['../structcg_scene_1_1_ray_cast_filter_data.html',1,'cgScene']]],
   ['rebind',['rebind',['../structcg_pool_allocator_1_1rebind.html',1,'cgPoolAllocator']]],
   ['referenceinfo',['ReferenceInfo',['../structcg_reference_1_1_reference_info.html',1,'cgReference']]],
   ['renderbatch',['RenderBatch',['../structcg_landscape_texture_data_1_1_render_batch.html',1,'cgLandscapeTextureData']]],

@@ -9,6 +9,7 @@ var classcg_script_engine =
     [ "declarePackage", "classcg_script_engine.html#ac79196a914ba67ba2ee24275da2fc4ac", null ],
     [ "destroySingleton", "classcg_script_engine.html#a3c4f0cd997f5b3cd2bb832ab8286ff4d", null ],
     [ "enableVerboseOutput", "classcg_script_engine.html#a4b4ca8905624f6e0c69c5eb94a25f3ed", null ],
+    [ "garbageCollect", "classcg_script_engine.html#a33922535d4a0a20004ec7f5f9ce4f554", null ],
     [ "getIdleExecuteContext", "classcg_script_engine.html#a7325d004c156d59e3a3414896d411cd3", null ],
     [ "getInstance", "classcg_script_engine.html#a03b7262a8313f621e4d527d6e1eea698", null ],
     [ "getInternalEngine", "classcg_script_engine.html#a79cfb46d4fc77fb407e25ac11b6686a7", null ],

@@ -18,7 +18,7 @@
 //        them (i.e. culling, rendering, etc.)                               //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -98,8 +98,8 @@ protected:
     void            renderDepthSortedBlending       ( );
     void            lightDefault                    ( );
     void            lightDepthSortedBlending        ( );
-    void            insertObjectsByMaterial         ( const cgMaterialHandle & material, const cgObjectNodeArray & objects );
-    void            insertObjectsByLightAndMaterial ( cgLightNode * light, const cgMaterialHandle & material, const cgObjectNodeArray & objects );
+    void            insertObjectsByMaterial         ( const cgMaterialHandle & material, const cgObjectNodeList & objects );
+    void            insertObjectsByLightAndMaterial ( cgLightNode * light, const cgMaterialHandle & material, const cgObjectNodeList & objects );
     void            insertObject                    ( cgObjectNode * object );
     void            insertLight                     ( cgLightNode * light );
 

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -123,18 +123,20 @@ Inheritance diagram for cgWorldComponentEventListener:</div>
 <area href="classcg_event_listener.html" title="Abstract interface class from which other listener classes can derive in order to recieve messages wh..." alt="cgEventListener" shape="rect" coords="0,56,236,80"/>
 <area href="classcg_script_interop_1_1_disposable_script_object.html" title="Base class from which objects should be derived if they need to be passed to a script by reference as..." alt="cgScriptInterop::DisposableScriptObject" shape="rect" coords="0,0,236,24"/>
 <area href="classcg_object_node.html" title="Base class for the various types of object nodes that may exist in a scene. " alt="cgObjectNode" shape="rect" coords="0,168,236,192"/>
-<area href="classcg_bone_node.html" title="Custom node type for the bone object. Manages additional properties that may need to be overriden by ..." alt="cgBoneNode" shape="rect" coords="246,224,482,248"/>
-<area href="classcg_camera_node.html" title="Custom node type for the camera object. Manages additional processes necessary when changes to the ca..." alt="cgCameraNode" shape="rect" coords="246,280,482,304"/>
-<area href="classcg_dummy_node.html" title="Custom node type for the dummy object. Manages additional properties that may need to be override by ..." alt="cgDummyNode" shape="rect" coords="246,336,482,360"/>
-<area href="classcg_group_node.html" title="Custom node type for the group object. Manages additional processes necessary when changes to the gro..." alt="cgGroupNode" shape="rect" coords="246,392,482,416"/>
-<area href="classcg_joint_node.html" title="An individual physics joint object node. " alt="cgJointNode" shape="rect" coords="246,448,482,472"/>
-<area href="classcg_light_node.html" title="An individual light source object node. " alt="cgLightNode" shape="rect" coords="246,504,482,528"/>
-<area href="classcg_mesh_node.html" title="Custom node type for the mesh object. Manages additional properties that may need to be override by t..." alt="cgMeshNode" shape="rect" coords="246,560,482,584"/>
-<area href="classcg_particle_emitter_node.html" title="Custom node type for the particle emitter object. Manages additional properties that may need to be o..." alt="cgParticleEmitterNode" shape="rect" coords="246,616,482,640"/>
-<area href="classcg_sound_emitter_node.html" title="Custom node type for the sound emitter object. Manages additional properties that may need to be over..." alt="cgSoundEmitterNode" shape="rect" coords="246,672,482,696"/>
-<area href="classcg_spatial_tree_node.html" title="Custom node type for the spatial tree object. Manages additional properties that may need to be overr..." alt="cgSpatialTreeNode" shape="rect" coords="246,728,482,752"/>
-<area href="classcg_spline_node.html" title="Custom node type for the spline object. Manages additional properties that may need to be override by..." alt="cgSplineNode" shape="rect" coords="246,784,482,808"/>
-<area href="classcg_target_node.html" title="Custom node type for the target object. Manages additional properties that may need to be override by..." alt="cgTargetNode" shape="rect" coords="246,840,482,864"/>
+<area href="classcg_billboard_node.html" title="Custom node type for the billboard object. Manages additional properties that may need to be override..." alt="cgBillboardNode" shape="rect" coords="246,224,482,248"/>
+<area href="classcg_bone_node.html" title="Custom node type for the bone object. Manages additional properties that may need to be overriden by ..." alt="cgBoneNode" shape="rect" coords="246,280,482,304"/>
+<area href="classcg_camera_node.html" title="Custom node type for the camera object. Manages additional processes necessary when changes to the ca..." alt="cgCameraNode" shape="rect" coords="246,336,482,360"/>
+<area href="classcg_dummy_node.html" title="Custom node type for the dummy object. Manages additional properties that may need to be override by ..." alt="cgDummyNode" shape="rect" coords="246,392,482,416"/>
+<area href="classcg_group_node.html" title="Custom node type for the group object. Manages additional processes necessary when changes to the gro..." alt="cgGroupNode" shape="rect" coords="246,448,482,472"/>
+<area href="classcg_joint_node.html" title="An individual physics joint object node. " alt="cgJointNode" shape="rect" coords="246,504,482,528"/>
+<area href="classcg_light_node.html" title="An individual light source object node. " alt="cgLightNode" shape="rect" coords="246,560,482,584"/>
+<area href="classcg_mesh_node.html" title="Custom node type for the mesh object. Manages additional properties that may need to be override by t..." alt="cgMeshNode" shape="rect" coords="246,616,482,640"/>
+<area href="classcg_navigation_waypoint_node.html" title="Base navigation waypoint node from which various types of required navigation waypoint can be derived..." alt="cgNavigationWaypointNode" shape="rect" coords="246,672,482,696"/>
+<area href="classcg_particle_emitter_node.html" title="Custom node type for the particle emitter object. Manages additional properties that may need to be o..." alt="cgParticleEmitterNode" shape="rect" coords="246,728,482,752"/>
+<area href="classcg_sound_emitter_node.html" title="Custom node type for the sound emitter object. Manages additional properties that may need to be over..." alt="cgSoundEmitterNode" shape="rect" coords="246,784,482,808"/>
+<area href="classcg_spatial_tree_node.html" title="Custom node type for the spatial tree object. Manages additional properties that may need to be overr..." alt="cgSpatialTreeNode" shape="rect" coords="246,840,482,864"/>
+<area href="classcg_spline_node.html" title="Custom node type for the spline object. Manages additional properties that may need to be override by..." alt="cgSplineNode" shape="rect" coords="246,896,482,920"/>
+<area href="classcg_target_node.html" title="Custom node type for the target object. Manages additional properties that may need to be override by..." alt="cgTargetNode" shape="rect" coords="246,952,482,976"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -270,7 +272,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classcg_object_node.html#aef9ac9ef2316bc9f32dfb2c93443ee3f">cgObjectNode</a>, <a class="el" href="classcg_projector_light_node.html#aea95d6414202133ddc0e97df52697238">cgProjectorLightNode</a>, <a class="el" href="classcg_point_light_node.html#a15132e63b57533b45c6ced02fdaa31d6">cgPointLightNode</a>, <a class="el" href="classcg_spot_light_node.html#a98fbf26df81bf93a740b72058f6dc8bc">cgSpotLightNode</a>, <a class="el" href="classcg_directional_light_node.html#ae79e78d9ae68fbe63d0fd4dfa8ee27d2">cgDirectionalLightNode</a>, <a class="el" href="classcg_camera_node.html#a57dd835f31151cc70995ecc118f01f4d">cgCameraNode</a>, <a class="el" href="classcg_particle_emitter_node.html#a37da6596bbe5c1d3d1953334bf0a846f">cgParticleEmitterNode</a>, <a class="el" href="classcg_hemisphere_light_node.html#a067f91488df3bb829cf52110cc62a13b">cgHemisphereLightNode</a>, <a class="el" href="classcg_actor_node.html#ad4f984cb1eed0a3ad11bcd54110c035d">cgActorNode</a>, <a class="el" href="classcg_mesh_node.html#a7f6ab1b2039da38cc0e5d74c7afd4033">cgMeshNode</a>, <a class="el" href="classcg_sound_emitter_node.html#a7741a15f6986363f3321528b6353ec74">cgSoundEmitterNode</a>, <a class="el" href="classcg_bone_node.html#a890ca89db0046348242a3c288ad30ff8">cgBoneNode</a>, <a class="el" href="classcg_group_node.html#aa0e32099b51e75afad254a23afe3a704">cgGroupNode</a>, and <a class="el" href="classcg_spatial_tree_node.html#a3c1ee539161eea04635c685942e20857">cgSpatialTreeNode</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_object_node.html#aef9ac9ef2316bc9f32dfb2c93443ee3f">cgObjectNode</a>, <a class="el" href="classcg_projector_light_node.html#aea95d6414202133ddc0e97df52697238">cgProjectorLightNode</a>, <a class="el" href="classcg_particle_emitter_node.html#a37da6596bbe5c1d3d1953334bf0a846f">cgParticleEmitterNode</a>, <a class="el" href="classcg_point_light_node.html#a15132e63b57533b45c6ced02fdaa31d6">cgPointLightNode</a>, <a class="el" href="classcg_camera_node.html#a57dd835f31151cc70995ecc118f01f4d">cgCameraNode</a>, <a class="el" href="classcg_spot_light_node.html#a98fbf26df81bf93a740b72058f6dc8bc">cgSpotLightNode</a>, <a class="el" href="classcg_mesh_node.html#a7f6ab1b2039da38cc0e5d74c7afd4033">cgMeshNode</a>, <a class="el" href="classcg_actor_node.html#ad4f984cb1eed0a3ad11bcd54110c035d">cgActorNode</a>, <a class="el" href="classcg_directional_light_node.html#ae79e78d9ae68fbe63d0fd4dfa8ee27d2">cgDirectionalLightNode</a>, <a class="el" href="classcg_hemisphere_light_node.html#a067f91488df3bb829cf52110cc62a13b">cgHemisphereLightNode</a>, <a class="el" href="classcg_hinge_joint_node.html#a2b0bc144c18609438316281c36168ed8">cgHingeJointNode</a>, <a class="el" href="classcg_sound_emitter_node.html#a7741a15f6986363f3321528b6353ec74">cgSoundEmitterNode</a>, <a class="el" href="classcg_bone_node.html#a890ca89db0046348242a3c288ad30ff8">cgBoneNode</a>, <a class="el" href="classcg_billboard_node.html#a393c19348ed823465f3d284e19cdadbd">cgBillboardNode</a>, <a class="el" href="classcg_group_node.html#aa0e32099b51e75afad254a23afe3a704">cgGroupNode</a>, and <a class="el" href="classcg_spatial_tree_node.html#a3c1ee539161eea04635c685942e20857">cgSpatialTreeNode</a>.</p>
 
 </div>
 </div>
@@ -283,7 +285,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_world_component_event_listener.html">cgWorldComponentEventListener</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:55 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:59 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -5,7 +5,6 @@ var classcg_button_control =
     [ "~cgButtonControl", "classcg_button_control.html#a21afc7b9268005dbf5c42ed4d6a6f4d2", null ],
     [ "getImage", "classcg_button_control.html#aadf6ce1c526e7700716de3aa5b69cd66", null ],
     [ "getReferenceType", "classcg_button_control.html#aae8c4d576ec5de3cf6af50515420b60c", null ],
-    [ "getTextColor", "classcg_button_control.html#abdb62855bf11c1f313eb7ecf41a2234a", null ],
     [ "onClick", "classcg_button_control.html#a92dea9dadbd521138d1424db3b3ed2f8", null ],
     [ "onInitControl", "classcg_button_control.html#adef6daa6bcb4f98ec7fbd70555e16d18", null ],
     [ "onMouseButtonDown", "classcg_button_control.html#aaed01b16dd0212ed42bfeb7ce7803505", null ],

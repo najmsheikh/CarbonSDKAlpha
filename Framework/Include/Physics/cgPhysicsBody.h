@@ -17,7 +17,7 @@
 //        functionality.                                                     //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -119,6 +119,7 @@ public:
     bool                        isAutoSleepEnabled          ( ) const;
     void                        enableContinuousCollision   ( bool enabled );
     bool                        isContinuousCollisionEnabled( ) const;
+    void                        setMaterialGroupId          ( cgDefaultPhysicsMaterialGroup::Base defaultMaterial );
     
     // Internal utilities
     NewtonBody                * getInternalBody         ( ) const;

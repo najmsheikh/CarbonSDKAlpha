@@ -17,7 +17,7 @@
 //        functionality.                                                     //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -460,6 +460,18 @@ cgPhysicsShape * cgPhysicsBody::getShape( ) const
 NewtonBody * cgPhysicsBody::getInternalBody( ) const
 {
     return mBody;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setMaterialGroupId()
+/// <summary>
+/// Set the material group id of this physics body to one of the defined
+/// world default material groups.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgPhysicsBody::setMaterialGroupId( cgDefaultPhysicsMaterialGroup::Base defaultMaterial )
+{
+    NewtonBodySetMaterialGroupID( mBody, mWorld->getDefaultMaterialGroupId( defaultMaterial ) );
 }
 
 //-----------------------------------------------------------------------------

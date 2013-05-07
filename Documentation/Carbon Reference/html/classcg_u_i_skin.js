@@ -1,6 +1,7 @@
 var classcg_u_i_skin =
 [
     [ "ControlConfig", "structcg_u_i_skin_1_1_control_config.html", "structcg_u_i_skin_1_1_control_config" ],
+    [ "ListBoxConfig", "structcg_u_i_skin_1_1_list_box_config.html", "structcg_u_i_skin_1_1_list_box_config" ],
     [ "TextBoxConfig", "structcg_u_i_skin_1_1_text_box_config.html", "structcg_u_i_skin_1_1_text_box_config" ],
     [ "cgUISkin", "classcg_u_i_skin.html#a1ab4ecfbb5499af03a3b127281e06b8a", null ],
     [ "~cgUISkin", "classcg_u_i_skin.html#a57234a65afc214489743fb6e61876477", null ],

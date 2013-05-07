@@ -14,7 +14,7 @@
 //        used for scene special effects.                                    //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -197,7 +197,7 @@ protected:
 };
 
 //-----------------------------------------------------------------------------
-//  Name : cgBoneNode (Class)
+//  Name : cgParticleEmitterNode (Class)
 /// <summary>
 /// Custom node type for the particle emitter object. Manages additional 
 /// properties that may need to be overriden by this type.
@@ -231,7 +231,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgObjectNode)
     //-------------------------------------------------------------------------
-    virtual bool                registerVisibility      ( cgVisibilitySet * visibilityData, cgUInt32 flags );
+    virtual bool                registerVisibility      ( cgVisibilitySet * visibilityData );
     virtual bool                onNodeCreated           ( const cgUID & objectType, cgCloneMethod::Base cloneMethod );
     virtual bool                onNodeLoading           ( const cgUID & objectType, cgWorldQuery * nodeData, cgSceneCell * parentCell, cgCloneMethod::Base cloneMethod );
     virtual void                onComponentModified     ( cgComponentModifiedEventArgs * e );

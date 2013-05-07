@@ -13,7 +13,7 @@
 // Desc : Bounding Box class. Simple but efficient bounding box processing.  //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -48,13 +48,9 @@ public:
 	//-------------------------------------------------------------------------
 	// Public Methods
 	//-------------------------------------------------------------------------
-    cgVector3       getDimensions       ( ) const;
-    cgVector3       getCenter           ( ) const;
-    cgVector3       getExtents          ( ) const;
     cgPlane         getPlane            ( cgVolumePlane::Side side ) const;
     void            getPlanePoints      ( cgVolumePlane::Side side, cgVector3 pointsOut[] ) const;
-    cgBoundingBox & calculateFromPolygon( const cgVector3 vertices[], cgUInt32 vertexCount, cgUInt32 vertexStride, bool reset = true );
-    cgBoundingBox & addPoint            ( const cgVector3 & point );
+    cgBoundingBox & fromPoints          ( const cgByte * pointBuffer, cgUInt32 pointCount, cgUInt32 pointStride, bool reset = true );
     bool            intersect           ( const cgBoundingBox & bounds ) const;
     bool            intersect           ( const cgBoundingBox & bounds, bool & contained ) const;
     bool            intersect           ( const cgBoundingBox & bounds, cgBoundingBox & intersection ) const;
@@ -94,6 +90,61 @@ public:
     bool            operator !=         ( const cgBoundingBox & bounds ) const;
     bool            operator ==         ( const cgBoundingBox & bounds ) const;
 
+    //-------------------------------------------------------------------------
+	// Public Inline Methods
+	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
+    //  Name : addPoint ()
+    /// <summary>
+    /// Grows the bounding box based on the point passed.
+    /// </summary>
+    //-------------------------------------------------------------------------
+    inline cgBoundingBox & addPoint( const cgVector3 & Point )
+    {
+        // Grow by this point
+        if ( Point.x < min.x ) min.x = Point.x;
+        if ( Point.y < min.y ) min.y = Point.y;
+        if ( Point.z < min.z ) min.z = Point.z;
+        if ( Point.x > max.x ) max.x = Point.x;
+        if ( Point.y > max.y ) max.y = Point.y;
+        if ( Point.z > max.z ) max.z = Point.z;
+        return *this;
+    }
+
+    //-------------------------------------------------------------------------
+    //  Name : getDimensions ()
+    /// <summary>
+    /// Returns a vector containing the dimensions of the bounding box
+    /// </summary>
+    //-------------------------------------------------------------------------
+    inline cgVector3 getDimensions( ) const
+    {
+        return max - min;
+    }
+
+    //-------------------------------------------------------------------------
+    //  Name : getCenter ()
+    /// <summary>
+    /// Returns a vector containing the exact centre point of the box
+    /// </summary>
+    //-------------------------------------------------------------------------
+    inline cgVector3 getCenter() const
+    {
+        return cgVector3( (max.x + min.x) * 0.5f, (max.y + min.y) * 0.5f, (max.z + min.z) * 0.5f );
+    }
+
+    //-------------------------------------------------------------------------
+    //  Name : getExtents ()
+    /// <summary>
+    /// Returns a vector containing the extents of the bounding box (the
+    /// half-dimensions).
+    /// </summary>
+    //-------------------------------------------------------------------------
+    inline cgVector3 cgBoundingBox::getExtents( ) const
+    {
+        return cgVector3( (max.x - min.x) * 0.5f, (max.y - min.y) * 0.5f, (max.z - min.z) * 0.5f );
+    }
+    
     //-------------------------------------------------------------------------
 	// Public Variables
 	//-------------------------------------------------------------------------

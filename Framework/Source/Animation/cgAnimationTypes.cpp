@@ -14,7 +14,7 @@
 //        animation related types, defines and macros.                       //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -26,7 +26,6 @@
 // cgAnimationTypes Module Includes
 //-----------------------------------------------------------------------------
 #include <Animation/cgAnimationTypes.h>
-#include <Math/cgEulerAngles.h>
 
 //-----------------------------------------------------------------------------
 // Static Member Definitions
@@ -504,7 +503,7 @@ cgAnimationTargetController * cgAnimationTargetController::createInstance( cgAni
 /// target controller and any associated child animation channels.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgAnimationTargetController::serialize( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world )
+bool cgAnimationTargetController::serialize( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world, void * customData, cgUInt32 customDataSize )
 {
     if ( (cgGetSandboxMode() == cgSandboxMode::Enabled) && !mDatabaseId )
     {
@@ -513,6 +512,7 @@ bool cgAnimationTargetController::serialize( cgUInt32 targetDataId, const cgStri
         mInsertController.bindParameter( 1, targetDataId  );
         mInsertController.bindParameter( 2, controllerIdentifier );
         mInsertController.bindParameter( 3, (cgInt32)getControllerType() );
+        mInsertController.bindParameter( 4, customData, customDataSize );
         
         // Process!
         if ( !mInsertController.step( true ) )
@@ -541,7 +541,7 @@ bool cgAnimationTargetController::serialize( cgUInt32 targetDataId, const cgStri
 /// the supplied query object.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgAnimationTargetController::deserialize( cgWorldQuery & controllerQuery, bool cloning, cgInt32 & minFrameOut, cgInt32 & maxFrameOut )
+bool cgAnimationTargetController::deserialize( cgWorldQuery & controllerQuery, bool cloning, cgInt32 & minFrameOut, cgInt32 & maxFrameOut, void *& customDataOut, cgUInt32 & customDataSizeOut )
 {
     // Prepare queries similar to 'serialize()' so that derived class
     // does not have to.
@@ -588,6 +588,9 @@ bool cgAnimationTargetController::deserialize( cgWorldQuery & controllerQuery, b
 
     } // Next loaded channel
 
+    // Get custom data area
+    controllerQuery.getColumn( _T("ControllerParams"), &customDataOut, customDataSizeOut );
+
     // Only associate with the original database row identifier if we were
     // not instructed to clone data. By ensuring that the 'databaseId'
     // is '0', this will force the insertion of a new channel row.
@@ -613,7 +616,7 @@ void cgAnimationTargetController::prepareQueries( cgWorld * world )
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         if ( !mInsertController.isPrepared() || mInsertController.getWorld() != world )
-            mInsertController.prepare( world, _T("INSERT INTO 'DataSources::AnimationSet::TargetControllers' VALUES(NULL,?1,?2,?3)"), true );
+            mInsertController.prepare( world, _T("INSERT INTO 'DataSources::AnimationSet::TargetControllers' VALUES(NULL,?1,?2,?3,?4)"), true );
     
     } // End if sandbox
 
@@ -705,12 +708,12 @@ void cgPositionXYZTargetController::dispose( bool disposeBase )
 /// target controller and any associated child animation channels.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgPositionXYZTargetController::serialize( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world )
+bool cgPositionXYZTargetController::serialize( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world, void * customData, cgUInt32 customDataSize )
 {
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         // Call base class implementation.
-        if ( !cgAnimationTargetController::serialize( targetDataId, controllerIdentifier, world ) )
+        if ( !cgAnimationTargetController::serialize( targetDataId, controllerIdentifier, world, CG_NULL, 0 ) )
             return false;
 
         // Allow each of the animation channels to serialize.
@@ -781,9 +784,21 @@ void cgPositionXYZTargetController::addLinearKey( cgInt32 frame, const cgVector3
 //-----------------------------------------------------------------------------
 const cgFloatCurveAnimationChannel & cgPositionXYZTargetController::getAnimationChannel( cgUInt32 index ) const
 {
-    static cgFloatCurveAnimationChannel Empty;
+    static const cgFloatCurveAnimationChannel Empty;
     if ( index >= 3 )
         return Empty;
+    return mCurves[index];
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getAnimationChannel ()
+/// <summary>
+/// Retrieve the data associated with a specific animation channel by index.
+/// Valid indices are 0=X, 1=Y, 2=Z
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloatCurveAnimationChannel & cgPositionXYZTargetController::getAnimationChannel( cgUInt32 index )
+{
     return mCurves[index];
 }
 
@@ -885,12 +900,12 @@ void cgScaleXYZTargetController::dispose( bool disposeBase )
 /// target controller and any associated child animation channels.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgScaleXYZTargetController::serialize( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world )
+bool cgScaleXYZTargetController::serialize( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world, void * customData, cgUInt32 customDataSize )
 {
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         // Call base class implementation.
-        if ( !cgAnimationTargetController::serialize( targetDataId, controllerIdentifier, world ) )
+        if ( !cgAnimationTargetController::serialize( targetDataId, controllerIdentifier, world, CG_NULL, 0 ) )
             return false;
 
         // Allow each of the animation channels to serialize.
@@ -961,9 +976,21 @@ void cgScaleXYZTargetController::addLinearKey( cgInt32 frame, const cgVector3 & 
 //-----------------------------------------------------------------------------
 const cgFloatCurveAnimationChannel & cgScaleXYZTargetController::getAnimationChannel( cgUInt32 index ) const
 {
-    static cgFloatCurveAnimationChannel Empty;
+    static const cgFloatCurveAnimationChannel Empty;
     if ( index >= 3 )
         return Empty;
+    return mCurves[index];
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getAnimationChannel ()
+/// <summary>
+/// Retrieve the data associated with a specific animation channel by index.
+/// Valid indices are 0=X, 1=Y, 2=Z
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloatCurveAnimationChannel & cgScaleXYZTargetController::getAnimationChannel( cgUInt32 index )
+{
     return mCurves[index];
 }
 
@@ -1059,12 +1086,12 @@ void cgUniformScaleTargetController::dispose( bool disposeBase )
 /// target controller and any associated child animation channels.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgUniformScaleTargetController::serialize( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world )
+bool cgUniformScaleTargetController::serialize( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world, void * customData, cgUInt32 customDataSize )
 {
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         // Call base class implementation.
-        if ( !cgAnimationTargetController::serialize( targetDataId, controllerIdentifier, world ) )
+        if ( !cgAnimationTargetController::serialize( targetDataId, controllerIdentifier, world, CG_NULL, 0 ) )
             return false;
 
         // Allow the animation channel to serialize.
@@ -1113,6 +1140,28 @@ void cgUniformScaleTargetController::evaluate( cgDouble position, cgFloat & s, c
 void cgUniformScaleTargetController::addLinearKey( cgInt32 frame, cgFloat value )
 {
     mCurve.addLinearKey( frame, value );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getAnimationChannel ()
+/// <summary>
+/// Retrieve the keyframe data associated with this controller.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgFloatCurveAnimationChannel & cgUniformScaleTargetController::getAnimationChannel( ) const
+{
+    return mCurve;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getAnimationChannel ()
+/// <summary>
+/// Retrieve the keyframe data associated with this controller.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloatCurveAnimationChannel & cgUniformScaleTargetController::getAnimationChannel( )
+{
+    return mCurve;
 }
 
 //-----------------------------------------------------------------------------
@@ -1205,12 +1254,12 @@ void cgQuaternionTargetController::dispose( bool disposeBase )
 /// target controller and any associated child animation channels.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgQuaternionTargetController::serialize( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world )
+bool cgQuaternionTargetController::serialize( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world, void * customData, cgUInt32 customDataSize )
 {
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         // Call base class implementation.
-        if ( !cgAnimationTargetController::serialize( targetDataId, controllerIdentifier, world ) )
+        if ( !cgAnimationTargetController::serialize( targetDataId, controllerIdentifier, world, CG_NULL, 0 ) )
             return false;
 
         // Allow the animation channel to serialize.
@@ -1361,6 +1410,17 @@ const cgQuaternionAnimationChannel & cgQuaternionTargetController::getAnimationC
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getAnimationChannel ()
+/// <summary>
+/// Retrieve the quaternion keyframe data associated with this controller.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgQuaternionAnimationChannel & cgQuaternionTargetController::getAnimationChannel( )
+{
+    return mKeyFrames;
+}
+
+//-----------------------------------------------------------------------------
 // Name : getSupportedChannels ( )
 /// <summary>
 /// Retrieve an array containing the string identifiers of the animation
@@ -1384,8 +1444,9 @@ const cgStringArray & cgQuaternionTargetController::getSupportedChannels( ) cons
 /// cgEulerAnglesTargetController Class Constructor
 /// </summary>
 //-----------------------------------------------------------------------------
-cgEulerAnglesTargetController::cgEulerAnglesTargetController( )
+cgEulerAnglesTargetController::cgEulerAnglesTargetController( cgEulerAnglesOrder::Base order /* = cgEulerAnglesOrder::YXZ */ )
 {
+    mRotationOrder = order;
 }
 
 //-----------------------------------------------------------------------------
@@ -1396,6 +1457,7 @@ cgEulerAnglesTargetController::cgEulerAnglesTargetController( )
 //-----------------------------------------------------------------------------
 cgEulerAnglesTargetController::cgEulerAnglesTargetController( const cgEulerAnglesTargetController & init, const cgRange & frameRange )
 {
+    mRotationOrder = init.mRotationOrder;
     for ( size_t i = 0; i < 3; ++i )
     {
         cgBezierSpline2 & destSpline = mCurves[i].data;
@@ -1458,12 +1520,13 @@ void cgEulerAnglesTargetController::dispose( bool disposeBase )
 /// target controller and any associated child animation channels.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgEulerAnglesTargetController::serialize( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world )
+bool cgEulerAnglesTargetController::serialize( cgUInt32 targetDataId, const cgString & controllerIdentifier, cgWorld * world, void * customData, cgUInt32 customDataSize )
 {
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         // Call base class implementation.
-        if ( !cgAnimationTargetController::serialize( targetDataId, controllerIdentifier, world ) )
+        cgUInt32 customData = (cgUInt32)mRotationOrder;
+        if ( !cgAnimationTargetController::serialize( targetDataId, controllerIdentifier, world, &customData, sizeof(cgUInt32) ) )
             return false;
 
         // Allow each of the animation channels to serialize.
@@ -1472,6 +1535,26 @@ bool cgEulerAnglesTargetController::serialize( cgUInt32 targetDataId, const cgSt
         mCurves[2].serialize( mDatabaseId, _T("z"), world );
 
     } // End if can insert
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : deserialize ()
+/// <summary>
+/// Import the data associated with this animation target controller based on
+/// the supplied query object.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgEulerAnglesTargetController::deserialize( cgWorldQuery & controllerQuery, bool cloning, cgInt32 & minFrameOut, cgInt32 & maxFrameOut, void *& customDataOut, cgUInt32 & customDataSizeOut )
+{
+    if ( !cgAnimationTargetController::deserialize( controllerQuery, cloning, minFrameOut, maxFrameOut, customDataOut, customDataSizeOut ) )
+        return false;
+
+    // Load custom data.
+    if ( customDataOut && customDataSizeOut == sizeof(cgUInt32) )
+        mRotationOrder = (cgEulerAnglesOrder::Base)(*(cgUInt32*)customDataOut);
 
     // Success!
     return true;
@@ -1510,6 +1593,9 @@ void cgEulerAnglesTargetController::evaluate( cgDouble position, cgEulerAngles &
         e.z = mCurves[2].data.evaluateForX( (cgFloat)position, true );
     else
         e.z = default.z;
+
+    // Set the rotation order for the angles.
+    e.order = mRotationOrder;
 }
 
 //-----------------------------------------------------------------------------
@@ -1538,7 +1624,7 @@ void cgEulerAnglesTargetController::evaluate( cgDouble position, cgEulerAngles &
     if ( nDefaults )
     {
         // Convert default quaternion to euler only as necessary.
-        cgEulerAngles defaultEuler( default );
+        cgEulerAngles defaultEuler( default, mRotationOrder );
 
         // Some keys were unavailable, apply defaults.
         if ( nDefaults & 1 )
@@ -1549,6 +1635,9 @@ void cgEulerAnglesTargetController::evaluate( cgDouble position, cgEulerAngles &
             e.z = defaultEuler.z;
 
     } // End if default
+
+    // Set the rotation order for the angles.
+    e.order = mRotationOrder;
 }
 
 //-----------------------------------------------------------------------------
@@ -1604,9 +1693,21 @@ void cgEulerAnglesTargetController::addLinearKey( cgInt32 frame, const cgQuatern
 //-----------------------------------------------------------------------------
 const cgFloatCurveAnimationChannel & cgEulerAnglesTargetController::getAnimationChannel( cgUInt32 index ) const
 {
-    static cgFloatCurveAnimationChannel Empty;
+    static const cgFloatCurveAnimationChannel Empty;
     if ( index >= 3 )
         return Empty;
+    return mCurves[index];
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getAnimationChannel ()
+/// <summary>
+/// Retrieve the data associated with a specific animation channel by index.
+/// Valid indices are 0=X, 1=Y, 2=Z
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloatCurveAnimationChannel & cgEulerAnglesTargetController::getAnimationChannel( cgUInt32 index )
+{
     return mCurves[index];
 }
 

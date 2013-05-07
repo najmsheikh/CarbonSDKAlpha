@@ -16,7 +16,7 @@
 //        resources.                                                         //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -150,7 +150,7 @@ public:
     virtual cgConfigResult::Base    loadConfig              ( const cgString & fileName ) = 0;
     virtual cgConfigResult::Base    loadDefaultConfig       ( bool windowed = false ) = 0;
     virtual bool                    saveConfig              ( const cgString & fileName ) = 0;
-    virtual bool                    updateDisplayMode       ( const cgDisplayMode & mode, bool windowed ) = 0;
+    virtual bool                    updateDisplayMode       ( const cgDisplayMode & mode, bool windowed, bool verticalSync ) = 0;
     virtual void                    windowResized           ( cgInt32 width, cgInt32 height );
     virtual void                    releaseOwnedResources   ( );
     virtual cgSize                  getScreenSize           ( ) const = 0;

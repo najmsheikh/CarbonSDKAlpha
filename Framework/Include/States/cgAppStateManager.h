@@ -14,7 +14,7 @@
 //        the application i.e. Main menu, game play, game over, credits etc. //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -247,6 +247,7 @@ public:
     //-------------------------------------------------------------------------
     virtual const cgUID   & getReferenceType        ( ) const { return RTID_AppState; }
     virtual bool            queryReferenceType      ( const cgUID & type ) const;
+    virtual bool            processMessage          ( cgMessage * message );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
@@ -273,11 +274,12 @@ protected:
         cgScriptFunctionHandle  render;
         cgScriptFunctionHandle  suspend;
         cgScriptFunctionHandle  resume;
+        cgScriptFunctionHandle  processMessage;
         
         // Constructor
         MethodHandles() :
             begin(CG_NULL), end(CG_NULL), initialize(CG_NULL), update(CG_NULL),
-            render(CG_NULL), suspend(CG_NULL), resume(CG_NULL) {}
+            render(CG_NULL), suspend(CG_NULL), resume(CG_NULL), processMessage(CG_NULL) {}
     };
 
     CGE_MAP_DECLARE(cgString, EventActionDesc, EventActionMap)

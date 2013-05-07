@@ -14,7 +14,7 @@
 //        rendering of data organized using a spatial tree structure.        //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -131,7 +131,7 @@ public:
     //-------------------------------------------------------------------------
     virtual bool                onNodeCreated           ( const cgUID & objectType, cgCloneMethod::Base cloneMethod );
     virtual bool                onNodeLoading           ( const cgUID & objectType, cgWorldQuery * nodeData, cgSceneCell * parentCell, cgCloneMethod::Base cloneMethod );
-    virtual bool                registerVisibility      ( cgVisibilitySet * pSet, cgUInt32 nFlags );
+    virtual bool                registerVisibility      ( cgVisibilitySet * pSet );
     virtual void                onComponentModified     ( cgComponentModifiedEventArgs * e );
     
     //-------------------------------------------------------------------------

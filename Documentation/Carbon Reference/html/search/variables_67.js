@@ -7,7 +7,7 @@ var searchData=
   ['g_5f4cc_5ffetch4disable',['g_4CC_Fetch4Disable',['../cg_texture_pool_8cpp.html#a8db42dfd70b61728ea15095f48985be3',1,'cgTexturePool.cpp']]],
   ['g_5f4cc_5ffetch4enable',['g_4CC_Fetch4Enable',['../cg_texture_pool_8cpp.html#ae695bc99f3760af213f427e5699799e0',1,'cgTexturePool.cpp']]],
   ['geometrybias',['geometryBias',['../structcg_reflectance_generator_1_1__cb_r_s_m.html#a1819002ea1d89a13fa17c6d64b595c06',1,'cgReflectanceGenerator::_cbRSM']]],
-  ['globalidentifier',['globalIdentifier',['../structcg_world_object_type_desc.html#ae23923fe80c0191d8ed19168efb7da7c',1,'cgWorldObjectTypeDesc::globalIdentifier()'],['../structcg_object_sub_element_type_desc.html#a9140e9c9e09f057c43adcec50ed56b65',1,'cgObjectSubElementTypeDesc::globalIdentifier()']]],
+  ['globalidentifier',['globalIdentifier',['../structcg_world_object_type_desc.html#ae23923fe80c0191d8ed19168efb7da7c',1,'cgWorldObjectTypeDesc::globalIdentifier()'],['../structcg_object_sub_element_type_desc.html#a9140e9c9e09f057c43adcec50ed56b65',1,'cgObjectSubElementTypeDesc::globalIdentifier()'],['../structcg_scene_element_type_desc.html#ab8952a8c6291cff42514dc5318eb7bfe',1,'cgSceneElementTypeDesc::globalIdentifier()']]],
   ['globaloffset',['globalOffset',['../structcg_constant_buffer_desc.html#a7d778bd94a17ad9c657c3860837401ad',1,'cgConstantBufferDesc']]],
   ['gloss',['gloss',['../structcg_material_terms.html#a0287df9301597f3f98c1930937452c05',1,'cgMaterialTerms']]],
   ['grain',['grain',['../structcg_image_processor_1_1_samplers.html#a0f15ed777133bbaacf813be237d2aabe',1,'cgImageProcessor::Samplers']]],

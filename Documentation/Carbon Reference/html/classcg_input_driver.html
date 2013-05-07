@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -165,12 +165,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a65e2ad824819b7685f4d898cfe6a5041"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#a65e2ad824819b7685f4d898cfe6a5041">isKeyPressed</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> keyCode) const </td></tr>
 <tr class="memdesc:a65e2ad824819b7685f4d898cfe6a5041"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple query routine to determine if a key is currently pressed.  <a href="#a65e2ad824819b7685f4d898cfe6a5041"></a><br/></td></tr>
 <tr class="separator:a65e2ad824819b7685f4d898cfe6a5041"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99041594bef8af88c7583c03364b90ef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#a99041594bef8af88c7583c03364b90ef">isKeyPressed</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> keyCode, bool wasNotPressed) const </td></tr>
+<tr class="memdesc:a99041594bef8af88c7583c03364b90ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple query routine to determine if a key is currently pressed. By specifying true to the 'wasNotPressed' parameter, this method will only return a positive result if the key was not previously pressed in the last poll event (i.e. last frame)  <a href="#a99041594bef8af88c7583c03364b90ef"></a><br/></td></tr>
+<tr class="separator:a99041594bef8af88c7583c03364b90ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2294676e5e93bd4877250f3e1023c4d2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#a2294676e5e93bd4877250f3e1023c4d2">wasMouseButtonPressed</a> (<a class="el" href="namespacecg_mouse_buttons.html#a397643424a5a968725d20d518aad8a16">cgMouseButtons::Base</a> button) const </td></tr>
 <tr class="memdesc:a2294676e5e93bd4877250f3e1023c4d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple query routine to determine if a mouse button was previously pressed in the previous call to poll.  <a href="#a2294676e5e93bd4877250f3e1023c4d2"></a><br/></td></tr>
 <tr class="separator:a2294676e5e93bd4877250f3e1023c4d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bfe59ae57e49cece3154e767c6dd402"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#a2bfe59ae57e49cece3154e767c6dd402">isMouseButtonPressed</a> (<a class="el" href="namespacecg_mouse_buttons.html#a397643424a5a968725d20d518aad8a16">cgMouseButtons::Base</a> button) const </td></tr>
 <tr class="memdesc:a2bfe59ae57e49cece3154e767c6dd402"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple query routine to determine if a mouse button is currently pressed.  <a href="#a2bfe59ae57e49cece3154e767c6dd402"></a><br/></td></tr>
 <tr class="separator:a2bfe59ae57e49cece3154e767c6dd402"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27a3a46bb3efbca73acc3c1433ae727d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#a27a3a46bb3efbca73acc3c1433ae727d">isMouseButtonPressed</a> (<a class="el" href="namespacecg_mouse_buttons.html#a397643424a5a968725d20d518aad8a16">cgMouseButtons::Base</a> button, bool wasNotPressed) const </td></tr>
+<tr class="memdesc:a27a3a46bb3efbca73acc3c1433ae727d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple query routine to determine if a mouse button is currently pressed. By specifying true to the 'wasNotPressed' parameter, this method will only return a positive result if the key was not previously pressed in the last poll event (i.e. last frame)  <a href="#a27a3a46bb3efbca73acc3c1433ae727d"></a><br/></td></tr>
+<tr class="separator:a27a3a46bb3efbca73acc3c1433ae727d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ae2b7ce2ece9dc10a0a732ee0bde3e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#a8ae2b7ce2ece9dc10a0a732ee0bde3e0">setMouseMode</a> (<a class="el" href="namespacecg_mouse_handler_mode.html#adabc85fbafd4d8cf874156230eb0c099">cgMouseHandlerMode::Base</a> mode)</td></tr>
 <tr class="memdesc:a8ae2b7ce2ece9dc10a0a732ee0bde3e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the way in which mouse movement will be interpreted / handled.  <a href="#a8ae2b7ce2ece9dc10a0a732ee0bde3e0"></a><br/></td></tr>
 <tr class="separator:a8ae2b7ce2ece9dc10a0a732ee0bde3e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -227,9 +233,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#abc11be6582c83be070816daf60d96781">isInternalReference</a> () const </td></tr>
 <tr class="memdesc:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this reference is either an internal or serialized reference.  <a href="#abc11be6582c83be070816daf60d96781"></a><br/></td></tr>
 <tr class="separator:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#af002aedbdfca5e97c3a7263425a60dac">isDisposed</a> ()</td></tr>
-<tr class="memdesc:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#af002aedbdfca5e97c3a7263425a60dac"></a><br/></td></tr>
-<tr class="separator:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a34951860e42866aff9b890d704bccbc4">isDisposed</a> () const </td></tr>
+<tr class="memdesc:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#a34951860e42866aff9b890d704bccbc4"></a><br/></td></tr>
+<tr class="separator:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#aecf67c7fc72ba0d465096b4584e1caba">isDisposing</a> () const </td></tr>
 <tr class="memdesc:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object is in the process of being disposed.  <a href="#aecf67c7fc72ba0d465096b4584e1caba"></a><br/></td></tr>
 <tr class="separator:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -596,6 +602,34 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a99041594bef8af88c7583c03364b90ef"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgInputDriver::isKeyPressed </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
+          <td class="paramname"><em>nKeyCode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>wasNotPressed</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Simple query routine to determine if a key is currently pressed. By specifying true to the 'wasNotPressed' parameter, this method will only return a positive result if the key was not previously pressed in the last poll event (i.e. last frame) </p>
+
+</div>
+</div>
 <a class="anchor" id="a2bfe59ae57e49cece3154e767c6dd402"></a>
 <div class="memitem">
 <div class="memproto">
@@ -611,6 +645,34 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Simple query routine to determine if a mouse button is currently pressed. </p>
+
+</div>
+</div>
+<a class="anchor" id="a27a3a46bb3efbca73acc3c1433ae727d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgInputDriver::isMouseButtonPressed </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacecg_mouse_buttons.html#a397643424a5a968725d20d518aad8a16">cgMouseButtons::Base</a>&#160;</td>
+          <td class="paramname"><em>Button</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>wasNotPressed</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Simple query routine to determine if a mouse button is currently pressed. By specifying true to the 'wasNotPressed' parameter, this method will only return a positive result if the key was not previously pressed in the last poll event (i.e. last frame) </p>
 
 </div>
 </div>
@@ -794,7 +856,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_input_driver.html">cgInputDriver</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:34 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:29 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

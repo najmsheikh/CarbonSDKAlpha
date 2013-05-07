@@ -14,7 +14,7 @@
 //        and rendering of an individual scene.                              //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -33,19 +33,21 @@
 #include <World/cgObjectNode.h>
 #include <World/cgLandscape.h>
 #include <World/cgSceneElement.h>
+#include <World/cgSphereTree.h>
+#include <World/cgBSPVisTree.h>
 #include <World/Lighting/cgLightingManager.h>
-#include <World/Objects/cgSpatialTreeObject.h>
 #include <World/Objects/cgCameraObject.h>
 #include <World/Objects/cgLightObject.h>
 #include <World/Objects/cgGroupObject.h>
 #include <World/Objects/cgActor.h>
 #include <World/Objects/cgMeshObject.h>
-#include <World/Elements/cgNavigationMeshElement.h> // ToDo: 9999 - remove this if navigation elements are stepped in an alternate fashion.
-#include <Navigation/cgNavigationHandler.h> // ToDo: 9999 - remove this if navigation elements are stepped in an alternate fashion.
+#include <World/Elements/cgNavigationMeshElement.h>     // ToDo: 9999 - remove this if navigation elements are stepped in an alternate fashion.
+#include <World/Elements/cgBSPVisTreeElement.h>
+#include <Navigation/cgNavigationHandler.h>             // ToDo: 9999 - remove this if navigation elements are stepped in an alternate fashion.
 #include <Resources/cgResourceManager.h>
 #include <Resources/cgStandardMaterial.h>
 #include <Resources/cgScript.h>
-#include <Resources/cgHeightMap.h> // ToDo: 9999 - Remove when we have completed testing
+#include <Resources/cgHeightMap.h>                      // ToDo: 9999 - Remove when we have completed testing
 #include <Physics/cgPhysicsEngine.h>
 #include <Physics/cgPhysicsWorld.h>
 #include <Rendering/cgRenderDriver.h>
@@ -59,11 +61,6 @@
 #include <algorithm>
 
 // ToDo: 9999 - Replace all 'scriptSafeDispose()' with 'deleteReference()' calls solution wide.
-
-// ToDo: 9999 - Should we just addReference() all nodes to prevent cases where
-// the node is prematurely destroyed? If so, we can get rid of the 'isValidReference()'
-// call in cgScene::deleteObjectNodes()
-
 // ToDo: 9999 - When an object is deleted, it leaves the cell in which it existed
 // in-tact even if that cell is now empty. Care has to be taken here because 
 // the cell system needs to understand when an object has been truly deleted
@@ -117,7 +114,7 @@ cgSceneDescriptor::cgSceneDescriptor( )
 /// <param name="description">Description of the high-level properties that 
 /// should be assumed for the created scene.</param>
 //-----------------------------------------------------------------------------
-cgScene::cgScene( cgWorld * world, const cgSceneDescriptor * description )  : cgReference( cgReferenceManager::generateInternalRefId( ) )
+cgScene::cgScene( cgWorld * world, const cgSceneDescriptor * description )  : cgReference( cgReferenceManager::generateInternalRefId( ) ), mPendingUpdateFIFO( 10000 )
 {
     // Initialize variables to sensible defaults
     mPhysicsWorld               = CG_NULL;
@@ -133,6 +130,8 @@ cgScene::cgScene( cgWorld * world, const cgSceneDescriptor * description )  : cg
     mNextSelectionId            = 0;
     mActiveObjectElementType    = cgUID::Empty;
     mOnSceneRenderMethod        = CG_NULL;
+    mSceneTree                  = CG_NULL;
+    mStaticVisTree              = CG_NULL;
 
     // Allocate the lighting manager on the heap
     mLightingManager            = new cgLightingManager( this );
@@ -256,7 +255,15 @@ void cgScene::dispose( bool disposeBase )
     mElements.clear();
     mElementTypes.clear();
 
+    // Destroy scene tree.
+    if ( mSceneTree )
+        mSceneTree->scriptSafeDispose();
+    if ( mStaticVisTree )
+        mStaticVisTree->scriptSafeDispose();
+
     // Clear variables
+    mSceneTree                  = CG_NULL;
+    mStaticVisTree              = CG_NULL;
     mPhysicsWorld               = CG_NULL;
     mActiveCamera               = CG_NULL;
     mLandscape                  = CG_NULL;
@@ -267,9 +274,7 @@ void cgScene::dispose( bool disposeBase )
     mOnSceneRenderMethod        = CG_NULL;
 
     // Clear containers
-    mRootSpatialTrees.clear();
     mCells.clear();
-    mOrphanNodes.clear();
     mObjectNodeTypes.clear();
     mObjectNodes.clear();
     mNameUsage.clear();
@@ -501,6 +506,10 @@ bool cgScene::load( )
     cgResourceManager * resources  = cgResourceManager::getInstance();
     cgPhysicsEngine   * physics    = cgPhysicsEngine::getInstance();
 
+    // Allocate scene tree data
+    mStaticVisTree = new cgBSPTree();
+    mSceneTree = new cgSphereTree( 10000, 5, 0.6f, mStaticVisTree ); // TODO: Tailor sizes.
+
     // Create and initialize a new physics world for this scene
     mPhysicsWorld = physics->createWorld( );
     if ( !mPhysicsWorld->initialize( mSceneDescriptor.sceneBounds ) )
@@ -639,6 +648,19 @@ bool cgScene::load( )
             throw ResultException( cgString::format( _T("Unable to load initial scene cell data for scene id %i. World database has potentially become corrupt."), sceneId ), cgDebugSource() );
         if ( sceneId && !loadSceneElements( ) )
             throw ResultException( cgString::format( _T("Unable to load scene element data for scene id %i. World database has potentially become corrupt."), sceneId ), cgDebugSource() );
+
+        // Build static visibility tree if required.
+        if ( cgGetSandboxMode() == cgSandboxMode::Disabled )
+        {
+            const cgSceneElementArray & visTreeElements = getSceneElementsByType( RTID_BSPVisTreeElement );
+            if ( !visTreeElements.empty() )
+            {
+                // Build the visibility tree.
+                ((cgBSPVisTreeElement*)visTreeElements[0])->buildTree( mStaticVisTree );
+                
+            } // End if has visibility elements
+        
+        } // End if runtime
 
     } // End try
 
@@ -825,7 +847,7 @@ bool cgScene::loadAllCells( )
         // Resolve any remaining information.
         resolvePendingUpdates();
 
-        // Process all loaded nodes and allow them to initialize now that the entire scene
+		// Process all loaded nodes and allow them to initialize now that the entire scene
         // has been loaded.
         for ( cgObjectNodeMap::iterator itNode = mObjectNodes.begin(); itNode != mObjectNodes.end(); ++itNode )
         {
@@ -833,7 +855,6 @@ bool cgScene::loadAllCells( )
                 throw ResultException( cgString::format( _T("Unable to load cell data for scene %x because at least one if its nodes reported a failure during initialization. Refer to any previous errors for more information.\n"), getSceneId() ), cgDebugSource() );
         
         } // Next node
-
     } // End try
 
     catch ( const ResultException & e )
@@ -1068,42 +1089,28 @@ void cgScene::updateObjectOwnership( cgObjectNode * node )
 
     } // End if no parent
 
-    // Ask all root level spatial trees if they want to take ownership of this object.
-    // Each tree will perform the task for each of their child trees (if any).
-    bool found = false, previouslyManaged = (node->getSpatialTree() != CG_NULL);
-    for ( cgObjectNodeSet::iterator itTree = mRootSpatialTrees.begin(); 
-          itTree != mRootSpatialTrees.end() && !found; 
-          ++itTree )
+    // If this is a renderable type, insert into the scene's spatial tree 
+    // if it is isn't already. Otherwisem if it has been previously
+    // inserted, update its location and/or radius.
+    cgWorldObject * object = node->getReferencedObject();
+    if ( (cgGetSandboxMode() == cgSandboxMode::Enabled) || (object && object->isRenderable()) )
     {
-        cgSpatialTreeNode * tree = (cgSpatialTreeNode*)(*itTree);
+        cgBoundingSphere bounds = node->getBoundingSphere();
+        cgSphereTreeSubNode * sceneTreeNode = node->getSceneTreeNode();
+        if ( !sceneTreeNode )
+        {
+            // Add to scene tree.
+            sceneTreeNode = mSceneTree->addSphere( bounds, node );
+            node->setSceneTreeNode( sceneTreeNode );
+
+        } // End if not in tree
+        else
+        {
+            // Update the current scene tree data.
+            sceneTreeNode->updateSphere( bounds.position, bounds.radius );
         
-        // Skip self
-        if ( tree == node )
-            continue;
-
-        // Test to see if this spatial tree (or one of its children) wants ownership
-        if ( tree->updateObjectOwnership( node ) )
-            found = true;
-
-    } // Next Tree
-
-    // If the object was not previously managed within a spatial
-    // tree (i.e. an orphan), but a tree has now taken ownership
-    // then remove it from the orphan list. Otherwise, add it
-    // to the orphan list.
-    if ( found && !previouslyManaged )
-    {
-        // Remove from orphan list
-        mOrphanNodes.erase( node );
-
-    } // End if newly managed
-    else if ( !found && previouslyManaged )
-    {
-        // Add to orphan list
-        node->setSpatialTree( CG_NULL );
-        mOrphanNodes.insert( node );
-    
-    } // End if !managed
+        } // End if already in tree
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -1113,59 +1120,34 @@ void cgScene::updateObjectOwnership( cgObjectNode * node )
 /// information and rendering subsets.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgScene::computeVisibility( const cgFrustum & frustum, cgVisibilitySet * visibilityData, cgUInt32 flags )
+void cgScene::computeVisibility( const cgFrustum & frustum, cgVisibilitySet * visibilityData )
 {
-    // First register all orphan nodes.
-    cgObjectNodeSet::iterator itNode;
-    for ( itNode = mOrphanNodes.begin(); itNode != mOrphanNodes.end(); ++itNode )
+    /*ObjectNodeTypeMap::iterator itType;
+    bool mustRender = (flags & cgVisibilitySearchFlags::MustRender);
+    for ( itType = mObjectNodeTypes.begin(); itType != mObjectNodeTypes.end(); ++itType )
     {
-        // Register only if it passes simple bounding box test.
-        cgObjectNode * node = (*itNode);
-        if ( frustum.testAABB( node->getBoundingBox() ) )
-            node->registerVisibility( visibilityData, flags );
+        cgObjectNodeArray & nodes = itType->second;
+        for ( size_t i = 0; i < nodes.size(); ++i )
+        {
+            // If the object type itself is not inherantly renderable, but
+            // the search flags required it, we can skip all nodes of this type.
+            cgObjectNode * node = nodes[i];
+            if ( mustRender && !node->getReferencedObject()->isRenderable() )
+                break;
+            
+            // AABB test and register visibility only if node is actually 
+            // renderable (including it's visibility state) if rendering was required.
+            if ( (!mustRender || node->isRenderable()) && frustum.testAABB( node->getBoundingBox() ) )
+                node->registerVisibility( visibilityData, flags );
+        
+        } // Next node
     
-    } // Next Orphan
+    } // Next type*/
+    mSceneTree->computeVisibility( frustum, visibilityData, visibilityData->getSearchFlags() );
     
     // Now request that all spatial trees compute their respective visibility.
     if ( mLandscape )
-        mLandscape->computeVisibility( frustum, visibilityData, flags, CG_NULL );
-    cgObjectNodeSet::iterator itTree;
-    for ( itTree = mRootSpatialTrees.begin(); itTree != mRootSpatialTrees.end(); ++itTree )
-    {
-        cgSpatialTreeNode * tree = (cgSpatialTreeNode*)(*itTree);
-        tree->computeVisibility( frustum, visibilityData, flags );
-        
-    } // Next Tree
-}
-
-//-----------------------------------------------------------------------------
-//  Name : computeVisibility () (Virtual)
-/// <summary>
-/// Called by the application to allow us to retrieve leaf visibility
-/// information and rendering subsets.
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgScene::computeVisibility( const cgBoundingBox & bounds, cgVisibilitySet * visibilityData, cgUInt32 flags )
-{
-    // First register all orphan nodes.
-    cgObjectNodeSet::iterator itNode;
-    for ( itNode = mOrphanNodes.begin(); itNode != mOrphanNodes.end(); ++itNode )
-    {
-        // Register only if it passes simple bounding box test.
-        cgObjectNode * node = (*itNode);
-        if ( bounds.intersect( node->getBoundingBox() ) )
-            node->registerVisibility( visibilityData, flags );
-    
-    } // Next Orphan
-
-    // Now request that all spatial trees compute their respective visibility.
-    cgObjectNodeSet::iterator itTree;
-    for ( itTree = mRootSpatialTrees.begin(); itTree != mRootSpatialTrees.end(); ++itTree )
-    {
-        cgSpatialTreeNode * tree = (cgSpatialTreeNode*)(*itTree);
-        tree->computeVisibility( bounds, visibilityData, flags );
-        
-    } // Next Tree
+        mLandscape->computeVisibility( frustum, visibilityData, visibilityData->getSearchFlags(), CG_NULL );
 }
 
 //-----------------------------------------------------------------------------
@@ -1279,21 +1261,15 @@ cgObjectNode * cgScene::loadObjectNode( cgUInt32 rootReferenceId, cgUInt32 refer
     mObjectNodes[ newNode->getReferenceId() ] = newNode;
     mObjectNodeTypes[ newNode->getObjectType() ].push_back( newNode );
 
-    // Add to the orphan node list initially as necessary.
+    /*// Add to the orphan node list initially as necessary.
     if ( !newNode->getSpatialTree() )
-        mOrphanNodes.insert( newNode );
-
+        mOrphanNodes.insert( newNode );*/
     // Add as a root level node in the node hierarchy unless
     // it already exists or already has a parent.
     if ( !newNode->getParent() )
     {
         mRootNodes[ newNode->getReferenceId() ] = newNode;
 
-        // If this is a spatial tree, we need to keep track of these too for
-        // the purposes of visibility computation and object ownership management.
-        if ( newNode->queryReferenceType( RTID_SpatialTreeNode ) )
-            mRootSpatialTrees.insert( newNode );
-    
     } // End if no parent
 
     // Add the node to the relevant update bucket if required
@@ -1482,12 +1458,34 @@ cgObjectNode * cgScene::loadObjectNode( cgUInt32 referenceId, cgCloneMethod::Bas
 //-----------------------------------------------------------------------------
 void cgScene::unloadObjectNode( cgObjectNode * node )
 {
+    unloadObjectNode( node, false );
+}
+
+//-----------------------------------------------------------------------------
+// Name : unloadObjectNode ()
+/// <summary>
+/// Call in order to remove the specified node from the in-memory scene
+/// but /not/ from the scene database.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScene::unloadObjectNode( cgObjectNode * node, bool unloadChildren )
+{
     // Skip if it cannot be deleted
     if ( !node )
         return;
 
     // ToDo: temporary debug.
     //cgAppLog::write( cgAppLog::Debug, _T("Unloading node '%s' (0x%X)\n"), node->getName().c_str(), node->getReferenceId() );
+
+    // Unloading children first if requested.
+    if ( unloadChildren )
+    {
+        cgObjectNodeList::iterator itChild;
+        cgObjectNodeList childNodes = node->getChildren();
+        for ( itChild = childNodes.begin(); itChild != childNodes.end(); ++itChild );
+            (*itChild)->unload( true );
+
+    } // End if unload children
 
     // Allow the node to resolve any final pending updates in order
     // to fully serialize its data into its final state, or to update
@@ -1542,9 +1540,6 @@ void cgScene::unloadObjectNode( cgObjectNode * node )
     if ( itNode != nodes.end() )
         nodes.erase( itNode );
 
-    // Remove node from orphan list if it existed there.
-    mOrphanNodes.erase( node );
-
     // Remove the object from the appropriate update bucket.
     cgObjectNodeList * bucket = &mUpdateBuckets[ node->mUpdateRate ].nodes;
     for ( cgObjectNodeList::iterator itBucketNode = bucket->begin(); itBucketNode != bucket->end(); ++itBucketNode )
@@ -1561,12 +1556,8 @@ void cgScene::unloadObjectNode( cgObjectNode * node )
     // If this node exists at the root level in the hierarchy,
     // remove it from the root node list first of all.
     if ( node->getParent() == CG_NULL )
-    {
         mRootNodes.erase( node->getReferenceId() );
-        mRootSpatialTrees.erase( node );
     
-    } // End if no parent
-
     // Remove from the scene. Will automatically be removed
     // from name usage map when node is disposed.
     mObjectNodes.erase( node->getReferenceId() );
@@ -1646,9 +1637,6 @@ void cgScene::unloadObjectNodes( cgObjectNodeMap & nodes )
 
         } // End if sandbox
 
-        // Remove node from orphan list if it existed there.
-        mOrphanNodes.erase( node );
-
         // Remove the object from the appropriate update bucket.
         cgObjectNodeList * bucket = &mUpdateBuckets[ node->mUpdateRate ].nodes;
         for ( cgObjectNodeList::iterator itBucketNode = bucket->begin(); itBucketNode != bucket->end(); ++itBucketNode )
@@ -1665,12 +1653,8 @@ void cgScene::unloadObjectNodes( cgObjectNodeMap & nodes )
         // If this node exists at the root level in the hierarchy,
         // remove it from the root node list first of all.
         if ( node->getParent() == CG_NULL )
-        {
             mRootNodes.erase( node->getReferenceId() );
-            mRootSpatialTrees.erase( node );
         
-        } // End if no parent
-
         // Remove from the scene. Will automatically be removed
         // from name usage map when node is disposed.
         mObjectNodes.erase( node->getReferenceId() );
@@ -1915,22 +1899,14 @@ cgObjectNode * cgScene::createObjectNode( bool internalNode, const cgUID & objec
     mObjectNodes[ newNode->getReferenceId() ] = newNode;
     mObjectNodeTypes[ newNode->getObjectType() ].push_back( newNode );
 
-    // Add to the orphan node list initially as necessary.
+    /*// Add to the orphan node list initially as necessary.
     if ( !newNode->getSpatialTree() )
-        mOrphanNodes.insert( newNode );
+        mOrphanNodes.insert( newNode );*/
 
     // Add as a root level node in the node hierarchy unless
     // it already exists or already has a parent.
     if ( !newNode->getParent() )
-    {
         mRootNodes[ newNode->getReferenceId() ] = newNode;
-
-        // If this is a spatial tree, we need to keep track of these too for
-        // the purposes of visibility computation and object ownership management.
-        if ( newNode->queryReferenceType( RTID_SpatialTreeNode ) )
-            mRootSpatialTrees.insert( newNode );
-    
-    } // End if no parent
 
     // Add the node to the relevant update bucket if required
     cgUpdateRate::Base updateRate = newNode->getUpdateRate();
@@ -1946,27 +1922,6 @@ cgObjectNode * cgScene::createObjectNode( bool internalNode, const cgUID & objec
 
     // Notify whoever is interested that the scene was modified
     onNodeAdded( &cgNodeUpdatedEventArgs( this, newNode ) );
-
-    // ToDo: 9999 - Original Framework
-    /*// Insert into the main scene object list.
-    m_Objects.push_back( object );
-
-    // Add to the root object list ONLY if it has no parent.
-    if ( object->getParent() == CG_NULL )
-        m_RootObjects.push_back( object );
-
-    // Also add to the lookup table that indicates if an object exists.
-    m_ValidObjectTable.insert( object );
-    
-    // Also insert into group sorted object list
-    m_ObjectTypes[ object->GetObjectType() ].push_back( object );
-
-    // And finally, the name sorted object map
-    m_NamedObjects[ object->GetInstanceName() ] = object;
-
-    // Insert us into the spatial tree if required
-    if ( m_pSpatialTree != NULL )
-        m_pSpatialTree->updateObjectOwnership( object );*/
     
     // Success?
     return newNode;
@@ -2017,6 +1972,18 @@ bool cgScene::isLoading( ) const
 cgPhysicsWorld * cgScene::getPhysicsWorld( ) const
 {
     return mPhysicsWorld;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getSceneTree ()
+/// <summary>
+/// Retrieve the scene's spatial hierarchy data, most commonly used for
+/// broadphase tests.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgSphereTree * cgScene::getSceneTree( ) const
+{
+    return mSceneTree;
 }
 
 //-----------------------------------------------------------------------------
@@ -2137,82 +2104,6 @@ bool cgScene::setActiveCamera( cgCameraNode * pCamera )
     return true;
 }
 
-// ToDo: To be replaced with 'CreateNode' / 'LoadNode'
-/*//-----------------------------------------------------------------------------
-//  Name : AddObject ()
-/// <summary>
-/// Add the specified object to the scene.
-/// Note : Should not ideally be called explicitly unless you can guarantee
-/// object lifetime (scene will take ownership).
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgScene::AddObject( cgSceneObject * object )
-{
-    cgSceneObjectList::iterator itObject;
-
-    // This exact object already exists?
-    if ( SceneObjectExists( object ) == true )
-        return true;
-
-    // Something with the same instance name already exists?
-    if ( m_NamedObjects.find( object->GetInstanceName() ) != m_NamedObjects.end() ) 
-    {
-        cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("An object with name '%s' already exists in the object database for this scene. Object instance names must be unique.\n"), object->GetInstanceName().c_str() );
-        return false;
-    
-    } // End if already exists
-
-    // Insert into the main scene object list.
-    m_Objects.push_back( object );
-
-    // Add to the root object list ONLY if it has no parent.
-    if ( object->getParent() == CG_NULL )
-        m_RootObjects.push_back( object );
-
-    // Also add to the lookup table that indicates if an object exists.
-    m_ValidObjectTable.insert( object );
-    
-    // Also insert into group sorted object list
-    m_ObjectTypes[ object->GetObjectType() ].push_back( object );
-
-    // And finally, the name sorted object map
-    m_NamedObjects[ object->GetInstanceName() ] = object;
-
-    // Insert us into the spatial tree if required
-    if ( m_pSpatialTree != NULL )
-        m_pSpatialTree->updateObjectOwnership( object );
-    
-    // Success!
-    return true;
-}
-
-//-----------------------------------------------------------------------------
-//  Name : RemoveObject ()
-/// <summary>
-/// Remove the specified object from the scene.
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgScene::RemoveObject( cgSceneObject * object )
-{
-    // Validate requirements
-    if ( object == CG_NULL )
-        return;
-
-    // Remove the tree object from the spatial tree
-    object->setSpatialTree( CG_NULL );
-    
-    // Remove from all lists
-    m_Objects.remove( object );
-    m_RootObjects.remove( object );
-    m_ValidObjectTable.erase( object );
-    m_ObjectTypes[ object->GetObjectType() ].remove( object );
-    m_NamedObjects.erase( object->GetInstanceName() );
-
-    // Set the update rate to 'Never' to remove it from any active
-    // update list.
-    setObjectUpdateRate( object, cgUpdateRate::Never );
-}*/
-
 //-----------------------------------------------------------------------------
 //  Name : addRootNode ()
 /// <summary>
@@ -2227,11 +2118,6 @@ void cgScene::addRootNode( cgObjectNode * node )
     {
         mRootNodes[ node->getReferenceId() ] = node;
         setDirty( true );
-
-        // If this is a spatial tree, we need to keep track of these too for
-        // the purposes of visibility computation and object ownership management.
-        if ( node->queryReferenceType( RTID_SpatialTreeNode ) == true )
-            mRootSpatialTrees.insert( node );
     
     } // End if not found
 }
@@ -2251,164 +2137,7 @@ void cgScene::removeRootNode( cgObjectNode * node )
         setDirty( true );
     
     } // End if found
-
-    // Remove from the root spatial tree list used for visibility
-    // computation and object ownership management.
-    if ( node->queryReferenceType( RTID_SpatialTreeNode ) == true )
-        mRootSpatialTrees.erase( node );
 }
-
-// ToDo: Fix Me
-/*//-----------------------------------------------------------------------------
-//  Name : GetNodesByType ()
-/// <summary>
-/// Returns a list of objects matching input cgUID type.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgScene::GetObjectsByType( cgUID ObjectType, cgSceneObjectList **ppObjects )
-{
-	// Validate output parameter
-	if ( !ppObjects ) return false;
-
-	// Search for the object list matching the UID
-    ObjectTypeMap::iterator itObject = m_ObjectTypes.find( ObjectType );
-    
-	// If a valid list was found, return it.
-	if( itObject != m_ObjectTypes.end( ) )
-	{
-        // Return the object list
-		*ppObjects = &(itObject->second);
-		return true;
-	
-    } // End if found type
-
-	// No matches. 
-	return false;
-}
-
-//-----------------------------------------------------------------------------
-//  Name : GetObjectsByDistance ()
-/// <summary>
-/// Returns a list of objects with the specified distance.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgScene::GetObjectsByDistance( cgSceneObjectList & objects, const cgVector3 & vecPos, cgFloat distance )
-{
-    //ISpatialTree::LeafList::iterator    itLeaf;
-    //ISpatialTree::LeafList              Leaves;
-    //ITreeLeaf::TreeObjectList::iterator itObject;
-    //ITreeLeaf::TreeObjectList           objects;
-    bool                                bFoundObjects = false;
-
-    // ToDo : Complete this
-
-    // Validate requirements
-    if ( !m_pSpatialTree )
-        return false;
-
-    // Generate a bounding box for retrieving data from the spatial tree
-    cgBoundingBox AABB( vecPos.x - distance, vecPos.y - distance, vecPos.z - distance,
-                        vecPos.x + distance, vecPos.y + distance, vecPos.z + distance );
-
-    // Retrieve a list of all leaves in the vicinity
-    m_pSpatialTree->CollectLeavesAABB( Leaves, AABB );
-
-    // Loop through all leaves in the list
-    for ( itLeaf = Leaves.begin(); itLeaf != Leaves.end(); ++itLeaf )
-    {
-        ITreeLeaf * pLeaf = *itLeaf;
-        if ( !pLeaf ) continue;
-
-        // Retrieve objects in this leaf
-        objects = pLeaf->GetTreeObjectList();
-
-        // Loop through all objects
-        for ( itObject = objects.begin(); itObject != objects.end(); ++itObject )
-        {
-            ISpatialTree::TreeObject * pTreeObject = *itObject;
-            if ( !pTreeObject ) continue;
-
-            // Is this a scene object?
-            if ( pTreeObject->type != ISpatialTree::TreeObject::GameObject ) continue;
-
-            // If this is not already in the list
-            if ( std::find( ObjectList.begin(), ObjectList.end(), (cgSceneObject*)pTreeObject->pContext ) != ObjectList.end() ) continue;
-
-            // Within the specified distance?
-            sqVector3 vecObjectPos = ((cgSceneObject*)pTreeObject->pContext)->getPosition();
-            if ( (vecObjectPos - vecPos).SquareLength() > (distance * distance) ) continue;
-
-            // Add it to the list
-            ObjectList.push_back( (cgSceneObject*)pTreeObject->pContext );
-            bFoundObjects = true;
-
-        } // Next Object
-
-    } // Next leaf
-
-    // Did we find any objects?
-    return bFoundObjects;
-}
-
-//-----------------------------------------------------------------------------
-//  Name : GetObjectInBounds ()
-/// <summary>
-/// Returns a list of objects with the specified bounding box.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgScene::GetObjectsInBounds( cgSceneObjectList & objects, const cgBoundingBox & AABB )
-{
-    //ISpatialTree::LeafList::iterator    itLeaf;
-    //ISpatialTree::LeafList              Leaves;
-    //ITreeLeaf::TreeObjectList::iterator itObject;
-    //ITreeLeaf::TreeObjectList           objects;
-    bool                                bFoundObjects = false;
-
-    // ToDo : Complete this.
-
-    // Validate requirements
-    if ( !m_pSpatialTree )
-        return false;
-
-    // Retrieve a list of all leaves in the vicinity
-    m_pSpatialTree->CollectLeavesAABB( Leaves, AABB );
-
-    // Loop through all leaves in the list
-    for ( itLeaf = Leaves.begin(); itLeaf != Leaves.end(); ++itLeaf )
-    {
-        ITreeLeaf * pLeaf = *itLeaf;
-        if ( !pLeaf ) continue;
-
-        // Retrieve objects in this leaf
-        objects = pLeaf->GetTreeObjectList();
-
-        // Loop through all objects
-        for ( itObject = objects.begin(); itObject != objects.end(); ++itObject )
-        {
-            ISpatialTree::TreeObject * pTreeObject = *itObject;
-            if ( !pTreeObject ) continue;
-
-            // Is this a scene object?
-            if ( pTreeObject->type != ISpatialTree::TreeObject::GameObject ) continue;
-
-            // If this is not already in the list
-            if ( std::find( ObjectList.begin(), ObjectList.end(), (cgSceneObject*)pTreeObject->pContext ) != ObjectList.end() ) continue;
-
-            // Bounding boxes intersect?
-            sqBounds3 AABBObject = ((cgSceneObject*)pTreeObject->pContext)->getBoundingBox( );
-            if ( !cgCollision::AABBIntersectAABB( AABB, AABBObject ) ) continue;
-
-            // Add it to the list
-            ObjectList.push_back( (cgSceneObject*)pTreeObject->pContext );
-            bFoundObjects = true;
-
-        } // Next Object
-
-    } // Next leaf
-
-    // Did we find any objects?
-    return bFoundObjects;
-}*/
 
 //-----------------------------------------------------------------------------
 //  Name : setObjectUpdateRate ()
@@ -3048,7 +2777,10 @@ void cgScene::update( )
 
     // Resolve any deferred node updates.
     resolvePendingUpdates();
-    
+
+    // Allow scene tree to resolve.
+    mSceneTree->process();
+
     // End profiling scene update method.
     profiler->endProcess( );
 }
@@ -3064,8 +2796,18 @@ void cgScene::resolvePendingUpdates( )
 {
     // Keep pulling from the front of the map until it is empty (the resolution 
     // process will remove each node as it is processed).
-    while ( !mPendingUpdates.empty() )
-        (*mPendingUpdates.begin())->resolvePendingUpdates( cgDeferredUpdateFlags::All );
+    size_t maximumResolve = mPendingUpdateFIFO.getEntryCount();
+    for ( size_t i = 0; i < maximumResolve; ++i )
+    {
+        cgObjectNode * node = mPendingUpdateFIFO.pop();
+        if ( node )
+        {
+            node->setPendingUpdateEntry( CG_NULL );
+            node->resolvePendingUpdates( cgDeferredUpdateFlags::All );
+        
+        } // End if valid
+    
+    } // Next test
 }
 
 //-----------------------------------------------------------------------------
@@ -3082,7 +2824,7 @@ void cgScene::resolvePendingUpdates( )
 void cgScene::queueNodeUpdates( cgObjectNode * node )
 {
     // ToDo: Automatically remove from queue when a node is deleted / unloaded.
-    mPendingUpdates.insert( node );
+    node->setPendingUpdateEntry( mPendingUpdateFIFO.push( node ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -3094,7 +2836,7 @@ void cgScene::queueNodeUpdates( cgObjectNode * node )
 //-----------------------------------------------------------------------------
 void cgScene::resolvedNodeUpdates( cgObjectNode * node )
 {
-    mPendingUpdates.erase( node );
+    node->setPendingUpdateEntry( CG_NULL );
 }
 
 //-----------------------------------------------------------------------------
@@ -3173,31 +2915,20 @@ void cgScene::render( )
     // Make sure that it collects materials from the objects for runtime batching.
     //profiler->beginProcess( _T("Visibility") );
     //profiler->beginProcess( _T("Camera") );
-    mActiveCamera->computeVisibility( cgVisibilitySearchFlags::MustRender | cgVisibilitySearchFlags::CollectMaterials, true );
+    mActiveCamera->computeVisibility( );
     //profiler->endProcess( );
 
     // Compute level of detail settings for each visible object.
     //profiler->beginProcess( _T("LoD Computation") );
+    cgObjectNodeList::const_iterator itObject;
     cgVisibilitySet * visibilityData = mActiveCamera->getVisibilitySet();
-    cgObjectNodeArray & visibleLights = visibilityData->getVisibleLights();
-    cgObjectNodeArray & visibleObjects = visibilityData->getVisibleObjects();
-    for ( size_t i = 0; i < visibleObjects.size(); ++i )
-        visibleObjects[i]->computeLevelOfDetail( mActiveCamera );
-    for ( size_t i = 0; i < visibleLights.size(); ++i )
-        visibleLights[i]->computeLevelOfDetail( mActiveCamera );
+    cgObjectNodeList & visibleLights = visibilityData->getVisibleLights();
+    cgObjectNodeList & visibleObjects = visibilityData->getVisibleObjects();
+    for ( itObject = visibleObjects.begin(); itObject != visibleObjects.end(); ++itObject )
+        (*itObject)->computeLevelOfDetail( mActiveCamera );
+    for ( itObject = visibleLights.begin(); itObject != visibleLights.end(); ++itObject )
+        (*itObject)->computeLevelOfDetail( mActiveCamera );
     //profiler->endProcess( );
-
-    // Also allow light sources to compute visibility as they deem necessary
-    // (this will largely only be the case if they are shadow casters)
-    //profiler->beginProcess( _T("Light Sources") );
-    for ( size_t i = 0; i < visibleLights.size(); ++i )
-        ((cgLightNode*)visibleLights[i])->computeVisibility();
-    //profiler->endProcess( );
-
-    /*// Combine sets to produce a list of lights that influence each object.
-    //profiler->beginProcess( _T("Illumation Set") );
-    selectionSet->GenerateIlluminationSet();
-    //profiler->endProcess( );*/
 
     // Update the lighting manager. This will include updating any indirect
 	// lighting data that is needed for the frame
@@ -3266,26 +2997,21 @@ void cgScene::sandboxRender( cgUInt32 flags, const cgPlane & gridPlane )
     driver->setWorldTransform( CG_NULL );
     driver->setCamera( mActiveCamera );
 
-    // Compute the visibility set containing /all/ objects, not just
-    // the traditionally 'renderable' ones.
-    mActiveCamera->computeVisibility( 0, true );
-
-    // ToDo: 9999
-    /*// Add all orphan nodes to the visibility set if there is no scene tree (default).
-    if ( m_oSceneTree == nullptr )
-        oVis->AddNodes( mOrphanNodes );*/
+    // Compute the visibility set for the currently active camera.
+    mActiveCamera->computeVisibility( );
 
     // Begin sandbox render pass.
     beginRenderPass( _T("Sandbox") );
 
     // Visit each node and ask them to draw.
+    cgObjectNodeList::iterator itObject;
     cgVisibilitySet * visibilityData = mActiveCamera->getVisibilitySet();
-    cgObjectNodeArray & visibleObjects = visibilityData->getVisibleObjects();
-    cgObjectNodeArray & visibleLights  = visibilityData->getVisibleLights();
-    for ( size_t i = 0; i < visibleObjects.size(); ++i )
-        visibleObjects[i]->sandboxRender( flags, mActiveCamera, visibilityData, gridPlane );
-    for ( size_t i = 0; i < visibleLights.size(); ++i )
-        visibleLights[i]->sandboxRender( flags, mActiveCamera, visibilityData, gridPlane );
+    cgObjectNodeList & visibleObjects = visibilityData->getVisibleObjects();
+    cgObjectNodeList & visibleLights  = visibilityData->getVisibleLights();
+    for ( itObject = visibleObjects.begin(); itObject != visibleObjects.end(); ++itObject )
+        (*itObject)->sandboxRender( flags, mActiveCamera, visibilityData, gridPlane );
+    for ( itObject = visibleLights.begin(); itObject != visibleLights.end(); ++itObject )
+        (*itObject)->sandboxRender( flags, mActiveCamera, visibilityData, gridPlane );
 
     // Allow scene elements to draw last.
     for ( size_t i = 0; i < mElements.size(); ++i )
@@ -4186,9 +3912,6 @@ bool cgScene::deleteObjectNode( cgObjectNode * node )
     if ( itNode != nodes.end() )
         nodes.erase( itNode );
 
-    // Remove node from orphan list if it existed there.
-    mOrphanNodes.erase( node );
-
     // Remove the object from the appropriate update bucketNodes.
     cgObjectNodeList * bucketNodes = &mUpdateBuckets[ node->mUpdateRate ].nodes;
     for ( cgObjectNodeList::iterator itBucketNode = bucketNodes->begin(); itBucketNode != bucketNodes->end(); ++itBucketNode )
@@ -4204,12 +3927,8 @@ bool cgScene::deleteObjectNode( cgObjectNode * node )
 
     // If this node exists at the root level in the hierarchy,
     // remove it from the root node list first of all.
-    if ( node->getParent() == CG_NULL )
-    {
+    if ( !node->getParent() )
         mRootNodes.erase( node->getReferenceId() );
-        mRootSpatialTrees.erase( node );
-    
-    } // End if no parent
 
     // Remove from the scene. Will automatically be removed
     // from name usage map when node is disposed.
@@ -4359,9 +4078,6 @@ bool cgScene::deleteObjectNodes( cgObjectNodeMap & nodes )
 
         } // End if sandbox
 
-        // Remove node from orphan list if it existed there.
-        mOrphanNodes.erase( node );
-
         // Remove the object from the appropriate update bucketNodes.
         cgObjectNodeList * bucketNodes = &mUpdateBuckets[ node->mUpdateRate ].nodes;
         for ( cgObjectNodeList::iterator itBucketNode = bucketNodes->begin(); itBucketNode != bucketNodes->end(); ++itBucketNode )
@@ -4378,12 +4094,8 @@ bool cgScene::deleteObjectNodes( cgObjectNodeMap & nodes )
         // If this node exists at the root level in the hierarchy,
         // remove it from the root node list first of all.
         if ( !node->getParent() )
-        {
             mRootNodes.erase( node->getReferenceId() );
-            mRootSpatialTrees.erase( node );
     
-        } // End if no parent
-
         // Remove from the scene. Will automatically be removed
         // from name usage map when node is disposed.
         mObjectNodes.erase( node->getReferenceId() );

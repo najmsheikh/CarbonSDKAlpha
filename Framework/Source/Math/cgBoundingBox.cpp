@@ -13,7 +13,7 @@
 // Desc : Bounding Box class. Simple but efficient bounding box processing.  //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -115,40 +115,6 @@ bool cgBoundingBox::isDegenerate( ) const
 }
 
 //-----------------------------------------------------------------------------
-//  Name : getDimensions ()
-/// <summary>
-/// Returns a vector containing the dimensions of the bounding box
-/// </summary>
-//-----------------------------------------------------------------------------
-cgVector3 cgBoundingBox::getDimensions() const
-{
-    return max - min;
-}
-
-//-----------------------------------------------------------------------------
-//  Name : getCenter ()
-/// <summary>
-/// Returns a vector containing the exact centre point of the box
-/// </summary>
-//-----------------------------------------------------------------------------
-cgVector3 cgBoundingBox::getCenter() const
-{
-    return (max + min) * 0.5f;
-}
-
-//-----------------------------------------------------------------------------
-//  Name : getExtents ()
-/// <summary>
-/// Returns a vector containing the extents of the bounding box (the
-/// half-dimensions).
-/// </summary>
-//-----------------------------------------------------------------------------
-cgVector3 cgBoundingBox::getExtents( ) const
-{
-    return max - getCenter();
-}
-
-//-----------------------------------------------------------------------------
 //  Name : getPlane ()
 /// <summary>
 /// Retrieves the plane for the specified side of the bounding box
@@ -245,45 +211,24 @@ void cgBoundingBox::getPlanePoints( cgVolumePlane::Side Side, cgVector3 PointsOu
 }
 
 //-----------------------------------------------------------------------------
-//  Name : calculateFromPolygon ()
+//  Name : fromPoints ()
 /// <summary>
-/// Calculates the bounding box based on the Face passed.
+/// Calculates the bounding box based on the points specified.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgBoundingBox& cgBoundingBox::calculateFromPolygon( const cgVector3 pVertices[], cgUInt32 VertexCount, cgUInt32 VertexStride, bool bReset /* = true */ )
+cgBoundingBox& cgBoundingBox::fromPoints( const cgByte * pointBuffer, cgUInt32 pointCount, cgUInt32 pointStride, bool resetBounds /* = true */ )
 {
-    cgByte * pVerts  = (cgByte*)pVertices;
-    cgUInt32 v;
-
-    // Check for invalid params
-    if ( !pVertices ) return *this;
-
     // Reset the box if requested
-    if ( bReset ) reset();
+    if ( resetBounds )
+        reset();
 
-    // Loop round all the Vertices in the face
-    for ( v = 0; v < VertexCount; v++, pVerts += VertexStride ) 
-        addPoint( *(cgVector3*)pVerts );
+    // Loop through all the points supplied and grow the box.
+    if ( pointBuffer && pointCount )
+    {
+        for ( cgUInt32 v = 0; v < pointCount; ++v, pointBuffer += pointStride ) 
+            addPoint( *(cgVector3*)pointBuffer );
 
-    return *this;
-}
-
-//-----------------------------------------------------------------------------
-//  Name : addPoint ()
-/// <summary>
-/// Grows the bounding box based on the point passed.
-/// </summary>
-//-----------------------------------------------------------------------------
-cgBoundingBox& cgBoundingBox::addPoint( const cgVector3 & Point )
-{
-    // Grow by this point
-    if ( Point.x < min.x ) min.x = Point.x;
-    if ( Point.y < min.y ) min.y = Point.y;
-    if ( Point.z < min.z ) min.z = Point.z;
-    if ( Point.x > max.x ) max.x = Point.x;
-    if ( Point.y > max.y ) max.y = Point.y;
-    if ( Point.z > max.z ) max.z = Point.z;
-
+    } // End if has data
     return *this;
 }
 

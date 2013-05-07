@@ -14,7 +14,7 @@
 //       detection and response routines for use throughout our application. //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -114,9 +114,9 @@ public:
     static bool                 AABBIntersectAABB           ( const cgBoundingBox & AABB1, const cgBoundingBox & AABB2, bool ignoreX = false, bool ignoreY = false, bool ignoreZ = false );
     static bool                 AABBIntersectAABB           ( bool & contained, const cgBoundingBox & AABB1, const cgBoundingBox & AABB2, bool ignoreX = false, bool ignoreY = false, bool ignoreZ = false );
     
-    static cgPlaneQuery::Class  pointClassifyPlane          ( const cgVector3& point, const cgVector3& planeNormal, cgFloat planeDistance );
+    static cgPlaneQuery::Class  pointClassifyPlane          ( const cgVector3& point, const cgVector3& planeNormal, cgFloat planeDistance, cgFloat tolerance = CGE_EPSILON );
     static cgPlaneQuery::Class  rayClassifyPlane            ( const cgVector3& origin, const cgVector3& velocity, const cgVector3& planeNormal, cgFloat planeDistance );
-    static cgPlaneQuery::Class  polyClassifyPlane           ( void * vertices, cgUInt32 vertexCount, cgUInt32 stride, const cgVector3& planeNormal, cgFloat planeDistance );
+    static cgPlaneQuery::Class  polyClassifyPlane           ( void * vertices, cgUInt32 vertexCount, cgUInt32 stride, const cgVector3& planeNormal, cgFloat planeDistance, cgFloat tolerance = CGE_EPSILON );
     static cgPlaneQuery::Class  AABBClassifyPlane           ( const cgBoundingBox & AABB, const cgVector3& planeNormal, cgFloat planeDistance );
 
     //-------------------------------------------------------------------------

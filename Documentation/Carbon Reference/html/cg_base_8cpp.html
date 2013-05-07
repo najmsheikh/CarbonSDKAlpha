@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -110,6 +110,7 @@ $(document).ready(function(){initNavTree('cg_base_8cpp.html','');});
 <div class="textblock"><code>#include &lt;<a class="el" href="cg_precompiled_8h_source.html">cgPrecompiled.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_base_8h_source.html">cgBase.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_application_8h_source.html">System/cgApplication.h</a>&gt;</code><br/>
+<code>#include &lt;sys/timeb.h&gt;</code><br/>
 <code>#include &lt;windows.h&gt;</code><br/>
 <code>#include &lt;gdiplusenums.h&gt;</code><br/>
 <code>#include &lt;gdiplustypes.h&gt;</code><br/>
@@ -145,12 +146,17 @@ $(document).ready(function(){initNavTree('cg_base_8cpp.html','');});
 <code>#include &lt;<a class="el" href="cg_fixed_axis_joint_object_8h_source.html">World/Objects/cgFixedAxisJointObject.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_hinge_joint_object_8h_source.html">World/Objects/cgHingeJointObject.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_sound_emitter_object_8h_source.html">World/Objects/cgSoundEmitterObject.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="cg_navigation_patrol_point_8h_source.html">World/Objects/cgNavigationPatrolPoint.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="cg_billboard_object_8h_source.html">World/Objects/cgBillboardObject.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_box_collision_shape_element_8h_source.html">World/Objects/Elements/cgBoxCollisionShapeElement.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_sphere_collision_shape_element_8h_source.html">World/Objects/Elements/cgSphereCollisionShapeElement.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_cylinder_collision_shape_element_8h_source.html">World/Objects/Elements/cgCylinderCollisionShapeElement.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_capsule_collision_shape_element_8h_source.html">World/Objects/Elements/cgCapsuleCollisionShapeElement.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_cone_collision_shape_element_8h_source.html">World/Objects/Elements/cgConeCollisionShapeElement.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_hull_collision_shape_element_8h_source.html">World/Objects/Elements/cgHullCollisionShapeElement.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="cg_animation_set_element_8h_source.html">World/Objects/Elements/cgAnimationSetElement.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="cg_navigation_mesh_element_8h_source.html">World/Elements/cgNavigationMeshElement.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="cg_sky_element_8h_source.html">World/Elements/cgSkyElement.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_character_controller_8h_source.html">Physics/Controllers/cgCharacterController.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_script_engine_8h_source.html">Scripting/cgScriptEngine.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="_core_8h_source.html">Scripting/Packages/Core.h</a>&gt;</code><br/>
@@ -461,7 +467,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_65cb1e81656fd908372bbce03574f466.html">Source</a></li><li class="navelem"><a class="el" href="cg_base_8cpp.html">cgBase.cpp</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:19 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:01 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

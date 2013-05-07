@@ -118,7 +118,7 @@ shared class DestructibleLight : IScriptedObjectBehavior
             if ( resources.loadMaterial( unlitMaterial, scene.getParentWorld(), MaterialType::Standard, unlitMaterialId, false, 0, DebugSource() ) )
             {
                 // Swap!
-                mMesh.getMesh().getResource(true).replaceMaterial( litMaterial, unlitMaterial );
+                mMesh.replaceMaterial( litMaterial, unlitMaterial );
             
             } // End if found unlit
 

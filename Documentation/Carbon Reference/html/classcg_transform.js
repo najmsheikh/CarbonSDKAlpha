@@ -89,5 +89,6 @@ var classcg_transform =
     [ "zAxis", "classcg_transform.html#a0bab5cb5f2ef505aecec2389d546e16b", null ],
     [ "zero", "classcg_transform.html#aa33b85f688f223b103c9ef44e2732b45", null ],
     [ "zUnitAxis", "classcg_transform.html#abd97149e835282bf6da9128badafef2d", null ],
-    [ "_m", "classcg_transform.html#a3256be1bcf809082f020693ac7f8e270", null ]
+    [ "_m", "classcg_transform.html#a3256be1bcf809082f020693ac7f8e270", null ],
+    [ "Identity", "classcg_transform.html#a9ab36e560f97ff98a535132f996092a0", null ]
 ];

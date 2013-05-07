@@ -21,7 +21,7 @@ var classcg_buffer_format_enum =
     [ "getBestTwoChannelFormat", "classcg_buffer_format_enum.html#a45e3982f0d87ca5d552f4502ed340ed1", null ],
     [ "getFormatCaps", "classcg_buffer_format_enum.html#ae48b0527e7140ec6365e045e50c78a85", null ],
     [ "initialize", "classcg_buffer_format_enum.html#a9e0bae714c83794984160a76c5e302bd", null ],
-    [ "isFormatSupported", "classcg_buffer_format_enum.html#a14d458f3bbce6308d84f8c59417d06c0", null ],
+    [ "isFormatSupported", "classcg_buffer_format_enum.html#a27f748ccdbddfda17e5fe0a1ed9e5131", null ],
     [ "operator=", "classcg_buffer_format_enum.html#a261949318553caa6ec22f01e785c318e", null ],
     [ "mDepthStencil", "classcg_buffer_format_enum.html#a8de774079ba2b6820f2f368f2d35f877", null ],
     [ "mRenderTarget", "classcg_buffer_format_enum.html#ad95fdf3e4763f8d697d3ac00f60b18ed", null ],

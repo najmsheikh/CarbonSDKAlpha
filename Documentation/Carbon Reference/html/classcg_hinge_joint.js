@@ -8,6 +8,7 @@ var classcg_hinge_joint =
     [ "getAngle", "classcg_hinge_joint.html#a1b83117e3b0ec6247543689ab49c5653", null ],
     [ "getAxis", "classcg_hinge_joint.html#a3e66c8e2c048e41976928022e78c99ae", null ],
     [ "getInfo", "classcg_hinge_joint.html#ac9d614088db2d6c5eb0419b57fdd1fcb", null ],
+    [ "getPivotTransform", "classcg_hinge_joint.html#acc96fd42ac4364fdf7d990cace11cc37", null ],
     [ "getReferenceType", "classcg_hinge_joint.html#af17468ec83b5116ce06919f41fd74f4f", null ],
     [ "getRelativeAngularVelocity", "classcg_hinge_joint.html#ac11d5c6ec52fb555cc31270ef10ac51d", null ],
     [ "onPhysicsBodyTransformed", "classcg_hinge_joint.html#a40d302df8a6bea1f1e90cf0e347524f6", null ],

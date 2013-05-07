@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -131,6 +131,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5f164fa236b44c9524ab2961da41e98d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#a5f164fa236b44c9524ab2961da41e98d">cgEulerAnglesTargetController</a> ()</td></tr>
 <tr class="memdesc:a5f164fa236b44c9524ab2961da41e98d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classcg_euler_angles_target_controller.html" title="An implementation of the base &#39;cgAnimationTargetController&#39; class that allows the application to repr...">cgEulerAnglesTargetController</a> Class Constructor  <a href="#a5f164fa236b44c9524ab2961da41e98d"></a><br/></td></tr>
 <tr class="separator:a5f164fa236b44c9524ab2961da41e98d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f12d8068b1a01ec0a4512562220c4fb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#a7f12d8068b1a01ec0a4512562220c4fb">cgEulerAnglesTargetController</a> (const <a class="el" href="classcg_euler_angles_target_controller.html">cgEulerAnglesTargetController</a> &amp;init, const <a class="el" href="structcg_range.html">cgRange</a> &amp;frameRange)</td></tr>
+<tr class="memdesc:a7f12d8068b1a01ec0a4512562220c4fb"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classcg_euler_angles_target_controller.html" title="An implementation of the base &#39;cgAnimationTargetController&#39; class that allows the application to repr...">cgEulerAnglesTargetController</a> Class Constructor  <a href="#a7f12d8068b1a01ec0a4512562220c4fb"></a><br/></td></tr>
+<tr class="separator:a7f12d8068b1a01ec0a4512562220c4fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee936b2c2b881476f80c9ebaea7943e5"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#aee936b2c2b881476f80c9ebaea7943e5">~cgEulerAnglesTargetController</a> ()</td></tr>
 <tr class="memdesc:aee936b2c2b881476f80c9ebaea7943e5"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classcg_euler_angles_target_controller.html" title="An implementation of the base &#39;cgAnimationTargetController&#39; class that allows the application to repr...">cgEulerAnglesTargetController</a> Class Destructor  <a href="#aee936b2c2b881476f80c9ebaea7943e5"></a><br/></td></tr>
 <tr class="separator:aee936b2c2b881476f80c9ebaea7943e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -146,6 +149,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6f0a0e585a342964583a39da8e6b90ec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#a6f0a0e585a342964583a39da8e6b90ec">addLinearKey</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> frame, const <a class="el" href="classcg_quaternion.html">cgQuaternion</a> &amp;value)</td></tr>
 <tr class="memdesc:a6f0a0e585a342964583a39da8e6b90ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert a new key-frame into the controller's animation channels to produce a linear interpolation between the previous and new keys.  <a href="#a6f0a0e585a342964583a39da8e6b90ec"></a><br/></td></tr>
 <tr class="separator:a6f0a0e585a342964583a39da8e6b90ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafa1ec4c71aafd298efb88547da7f0db"><td class="memItemLeft" align="right" valign="top">const <br class="typebreak"/>
+<a class="el" href="classcg_float_curve_animation_channel.html">cgFloatCurveAnimationChannel</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#aafa1ec4c71aafd298efb88547da7f0db">getAnimationChannel</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> index) const </td></tr>
+<tr class="memdesc:aafa1ec4c71aafd298efb88547da7f0db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the data associated with a specific animation channel by index. Valid indices are 0=X, 1=Y, 2=Z  <a href="#aafa1ec4c71aafd298efb88547da7f0db"></a><br/></td></tr>
+<tr class="separator:aafa1ec4c71aafd298efb88547da7f0db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00b736a0a755c1520e7d9b6facee713a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#a00b736a0a755c1520e7d9b6facee713a">serialize</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> targetDataId, const <a class="el" href="classcg_string.html">cgString</a> &amp;controllerIdentifier, <a class="el" href="classcg_world.html">cgWorld</a> *world)</td></tr>
 <tr class="memdesc:a00b736a0a755c1520e7d9b6facee713a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert (or update) the database entries associated with this animation target controller and any associated child animation channels.  <a href="#a00b736a0a755c1520e7d9b6facee713a"></a><br/></td></tr>
 <tr class="separator:a00b736a0a755c1520e7d9b6facee713a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -225,6 +232,34 @@ Additional Inherited Members</h2></td></tr>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classcg_euler_angles_target_controller.html" title="An implementation of the base &#39;cgAnimationTargetController&#39; class that allows the application to repr...">cgEulerAnglesTargetController</a> Class Constructor </p>
+
+</div>
+</div>
+<a class="anchor" id="a7f12d8068b1a01ec0a4512562220c4fb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cgEulerAnglesTargetController::cgEulerAnglesTargetController </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_euler_angles_target_controller.html">cgEulerAnglesTargetController</a> &amp;&#160;</td>
+          <td class="paramname"><em>init</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_range.html">cgRange</a> &amp;&#160;</td>
+          <td class="paramname"><em>frameRange</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -468,6 +503,24 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aafa1ec4c71aafd298efb88547da7f0db"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classcg_float_curve_animation_channel.html">cgFloatCurveAnimationChannel</a> &amp; cgEulerAnglesTargetController::getAnimationChannel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the data associated with a specific animation channel by index. Valid indices are 0=X, 1=Y, 2=Z </p>
+
+</div>
+</div>
 <a class="anchor" id="a4e64f674593f93af5bba5b461e985b5b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -595,7 +648,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_euler_angles_target_controller.html">cgEulerAnglesTargetController</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:32 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:25 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -1,6 +1,7 @@
 var classcg_uniform_scale_target_controller =
 [
     [ "cgUniformScaleTargetController", "classcg_uniform_scale_target_controller.html#a6f1d59bf3c896d8bfdb657ca6381353f", null ],
+    [ "cgUniformScaleTargetController", "classcg_uniform_scale_target_controller.html#a2f85224b565c40dd748c64330d039648", null ],
     [ "~cgUniformScaleTargetController", "classcg_uniform_scale_target_controller.html#ac6661d7198edddd820521855412bf0ae", null ],
     [ "addLinearKey", "classcg_uniform_scale_target_controller.html#a66c36c703583e5d47147e00985227a93", null ],
     [ "deserializeChannel", "classcg_uniform_scale_target_controller.html#ac84890868f9768dad35b22799cc979fe", null ],

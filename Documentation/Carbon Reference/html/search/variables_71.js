@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quality',['quality',['../structcg_rigid_body_1_1_construct_data.html#af057d1a4c80109247f6cf9f3da158351',1,'cgRigidBody::ConstructData']]]
+  ['quality',['quality',['../structcg_rigid_body_create_params.html#a3658f678f159f0a6842879f4d5ae0702',1,'cgRigidBodyCreateParams']]]
 ];

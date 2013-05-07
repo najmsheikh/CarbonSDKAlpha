@@ -14,7 +14,7 @@
 //        used for scene special effects.                                    //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -138,7 +138,7 @@ cgWorldObject * cgParticleEmitterObject::allocateClone( const cgUID & type, cgUI
 cgBoundingBox cgParticleEmitterObject::getLocalBoundingBox( )
 {
     cgToDo( "Particles", "Compute maximum bounding box? Also override node's method to get ACTUAL bounding box." );
-    return cgBoundingBox( -FLT_MAX, -FLT_MAX, -FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX );
+    return cgBoundingBox( -500, -500, -500, 500, 500, 500 );
 }
 
 //-----------------------------------------------------------------------------
@@ -2981,15 +2981,16 @@ bool cgParticleEmitterNode::queryReferenceType( const cgUID & type ) const
 /// paying close attention to filtering rules.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgParticleEmitterNode::registerVisibility( cgVisibilitySet * pSet, cgUInt32 nFlags )
+bool cgParticleEmitterNode::registerVisibility( cgVisibilitySet * pSet )
 {
     // Allow base class to perform basic tests against filters and
     // add itself to the list of visible objects where necessary.
-    if ( !cgObjectNode::registerVisibility( pSet, nFlags ) )
+    if ( !cgObjectNode::registerVisibility( pSet ) )
         return false;
 
     // Register with the 'default' (null) material so that this node 
     // can be included in standard material batched / queue based rendering.
+    cgUInt32 nFlags = pSet->getSearchFlags();
     if ( nFlags & cgVisibilitySearchFlags::CollectMaterials )
         pSet->addVisibleMaterial( cgMaterialHandle::Null, this );
     

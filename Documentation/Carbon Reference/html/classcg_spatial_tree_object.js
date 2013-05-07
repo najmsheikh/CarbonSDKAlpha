@@ -13,5 +13,5 @@ var classcg_spatial_tree_object =
     [ "queryReferenceType", "classcg_spatial_tree_object.html#a65c7b33493df42d8eda87ee64f13c5fb", null ],
     [ "render", "classcg_spatial_tree_object.html#a13e87b22189228f44e670b88a7d16fe5", null ],
     [ "renderSubset", "classcg_spatial_tree_object.html#a904242191fed3c7d37b6370f4f683ef5", null ],
-    [ "sandboxRender", "classcg_spatial_tree_object.html#a1f2649db66cc377b80911e0d76a8ac5b", null ]
+    [ "sandboxRender", "classcg_spatial_tree_object.html#a381e81ea490a2ab54220d6f4e7eb8c54", null ]
 ];

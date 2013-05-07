@@ -15,7 +15,7 @@
 //        controls and widgets.                                              //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -38,6 +38,8 @@
 #include <Rendering/cgRenderDriver.h>
 #include <Input/cgInputTypes.h>
 #include <System/cgMessageTypes.h>
+#include <System/cgAppWindow.h>
+#include <System/cgStringUtility.h>
 
 //-----------------------------------------------------------------------------
 // Static member definitions.
@@ -62,6 +64,11 @@ cgUIManager::cgUIManager() : cgReference( cgReferenceManager::generateInternalRe
     mCapturedControl = CG_NULL;
     mFocusControl    = CG_NULL;
     mCursorLayer     = CG_NULL;
+    mCursorType      = CG_NULL;
+    mLastCursorType  = CG_NULL;
+    mCursorFrame     = 0;
+    mCursorAnimBegin = 0;
+    mConfigLoaded    = false;
     mInitialized     = false;
 
     // Register us with the mouse and keyboard input messaging groups
@@ -93,11 +100,18 @@ cgUIManager::~cgUIManager()
 //-----------------------------------------------------------------------------
 void cgUIManager::dispose( bool bDisposeBase )
 {
-    SkinMap::iterator         itSkin;
-    LayerList::iterator       itLayer;
-    ImageLibraryMap::iterator itLibrary;
+    // Show the focus window's platform cursor once more depending 
+    // on whether 'hardware' cursors were enabled.
+    if ( mInitialized )
+    {
+        cgAppWindow * pWindow = mResourceManager->getRenderDriver()->getFocusWindow();
+        if ( pWindow && !mConfig.useHardwareCursor )
+            pWindow->showCursor( true );
+    
+    } // End if initialized
 
     // Iterate through and release all layers
+    LayerList::iterator itLayer;
     while ( (itLayer = mLayers.begin()) != mLayers.end() )
     {
         (*itLayer)->scriptSafeDispose();
@@ -106,10 +120,12 @@ void cgUIManager::dispose( bool bDisposeBase )
     } // End if found layer
 
     // Iterate through and release all loaded skins
+    SkinMap::iterator itSkin;
     for ( itSkin = mSkins.begin(); itSkin != mSkins.end(); ++itSkin )
         delete itSkin->second;
 
     // Iterate through and release all loaded image libraries
+    ImageLibraryMap::iterator itLibrary;
     for ( itLibrary = mImageLibraries.begin(); itLibrary != mImageLibraries.end(); ++itLibrary )
         delete itLibrary->second;
 
@@ -130,7 +146,9 @@ void cgUIManager::dispose( bool bDisposeBase )
     mCurrentSkin     = CG_NULL;
     mCapturedControl = CG_NULL;
     mFocusControl    = CG_NULL;
+    mConfigLoaded    = false;
     mInitialized     = false;
+    mConfig          = InitConfig();
 
     // Call base class implementation if required.
     if ( bDisposeBase == true )
@@ -178,6 +196,73 @@ void cgUIManager::destroySingleton( )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : loadConfig () (Virtual)
+/// <summary>
+/// Load the interface manager configuration from the file specified.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgConfigResult::Base cgUIManager::loadConfig( const cgString & strFileName )
+{
+    // Fail if config already loaded
+    if ( mConfigLoaded )
+        return cgConfigResult::Error;
+
+    // Retrieve configuration options if provided
+    if ( !strFileName.empty() )
+    {
+        LPCTSTR strSection = _T("Interface");
+        mConfig.useHardwareCursor = GetPrivateProfileInt( strSection, _T("UseHardwareCursor"), 1, strFileName.c_str() ) > 0;
+
+    } // End if config provided
+    
+    // Signal that we have settled on good config options
+    mConfigLoaded = true;
+    
+    // Options are valid. Success!!
+    return cgConfigResult::Valid;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : loadDefaultConfig () (Virtual)
+/// <summary>
+/// Load a default configuration for the interface manager.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgConfigResult::Base cgUIManager::loadDefaultConfig( )
+{
+    // Pick sensible defaults
+    mConfig.useHardwareCursor = true;
+    
+    // Pass through to the LoadConfig function
+    return loadConfig( _T("") );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : saveConfig () (Virtual)
+/// <summary>
+/// Save the interface manager configuration to the file specified.
+/// Note : When specifying the save filename, it's important to either use a
+/// full path ("C:\\{Path}\\Config.ini") or a path relative to the
+/// current directory INCLUDING the first period (".\\Config.ini"). If
+/// not, windows will place the ini in the windows directory rather than
+/// the application dir.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgUIManager::saveConfig( const cgString & strFileName )
+{
+    // Validate requirements
+    if ( strFileName.empty() )
+        return false;
+
+    // Save configuration options
+    LPCTSTR strSection = _T("Interface");
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("UseHardwareCursor"), mConfig.useHardwareCursor, strFileName.c_str() );
+
+    // Success!!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : initialize ()
 /// <summary>
 /// Initialize the interface manager ready for processing.
@@ -185,6 +270,14 @@ void cgUIManager::destroySingleton( )
 //-----------------------------------------------------------------------------
 bool cgUIManager::initialize( cgResourceManager * pResourceManager )
 {
+    // Configuration must be loaded
+    if ( !mConfigLoaded )
+    {
+        cgAppLog::write( cgAppLog::Debug | cgAppLog::Error, _T("Interface manager configuration must be loaded prior to initialization!\n"));
+        return false;
+
+    } // End if no config loaded
+
     // Validate requirements
     if ( mInitialized == true )
     {
@@ -204,6 +297,12 @@ bool cgUIManager::initialize( cgResourceManager * pResourceManager )
     // Store references
     mResourceManager = pResourceManager;
 
+    // Show/hide the focus window's platform cursor depending on whether
+    // 'hardware' cursors were enabled.
+    cgAppWindow * pWindow = mResourceManager->getRenderDriver()->getFocusWindow();
+    if ( !mConfig.useHardwareCursor )
+        pWindow->showCursor( false );
+        
     // Allocate a text engine
     mTextEngine = new cgTextEngine( getRenderDriver() );
 
@@ -236,6 +335,14 @@ bool cgUIManager::begin( )
     // Create the top level system layers (includes the layer on which the cursor is rendered)
     if ( createSystemLayers() == false )
         return false;
+
+    // Show the emulated cursor if hardware cursors are not
+    // enabled (hidden by default).
+    if ( !mConfig.useHardwareCursor )
+        mCursorLayer->showCursor( true );
+
+    // Select the default cursor.
+    selectCursor( _T("Arrow") );
     
     // Success!
     return true;
@@ -1011,6 +1118,72 @@ cgRect cgUIManager::printText( const cgRect & rcScreen, const cgString & strText
 }
 
 //-----------------------------------------------------------------------------
+//  Name : update ()
+/// <summary>
+/// Allow the manager to update any necessary forms, controls, widgets and
+/// layers.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIManager::update()
+{
+    // Get access to the global game timer
+    cgTimer * pTimer = cgTimer::getInstance();
+
+    // Reset animation if the cursor has been swapped.
+    if ( mLastCursorType != mCursorType )
+    {
+        mCursorFrame     = 0;
+        mCursorAnimBegin = (cgFloat)pTimer->getTime();
+        mLastCursorType  = mCursorType;
+    
+    } // End if different cursor
+
+    // If the input driver is not in cursor mode, don't render a cursor
+    if ( cgInputDriver::getInstance()->getMouseMode() != cgMouseHandlerMode::Cursor )
+        return;
+
+    // Is this cursor an animating one?
+    if ( mCursorType && mCursorType->animated )
+    {
+        // What frame should we be on?
+        cgInt32 nCurrentFrame = 0;
+        nCurrentFrame = (cgInt32)(((cgFloat)pTimer->getTime() - mCursorAnimBegin) / 
+                              (mCursorType->duration / (cgFloat)mCursorType->frames.size()));
+
+        // Wrap round if looping, otherwise clamp
+        if ( mCursorType->loop )
+            nCurrentFrame %= (cgInt32)mCursorType->frames.size();
+        else
+            nCurrentFrame = min( nCurrentFrame, (cgInt32)mCursorType->frames.size() - 1 );
+
+        // If the frame is different from our current frame, update the billboard
+        if ( (cgInt32)mCursorFrame != nCurrentFrame )
+        {
+            // Update data for next frame
+            mCursorFrame = (cgInt16)nCurrentFrame;
+
+            // Set the hardware cursor to the window.
+            if ( nCurrentFrame < (cgInt32)mCursorType->platformCursors.size() )
+            {
+                cgAppWindow * pWindow = mResourceManager->getRenderDriver()->getFocusWindow();
+                pWindow->setCursor( mCursorType->platformCursors[mCursorFrame] );
+            
+            } // End if has platform cursor
+            
+            // Set the current cursor frame for the emulated layer.
+            if ( mCursorLayer )
+                mCursorLayer->selectCursor( mCursorType, mCursorFrame );
+
+        } // End if select different frame
+
+    } // End if animated cursor
+
+    // Allow the cursor layer to update.
+    if ( mCursorLayer )
+        mCursorLayer->update();
+}
+
+//-----------------------------------------------------------------------------
 //  Name : render ()
 /// <summary>
 /// Draw all currently active user interface components.
@@ -1192,6 +1365,9 @@ bool cgUIManager::processMessage( cgMessage * pMessage )
         {
             const cgMouseMoveEventArgs * pData = (cgMouseMoveEventArgs*)pMessage->messageData;
 
+            // Whenever the cursor moves, we should switch back to the default cursor image.
+            selectCursor( _T("Arrow") );
+
             // Iterate through each layer and notify them from the top layer down
             for ( itLayer = mLayers.rbegin(); itLayer != mLayers.rend(); ++itLayer )
             {
@@ -1355,10 +1531,54 @@ bool cgUIManager::processMessage( cgMessage * pMessage )
 /// cursor definition.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgUIManager::selectCursor( const cgString &strCursor )
+void cgUIManager::selectCursor( const cgString & strCursor )
 {
-    if ( mCursorLayer != CG_NULL )
-        mCursorLayer->selectCursor( strCursor );
+    // Retrieve the cursor definition from the skin
+    cgUISkin * pCurrentSkin = getCurrentSkin();
+    const cgUICursorDesc & Desc = pCurrentSkin->getCursorDefinition();
+
+    // Contains this new type?
+    cgUICursorType::Map::const_iterator itType = Desc.types.find( strCursor );
+
+    // If not, switch back to 'default' type.
+    if ( itType == Desc.types.end() )
+        itType = Desc.types.find( _T("Arrow") );
+
+    // Found the selected cursor?
+    const cgUICursorType * pNextCursor = CG_NULL;
+    if ( itType != Desc.types.end() )
+        pNextCursor = &itType->second;
+
+    // Cursor is being modified?
+    if ( pNextCursor != mCursorType )
+    {
+        // Get access to the global game timer
+        cgTimer * pTimer = cgTimer::getInstance();
+
+        // Update status variables for next frame
+        mCursorType      = pNextCursor;
+
+        // Set the hardware cursor to the window.
+        if ( !mCursorType->platformCursors.empty() )
+        {
+            cgInt32 nFrameCount = (mCursorType->animated) ? mCursorType->platformCursors.size() : 1;
+            cgAppWindow * pWindow = mResourceManager->getRenderDriver()->getFocusWindow();
+            if ( mCursorType )
+                pWindow->setCursor( mCursorType->platformCursors[mCursorFrame % nFrameCount] );
+            else
+                pWindow->setCursor( CG_NULL );
+        
+        } // End if has platform cursor
+
+        // Update software emulated cursor layer.
+        if ( mCursorLayer )
+        {
+            cgInt32 nFrameCount = (mCursorType->animated) ? mCursorType->frames.size() : 1;
+            mCursorLayer->selectCursor( mCursorType, mCursorFrame % nFrameCount );
+        
+        } // End if initialized
+
+    } // End if changing cursor
 }
 
 //-----------------------------------------------------------------------------

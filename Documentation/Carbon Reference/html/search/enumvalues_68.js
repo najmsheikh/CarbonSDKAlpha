@@ -11,6 +11,8 @@ var searchData=
   ['hdrlighting',['HDRLighting',['../classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3a7f69190e3f721ade465cc244fdc45891',1,'cgRenderDriver::HDRLighting()'],['../namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a3e5f5efa9e3d9cd0f1bd51f5ee0389ae',1,'cgSystemState::HDRLighting()']]],
   ['heightmapresident',['HeightMapResident',['../namespacecg_landscape_flags.html#a0d0e671a6b7cc38e9ad09e39a8aa75f3aea76408353d34458fc4479d074d8820d',1,'cgLandscapeFlags']]],
   ['hemisphereao',['HemisphereAO',['../classcg_s_s_a_o_processor.html#add3bf4f289df3fde28a3d83b3a986198acf79d3b1b0738bfa09f9729ee4ca8a27',1,'cgSSAOProcessor']]],
+  ['hidden',['Hidden',['../classcg_sphere_tree.html#ab6eaf5142e0d1fde8a4745534182734ca6e656fa63c39b950a79b1eb0e25bdae1',1,'cgSphereTree']]],
+  ['high',['High',['../namespacecg_navigation_avoidance_quality.html#a684959b5458c94192f10b76ef65c01f2a956963f609ceec137695f7bd1c0718cd',1,'cgNavigationAvoidanceQuality']]],
   ['highest',['Highest',['../namespacecg_thread_priority.html#af0d83fa470eb420470d8435d971c020dafee784ab071df2e0c4f4f9689151eb77',1,'cgThreadPriority']]],
   ['home',['Home',['../namespacecg_keys.html#a4febbfd6b5ecb1f73aaf2c2b711a21a6a13f9de55565dbbdf0bee482505bce6ba',1,'cgKeys']]],
   ['horizonclipped',['HorizonClipped',['../classcg_landscape.html#a1630b1bceefcf65301421367ada499cdab6a6c2dafabf5835feec527ec371a3d8',1,'cgLandscape']]],

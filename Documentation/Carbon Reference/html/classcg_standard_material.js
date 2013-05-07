@@ -19,6 +19,7 @@ var classcg_standard_material =
     [ "cgStandardMaterial", "classcg_standard_material.html#a2edb1f3bb4876015686dcc3740c005e5", null ],
     [ "~cgStandardMaterial", "classcg_standard_material.html#ab7b18cdce8a9de93eda62e797c033a22", null ],
     [ "addSampler", "classcg_standard_material.html#a833d45a1f40c4671c7ea82437dea3303", null ],
+    [ "addSampler", "classcg_standard_material.html#aa8e1e68d5e124901bac75157b754ea50", null ],
     [ "addSampler", "classcg_standard_material.html#a25c04d51202e0373d19f42ab9d6c0334", null ],
     [ "apply", "classcg_standard_material.html#a5cd06c204fd05674ffee71a8be43e142", null ],
     [ "applySamplers", "classcg_standard_material.html#a192d1f77c8610051118fb6a6d16fb567", null ],

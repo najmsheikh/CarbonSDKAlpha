@@ -1,12 +1,3 @@
-bool upgrade( World @ world, uint sourceVersion, uint destinationVersion )
-{
-    if ( sourceVersion == 0x1000003 ) // v1.00.0003
-        return upgrade_1000003_to_1000004( world );
-
-    // Unsupported source version
-    return false;
-}
-
 bool upgrade_1000003_to_1000004( World @ world )
 {
     String sql;

@@ -14,7 +14,7 @@
 //        of the core framework.                                             //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -174,6 +174,7 @@
 #include <System\cgApplication.h>
 #include <System\cgAppLog.h>
 #include <System\cgAppWindow.h>
+#include <System\cgCursor.h>
 #include <System\cgEventDispatcher.h>
 #include <System\cgExceptions.h>
 #include <System\cgFileSystem.h>
@@ -204,6 +205,8 @@
 #include <World\cgSceneCell.h>
 #include <World\cgSceneController.h>
 #include <World\cgSceneElement.h>
+#include <World\cgSphereTree.h>
+#include <World\cgBSPVisTree.h>
 #include <World\cgSpatialTree.h>
 #include <World\cgVisibilitySet.h>
 #include <World\cgWorld.h>
@@ -215,6 +218,7 @@
 #include <World\cgWorldTypes.h>
 #include <World\Elements\cgSkyElement.h>
 #include <World\Elements\cgNavigationMeshElement.h>
+#include <World\Elements\cgBSPVisTreeElement.h>
 #include <World\Lighting\cgLightingManager.h>
 #include <World\Lighting\cgLightingTypes.h>
 #include <World\Lighting\cgRadianceGrid.h>

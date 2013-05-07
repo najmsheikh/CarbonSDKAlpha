@@ -16,7 +16,7 @@
 //        environment) and the relevant components of the navigation system. //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -60,6 +60,15 @@ class CGE_API cgNavigationMeshElement : public cgSceneElement
 
 public:
     //-------------------------------------------------------------------------
+    // Public Enumerations
+    //-------------------------------------------------------------------------
+    enum SandboxRenderMethod
+    {
+        Hidden = 0,
+        ShowAll
+    };
+
+    //-------------------------------------------------------------------------
     // Constructors & Destructors
     //-------------------------------------------------------------------------
              cgNavigationMeshElement( cgUInt32 referenceId, cgScene * scene );
@@ -78,10 +87,12 @@ public:
     void                        setAgentMaximumSlope        ( cgFloat degrees, bool rebuild = false );
     void                        setAgentMaximumStepHeight   ( cgFloat height, bool rebuild = false );
     void                        setParameters               ( const cgNavigationMeshCreateParams & params, bool rebuild = false );
+    void                        setSandboxRenderMethod      ( SandboxRenderMethod method );
     bool                        buildMesh                   ( );
     cgNavigationAgent         * createAgent                 ( const cgNavigationAgentCreateParams & params, const cgVector3 & position );
     const cgNavigationMeshCreateParams& getParameters       ( ) const;
     cgNavigationHandler       * getNavigationHandler        ( ) const;
+    SandboxRenderMethod         getSandboxRenderMethod      ( ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods
@@ -122,9 +133,10 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    cgNavigationMesh              * mNavMesh;   // Constructed navigation mesh
-    cgNavigationHandler           * mHandler;   // Navigation handler associated with this mesh. Performs agent updates as required.
-    cgNavigationMeshCreateParams    mParams;    // Navigation mesh generation parameters.
+    SandboxRenderMethod             mSandboxRenderMethod;   // Method used to render when in sandbox mode.
+    cgNavigationMesh              * mNavMesh;               // Constructed navigation mesh
+    cgNavigationHandler           * mHandler;               // Navigation handler associated with this mesh. Performs agent updates as required.
+    cgNavigationMeshCreateParams    mParams;                // Navigation mesh generation parameters.
     
     //-------------------------------------------------------------------------
     // Protected Static Variables

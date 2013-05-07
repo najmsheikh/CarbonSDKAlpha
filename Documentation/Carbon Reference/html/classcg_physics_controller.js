@@ -5,6 +5,7 @@ var classcg_physics_controller =
     [ "~cgPhysicsController", "classcg_physics_controller.html#a2723a894e16d57a3b88df6cd1e706efd", null ],
     [ "applyForce", "classcg_physics_controller.html#a2ed9b59c1e985d55d5ccb4e776396736", null ],
     [ "createInstance", "classcg_physics_controller.html#a77cb92d12a322105504fba32b194c9d5", null ],
+    [ "dispose", "classcg_physics_controller.html#a596dc38051fdd2c7059c9b40647ac5a7", null ],
     [ "initialize", "classcg_physics_controller.html#a7bb362def12c2fa81b0fe66bdae43f6a", null ],
     [ "postStep", "classcg_physics_controller.html#ab2455b0a92aa4c86bc80e0b97841a13f", null ],
     [ "preStep", "classcg_physics_controller.html#a4028d3e2bae365851527bb79f5983616", null ],

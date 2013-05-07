@@ -16,7 +16,7 @@
 //        samplers and potentially even physical properties (friction etc.)  //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -135,6 +135,7 @@ public:
     const SamplerArray        & getSamplers                 ( ) const;
     cgSampler                 * getSamplerByName            ( const cgString & name );
     cgSampler                 * addSampler                  ( const cgString & name );
+    cgSampler                 * addSampler                  ( const cgString & name, const cgTextureHandle & texture );
     cgSampler                 * addSampler                  ( const cgString & name, cgInputStream texture, cgUInt32 textureLoadFlags = 0, const cgDebugSourceInfo & debugSource = cgDebugSourceInfo(_T(""),0) );
     bool                        removeSampler               ( const cgString & name );
     void                        applySamplers               ( );

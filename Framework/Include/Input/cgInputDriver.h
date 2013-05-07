@@ -15,7 +15,7 @@
 //        destruction of our DirectInput devices and associated resources.   //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -100,7 +100,6 @@ public:
         cgUInt32 keyRepeatDelay;        // The amount of time, in milliseconds, to wait before re-sending key pressed messages
         cgUInt32 keyRepeatRate;         // Once key repeat delay has passed, how quickly should the key pressed messages occur.
         cgUInt32 keyboardBufferSize;    // The size of the keyboard buffer in bytes.
-        bool     hideSystemCursor;      // Should we hide the OS cursor during initialization?
     };
 
     //-------------------------------------------------------------------------

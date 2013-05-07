@@ -12,6 +12,7 @@ var classcg_u_i_control_layer =
     [ "onMouseButtonUp", "classcg_u_i_control_layer.html#a76041d815f985c958bca986f15bb2140", null ],
     [ "onMouseMove", "classcg_u_i_control_layer.html#a03f67c4f27bd36b276968462fca4c6be", null ],
     [ "onMouseWheelScroll", "classcg_u_i_control_layer.html#ad236a15e889c5b4859dfbe1e66d156db", null ],
+    [ "onScreenLayoutChange", "classcg_u_i_control_layer.html#a6e0872f371c168451ad769b264e00c9a", null ],
     [ "registerSkinElement", "classcg_u_i_control_layer.html#acd93b7cf6710be6d95f3f7ca11b9039d", null ],
     [ "render", "classcg_u_i_control_layer.html#a036e5cccafc766b1358180e14a07b690", null ],
     [ "mControl", "classcg_u_i_control_layer.html#afa638364715aec1a710de0a98f1feb16", null ],

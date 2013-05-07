@@ -14,7 +14,7 @@
 //       detection and response routines for use throughout our application. //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -717,15 +717,15 @@ bool cgCollision::AABBIntersectAABB( bool & bContained, const cgBoundingBox & AA
 /// Classify the point against a plane.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgPlaneQuery::Class cgCollision::pointClassifyPlane( const cgVector3& Point, const cgVector3& PlaneNormal, cgFloat PlaneDistance )
+cgPlaneQuery::Class cgCollision::pointClassifyPlane( const cgVector3& Point, const cgVector3& PlaneNormal, cgFloat PlaneDistance, cgFloat Tolerance /* = CGE_EPSILON */ )
 {
     // Calculate distance from plane
     cgFloat fDistance = cgVector3::dot( Point, PlaneNormal ) + PlaneDistance;
 
     // Retrieve classification
     cgPlaneQuery::Class Location = cgPlaneQuery::On;
-    if ( fDistance < -CGE_EPSILON ) Location = cgPlaneQuery::Back;
-    if ( fDistance >  CGE_EPSILON ) Location = cgPlaneQuery::Front;
+    if ( fDistance < -Tolerance ) Location = cgPlaneQuery::Back;
+    if ( fDistance >  Tolerance ) Location = cgPlaneQuery::Front;
 
     // Return the classification
     return Location;
@@ -778,7 +778,7 @@ cgPlaneQuery::Class cgCollision::rayClassifyPlane( const cgVector3& Origin, cons
 /// Classify the poly against a plane.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgPlaneQuery::Class cgCollision::polyClassifyPlane( void * pVertices, cgUInt32 VertexCount, cgUInt32 Stride, const cgVector3& PlaneNormal, cgFloat PlaneDistance )
+cgPlaneQuery::Class cgCollision::polyClassifyPlane( void * pVertices, cgUInt32 VertexCount, cgUInt32 Stride, const cgVector3& PlaneNormal, cgFloat PlaneDistance, cgFloat Tolerance /* = CGE_EPSILON */ )
 {
     cgUInt32 Infront  = 0, Behind = 0, OnPlane=0, i;
     cgUInt8  Location = 0;
@@ -794,8 +794,8 @@ cgPlaneQuery::Class cgCollision::polyClassifyPlane( void * pVertices, cgUInt32 V
 
         // Retrieve classification
         Location = cgPlaneQuery::On;
-        if ( fDistance < -CGE_EPSILON ) Location = cgPlaneQuery::Back;
-        if ( fDistance >  CGE_EPSILON ) Location = cgPlaneQuery::Front;
+        if ( fDistance < -Tolerance ) Location = cgPlaneQuery::Back;
+        if ( fDistance >  Tolerance ) Location = cgPlaneQuery::Front;
 
         // Check the position
         if (Location == cgPlaneQuery::Front )

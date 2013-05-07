@@ -14,7 +14,7 @@
 //        results, flags, etc.                                               //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -25,6 +25,11 @@
 // cgUITypes Header Includes
 //-----------------------------------------------------------------------------
 #include <cgBaseTypes.h>
+
+//-----------------------------------------------------------------------------
+// Forward Declarations
+//-----------------------------------------------------------------------------
+class cgCursor;
 
 //-----------------------------------------------------------------------------
 // Common Global Enumerations
@@ -210,13 +215,16 @@ struct cgUICursorType
 {
     // Typedefs
     CGE_MAP_DECLARE(cgString, cgUICursorType, Map) // ToDo: unordered_map?
+    CGE_VECTOR_DECLARE( cgCursor*, PlatformCursorArray )
 
     // Variables
-    cgPoint     hotPoint;   // Offset in the billboard about which the cursor will be centered.
-    cgRectArray frames;     // List of animation frame rectangles for this cursor type
-    bool        animated;   // Is this cursor type animated?
-    bool        loop;       // Should the animation loop?
-    cgFloat     duration;   // How long should the animation last.
+    cgString                name;       // Name associated with this cursor type.
+    cgPoint                 hotPoint;   // Offset in the billboard about which the cursor will be centered.
+    cgRectArray             frames;     // List of animation frame rectangles for this cursor type
+    bool                    animated;   // Is this cursor type animated?
+    bool                    loop;       // Should the animation loop?
+    cgFloat                 duration;   // How long should the animation last.
+    PlatformCursorArray     platformCursors;
 
     // Reset method to allow for post-load validation
     void reset()

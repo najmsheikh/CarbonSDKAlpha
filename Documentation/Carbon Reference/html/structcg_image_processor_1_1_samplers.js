@@ -1,5 +1,7 @@
 var structcg_image_processor_1_1_samplers =
 [
+    [ "aLinear", "structcg_image_processor_1_1_samplers.html#aa0e3fbb086e20cf3a8d769d2ea100363", null ],
+    [ "aPoint", "structcg_image_processor_1_1_samplers.html#afa57fdf516f82121bde0a8af623f7343", null ],
     [ "curr", "structcg_image_processor_1_1_samplers.html#a94a64d3398ea3c7b43bb13a23da3bf45", null ],
     [ "depthDest", "structcg_image_processor_1_1_samplers.html#a2a9f2d724ab14ba1d2e767c1d0a31b30", null ],
     [ "depthSrc", "structcg_image_processor_1_1_samplers.html#afdf08f2a92851a24c8fe014d8c239f94", null ],
@@ -9,9 +11,11 @@ var structcg_image_processor_1_1_samplers =
     [ "horizontalPoint", "structcg_image_processor_1_1_samplers.html#a2e259e5727a3b9272a6d15acf9a96580", null ],
     [ "imageLinear", "structcg_image_processor_1_1_samplers.html#a182656d84255022adc9dcaa5b929466b", null ],
     [ "linear", "structcg_image_processor_1_1_samplers.html#a5bbd38d50b190ef1c52b84b3f852a682", null ],
+    [ "linearBorder", "structcg_image_processor_1_1_samplers.html#a870ecc55a10a43b9eca2f0fdf78d2998", null ],
     [ "normalDest", "structcg_image_processor_1_1_samplers.html#a5fef97b317ee77ba2a76a9ad0ef471d9", null ],
     [ "normalSrc", "structcg_image_processor_1_1_samplers.html#a34fdfedae37a0ac1b40b193c2abec590", null ],
     [ "point", "structcg_image_processor_1_1_samplers.html#a5c40de04cb1bc38437ba22e3c3ab9252", null ],
+    [ "pointBorder", "structcg_image_processor_1_1_samplers.html#a0808f22906151820a62027ebfb5bce21", null ],
     [ "prev", "structcg_image_processor_1_1_samplers.html#a05fd2b11af9dc0578ec9e0f4d216cf83", null ],
     [ "remap", "structcg_image_processor_1_1_samplers.html#a7ada22289e7e7a3bc46c2b142101fc1a", null ],
     [ "verticalLinear", "structcg_image_processor_1_1_samplers.html#a8c570f0b10786617a8d38b7078e93018", null ],

@@ -26,9 +26,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 enum ParticleBlendMethod
 {
-    Additive = 0,
-    Linear   = 1,
-    Screen   = 2
+    Additive        = 0,
+    Linear          = 1,
+    Screen          = 2,
+    SoftAdditive    = 3,
+    SoftLinear      = 4
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -73,6 +75,7 @@ class ParticleShader : ISurfaceShader
     ///////////////////////////////////////////////////////////////////////////
     <?samplers
         Sampler2D     sBillboardInput   : register(s0);
+        Sampler2D     sDepth            : register(s10);
     ?>
 
     ///////////////////////////////////////////////////////////////////////////
@@ -105,7 +108,7 @@ class ParticleShader : ISurfaceShader
         ///////////////////////////////////////////////////////////////
         // Blend States
         ///////////////////////////////////////////////////////////////
-        mBlendStates.resize(3);
+        mBlendStates.resize(5);
 
         // Additive blending (One -> One).
         BlendStateDesc blStates;
@@ -125,6 +128,12 @@ class ParticleShader : ISurfaceShader
         blStates.renderTarget0.sourceBlend      = BlendMode::InvDestColor;
         blStates.renderTarget0.destinationBlend = BlendMode::One;
         resources.createBlendState( mBlendStates[ParticleBlendMethod::Screen], blStates, 0, DebugSource() );
+
+        // Soft additive
+        mBlendStates[ParticleBlendMethod::SoftAdditive] = mBlendStates[ParticleBlendMethod::Additive];
+
+        // Soft linear
+        mBlendStates[ParticleBlendMethod::SoftLinear] = mBlendStates[ParticleBlendMethod::Linear];
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -142,9 +151,14 @@ class ParticleShader : ISurfaceShader
         mDriver.setBlendState( mBlendStates[blendMethod] );
         mDriver.setRasterizerState( null );
 
+        // Depth type control only required if using soft blending.
+        int depthType = 0;
+        if ( blendMethod == ParticleBlendMethod::SoftAdditive || blendMethod == ParticleBlendMethod::SoftLinear )
+            depthType = System.depthType;
+
         // Select shaders
         if ( !mOwner.selectVertexShader( "transformBillboard" ) ||
-             !mOwner.selectPixelShader( "drawBillboard", blendMethod, System.hdrLighting ) )
+             !mOwner.selectPixelShader( "drawBillboard", blendMethod, System.hdrLighting, depthType ) )
             return TechniqueResult::Abort;
 
         // Single-pass. Process is complete.
@@ -163,9 +177,14 @@ class ParticleShader : ISurfaceShader
         mDriver.setBlendState( mBlendStates[blendMethod] );
         mDriver.setRasterizerState( null );
 
+        // Depth type control only required if using soft blending.
+        int depthType = 0;
+        if ( blendMethod == ParticleBlendMethod::SoftAdditive || blendMethod == ParticleBlendMethod::SoftLinear )
+            depthType = System.depthType;
+
         // Select shaders
         if ( !mOwner.selectVertexShader( "transformBillboardYLocked" ) ||
-             !mOwner.selectPixelShader( "drawBillboard", blendMethod, System.hdrLighting ) )
+             !mOwner.selectPixelShader( "drawBillboard", blendMethod, System.hdrLighting, depthType ) )
             return TechniqueResult::Abort;
 
         // Single-pass. Process is complete.
@@ -184,9 +203,14 @@ class ParticleShader : ISurfaceShader
         mDriver.setBlendState( mBlendStates[blendMethod] );
         mDriver.setRasterizerState( null );
 
+        // Depth type control only required if using soft blending.
+        int depthType = 0;
+        if ( blendMethod == ParticleBlendMethod::SoftAdditive || blendMethod == ParticleBlendMethod::SoftLinear )
+            depthType = System.depthType;
+
         // Select shaders
         if ( !mOwner.selectVertexShader( "transformBillboardAxisLocked" ) ||
-             !mOwner.selectPixelShader( "drawBillboard", blendMethod, System.hdrLighting ) )
+             !mOwner.selectPixelShader( "drawBillboard", blendMethod, System.hdrLighting, depthType ) )
             return TechniqueResult::Abort;
 
         // Single-pass. Process is complete.
@@ -222,7 +246,7 @@ class ParticleShader : ISurfaceShader
         <?out
             float4 clipPosition     : SV_POSITION;
             float4 color            : COLOR;
-            float2 texCoords        : TEXCOORD0;
+            float3 texCoords        : TEXCOORD0;
             float  hdrScale         : TEXCOORD1;
         ?>
 
@@ -275,7 +299,8 @@ class ParticleShader : ISurfaceShader
             hdrScale = sourceProperties.w;
 
             // Copy over our texture coordinates
-            texCoords = sourceTexCoords;
+            texCoords.xy = sourceTexCoords;
+            texCoords.z = clipPosition.w;
         ?>
         
         // Valid shader
@@ -308,7 +333,7 @@ class ParticleShader : ISurfaceShader
         <?out
             float4 clipPosition    : SV_POSITION;
             float4 color           : COLOR;
-            float2 texCoords       : TEXCOORD0;
+            float3 texCoords       : TEXCOORD0;
             float  hdrScale        : TEXCOORD1;
         ?>
 
@@ -362,7 +387,8 @@ class ParticleShader : ISurfaceShader
             hdrScale = sourceProperties.w;
 
             // Copy over our texture coordinates
-            texCoords = sourceTexCoords;
+            texCoords.xy = sourceTexCoords;
+            texCoords.z = clipPosition.w;
         ?>
         
         // Valid shader
@@ -395,7 +421,7 @@ class ParticleShader : ISurfaceShader
         <?out
             float4 clipPosition    : SV_POSITION;
             float4 color           : COLOR;
-            float2 texCoords       : TEXCOORD0;
+            float3 texCoords       : TEXCOORD0;
             float  hdrScale        : TEXCOORD1;
         ?>
 
@@ -468,7 +494,8 @@ class ParticleShader : ISurfaceShader
             hdrScale = sourceProperties.w;
 
             // Copy over our texture coordinates
-            texCoords = sourceTexCoords;
+            texCoords.xy = sourceTexCoords;
+            texCoords.z = clipPosition.w;
         ?>
         
         // Valid shader
@@ -482,7 +509,7 @@ class ParticleShader : ISurfaceShader
     // Name : drawBillboard() (Pixel Shader)
     // Desc : Billboard pixel shader with optional softness support.
     //-------------------------------------------------------------------------
-    bool drawBillboard( int blendMethod, bool hdrLighting )
+    bool drawBillboard( int blendMethod, bool hdrLighting, int depthType )
     {
         /////////////////////////////////////////////
         // Definitions
@@ -491,7 +518,7 @@ class ParticleShader : ISurfaceShader
 		<?in
             float4 screenPosition   : SV_POSITION;
             float4 color            : COLOR;
-            float2 texCoords        : TEXCOORD0;
+            float3 texCoords        : TEXCOORD0; // Camera space Z is packed into Z
             float  hdrScale         : TEXCOORD1;
 		?>
 
@@ -500,17 +527,57 @@ class ParticleShader : ISurfaceShader
             float4 data0 : SV_TARGET0;
         ?>
 
+        // Constant buffer usage.
+        bool softBlending = (blendMethod == ParticleBlendMethod::SoftAdditive || blendMethod == ParticleBlendMethod::SoftLinear);
+        if ( softBlending )
+        {
+            <?cbufferrefs
+                _cbCamera;
+            ?>
+        
+        } // End if softBlending
+
         /////////////////////////////////////////////
         // Shader Code
         /////////////////////////////////////////////
         
         // Modulate the texture and interpolated color
         <?
-        data0 = sample2D( sBillboardInputTex, sBillboardInput, texCoords ) * color;
+        data0 = sample2D( sBillboardInputTex, sBillboardInput, texCoords.xy ) * color;
         ?>
 
+        // Adjust alpha based on provided depth information when soft particle blending is enabled.
+        if ( softBlending )
+        {
+            <?
+            //float2 depthBufferData;
+		    float2 screenTexCoords = screenPosition.xy * _targetSize.zw + _screenUVAdjustBias;
+            float sceneZ = decompressF32( tex2D( sDepth, screenTexCoords ).rgb ) * _cameraFar; 
+            ?>
+
+            // ToDo: Support the different depth types properly -- the above currently assumes LinearZ_Packed
+            // Sample current depth value from scene
+            /*bool isCompressedDepth = isCompressedDepthType( depthType );
+            int pureType = sampleDepthBuffer( "depthBufferData", "sDepthTex", "sDepth", "screenTexCoords", isCompressedDepth, depthType );*/
+             
+            // Adjust the particle transparency based on depth difference
+            <?
+            const float SoftFadeDistanceMin = 0.3f;
+            const float SoftFadeDistanceMax = 0.8f;
+            data0.a *= saturate( ( (sceneZ - texCoords.z) - SoftFadeDistanceMin) / (SoftFadeDistanceMax - SoftFadeDistanceMin) );
+
+            // Fade as we approach the near clip plane
+            //float clipFadeScale = 1.0f / (NearClipFadeEnd - NearClipFadeStart);
+            //float clipFadeBias  = -NearClipFadeStart * ClipFadeScale;
+            //data0.a *= saturate( In.ClipCoords.w * clipFadeScale + clipFadeBias );
+            ?>
+
+        } // End if soft particles
+
         // Pre-multiply color by alpha for screen and additive blending.
-        if ( blendMethod == ParticleBlendMethod::Screen || blendMethod == ParticleBlendMethod::Additive )
+        if ( blendMethod == ParticleBlendMethod::Screen || 
+             blendMethod == ParticleBlendMethod::Additive ||
+             blendMethod == ParticleBlendMethod::SoftAdditive )
         {
             <?
             data0.rgb *= data0.a;
@@ -538,3 +605,74 @@ class ParticleShader : ISurfaceShader
     }
  
 } // End Class : ParticleShader
+
+/*
+float4 psBillboardSoftLit( PS_BBINPUT_SOFT In ) : COLOR0
+{
+ // Combine texture and vertex color (opacities as well)
+ float4 BillboardColor = tex2D( BillboardSampler, In.TexCoords ) * In.Color;
+ BillboardColor.rgb *= BillboardColor.rgb; // sRGB fast remap
+
+ // Compute screen coords
+ float2 ScreenCoords = (In.ClipCoords.xy / In.ClipCoords.w) * float2( 0.5, -0.5 ) + float2( 0.5, 0.5 );
+ 
+ // Sample current depth value from scene
+ float SceneZ = DecompressF32( tex2D( OpaqueDepthSampler, ScreenCoords ).rgb ) * CameraFarClip;
+ 
+    // Adjust the particle transparency based on depth difference
+    BillboardColor.a *= saturate( ( abs(In.ClipCoords.w - SceneZ) - SoftFadeDistanceMin) / (SoftFadeDistanceMax - SoftFadeDistanceMin) );
+
+ // Fade as we approach the near clip plane
+ float ClipFadeScale = 1.0f / (NearClipFadeEnd - NearClipFadeStart);
+ float ClipFadeBias  = -NearClipFadeStart * ClipFadeScale;
+ BillboardColor.a   *= saturate( In.ClipCoords.w * ClipFadeScale + ClipFadeBias );
+
+ // Compute the position and normal using a ray-sphere intersection approach
+ float3 Position, N = 0;
+ Impostor( In.WorldPos, In.Normal.xy, In.Offset * 0.5, Position, N );
+ Position = Position + N * ((BillboardColor.r * 2.0f - 1.0f) * 25.0f);
+
+ // Compute the eye ray
+ float3 E = normalize( -Position );
+
+ // Sample the dual depth map
+ float4 DDM = tex2D( DualDepthSampler, ScreenCoords );
+
+ // Compute distance across the system
+ float AxisMin  = DDM.x;
+ float AxisMax  = 1.0f - DDM.y;
+ float Distance = ma(angry) 1.0f, (AxisMax - AxisMin) * CameraFarClip );
+
+ // Compute average density along the ray (Avg = Density / Thickness)
+ // Note: For the moment, we are simply using exponential density and ignoring distance
+ float Density = DDM.a;// / Distance;
+ float Transmission = exp( -Density );
+
+ /////////////////////////////////////////////////////////////////////////
+ 
+ // Compute lighting
+ float3 L;
+ float2 LightData = TestPointLighting( Position, N, LP, LR, LightWrapping, L );
+
+ // Compute attenuation
+ float Ks = 0.20f;
+ float Ka = LightData.y * LightData.y;
+
+ // Compute E.L
+ float EdotL = saturate( dot( E, -L ) );
+
+ // Compute diffuse term
+ float Id = lerp( LightData.x, LightData.x * Transmission, saturate( 2.0f * EdotL ) );
+
+ // Compute scattering term
+ float Is = EdotL * Ks * Transmission;
+
+ // Combine reflection and scattering and then attenuate
+ float3 FinalLighting = ((Is + Id) * Ka) * LightColor;
+
+ // Apply albedo
+ BillboardColor.rgb *= FinalLighting;
+
+ // Return result
+ return BillboardColor;
+};*/

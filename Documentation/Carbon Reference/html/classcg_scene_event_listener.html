@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -133,8 +133,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a78737d68b1f596c22c0b724996109eee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3afad259eca219a9538d49e070e04050"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene_event_listener.html#a3afad259eca219a9538d49e070e04050">onNodeDeleted</a> (<a class="el" href="structcg_node_updated_event_args.html">cgNodeUpdatedEventArgs</a> *e)</td></tr>
 <tr class="separator:a3afad259eca219a9538d49e070e04050"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1141ece55500c9e7821633ef86a0e1eb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene_event_listener.html#a1141ece55500c9e7821633ef86a0e1eb">onNodeNameChange</a> (<a class="el" href="structcg_node_updated_event_args.html">cgNodeUpdatedEventArgs</a> *e)</td></tr>
+<tr class="separator:a1141ece55500c9e7821633ef86a0e1eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02c6369c734367e264af11a7049013a0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene_event_listener.html#a02c6369c734367e264af11a7049013a0">onNodeParentChange</a> (<a class="el" href="structcg_node_parent_change_event_args.html">cgNodeParentChangeEventArgs</a> *e)</td></tr>
+<tr class="separator:a02c6369c734367e264af11a7049013a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e1b765b103eeeff946fd6d950c0d456"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene_event_listener.html#a0e1b765b103eeeff946fd6d950c0d456">onNodesDeleted</a> (<a class="el" href="structcg_nodes_updated_event_args.html">cgNodesUpdatedEventArgs</a> *e)</td></tr>
 <tr class="separator:a0e1b765b103eeeff946fd6d950c0d456"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85e4c2284aa1f3d6340f2ae014d834f4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene_event_listener.html#a85e4c2284aa1f3d6340f2ae014d834f4">onSceneElementAdded</a> (<a class="el" href="structcg_scene_element_event_args.html">cgSceneElementEventArgs</a> *e)</td></tr>
+<tr class="separator:a85e4c2284aa1f3d6340f2ae014d834f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe36a02c51bce49b63e0d6714f736d5b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene_event_listener.html#abe36a02c51bce49b63e0d6714f736d5b">onSceneElementDeleted</a> (<a class="el" href="structcg_scene_element_event_args.html">cgSceneElementEventArgs</a> *e)</td></tr>
+<tr class="separator:abe36a02c51bce49b63e0d6714f736d5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a475504b7cdc96201b406cf7baf159dea"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene_event_listener.html#a475504b7cdc96201b406cf7baf159dea">onSelectionUpdated</a> (<a class="el" href="structcg_selection_updated_event_args.html">cgSelectionUpdatedEventArgs</a> *e)</td></tr>
 <tr class="separator:a475504b7cdc96201b406cf7baf159dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a071a8300e500774caf568ed7f5a10eea"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene_event_listener.html#a071a8300e500774caf568ed7f5a10eea">onSelectionCleared</a> (<a class="el" href="structcg_scene_event_args.html">cgSceneEventArgs</a> *e)</td></tr>
@@ -324,6 +332,54 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a1141ece55500c9e7821633ef86a0e1eb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void cgSceneEventListener::onNodeNameChange </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcg_node_updated_event_args.html">cgNodeUpdatedEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a02c6369c734367e264af11a7049013a0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void cgSceneEventListener::onNodeParentChange </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcg_node_parent_change_event_args.html">cgNodeParentChangeEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a0e1b765b103eeeff946fd6d950c0d456"></a>
 <div class="memitem">
 <div class="memproto">
@@ -359,6 +415,54 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">virtual void cgSceneEventListener::onSceneDirtyChange </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcg_scene_event_args.html">cgSceneEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a85e4c2284aa1f3d6340f2ae014d834f4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void cgSceneEventListener::onSceneElementAdded </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcg_scene_element_event_args.html">cgSceneElementEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="abe36a02c51bce49b63e0d6714f736d5b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void cgSceneEventListener::onSceneElementDeleted </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcg_scene_element_event_args.html">cgSceneElementEventArgs</a> *&#160;</td>
           <td class="paramname"><em>e</em></td><td>)</td>
           <td></td>
         </tr>
@@ -477,7 +581,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_scene_event_listener.html">cgSceneEventListener</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:45 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:47 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

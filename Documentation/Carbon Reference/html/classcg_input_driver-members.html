@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -129,12 +129,14 @@ $(document).ready(function(){initNavTree('classcg_input_driver.html','');});
   <tr><td class="entry"><a class="el" href="classcg_reference.html#aa045c0d8acb58f600a5858b7e7e6ea0d">getReferenceId</a>() const </td><td class="entry"><a class="el" href="classcg_reference.html">cgReference</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_input_driver.html#a82e085f3c15c3d43aa5329d736c08fb7">getReferenceType</a>() const </td><td class="entry"><a class="el" href="classcg_input_driver.html">cgInputDriver</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_input_driver.html#a9da5943963357e8b8abd575d68f552e9">initialize</a>(cgAppWindow *focusWindow, bool windowed=true)</td><td class="entry"><a class="el" href="classcg_input_driver.html">cgInputDriver</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classcg_reference.html#af002aedbdfca5e97c3a7263425a60dac">isDisposed</a>()</td><td class="entry"><a class="el" href="classcg_reference.html">cgReference</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_reference.html#a34951860e42866aff9b890d704bccbc4">isDisposed</a>() const </td><td class="entry"><a class="el" href="classcg_reference.html">cgReference</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_reference.html#aecf67c7fc72ba0d465096b4584e1caba">isDisposing</a>() const </td><td class="entry"><a class="el" href="classcg_reference.html">cgReference</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_input_driver.html#afcfd6085644db75266c272f235230a98">isInitialized</a>() const </td><td class="entry"><a class="el" href="classcg_input_driver.html">cgInputDriver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_reference.html#abc11be6582c83be070816daf60d96781">isInternalReference</a>() const </td><td class="entry"><a class="el" href="classcg_reference.html">cgReference</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_input_driver.html#a65e2ad824819b7685f4d898cfe6a5041">isKeyPressed</a>(cgInt32 keyCode) const </td><td class="entry"><a class="el" href="classcg_input_driver.html">cgInputDriver</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_input_driver.html#a2bfe59ae57e49cece3154e767c6dd402">isMouseButtonPressed</a>(cgMouseButtons::Base button) const </td><td class="entry"><a class="el" href="classcg_input_driver.html">cgInputDriver</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_input_driver.html#a99041594bef8af88c7583c03364b90ef">isKeyPressed</a>(cgInt32 keyCode, bool wasNotPressed) const </td><td class="entry"><a class="el" href="classcg_input_driver.html">cgInputDriver</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_input_driver.html#a2bfe59ae57e49cece3154e767c6dd402">isMouseButtonPressed</a>(cgMouseButtons::Base button) const </td><td class="entry"><a class="el" href="classcg_input_driver.html">cgInputDriver</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_input_driver.html#a27a3a46bb3efbca73acc3c1433ae727d">isMouseButtonPressed</a>(cgMouseButtons::Base button, bool wasNotPressed) const </td><td class="entry"><a class="el" href="classcg_input_driver.html">cgInputDriver</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_input_driver.html#ac493a5d28c92d3cbd802f030c04d1308">keyCodeToCharacter</a>(cgInt32 keyCode)</td><td class="entry"><a class="el" href="classcg_input_driver.html">cgInputDriver</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_input_driver.html#a2c9b23881a7af41b92b2abb7f980428c">loadConfig</a>(const cgString &amp;fileName)</td><td class="entry"><a class="el" href="classcg_input_driver.html">cgInputDriver</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_input_driver.html#a71ad678ba23cbf298de6f9c76bd32fc9">loadDefaultConfig</a>()</td><td class="entry"><a class="el" href="classcg_input_driver.html">cgInputDriver</a></td><td class="entry"></td></tr>
@@ -174,7 +176,7 @@ $(document).ready(function(){initNavTree('classcg_input_driver.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:34 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:29 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

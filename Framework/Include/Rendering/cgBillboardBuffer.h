@@ -14,7 +14,7 @@
 //        and two dimensional (pre-transformed), screen oriented billboards. //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -117,6 +117,7 @@ public:
     const FrameDesc       * getFrameData            ( cgInt16 groupIndex, cgInt16 frameIndex ) const;
     cgInt16                 getFrameGroupIndex      ( const cgString & groupName ) const;
     cgInt16                 getFrameIndex           ( cgInt16 groupIndex, const cgString & frameName ) const;
+    cgTextureHandle         getTexture              ( ) const;
     cgSurfaceShaderHandle   getSurfaceShader        ( ) const;
     void                    setDirty                ( bool dirty ) { mBufferDirty = dirty; }
     void                    clear                   ( bool destroyBillboards );

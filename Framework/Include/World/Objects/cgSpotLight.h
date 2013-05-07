@@ -13,7 +13,7 @@
 // Desc : Spot light source classes.                                         //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -178,8 +178,6 @@ public:
     virtual bool                    testObjectShadowVolume  ( cgObjectNode * object, const cgFrustum & viewFrustum );
 
     virtual void                    computeShadowSets       ( cgCameraNode * camera );
-    // ToDo: 6767 - Remove
-    virtual void                    computeVisibility       ( );
     virtual void                    computeLevelOfDetail    ( cgCameraNode * camera );
 
     // Direct lighting

@@ -15,7 +15,7 @@
 //        Also provides support for inter-reference messaging.               //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -298,7 +298,7 @@ bool cgReferenceManager::sendMessageTo( cgUInt32 nFrom, cgUInt32 nTo, cgMessage 
     if ( !fSendDelay )
     {
         // Just send message straight away
-        issueMessage( pMessage, Individual );
+        return issueMessage( pMessage, Individual );
     
     } // End if send immediately
     else
@@ -340,7 +340,7 @@ bool cgReferenceManager::sendMessageToSubscribers( cgUInt32 nFrom, cgMessage * p
     if ( !fSendDelay )
     {
         // Just send message straight away
-        issueMessage( pMessage, Subscribers );
+        return issueMessage( pMessage, Subscribers );
         
     } // End if send immediately
     else
@@ -381,7 +381,7 @@ bool cgReferenceManager::sendMessageToAll( cgUInt32 nFrom, cgMessage * pMessage,
     if ( !fSendDelay )
     {
         // Just send message straight away
-        issueMessage( pMessage, All );
+        return issueMessage( pMessage, All );
         
     } // End if send immediately
     else
@@ -429,7 +429,7 @@ bool cgReferenceManager::sendMessageToGroup( cgUInt32 nFrom, const cgUID & Group
         if ( !fSendDelay )
         {
             // Just send message straight away
-            issueMessage( pMessage, Group );
+            return issueMessage( pMessage, Group );
 
         } // End if send immediately
         else
@@ -816,6 +816,7 @@ bool cgReferenceManager::issueMessage( cgMessage * pMessage, DestinationType Des
             SubscriberMap::iterator itSubscribers = mSubscriberTable.find( pMessage->fromId );
 
             // Did we find subscribers for this source?
+            bool bResult = false;
             if ( itSubscribers != mSubscriberTable.end() )
             {
                 // Iterate through all subscribed targets.
@@ -833,15 +834,14 @@ bool cgReferenceManager::issueMessage( cgMessage * pMessage, DestinationType Des
                         pMessage->deliveryTime = fCurrentTime;
 
                         // Send the message for processing immediately
-                        pTo->processMessage( pMessage );
+                        bResult |= pTo->processMessage( pMessage );
 
                     } // End if found
 
                 } // Next subscriber
 
             } // End if subscribers exist
-            
-            break;
+            return bResult;
 
         } // End Case Subscribers
         case Group:
@@ -850,6 +850,7 @@ bool cgReferenceManager::issueMessage( cgMessage * pMessage, DestinationType Des
             GroupMap::iterator itGroup = mMessagingGroups.find( pMessage->groupToId );
 
             // Did we find this messaging group?
+            bool bResult = false;
             if ( itGroup != mMessagingGroups.end() )
             {
                 // Iterate through all reference targets subscribed to this group
@@ -867,20 +868,20 @@ bool cgReferenceManager::issueMessage( cgMessage * pMessage, DestinationType Des
                         pMessage->deliveryTime = fCurrentTime;
 
                         // Send the message for processing immediately
-                        pTo->processMessage( pMessage );
+                        bResult |= pTo->processMessage( pMessage );
                     
                     } // End if found
 
                 } // Next subscriber
 
             } // End if group exists
-
-            break;
+            return bResult;
         
         } // End Case Group
         case All:
         {
             // Loop through all references. First the internal ones.
+            bool bResult = false;
             ReferenceMap::iterator itReference;
             for ( itReference = mInternalReferences.begin(); itReference != mInternalReferences.end(); )
             {
@@ -892,7 +893,7 @@ bool cgReferenceManager::issueMessage( cgMessage * pMessage, DestinationType Des
                     pMessage->deliveryTime = fCurrentTime;
 
                     // Send the message for processing immediately
-                    pTo->processMessage( pMessage );
+                    bResult |= pTo->processMessage( pMessage );
 
                 } // End if valid
 
@@ -909,12 +910,12 @@ bool cgReferenceManager::issueMessage( cgMessage * pMessage, DestinationType Des
                     pMessage->deliveryTime = fCurrentTime;
 
                     // Send the message for processing immediately
-                    pTo->processMessage( pMessage );
+                    bResult |= pTo->processMessage( pMessage );
 
                 } // End if valid
 
             } // Next reference
-            break;
+            return bResult;
 
         } // End Case All
     

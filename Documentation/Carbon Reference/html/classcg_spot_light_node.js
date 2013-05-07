@@ -17,7 +17,6 @@ var classcg_spot_light_node =
     [ "boundsInVolume", "classcg_spot_light_node.html#a2148deaa97b1ab86ef877d1c5c62ebf9", null ],
     [ "computeLevelOfDetail", "classcg_spot_light_node.html#af818c3c935765616498de84ccdaf1eab", null ],
     [ "computeShadowSets", "classcg_spot_light_node.html#a1e0777372824a7c2a9914518e277d999", null ],
-    [ "computeVisibility", "classcg_spot_light_node.html#aaba35ff988a043aa7c4d9f004869c9a5", null ],
     [ "createLightShape", "classcg_spot_light_node.html#ab00285ce13da4bf9f134360005b316d8", null ],
     [ "dispose", "classcg_spot_light_node.html#a56edc3b36fb31cfaf18688ac8fc487d8", null ],
     [ "endIndirectFill", "classcg_spot_light_node.html#a2326e8f911aebe6183a7bc9678668d80", null ],

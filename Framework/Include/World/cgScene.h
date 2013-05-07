@@ -14,7 +14,7 @@
 //        and rendering of an individual scene.                              //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -56,6 +56,8 @@ class cgWorldQuery;
 class cgFrustum;
 class cgLandscape;
 struct cgLandscapeImportParams;
+class cgSphereTree;
+class cgBSPTree;
 
 //-----------------------------------------------------------------------------
 // Globally Unique Type Id(s)
@@ -251,6 +253,120 @@ public:
 };
 
 //-----------------------------------------------------------------------------
+// Name : cgSceneUpdateFIFO (Class)
+/// <summary>
+/// Stores a list of nodes that need are pending further (deferred) updates 
+/// after modification by the engine or application during the scene's update 
+/// process.
+/// </summary>
+//-----------------------------------------------------------------------------
+class cgSceneUpdateFIFO
+{
+public:
+    //-------------------------------------------------------------------------
+    // Constructors & Destructors
+    //-------------------------------------------------------------------------
+    cgSceneUpdateFIFO( size_t size )
+    {
+        mCount      = 0;
+        mCurrent    = 0;
+        mBottom     = 0;
+        mSize       = size;
+        mBuffer     = new cgObjectNode*[size];
+    }
+
+    ~cgSceneUpdateFIFO( )
+    {
+        clear();
+    }
+
+    //-------------------------------------------------------------------------
+    // Public Methods
+    //-------------------------------------------------------------------------
+    cgObjectNode ** push( cgObjectNode * node )
+    {
+        ++mCount;
+        cgObjectNode ** result = &mBuffer[mCurrent];
+        mBuffer[mCurrent] = node;
+        ++mCurrent;
+        if ( mCurrent == mSize )
+            mCurrent = 0;
+        return result;
+    };
+
+    cgObjectNode * pop()
+    {
+        while ( mCurrent != mBottom )
+        {
+            --mCount;
+            cgObjectNode * result = mBuffer[mBottom];
+            ++mBottom;
+            if ( mBottom == mSize )
+                mBottom = 0;
+            if ( result )
+                return result;
+        }
+        return CG_NULL;
+    }
+
+    bool flush( cgObjectNode * node )
+    {
+        if ( mCurrent == mBottom )
+            return false;
+
+        for ( size_t i = mBottom; i != mCurrent; )
+        {
+            if ( mBuffer[i] == node )
+            {
+                mBuffer[i] = CG_NULL;
+                return true;
+            }
+            if ( ++i == mSize )
+                i = 0;
+        
+        } // Next
+        return false;
+    }
+
+    //-------------------------------------------------------------------------
+    // Name : clear ()
+    /// <summary>
+    /// Clear the buffer and deallocate internal resources.
+    /// </summary>
+    //-------------------------------------------------------------------------
+    void clear( )
+    {
+        delete []mBuffer;
+        mCount      = 0;
+        mCurrent    = 0;
+        mBottom     = 0;
+        mSize       = 0;
+        mBuffer     = CG_NULL;
+    }
+
+    //-------------------------------------------------------------------------
+    // Name : getEntryCount ()
+    /// <summary>
+    /// Determine the number of elements that are pushed onto the FIFO buffer.
+    /// </summary>
+    //-------------------------------------------------------------------------
+    inline size_t getEntryCount( ) const
+    {
+        return mCount;
+    }
+
+private:
+    //-------------------------------------------------------------------------
+    // Private Variables
+    //-------------------------------------------------------------------------
+    size_t          mCount;
+    size_t          mCurrent;
+    size_t          mBottom;
+    size_t          mSize;
+    cgObjectNode ** mBuffer;
+};
+
+//-----------------------------------------------------------------------------
 //  Name : cgScene (Class)
 /// <summary>
 /// The main class responsible for loading and managing an individual scene. 
@@ -312,6 +428,7 @@ public:
     cgObjectNode              * createObjectNode            ( bool internalNode, const cgUID & objectTypeIdentifier, bool autoAssignName, cgCloneMethod::Base cloneMethod, cgObjectNode * nodeInit, const cgTransform & initTransform );
     cgObjectNode              * loadObjectNode              ( cgUInt32 referenceId, cgCloneMethod::Base cloneMethod, bool loadChildren );
     void                        unloadObjectNode            ( cgObjectNode * node );
+    void                        unloadObjectNode            ( cgObjectNode * node, bool unloadChildren );
     void                        unloadObjectNodes           ( cgObjectNodeMap & nodes );
     cgSceneElement            * createSceneElement          ( bool internalElement, const cgUID & elementTypeIdentifier );
     void                        unloadSceneElement          ( cgSceneElement * element );
@@ -339,8 +456,7 @@ public:
     // Cell Management
     const cgVector3           & getCellSize                 ( ) const;
     void                        updateObjectOwnership       ( cgObjectNode * node );
-    void                        computeVisibility           ( const cgFrustum & frustum, cgVisibilitySet * visibilityData, cgUInt32 flags );
-    void                        computeVisibility           ( const cgBoundingBox & Bounds, cgVisibilitySet * visibilityData, cgUInt32 flags );
+    void                        computeVisibility           ( const cgFrustum & frustum, cgVisibilitySet * visibilityData );
     
     // Scene Components
     cgPhysicsWorld            * getPhysicsWorld             ( ) const;
@@ -349,6 +465,7 @@ public:
     cgResourceManager         * getResourceManager          ( ) const;
     cgLandscape               * getLandscape                ( ) const;
     cgLightingManager         * getLightingManager          ( ) const; 
+    cgSphereTree              * getSceneTree                ( ) const;
 
     // Scene Rendering
     void                        render                      ( );
@@ -521,7 +638,7 @@ protected:
 
     // Object Update Processing
     UpdateBucket            mUpdateBuckets[cgUpdateRate::Count];
-    cgObjectNodeSet         mPendingUpdates;
+    cgSceneUpdateFIFO       mPendingUpdateFIFO;
     bool                    mUpdatingEnabled;
 
     // Controllers
@@ -536,9 +653,9 @@ protected:
     
     // Cell Management
     cgSceneCellMap          mCells;                     // All defined cells, organized by 3D grid reference.
-    cgObjectNodeSet         mRootSpatialTrees;          // Set containing all root level scene spatial trees.
-    cgObjectNodeSet         mOrphanNodes;               // List of all nodes that did not make it into a spatial tree during update.
-
+    cgSphereTree          * mSceneTree;                 // Primary scene broadphase tree.
+    cgBSPTree             * mStaticVisTree;             // Static visibility tree.
+    
     // Dynamics Related
     bool                    mDynamicsEnabled;           // Is dynamics processing (physics) enabled?
 

@@ -13,7 +13,7 @@
 // Desc : Custom derived window class specific to the Windows(tm) platform.  //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//      Copyright (c) 1997 - 2008 Game Institute. All Rights Reserved.       //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -25,6 +25,7 @@
 // cgWinAppWindow Module Includes
 //-----------------------------------------------------------------------------
 #include <System/Platform/cgWinAppWindow.h>
+#include <System/Platform/cgWinCursor.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 // cgWinAppWindow Member Definitions
@@ -65,8 +66,21 @@ cgWinAppWindow::cgWinAppWindow( void * pNativeWindow ) : cgAppWindow( )
 //-----------------------------------------------------------------------------
 cgWinAppWindow::~cgWinAppWindow()
 {
+    // Release allocated memory
+    dispose( false );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : dispose () (Virtual)
+/// <summary>
+/// Release any memory, references or resources allocated by this object.
+/// </summary>
+/// <copydetails cref="cgScriptInterop::DisposableScriptObject::dispose()" />
+//-----------------------------------------------------------------------------
+void cgWinAppWindow::dispose( bool bDisposeBase )
+{
     // Clean up window data.
-    if ( mWnd != CG_NULL && mOwnsWindow == true )
+    if ( mWnd && mOwnsWindow )
     {
         DestroyWindow( mWnd );
         UnregisterClass( mWndClass.lpszClassName, mWndClass.hInstance );
@@ -76,6 +90,10 @@ cgWinAppWindow::~cgWinAppWindow()
     // Clear variables
     mWnd        = CG_NULL;
     mOwnsWindow = false;
+
+    // Call base class implementation
+    if ( bDisposeBase )
+        cgAppWindow::dispose( true );
 }
 
 //-----------------------------------------------------------------------------
@@ -291,6 +309,36 @@ LRESULT cgWinAppWindow::WndProc( HWND hWnd, cgUInt Message, WPARAM wParam, LPARA
             onClose();
             break;
 
+        case WM_SETCURSOR:
+
+            // Cursor hidden?
+            if ( mCursorVisCount <= 0 )
+            {
+                SetCursor( NULL );
+                return TRUE;
+            
+            } // End if cursor hidden
+
+            // Trigger cursor update message
+            if ( onUpdateCursor() )
+                return TRUE;
+
+            // If nothing overrides the cursor, attempt to set any
+            // cursor that was supplied via 'cgAppWindow::setCursor()'.
+            if ( mCursor )
+            {
+                SetCursor( (HCURSOR)static_cast<cgWinCursor*>(mCursor)->getCursorHandle() );
+                return TRUE;
+            
+            } // End if cursor supplied
+            else
+            {
+                SetCursor( NULL );
+                return TRUE;
+            
+            } // End if NULL cursor supplied
+            break;
+
         case WM_SIZE:
 
             // Retrieve new client rectangle for window                
@@ -304,6 +352,29 @@ LRESULT cgWinAppWindow::WndProc( HWND hWnd, cgUInt Message, WPARAM wParam, LPARA
 
     // Perform default processing
     return DefWindowProc(hWnd, Message, wParam, lParam);
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setCursor () (Virtual)
+/// <summary>
+/// Update the cursor image to be displayed when the user's cursor falls within
+/// this application window.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgWinAppWindow::setCursor( cgCursor * pCursor )
+{
+    // Call base class implementation first.
+    cgAppWindow::setCursor( pCursor );
+
+    // Attempt to set any cursor that was supplied (unless hidden)
+    if ( mCursorVisCount > 0 )
+    {
+        if ( mCursor )
+            SetCursor( static_cast<cgWinCursor*>(mCursor)->getCursorHandle() );
+        else
+            SetCursor( CG_NULL );
+    
+    } // End if show cursor
 }
 
 //-----------------------------------------------------------------------------

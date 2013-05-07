@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -328,9 +328,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6f20191d8a40773ecda9e17c7d52ed49 inherit pub_methods_classcg_spatial_tree"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree.html#a6f20191d8a40773ecda9e17c7d52ed49">computeVisibility</a> (const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;bounds, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, <a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *issuer)</td></tr>
 <tr class="memdesc:a6f20191d8a40773ecda9e17c7d52ed49 inherit pub_methods_classcg_spatial_tree"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the application to allow us to retrieve leaf visibility information and rendering subsets based on the specified object space bounding box.  <a href="#a6f20191d8a40773ecda9e17c7d52ed49"></a><br/></td></tr>
 <tr class="separator:a6f20191d8a40773ecda9e17c7d52ed49 inherit pub_methods_classcg_spatial_tree"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab38b3e88f45c99d70bb1067e5552095e inherit pub_methods_classcg_spatial_tree"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree.html#ab38b3e88f45c99d70bb1067e5552095e">CollectLeaves</a> (cgSceneLeafArray &amp;leaves, const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;bounds, <a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *issuer)</td></tr>
-<tr class="memdesc:ab38b3e88f45c99d70bb1067e5552095e inherit pub_methods_classcg_spatial_tree"><td class="mdescLeft">&#160;</td><td class="mdescRight">This default implementation can called by the application to retrieve a list of all of the leaves that were intersected by the specified object space bounding box.  <a href="#ab38b3e88f45c99d70bb1067e5552095e"></a><br/></td></tr>
-<tr class="separator:ab38b3e88f45c99d70bb1067e5552095e inherit pub_methods_classcg_spatial_tree"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af02c1ba2abe0ac51bd9364fc83dbdb1b inherit pub_methods_classcg_spatial_tree"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree.html#af02c1ba2abe0ac51bd9364fc83dbdb1b">collectLeaves</a> (cgSceneLeafArray &amp;leaves, const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;bounds, <a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *issuer)</td></tr>
+<tr class="memdesc:af02c1ba2abe0ac51bd9364fc83dbdb1b inherit pub_methods_classcg_spatial_tree"><td class="mdescLeft">&#160;</td><td class="mdescRight">This default implementation can called by the application to retrieve a list of all of the leaves that were intersected by the specified object space bounding box.  <a href="#af02c1ba2abe0ac51bd9364fc83dbdb1b"></a><br/></td></tr>
+<tr class="separator:af02c1ba2abe0ac51bd9364fc83dbdb1b inherit pub_methods_classcg_spatial_tree"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae528547f68156cb659faefdddfb85478 inherit pub_methods_classcg_spatial_tree"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree.html#ae528547f68156cb659faefdddfb85478">updateObjectOwnership</a> (<a class="el" href="classcg_object_node.html">cgObjectNode</a> *object, const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;objectBounds, <a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *issuer, bool testOnly)</td></tr>
+<tr class="memdesc:ae528547f68156cb659faefdddfb85478 inherit pub_methods_classcg_spatial_tree"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows the spatial tree to determine if it can / wants to own the specified object and optionally inserts it into the relevant leaf.  <a href="#ae528547f68156cb659faefdddfb85478"></a><br/></td></tr>
+<tr class="separator:ae528547f68156cb659faefdddfb85478 inherit pub_methods_classcg_spatial_tree"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classcg_script_interop_1_1_disposable_script_object"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcg_script_interop_1_1_disposable_script_object')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcg_script_interop_1_1_disposable_script_object.html">cgScriptInterop::DisposableScriptObject</a></td></tr>
 <tr class="memitem:a815b9a991113bb99acea9e15af2920a2 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a815b9a991113bb99acea9e15af2920a2">DisposableScriptObject</a> ()</td></tr>
 <tr class="separator:a815b9a991113bb99acea9e15af2920a2 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3666,7 +3669,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_landscape.html">cgLandscape</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:34 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:30 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

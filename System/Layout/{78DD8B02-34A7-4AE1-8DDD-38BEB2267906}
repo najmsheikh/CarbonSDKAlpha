@@ -1,0 +1,24 @@
+--Table: SceneElements::BSPVisTree -- {78DD8B02-34A7-4AE1-8DDD-38BEB2267906}
+
+CREATE TABLE [SceneElements::BSPVisTree] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [Type] smallint DEFAULT 0,
+  [SandboxRenderMethod] smallint DEFAULT 0, 
+  [ManualRebuild] tinyint(1) DEFAULT 0, 
+  [RefCount] integer DEFAULT 0);
+
+CREATE TABLE IF NOT EXISTS [SceneElements::BSPVisTree::Occluders] (
+  [OccluderId] integer NOT NULL PRIMARY KEY, 
+  [ElementId] integer,
+  [GeometryId] integer);
+
+CREATE INDEX IF NOT EXISTS [SceneElements::BSPVisTree::Occluders_ElementIndex] ON [SceneElements::BSPVisTree::Occluders] ([ElementId]);
+
+CREATE TRIGGER [SceneElements::BSPVisTree_OnDelete]
+  BEFORE DELETE
+  ON [SceneElements::BSPVisTree]
+  BEGIN
+    DELETE FROM [Scenes::Elements] WHERE ElementId=old.RefId;
+    DELETE FROM [Scenes::BSPVisTree::Occluders] WHERE ElementId=old.RefId;
+  END;
+

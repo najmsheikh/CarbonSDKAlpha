@@ -2,10 +2,7 @@
 
 CREATE TABLE [Objects::Bone] (
   [RefId] integer NOT NULL PRIMARY KEY,
-  [Width] real DEFAULT 0.15,
-  [Height] real DEFAULT 0.15,
-  [Length] real DEFAULT 0.0,
-  [Taper] real DEFAULT 0.9,
+  [HasCollisionVolume] tinyint(1) DEFAULT 0,
   [RefCount] integer DEFAULT 0);
 
 CREATE TRIGGER [Objects::Bone_OnDelete]

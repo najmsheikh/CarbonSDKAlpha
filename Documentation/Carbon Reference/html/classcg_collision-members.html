@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -118,11 +118,11 @@ $(document).ready(function(){initNavTree('classcg_collision.html','');});
   <tr class="even"><td class="entry"><a class="el" href="classcg_collision.html#a9000b3cec561957bc8c4e6897bc25bdc">dispose</a>(bool disposeBase)</td><td class="entry"><a class="el" href="classcg_collision.html">cgCollision</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_collision.html#a25bdd1ee035b6340464e918c4a0f9aa0">ellipsoidIntersectScene</a>(cgObjectNode *sourceObject, const cgVector3 &amp;center, const cgVector3 &amp;radius, const cgVector3 &amp;velocity, CollIntersect intersections[], cgUInt32 &amp;intersectionCount, bool inputEllipsoidSpace=false, bool returnEllipsoidSpace=false)</td><td class="entry"><a class="el" href="classcg_collision.html">cgCollision</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a5da40dc03376bc8d5c50145690eb5f28">mScriptRefCount</a></td><td class="entry"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html">cgScriptInterop::DisposableScriptObject</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_collision.html#a0dd4e46f21a0c0eba3bb9b3942c94247">pointClassifyPlane</a>(const cgVector3 &amp;point, const cgVector3 &amp;planeNormal, cgFloat planeDistance)</td><td class="entry"><a class="el" href="classcg_collision.html">cgCollision</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_collision.html#af2721aa17ca12ea2f9e44ed376f39e44">pointClassifyPlane</a>(const cgVector3 &amp;point, const cgVector3 &amp;planeNormal, cgFloat planeDistance, cgFloat tolerance=CGE_EPSILON)</td><td class="entry"><a class="el" href="classcg_collision.html">cgCollision</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_collision.html#a79f3a90321e2fcffa187d25d7e213973">pointInAABB</a>(const cgVector3 &amp;point, const cgBoundingBox &amp;AABB, bool ignoreX=false, bool ignoreY=false, bool ignoreZ=false)</td><td class="entry"><a class="el" href="classcg_collision.html">cgCollision</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_collision.html#a1b1af4eef9598327893c44fb686f0844">pointInTriangle</a>(const cgVector3 &amp;point, const cgVector3 &amp;v1, const cgVector3 &amp;v2, const cgVector3 &amp;v3, float tolerance=0.0f)</td><td class="entry"><a class="el" href="classcg_collision.html">cgCollision</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_collision.html#ab806408d3178422a9ee36e1ef98a5695">pointInTriangle</a>(const cgVector3 &amp;point, const cgVector3 &amp;v1, const cgVector3 &amp;v2, const cgVector3 &amp;v3, const cgVector3 &amp;normal, float tolerance=0.0f)</td><td class="entry"><a class="el" href="classcg_collision.html">cgCollision</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_collision.html#a5bb9a2f44e289bb35a0ddfd0b668e326">polyClassifyPlane</a>(void *vertices, cgUInt32 vertexCount, cgUInt32 stride, const cgVector3 &amp;planeNormal, cgFloat planeDistance)</td><td class="entry"><a class="el" href="classcg_collision.html">cgCollision</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_collision.html#a0e07ae4f7a15f2d0cc139a98392ed2e5">polyClassifyPlane</a>(void *vertices, cgUInt32 vertexCount, cgUInt32 stride, const cgVector3 &amp;planeNormal, cgFloat planeDistance, cgFloat tolerance=CGE_EPSILON)</td><td class="entry"><a class="el" href="classcg_collision.html">cgCollision</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_collision.html#a3d2078dfea7b33b32f9e8af676d365d8a700e5d29f894dfd709eeabd6045662b6">Query_All</a> enum value</td><td class="entry"><a class="el" href="classcg_collision.html">cgCollision</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_collision.html#a3d2078dfea7b33b32f9e8af676d365d8acc030b8d00da128b3d5069651e23a7d7">Query_None</a> enum value</td><td class="entry"><a class="el" href="classcg_collision.html">cgCollision</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_collision.html#a3d2078dfea7b33b32f9e8af676d365d8a83307868096af8b6acb29f94ad94777f">Query_Selective</a> enum value</td><td class="entry"><a class="el" href="classcg_collision.html">cgCollision</a></td><td class="entry"></td></tr>
@@ -155,7 +155,7 @@ $(document).ready(function(){initNavTree('classcg_collision.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:30 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:18 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

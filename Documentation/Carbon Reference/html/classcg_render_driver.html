@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -166,6 +166,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0b68fa8450e8dc113545d5c690b98b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a477d6d55960741dc9fc03ce4f167cdf3"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a477d6d55960741dc9fc03ce4f167cdf3">saveConfig</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;fileName)=0</td></tr>
 <tr class="separator:a477d6d55960741dc9fc03ce4f167cdf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a798c00808b06a6c67819a34acdecf651"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a798c00808b06a6c67819a34acdecf651">updateDisplayMode</a> (const <a class="el" href="structcg_display_mode.html">cgDisplayMode</a> &amp;mode, bool windowed, bool verticalSync)=0</td></tr>
+<tr class="separator:a798c00808b06a6c67819a34acdecf651"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9d7b6ede9fba9a02aafb9c35babc5e0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#aa9d7b6ede9fba9a02aafb9c35babc5e0">windowResized</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> width, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> height)</td></tr>
 <tr class="memdesc:aa9d7b6ede9fba9a02aafb9c35babc5e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify the render driver that the render window was resized. Note : This should only be called directly by the application if the render driver was initialized using a custom window.  <a href="#aa9d7b6ede9fba9a02aafb9c35babc5e0"></a><br/></td></tr>
 <tr class="separator:aa9d7b6ede9fba9a02aafb9c35babc5e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -690,9 +692,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#abc11be6582c83be070816daf60d96781">isInternalReference</a> () const </td></tr>
 <tr class="memdesc:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this reference is either an internal or serialized reference.  <a href="#abc11be6582c83be070816daf60d96781"></a><br/></td></tr>
 <tr class="separator:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#af002aedbdfca5e97c3a7263425a60dac">isDisposed</a> ()</td></tr>
-<tr class="memdesc:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#af002aedbdfca5e97c3a7263425a60dac"></a><br/></td></tr>
-<tr class="separator:af002aedbdfca5e97c3a7263425a60dac inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a34951860e42866aff9b890d704bccbc4">isDisposed</a> () const </td></tr>
+<tr class="memdesc:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object has been disposed.  <a href="#a34951860e42866aff9b890d704bccbc4"></a><br/></td></tr>
+<tr class="separator:a34951860e42866aff9b890d704bccbc4 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#aecf67c7fc72ba0d465096b4584e1caba">isDisposing</a> () const </td></tr>
 <tr class="memdesc:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object is in the process of being disposed.  <a href="#aecf67c7fc72ba0d465096b4584e1caba"></a><br/></td></tr>
 <tr class="separator:aecf67c7fc72ba0d465096b4584e1caba inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -773,9 +775,10 @@ Protected Types</h2></td></tr>
 &#160;&#160;<a class="el" href="classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3a22788149c6b1a98d6fee0422db0a7f30">NormalizedDistance</a> = 0x800, 
 <a class="el" href="classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3ae7af9ece2c0c5a46d365eb524175e2dc">SurfaceNormals</a> = 0x1000, 
 <a class="el" href="classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3ab9849783919db76fa610c0e3c9fd2fa1">PackedDepth</a> = 0x2000, 
-<a class="el" href="classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3a8f0fc5c2007f9d0f1bbf950de4a9fcdf">ColorWrites</a> = 0x4000, 
+<a class="el" href="classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3aee94bad64ac95e1215958fe1e675e588">DepthStencilReads</a> = 0x4000, 
 <br/>
-&#160;&#160;<a class="el" href="classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3a65210ac381fac6b70d29b5d531aa3dd1">CullMode</a> = 0x8000
+&#160;&#160;<a class="el" href="classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3a8f0fc5c2007f9d0f1bbf950de4a9fcdf">ColorWrites</a> = 0x8000, 
+<a class="el" href="classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3a65210ac381fac6b70d29b5d531aa3dd1">CullMode</a> = 0x10000
 <br/>
  }</td></tr>
 <tr class="separator:a99ef3d1a928e46ff08c5db2ab8b3c1c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -904,6 +907,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:ac55c1338c10c0e4ea6ff0254119c8d25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80e2d84070e1f1122c050864330a0f8a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a80e2d84070e1f1122c050864330a0f8a">mStateFilteringEnabled</a></td></tr>
 <tr class="separator:a80e2d84070e1f1122c050864330a0f8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2353f9502ead923af5f7a9fc0e607148"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a2353f9502ead923af5f7a9fc0e607148">mSuppressResizeEvent</a></td></tr>
+<tr class="separator:a2353f9502ead923af5f7a9fc0e607148"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6cebaef06a5d3ab37567f10e12e77d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#a118acf0914cb9c76815e189ac6f8a0c0">cgScriptHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#aa6cebaef06a5d3ab37567f10e12e77d2">mSystemExportScript</a></td></tr>
 <tr class="separator:aa6cebaef06a5d3ab37567f10e12e77d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abce9b8fb6894d0d9b8316d238241340e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_script_object.html">cgScriptObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#abce9b8fb6894d0d9b8316d238241340e">mSystemExports</a></td></tr>
@@ -1179,6 +1184,8 @@ Static Protected Attributes</h2></td></tr>
 <tr><td valign="top"><em><a class="anchor" id="a99ef3d1a928e46ff08c5db2ab8b3c1c3ae7af9ece2c0c5a46d365eb524175e2dc"></a>SurfaceNormals</em>&nbsp;</td><td>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="a99ef3d1a928e46ff08c5db2ab8b3c1c3ab9849783919db76fa610c0e3c9fd2fa1"></a>PackedDepth</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a99ef3d1a928e46ff08c5db2ab8b3c1c3aee94bad64ac95e1215958fe1e675e588"></a>DepthStencilReads</em>&nbsp;</td><td>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="a99ef3d1a928e46ff08c5db2ab8b3c1c3a8f0fc5c2007f9d0f1bbf950de4a9fcdf"></a>ColorWrites</em>&nbsp;</td><td>
 </td></tr>
@@ -6172,6 +6179,46 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a798c00808b06a6c67819a34acdecf651"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool cgRenderDriver::updateDisplayMode </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structcg_display_mode.html">cgDisplayMode</a> &amp;&#160;</td>
+          <td class="paramname"><em>mode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>windowed</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>verticalSync</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a9d58aab65019e97d7d64a88e8965c0b8"></a>
 <div class="memitem">
 <div class="memproto">
@@ -7450,6 +7497,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a2353f9502ead923af5f7a9fc0e607148"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgRenderDriver::mSuppressResizeEvent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="abce9b8fb6894d0d9b8316d238241340e"></a>
 <div class="memitem">
 <div class="memproto">
@@ -7760,7 +7827,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_render_driver.html">cgRenderDriver</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:44 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:44 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

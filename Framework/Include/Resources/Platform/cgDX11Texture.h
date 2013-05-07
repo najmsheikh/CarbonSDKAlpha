@@ -14,7 +14,7 @@
 //        resource data (DX11 implementation).                               //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -89,6 +89,7 @@ public:
     virtual void            unlock              ( bool updateMips = false );
     virtual bool            getImageData        ( cgImage & imageOut );
     virtual bool            updateMipLevels     ( );
+	virtual bool            clone               ( cgTexture * destinationTexture, const cgRect & sourceRectangle, const cgRect & destinationRectangle );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (cgResource)
@@ -1131,6 +1132,20 @@ bool cgDX11Texture<_BaseClass>::getImageData( cgImage & imageOut )
     return true;*/
     // 7777
     return false;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : clone () (Virtual)
+/// <summary>
+/// Copy the specified region of this texture into the specified region of the
+/// destination texture.
+/// </summary>
+//-----------------------------------------------------------------------------
+template <class _BaseClass>
+bool cgDX11Texture<_BaseClass>::clone( cgTexture * destinationTexture, const cgRect & sourceRectangle, const cgRect & destinationRectangle )
+{
+	// 7777
+	return false;
 }
 
 //-----------------------------------------------------------------------------

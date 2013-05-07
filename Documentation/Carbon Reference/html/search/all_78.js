@@ -9,6 +9,7 @@ var searchData=
   ['xbutton2',['XButton2',['../namespacecg_mouse_buttons.html#a397643424a5a968725d20d518aad8a16a36c5c9e3a9e307b1afe3e75c1766b749',1,'cgMouseButtons']]],
   ['xunitaxis',['xUnitAxis',['../classcg_transform.html#a1c9b025fd9d45493a9da50f0a4f1d9d8',1,'cgTransform']]],
   ['xx',['xx',['../classcg_least_squares_sums.html#a0e73b1af62f2456d6830b7db22a3b672',1,'cgLeastSquaresSums']]],
-  ['xy',['xy',['../classcg_least_squares_sums.html#aad0be9871121bd967047210b6ce2c5f2',1,'cgLeastSquaresSums']]],
+  ['xy',['xy',['../classcg_least_squares_sums.html#aad0be9871121bd967047210b6ce2c5f2',1,'cgLeastSquaresSums::xy()'],['../classcg_vector4.html#a4fcf69dd070abcd76c8cf0e24c86c007',1,'cgVector4::xy()'],['../classcg_vector3.html#af1e18fbdc0bebf188c8393b7eb83ed9a',1,'cgVector3::xy()']]],
+  ['xyz',['xyz',['../classcg_vector4.html#a13c99427a20bbdbbab760f7d109fd905',1,'cgVector4']]],
   ['xz',['xz',['../classcg_least_squares_sums.html#ac5511b183c59b887f276a538169cbc82',1,'cgLeastSquaresSums']]]
 ];

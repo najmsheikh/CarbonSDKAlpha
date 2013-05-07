@@ -35,8 +35,7 @@ namespace AudioDriver
             BINDSUCCESS( engine->registerObjectProperty( "InputDriverConfig", "float mouseSensitivity" , offsetof(cgInputDriver::InitConfig,mouseSensitivity) ) );
             BINDSUCCESS( engine->registerObjectProperty( "InputDriverConfig", "uint keyRepeatDelay"    , offsetof(cgInputDriver::InitConfig,keyRepeatDelay) ) );
             BINDSUCCESS( engine->registerObjectProperty( "InputDriverConfig", "uint keyRepeatRate"     , offsetof(cgInputDriver::InitConfig,keyRepeatRate) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "InputDriverConfig", "uint keyboardBufferSize", offsetof(cgInputDriver::InitConfig,keyboardBufferSize) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "InputDriverConfig", "bool hideSystemCursor"  , offsetof(cgInputDriver::InitConfig,hideSystemCursor) ) );*/
+            BINDSUCCESS( engine->registerObjectProperty( "InputDriverConfig", "uint keyboardBufferSize", offsetof(cgInputDriver::InitConfig,keyboardBufferSize) ) );*/
 
             ///////////////////////////////////////////////////////////////////////
             // cgAudioDriver (Class)

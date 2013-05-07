@@ -16,7 +16,7 @@
 //        samplers and potentially even physical properties (friction etc.)  //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -1337,8 +1337,9 @@ bool cgStandardMaterial::setSurfaceShader( const cgSurfaceShaderHandle & hShader
 //-----------------------------------------------------------------------------
 cgSurfaceShaderHandle & cgStandardMaterial::getActiveSurfaceShader( )
 {
-    // Do we have a surface shader, or should the we use the manager default?
-    cgSurfaceShaderHandle & hShader = (mSurfaceShader.isValid()) ? mSurfaceShader : mDefaultShader;
+    // Do we have a surface shader (that successfully loaded), or should the 
+    // we use the manager default?
+    cgSurfaceShaderHandle & hShader = (mSurfaceShader.isValid() && mSurfaceShader->getShaderIdentifier()) ? mSurfaceShader : mDefaultShader;
     if ( !hShader.isValid() )
     {
         mManager->createDefaultSurfaceShader( &mDefaultShader, 0, cgDebugSource() );
@@ -1410,7 +1411,67 @@ cgSampler * cgStandardMaterial::addSampler( const cgString & strName, cgInputStr
     // ToDo: 9999 - Figure out how to handle the update of the resource manager's 
     //              material look up table perhaps we can just build it on the fly?.
     // ToDo: 9999 - If alpha blended, set the bTwoSided flag to true and set a default 
-    //              light transfer value if not provided. Is this still necessary? Ask Joe.
+    //              light transfer value if not provided. Is this still necessary?
+
+    // Samplers are now dirty
+    mDBDirtyFlags |= SamplersDirty;
+    serializeMaterial();
+
+    // Success!
+    return pSampler;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : addSampler ()
+/// <summary>
+/// Create the specified sampler and add it to our internal list, setting the
+/// supplied texture to the sampler directly. Returns the newly created sampler 
+/// if any.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgSampler * cgStandardMaterial::addSampler( const cgString & strName, const cgTextureHandle & texture )
+{
+    // We must already be associated with a resource manager.
+    if ( !mManager )
+        return CG_NULL;
+
+    // If the sampler name is invalid, or one with this
+    // name already exists, fail.
+    if ( strName.empty() || mNamedSamplers.find( strName ) != mNamedSamplers.end() )
+        return CG_NULL;
+
+    // Do we have a surface shader, or should the samplers use the manager default?
+    cgSurfaceShaderHandle & hShader = getActiveSurfaceShader();
+
+    // Create a new sampler of this type (internal or serialized depending on 
+    // the properties of this parent material).
+    cgSampler * pSampler = CG_NULL;
+    if ( isInternalReference() == false )
+        pSampler = mManager->createSampler( mWorld, strName, hShader );
+    else
+        pSampler = mManager->createSampler( strName, hShader );
+    if ( !pSampler )
+        return CG_NULL;
+
+    // Apply the specified texture
+    pSampler->setTexture( texture );
+    
+    // Add the material as a reference holder.
+    pSampler->addReference( this, isInternalReference() );
+
+    // Push this sampler to all appropriate lists
+    mSamplers.push_back( pSampler );
+    mNamedSamplers[ strName ] = pSampler;
+
+    // Update cached members.
+    onSamplerAdded( strName, pSampler );
+
+    // ToDo: 9999 - Specular mask packing into diffuse alpha.
+    // ToDo: 9999 - Remove BeginPopulate() / EndPopulate()
+    // ToDo: 9999 - Figure out how to handle the update of the resource manager's 
+    //              material look up table perhaps we can just build it on the fly?.
+    // ToDo: 9999 - If alpha blended, set the bTwoSided flag to true and set a default 
+    //              light transfer value if not provided. Is this still necessary?
 
     // Samplers are now dirty
     mDBDirtyFlags |= SamplersDirty;

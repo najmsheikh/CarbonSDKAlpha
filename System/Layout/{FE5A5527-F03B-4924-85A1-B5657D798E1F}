@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS [DataSources::AnimationSet::TargetControllers] (
   [TargetControllerId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
   [TargetDataId] integer,
   [ControllerIdentifier] varchar(255),
-  [ControllerType] smallint DEFAULT(0));
+  [ControllerType] smallint DEFAULT(0),
+  [ControllerParams] BLOB);
 
 CREATE INDEX IF NOT EXISTS [DataSources::AnimationSet::TargetControllers_TargetDataIdIndex] ON [DataSources::AnimationSet::TargetControllers] ([TargetDataId]);
 CREATE INDEX IF NOT EXISTS [DataSources::AnimationSet::TargetControllers_ControllerIdentifierMatch] ON [DataSources::AnimationSet::TargetControllers] ([TargetDataId], [ControllerIdentifier]);

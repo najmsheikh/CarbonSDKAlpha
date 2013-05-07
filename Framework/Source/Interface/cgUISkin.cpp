@@ -17,7 +17,7 @@
 //        system.                                                            //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -31,6 +31,9 @@
 #include <Interface/cgUISkin.h>
 #include <Interface/cgUILayers.h>
 #include <Rendering/cgBillboardBuffer.h>
+#include <Resources/cgTexture.h>
+#include <System/cgImage.h>
+#include <System/cgCursor.h>
 #include <System/cgStringUtility.h>
 #include <System/cgXML.h>
 
@@ -187,6 +190,21 @@ cgUISkin::cgUISkin( )
 //-----------------------------------------------------------------------------
 cgUISkin::~cgUISkin()
 {
+    // Release any allocated cursors.
+    cgUICursorType::Map::iterator itType;
+    cgUICursorType::Map & Types = mCursorDefinition.types;
+    for ( itType = Types.begin(); itType != Types.end(); ++itType )
+    {
+        cgUICursorType & Type = itType->second;
+        for ( size_t i = 0; i < Type.platformCursors.size(); ++i )
+        {
+            cgCursor * pCursor = Type.platformCursors[i];
+            if ( pCursor )
+                pCursor->removeReference( CG_NULL );
+        
+        } // Next cursor
+
+    } // Next cursor type
 }
 
 //-----------------------------------------------------------------------------
@@ -401,7 +419,7 @@ void cgUISkin::parseRegion( const cgXMLNode & xNode, cgPointArray & Region )
 void cgUISkin::parseCursor( const cgXMLNode & xNode, const cgString & strBaseDirectory, cgUICursorDesc & Desc )
 {
     cgXMLNode  xChild, xType, xFrames, xPlayback;
-    cgString   strTypeName, strValue;
+    cgString   strValue;
 
     // Reset the description structure
     Desc.Reset();
@@ -426,7 +444,7 @@ void cgUISkin::parseCursor( const cgXMLNode & xNode, const cgString & strBaseDir
         Type.reset();
 
         // Get the type name
-        if ( !xType.getAttributeText( _T("name"), strTypeName ) )
+        if ( !xType.getAttributeText( _T("name"), Type.name ) )
             continue;
         
         // Is this cusror type animated?
@@ -446,7 +464,7 @@ void cgUISkin::parseCursor( const cgXMLNode & xNode, const cgString & strBaseDir
             // Retrieve the frames node containing the animation rectangles
             xFrames = xType.getChildNode( _T("Frames") );
             if ( xFrames.isEmpty() )
-                throw _T("Cursor type '") + strTypeName + _T("' is listed as animated but contains no frame definitions");
+                throw _T("Cursor type '") + Type.name + _T("' is listed as animated but contains no frame definitions");
             
             // Retrieve all frame rectangles
             for ( cgUInt32 j = 0; ; )
@@ -469,12 +487,12 @@ void cgUISkin::parseCursor( const cgXMLNode & xNode, const cgString & strBaseDir
             // Retrieve the playback descriptor for this animated cursor
             xPlayback = xType.getChildNode( _T("Playback") );
             if ( xPlayback.isEmpty() )
-                throw _T("Cursor type '") + strTypeName + _T("' is listed as animated but contains no playback descriptor");
+                throw _T("Cursor type '") + Type.name + _T("' is listed as animated but contains no playback descriptor");
 
             // Retrieve playback parameters
             xChild = xPlayback.getChildNode( _T("Duration") );
             if ( xChild.isEmpty() )
-                throw _T("Cursor type '") + strTypeName + _T("' is listed as animated but contains no animation duration");
+                throw _T("Cursor type '") + Type.name + _T("' is listed as animated but contains no animation duration");
             cgStringParser( xChild.getText() ) >> Type.duration;
 
             xChild = xPlayback.getChildNode( _T("Loop") );
@@ -489,7 +507,7 @@ void cgUISkin::parseCursor( const cgXMLNode & xNode, const cgString & strBaseDir
             // Simply retrieve the single rectangle
             xChild = xType.getChildNode( _T("Rect") );
             if ( xChild.isEmpty() )
-                throw _T("Cursor type '") + strTypeName + _T("' is listed as static but contains no child rectangle");
+                throw _T("Cursor type '") + Type.name + _T("' is listed as static but contains no child rectangle");
             
             // Extract the rectangle data
             cgStringUtility::tryParse( xChild.getText(), rcFrame );
@@ -500,7 +518,7 @@ void cgUISkin::parseCursor( const cgXMLNode & xNode, const cgString & strBaseDir
         } // End if static / single frame
 
         // Add the cursor type to the definition
-        Desc.types[ strTypeName ] = Type;
+        Desc.types[ Type.name ] = Type;
 
     } // Next cursor type
 }
@@ -840,17 +858,40 @@ bool cgUISkin::prepareControlFrames( cgUIControlLayer * pLayer, cgUIFormStyle::B
 /// in the skin definition for the cursor.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgUISkin::prepareCursorFrames( cgBillboardBuffer * pBuffer )
+bool cgUISkin::prepareCursorFrames( cgBillboardBuffer * pBuffer, cgRenderDriver * pRenderDriver )
 {
     cgInt16  nGroupIndex = 0;
     cgUInt32 i;
+
+    // Get access to required systems.
+    cgResourceManager * pResources = pRenderDriver->getResourceManager();
+
+    // Generate platform specific cursor data from the provided cursor
+    // texture file to use when cursor emulation is not in use.
+    cgImage * pCursorImage = CG_NULL;
+    cgTextureHandle hTexture = pBuffer->getTexture();
+    cgTexture * pTexture = hTexture.getResource();
+    if ( pTexture && pTexture->isLoaded() )
+    {
+        if ( ( pCursorImage = cgImage::createInstance( pTexture->getSize().width, pTexture->getSize().height, cgBufferFormat::B8G8R8A8, false ) ) )
+        {
+            if ( !pTexture->getImageData( *pCursorImage ) )
+            {
+                delete pCursorImage;
+                pCursorImage = CG_NULL;
+
+            } // End if failed
+
+        } // End if created
+    
+    } // End if loaded
     
     // Iterate through each defined cursor type
-    cgUICursorType::Map::const_iterator itType;
-    const cgUICursorType::Map & Types = mCursorDefinition.types;
+    cgUICursorType::Map::iterator itType;
+    cgUICursorType::Map & Types = mCursorDefinition.types;
     for ( itType = Types.begin(); itType != Types.end(); ++itType )
     {
-        const cgUICursorType & Type = itType->second;
+        cgUICursorType & Type = itType->second;
         
         // Add the frame group for this cursor type
         nGroupIndex = pBuffer->addFrameGroup( itType->first );
@@ -858,6 +899,21 @@ bool cgUISkin::prepareCursorFrames( cgBillboardBuffer * pBuffer )
         // Add all of the frames defined in the cursor definition
         for ( i = 0; i < Type.frames.size(); ++i )
             pBuffer->addFrame( nGroupIndex, Type.frames[i] );
+
+        // If hardware cursors are enabled, build the platform
+        // compatible cursor resources here for each frame.
+        if ( pCursorImage )
+        {
+            for ( i = 0; i < Type.frames.size(); ++i )
+            {
+                cgCursor * pCursor = cgCursor::createInstance( Type.hotPoint, Type.frames[i], *pCursorImage );
+                if ( pCursor )
+                    pCursor->addReference( CG_NULL );
+                Type.platformCursors.push_back( pCursor );
+
+            } // Next frame
+        
+        } // End if hardware cursor
 
     } // Next cursor type
 

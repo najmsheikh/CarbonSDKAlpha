@@ -13,7 +13,7 @@
 // Desc : Point / omni-directional light source classes.                     //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -776,147 +776,6 @@ bool cgPointLightObject::queryReferenceType( const cgUID & type ) const
     return cgLightObject::queryReferenceType( type );
 }
 
-/* ToDo: Remove on completion.
-//-----------------------------------------------------------------------------
-//  Name : Deserialize ()
-/// <summary>
-/// Initialize the object based on the XML data pulled from the 
-/// environment / scene definition file.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgPointLightObject::Deserialize( const cgXMLNode & InitData, cgSceneLoader * pLoader )
-{
-    cgXMLNode xChild, xAttenShadow, xFrustum;
-
-    // Allow base class to process data first
-    if ( !cgLightObject::Deserialize( InitData, pLoader ) )
-        return false;
-
-    // Iterate through all child nodes to get custom light source data
-    for ( cgUInt32 i = 0; i < InitData.GetChildNodeCount(); ++i )
-    {
-        xChild = InitData.GetChildNode( i );
-
-        // What type of node is this?
-        if ( xChild.IsOfType(_T("Range") ) )
-        {
-            cgFloat fValue;
-            cgStringParser( xChild.GetText() ) >> fValue;
-            SetRange( fValue );
-
-        } // End if Range
-        else if ( xChild.IsOfType(_T("Attenuation") ) )
-        {
-            // Parse the distance attenuation data (if any).
-            xAttenShadow = xChild.GetChildNode( _T("Distance") );
-            if ( !xAttenShadow.isEmpty() )
-                m_DistanceAttenCurve.ParseXML( xAttenShadow );
-
-            // Retrieve the attenuation mask data (if any)
-            xAttenShadow     = xChild.GetChildNode( _T("Mask") );
-            m_xAttenMaskData = xAttenShadow.GetChildNode( _T("Sampler") );
-
-        } // End if Attenuation
-        else if ( xChild.IsOfType(_T("Shadowing") ) )
-        {
-            // Iterate through all child nodes to get shadowing settings
-            for ( cgUInt32 j = 0; j < xChild.GetChildNodeCount(); ++j )
-            {
-                xAttenShadow = xChild.GetChildNode( j );
-
-                // What type of node is this?
-                if ( xAttenShadow.IsOfType( _T("Frustums") ) )
-                {
-                    bool bLinked = false;
-                    if ( xAttenShadow.DefinesAttribute( _T("Linked") ) )
-                        bLinked = cgStringUtility::ParseBool( xAttenShadow.GetAttributeText(_T("Linked")) );
-
-                    // Process all child frustums
-                    for ( cgUInt32 k = 0; ; )
-                    {
-                        xFrustum = xAttenShadow.GetNextChildNode( _T("Frustum"), k );
-                        if ( xFrustum.isEmpty() )
-                            break;
-                        
-                        // Select correct frustum and deserialize
-                        cgString strType;
-                        if ( !xFrustum.GetAttributeText( _T("Type"), strType ) )
-                            continue;
-                        if ( !bLinked )
-                        {
-                            if ( cgStringUtility::Compare( strType, _T("+X"), true ) == 0 )
-                            {
-                                if ( !mFrustums[0]->Deserialize( xFrustum ) )
-                                    return false;
-                            
-                            } // End if +X
-                            else if ( cgStringUtility::Compare( strType, _T("-X"), true ) == 0 )
-                            {
-                                if ( !mFrustums[1]->Deserialize( xFrustum ) )
-                                    return false;
-                            
-                            } // End if -X
-                            else if ( cgStringUtility::Compare( strType, _T("+Y"), true ) == 0 )
-                            {
-                                if ( !mFrustums[2]->Deserialize( xFrustum ) )
-                                    return false;
-                            
-                            } // End if +Y
-                            else if ( cgStringUtility::Compare( strType, _T("-Y"), true ) == 0 )
-                            {
-                                if ( !mFrustums[3]->Deserialize( xFrustum ) )
-                                    return false;
-                            
-                            } // End if -Y
-                            else if ( cgStringUtility::Compare( strType, _T("+Z"), true ) == 0 )
-                            {
-                                if ( !mFrustums[4]->Deserialize( xFrustum ) )
-                                    return false;
-                            
-                            } // End if +Z
-                            else if ( cgStringUtility::Compare( strType, _T("-Z"), true ) == 0 )
-                            {
-                                if ( !mFrustums[5]->Deserialize( xFrustum ) )
-                                    return false;
-                            
-                            } // End if -Z
-
-                        } // End if !linked
-                        else
-                        {
-                            if ( cgStringUtility::Compare( strType, _T("All"), true ) == 0 )
-                            {
-                                for ( cgUInt32 f = 0; f < 6; ++f )
-                                {
-                                    // Deserialize all from the same node.
-                                    if ( !mFrustums[f]->Deserialize( xFrustum ) )
-                                        return false;
-                                
-                                } // Next Frustum
-                            
-                            } // End if All
-
-                        } // End if frustums linked
-                            
-                    } // Next Frustum
-
-                } // End if Frustums
-                else if ( xAttenShadow.IsOfType( _T("UpdateRate") ) )
-                {
-                    cgStringParser( xAttenShadow.GetText() ) >> mShadowUpdateRate;
-
-                } // End if UpdateRate
-                
-            } // Next Child Node
-
-        } // End if Shadowing
-
-    } // Next Child Node
-
-    // Success!
-    return true;
-}*/
-
 //-----------------------------------------------------------------------------
 //  Name : getLightType () (Virtual)
 /// <summary>
@@ -1331,45 +1190,6 @@ bool cgPointLightNode::testObjectShadowVolume( cgObjectNode * pObject, const cgF
 }
 
 //-----------------------------------------------------------------------------
-//  Name : computeVisibility () (Virtual)
-/// <summary>
-/// Compute any necessary visibility information that this light source may
-/// need (from its point of view).
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgPointLightNode::computeVisibility( )
-{
-    // If it was determined that we should calculate shadows,
-    // attempt to refine this further to see if we /really/
-    // need to based on the state(s) of our shadow frustums.
-    /*if ( isShadowSource() )
-    {
-        bool bCalcShadows = false;
-
-        // Process each shadow frustum.
-        // ToDo: 6767 - Reintroduce!
-        for ( cgInt i = 0; i < 6; ++i )
-        {
-            // First allow the frustum to compute its own local shadow set information.
-            // This will return 'true' if it is deemed necessary to compute shadows
-            // or at least render from a pool shadow map.
-            cgShadowGenerator * pFrustum = mFrustums[i];
-            if ( pFrustum )
-                bCalcShadows |= pFrustum->computeShadowSets( CG_NULL );
-
-        } // Next frustum
-
-        // Is there /still/ any need to assume that this is a shadow source?
-        if ( !bCalcShadows )
-            mComputeShadows = false;
-
-    } // End if mComputeShadows*/
-
-    // Call base class implementation last
-    cgLightNode::computeVisibility();
-}
-
-//-----------------------------------------------------------------------------
 //  Name : computeShadowSets( ) (Virtual)
 /// <summary>
 /// Creates the shadow mapping visibility sets that are also found within
@@ -1718,18 +1538,21 @@ cgInt32 cgPointLightNode::beginShadowFill( cgTexturePool * pPool )
     memset( mShadowFrustumUpdated, 0, 6 * sizeof(bool) );
     mShadowMapsUpdated = false;
     
-    // ToDo: 6767 - Determine if it is an appropriate time for us to update based on
+    // Determine if it is an appropriate time for us to update based on
     // our shadow map update period limiting property.
-    /*cgUInt32 nShadowUpdateRate = getShadowUpdateRate();
-    if ( nShadowUpdateRate > 0 )
+    // ToDo: 6767 -- Should increment mShadowTimeSinceLast outside of this
+    // method since it may be called multiple times in a frame.
+    bool timeToUpdate = true;
+    cgUInt32 shadowUpdateRate = getShadowUpdateRate();
+    if ( shadowUpdateRate > 0 )
     {
-        mShadowTimeSinceLast += cgTimer::getInstance()->GetTimeElapsed();
-        if ( mShadowTimeSinceLast < (1.0f / (cgFloat)nShadowUpdateRate) )
-            m_bShadowTimedUpdate = false;
+        mShadowTimeSinceLast += cgTimer::getInstance()->getTimeElapsed();
+        if ( mShadowTimeSinceLast < (1.0f / (cgFloat)shadowUpdateRate) )
+            timeToUpdate = false;
         else
             mShadowTimeSinceLast = 0.0f;
 
-    } // End if limit updates*/
+    } // End if limit updates
 
     // For each frustum...
     mShadowPasses.reserve( 6 ); // Assume 1 pass per frustum as a minimum
@@ -1765,6 +1588,11 @@ cgInt32 cgPointLightNode::beginShadowFill( cgTexturePool * pPool )
         // We can fill if we got previously assigned resources, but don't necessarily 
         // have to if the frustum doesn't require it.
         if( (nFillStatus & cgShadowGeneratorFillResult::CanFill) && !pShadowFrustum->shouldRegenerate() )
+            continue;
+
+        // Even if the frustum thinks we should regenerate, if it's not our time
+        // then we can skip for this frustum.
+        if ( (nFillStatus & cgShadowGeneratorFillResult::CanFill) && !timeToUpdate )
             continue;
 
         // How many passes are required to fill the assigned shadow resources?
@@ -3218,4 +3046,16 @@ bool cgPointLightNode::setCellTransform( const cgTransform & Transform, cgTransf
 
     // Success!
     return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getBoundingSphere () (Virtual)
+/// <summary>
+/// Retrieve the bounding sphere for this point light source as it exists in
+/// world space.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgBoundingSphere cgPointLightNode::getBoundingSphere( )
+{
+    return cgBoundingSphere( getPosition(false), getOuterRange() );
 }

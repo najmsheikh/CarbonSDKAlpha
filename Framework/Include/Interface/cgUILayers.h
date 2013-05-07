@@ -17,7 +17,7 @@
 //        which display system specific items such as the cursor.            //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -173,13 +173,15 @@ public:
     // Public Methods
     //-------------------------------------------------------------------------
     bool                initialize      ( );
-    void                selectCursor    ( const cgString & name );
+    void                selectCursor    ( const cgUICursorType * type, cgUInt32 frame );
+    void                update          ( );
+    void                showCursor      ( bool show );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgUILayer)
     //-------------------------------------------------------------------------
-    virtual void        render          ( );
     virtual bool        onMouseMove     ( const cgPoint & position, const cgPointF & offset );
+    virtual void        render          ( );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
@@ -193,10 +195,9 @@ protected:
     cgBillboard2D             * mCursor;            // Billboard containing the cursor
     cgPoint                     mCursorOffset;      // Amount to offset cursor billboard from the mouse position (hot point)
     const cgUICursorType      * mCurrentType;       // The currently selected cursor type.
-    cgString                    mNextCursor;        // The name of the cursor to use the next time we render
-    cgString                    mCurrentCursor;     // The name of the currently selected cursor (i.e. the last time we rendered).
     cgInt16                     mCurrentFrame;      // Current frame to select from the billboard group for an animating cursor
-    cgFloat                     mAnimBeginTime;     // When did the animation start?
+    bool                        mCursorDirty;       // Has the cursor billboard been modified such that its vertices need updating?
+    bool                        mCursorVisible;     // Is the cursor currently visible?
 };
 
 #endif // !_CGE_CGUILAYERS_H_

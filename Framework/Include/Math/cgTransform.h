@@ -16,7 +16,7 @@
 //        provided by standard matrices.                                     //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -63,6 +63,7 @@ public:
     cgVector3         & transformNormal             ( cgVector3 & out, const cgVector3 & v ) const;
     cgVector3         & inverseTransformNormal      ( cgVector3 & out, const cgVector3 & v ) const;
     bool                decompose                   ( cgVector3 & scale, cgVector3 & shear, cgQuaternion & rotation, cgVector3 & translation ) const;
+    bool                decompose                   ( cgVector3 & scale, cgQuaternion & rotation, cgVector3 & translation ) const;
     bool                decompose                   ( cgQuaternion & rotation, cgVector3 & translation ) const;
     cgTransform       & multiply                    ( cgTransform & out, const cgTransform & t ) const;
     cgTransform       & add                         ( cgTransform & out, const cgTransform & t ) const;
@@ -88,6 +89,7 @@ public:
     cgTransform       & scale                       ( cgFloat x, cgFloat y, cgFloat z );
     cgTransform       & scale                       ( cgFloat x, cgFloat y, cgFloat z, const cgVector3 & center );
     cgTransform       & scaleLocal                  ( cgFloat x, cgFloat y, cgFloat z );
+    cgTransform       & scaleLocal                  ( cgFloat x, cgFloat y, cgFloat z, const cgVector3 & localCenter );
     cgTransform       & translate                   ( cgFloat x, cgFloat y, cgFloat z );
     cgTransform       & translate                   ( const cgVector3 & v );
     cgTransform       & translateLocal              ( cgFloat x, cgFloat y, cgFloat z );
@@ -149,6 +151,7 @@ public:
     static cgTransform& add                         ( cgTransform & out, const cgTransform & t1, const cgTransform & t2 );
     static cgTransform& inverse                     ( cgTransform & out, const cgTransform & t );
     static bool         decompose                   ( cgVector3 & scale, cgVector3 & shear, cgQuaternion & rotation, cgVector3 & translation, const cgTransform & t );
+    static bool         decompose                   ( cgVector3 & scale, cgQuaternion & rotation, cgVector3 & translation, const cgTransform & t );
     static bool         decompose                   ( cgQuaternion & rotation, cgVector3 & translation, const cgTransform & t );
     static cgTransform& compose                     ( cgTransform & out, const cgVector3 & scale, const cgVector3 & shear, const cgQuaternion & rotation, const cgVector3 & translation );
     static cgTransform& compose                     ( cgTransform & out, const cgQuaternion & rotation, const cgVector3 & translation );

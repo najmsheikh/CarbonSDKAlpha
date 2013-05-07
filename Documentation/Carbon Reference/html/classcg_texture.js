@@ -31,6 +31,7 @@ var classcg_texture =
     [ "onNewVideoFrame", "classcg_texture.html#a5a3163acf88fc4dbf082cb1706997456", null ],
     [ "queryReferenceType", "classcg_texture.html#a2a8038388238b19386da19e5d5e3bfc3", null ],
     [ "setCurrentCubeFace", "classcg_texture.html#af6933dda1b92e8f6939ed748406b105d", null ],
+    [ "supportsLinearSampling", "classcg_texture.html#a1bdbd048e6a1493e7ac201ca22531d42", null ],
     [ "unloadResource", "classcg_texture.html#afb6dc6fa9b51c6fa9e7e5986eba78a7e", null ],
     [ "unlock", "classcg_texture.html#a65b5226efe7ebe67619cf286a3c30f0e", null ],
     [ "update", "classcg_texture.html#a316dcc76111241ebe0ea25459e213885", null ],

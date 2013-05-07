@@ -22,7 +22,7 @@ var cg_math_utility_8h =
     [ "nextPowerOfTwo", "cg_math_utility_8h.html#a8876481ef65b33bfb951514ea11f4bf2", null ],
     [ "randomColor", "cg_math_utility_8h.html#a2aad272ba135636b5c0cda0dc6907d49", null ],
     [ "randomFloat", "cg_math_utility_8h.html#af3e6a6178d975b20fa6537591abca9ff", null ],
-    [ "randomInt", "cg_math_utility_8h.html#aabdc0a9914c4b552199ef6aca6b3025a", null ],
+    [ "randomInt", "cg_math_utility_8h.html#a2935c2bac13f68a347f17f9cfe375733", null ],
     [ "saturate", "cg_math_utility_8h.html#ae001c05f1eeaf9ee1c674cf09c781e1b", null ],
     [ "smooth", "cg_math_utility_8h.html#a98ca51b2f984aad506ca7e3419781924", null ],
     [ "solveCubic", "cg_math_utility_8h.html#a3f08d44657e79eec8dc39aeb2d448f09", null ],

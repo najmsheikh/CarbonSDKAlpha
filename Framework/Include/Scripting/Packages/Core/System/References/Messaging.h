@@ -88,6 +88,7 @@ namespace Messaging
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "AppWindow_OnCreate", cgSystemMessages::AppWindow_OnCreate ) );
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "AppWindow_OnClose", cgSystemMessages::AppWindow_OnClose ) );
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "AppWindow_OnSize", cgSystemMessages::AppWindow_OnSize ) );
+            BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "AppWindow_OnUpdateCursor", cgSystemMessages::AppWindow_OnUpdateCursor ) );
 
             // Messages issued by cgWorld
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "World_Disposing", cgSystemMessages::World_Disposing ) );

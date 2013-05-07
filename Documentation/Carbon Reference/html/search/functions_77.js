@@ -5,6 +5,7 @@ var searchData=
   ['waspreviousowner',['wasPreviousOwner',['../classcg_texture_pool_resource.html#a0e78c1f2d658d4397e9c180b88df0e2f',1,'cgTexturePoolResource']]],
   ['weldvertices',['weldVertices',['../classcg_mesh.html#a5ba1f98cc6e750abc77f3d2e0d43fb0e',1,'cgMesh']]],
   ['width',['width',['../structcg_rect.html#a5c4e2abc8c60213dae3a64d319db3bed',1,'cgRect::width()'],['../structcg_rect_f.html#a405c65991c3e546a55c21e8baf946623',1,'cgRectF::width()'],['../classcg_bounding_box.html#aa31439bdbfd2e7e45d333d8c5c394271',1,'cgBoundingBox::width()']]],
+  ['winding',['Winding',['../structcg_b_s_p_tree_1_1_winding.html#a367955a76d2c15a0f31eb5d784d9d21d',1,'cgBSPTree::Winding']]],
   ['windowresized',['windowResized',['../classcg_render_driver.html#aa9d7b6ede9fba9a02aafb9c35babc5e0',1,'cgRenderDriver']]],
   ['wndproc',['WndProc',['../classcg_win_app_window.html#a9c3687d627192ccb765f8feb54040d64',1,'cgWinAppWindow']]],
   ['wordwrap',['wordWrap',['../classcg_string.html#ab53d8ede9efdafb691077e0b237b084b',1,'cgString']]],

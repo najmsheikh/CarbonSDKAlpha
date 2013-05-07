@@ -38,6 +38,7 @@ var classcg_audio_driver =
     [ "removeStreamBuffer", "classcg_audio_driver.html#a16668944db1f5aba2609c911db0110ea", null ],
     [ "saveConfig", "classcg_audio_driver.html#a999d57fdaae07f6c156b3d8584112b25", null ],
     [ "set3DListenerTransform", "classcg_audio_driver.html#a24a8b3ef658294c787dd46646d452533", null ],
+    [ "set3DRolloffFactor", "classcg_audio_driver.html#ab84792d994f87f7fe37eb1a7225998f7", null ],
     [ "set3DWorldScale", "classcg_audio_driver.html#afd4ee72c995e8b4bc61fb5a1c5754ed8", null ],
     [ "setTrackFadeTimes", "classcg_audio_driver.html#a4a11069deeb1b01b8614dd5b4e73e5f9", null ],
     [ "stopAmbientTrack", "classcg_audio_driver.html#abf60dbdc7e94576a17d5d854f5648f13", null ],

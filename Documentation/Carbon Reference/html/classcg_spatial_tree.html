@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -121,9 +121,10 @@ Inheritance diagram for cgSpatialTree:</div>
  <div class="center">
   <img src="classcg_spatial_tree.png" usemap="#cgSpatialTree_map" alt=""/>
   <map id="cgSpatialTree_map" name="cgSpatialTree_map">
-<area href="classcg_script_interop_1_1_disposable_script_object.html" title="Base class from which objects should be derived if they need to be passed to a script by reference as..." alt="cgScriptInterop::DisposableScriptObject" shape="rect" coords="123,0,359,24"/>
+<area href="classcg_script_interop_1_1_disposable_script_object.html" title="Base class from which objects should be derived if they need to be passed to a script by reference as..." alt="cgScriptInterop::DisposableScriptObject" shape="rect" coords="246,0,482,24"/>
 <area href="classcg_landscape.html" title="Represents scene landscape data. Derived from spatial tree in order to supply hierarchical horizon oc..." alt="cgLandscape" shape="rect" coords="0,112,236,136"/>
-<area href="classcg_spatial_tree_object.html" title="Base spatial tree object type. " alt="cgSpatialTreeObject" shape="rect" coords="246,112,482,136"/>
+<area href="classcg_octree.html" title="Represents specialized octree spatial partitioning hierarchy. " alt="cgOctree" shape="rect" coords="246,112,482,136"/>
+<area href="classcg_spatial_tree_object.html" title="Base spatial tree object type. " alt="cgSpatialTreeObject" shape="rect" coords="492,112,728,136"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -156,9 +157,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6f20191d8a40773ecda9e17c7d52ed49"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree.html#a6f20191d8a40773ecda9e17c7d52ed49">computeVisibility</a> (const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;bounds, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, <a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *issuer)</td></tr>
 <tr class="memdesc:a6f20191d8a40773ecda9e17c7d52ed49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the application to allow us to retrieve leaf visibility information and rendering subsets based on the specified object space bounding box.  <a href="#a6f20191d8a40773ecda9e17c7d52ed49"></a><br/></td></tr>
 <tr class="separator:a6f20191d8a40773ecda9e17c7d52ed49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab38b3e88f45c99d70bb1067e5552095e"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree.html#ab38b3e88f45c99d70bb1067e5552095e">CollectLeaves</a> (cgSceneLeafArray &amp;leaves, const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;bounds, <a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *issuer)</td></tr>
-<tr class="memdesc:ab38b3e88f45c99d70bb1067e5552095e"><td class="mdescLeft">&#160;</td><td class="mdescRight">This default implementation can called by the application to retrieve a list of all of the leaves that were intersected by the specified object space bounding box.  <a href="#ab38b3e88f45c99d70bb1067e5552095e"></a><br/></td></tr>
-<tr class="separator:ab38b3e88f45c99d70bb1067e5552095e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af02c1ba2abe0ac51bd9364fc83dbdb1b"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree.html#af02c1ba2abe0ac51bd9364fc83dbdb1b">collectLeaves</a> (cgSceneLeafArray &amp;leaves, const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;bounds, <a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *issuer)</td></tr>
+<tr class="memdesc:af02c1ba2abe0ac51bd9364fc83dbdb1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This default implementation can called by the application to retrieve a list of all of the leaves that were intersected by the specified object space bounding box.  <a href="#af02c1ba2abe0ac51bd9364fc83dbdb1b"></a><br/></td></tr>
+<tr class="separator:af02c1ba2abe0ac51bd9364fc83dbdb1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae528547f68156cb659faefdddfb85478"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree.html#ae528547f68156cb659faefdddfb85478">updateObjectOwnership</a> (<a class="el" href="classcg_object_node.html">cgObjectNode</a> *object, const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;objectBounds, <a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *issuer, bool testOnly)</td></tr>
+<tr class="memdesc:ae528547f68156cb659faefdddfb85478"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows the spatial tree to determine if it can / wants to own the specified object and optionally inserts it into the relevant leaf.  <a href="#ae528547f68156cb659faefdddfb85478"></a><br/></td></tr>
+<tr class="separator:ae528547f68156cb659faefdddfb85478"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add74cc557b64ce9d0a46cd326370112a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_spatial_tree.html#add74cc557b64ce9d0a46cd326370112a">dispose</a> (bool disposeBase)</td></tr>
 <tr class="memdesc:add74cc557b64ce9d0a46cd326370112a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any memory, references or resources allocated by this object.  <a href="#add74cc557b64ce9d0a46cd326370112a"></a><br/></td></tr>
 <tr class="separator:add74cc557b64ce9d0a46cd326370112a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -274,7 +278,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Default behavior for allocating new leaves. Can be overriden to return an alternate leaf type. </p>
 
-<p>Reimplemented in <a class="el" href="classcg_landscape.html#a7176c5345813fbdb7ad57c776ab586c9">cgLandscape</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_landscape.html#a7176c5345813fbdb7ad57c776ab586c9">cgLandscape</a>, and <a class="el" href="classcg_octree.html#adc38d619b23760bd6d00465a7c10a921">cgOctree</a>.</p>
 
 </div>
 </div>
@@ -302,11 +306,11 @@ Protected Attributes</h2></td></tr>
 
 <p>Default behavior for allocating new nodes. Can be overriden to return an alternate node type. </p>
 
-<p>Reimplemented in <a class="el" href="classcg_landscape.html#a7fe901f509278745b5f81bedca5f8d84">cgLandscape</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_landscape.html#a7fe901f509278745b5f81bedca5f8d84">cgLandscape</a>, and <a class="el" href="classcg_octree.html#aadb7063eb6b04141a28a562cdafefa18">cgOctree</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab38b3e88f45c99d70bb1067e5552095e"></a>
+<a class="anchor" id="af02c1ba2abe0ac51bd9364fc83dbdb1b"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -314,7 +318,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool cgSpatialTree::CollectLeaves </td>
+          <td class="memname">bool cgSpatialTree::collectLeaves </td>
           <td>(</td>
           <td class="paramtype">cgSceneLeafArray &amp;&#160;</td>
           <td class="paramname"><em>Leaves</em>, </td>
@@ -359,25 +363,25 @@ Protected Attributes</h2></td></tr>
           <td class="memname">void cgSpatialTree::computeVisibility </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classcg_frustum.html">cgFrustum</a> &amp;&#160;</td>
-          <td class="paramname"><em>Frustum</em>, </td>
+          <td class="paramname"><em>frustum</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *&#160;</td>
-          <td class="paramname"><em>pVisData</em>, </td>
+          <td class="paramname"><em>visibilityData</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
-          <td class="paramname"><em>nFlags</em>, </td>
+          <td class="paramname"><em>flags</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *&#160;</td>
-          <td class="paramname"><em>pIssuer</em>&#160;</td>
+          <td class="paramname"><em>issuer</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -394,7 +398,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Called by the application to allow us to retrieve leaf visibility information and rendering subsets based on the specified object space frustum. </p>
 
-<p>Reimplemented in <a class="el" href="classcg_landscape.html#ac16752cf92882fa9c0a14c889ee327f1">cgLandscape</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_landscape.html#ac16752cf92882fa9c0a14c889ee327f1">cgLandscape</a>, and <a class="el" href="classcg_octree.html#a130cec66d78856d87fdba2d7fe5c36a6">cgOctree</a>.</p>
 
 </div>
 </div>
@@ -473,7 +477,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a607a22a9c1cb9252904e5097a1dab7a7">cgScriptInterop::DisposableScriptObject</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_landscape.html#ae33e93c3dda18e44d9656c1b891a0239">cgLandscape</a>, and <a class="el" href="classcg_spatial_tree_object.html#a1952dfa90a65c8a541e9934c1e9e1c96">cgSpatialTreeObject</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_landscape.html#ae33e93c3dda18e44d9656c1b891a0239">cgLandscape</a>, <a class="el" href="classcg_spatial_tree_object.html#a1952dfa90a65c8a541e9934c1e9e1c96">cgSpatialTreeObject</a>, and <a class="el" href="classcg_octree.html#a45271299cd3f548dbe4de379ff44ca5f">cgOctree</a>.</p>
 
 </div>
 </div>
@@ -508,6 +512,54 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Retrieve the root spatial tree sub node. </p>
+
+</div>
+</div>
+<a class="anchor" id="ae528547f68156cb659faefdddfb85478"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgSpatialTree::updateObjectOwnership </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_object_node.html">cgObjectNode</a> *&#160;</td>
+          <td class="paramname"><em>pObject</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;&#160;</td>
+          <td class="paramname"><em>ObjectSpaceBounds</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcg_spatial_tree_instance.html">cgSpatialTreeInstance</a> *&#160;</td>
+          <td class="paramname"><em>pIssuer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bTestOnly</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allows the spatial tree to determine if it can / wants to own the specified object and optionally inserts it into the relevant leaf. </p>
 
 </div>
 </div>
@@ -562,7 +614,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_spatial_tree.html">cgSpatialTree</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:50 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:50 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

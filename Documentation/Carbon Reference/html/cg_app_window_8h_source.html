@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -192,27 +192,30 @@ $(document).ready(function(){initNavTree('cg_app_window_8h_source.html','');});
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="structcg_point.html">cgPoint</a>         screenToClient          ( <span class="keyword">const</span> <a class="code" href="structcg_point.html">cgPoint</a> &amp; screenPoint ) = 0;</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="structcg_point.html">cgPoint</a>         clientToScreen          ( <span class="keyword">const</span> <a class="code" href="structcg_point.html">cgPoint</a> &amp; clientPoint ) = 0;</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>            setTitle                ( <span class="keyword">const</span> <a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a> &amp; title ) = 0;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="comment">// Events</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>            onSize                  ( <span class="keyword">const</span> <a class="code" href="structcg_size.html">cgSize</a> &amp; size, <span class="keywordtype">bool</span> minimized );</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>            onCreate                ( );</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>            onClose                 ( );</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides cgReference)</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno"><a class="code" href="classcg_app_window.html#afada416496399b9639c5354400cf2c59">  102</a></span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a>   &amp; <a class="code" href="classcg_app_window.html#afada416496399b9639c5354400cf2c59">getReferenceType</a>        ( )<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="cg_app_window_8h.html#a162ef15d262afcd2cdd474b92099f1dd">RTID_AppWindow</a>; }</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span>            <a class="code" href="classcg_reference.html#a597d24d0d03d4cf61e2afcd842a43fa4">queryReferenceType</a>      ( <span class="keyword">const</span> <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a> &amp; type ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;};</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">#endif // !_CGE_CGAPPWINDOW_H_</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>            setSize                 ( <span class="keyword">const</span> <a class="code" href="structcg_size.html">cgSize</a> &amp; size ) = 0;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>            setClientSize           ( <span class="keyword">const</span> <a class="code" href="structcg_size.html">cgSize</a> &amp; size ) = 0;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>            setFullScreenMode       ( <span class="keywordtype">bool</span> fullScreen ) = 0;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="comment">// Events</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>            onSize                  ( <span class="keyword">const</span> <a class="code" href="structcg_size.html">cgSize</a> &amp; size, <span class="keywordtype">bool</span> minimized );</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>            onCreate                ( );</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>            onClose                 ( );</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides cgReference)</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno"><a class="code" href="classcg_app_window.html#afada416496399b9639c5354400cf2c59">  105</a></span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a>   &amp; <a class="code" href="classcg_app_window.html#afada416496399b9639c5354400cf2c59">getReferenceType</a>        ( )<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="cg_app_window_8h.html#a162ef15d262afcd2cdd474b92099f1dd">RTID_AppWindow</a>; }</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span>            <a class="code" href="classcg_reference.html#a597d24d0d03d4cf61e2afcd842a43fa4">queryReferenceType</a>      ( <span class="keyword">const</span> <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a> &amp; type ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;};</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">#endif // !_CGE_CGAPPWINDOW_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_c33361510b5d8458f9ad99ec7c35be6a.html">System</a></li><li class="navelem"><a class="el" href="cg_app_window_8h.html">cgAppWindow.h</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:13 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:47:21 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

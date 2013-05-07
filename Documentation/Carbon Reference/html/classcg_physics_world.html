@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -103,8 +103,11 @@ $(document).ready(function(){initNavTree('classcg_physics_world.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classcg_physics_world-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -127,6 +130,18 @@ Inheritance diagram for cgPhysicsWorld:</div>
 </map>
  </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_physics_world_1_1_ray_cast_filter_callback_data.html">RayCastFilterCallbackData</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a611f5485bea77b0a8821668d0e952bff"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#a611f5485bea77b0a8821668d0e952bff">RayCastFilterCallback</a> )(<a class="el" href="classcg_physics_body.html">cgPhysicsBody</a> *body, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;hitNormal, <a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a> collisionId, void *userData, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> intersectParam)</td></tr>
+<tr class="separator:a611f5485bea77b0a8821668d0e952bff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3a1cc0f276b785a3f3e395acd12eb32"><td class="memItemLeft" align="right" valign="top">typedef bool(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#af3a1cc0f276b785a3f3e395acd12eb32">RayCastPreFilterCallback</a> )(<a class="el" href="classcg_physics_body.html">cgPhysicsBody</a> *body, <a class="el" href="classcg_physics_shape.html">cgPhysicsShape</a> *shape, void *userData)</td></tr>
+<tr class="separator:af3a1cc0f276b785a3f3e395acd12eb32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae055013ed7baad73e12092ad484f12c0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#ae055013ed7baad73e12092ad484f12c0">cgPhysicsWorld</a> (<a class="el" href="classcg_physics_engine.html">cgPhysicsEngine</a> *engine)</td></tr>
@@ -153,6 +168,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a57cb5702b5108b58d96f6165b6b587ba"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#a57cb5702b5108b58d96f6165b6b587ba">getDefaultGravity</a> () const </td></tr>
 <tr class="memdesc:a57cb5702b5108b58d96f6165b6b587ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the default force of gravity applied to all bodies that exist within this physics world. Individual bodies can supply their own gravity values to override this default. See '<a class="el" href="classcg_physics_body.html#a8d7581670d284aedf0eab265919302c4" title="Set the custom gravity force to use for this body. This custom force will only be applied when enable...">cgPhysicsBody::setCustomGravity()</a>' and '<a class="el" href="classcg_physics_body.html#a33ec4f2cf7171fba4aa446927542cc98" title="Enable or disable the use of the custom gravity force. When disabled, the global gravity force will b...">cgPhysicsBody::enableCustomGravity()</a>'.  <a href="#a57cb5702b5108b58d96f6165b6b587ba"></a><br/></td></tr>
 <tr class="separator:a57cb5702b5108b58d96f6165b6b587ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a14ca99b8ec10a234ad0dc7f0dc01bd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#a3a14ca99b8ec10a234ad0dc7f0dc01bd">rayCastClosest</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;from, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;to, <a class="el" href="structcg_collision_contact.html">cgCollisionContact</a> &amp;closestContact)</td></tr>
+<tr class="memdesc:a3a14ca99b8ec10a234ad0dc7f0dc01bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the closest intersected physics body along the specified ray.  <a href="#a3a14ca99b8ec10a234ad0dc7f0dc01bd"></a><br/></td></tr>
+<tr class="separator:a3a14ca99b8ec10a234ad0dc7f0dc01bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0a97ddcf317a9e98f3cc329b8c48225"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#ac0a97ddcf317a9e98f3cc329b8c48225">rayCastAll</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;from, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;to, bool sortContacts, cgCollisionContact::Array &amp;contacts)</td></tr>
+<tr class="memdesc:ac0a97ddcf317a9e98f3cc329b8c48225"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collect a list of all intersected physics body along the specified ray. The list of contacts can optionally be sorted by distance with the closest intersection first.  <a href="#ac0a97ddcf317a9e98f3cc329b8c48225"></a><br/></td></tr>
+<tr class="separator:ac0a97ddcf317a9e98f3cc329b8c48225"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a743f15437993765016b56f4a015b1199"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#a743f15437993765016b56f4a015b1199">rayCast</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;from, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;to, <a class="el" href="classcg_physics_world.html#af3a1cc0f276b785a3f3e395acd12eb32">RayCastPreFilterCallback</a> preFilter, <a class="el" href="classcg_physics_world.html#a611f5485bea77b0a8821668d0e952bff">RayCastFilterCallback</a> filter, void *userData)</td></tr>
+<tr class="memdesc:a743f15437993765016b56f4a015b1199"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a ray cast and execute the specified callback whenever a new potential contact is encountered.  <a href="#a743f15437993765016b56f4a015b1199"></a><br/></td></tr>
+<tr class="separator:a743f15437993765016b56f4a015b1199"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1d60b972e26ec20ad6d28791995df67"><td class="memItemLeft" align="right" valign="top">NewtonWorld *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#ae1d60b972e26ec20ad6d28791995df67">getInternalWorld</a> ()</td></tr>
 <tr class="memdesc:ae1d60b972e26ec20ad6d28791995df67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the internal world object specific to Newton. This is not technically part of the public interface and should not be called by the application directly.  <a href="#ae1d60b972e26ec20ad6d28791995df67"></a><br/></td></tr>
 <tr class="separator:ae1d60b972e26ec20ad6d28791995df67"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,6 +195,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9b658077195ad4b7cc0b93c169cae9e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_physics_shape.html">cgPhysicsShape</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#a9b658077195ad4b7cc0b93c169cae9e6">getExistingShape</a> (const <a class="el" href="classcg_physics_shape_cache_key.html">cgPhysicsShapeCacheKey</a> &amp;key) const </td></tr>
 <tr class="memdesc:a9b658077195ad4b7cc0b93c169cae9e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find a shape with the specified properties if it exists in the shape cache.  <a href="#a9b658077195ad4b7cc0b93c169cae9e6"></a><br/></td></tr>
 <tr class="separator:a9b658077195ad4b7cc0b93c169cae9e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a763d2d123414e0415765ef5b5190a252"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#a763d2d123414e0415765ef5b5190a252">getDefaultMaterialGroupId</a> (<a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181">cgDefaultPhysicsMaterialGroup::Base</a> group) const </td></tr>
+<tr class="memdesc:a763d2d123414e0415765ef5b5190a252"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the material group id of the specified default material group that will be automatically assigned (by default) to certain types of objects in the world.  <a href="#a763d2d123414e0415765ef5b5190a252"></a><br/></td></tr>
+<tr class="separator:a763d2d123414e0415765ef5b5190a252"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad48404f97d9eeeb2cc6b44146532baea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#ad48404f97d9eeeb2cc6b44146532baea">toPhysicsScale</a> () const </td></tr>
 <tr class="separator:ad48404f97d9eeeb2cc6b44146532baea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fb6d0b143ed65005a08a568466a64bf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#a4fb6d0b143ed65005a08a568466a64bf">fromPhysicsScale</a> () const </td></tr>
@@ -223,6 +250,21 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:a1f108db907a1bb285d0b61322b49b52a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the specified shape from the shape cache.  <a href="#a1f108db907a1bb285d0b61322b49b52a"></a><br/></td></tr>
 <tr class="separator:a1f108db907a1bb285d0b61322b49b52a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
+Static Protected Member Functions</h2></td></tr>
+<tr class="memitem:af89a736d76ace04436a9f5ab3a5542ec"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#af89a736d76ace04436a9f5ab3a5542ec">rayCastClosestFilter</a> (const NewtonBody *const body, const <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> *const hitNormal, <a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a> collisionId, void *const userData, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> intersectParam)</td></tr>
+<tr class="memdesc:af89a736d76ace04436a9f5ab3a5542ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">TODO  <a href="#af89a736d76ace04436a9f5ab3a5542ec"></a><br/></td></tr>
+<tr class="separator:af89a736d76ace04436a9f5ab3a5542ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa66e3510bcef6913d0e7a69d22af0366"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#aa66e3510bcef6913d0e7a69d22af0366">rayCastAllFilter</a> (const NewtonBody *const body, const <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> *const hitNormal, <a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a> collisionId, void *const userData, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> intersectParam)</td></tr>
+<tr class="memdesc:aa66e3510bcef6913d0e7a69d22af0366"><td class="mdescLeft">&#160;</td><td class="mdescRight">TODO  <a href="#aa66e3510bcef6913d0e7a69d22af0366"></a><br/></td></tr>
+<tr class="separator:aa66e3510bcef6913d0e7a69d22af0366"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0373c4043bc79c7d1034ac97861b578"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#ab0373c4043bc79c7d1034ac97861b578">rayCastFilter</a> (const NewtonBody *const body, const <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> *const hitNormal, <a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a> collisionId, void *const userData, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> intersectParam)</td></tr>
+<tr class="memdesc:ab0373c4043bc79c7d1034ac97861b578"><td class="mdescLeft">&#160;</td><td class="mdescRight">TODO  <a href="#ab0373c4043bc79c7d1034ac97861b578"></a><br/></td></tr>
+<tr class="separator:ab0373c4043bc79c7d1034ac97861b578"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2b849172f7805618678bdc2487f3e45"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="cg_base_types_8h.html#ac060173eb974cd288d97a2f971788a44">cgUInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#ad2b849172f7805618678bdc2487f3e45">rayCastPreFilter</a> (const NewtonBody *const body, const NewtonCollision *const collision, void *const userData)</td></tr>
+<tr class="memdesc:ad2b849172f7805618678bdc2487f3e45"><td class="mdescLeft">&#160;</td><td class="mdescRight">TODO  <a href="#ad2b849172f7805618678bdc2487f3e45"></a><br/></td></tr>
+<tr class="separator:ad2b849172f7805618678bdc2487f3e45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a0378bd0385cef97512d6920a9a745ab8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_physics_engine.html">cgPhysicsEngine</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#a0378bd0385cef97512d6920a9a745ab8">mEngine</a></td></tr>
@@ -243,6 +285,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a027c6f57e6b6baa531ee8239ebbe915e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ba679c96a6abef76bb67fa45e255b3c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_vector3.html">cgVector3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#a9ba679c96a6abef76bb67fa45e255b3c">mDefaultGravity</a></td></tr>
 <tr class="separator:a9ba679c96a6abef76bb67fa45e255b3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e787a872b4173330f9c30a9756d532b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#a5e787a872b4173330f9c30a9756d532b">mDefaultMaterialIds</a> [<a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a9c646940bf3bb5e41c83f24b6de4bde8">cgDefaultPhysicsMaterialGroup::Count</a>]</td></tr>
+<tr class="separator:a5e787a872b4173330f9c30a9756d532b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classcg_event_dispatcher"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_event_dispatcher')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_event_dispatcher.html">cgEventDispatcher</a></td></tr>
 <tr class="memitem:a60b73d596abf511416b0e36e5b107e1b inherit pro_attribs_classcg_event_dispatcher"><td class="memItemLeft" align="right" valign="top">EventListenerList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_event_dispatcher.html#a60b73d596abf511416b0e36e5b107e1b">mEventListeners</a></td></tr>
 <tr class="separator:a60b73d596abf511416b0e36e5b107e1b inherit pro_attribs_classcg_event_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -252,7 +296,32 @@ Protected Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Describes an individual instance of a physics / dynamics world. This world contains all of the physics bodies / objects that describe how physical object interaction should take place. Multiple worlds can be created where necessary. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a class="anchor" id="a611f5485bea77b0a8821668d0e952bff"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>(* cgPhysicsWorld::RayCastFilterCallback)(<a class="el" href="classcg_physics_body.html">cgPhysicsBody</a> *body, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;hitNormal, <a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a> collisionId, void *userData, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> intersectParam)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af3a1cc0f276b785a3f3e395acd12eb32"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef bool(* cgPhysicsWorld::RayCastPreFilterCallback)(<a class="el" href="classcg_physics_body.html">cgPhysicsBody</a> *body, <a class="el" href="classcg_physics_shape.html">cgPhysicsShape</a> *shape, void *userData)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ae055013ed7baad73e12092ad484f12c0"></a>
 <div class="memitem">
 <div class="memproto">
@@ -516,6 +585,24 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a763d2d123414e0415765ef5b5190a252"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> cgPhysicsWorld::getDefaultMaterialGroupId </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181">cgDefaultPhysicsMaterialGroup::Base</a>&#160;</td>
+          <td class="paramname"><em>group</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the material group id of the specified default material group that will be automatically assigned (by default) to certain types of objects in the world. </p>
+
+</div>
+</div>
 <a class="anchor" id="a9b658077195ad4b7cc0b93c169cae9e6"></a>
 <div class="memitem">
 <div class="memproto">
@@ -566,6 +653,330 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Initialize the physics world ready for use. </p>
+
+</div>
+</div>
+<a class="anchor" id="a743f15437993765016b56f4a015b1199"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgPhysicsWorld::rayCast </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
+          <td class="paramname"><em>from</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
+          <td class="paramname"><em>to</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcg_physics_world.html#af3a1cc0f276b785a3f3e395acd12eb32">RayCastPreFilterCallback</a>&#160;</td>
+          <td class="paramname"><em>preFilter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcg_physics_world.html#a611f5485bea77b0a8821668d0e952bff">RayCastFilterCallback</a>&#160;</td>
+          <td class="paramname"><em>filter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>userData</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Perform a ray cast and execute the specified callback whenever a new potential contact is encountered. </p>
+
+</div>
+</div>
+<a class="anchor" id="ac0a97ddcf317a9e98f3cc329b8c48225"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgPhysicsWorld::rayCastAll </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
+          <td class="paramname"><em>from</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
+          <td class="paramname"><em>to</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>sortContacts</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cgCollisionContact::Array &amp;&#160;</td>
+          <td class="paramname"><em>contacts</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Collect a list of all intersected physics body along the specified ray. The list of contacts can optionally be sorted by distance with the closest intersection first. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa66e3510bcef6913d0e7a69d22af0366"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgPhysicsWorld::rayCastAllFilter </td>
+          <td>(</td>
+          <td class="paramtype">const NewtonBody *const&#160;</td>
+          <td class="paramname"><em>body</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> *const&#160;</td>
+          <td class="paramname"><em>hitNormal</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a>&#160;</td>
+          <td class="paramname"><em>collisionId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *const&#160;</td>
+          <td class="paramname"><em>userData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>intersectParam</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>TODO </p>
+
+</div>
+</div>
+<a class="anchor" id="a3a14ca99b8ec10a234ad0dc7f0dc01bd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgPhysicsWorld::rayCastClosest </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
+          <td class="paramname"><em>from</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
+          <td class="paramname"><em>to</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structcg_collision_contact.html">cgCollisionContact</a> &amp;&#160;</td>
+          <td class="paramname"><em>closestContact</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Find the closest intersected physics body along the specified ray. </p>
+
+</div>
+</div>
+<a class="anchor" id="af89a736d76ace04436a9f5ab3a5542ec"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgPhysicsWorld::rayCastClosestFilter </td>
+          <td>(</td>
+          <td class="paramtype">const NewtonBody *const&#160;</td>
+          <td class="paramname"><em>body</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> *const&#160;</td>
+          <td class="paramname"><em>hitNormal</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a>&#160;</td>
+          <td class="paramname"><em>collisionId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *const&#160;</td>
+          <td class="paramname"><em>userData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>intersectParam</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>TODO </p>
+
+</div>
+</div>
+<a class="anchor" id="ab0373c4043bc79c7d1034ac97861b578"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgPhysicsWorld::rayCastFilter </td>
+          <td>(</td>
+          <td class="paramtype">const NewtonBody *const&#160;</td>
+          <td class="paramname"><em>body</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> *const&#160;</td>
+          <td class="paramname"><em>hitNormal</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a>&#160;</td>
+          <td class="paramname"><em>collisionId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *const&#160;</td>
+          <td class="paramname"><em>userData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>intersectParam</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>TODO </p>
+
+</div>
+</div>
+<a class="anchor" id="ad2b849172f7805618678bdc2487f3e45"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac060173eb974cd288d97a2f971788a44">cgUInt</a> cgPhysicsWorld::rayCastPreFilter </td>
+          <td>(</td>
+          <td class="paramtype">const NewtonBody *const&#160;</td>
+          <td class="paramname"><em>body</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const NewtonCollision *const&#160;</td>
+          <td class="paramname"><em>collision</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *const&#160;</td>
+          <td class="paramname"><em>userData</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>TODO </p>
 
 </div>
 </div>
@@ -821,6 +1232,26 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a5e787a872b4173330f9c30a9756d532b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a> cgPhysicsWorld::mDefaultMaterialIds[<a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a9c646940bf3bb5e41c83f24b6de4bde8">cgDefaultPhysicsMaterialGroup::Count</a>]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a0378bd0385cef97512d6920a9a745ab8"></a>
 <div class="memitem">
 <div class="memproto">
@@ -971,7 +1402,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_physics_world.html">cgPhysicsWorld</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:43 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:41 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

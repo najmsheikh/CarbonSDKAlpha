@@ -14,7 +14,7 @@
 //        straight forward cgMesh objects.                                   //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 #pragma once
@@ -211,7 +211,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgObjectNode)
     //-------------------------------------------------------------------------
-    virtual bool                registerVisibility      ( cgVisibilitySet * visibilityData, cgUInt32 flags );
+    virtual bool                registerVisibility      ( cgVisibilitySet * visibilityData );
     virtual void                onComponentModified     ( cgComponentModifiedEventArgs * e );
     virtual void                onResolvePendingUpdates ( cgUInt32 updates );
     virtual bool                onNodeLoading           ( const cgUID & objectType, cgWorldQuery * nodeData, cgSceneCell * parentCell, cgCloneMethod::Base cloneMethod );

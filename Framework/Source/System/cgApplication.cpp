@@ -16,7 +16,7 @@
 //        initializing all of the systems that the application will rely on  //
 //                                                                           //
 //---------------------------------------------------------------------------//
-//      Copyright (c) 1997 - 2008 Game Institute. All Rights Reserved.       //
+//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
 
 //-----------------------------------------------------------------------------
@@ -296,6 +296,39 @@ bool cgApplication::initInterface()
 
     // Write debug info
     cgAppLog::write( cgAppLog::Info, _T("Initializing user interface.\n") );
+
+    // Instruct the interface manager to load configuration
+    cgConfigResult::Base Status = pInterface->loadConfig( mSystemConfig );
+    
+    // Were we able to match previous configuration data
+    // to that now supported by the hardware?
+    if( Status == cgConfigResult::Mismatch )
+    {
+        // Write debug info
+        cgAppLog::write( cgAppLog::Warning, _T("Previous configuration mismatch found when selecting user interface features. Selecting defaults.\n") );
+
+        // Notify the user
+        MessageBox( CG_NULL, _T("Previous configuration references features or modes not supported by the current system.\r\n\r\n")
+                          _T("It is possible that the hardware or device drivers were changed since last time the application was run.\r\n\r\n")
+                          _T("User interface configuration options will now be reset (this will not affect your profiles, keymappings or game options)."),
+                          _T("Interface Subsystem Change"), MB_OK | MB_ICONINFORMATION | MB_APPLMODAL );
+
+        // Find sensible defaults
+        Status = pInterface->loadDefaultConfig( );
+
+    } // End if mismatch loading config
+
+    // Was there an error loading the configuration
+    if ( Status != cgConfigResult::Valid )
+    {
+        // Write debug info
+        cgAppLog::write( cgAppLog::Error, _T("Failed to load a valid user interface configuration.\n") );
+        return false;
+    
+    } // End if error loading config
+
+    // Save the render driver configuration
+    pInterface->saveConfig( mSystemConfig );
 
     // Initialize the user interface system using the resource manager
     if ( !pInterface->initialize( cgResourceManager::getInstance() ) )
@@ -692,14 +725,7 @@ bool cgApplication::frameBegin( bool bRunSimulation /* = true */ )
     cgRenderDriver    * pDriver    = cgRenderDriver::getInstance();
     cgTimer           * pTimer     = cgTimer::getInstance();
     cgInputDriver     * pInput     = cgInputDriver::getInstance();
-
-	cgInputDriver * inputDriver = cgInputDriver::getInstance();
-	if ( !inputDriver->wasKeyPressed( cgKeys::F ) && inputDriver->isKeyPressed( cgKeys::F ) )
-	{
-		mMaximumFPS += 30.0f;
-		if ( mMaximumFPS > 120.0f )
-			mMaximumFPS = 30.0f;
-	}
+    cgUIManager       * pInterface = cgUIManager::getInstance();
 
     // Allowing simulation to run?
     if ( bRunSimulation == true )
@@ -739,6 +765,9 @@ bool cgApplication::frameBegin( bool bRunSimulation /* = true */ )
 
     // Allow input driver to poll
     pInput->poll();
+
+    // Allow interface manager to process.
+    pInterface->update();
 
     // Allow reference manager to process messages
     cgReferenceManager::processMessages( );

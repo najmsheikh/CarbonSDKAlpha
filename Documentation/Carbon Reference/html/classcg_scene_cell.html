@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -153,6 +153,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a11abf112baaabc9ea5cd1085eaf66ab7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene_cell.html#a11abf112baaabc9ea5cd1085eaf66ab7">getGridOffsets</a> (<a class="el" href="cg_base_types_8h.html#a205b36290def5db7b358b851cfb45586">cgInt16</a> &amp;x, <a class="el" href="cg_base_types_8h.html#a205b36290def5db7b358b851cfb45586">cgInt16</a> &amp;y, <a class="el" href="cg_base_types_8h.html#a205b36290def5db7b358b851cfb45586">cgInt16</a> &amp;z) const </td></tr>
 <tr class="memdesc:a11abf112baaabc9ea5cd1085eaf66ab7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the 3D grid coordinates for this cell.  <a href="#a11abf112baaabc9ea5cd1085eaf66ab7"></a><br/></td></tr>
 <tr class="separator:a11abf112baaabc9ea5cd1085eaf66ab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac927d1c5119e34591d9abdb1e94c75b4"><td class="memItemLeft" align="right" valign="top">const cgObjectNodeSet &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene_cell.html#ac927d1c5119e34591d9abdb1e94c75b4">getNodes</a> () const </td></tr>
+<tr class="memdesc:ac927d1c5119e34591d9abdb1e94c75b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the set containing all allocated nodes associated with this scene cell.  <a href="#ac927d1c5119e34591d9abdb1e94c75b4"></a><br/></td></tr>
+<tr class="separator:ac927d1c5119e34591d9abdb1e94c75b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff639537b6e7ef44f9c5e9a521a3acb2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene_cell.html#aff639537b6e7ef44f9c5e9a521a3acb2">isEmpty</a> () const </td></tr>
 <tr class="memdesc:aff639537b6e7ef44f9c5e9a521a3acb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this scene cell is now obsolete because it no longer contains any active nodes AND no custom properties have been defined.  <a href="#aff639537b6e7ef44f9c5e9a521a3acb2"></a><br/></td></tr>
 <tr class="separator:aff639537b6e7ef44f9c5e9a521a3acb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -208,6 +211,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a0c1a2426649b21cce1698019702a3116"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab86ad46eaac2b1b00912ca0641de14d9"><td class="memItemLeft" align="right" valign="top">cgObjectNodeSet&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene_cell.html#ab86ad46eaac2b1b00912ca0641de14d9">mNodes</a></td></tr>
 <tr class="separator:ab86ad46eaac2b1b00912ca0641de14d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a899332a0c4432d33173aef525b0b7343"><td class="memItemLeft" align="right" valign="top">NavigationTileArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene_cell.html#a899332a0c4432d33173aef525b0b7343">mNavigationTiles</a></td></tr>
+<tr class="separator:a899332a0c4432d33173aef525b0b7343"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classcg_script_interop_1_1_disposable_script_object"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_script_interop_1_1_disposable_script_object')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_script_interop_1_1_disposable_script_object.html">cgScriptInterop::DisposableScriptObject</a></td></tr>
 <tr class="memitem:a5da40dc03376bc8d5c50145690eb5f28 inherit pro_attribs_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a5da40dc03376bc8d5c50145690eb5f28">mScriptRefCount</a></td></tr>
 <tr class="separator:a5da40dc03376bc8d5c50145690eb5f28 inherit pro_attribs_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -418,6 +423,23 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Retrieve the 3D grid coordinates for this cell. </p>
+
+</div>
+</div>
+<a class="anchor" id="ac927d1c5119e34591d9abdb1e94c75b4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const cgObjectNodeSet &amp; cgSceneCell::getNodes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the set containing all allocated nodes associated with this scene cell. </p>
 
 </div>
 </div>
@@ -711,6 +733,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a899332a0c4432d33173aef525b0b7343"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">NavigationTileArray cgSceneCell::mNavigationTiles</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="ab86ad46eaac2b1b00912ca0641de14d9"></a>
 <div class="memitem">
 <div class="memproto">
@@ -761,7 +803,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_scene_cell.html">cgSceneCell</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:45 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:47 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

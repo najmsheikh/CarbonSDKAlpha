@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v1.0.0</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
    </div>
   </td>
  </tr>
@@ -136,7 +136,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a035f7d678b2d7cc97126b67b678f513c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to assign the input generator (with optional channel reuse) to this resource and updates the number of available channels accordingly. If all available channels are occupied, this resource is removed from the available pool (assuming it was a pool map to begin with).  <a href="#a035f7d678b2d7cc97126b67b678f513c"></a><br/></td></tr>
 <tr class="separator:a035f7d678b2d7cc97126b67b678f513c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af73205360ac6518947e69f6dac775023"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_texture_pool_resource.html#af73205360ac6518947e69f6dac775023">unassign</a> (void *owner, bool forceTimeReset=false)</td></tr>
-<tr class="memdesc:af73205360ac6518947e69f6dac775023"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes any references to the specified currOwner held by this resource and updates the number of available channels accordingly.  <a href="#af73205360ac6518947e69f6dac775023"></a><br/></td></tr>
+<tr class="memdesc:af73205360ac6518947e69f6dac775023"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes any references to the specified owner held by this resource and updates the number of available channels accordingly.  <a href="#af73205360ac6518947e69f6dac775023"></a><br/></td></tr>
 <tr class="separator:af73205360ac6518947e69f6dac775023"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd21ecd7d834902b50cb47db3a8e102a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_texture_pool_resource.html#abd21ecd7d834902b50cb47db3a8e102a">clearAssignments</a> ()</td></tr>
 <tr class="memdesc:abd21ecd7d834902b50cb47db3a8e102a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears out any prior assignments and resets the number of available channels to the original value  <a href="#abd21ecd7d834902b50cb47db3a8e102a"></a><br/></td></tr>
@@ -148,14 +148,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a88aa91e0c674dc29f99f83dbbf501d14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries to see whether or not the requested channels are available  <a href="#a88aa91e0c674dc29f99f83dbbf501d14"></a><br/></td></tr>
 <tr class="separator:a88aa91e0c674dc29f99f83dbbf501d14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35841164273bc66acde25de3a8536ba3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_texture_pool_resource.html#a35841164273bc66acde25de3a8536ba3">getChannelMask</a> (void *owner) const </td></tr>
-<tr class="memdesc:a35841164273bc66acde25de3a8536ba3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds a mask based on which channels the specified currOwner occupies.  <a href="#a35841164273bc66acde25de3a8536ba3"></a><br/></td></tr>
+<tr class="memdesc:a35841164273bc66acde25de3a8536ba3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds a mask based on which channels the specified owner occupies.  <a href="#a35841164273bc66acde25de3a8536ba3"></a><br/></td></tr>
 <tr class="separator:a35841164273bc66acde25de3a8536ba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e78c1f2d658d4397e9c180b88df0e2f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_texture_pool_resource.html#a0e78c1f2d658d4397e9c180b88df0e2f">wasPreviousOwner</a> (void *owner, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> previousChannelMask=0) const </td></tr>
-<tr class="memdesc:a0e78c1f2d658d4397e9c180b88df0e2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether the input owner pointer was a prior owner of this resource (i.e., was it the last one to fill/use it?).  <a href="#a0e78c1f2d658d4397e9c180b88df0e2f"></a><br/></td></tr>
+<tr class="memdesc:a0e78c1f2d658d4397e9c180b88df0e2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether the input owner pointer was the prior owner/filler of this resource (i.e., was it the last one to fill/use it?).  <a href="#a0e78c1f2d658d4397e9c180b88df0e2f"></a><br/></td></tr>
 <tr class="separator:a0e78c1f2d658d4397e9c180b88df0e2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3304b629a476ec591157928d3e72bdf2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_texture_pool_resource.html#a3304b629a476ec591157928d3e72bdf2">isAssignedType</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> dataTypeId) const </td></tr>
 <tr class="memdesc:a3304b629a476ec591157928d3e72bdf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does this resource have assigned data of the indicated type?  <a href="#a3304b629a476ec591157928d3e72bdf2"></a><br/></td></tr>
 <tr class="separator:a3304b629a476ec591157928d3e72bdf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa5c0800c0bf92dc4f5a80ea3ca5ad3a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_texture_pool_resource.html#afa5c0800c0bf92dc4f5a80ea3ca5ad3a">setFiller</a> (void *pFiller)</td></tr>
+<tr class="memdesc:afa5c0800c0bf92dc4f5a80ea3ca5ad3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flags the owner as the filler of this resource  <a href="#afa5c0800c0bf92dc4f5a80ea3ca5ad3a"></a><br/></td></tr>
+<tr class="separator:afa5c0800c0bf92dc4f5a80ea3ca5ad3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aada3540801e42a2827f9f7af8a6be0b4"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_texture_pool_resource_desc.html">cgTexturePoolResourceDesc</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_texture_pool_resource.html#aada3540801e42a2827f9f7af8a6be0b4">getDescription</a> () const </td></tr>
 <tr class="separator:aada3540801e42a2827f9f7af8a6be0b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ca73d9cf587a5f80c21ea32e9ad7997"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_texture_pool_resource_type.html#a9a38411060476ed9066bbec363b0c26a">cgTexturePoolResourceType::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_texture_pool_resource.html#a8ca73d9cf587a5f80c21ea32e9ad7997">getType</a> () const </td></tr>
@@ -421,7 +424,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Builds a mask based on which channels the specified currOwner occupies. </p>
+<p>Builds a mask based on which channels the specified owner occupies. </p>
 
 </div>
 </div>
@@ -638,6 +641,24 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="afa5c0800c0bf92dc4f5a80ea3ca5ad3a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgTexturePoolResource::setFiller </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>pOwner</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flags the owner as the filler of this resource </p>
+
+</div>
+</div>
 <a class="anchor" id="af73205360ac6518947e69f6dac775023"></a>
 <div class="memitem">
 <div class="memproto">
@@ -662,7 +683,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Removes any references to the specified currOwner held by this resource and updates the number of available channels accordingly. </p>
+<p>Removes any references to the specified owner held by this resource and updates the number of available channels accordingly. </p>
 
 </div>
 </div>
@@ -690,7 +711,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Returns whether the input owner pointer was a prior owner of this resource (i.e., was it the last one to fill/use it?). </p>
+<p>Returns whether the input owner pointer was the prior owner/filler of this resource (i.e., was it the last one to fill/use it?). </p>
 
 </div>
 </div>
@@ -704,7 +725,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_texture_pool_resource.html">cgTexturePoolResource</a></li>
-    <li class="footer">Generated on Mon Sep 3 2012 02:06:52 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Fri Mar 22 2013 16:48:55 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -83,7 +83,8 @@ shared class FiringState : AgentState
                 if ( weapon.getFiringMode() != WeaponFiringMode::SingleShot )
                 {
                     // Looped fire cycle.
-                    //mAnimationTrackIndex = actor.playAnimationSet( "Primary", mCurrentWeapon.getClass() + " Fire Cycle", AnimationPlaybackMode::Loop );
+                    if ( mNPC.firingAnimationName != "" )
+                        mNPC.selectAnimation( mNPC.firingAnimationName, AnimationPlaybackMode::Loop, 0.0f );
                 
                 } // End if !single shot
                 else
