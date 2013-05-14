@@ -19,7 +19,7 @@ namespace ResourceManager
         // Type declarations
         void declare( cgScriptEngine * engine )
         {
-            BINDSUCCESS( engine->registerObjectType( "ResourceManagerConfig", sizeof(cgResourceManager::InitConfig), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS ) );
+            BINDSUCCESS( engine->registerObjectType( "ResourceManagerConfig", sizeof(cgResourceManager::InitConfig), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
             BINDSUCCESS( engine->registerObjectType( "ResourceManager", 0, asOBJ_REF ) );
         }
 
@@ -32,16 +32,20 @@ namespace ResourceManager
             // cgResourceManager::InitConfig (Struct)
             ///////////////////////////////////////////////////////////////////////
 
-            // Register the reference/object handle support for the objects
-            registerHandleBehaviors<cgResourceManager>( engine );
+            // Register the default constructor, destructor and assignment operators.
+            registerDefaultCDA<cgResourceManager::InitConfig>( engine, "ResourceManagerConfig" );
             
             // Register object properties
             BINDSUCCESS( engine->registerObjectProperty( "ResourceManagerConfig", "uint textureMipLevels", offsetof(cgResourceManager::InitConfig,textureMipLevels) ) );
             BINDSUCCESS( engine->registerObjectProperty( "ResourceManagerConfig", "bool compressTextures", offsetof(cgResourceManager::InitConfig,compressTextures) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "ResourceManagerConfig", "String defaultShaderFile", offsetof(cgResourceManager::InitConfig,defaultShaderFile) ) );
 
             ///////////////////////////////////////////////////////////////////////
             // cgResourceManager (Class)
             ///////////////////////////////////////////////////////////////////////
+
+            // Register the reference/object handle support for the objects
+            registerHandleBehaviors<cgResourceManager>( engine );
             
             // Register base class object methods
             Core::System::References::Reference::registerReferenceMethods<cgResourceManager>( engine, "ResourceManager" );

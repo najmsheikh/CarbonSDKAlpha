@@ -516,7 +516,7 @@ bool cgWorld::postConnect( bool newWorld )
     executeQuery( _T("PRAGMA synchronous=OFF"), false );        // Don't wait for file access to complete.
     executeQuery( _T("PRAGMA count_changes=OFF"), false );      // Don't count database changes.
     executeQuery( _T("PRAGMA temp_store=2"), false );           // Temporary tables in memory.
-    
+
     // In sandbox mode, we need to perform some adjustments on the data in the database.
     if ( !newWorld && cgGetSandboxMode() != cgSandboxMode::Disabled )
     {
@@ -526,6 +526,31 @@ bool cgWorld::postConnect( bool newWorld )
         // Catch exceptions
         try
         {
+            // Bind DUMMY asset trigger functions.
+            #if defined(UNICODE) || defined(_UNICODE)
+                const cgInt textRep = SQLITE_UTF16;
+            #else // UNICODE
+                const cgInt textRep = SQLITE_UTF8;
+            #endif // !UNICODE
+            if ( sqlite3_create_function_v2( mDatabase, "AssetAdded", 2, textRep, this, emptyTriggerHandler, CG_NULL, CG_NULL, CG_NULL ) != SQLITE_OK )
+            {
+                cgAppLog::write( cgAppLog::Error, _T("Failed to bind 'AssetAdded' function to world database.\n") );
+                return false;
+            
+            } // End if failed
+            if ( sqlite3_create_function_v2( mDatabase, "AssetRemoved", 2, textRep, this, emptyTriggerHandler, CG_NULL, CG_NULL, CG_NULL ) != SQLITE_OK )
+            {
+                cgAppLog::write( cgAppLog::Error, _T("Failed to bind 'AssetRemoved' function to world database.\n") );
+                return false;
+            
+            } // End if failed
+            if ( sqlite3_create_function_v2( mDatabase, "AssetUpdated", 3, textRep, this, emptyTriggerHandler, CG_NULL, CG_NULL, CG_NULL ) != SQLITE_OK )
+            {
+                cgAppLog::write( cgAppLog::Error, _T("Failed to bind 'AssetUpdated' function to world database.\n") );
+                return false;
+            
+            } // End if failed
+
             // Before allowing a final export, perform a full scan of the database for all
             // 'path' entries in all tables in the database. These will be converted to
             // relative paths if necessary. In case of failure, run it within a transaction.
@@ -577,15 +602,20 @@ bool cgWorld::postConnect( bool newWorld )
                     query.getColumn( _T("type"), columnType );
                     
                     // type is set to 'path'?
-                    if ( columnType.compare( _T("path"), true ) == 0 )
+                    if ( columnType.size() >= 4 )
                     {
-                        // Record column information.
-                        ColumnData data;
-                        data.table = i;
-                        query.getColumn( _T("name"), data.name );
-                        pathColumns.push_back( data );
-                        
-                    } // End if type = 'path'
+                        cgString prefix = columnType.substr(0,4);
+                        if ( prefix.compare( _T("path"), true ) == 0 )
+                        {
+                            // Record column information.
+                            ColumnData data;
+                            data.table = i;
+                            query.getColumn( _T("name"), data.name );
+                            pathColumns.push_back( data );
+                            
+                        } // End if type = 'path'
+                    
+                    } // End if long enough
 
                 } // Next Column
 
@@ -604,7 +634,7 @@ bool cgWorld::postConnect( bool newWorld )
                 {
                     cgString error;
                     updateQuery.getLastError( error );
-                    throw cgExceptions::ResultException( cgString::format(_T("Failed to prepare row update queryString while generating world database absolute paths. Error: %s"), error.c_str()), cgDebugSource() );
+                    throw cgExceptions::ResultException( cgString::format(_T("Failed to prepare row update query while generating world database absolute paths. Error: %s"), error.c_str()), cgDebugSource() );
                 
                 } // End if failed
 
@@ -653,6 +683,11 @@ bool cgWorld::postConnect( bool newWorld )
             query.prepare( mDatabase, _T("COMMIT") );
             query.step( true );
 
+            // Remove DUMMY asset trigger functions.
+            sqlite3_create_function_v2( mDatabase, "AssetAdded", 2, textRep, this, CG_NULL, CG_NULL, CG_NULL, CG_NULL );
+            sqlite3_create_function_v2( mDatabase, "AssetRemoved", 2, textRep, this, CG_NULL, CG_NULL, CG_NULL, CG_NULL );
+            sqlite3_create_function_v2( mDatabase, "AssetUpdated", 3, textRep, this, CG_NULL, CG_NULL, CG_NULL, CG_NULL );
+
         } // End try
 
         catch( const cgExceptions::ResultException & e )
@@ -666,40 +701,65 @@ bool cgWorld::postConnect( bool newWorld )
 
     } // End if sandbox
 
-    // Prepare the standard 'BEGIN' transaction queryString we'll be using often.
+    // Prepare the standard 'BEGIN' transaction query we'll be using often.
     sqlite3_stmt * statement = CG_NULL;
     const cgChar * queryString = "BEGIN";
     sqlite3_prepare_v2( mDatabase, queryString, strlen(queryString), &mStatementBegin, NULL );
     if ( !mStatementBegin )
     {
         STRING_CONVERT;
-        cgAppLog::write( cgAppLog::Error, _T("Failed to compile common transaction begin queryString. Error: %s\n"), stringConvertA2CT(sqlite3_errmsg(mDatabase)) );
+        cgAppLog::write( cgAppLog::Error, _T("Failed to compile common transaction begin query. Error: %s\n"), stringConvertA2CT(sqlite3_errmsg(mDatabase)) );
         return false;
     
     } // End if failed
 
-    // Prepare the standard 'COMMIT' transaction queryString we'll be using often.
+    // Prepare the standard 'COMMIT' transaction query we'll be using often.
     queryString = "COMMIT";
     sqlite3_prepare_v2( mDatabase, queryString, strlen(queryString), &mStatementCommit, NULL );
     if ( !mStatementCommit )
     {
         STRING_CONVERT;
-        cgAppLog::write( cgAppLog::Error, _T("Failed to compile common transaction commit queryString. Error: %s\n"), stringConvertA2CT(sqlite3_errmsg(mDatabase)) );
+        cgAppLog::write( cgAppLog::Error, _T("Failed to compile common transaction commit query. Error: %s\n"), stringConvertA2CT(sqlite3_errmsg(mDatabase)) );
         return false;
     
     } // End if failed
     
-    // Prepare the standard 'ROLLBACK' transaction queryString we'll be using often.
+    // Prepare the standard 'ROLLBACK' transaction query we'll be using often.
     queryString = "ROLLBACK";
     sqlite3_prepare_v2( mDatabase, queryString, strlen(queryString), &mStatementRollback, NULL );
     if ( !mStatementRollback )
     {
         STRING_CONVERT;
-        cgAppLog::write( cgAppLog::Error, _T("Failed to compile common transaction rollback queryString. Error: %s\n"), stringConvertA2CT(sqlite3_errmsg(mDatabase)) );
+        cgAppLog::write( cgAppLog::Error, _T("Failed to compile common transaction rollback query. Error: %s\n"), stringConvertA2CT(sqlite3_errmsg(mDatabase)) );
         return false;
     
     } // End if failed
-       
+
+    // Bind user functions
+    #if defined(UNICODE) || defined(_UNICODE)
+        const cgInt textRep = SQLITE_UTF16;
+    #else // UNICODE
+        const cgInt textRep = SQLITE_UTF8;
+    #endif // !UNICODE
+    if ( sqlite3_create_function_v2( mDatabase, "AssetAdded", 2, textRep, this, onAssetAdded, CG_NULL, CG_NULL, CG_NULL ) != SQLITE_OK )
+    {
+        cgAppLog::write( cgAppLog::Error, _T("Failed to bind 'AssetAdded' function to world database.\n") );
+        return false;
+    
+    } // End if failed
+    if ( sqlite3_create_function_v2( mDatabase, "AssetRemoved", 2, textRep, this, onAssetRemoved, CG_NULL, CG_NULL, CG_NULL ) != SQLITE_OK )
+    {
+        cgAppLog::write( cgAppLog::Error, _T("Failed to bind 'AssetRemoved' function to world database.\n") );
+        return false;
+    
+    } // End if failed
+    if ( sqlite3_create_function_v2( mDatabase, "AssetUpdated", 3, textRep, this, onAssetUpdated, CG_NULL, CG_NULL, CG_NULL ) != SQLITE_OK )
+    {
+        cgAppLog::write( cgAppLog::Error, _T("Failed to bind 'AssetUpdated' function to world database.\n") );
+        return false;
+    
+    } // End if failed
+
     // Success!
     return true;
 }
@@ -932,6 +992,31 @@ bool cgWorld::save( const cgString & fileName )
         {
             cgWorldQuery query; // Make sure query goes out of scope before database is closed.
 
+            // Bind DUMMY asset trigger functions.
+            #if defined(UNICODE) || defined(_UNICODE)
+                const cgInt textRep = SQLITE_UTF16;
+            #else // UNICODE
+                const cgInt textRep = SQLITE_UTF8;
+            #endif // !UNICODE
+            if ( sqlite3_create_function_v2( databaseOut, "AssetAdded", 2, textRep, this, emptyTriggerHandler, CG_NULL, CG_NULL, CG_NULL ) != SQLITE_OK )
+            {
+                cgAppLog::write( cgAppLog::Error, _T("Failed to bind 'AssetAdded' function to world database.\n") );
+                return false;
+            
+            } // End if failed
+            if ( sqlite3_create_function_v2( databaseOut, "AssetRemoved", 2, textRep, this, emptyTriggerHandler, CG_NULL, CG_NULL, CG_NULL ) != SQLITE_OK )
+            {
+                cgAppLog::write( cgAppLog::Error, _T("Failed to bind 'AssetRemoved' function to world database.\n") );
+                return false;
+            
+            } // End if failed
+            if ( sqlite3_create_function_v2( databaseOut, "AssetUpdated", 3, textRep, this, emptyTriggerHandler, CG_NULL, CG_NULL, CG_NULL ) != SQLITE_OK )
+            {
+                cgAppLog::write( cgAppLog::Error, _T("Failed to bind 'AssetUpdated' function to world database.\n") );
+                return false;
+            
+            } // End if failed
+
             // Retrieve a list of all tables in the database.
             cgStringArray tables;
             if ( query.prepare( databaseOut, _T("SELECT name FROM 'SQLITE_MASTER' WHERE type='table'") ) == false || query.step() == false )
@@ -974,15 +1059,20 @@ bool cgWorld::save( const cgString & fileName )
                     query.getColumn( _T("type"), columnType );
                     
                     // type is set to 'path'?
-                    if ( columnType.compare( _T("path"), true ) == 0 )
+                    if ( columnType.size() >= 4 )
                     {
-                        // Record column information.
-                        ColumnData data;
-                        data.table = i;
-                        query.getColumn( _T("name"), data.name );
-                        pathColumns.push_back( data );
-                        
-                    } // End if type = 'path'
+                        cgString prefix = columnType.substr(0,4);
+                        if ( prefix.compare( _T("path"), true ) == 0 )
+                        {
+                            // Record column information.
+                            ColumnData data;
+                            data.table = i;
+                            query.getColumn( _T("name"), data.name );
+                            pathColumns.push_back( data );
+                            
+                        } // End if type = 'path'
+                    
+                    } // End if long enough
 
                 } // Next Column
 
@@ -1001,7 +1091,7 @@ bool cgWorld::save( const cgString & fileName )
                 {
                     cgString error;
                     updateQuery.getLastError( error );
-                    throw cgExceptions::ResultException( cgString::format(_T("Failed to prepare row update queryString while generating world database relative paths. Error: %s"), error.c_str()), cgDebugSource() );
+                    throw cgExceptions::ResultException( cgString::format(_T("Failed to prepare row update query while generating world database relative paths. Error: %s"), error.c_str()), cgDebugSource() );
                 
                 } // End if failed
 
@@ -2134,6 +2224,147 @@ cgResourceManager * cgWorld::getResourceManager( ) const
 {
     // Worlds always currently use the main singleton resource manager.
     return cgResourceManager::getInstance();
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onAssetAdded () (Private, Static)
+/// <summary>
+/// Internal callback function, registered with the world database as the
+/// 'AssetAdded' user-defined function, and triggered whenever a new record
+/// is created in the database that represents an asset.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgWorld::onAssetAdded( sqlite3_context * context, cgInt argCount, sqlite3_value ** values )
+{
+    const cgTChar * category, * name;
+
+    // Get argument data.
+    #if defined(UNICODE) || defined(_UNICODE)
+        category = (const cgWChar*)::sqlite3_value_text16( values[0] );
+        name     = (const cgWChar*)::sqlite3_value_text16( values[1] );
+    #else // UNICODE
+        category = (const cgChar*)::sqlite3_value_text( values[0] );
+        name     = (const cgChar*)::sqlite3_value_text( values[1] );
+    #endif // !UNICODE
+
+    // Raise the event.
+    cgWorld * world = (cgWorld*)sqlite3_user_data(context);
+    world->onAssetAdded( &cgWorldAssetUpdateEventArgs( world, (category) ? category : cgString::Empty, (name) ? name : cgString::Empty, cgString::Empty ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onAssetRemoved () (Private, Static)
+/// <summary>
+/// Internal callback function, registered with the world database as the
+/// 'AssetRemoved' user-defined function, and triggered whenever an existing
+/// record is removed from the database that represents an asset.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgWorld::onAssetRemoved( sqlite3_context * context, cgInt argCount, sqlite3_value ** values )
+{
+    const cgTChar * category, * name;
+
+    // Get argument data.
+    #if defined(UNICODE) || defined(_UNICODE)
+        category = (const cgWChar*)::sqlite3_value_text16( values[0] );
+        name     = (const cgWChar*)::sqlite3_value_text16( values[1] );
+    #else // UNICODE
+        category = (const cgChar*)::sqlite3_value_text( values[0] );
+        name     = (const cgChar*)::sqlite3_value_text( values[1] );
+    #endif // !UNICODE
+
+    // Raise the event.
+    cgWorld * world = (cgWorld*)sqlite3_user_data(context);
+    world->onAssetRemoved( &cgWorldAssetUpdateEventArgs( world, (category) ? category : cgString::Empty, (name) ? name : cgString::Empty, cgString::Empty ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onAssetUpdated () (Private, Static)
+/// <summary>
+/// Internal callback function, registered with the world database as the
+/// 'AssetUpdated' user-defined function, and triggered whenever an existing
+/// record is updated within the database that represents an asset.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgWorld::onAssetUpdated( sqlite3_context * context, cgInt argCount, sqlite3_value ** values )
+{
+    const cgTChar * category, * name, * originalName;
+
+    // Get argument data.
+    #if defined(UNICODE) || defined(_UNICODE)
+        category     = (const cgWChar*)::sqlite3_value_text16( values[0] );
+        originalName = (const cgWChar*)::sqlite3_value_text16( values[1] );
+        name         = (const cgWChar*)::sqlite3_value_text16( values[2] );
+    #else // UNICODE
+        category     = (const cgChar*)::sqlite3_value_text( values[0] );
+        originalName = (const cgChar*)::sqlite3_value_text( values[1] );
+        name         = (const cgChar*)::sqlite3_value_text( values[2] );
+    #endif // !UNICODE
+
+    // If the source and destination names are equivalent
+    // we can treat this as a no-op.
+    cgString nameFinal = (name) ? name : cgString::Empty;
+    cgString originalNameFinal = (originalName) ? originalName : cgString::Empty;
+    if ( nameFinal == originalNameFinal )
+        return;
+
+    // Raise the event.
+    cgWorld * world = (cgWorld*)sqlite3_user_data(context);
+    world->onAssetUpdated( &cgWorldAssetUpdateEventArgs( world, (category) ? category : cgString::Empty, nameFinal, originalNameFinal ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onAssetAdded () (Virtual)
+/// <summary>
+/// Can be overriden or called by derived class in order to notify all 
+/// listeners when the world database has been modified in a way that 
+/// introduced a new world asset.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgWorld::onAssetAdded( cgWorldAssetUpdateEventArgs * e )
+{
+    // Trigger 'onAssetAdded' of all listeners (duplicate list in case
+    // it is altered in response to event).
+    EventListenerList::iterator itListener;
+    EventListenerList listeners = mEventListeners;
+    for ( itListener = listeners.begin(); itListener != listeners.end(); ++itListener )
+        ((cgWorldEventListener*)(*itListener))->onAssetAdded( e );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onAssetRemoved () (Virtual)
+/// <summary>
+/// Can be overriden or called by derived class in order to notify all 
+/// listeners when the world database has been modified in a way that 
+/// removed a world asset.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgWorld::onAssetRemoved( cgWorldAssetUpdateEventArgs * e )
+{
+    // Trigger 'onAssetRemoved' of all listeners (duplicate list in case
+    // it is altered in response to event).
+    EventListenerList::iterator itListener;
+    EventListenerList listeners = mEventListeners;
+    for ( itListener = listeners.begin(); itListener != listeners.end(); ++itListener )
+        ((cgWorldEventListener*)(*itListener))->onAssetRemoved( e );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onAssetUpdated () (Virtual)
+/// <summary>
+/// Can be overriden or called by derived class in order to notify all 
+/// listeners when the world database has been modified in a way that 
+/// updated a world asset.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgWorld::onAssetUpdated( cgWorldAssetUpdateEventArgs * e )
+{
+    // Trigger 'onAssetUpdated' of all listeners (duplicate list in case
+    // it is altered in response to event).
+    EventListenerList::iterator itListener;
+    EventListenerList listeners = mEventListeners;
+    for ( itListener = listeners.begin(); itListener != listeners.end(); ++itListener )
+        ((cgWorldEventListener*)(*itListener))->onAssetUpdated( e );
 }
 
 //-----------------------------------------------------------------------------

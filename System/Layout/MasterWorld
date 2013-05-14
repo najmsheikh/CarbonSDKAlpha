@@ -86,17 +86,39 @@ CREATE TABLE [Materials::Standard] (
   [TransmissionCurveSize] SMALLINT DEFAULT (0), 
   [TransmissionCurve] BLOB, 
   [ShaderFlags] smallint DEFAULT (0), 
-  [ShaderSource] path, 
+  [ShaderSource] path[Shader], 
   [PreviewImage] blob, 
   [RefCount] integer DEFAULT (0));
+
 CREATE TRIGGER [Materials::Standard_OnDelete]
-BEFORE DELETE
-ON [Materials::Standard]
-BEGIN
-  DELETE FROM [Materials::Standard::Parameters] WHERE MaterialId=old.RefId;
-  DELETE FROM [Materials::Standard::Samplers] WHERE MaterialId=old.RefId;  
-  DELETE FROM [Scenes::MaterialUsage] WHERE MaterialId=old.RefId;
-END;
+  BEFORE DELETE
+  ON [Materials::Standard]
+  BEGIN
+    DELETE FROM [Materials::Standard::Parameters] WHERE MaterialId=old.RefId;
+    DELETE FROM [Materials::Standard::Samplers] WHERE MaterialId=old.RefId;  
+    DELETE FROM [Scenes::MaterialUsage] WHERE MaterialId=old.RefId;
+  END;
+
+CREATE TRIGGER [Materials::Standard_AssetsAdded]
+  AFTER INSERT
+  ON [Materials::Standard]
+  BEGIN
+    SELECT AssetAdded( 'Shader', new.ShaderSource );
+  END;
+
+CREATE TRIGGER [Materials::Standard_AssetsRemoved]
+  BEFORE DELETE
+  ON [Materials::Standard]
+  BEGIN
+    SELECT AssetRemoved( 'Shader', old.ShaderSource );
+  END;
+
+CREATE TRIGGER [Materials::Standard_AssetsUpdated]
+  BEFORE UPDATE
+  ON [Materials::Standard]
+  BEGIN
+    SELECT AssetUpdated( 'Shader', old.ShaderSource, new.ShaderSource );
+  END;
 
 --Table: Cells
 
@@ -228,12 +250,33 @@ CREATE TABLE [Nodes::Behaviors] (
   [NodeId] integer,
   [LoadOrder] integer,
   [Type] smallint DEFAULT 0, 
-  [Script] path,
+  [Script] path[Script],
   [TypeName] varchar(64), 
   [Data] BLOB);
 
 CREATE INDEX [Nodes::Behaviors_NodeIdIndex] ON [Nodes::Behaviors] ([NodeId]);
 CREATE INDEX [Nodes::Behaviors_SortedLoad] ON [Nodes::Behaviors] ([NodeId], [LoadOrder]);
+
+CREATE TRIGGER [Nodes::Behaviors_AssetsAdded]
+  AFTER INSERT
+  ON [Nodes::Behaviors]
+  BEGIN
+    SELECT AssetAdded( 'Script', new.Script );
+  END;
+
+CREATE TRIGGER [Nodes::Behaviors_AssetsRemoved]
+  BEFORE DELETE
+  ON [Nodes::Behaviors]
+  BEGIN
+    SELECT AssetRemoved( 'Script', old.Script );
+  END;
+
+CREATE TRIGGER [Nodes::Behaviors_AssetsUpdated]
+  BEFORE UPDATE
+  ON [Nodes::Behaviors]
+  BEGIN
+    SELECT AssetUpdated( 'Script', old.Script, new.Script );
+  END;
 
 --Table: ObjectClasses
 
@@ -271,7 +314,7 @@ CREATE TABLE [SceneElementTypes] (
 CREATE TABLE [Samplers] (
   [RefId] integer NOT NULL PRIMARY KEY, 
   [Name] varchar(64), 
-  [Filename] path, 
+  [Filename] path[Texture], 
   [AddressU] smallint, 
   [AddressV] smallint, 
   [AddressW] smallint, 
@@ -289,6 +332,27 @@ CREATE TABLE [Samplers] (
   [ComparisonFunc] SMALLINT,
   [Strength] REAL DEFAULT(1),
   [RefCount] integer DEFAULT (0));
+
+CREATE TRIGGER [Samplers_AssetsAdded]
+  AFTER INSERT
+  ON [Samplers]
+  BEGIN
+    SELECT AssetAdded( 'Texture', new.Filename );    
+  END;
+
+CREATE TRIGGER [Samplers_AssetsRemoved]
+  BEFORE DELETE
+  ON [Samplers]
+  BEGIN
+    SELECT AssetRemoved( 'Texture', old.Filename );    
+  END;
+
+CREATE TRIGGER [Samplers_AssetsUpdated]
+  BEFORE UPDATE
+  ON [Samplers]
+  BEGIN
+    SELECT AssetUpdated( 'Texture', old.Filename, new.Filename );    
+  END;
 
 --Table: Scenes::MaterialUsage
 

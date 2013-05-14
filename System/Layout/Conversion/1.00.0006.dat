@@ -1,0 +1,427 @@
+bool upgrade_1000005_to_1000006( World @ world )
+{
+    String sql;
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Convert 'Samplers' column types from 'path' to 'path[<type>]'
+    ///////////////////////////////////////////////////////////////////////////
+
+    // Copy existing table data into temporary table and drop the original.
+    sql  = "CREATE TEMPORARY TABLE [TEMP_Samplers] AS SELECT * FROM [Samplers];";
+    sql += "DROP TABLE [Samplers];";
+
+    // Rebuild 'Samplers' table.
+    sql += "CREATE TABLE [Samplers] (";
+    sql += "  [RefId] integer NOT NULL PRIMARY KEY, ";
+    sql += "  [Name] varchar(64), ";
+    sql += "  [Filename] path[Texture], ";
+    sql += "  [AddressU] smallint, ";
+    sql += "  [AddressV] smallint, ";
+    sql += "  [AddressW] smallint, ";
+    sql += "  [MinFilter] smallint, ";
+    sql += "  [MagFilter] smallint, ";
+    sql += "  [MipFilter] smallint, ";
+    sql += "  [BorderColorR] real, ";
+    sql += "  [BorderColorG] real, ";
+    sql += "  [BorderColorB] real, ";
+    sql += "  [BorderColorA] real, ";
+    sql += "  [MaxAnisotropy] smallint, ";
+    sql += "  [MipLODBias] real, ";
+    sql += "  [MinLOD] REAL, ";
+    sql += "  [MaxLOD] REAL, ";
+    sql += "  [ComparisonFunc] SMALLINT,";
+    sql += "  [Strength] REAL DEFAULT(1),";
+    sql += "  [RefCount] integer DEFAULT (0));";
+
+    // Copy data over to new table.
+    sql += "INSERT INTO [Samplers] SELECT * FROM [TEMP_Samplers];";
+
+    // Drop the temporary table.
+    sql += "DROP TABLE [TEMP_Samplers];";
+
+    // Execute the query
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Convert 'Materials::Standard' column types from 'path' to 'path[<type>]'
+    ///////////////////////////////////////////////////////////////////////////
+
+    // Copy existing table data into temporary table and drop the original.
+    sql  = "CREATE TEMPORARY TABLE [TEMP_Materials::Standard] AS SELECT * FROM [Materials::Standard];";
+    sql += "DROP TABLE [Materials::Standard];";
+
+    // Rebuild 'Materials::Standard' table.
+    sql += "CREATE TABLE [Materials::Standard] (";
+    sql += "  [RefId] integer NOT NULL PRIMARY KEY, ";
+    sql += "  [Name] varchar(128), ";
+    sql += "  [PropertiesHighPart] integer DEFAULT(0),";
+    sql += "  [PropertiesLowPart]  integer DEFAULT(0),";
+    sql += "  [DiffuseReflectanceR] real DEFAULT (1), ";
+    sql += "  [DiffuseReflectanceG] real DEFAULT (1), ";
+    sql += "  [DiffuseReflectanceB] real DEFAULT (1), ";
+    sql += "  [AmbientReflectanceR] real DEFAULT (0), ";
+    sql += "  [AmbientReflectanceG] real DEFAULT (0), ";
+    sql += "  [AmbientReflectanceB] real DEFAULT (0), ";
+    sql += "  [SpecularReflectanceR] real DEFAULT (0), ";
+    sql += "  [SpecularReflectanceG] real DEFAULT (0), ";
+    sql += "  [SpecularReflectanceB] real DEFAULT (0), ";
+    sql += "  [Gloss] real DEFAULT (5), ";
+    sql += "  [EmissiveColorR] real DEFAULT (0), ";
+    sql += "  [EmissiveColorG] real DEFAULT (0), ";
+    sql += "  [EmissiveColorB] real DEFAULT (0), ";
+    sql += "  [EmissiveHDRScalar] real DEFAULT (1), ";
+    sql += "  [MetalnessAmount] REAL DEFAULT (0), ";
+    sql += "  [MetalnessDiffuse] REAL DEFAULT (1), ";
+    sql += "  [MetalnessSpecular] REAL DEFAULT (1), ";
+    sql += "  [RimIntensity] REAL DEFAULT (0), ";
+    sql += "  [RimExponent] REAL DEFAULT (1), ";
+    sql += "  [ReflectionMode] SMALLINT DEFAULT (0), ";
+    sql += "  [ReflectionIntensity] REAL DEFAULT (1), ";
+    sql += "  [ReflectionBumpiness] REAL DEFAULT (1), ";
+    sql += "  [ReflectionMipLevel] REAL DEFAULT (0), ";
+    sql += "  [FresnelExponent] REAL DEFAULT (5), ";
+    sql += "  [FresnelDiffuse] REAL DEFAULT (0), ";
+    sql += "  [FresnelSpecular] REAL DEFAULT (0), ";
+    sql += "  [FresnelReflection] REAL DEFAULT (0), ";
+    sql += "  [FresnelOpacity] REAL DEFAULT (0), ";
+    sql += "  [BlendingMode] smallint DEFAULT (0), ";
+    sql += "  [Opacity] real DEFAULT (1), ";
+    sql += "  [SpecularOpacity] REAL DEFAULT (1), ";
+    sql += "  [SpecularOpacityLinked] TINYINT(1) DEFAULT (1), ";
+    sql += "  [DiffuseOpacityMapStrength] REAL DEFAULT (1), ";
+    sql += "  [SpecularOpacityMapStrength] REAL DEFAULT (1), ";
+    sql += "  [TransmissionType] SMALLINT DEFAULT (1), ";
+    sql += "  [TransmissionCurveSize] SMALLINT DEFAULT (0), ";
+    sql += "  [TransmissionCurve] BLOB, ";
+    sql += "  [ShaderFlags] smallint DEFAULT (0), ";
+    sql += "  [ShaderSource] path[Shader], ";
+    sql += "  [PreviewImage] blob, ";
+    sql += "  [RefCount] integer DEFAULT (0));";
+
+    sql += "CREATE TRIGGER [Materials::Standard_OnDelete]";
+    sql += "  BEFORE DELETE";
+    sql += "  ON [Materials::Standard]";
+    sql += "  BEGIN";
+    sql += "    DELETE FROM [Materials::Standard::Parameters] WHERE MaterialId=old.RefId;";
+    sql += "    DELETE FROM [Materials::Standard::Samplers] WHERE MaterialId=old.RefId;  ";
+    sql += "    DELETE FROM [Scenes::MaterialUsage] WHERE MaterialId=old.RefId;";
+    sql += "  END;";
+
+    // Copy data over to new table.
+    sql += "INSERT INTO [Materials::Standard] SELECT * FROM [TEMP_Materials::Standard];";
+
+    // Drop the temporary table.
+    sql += "DROP TABLE [TEMP_Materials::Standard];";
+
+    // Execute the query
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Convert 'Nodes::Behaviors' column types from 'path' to 'path[<type>]'
+    ///////////////////////////////////////////////////////////////////////////
+
+    // Copy existing table data into temporary table and drop the original.
+    sql  = "CREATE TEMPORARY TABLE [TEMP_Nodes::Behaviors] AS SELECT * FROM [Nodes::Behaviors];";
+    sql += "DROP TABLE [Nodes::Behaviors];";
+
+    // Rebuild 'Nodes::Behaviors' table.
+    sql += "CREATE TABLE [Nodes::Behaviors] (";
+    sql += "  [BehaviorId] integer PRIMARY KEY AUTOINCREMENT, ";
+    sql += "  [NodeId] integer,";
+    sql += "  [LoadOrder] integer,";
+    sql += "  [Type] smallint DEFAULT 0, ";
+    sql += "  [Script] path[Script],";
+    sql += "  [TypeName] varchar(64), ";
+    sql += "  [Data] BLOB);";
+
+    sql += "CREATE INDEX [Nodes::Behaviors_NodeIdIndex] ON [Nodes::Behaviors] ([NodeId]);";
+    sql += "CREATE INDEX [Nodes::Behaviors_SortedLoad] ON [Nodes::Behaviors] ([NodeId], [LoadOrder]);";
+
+    // Copy data over to new table.
+    sql += "INSERT INTO [Nodes::Behaviors] SELECT * FROM [TEMP_Nodes::Behaviors];";
+
+    // Drop the temporary table.
+    sql += "DROP TABLE [TEMP_Nodes::Behaviors];";
+
+    // Execute the query
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Convert 'Objects::ParticleEmitter::Layers' column types from 
+    // 'path' to 'path[<type>]'
+    ///////////////////////////////////////////////////////////////////////////
+
+    if ( world.tableExists( "Objects::ParticleEmitter::Layers" ) )
+    {
+        // Copy existing table data into temporary table and drop the original.
+        sql  = "CREATE TEMPORARY TABLE [TEMP_Objects::ParticleEmitter::Layers] AS SELECT * FROM [Objects::ParticleEmitter::Layers];";
+        sql += "DROP TABLE [Objects::ParticleEmitter::Layers];";
+
+        // Rebuild 'Objects::ParticleEmitter::Layers' table.
+        sql += "CREATE TABLE [Objects::ParticleEmitter::Layers] (";
+        sql += "  [LayerId] integer NOT NULL PRIMARY KEY, ";
+        sql += "  [EmitterId] integer, ";
+        sql += "  [LayerOrder] smallint DEFAULT 0, ";
+        sql += "  [Type] smallint DEFAULT 0, ";
+        sql += "  [ScriptFile] path[Script], ";
+        sql += "  [InnerCone] real, ";
+        sql += "  [OuterCone] real, ";
+        sql += "  [EmissionRadius] real, ";
+        sql += "  [DeadZoneRadius] real, ";
+        sql += "  [MaxSimultaneousParticles] INTEGER, ";
+        sql += "  [InitialParticles] integer, ";
+        sql += "  [MaxFiredParticles] integer, ";
+        sql += "  [BirthFrequency] real, ";
+        sql += "  [ParticleTexture] path[Texture], ";
+        sql += "  [ParticleShader] path[Shader], ";
+        sql += "  [SortedRender] tinyint DEFAULT 0, ";
+        sql += "  [BlendMethod] smallint DEFAULT 0, ";
+        sql += "  [FixedEmitDirX] real DEFAULT 0, ";
+        sql += "  [FixedEmitDirY] real DEFAULT 0, ";
+        sql += "  [FixedEmitDirZ] real DEFAULT 0, ";
+        sql += "  [RandomizeRotation] tinyint, ";
+        sql += "  [FireAmount] integer, ";
+        sql += "  [FireDelay] real, ";
+        sql += "  [FireDelayOffset] real, ";
+        sql += "  [BaseSizeX] real, ";
+        sql += "  [BaseSizeY] real, ";
+        sql += "  [MinLifetime] real, ";
+        sql += "  [MaxLifetime] real, ";
+        sql += "  [MinSpeed] real, ";
+        sql += "  [MaxSpeed] real, ";
+        sql += "  [MinMass] real, ";
+        sql += "  [MaxMass] real, ";
+        sql += "  [AirResistance] REAL, ";
+        sql += "  [MinAngularSpeed] real, ";
+        sql += "  [MaxAngularSpeed] real, ";
+        sql += "  [MinBaseScale] real, ";
+        sql += "  [MaxBaseScale] real,";
+        sql += "  [HDRScalar] real DEFAULT 1,";
+        sql += "  [ScaleXCurveType] SMALLINT DEFAULT 3, ";
+        sql += "  [ScaleXCurveSize] SMALLINT DEFAULT 0, ";
+        sql += "  [ScaleXCurve] BLOB, ";
+        sql += "  [ScaleYCurveType] SMALLINT DEFAULT 3, ";
+        sql += "  [ScaleYCurveSize] SMALLINT DEFAULT 0, ";
+        sql += "  [ScaleYCurve] BLOB, ";
+        sql += "  [ColorRCurveType] SMALLINT DEFAULT 3, ";
+        sql += "  [ColorRCurveSize] SMALLINT DEFAULT 0, ";
+        sql += "  [ColorRCurve] BLOB, ";
+        sql += "  [ColorGCurveType] SMALLINT DEFAULT 3, ";
+        sql += "  [ColorGCurveSize] SMALLINT DEFAULT 0, ";
+        sql += "  [ColorGCurve] BLOB, ";
+        sql += "  [ColorBCurveType] SMALLINT DEFAULT 3, ";
+        sql += "  [ColorBCurveSize] SMALLINT DEFAULT 0, ";
+        sql += "  [ColorBCurve] BLOB, ";
+        sql += "  [ColorACurveType] SMALLINT DEFAULT 3, ";
+        sql += "  [ColorACurveSize] SMALLINT DEFAULT 0, ";
+        sql += "  [ColorACurve] BLOB,";
+        sql += "  [EmissionEnabled] tinyint DEFAULT 1, ";
+        sql += "  [ApplyGravity] tinyint(1) DEFAULT 0,";
+        sql += "  [VelocityAligned] tinyint(1) DEFAULT 0, ";
+        sql += "  [VelocityScaleStrength] REAL DEFAULT 0);";
+
+        sql += "CREATE INDEX [Objects::ParticleEmitter::Layers_OrderedEmitterLayer] ON [Objects::ParticleEmitter::Layers] ([EmitterId], [LayerOrder]);";
+
+        // Copy data over to new table.
+        sql += "INSERT INTO [Objects::ParticleEmitter::Layers] SELECT * FROM [TEMP_Objects::ParticleEmitter::Layers];";
+
+        // Drop the temporary table.
+        sql += "DROP TABLE [TEMP_Objects::ParticleEmitter::Layers];";
+
+        // Execute the query
+        if ( !world.executeQuery( sql, false ) )
+            return false;
+
+    } // End if table exists
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Convert 'Objects::SoundEmitter' column types from 
+    // 'path' to 'path[<type>]'
+    ///////////////////////////////////////////////////////////////////////////
+
+    if ( world.tableExists( "Objects::SoundEmitter" ) )
+    {
+        // Copy existing table data into temporary table and drop the original.
+        sql  = "CREATE TEMPORARY TABLE [TEMP_Objects::SoundEmitter] AS SELECT * FROM [Objects::SoundEmitter];";
+        sql += "DROP TABLE [Objects::SoundEmitter];";
+
+        // Rebuild 'Objects::SoundEmitter' table.
+        sql += "CREATE TABLE [Objects::SoundEmitter] (";
+        sql += "  [RefId] integer NOT NULL PRIMARY KEY,";
+        sql += "  [SourceFile] path[Sound], ";
+        sql += "  [Streaming] tinyint(1) DEFAULT (0),";
+        sql += "  [DefaultVolume] real DEFAULT (1),";
+        sql += "  [AutoPlay] tinyint(1) DEFAULT (0),";
+        sql += "  [Looping] tinyint(1) DEFAULT (0),";
+        sql += "  [MuteOutsideRange] tinyint(1) DEFAULT (0),";
+        sql += "  [OuterRange] real,";
+        sql += "  [InnerRange] real DEFAULT(0),";
+        sql += "  [RefCount] integer DEFAULT (0));";
+
+        sql += "CREATE TRIGGER [Objects::SoundEmitter_OnDelete]";
+        sql += "  BEFORE DELETE";
+        sql += "  ON [Objects::SoundEmitter]";
+        sql += "  BEGIN";
+        sql += "    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  ";
+        sql += "  END;";
+
+        // Copy data over to new table.
+        sql += "INSERT INTO [Objects::SoundEmitter] SELECT * FROM [TEMP_Objects::SoundEmitter];";
+
+        // Drop the temporary table.
+        sql += "DROP TABLE [TEMP_Objects::SoundEmitter];";
+
+        // Execute the query
+        if ( !world.executeQuery( sql, false ) )
+            return false;
+
+    } // End if table exists
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Add new asset creation / removal / update triggers.
+    ///////////////////////////////////////////////////////////////////////////
+
+    // Asset update notification triggers for sampler table.
+    sql  = "CREATE TRIGGER [Samplers_AssetsAdded]";
+    sql += "  AFTER INSERT";
+    sql += "  ON [Samplers]";
+    sql += "  BEGIN";
+    sql += "    SELECT AssetAdded( 'Texture', new.Filename );";
+    sql += "  END;";
+
+    sql += "CREATE TRIGGER [Samplers_AssetsRemoved]";
+    sql += "  BEFORE DELETE";
+    sql += "  ON [Samplers]";
+    sql += "  BEGIN";
+    sql += "    SELECT AssetRemoved( 'Texture', old.Filename );";
+    sql += "  END;";
+
+    sql += "CREATE TRIGGER [Samplers_AssetsUpdated]";
+    sql += "  BEFORE UPDATE";
+    sql += "  ON [Samplers]";
+    sql += "  BEGIN";
+    sql += "    SELECT AssetUpdated( 'Texture', old.Filename, new.Filename );";
+    sql += "  END;";
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+
+    // Asset update notification triggers for node behavior table.
+    sql  = "CREATE TRIGGER [Nodes::Behaviors_AssetsAdded]";
+    sql += "  AFTER INSERT";
+    sql += "  ON [Nodes::Behaviors]";
+    sql += "  BEGIN";
+    sql += "    SELECT AssetAdded( 'Script', new.Script );";
+    sql += "  END;";
+
+    sql += "CREATE TRIGGER [Nodes::Behaviors_AssetsRemoved]";
+    sql += "  BEFORE DELETE";
+    sql += "  ON [Nodes::Behaviors]";
+    sql += "  BEGIN";
+    sql += "    SELECT AssetRemoved( 'Script', old.Script );";
+    sql += "  END;";
+
+    sql += "CREATE TRIGGER [Nodes::Behaviors_AssetsUpdated]";
+    sql += "  BEFORE UPDATE";
+    sql += "  ON [Nodes::Behaviors]";
+    sql += "  BEGIN";
+    sql += "    SELECT AssetUpdated( 'Script', old.Script, new.Script );";
+    sql += "  END;";
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+
+    // Asset update notification triggers for standard materials table.
+    sql  = "CREATE TRIGGER [Materials::Standard_AssetsAdded]";
+    sql += "  AFTER INSERT";
+    sql += "  ON [Materials::Standard]";
+    sql += "  BEGIN";
+    sql += "    SELECT AssetAdded( 'Shader', new.ShaderSource );";
+    sql += "  END;";
+
+    sql += "CREATE TRIGGER [Materials::Standard_AssetsRemoved]";
+    sql += "  BEFORE DELETE";
+    sql += "  ON [Materials::Standard]";
+    sql += "  BEGIN";
+    sql += "    SELECT AssetRemoved( 'Shader', old.ShaderSource );";
+    sql += "  END;";
+
+    sql += "CREATE TRIGGER [Materials::Standard_AssetsUpdated]";
+    sql += "  BEFORE UPDATE";
+    sql += "  ON [Materials::Standard]";
+    sql += "  BEGIN";
+    sql += "    SELECT AssetUpdated( 'Shader', old.ShaderSource, new.ShaderSource );";
+    sql += "  END;";
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+
+    // Asset update notification tirggers for particle emitter layers table.
+    if ( world.tableExists( "Objects::ParticleEmitter::Layers" ) )
+    {
+        sql  = "CREATE TRIGGER [Objects::ParticleEmitter::Layers_AssetsAdded]";
+        sql += "  AFTER INSERT";
+        sql += "  ON [Objects::ParticleEmitter::Layers]";
+        sql += "  BEGIN";
+        sql += "    SELECT AssetAdded( 'Script', new.ScriptFile );";
+        sql += "    SELECT AssetAdded( 'Texture', new.ParticleTexture );";
+        sql += "    SELECT AssetAdded( 'Shader', new.ParticleShader );";
+        sql += "  END;";
+
+        sql += "CREATE TRIGGER [Objects::ParticleEmitter::Layers_AssetsRemoved]";
+        sql += "  BEFORE DELETE";
+        sql += "  ON [Objects::ParticleEmitter::Layers]";
+        sql += "  BEGIN";
+        sql += "    SELECT AssetRemoved( 'Script', old.ScriptFile );";
+        sql += "    SELECT AssetRemoved( 'Texture', old.ParticleTexture );";
+        sql += "    SELECT AssetRemoved( 'Shader', old.ParticleShader );";
+        sql += "  END;";
+
+        sql += "CREATE TRIGGER [Objects::ParticleEmitter::Layers_AssetsUpdated]";
+        sql += "  BEFORE UPDATE";
+        sql += "  ON [Objects::ParticleEmitter::Layers]";
+        sql += "  BEGIN";
+        sql += "    SELECT AssetUpdated( 'Script', old.ScriptFile, new.ScriptFile );";
+        sql += "    SELECT AssetUpdated( 'Texture', old.ParticleTexture, new.ParticleTexture );";
+        sql += "    SELECT AssetUpdated( 'Shader', old.ParticleShader, new.ParticleShader );";
+        sql += "  END;";
+        if ( !world.executeQuery( sql, false ) )
+            return false;
+
+    } // End if table exists
+
+    // Asset update notification triggers for sound emitter table.
+    if ( world.tableExists( "Objects::SoundEmitter" ) )
+    {
+        sql  = "CREATE TRIGGER [Objects::SoundEmitter_AssetsAdded]";
+        sql += "  AFTER INSERT";
+        sql += "  ON [Objects::SoundEmitter]";
+        sql += "  BEGIN";
+        sql += "    SELECT AssetAdded( 'Sound', new.SourceFile );";
+        sql += "  END;";
+
+        sql += "CREATE TRIGGER [Objects::SoundEmitter_AssetsRemoved]";
+        sql += "  BEFORE DELETE";
+        sql += "  ON [Objects::SoundEmitter]";
+        sql += "  BEGIN";
+        sql += "    SELECT AssetRemoved( 'Sound', old.SourceFile );";
+        sql += "  END;";
+
+        sql += "CREATE TRIGGER [Objects::SoundEmitter_AssetsUpdated]";
+        sql += "  BEFORE UPDATE";
+        sql += "  ON [Objects::SoundEmitter]";
+        sql += "  BEGIN";
+        sql += "    SELECT AssetUpdated( 'Sound', old.SourceFile, new.SourceFile );";
+        sql += "  END;";
+        if ( !world.executeQuery( sql, false ) )
+            return false;
+
+    } // End if table exists
+
+    // Update version number to 1.00.0006
+    if ( !world.executeQuery( "UPDATE [Configuration] SET Version=1,Subversion=0,Revision=6 WHERE Type='Primary'", false ) )
+        return false;
+
+    // Success!
+    return true;
+}

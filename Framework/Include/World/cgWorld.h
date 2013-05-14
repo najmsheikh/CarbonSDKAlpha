@@ -44,6 +44,8 @@ class  cgWorldConfiguration;
 class  cgTransform;
 struct sqlite3;
 struct sqlite3_stmt;
+struct sqlite3_context;
+struct Mem;
 
 //-----------------------------------------------------------------------------
 // Globally Unique Type Id(s)
@@ -75,6 +77,16 @@ struct CGE_API cgSceneLoadEventArgs
 
 }; // End Struct cgSceneLoadEventArgs
 
+struct CGE_API cgWorldAssetUpdateEventArgs : public cgWorldEventArgs
+{
+    cgWorldAssetUpdateEventArgs( cgWorld * _world, const cgString & _category, const cgString & _name, const cgString &_originalName ) :
+        cgWorldEventArgs( _world ), originalName( _originalName ), name( _name ), category( _category ) {}
+    cgString category;
+    cgString name;
+    cgString originalName;
+
+}; // End Struct cgWorldAssetUpdateEventArgs
+
 //-----------------------------------------------------------------------------
 // Main Class Declarations
 //----------------------------------------------------------------------------
@@ -99,6 +111,10 @@ public:
     virtual void    onSceneLoadFailed   ( cgSceneLoadEventArgs * e ) {};
     virtual void    onSceneLoaded       ( cgSceneLoadEventArgs * e ) {};
     virtual void    onSceneUnloading    ( cgSceneLoadEventArgs * e ) {};
+
+    virtual void    onAssetAdded        ( cgWorldAssetUpdateEventArgs * e ) {};
+    virtual void    onAssetRemoved      ( cgWorldAssetUpdateEventArgs * e ) {};
+    virtual void    onAssetUpdated      ( cgWorldAssetUpdateEventArgs * e ) {};
 };
 
 //-----------------------------------------------------------------------------
@@ -221,6 +237,10 @@ protected:
     virtual void                onSceneLoaded               ( cgSceneLoadEventArgs * e );
     virtual void                onSceneUnloading            ( cgSceneLoadEventArgs * e );
 
+    virtual void                onAssetAdded                ( cgWorldAssetUpdateEventArgs * e );
+    virtual void                onAssetRemoved              ( cgWorldAssetUpdateEventArgs * e );
+    virtual void                onAssetUpdated              ( cgWorldAssetUpdateEventArgs * e );
+
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
@@ -239,6 +259,14 @@ protected:
     ComponentTypeTableSet           mExistingTypeTables;        // All component type tables that have been created in the database.
 
 private:
+    //-------------------------------------------------------------------------
+    // Private Static Functions
+    //-------------------------------------------------------------------------
+    static void                     onAssetAdded        ( sqlite3_context * context, cgInt argCount, Mem ** values );
+    static void                     onAssetRemoved      ( sqlite3_context * context, cgInt argCount, Mem ** values );
+    static void                     onAssetUpdated      ( sqlite3_context * context, cgInt argCount, Mem ** values );
+    static void                     emptyTriggerHandler ( sqlite3_context * context, cgInt argCount, Mem ** values ) {}
+
     //-------------------------------------------------------------------------
     // Private Static Variables
     //-------------------------------------------------------------------------

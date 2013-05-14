@@ -41,6 +41,8 @@ namespace cgSystemMessages
         Resources_CollectGarbage        = 1001,
         Resources_ReloadShaders         = 1002,
         Resources_ReloadScripts         = 1003,
+        Resources_ResourceAdded         = 1004,
+        Resources_ResourceRemoved       = 1005,
 
         // Messages issued by cgInputDriver
         InputDriver_MouseMoved          = 2001,

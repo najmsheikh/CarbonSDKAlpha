@@ -1474,15 +1474,12 @@ void cgScene::unloadObjectNode( cgObjectNode * node, bool unloadChildren )
     if ( !node )
         return;
 
-    // ToDo: temporary debug.
-    //cgAppLog::write( cgAppLog::Debug, _T("Unloading node '%s' (0x%X)\n"), node->getName().c_str(), node->getReferenceId() );
-
     // Unloading children first if requested.
     if ( unloadChildren )
     {
         cgObjectNodeList::iterator itChild;
         cgObjectNodeList childNodes = node->getChildren();
-        for ( itChild = childNodes.begin(); itChild != childNodes.end(); ++itChild );
+        for ( itChild = childNodes.begin(); itChild != childNodes.end(); ++itChild )
             (*itChild)->unload( true );
 
     } // End if unload children

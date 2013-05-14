@@ -74,8 +74,38 @@ struct cgConstantBufferDesc;
 const cgUID RTID_ResourceManager = {0x68A37B4A, 0xA149, 0x44FA, {0x8A, 0x11, 0xF1, 0x4E, 0x6D, 0xEB, 0xE2, 0xFE}};
 
 //-----------------------------------------------------------------------------
+// Event Argument Definitions
+//-----------------------------------------------------------------------------
+struct CGE_API cgResourceUpdateEventArgs
+{
+    cgResourceUpdateEventArgs( cgResource * _resource ) :
+        resource( _resource ) {}
+    cgResource * resource;
+
+}; // End Struct cgResourceUpdateEventArgs
+
+//-----------------------------------------------------------------------------
 // Main Class Declarations
 //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//  Name : cgResourceManagerEventListener (Class)
+/// <summary>
+/// Abstract interface class from which other classes can derive in order 
+/// to recieve messages whenever resource manager events occur.
+/// </summary>
+//-----------------------------------------------------------------------------
+class CGE_API cgResourceManagerEventListener : public cgEventListener
+{
+    DECLARE_DERIVED_SCRIPTOBJECT( cgResourceManagerEventListener, cgEventListener, "ResourceManagerEventListener" )
+
+public:
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods
+    //-------------------------------------------------------------------------
+    virtual void    onResourceAdded     ( cgResourceUpdateEventArgs * e ) {};
+    virtual void    onResourceRemoved   ( cgResourceUpdateEventArgs * e ) {};
+};
+
 //-----------------------------------------------------------------------------
 //  Name : cgResourceManager (Class)
 /// <summary>
@@ -105,6 +135,7 @@ public:
     {
         cgInt32     textureMipLevels;       // Number of levels to generate for texture mip mapping (0 = full chain, -1 = whatever is in the file)
         bool        compressTextures;       // Should attempt to compress textures if supported
+        cgString    defaultShaderFile;      // The name of the default surface shader file to associate if unavailable.
     };
 
     struct MaterialKey
@@ -291,9 +322,9 @@ public:
     //-------------------------------------------------------------------------
     virtual void                dispose                     ( bool disposeBase );
 
-private:
+protected:
     //-------------------------------------------------------------------------
-    // Private Structures
+    // Protected Structures
     //-------------------------------------------------------------------------
     struct ShaderKey
     {
@@ -356,7 +387,7 @@ private:
     friend bool CGE_API operator < ( const BlendStateKey&, const BlendStateKey& );
     
     //-------------------------------------------------------------------------
-    // Private Typedefs
+    // Protected Typedefs
     //-------------------------------------------------------------------------
     CGE_LIST_DECLARE(cgResource*, ResourceItemList)
     CGE_SET_DECLARE (cgResource*, ResourceItemSet)
@@ -368,7 +399,7 @@ private:
     CGE_MAP_DECLARE (cgString, cgResource*, NamedResourceMap)
     
     //-------------------------------------------------------------------------
-    // Private Methods
+    // Protected Methods
     //-------------------------------------------------------------------------
     bool                    postInit                    ( );
     cgString                listActiveResources         ( ResourceItemList & resourceList );
@@ -409,7 +440,13 @@ private:
     void                    sendGarbageMessage          ( );
 
     //-------------------------------------------------------------------------
-    // Private Variables
+    // Protected Virtual Methods
+    //-------------------------------------------------------------------------
+    virtual void            onResourceAdded             ( cgResourceUpdateEventArgs * e );
+    virtual void            onResourceRemoved           ( cgResourceUpdateEventArgs * e );
+
+    //-------------------------------------------------------------------------
+    // Protected Variables
     //-------------------------------------------------------------------------
     InitConfig                  mConfig;                        // Configuration for the resource manager.
     bool                        mDestructionEnabled;            // When destruction is disabled, resources are forced into the garbage queue on unload until it is re-enabled.
@@ -450,7 +487,6 @@ private:
     cgAudioDriver             * mAudioDriver;                   // The audio driver to which we are tied.
     cgSampler                 * mDefaultSamplers[2];            // The default samplers to apply if one is not explicitly available.
     cgScriptHandle              mDefaultShader;                 // Default surface shader script to use if none is supplied within a material.
-    cgString                    mDefaultShaderFile;             // The name of the default surface shader file to associate if unavailable.
     cgMaterialHandle            mDefaultMaterial;               // Default material used for the 'CollapseMaterials' batching method.
 
     //-------------------------------------------------------------------------

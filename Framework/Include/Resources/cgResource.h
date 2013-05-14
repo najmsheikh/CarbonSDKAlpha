@@ -82,12 +82,13 @@ public:
     // Public Inline Methods
     //-------------------------------------------------------------------------
     // Inline functions for retrieving / setting cached resource related responses
-    inline cgResourceType::Base getResourceType     ( ) const      { return mResourceType; }
-    inline cgResourceManager  * getManager          ( ) const      { return mManager; }
-    inline bool                 canEvict            ( ) const      { return mCanEvict; }
-    inline bool                 isLoaded            ( ) const      { return mResourceLoaded; }
-    inline bool                 isResourceLost      ( ) const      { return mResourceLost; }
-    inline void                 setResourceLost     ( bool lost )  { mResourceLost = lost; }
+    inline cgResourceType::Base getResourceType         ( ) const      { return mResourceType; }
+    inline cgStreamType::Base   getStreamType           ( ) const      { return mStreamType; }
+    inline cgResourceManager  * getManager              ( ) const      { return mManager; }
+    inline bool                 canEvict                ( ) const      { return mCanEvict; }
+    inline bool                 isLoaded                ( ) const      { return mResourceLoaded; }
+    inline bool                 isResourceLost          ( ) const      { return mResourceLost; }
+    inline void                 setResourceLost         ( bool lost )  { mResourceLost = lost; }
     
     //-----------------------------------------------------------------------------
     // Name : resourceTouched ()

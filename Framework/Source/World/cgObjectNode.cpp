@@ -382,7 +382,7 @@ void cgObjectNode::unload( bool unloadChildren )
         {
             cgObjectNodeList::iterator itChild;
             cgObjectNodeList childNodes = getChildren();
-            for ( itChild = childNodes.begin(); itChild != childNodes.end(); ++itChild );
+            for ( itChild = childNodes.begin(); itChild != childNodes.end(); ++itChild )
                 (*itChild)->unload( true );
 
         } // End if unload children

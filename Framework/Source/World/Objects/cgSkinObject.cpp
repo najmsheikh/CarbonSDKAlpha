@@ -620,6 +620,8 @@ bool cgSkinObject::renderSubset( cgCameraNode * pCamera, cgVisibilitySet * pVisD
 
     // Disable vertex blending
     pDriver->setVertexBlendData( CG_NULL, CG_NULL, 0, -1 );
+    if ( currentMaxBlendIndex != -1 )
+        pDriver->commitChanges( );
 
     // Drawn
     return true;

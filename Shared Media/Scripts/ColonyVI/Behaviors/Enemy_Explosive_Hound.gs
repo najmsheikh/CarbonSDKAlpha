@@ -100,7 +100,7 @@ shared class Enemy_Explosive_Hound : NPCAgent
             // Wait until sound has finished and then unload the agent and all its children.
             AudioBuffer @ effect = mExplosionSound.getResource(true);
             if ( @effect == null || !effect.isLoaded() || !effect.isPlaying() )
-                mNode.unload( false ); // ToDo: Unload all children!
+                mNode.unload( true );
         
         } // End if exploded
         else

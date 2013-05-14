@@ -1001,11 +1001,6 @@ void cgDX11Texture<_BaseClass>::deviceRestored()
 template <class _BaseClass>
 bool cgDX11Texture<_BaseClass>::getImageData( cgImage & imageOut )
 {
-    /*// ToDo: 9999 - Add error handling.
-    LPDIRECT3DSURFACE9  pTextureSurface = NULL, pSrcSurface = NULL;
-    D3DLOCKED_RECT      SrcData;
-    D3DSURFACE_DESC     desc;
-
     // Validate Requirements
     if ( !mTexture )
         return false;
@@ -1013,125 +1008,164 @@ bool cgDX11Texture<_BaseClass>::getImageData( cgImage & imageOut )
     // Make sure the texture is up to date.
     update();
 
-    // Is this a valid 2D or cube texture?
-    if ( mInfo.type == cgBufferType::Texture1D || mInfo.type == cgBufferType::Texture2D || 
-         mInfo.type == cgBufferType::Video || mInfo.type == cgBufferType::RenderTarget )
+    // Retrieve D3D device for texture creation (required DX11 class driver)
+    cgDX11RenderDriver * driver = dynamic_cast<cgDX11RenderDriver*>(mManager->getRenderDriver());
+    if ( !driver )
+        return false;
+    ID3D11Device * device = driver->getD3DDevice();
+    if ( !device )
+        return false;
+    ID3D11DeviceContext * deviceContext = driver->getD3DDeviceContext();
+    if ( !deviceContext )
     {
-        LPDIRECT3DTEXTURE9 texture = NULL;
-        if ( FAILED( mTexture->QueryInterface( IID_IDirect3DTexture9, (void**)&texture ) ) )
-            return false;
-
-        // Read from the top level surface
-        texture->GetSurfaceLevel( 0, &pTextureSurface );
-        texture->Release();
-
-    } // End if standard / render target texture
-    else if ( mInfo.type == cgBufferType::TextureCube || mInfo.type == cgBufferType::RenderTargetCube )
-    {
-        LPDIRECT3DCUBETEXTURE9 texture = NULL;
-        if ( FAILED( mTexture->QueryInterface( IID_IDirect3DCubeTexture9, (void**)&texture ) ) )
-            return false;
-
-        // Read from the top level surface of the relevant face
-        texture->GetCubeMapSurface( (D3DCUBEMAP_FACES)m_CurrentCubeFace, 0, &pTextureSurface );
-        texture->Release();
-
-    } // End if cube map
-    else
-    {
-        // Invalid operation
+        device->Release();
         return false;
     
-    } // End if other
+    } // End if no context
+
+    // First copy the resource data from video memory into a staging resource.
+    D3D11_TEXTURE2D_DESC desc;
+    desc.Width          = mInfo.width;
+    desc.Height         = mInfo.height;
+    desc.MipLevels      = 1;
+    desc.ArraySize      = 1;
+    desc.Format         = (DXGI_FORMAT)cgDX11BufferFormatEnum::formatToNative(mInfo.format);
+    desc.SampleDesc.Count   = 1;
+    desc.SampleDesc.Quality = 0;
+    desc.Usage          = D3D11_USAGE_STAGING;
+    desc.BindFlags      = 0;
+    desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+    desc.MiscFlags      = 0;
+
+    // Create an empty texture.
+    ID3D11Resource * sourceResource = CG_NULL;
+    ID3D11Texture2D * stagingTexture = CG_NULL;
+    HRESULT result = device->CreateTexture2D( &desc, CG_NULL, &stagingTexture );
+    if ( SUCCEEDED( result ) )
+    {
+        stagingTexture->QueryInterface( __uuidof( ID3D11Resource ), (void**)&sourceResource );
+        stagingTexture->Release();
+
+    } // End if success
+    else
+    {
+        device->Release();
+        deviceContext->Release();
+        return false;
+    
+    } // End if failed
+
+    // Compute the correct sub resource index depending on the texture type.
+    cgUInt subResourceIndex = 0;
+    if ( mInfo.type == cgBufferType::TextureCube || mInfo.type == cgBufferType::RenderTargetCube )
+        subResourceIndex = D3D11CalcSubresource( 0, mCurrentCubeFace, mInfo.mipLevels );
+    else
+        subResourceIndex = D3D11CalcSubresource( 0, 0, mInfo.mipLevels );
+
+    // Now copy the appropriate region over.
+    deviceContext->CopySubresourceRegion( sourceResource, 0, 0, 0, 0, mTexture, subResourceIndex, NULL );
 
     // If the output image buffer has not yet been allocated, we must do so first.
-    pTextureSurface->GetDesc( &desc );
-    if ( !ImageOut.IsValid() )
+    if ( !imageOut.isValid() )
     {
-        if ( !ImageOut.CreateImage( desc.width, desc.height, mInfo.format, false ) )
+        if ( !imageOut.createImage( mInfo.width, mInfo.height, mInfo.format, false ) )
             return false;
     
     } // End if allocate
-    cgUInt32 nWidth = ImageOut.GetWidth();
-    cgUInt32 nHeight = ImageOut.GetHeight();
+    cgUInt32 width = imageOut.getWidth();
+    cgUInt32 height = imageOut.getHeight();
 
-    // If this is a render target texture, we must first copy it into a system memory surface.
-    if ( mInfo.type == cgBufferType::RenderTarget || mInfo.type == cgBufferType::RenderTargetCube )
+    // Now we have our staging resource, we need to copy its data
+    // over into the image. If it is not of the correct format or
+    // size however, we must perform a further staging resource
+    // transfer first.
+    if ( mInfo.format != imageOut.getFormat() || mInfo.width != width || mInfo.height != height )
     {
-        IDirect3DDevice9 * device;
+        // Now copy into a new staging resource of the appropriate size / format
+        D3D11_TEXTURE2D_DESC desc;
+        desc.Width          = width;
+        desc.Height         = height;
+        desc.MipLevels      = 1;
+        desc.ArraySize      = 1;
+        desc.Format         = (DXGI_FORMAT)cgDX11BufferFormatEnum::formatToNative(imageOut.getFormat());
+        desc.SampleDesc.Count   = 1;
+        desc.SampleDesc.Quality = 0;
+        desc.Usage          = D3D11_USAGE_STAGING;
+        desc.BindFlags      = 0;
+        desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+        desc.MiscFlags      = 0;
+
+        // Create an empty texture.
+        ID3D11Texture2D * stagingTexture = CG_NULL;
+        HRESULT result = device->CreateTexture2D( &desc, CG_NULL, &stagingTexture );
+        if ( FAILED( result ) )
+        {
+            sourceResource->Release();
+            device->Release();
+            deviceContext->Release();
+            return false;
         
-        // We need to decode the texture into a new surface.
-        pTextureSurface->GetDevice( &pDevice );
-        pDevice->CreateOffscreenPlainSurface( desc.width, desc.height, desc.format, D3DPOOL_SYSTEMMEM, &pSrcSurface, CG_NULL );
-        pDevice->GetRenderTargetData( pTextureSurface, pSrcSurface );
-        pDevice->Release();
+        } // End if failed
 
-        // Original surface can now be released.
-        pTextureSurface->Release();
-        pTextureSurface = CG_NULL;
-
-        // The system memory surface now becomes our source surface.
-        pTextureSurface = pSrcSurface;
-        pSrcSurface = CG_NULL;
-
-    } // End if render target
-
-    // If the current texture format matches that required (in the image buffer) and the
-    // requested size is identical, then we can directly copy from the texture's surface. 
-    // If not, we must convert and/or downsample it first.
-    if ( mInfo.format == ImageOut.GetFormat() && description.width == nWidth && description.height == nHeight )
-    {
-        // Just use the texture's surface.
-        pSrcSurface = pTextureSurface;
-        pTextureSurface = NULL;
-
-    } // End if matched surface
-    else
-    {
-        IDirect3DDevice9 * device;
+        // Use D3DX11 to perform the transfer.
+        D3DX11_TEXTURE_LOAD_INFO loadInfo;
+        memset( &loadInfo, 0, sizeof(D3DX11_TEXTURE_LOAD_INFO) );
+        loadInfo.Filter         = D3DX11_FILTER_LINEAR;
+        loadInfo.MipFilter      = D3DX11_FILTER_LINEAR;
+        loadInfo.NumElements    = 1;
+        loadInfo.NumMips        = 1;
+        if ( FAILED( D3DX11LoadTextureFromTexture( deviceContext, sourceResource, &loadInfo, stagingTexture ) ) )
+        {
+            sourceResource->Release();
+            stagingTexture->Release();
+            device->Release();
+            deviceContext->Release();
+            return false;
         
-        // We need to decode the texture into a new surface.
-        pTextureSurface->GetDevice( &pDevice );
-        cgToDoAssert( "DX11", "Consider supported formats!" );
-        pDevice->CreateOffscreenPlainSurface( nWidth, nHeight, 
-                                             (D3DFORMAT)cgDX11BufferFormatEnum::formatToNative(ImageOut.GetFormat()),
-                                             D3DPOOL_SYSTEMMEM, &pSrcSurface, NULL );
-        D3DXLoadSurfaceFromSurface( pSrcSurface, NULL, NULL, pTextureSurface, NULL, NULL, D3DX_DEFAULT, 0 );
-        pDevice->Release();
-
+        } // End if failed
+        
         // Original surface can now be released.
-        pTextureSurface->Release();
-        pTextureSurface = NULL;
+        sourceResource->Release();
+        stagingTexture->QueryInterface( __uuidof( ID3D11Resource ), (void**)&sourceResource );
+        stagingTexture->Release();
 
     } // End if mismatched surface
 
     // Lock the surface so that we can copy pixel data out.
-    pSrcSurface->LockRect( &SrcData, NULL, D3DLOCK_READONLY );
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    if ( FAILED( deviceContext->Map( sourceResource, 0, D3D11_MAP_READ, 0, &mappedResource ) ) )
+    {
+        sourceResource->Release();
+        device->Release();
+        deviceContext->Release();
+        return CG_NULL;
     
+    } // End if failed
+
     // Copy image data.
-    cgByte * pSrcBuffer   = (cgByte*)SrcData.pBits;
-    cgByte * pDestBuffer  = (cgByte*)ImageOut.getBuffer();
-    cgUInt32 nPixelStride = ImageOut.GetBytesPerPixel();
-    cgUInt32 nDestPitch   = ImageOut.GetPitch();
-    for ( cgUInt32 y = 0; y < nHeight; ++y )
+    cgUInt32 pixelStride       = imageOut.getBytesPerPixel();
+    cgByte * sourceBuffer      = (cgByte*)mappedResource.pData;
+    cgByte * destinationBuffer = (cgByte*)imageOut.getBuffer();
+    cgUInt32 destinationPitch  = imageOut.getPitch();
+    for ( cgUInt32 y = 0; y < height; ++y )
     {
         // Duplicate current scanline
-        memcpy( pDestBuffer, pSrcBuffer, nWidth * nPixelStride );
+        memcpy( destinationBuffer, sourceBuffer, width * pixelStride );
         
         // Move down to next row
-        pSrcBuffer  += SrcData.Pitch;
-        pDestBuffer += nDestPitch;
+        sourceBuffer  += mappedResource.RowPitch;
+        destinationBuffer += destinationPitch;
 
     } // Next Row
 
     // Clean up
-    pSrcSurface->UnlockRect( );
-    pSrcSurface->Release();
+    deviceContext->Unmap( sourceResource, 0 );
+    device->Release();
+    deviceContext->Release();
+    sourceResource->Release();
 
     // Success!
-    return true;*/
-    // 7777
-    return false;
+    return true;
 }
 
 //-----------------------------------------------------------------------------

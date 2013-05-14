@@ -19,7 +19,7 @@ CREATE TABLE [Objects::ParticleEmitter::Layers] (
   [EmitterId] integer, 
   [LayerOrder] smallint DEFAULT 0, 
   [Type] smallint DEFAULT 0, 
-  [ScriptFile] path, 
+  [ScriptFile] path[Script], 
   [InnerCone] real, 
   [OuterCone] real, 
   [EmissionRadius] real, 
@@ -28,8 +28,8 @@ CREATE TABLE [Objects::ParticleEmitter::Layers] (
   [InitialParticles] integer, 
   [MaxFiredParticles] integer, 
   [BirthFrequency] real, 
-  [ParticleTexture] path, 
-  [ParticleShader] path, 
+  [ParticleTexture] path[Texture], 
+  [ParticleShader] path[Shader], 
   [SortedRender] tinyint DEFAULT 0, 
   [BlendMethod] smallint DEFAULT 0, 
   [FixedEmitDirX] real DEFAULT 0, 
@@ -77,3 +77,30 @@ CREATE TABLE [Objects::ParticleEmitter::Layers] (
   [VelocityScaleStrength] REAL DEFAULT 0);
 
 CREATE INDEX [Objects::ParticleEmitter::Layers_OrderedEmitterLayer] ON [Objects::ParticleEmitter::Layers] ([EmitterId], [LayerOrder]);
+
+CREATE TRIGGER [Objects::ParticleEmitter::Layers_AssetsAdded]
+  AFTER INSERT
+  ON [Objects::ParticleEmitter::Layers]
+  BEGIN
+    SELECT AssetAdded( 'Script', new.ScriptFile );    
+    SELECT AssetAdded( 'Texture', new.ParticleTexture );    
+    SELECT AssetAdded( 'Shader', new.ParticleShader );
+  END;
+
+CREATE TRIGGER [Objects::ParticleEmitter::Layers_AssetsRemoved]
+  BEFORE DELETE
+  ON [Objects::ParticleEmitter::Layers]
+  BEGIN
+    SELECT AssetRemoved( 'Script', old.ScriptFile );    
+    SELECT AssetRemoved( 'Texture', old.ParticleTexture );    
+    SELECT AssetRemoved( 'Shader', old.ParticleShader );
+  END;
+
+CREATE TRIGGER [Objects::ParticleEmitter::Layers_AssetsUpdated]
+  BEFORE UPDATE
+  ON [Objects::ParticleEmitter::Layers]
+  BEGIN
+    SELECT AssetUpdated( 'Script', old.ScriptFile, new.ScriptFile );    
+    SELECT AssetUpdated( 'Texture', old.ParticleTexture, new.ParticleTexture );    
+    SELECT AssetUpdated( 'Shader', old.ParticleShader, new.ParticleShader );
+  END;  

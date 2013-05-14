@@ -2,7 +2,7 @@
 
 CREATE TABLE [Objects::SoundEmitter] (
   [RefId] integer NOT NULL PRIMARY KEY,
-  [SourceFile] path, 
+  [SourceFile] path[Sound], 
   [Streaming] tinyint(1) DEFAULT (0),
   [DefaultVolume] real DEFAULT (1),
   [AutoPlay] tinyint(1) DEFAULT (0),
@@ -18,3 +18,24 @@ CREATE TRIGGER [Objects::SoundEmitter_OnDelete]
   BEGIN
     DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
   END;
+
+CREATE TRIGGER [Objects::SoundEmitter_AssetsAdded]
+  AFTER INSERT
+  ON [Objects::SoundEmitter]
+  BEGIN
+    SELECT AssetAdded( 'Sound', new.SourceFile );    
+  END;
+
+CREATE TRIGGER [Objects::SoundEmitter_AssetsRemoved]
+  BEFORE DELETE
+  ON [Objects::SoundEmitter]
+  BEGIN
+    SELECT AssetRemoved( 'Sound', old.SourceFile );
+  END;
+
+CREATE TRIGGER [Objects::SoundEmitter_AssetsUpdated]
+  BEFORE UPDATE
+  ON [Objects::SoundEmitter]
+  BEGIN
+    SELECT AssetUpdated( 'Sound', old.SourceFile, new.SourceFile );    
+  END;  

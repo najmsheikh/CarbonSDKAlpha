@@ -75,7 +75,8 @@ cgResourceManager::cgResourceManager( ) : cgReference( cgReferenceManager::gener
 
     // Clear structures
     memset( mDefaultSamplers, 0, sizeof(mDefaultSamplers) );
-    memset( &mConfig, 0, sizeof(InitConfig) );
+    mConfig.compressTextures = false;
+    mConfig.textureMipLevels = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -278,10 +279,10 @@ bool cgResourceManager::loadConfig( const cgString & strFileName )
     // Retrieve configuration options
     mConfig.compressTextures  = GetPrivateProfileInt( _T("Resources"), _T("CompressTextures"), 1, strFileName.c_str() ) > 0;
     mConfig.textureMipLevels  = GetPrivateProfileInt( _T("Resources"), _T("TextureMipLevels"), 0, strFileName.c_str() );
-
+    
     // Retrieve the default surface shader details
     GetPrivateProfileString( _T("Resources"), _T("DefaultShader"), _T(""), strValue, MAX_PATH, strFileName.c_str() );
-    mDefaultShaderFile = strValue;
+    mConfig.defaultShaderFile = strValue;
     
     // Success!!
     return true;
@@ -311,7 +312,7 @@ bool cgResourceManager::saveConfig( const cgString & strFileName )
     WritePrivateProfileString( _T("Resources"), _T("CompressTextures"), strBuffer.c_str(), strFileName.c_str() );
     strBuffer = cgString::format( _T("%i"), mConfig.textureMipLevels );
     WritePrivateProfileString( _T("Resources"), _T("TextureMipLevels"), strBuffer.c_str(), strFileName.c_str() );
-    WritePrivateProfileString( _T("Resources"), _T("DefaultShader"), mDefaultShaderFile.c_str(), strFileName.c_str() );
+    WritePrivateProfileString( _T("Resources"), _T("DefaultShader"), mConfig.defaultShaderFile.c_str(), strFileName.c_str() );
     
     // Success!!
     return true;
@@ -389,8 +390,8 @@ bool cgResourceManager::postInit( )
     // Load the default surface shader script if any supplied. New instance
     // of the surface shader class defined within this script will be created
     // for any material that does not define its own shader file.
-    if ( !mDefaultShaderFile.empty() )
-        loadSurfaceShaderScript( &mDefaultShader, mDefaultShaderFile, cgResourceFlags::AlwaysResident, cgDebugSource() );
+    if ( !mConfig.defaultShaderFile.empty() )
+        loadSurfaceShaderScript( &mDefaultShader, mConfig.defaultShaderFile, cgResourceFlags::AlwaysResident, cgDebugSource() );
 
     // Create the default material used primarily for the 'CollapseMaterials' batching method.
     createMaterial( &mDefaultMaterial, cgMaterialType::Standard, 0, cgDebugSource() );
@@ -1380,7 +1381,7 @@ bool cgResourceManager::createSurfaceShader( cgSurfaceShaderHandle * hResOut, co
 //-----------------------------------------------------------------------------
 bool cgResourceManager::createDefaultSurfaceShader( cgSurfaceShaderHandle * hResOut, cgUInt32 nFlags /* = 0 */, const cgDebugSourceInfo & _debugSource /* = cgDebugSourceInfo(_T(""),0) */ )
 {
-    return createSurfaceShader( hResOut, mDefaultShaderFile, nFlags, _debugSource );
+    return createSurfaceShader( hResOut, mConfig.defaultShaderFile, nFlags, _debugSource );
 }
 
 //-----------------------------------------------------------------------------
@@ -2902,6 +2903,9 @@ bool cgResourceManager::processNewResource( _HandleType * hResOut, _ResourceType
     if ( hResOut != CG_NULL )
         *hResOut = _HandleType( pNewResource, hResOut->getDatabaseUpdate(), hResOut->getOwner() );
 
+    // Notify listeners if required.
+    onResourceAdded( &cgResourceUpdateEventArgs( pNewResource ) );
+
     // Success!
     return true;
 }
@@ -4073,6 +4077,9 @@ void cgResourceManager::removeResource( cgResource * pResource )
         } // End case PixelShader
 
     } // End Switch type
+
+    // Notify listeners (before resource is finally destroyed).
+    onResourceRemoved( &cgResourceUpdateEventArgs( pResource ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -4149,6 +4156,57 @@ void cgResourceManager::releaseResourceList( ResourceItemList & ResourceList, bo
         } // End if all items
 
     } // Next resource
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onResourceAdded() (Virtual)
+/// <summary>
+/// Can be overriden or called by derived class when the a new resource has
+/// been added to the system for management in order to notify all listeners.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgResourceManager::onResourceAdded( cgResourceUpdateEventArgs * e )
+{
+    // Trigger 'onResourceAdded' of all listeners (duplicate list in case
+    // it is altered in response to event).
+    EventListenerList::iterator itListener;
+    EventListenerList listeners = mEventListeners;
+    for ( itListener = listeners.begin(); itListener != listeners.end(); ++itListener )
+        ((cgResourceManagerEventListener*)(*itListener))->onResourceAdded( e );
+    
+    // Build the message for anyone listening via messaging system
+    cgMessage message;
+    message.messageId      = cgSystemMessages::Resources_ResourceAdded;
+    message.messageData    = e;
+
+    // Send to anyone interested
+    cgReferenceManager::sendMessageToGroup( getReferenceId(), cgSystemMessageGroups::MGID_ResourceManager, &message );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onResourceRemoved() (Virtual)
+/// <summary>
+/// Can be overriden or called by derived class when the a resource is about
+/// to be removed from the system for management in order to notify all 
+/// listeners.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgResourceManager::onResourceRemoved( cgResourceUpdateEventArgs * e )
+{
+    // Trigger 'onResourceRemoved' of all listeners (duplicate list in case
+    // it is altered in response to event).
+    EventListenerList::iterator itListener;
+    EventListenerList listeners = mEventListeners;
+    for ( itListener = listeners.begin(); itListener != listeners.end(); ++itListener )
+        ((cgResourceManagerEventListener*)(*itListener))->onResourceRemoved( e );
+    
+    // Build the message for anyone listening via messaging system
+    cgMessage message;
+    message.messageId      = cgSystemMessages::Resources_ResourceRemoved;
+    message.messageData    = e;
+
+    // Send to anyone interested
+    cgReferenceManager::sendMessageToGroup( getReferenceId(), cgSystemMessageGroups::MGID_ResourceManager, &message );
 }
 
 //-----------------------------------------------------------------------------
