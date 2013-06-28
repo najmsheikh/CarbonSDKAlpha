@@ -97,7 +97,7 @@ shared class FirstPersonActor : IScriptedObjectBehavior
 
         // Load sound effects.
         ResourceManager @ resources = mActor.getScene().getResourceManager();
-        resources.loadAudioBuffer( mReloadSound,   "Sounds/GunReload.wav", AudioBufferFlags::Complex, 0, DebugSource() );
+        resources.loadAudioBuffer( mReloadSound,   "Sounds/M16 Reload.ogg", AudioBufferFlags::Complex, 0, DebugSource() );
         resources.loadAudioBuffer( mFireLoopSound, "Sounds/Carbine Fire.ogg", AudioBufferFlags::Complex, 0, DebugSource() );
         resources.loadAudioBuffer( mFireEndSound,  "Sounds/Carbine Fire End.ogg", AudioBufferFlags::Complex, 0, DebugSource() );
 

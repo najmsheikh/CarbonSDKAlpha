@@ -54,6 +54,8 @@ namespace PhysicsWorld
             BINDSUCCESS( engine->registerObjectMethod( "PhysicsWorld", "bool rayCastClosest( const Vector3 &in, const Vector3 &in, CollisionContact &inout )", asMETHODPR(cgPhysicsWorld, rayCastClosest, ( const cgVector3&, const cgVector3&, cgCollisionContact& ), bool), asCALL_THISCALL) );
             // ToDo: bool                rayCast             ( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgCollisionContact::Array & contacts );
             BINDSUCCESS( engine->registerObjectMethod( "PhysicsWorld", "int getDefaultMaterialGroupId( DefaultPhysicsMaterialGroup ) const", asMETHODPR(cgPhysicsWorld, getDefaultMaterialGroupId, ( cgDefaultPhysicsMaterialGroup::Base ) const, cgInt32), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "PhysicsWorld", "int createMaterialGroup( )", asMETHODPR(cgPhysicsWorld, createMaterialGroup, ( ), cgInt32), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "PhysicsWorld", "void enableMaterialCollision( int, int, bool )", asMETHODPR(cgPhysicsWorld, enableMaterialCollision, ( cgInt32, cgInt32, bool ), void), asCALL_THISCALL) );
         }
 
     }; // End Class : Package

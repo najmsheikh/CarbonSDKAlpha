@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 // Script Includes
 //-----------------------------------------------------------------------------
-#include_once "NPCAgent.gsh"
+#include_once "../API/NPCAgent.gsh"
 
 //-----------------------------------------------------------------------------
 // Class Definitions
@@ -33,7 +33,17 @@ shared class Enemy_Explosive_Hound : NPCAgent
     ///////////////////////////////////////////////////////////////////////////
 	// Private Member Variables
 	///////////////////////////////////////////////////////////////////////////
-    private AudioBufferHandle       mExplosionSound;
+    private int                 mExplosionSound;
+    private int                 mFootstepSound;
+    private array<int>          mIdleSounds;            // Array containing a random selection of grunting sounds for use during idling.
+    private array<int>          mHuntingSounds;         // Array containing a random selection of grunting sounds for use during hunting.
+    private array<int>          mDeathSounds;           // Array containing a random selection of grunting sounds for use during death.
+    
+    private array<SoundRef@>    mHuntingSoundChannels;
+    private SoundRef@           mFootstepSoundChannel;
+    
+    private IntervalTimer       mIdleTimer;
+    private IntervalTimer       mHuntingTimer;
 
 	///////////////////////////////////////////////////////////////////////////
 	// Constructors & Destructors
@@ -45,10 +55,14 @@ shared class Enemy_Explosive_Hound : NPCAgent
 	Enemy_Explosive_Hound( )
     {
         // Setup NPC description
+        mFactionId              = 1;
         maxDetectionConeH       = 200.0f;
         maxDetectionConeV       = 90.0f;
         maxDetectionRange       = 40.0f;
-        maxFiringRange          = 2.0f; // Move within 2 radius when advancing on the player.
+        maxFiringRange          = 0.0f;
+        idealFiringRange        = 0.0f;
+        minFiringRange          = 0.0f;     // Don't try and stay separated.
+        throttlePathFinding     = false;    // Constantly update path to target when charging.
         mMaximumHealth          = 75;
         mMaximumArmor           = 0;
         supportsRagdoll         = false;
@@ -57,6 +71,8 @@ shared class Enemy_Explosive_Hound : NPCAgent
         walkAnimationName       = "Run";
         maxSpeed                = 10.0f;
 
+		mIdleTimer.setInterval( 7, 12 );
+		mHuntingTimer.setInterval( 6, 12 );
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -73,6 +89,21 @@ shared class Enemy_Explosive_Hound : NPCAgent
         mCurrentHealth      = mMaximumHealth;
         mCurrentArmor       = mMaximumArmor;
 
+        // Load sound effects.
+        mIdleSounds.resize( 3 );
+        mIdleSounds[0] = mAudioManager.loadSound( "Sounds/Wildlife 1.ogg", true );
+        mIdleSounds[1] = mAudioManager.loadSound( "Sounds/Wildlife 2.ogg", true );
+        mIdleSounds[2] = mAudioManager.loadSound( "Sounds/Wildlife 3.ogg", true );
+
+        mHuntingSounds.resize( 1 );
+        mHuntingSounds[0] = mAudioManager.loadSound( "Sounds/Monster Demon Screech.ogg", true );
+		mFootstepSound    = mAudioManager.loadSound( "Sounds/Bug Movement.ogg", true );
+        mExplosionSound   = mAudioManager.loadSound( "Sounds/Grenade Explosion.ogg", true );
+
+        mHuntingSoundChannels.resize( 1 );
+        @mHuntingSoundChannels[0] = null;
+        @mFootstepSoundChannel    = null;
+        
         // Trigger base class implementation
         NPCAgent::onAttach( object );
 	}
@@ -84,8 +115,46 @@ shared class Enemy_Explosive_Hound : NPCAgent
 	//-------------------------------------------------------------------------
     void onDetach( ObjectNode @ object )
     {
+		// Release memory
+		mIdleSounds.resize( 0 );
+		mHuntingSounds.resize( 0 );
+		mDeathSounds.resize( 0 );
+		
         // Call base class implementation
         NPCAgent::onDetach( object );
+    }
+
+    //-------------------------------------------------------------------------
+	// Name : processSound () (Event)
+	// Desc : Called during onUpdate to select any sounds we wish to play based
+	//        on current state.
+	// Note : There are other ways to do this. This was the simplest although
+	//        perhaps a bit hacky.
+	//-------------------------------------------------------------------------
+    void processSound( float elapsedTime )
+    {
+		if ( !isAlive() )
+			return;
+
+		int state = mState.getStateIdentifier();
+    	if ( state == AgentStateId::Idle )
+		{
+            // Play idle sounds occassionally.
+			if ( mIdleTimer.update( elapsedTime ) )
+                mAudioManager.playSound( mIdleSounds[randomInt( 0, mIdleSounds.length()-1 )], true, false, 1.0f, Vector3(0,0,0), mNode );
+		
+		} // End if idle
+    	else if ( state == AgentStateId::Repositioning )
+		{
+			// Play looping footsteps sound if not already.
+            if ( !mAudioManager.isSoundPlaying( mFootstepSoundChannel ))
+                @mFootstepSoundChannel = mAudioManager.playSound( mFootstepSound, true, true, 1.0f, Vector3(0,0,0), mNode );
+            
+            // If the creature is within X meters of its target, scream!
+            float distanceToEnemy = vec3Length(mNode.getPosition() - targetLastKnownPos);
+            if ( distanceToEnemy < 12.0f && !mAudioManager.isSoundPlaying( mHuntingSoundChannels[0] ) )
+                @mHuntingSoundChannels[0] = mAudioManager.playSound( mHuntingSounds[0], true, false, 1.0f, Vector3(0,0,0), mNode );
+		}
     }
 
 	//-------------------------------------------------------------------------
@@ -94,26 +163,28 @@ shared class Enemy_Explosive_Hound : NPCAgent
 	//-------------------------------------------------------------------------
 	void onUpdate( float elapsedTime )
 	{
-        // Exploded yet?
+        // Do nothing if we are no longer alive.
         if ( !isAlive() )
+            return;
+
+        // If the agent is within 2 meters of its target, explode!
+        if ( targetAcquired )
         {
-            // Wait until sound has finished and then unload the agent and all its children.
-            AudioBuffer @ effect = mExplosionSound.getResource(true);
-            if ( @effect == null || !effect.isLoaded() || !effect.isPlaying() )
-                mNode.unload( true );
-        
-        } // End if exploded
-        else
-        {
-            // If the agent is within 2 meters of the player, explode!
-            InputDriver @ input = getAppInputDriver();
-            if ( vec3Length(mNode.getPosition() - playerNode.getPosition()) < 2.0f )
+            float distanceToEnemy = vec3Length(mNode.getPosition() - targetLastKnownPos);
+            if ( distanceToEnemy < 2.0f )
+            {
                 kill();
-        
-        } // End if !exploded
+                return;
+            
+            } // End if explode!
+
+        } // End if has target
 
         // Call base class implementation
         NPCAgent::onUpdate( elapsedTime );
+        
+        // Play sounds based on state
+        processSound( elapsedTime );
 	}
 
     //-------------------------------------------------------------------------
@@ -126,7 +197,8 @@ shared class Enemy_Explosive_Hound : NPCAgent
         if ( !isAlive() )
             return;
 
-        // Call the base class implementation first to finish up.
+        // Call the base class implementation first to finish up
+        // (this will cause a switch to the 'dead' state).
         NPCAgent::kill( hitNode, hitPoint, hitImpulse );
 
         // Spawn the explosion particle emitter.
@@ -158,7 +230,7 @@ shared class Enemy_Explosive_Hound : NPCAgent
             if ( @agent != null )
             {
                 // Notify!
-                agent.onExplosionHit( mNode.getPosition(), 60, (1.0f-(distance / forceRange)), 100.0f );
+                agent.onExplosionHit( mNode.getPosition(), 100, (1.0f-(distance / forceRange)), 100.0f );
 
             } // End if agent
             else
@@ -176,26 +248,27 @@ shared class Enemy_Explosive_Hound : NPCAgent
                                 
         } // Next object
 
-        // Hide the agent
-        mNode.showNode( false, true );
-
         // Play the explosion sound.
-        ResourceManager @ resources = scene.getResourceManager();
-        resources.loadAudioBuffer( mExplosionSound, "Sounds/Grenade Explosion.wav", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        AudioBuffer @ effect = mExplosionSound.getResource(true);
-        if ( @effect != null && effect.isLoaded() )
-        {
-            effect.set3DSoundPosition( mNode.getPosition() );
-            //effect.setVolume( 0.9f );
-            effect.setBufferPosition( 0 );
-            effect.play( false ); // Once
-        
-        } // End if loaded
+        mAudioManager.playSound( mExplosionSound, true, false, 1.0f, mNode.getPosition(), null );
 
+        // Stop any sounds that might still be playing.
+        mAudioManager.stopSound( mHuntingSoundChannels[0] );
+        mAudioManager.stopSound( mFootstepSoundChannel );
+
+        // Unload the node entirely.
+        mNode.unload( true );
     }
 
     ///////////////////////////////////////////////////////////////////////////
 	// Public Method Overrides (NPCAgent)
 	///////////////////////////////////////////////////////////////////////////
+    //-------------------------------------------------------------------------
+	// Name : getHeight ()
+	// Desc : Calculate current height of the agent.
+	//-------------------------------------------------------------------------
+    float getHeight( )
+    {
+        return 1.1f;
+    }
 
 } // End Class Enemy_Explosive_Hound

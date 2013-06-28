@@ -19,7 +19,17 @@
 //-----------------------------------------------------------------------------
 // Script Includes
 //-----------------------------------------------------------------------------
-#include_once "Agent.gsh"
+#include_once "../API/Agent.gsh"
+#include_once "../API/AudioManager.gsh"
+
+//-----------------------------------------------------------------------------
+// Constants
+//-----------------------------------------------------------------------------
+const float DetonationTimer     = 3.0f; // Seconds
+const float DamageRadius        = 10.0f;
+const float MaximumDamage       = 400.0f;
+const float MaximumObjectForce  = 400.0f;
+const float MaximumAgentForce   = 100.0f;
 
 //-----------------------------------------------------------------------------
 // Class Definitions
@@ -33,11 +43,10 @@ shared class Grenade : IScriptedObjectBehavior
     ///////////////////////////////////////////////////////////////////////////
 	// Private Member Variables
 	///////////////////////////////////////////////////////////////////////////
-    private ObjectNode@             mNode;                  // The node to which we are attached.
-    private float                   mTimeAlive;             // Amount of time this has been alive.
-    private bool                    mArmed;
-    private bool                    mExploded;
-    private AudioBufferHandle       mExplosionSound;
+    private ObjectNode@ mNode;                  // The node to which we are attached.
+    private float       mTimeAlive;             // Amount of time this has been alive.
+    private bool        mArmed;
+    private int         mExplosionSound;
     
 	///////////////////////////////////////////////////////////////////////////
 	// Constructors & Destructors
@@ -62,10 +71,24 @@ shared class Grenade : IScriptedObjectBehavior
 	{
         // Initialize variables
         @mNode     = object;
-        mArmed     = (mNode.getCustomProperties().getProperty( "armed", 0 ) != 0);
+        mArmed     = (mNode.getCustomProperty( "armed", 0 ) != 0);
         mTimeAlive = 0;
-        mExploded  = false;
-	}
+
+        // Is this the collidable scene grenade?
+        if ( mNode.getPhysicsModel() == PhysicsModel::RigidDynamic )
+        {
+            // Create a custom material group for this grenade and make sure that it
+            // cannot collide with the player character or cast only bodies.
+            PhysicsWorld @ physics = mNode.getScene().getPhysicsWorld();
+            int grenadeGroup = physics.createMaterialGroup();
+            physics.enableMaterialCollision( grenadeGroup, physics.getDefaultMaterialGroupId( DefaultPhysicsMaterialGroup::PlayerCharacter ), false );
+            physics.enableMaterialCollision( grenadeGroup, physics.getDefaultMaterialGroupId( DefaultPhysicsMaterialGroup::CastOnly ), false );
+
+            // Assign the grenade's physics body to this group.
+            mNode.getPhysicsBody().setMaterialGroupId( grenadeGroup );
+
+        } // End if RigidDynamic
+    }
 
     //-------------------------------------------------------------------------
 	// Name : onDetach () (Event)
@@ -111,87 +134,64 @@ shared class Grenade : IScriptedObjectBehavior
         } // End if !armed
         else
         {
-            if ( !mExploded )
+            // Explode after a further 'n' seconds from being thrown.
+            if ( mTimeAlive >= DetonationTimer )
             {
-                // Explode after a further 3 seconds from being thrown.
-                if ( mTimeAlive >= 3.0f )
+                // Spawn the explosion particle emitter.
+                Scene @ scene = mNode.getScene();
+                ObjectNode @ explosion = scene.loadObjectNode( 0x603, CloneMethod::ObjectInstance, false );
+                explosion.setPosition( mNode.getPosition() );
+
+                // Throw nearby dynamic objects and damage agents.
+                array<ObjectNode@> nodes;
+                scene.getObjectNodesInBounds( mNode.getPosition(), DamageRadius, nodes );
+                for ( int i = 0; i < nodes.length(); ++i )
                 {
-                    // Spawn the explosion particle emitter.
-                    Scene @ scene = mNode.getScene();
-                    ObjectNode @ explosion = scene.loadObjectNode( 0x603, CloneMethod::ObjectInstance, false );
-                    explosion.setPosition( mNode.getPosition() );
+                    // Skip self
+                    ObjectNode @ testNode = nodes[i];
+                    if ( @mNode == @testNode )
+                        continue;
 
-                    // Throw nearby dynamic objects and damage agents.
-                    float forceRange = 10.0f;
-                    array<ObjectNode@> nodes;
-                    scene.getObjectNodesInBounds( mNode.getPosition(), forceRange, nodes );
-                    for ( int i = 0; i < nodes.length(); ++i )
+                    // Compute actual distance to object
+                    Vector3 delta = testNode.getPosition() - mNode.getPosition();
+                    float distance = vec3Length( delta );
+
+                    // If this object has a behavior, is it an agent?
+                    Agent @ agent = null;
+                    if ( testNode.getBehaviorCount() != 0 )
+                        @agent = cast<Agent>(testNode.getScriptedBehavior(0));
+
+                    // Notify if agent, otherwise attempt to throw.
+                    if ( @agent != null )
                     {
-                        // Skip self
-                        ObjectNode @ testNode = nodes[i];
-                        if ( @mNode == @testNode )
-                            continue;
+                        // Notify!
+                        agent.onExplosionHit( mNode.getPosition(), MaximumDamage, (1.0f-(distance / DamageRadius)), MaximumAgentForce );
 
-                        // Compute actual distance to object
-                        Vector3 delta = testNode.getPosition() - mNode.getPosition();
-                        float distance = vec3Length( delta );
-
-                        // If this object has a behavior, is it an agent?
-                        Agent @ agent = null;
-                        if ( testNode.getBehaviorCount() != 0 )
-                            @agent = cast<Agent>(testNode.getScriptedBehavior(0));
-
-                        // Notify if agent, otherwise attempt to throw.
-                        if ( @agent != null )
-                        {
-                            // Notify!
-                            agent.onExplosionHit( mNode.getPosition(), 400, (1.0f-(distance / forceRange)), 100.0f );
-
-                        } // End if agent
-                        else
-                        {
-                            // Has physics body?
-                            PhysicsBody @ body = testNode.getPhysicsBody();
-                            if ( @body != null && body.getMass() > CGE_EPSILON )
-                            {
-                                delta /= distance; // normalize
-                                body.applyImpulse( delta * (400.0f / body.getMass()) * (1.0f-(distance / forceRange)) );
-                            
-                            } // End if has body
-
-                        } // End if !agent
-                                            
-                    } // Next object
-
-                    // Hide the grenade
-                    mNode.showNode( false, true );
-                    mExploded = true;
-
-                    // Play the explosion sound.
-                    ResourceManager @ resources = mNode.getScene().getResourceManager();
-                    resources.loadAudioBuffer( mExplosionSound, "Sounds/Grenade Explosion.wav", AudioBufferFlags::Complex3D, 0, DebugSource() );
-                    AudioBuffer @ effect = mExplosionSound.getResource(true);
-                    if ( @effect != null && effect.isLoaded() )
+                    } // End if agent
+                    else
                     {
-                        effect.set3DSoundPosition( mNode.getPosition() );
-                        //effect.setVolume( 0.9f );
-                        effect.setBufferPosition( 0 );
-                        effect.play( false ); // Once
-                    
-                    } // End if loaded
-                
-                } // End if after 3 seconds
+                        // Has physics body?
+                        PhysicsBody @ body = testNode.getPhysicsBody();
+                        if ( @body != null && body.getMass() > CGE_EPSILON )
+                        {
+                            delta /= distance; // normalize
+                            body.applyImpulse( delta * (MaximumObjectForce / body.getMass()) * (1.0f-(distance / DamageRadius)) );
+                        
+                        } // End if has body
 
-            } // End if !exploded
-            else
-            {
-                // Wait until sound has finished
-                AudioBuffer @ effect = mExplosionSound.getResource(true);
-                if ( @effect == null || !effect.isLoaded() || !effect.isPlaying() )
-                    mNode.unload();
+                    } // End if !agent
+                                        
+                } // Next object
 
-            } // End if exploded
-        
+                // Play the explosion sound.
+                AudioManager @ audioManager = getAudioManager();
+                audioManager.playSound( "Sounds/Grenade Explosion.ogg", true, false, 1.0f, mNode.getPosition(), null );
+
+                // Unload the grenade.
+                mNode.unload();
+
+            } // End if explode
+
         } // End if armed
 	}
 

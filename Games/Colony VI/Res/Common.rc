@@ -102,9 +102,9 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDS_VERSION             "Version 1.0.0"
-    IDS_COPYRIGHT           "Copyright © 1997 - 2012 Game Institute. All Rights Reserved."
-    IDS_TITLE               "Colony VI - Version 1.0.0 - GameInstitute.com"
+    IDS_VERSION             "Version 0.8.12"
+    IDS_COPYRIGHT           "Copyright © 1997 - 2013 Game Institute. All Rights Reserved."
+    IDS_TITLE               "Carbon Demo - Version 0.8.12 - GameInstitute.com"
 END
 
 #endif    // English (U.K.) resources

@@ -793,6 +793,7 @@ struct CGE_API cgMaterialTerms
     cgFloat         metalnessSpecular;
     cgFloat         rimExponent;
     cgFloat         rimIntensity;
+    cgFloat         alphaTestValue;
     
     // Reflections
     cgFloat         reflectionIntensity;
@@ -816,6 +817,7 @@ struct CGE_API cgMaterialTerms
         gloss                       ( 15.0f ),
         diffuseOpacityMapStrength   ( 1.0f ),
         specularOpacityMapStrength  ( 1.0f ),
+        alphaTestValue              ( 0.5f ),
         metalnessAmount             ( 0.0f ),
         metalnessDiffuse            ( 1.0f ),
         metalnessSpecular           ( 1.0f ),

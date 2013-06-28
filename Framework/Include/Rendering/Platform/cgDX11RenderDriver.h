@@ -383,7 +383,7 @@ public:
     //-------------------------------------------------------------------------
     // Constructors & Destructors
     //-------------------------------------------------------------------------
-    cgDX11RenderDriverInit   ( const cgRenderDriver::InitConfig & config, bool enforceConfig );
+    cgDX11RenderDriverInit   ( const cgRenderDriverConfig & config, bool enforceConfig );
     
 private:
     //-------------------------------------------------------------------------
@@ -395,8 +395,8 @@ private:
     //-------------------------------------------------------------------------
     // Private Variables
     //-------------------------------------------------------------------------
-    cgRenderDriver::InitConfig  mConfig;    // Requested configuration options during initialization
-    bool                        mEnforce;   // Should we strictly enforce the configuration options?
+    cgRenderDriverConfig  mConfig;    // Requested configuration options during initialization
+    bool                  mEnforce;   // Should we strictly enforce the configuration options?
 };
 
 #endif // CGE_DX11_RENDER_SUPPORT

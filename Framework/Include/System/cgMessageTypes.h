@@ -80,8 +80,8 @@ namespace cgSystemMessages
         UI_CheckBox_OnClick                 = 4180,
         UI_CheckBox_OnCheckedStateChange    = 4181,
 
-        // Messages issued by cgSceneLoader
-        SceneLoader_ProgressUpdated     = 5001,
+        // Messages issued by cgScene
+        Scene_LoadProgressUpdate        = 5001,
 
         // Messages issued by cgAppWindow
         AppWindow_OnCreate              = 6001,
@@ -121,7 +121,7 @@ namespace cgSystemMessageGroups
     // {7026E4D4-2946-44fe-B4DD-41DCD785F6C2}
     const cgUID MGID_KeyboardInput   = { 0x7026e4d4, 0x2946, 0x44fe, { 0xb4, 0xdd, 0x41, 0xdc, 0xd7, 0x85, 0xf6, 0xc2 } };
     // {8D14BD26-A712-4086-A1C5-36EA9C9B679B}
-    const cgUID MGID_SceneLoader     = { 0x8d14bd26, 0xa712, 0x4086, { 0xa1, 0xc5, 0x36, 0xea, 0x9c, 0x9b, 0x67, 0x9b } };
+    const cgUID MGID_Scene           = { 0x8d14bd26, 0xa712, 0x4086, { 0xa1, 0xc5, 0x36, 0xea, 0x9c, 0x9b, 0x67, 0x9b } };
     // {089FB0DF-6862-4E0D-96D8-2018DDD546A7}
     const cgUID MGID_AppWindow       = { 0x089FB0DF, 0x6862, 0x4E0D, { 0x96, 0xD8, 0x20, 0x18, 0xDD, 0xD5, 0x46, 0xA7 } };
     // {E47EB347-E611-4411-AD1C-4AA9E1294CDD}

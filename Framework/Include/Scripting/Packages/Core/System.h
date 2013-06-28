@@ -82,10 +82,21 @@ namespace System
         //---------------------------------------------------------------------
         static cgString executingFile()
         {
-            cgScript * script = (cgScript*)asGetActiveContext()->GetUserData();
-            if ( script != CG_NULL )
-                return script->getResourceName();
-            return cgString::Empty;;
+            asIScriptFunction * function = asGetActiveContext()->GetFunction();
+            if ( !function )
+            {
+                cgScript * script = (cgScript*)asGetActiveContext()->GetUserData();
+                if ( script != CG_NULL )
+                    return script->getResourceName();
+                return cgString::Empty;
+            
+            } // End if no function
+            else
+            {
+                STRING_CONVERT;
+                return cgString(stringConvertA2CT(function->GetScriptSectionName()));
+            
+            } // End if has function
         }
 
         //---------------------------------------------------------------------

@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------------------
 // Script Includes
 //-----------------------------------------------------------------------------
-#include_once "Weapon.gsh"
+#include_once "../API/Weapon.gsh"
 
 //-----------------------------------------------------------------------------
 // Class Definitions
@@ -48,17 +48,19 @@ shared class Weapon_Orc_Shotgun : Weapon
         // Describe the weapon
         mRoundsPerMagazine      = 8;
         mFireCooldown           = 0.8f; // 800ms cooldown on firing.
-        mBaseDamage             = 100;
+        mBaseDamage             = 60;
         mMinDamageRange         = 0;
         mMaxDamageRange         = 30;
         mProjectilesReleased    = 7;
         mProjectileSpread       = 10.0f;
         mProjectileVelocity     = 100.0f;
+		mWeaponFireVolume       = 1.0f;
 
         // Setup the initial weapon state.
         mFiringMode             = WeaponFiringMode::SingleShot;
         mCurrentMagazineRounds  = mRoundsPerMagazine;
         mTotalRounds            = mRoundsPerMagazine * 4000;
+        mMaximumRounds          = mTotalRounds;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -72,18 +74,18 @@ shared class Weapon_Orc_Shotgun : Weapon
 	void onAttach( ObjectNode @ object )
 	{
         // Setup base class with references to required objects.
-        @mMuzzleFlashEmitter = cast<ParticleEmitterNode>(object.findChild( "Muzzle_Flash_Orc_Shotgun" ));
+        mMuzzleFlashEmitters.resize(1);
+        @mMuzzleFlashEmitters[0] = cast<ParticleEmitterNode>(object.findChild( "Muzzle_Flash_Orc_Shotgun" ));
         //@mMuzzleFlashLight   = object.findChild( "Muzzle_Light_Beretta" );
         //@mEjectionPortSpawn  = object.findChild( "Weapon_Beretta_Ejection" );
 
         // Load sound effects.
-        ResourceManager @ resources = object.getScene().getResourceManager();
-        resources.loadAudioBuffer( mReloadSound,   "Sounds/Beretta Reload.wav", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mFireOnceSound, "Sounds/Shotgun Fire.wav", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mFireEndSound,  "Sounds/Carbine Fire End.ogg", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mWeaponDrySound,  "Sounds/Carbine Dry.ogg", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mMagazineLowSound,  "Sounds/Magazine Low.wav", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mToggleModeSound,  "Sounds/Carbine Dry.ogg", AudioBufferFlags::Complex3D, 0, DebugSource() );
+        mReloadSound      = mAudioManager.loadSound( "Sounds/Beretta Reload.ogg", true );
+        mFireOnceSound    = mAudioManager.loadSound( "Sounds/Shotgun Fire.ogg", true );
+        mFireEndSound     = mAudioManager.loadSound( "Sounds/Carbine Fire End.ogg", true );
+        mWeaponDrySound   = mAudioManager.loadSound( "Sounds/Carbine Dry.ogg", true );
+        mMagazineLowSound = mAudioManager.loadSound( "Sounds/Magazine Low.ogg", true );
+        mToggleModeSound  = mAudioManager.loadSound( "Sounds/Carbine Dry.ogg", true );
 
         // Trigger base class implementation
         Weapon::onAttach( object );

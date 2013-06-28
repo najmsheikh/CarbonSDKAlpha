@@ -62,22 +62,23 @@ public:
 	// Public Methods
 	//------------------------------------------------------------
 	void	        tick                            ( );
-    void	        tick                            ( cgFloat lockFPS );
+    void	        tick                            ( cgDouble lockFPS );
     void            enableSmoothing                 ( bool enabled );
     cgDouble        getTime                         ( bool queryTimer ) const;
     cgInt64         getPerfomanceCounter            ( bool queryTimer ) const;
     cgUInt32        getFrameRate                    ( ) const;
     cgDouble        measurePeriod                   ( cgInt64 counterBegin, cgInt64 counterEnd ) const;
-    void            setSimulationSpeed              ( cgFloat speed ) { mSimulationSpeed = speed; }
-    void            setRateLimit                    ( cgFloat rateLimit );
+    void            setSimulationSpeed              ( cgDouble speed ) { mSimulationSpeed = speed; }
+    void            setRateLimit                    ( cgDouble rateLimit );
     void            incrementFrameCounter           ( ) { ++mFrameCounter; }
 
     // Inlines for rapid access to internal data
     inline cgUInt32 getFrameCounter                 ( ) const { return mFrameCounter; }
-    inline cgReal   getTimeElapsed                  ( ) const { return mSimulationTimeElapsed; }
+    inline cgDouble getTimeElapsed                  ( ) const { return mSimulationTimeElapsed; }
     inline cgInt64  getPerformanceCounterOrigin     ( ) const { return mStartTime; }
     inline cgInt64  getPerfomanceCounterFrequency   ( ) const { return mPerfFreq; }
     inline cgDouble getTime                         ( ) const { return mCurrentTimeSeconds; }
+    inline cgDouble getSimulationSpeed              ( ) const { return mSimulationSpeed; }
 
 private:
     //------------------------------------------------------------
@@ -86,9 +87,9 @@ private:
     bool        mUsePerfHardware;           // Has Performance Counter
     bool        mUseSmoothing;              // Is time-step smoothing enabled?
 	cgDouble    mTimeScale;                 // Amount to scale counter
-	cgFloat     mTimeElapsed;               // Final REPORTED elapsed time since previous frame (may be smoothed)
-    cgFloat     mPrevTimeElapsed;           // Previous REPORTED elapsed time (may be smoothed).
-    cgFloat     mSimulationTimeElapsed;     // Pre-multiplied mTimeElapsed * mSimulationSpeed.
+	cgDouble    mTimeElapsed;               // Final REPORTED elapsed time since previous frame (may be smoothed)
+    cgDouble    mPrevTimeElapsed;           // Previous REPORTED elapsed time (may be smoothed).
+    cgDouble    mSimulationTimeElapsed;     // Pre-multiplied mTimeElapsed * mSimulationSpeed.
     cgDouble    mTimeDebt;                  // How much have the summed elapsed time's drifted from the real-world clock?
     cgInt64     mCurrentTime;               // Current Performance Counter
     cgDouble    mCurrentTimeSeconds;        // Pre-multiplied mCurrentTime * mTimeScale;
@@ -96,13 +97,13 @@ private:
     cgInt64     mLastTime;                  // Performance Counter last frame
 	cgInt64     mPerfFreq;                  // Performance Frequency
 
-    cgFloat     mFrameTime[11];
-    cgFloat     mSimulationSpeed;
-    cgFloat     mRateLimit;
+    cgDouble    mFrameTime[11];
+    cgDouble    mSimulationSpeed;
+    cgDouble    mRateLimit;
 
     cgUInt32    mFrameRate;                 // Stores current framerate
 	cgUInt32    mFPSFrameCount;             // Elapsed frames in any given second
-	cgFloat     mFPSTimeElapsed;            // How much time has passed during FPS sample
+	cgDouble    mFPSTimeElapsed;            // How much time has passed during FPS sample
 
     cgUInt32    mFrameCounter;              // Simple Application counter
 	

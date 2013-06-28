@@ -28,6 +28,7 @@
 // cgActor Module Includes
 //-----------------------------------------------------------------------------
 #include <World/Objects/cgActor.h>
+#include <World/Objects/cgBoneObject.h>
 #include <World/Objects/Elements/cgAnimationSetElement.h>
 #include <World/cgScene.h>
 #include <Animation/cgAnimationController.h>
@@ -650,10 +651,6 @@ void cgActorNode::onComponentModified( cgComponentModifiedEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgActorNode::update( cgFloat timeDelta )
 {
-    // Call base class implementation first to allow
-    // the node itself to update / move, etc.
-    cgObjectNode::update( timeDelta );
-
     // Process active animation tracks and fade them where necessary.
     for ( AnimationTrackMap::iterator itTrack = mAnimationTracks.begin(); itTrack != mAnimationTracks.end(); ++itTrack )
     {
@@ -742,6 +739,9 @@ void cgActorNode::update( cgFloat timeDelta )
         } // End if !sandbox
     
     } // End if has controller
+
+    // Allow the object to update last so that it can override animation output.
+    cgObjectNode::update( timeDelta );
 }
 
 
@@ -1158,4 +1158,35 @@ void cgActorNode::setTrackFadeTimes( cgFloat fadeOutTime, cgFloat fadeInTime )
 {
     mFadeOutTime = fadeOutTime;
     mFadeInTime  = fadeInTime;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : enableSkeletonCollision ()
+/// <summary>
+/// Enable / disable collision volumes for any child bones / skeleton.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgActorNode::enableSkeletonCollision( bool enable )
+{
+    cgObjectNodeList::iterator itNode;
+    for ( itNode = mChildren.begin(); itNode != mChildren.end(); ++itNode )
+        enableSkeletonCollision( *itNode, enable );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : enableSkeletonCollision () (Protected, Recursive)
+/// <summary>
+/// Enable / disable collision volumes for any child bones / skeleton.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgActorNode::enableSkeletonCollision( cgObjectNode * node, bool enable )
+{
+    // Enable / disable collision volume if this is a bone.
+    if ( node->queryObjectType( RTID_BoneObject ) )
+        ((cgBoneNode*)node)->enableCollision( enable );
+
+    // Process children.
+    cgObjectNodeList::iterator itNode;
+    for ( itNode = node->getChildren().begin(); itNode != node->getChildren().end(); ++itNode )
+        enableSkeletonCollision( *itNode, enable );
 }

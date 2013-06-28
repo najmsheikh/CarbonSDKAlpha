@@ -2,7 +2,12 @@
 <ImageAtlas>
   <Source>MainMenuElements.dds</Source>
   <Group>
-    <Image x="0" y="0" width="2048" height="1244" name="menu_background"/>
-	<Image x="0" y="1245" width="923" height="211" name="title_text"/>
+	<Image x="0" y="0" width="923" height="212" name="title_text"/>
+	<Image x="0" y="894" width="850" height="130" name="carbon_title_text"/>
+	<Image x="0" y="212" width="478" height="50" name="play_demo"/>
+	<Image x="0" y="262" width="612" height="50" name="options"/>
+	<Image x="0" y="312" width="438" height="50" name="exit_game"/>
+	<Image x="0" y="362" width="160" height="312" name="option_bg"/>
+	<Image x="160" y="362" width="96" height="96" name="select_icon"/>
   </Group>
 </ImageAtlas>

@@ -10,6 +10,9 @@ namespace cgScriptPackages { namespace Core { namespace World {
 // Package declaration
 namespace Scene
 {
+    // Namespace promotion (within parent)
+    using namespace cgScriptInterop::Types;
+
     // Package descriptor
     class Package : public cgScriptPackage
     {
@@ -38,14 +41,6 @@ namespace Scene
             Core::System::References::Reference::registerReferenceMethods<cgScene>( engine, "Scene" );
 
             // ToDo: 9999 - Completely redo this.
-
-            // Requires scene element array type for several methods in this interface
-            BINDSUCCESS( engine->registerObjectType( "SceneElement@[]", sizeof(std::vector<cgSceneElement*>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            STDVectorHelper<cgSceneElement*>::registerMethods( engine, "SceneElement@[]", "SceneElement@" );
-
-            // Requires object node array type for several methods in this interface
-            BINDSUCCESS( engine->registerObjectType( "ObjectNode@[]", sizeof(std::vector<cgObjectNode*>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            STDVectorHelper<cgObjectNode*>::registerMethods( engine, "ObjectNode@[]", "ObjectNode@" );
             
             // Register the object methods
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "const String & getName( ) const", asMETHODPR(cgScene,getName,() const, const cgString &), asCALL_THISCALL) );
@@ -70,15 +65,81 @@ namespace Scene
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "ObjectNode@+ pickClosestNode( const Size &in, const Vector3 &in, const Vector3 &in, Vector3 &inout )", asMETHODPR(cgScene,pickClosestNode,( const cgSize&, const cgVector3&, const cgVector3&, cgVector3& ), cgObjectNode*), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "PhysicsWorld@+ getPhysicsWorld( ) const", asMETHODPR(cgScene,getPhysicsWorld,( ) const, cgPhysicsWorld*), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "ObjectNode@+ loadObjectNode( uint, CloneMethod, bool )", asMETHODPR(cgScene,loadObjectNode,( cgUInt32, cgCloneMethod::Base, bool ), cgObjectNode*), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Scene", "const array<SceneElement@> & getSceneElementsByType( const UID &in ) const", asMETHODPR(cgScene,getSceneElementsByType,( const cgUID& ) const, const cgSceneElementArray& ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Scene", "void getSceneElementsByType( const UID &in, array<SceneElement@>@+ ) const", asFUNCTIONPR(getSceneElementsByType,( const cgUID&, ScriptArray*, cgScene* ), void), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "ObjectNode@+ createObjectNode( bool, const UID &in, bool )", asMETHODPR(cgScene,createObjectNode,( bool, const cgUID&, bool ), cgObjectNode* ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "ObjectNode@+ createObjectNode( bool, const UID &in, bool, CloneMethod, ObjectNode@+, const Transform &in )", asMETHODPR(cgScene,createObjectNode,( bool, const cgUID&, bool, cgCloneMethod::Base, cgObjectNode*, const cgTransform& ), cgObjectNode* ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Scene", "const array<ObjectNode@> & getObjectNodesByType( const UID &in ) const", asMETHODPR(cgScene,getObjectNodesByType,( const cgUID& ) const, const cgObjectNodeArray& ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Scene", "void getObjectNodesByType( const UID &in, array<ObjectNode@>@+ ) const", asFUNCTIONPR(getObjectNodesByType,( const cgUID&, ScriptArray*, cgScene* ), void), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "ObjectNode@+ getObjectNodeById( uint ) const", asMETHODPR(cgScene,getObjectNodeById,( cgUInt32 ) const, cgObjectNode* ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Scene", "void getObjectNodesInBounds( const Vector3 &in, float, array<ObjectNode@> &inout ) const", asMETHODPR(cgScene,getObjectNodesInBounds,( const cgVector3&, cgFloat, cgObjectNodeArray& ) const, void ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Scene", "void getObjectNodesInBounds( const BoundingBox &in, array<ObjectNode@> &inout ) const", asMETHODPR(cgScene,getObjectNodesInBounds,( const cgBoundingBox&, cgObjectNodeArray& ) const, void ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Scene", "void getObjectNodesInBounds( const Vector3 &in, float, array<ObjectNode@>@+ ) const", asFUNCTIONPR(getObjectNodesInBounds,( const cgVector3 &, cgFloat, ScriptArray*, cgScene* ), void), asCALL_CDECL_OBJLAST) );
+            BINDSUCCESS( engine->registerObjectMethod( "Scene", "void getObjectNodesInBounds( const BoundingBox &in, array<ObjectNode@>@+ ) const", asFUNCTIONPR(getObjectNodesInBounds,( const cgBoundingBox &, ScriptArray*, cgScene* ), void), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "bool rayCastClosest( const Vector3 &in, const Vector3 &in, SceneCollisionContact &inout )", asMETHODPR(cgScene, rayCastClosest, ( const cgVector3&, const cgVector3&, cgSceneCollisionContact& ), bool), asCALL_THISCALL) );
             // ToDo: bool                rayCast             ( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgSceneCollisionContact::Array & contacts );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : getObjectNodesByType ()
+        /// <summary>
+        /// Provides an alternative overload for the script accessible
+        /// Scene::getObjectNodesByType() method that allows the script to
+        /// use a templated array type directly.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static void getObjectNodesByType( const cgUID & type, ScriptArray * nodes, cgScene *thisPointer )
+        {
+            const cgObjectNodeArray & sceneNodes = thisPointer->getObjectNodesByType( type );
+            nodes->resize( sceneNodes.size() );
+            for ( size_t i = 0; i < sceneNodes.size(); ++i )
+                nodes->setValue( i, (void**)&sceneNodes[i] );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : getSceneElementsByType ()
+        /// <summary>
+        /// Provides an alternative overload for the script accessible
+        /// Scene::getSceneElementsByType() method that allows the script to
+        /// use a templated array type directly.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static void getSceneElementsByType( const cgUID & type, ScriptArray * elements, cgScene *thisPointer )
+        {
+            const cgSceneElementArray & sceneElements = thisPointer->getSceneElementsByType( type );
+            elements->resize( sceneElements.size() );
+            for ( size_t i = 0; i < sceneElements.size(); ++i )
+                elements->setValue( i, (void**)&sceneElements[i] );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : getObjectNodesInBounds ()
+        /// <summary>
+        /// Provides an alternative overload for the script accessible
+        /// Scene::getObjectNodesInBounds() method that allows the script to
+        /// use a templated array type directly.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static void getObjectNodesInBounds( const cgVector3 & center, cgFloat radius, ScriptArray * nodes, cgScene *thisPointer )
+        {
+            cgObjectNodeArray sceneNodes;
+            thisPointer->getObjectNodesInBounds( center, radius, sceneNodes );
+            nodes->resize( sceneNodes.size() );
+            for ( size_t i = 0; i < sceneNodes.size(); ++i )
+                nodes->setValue( i, &sceneNodes[i] );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : getObjectNodesInBounds ()
+        /// <summary>
+        /// Provides an alternative overload for the script accessible
+        /// Scene::getObjectNodesInBounds() method that allows the script to
+        /// use a templated array type directly.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static void getObjectNodesInBounds( const cgBoundingBox & bounds, ScriptArray * nodes, cgScene *thisPointer )
+        {
+            cgObjectNodeArray sceneNodes;
+            thisPointer->getObjectNodesInBounds( bounds, sceneNodes );
+            nodes->resize( sceneNodes.size() );
+            for ( size_t i = 0; i < sceneNodes.size(); ++i )
+                nodes->setValue( i, &sceneNodes[i] );
         }
 
     }; // End Class : Package

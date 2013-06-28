@@ -496,6 +496,10 @@ struct CGE_API cgRectF
 
 struct CGE_API cgColorValue
 {
+    // Friends
+    friend cgColorValue CGE_API operator * ( cgFloat, const cgColorValue& );
+
+    // Constructors
     cgColorValue() {}
     cgColorValue( cgFloat _r, cgFloat _g, cgFloat _b, cgFloat _a ) :
         r(_r), g(_g), b(_b), a(_a) {}
@@ -513,10 +517,10 @@ struct CGE_API cgColorValue
     operator cgUInt32() const
     {
         // Compute color
-        return ((cgUInt32)(std::min<cgFloat>( 255.0f, a * 255.0f )) << 24) |
-               ((cgUInt32)(std::min<cgFloat>( 255.0f, r * 255.0f )) << 16) |
-               ((cgUInt32)(std::min<cgFloat>( 255.0f, g * 255.0f )) << 8 ) |
-               ((cgUInt32)(std::min<cgFloat>( 255.0f, b * 255.0f ))      );
+        return ((cgUInt32)(std::max<cgFloat>(0, std::min<cgFloat>( 255.0f, a * 255.0f ))) << 24) |
+               ((cgUInt32)(std::max<cgFloat>(0, std::min<cgFloat>( 255.0f, r * 255.0f ))) << 16) |
+               ((cgUInt32)(std::max<cgFloat>(0, std::min<cgFloat>( 255.0f, g * 255.0f ))) << 8 ) |
+               ((cgUInt32)(std::max<cgFloat>(0, std::min<cgFloat>( 255.0f, b * 255.0f )))      );
     
     } // End Cast
 
@@ -603,9 +607,17 @@ struct CGE_API cgColorValue
     
     } // End operator ==
 
-    friend cgColorValue CGE_API operator * ( cgFloat, const cgColorValue& );
-
     // utility methods
+    cgString toString( const cgString & format ) const
+    {
+        if ( format == _T("x") )
+            return cgString::format( _T("%x"), (cgUInt32)*this );
+        else if ( format == _T("0x") )
+            return cgString::format( _T("0x%x"), (cgUInt32)*this );
+        else
+            return cgString::Empty;
+    }
+
     static cgColorValue cgColorValue::clamp( const cgColorValue & c )
     {
         cgColorValue out;
@@ -767,6 +779,7 @@ CGE_UNORDEREDSET_DECLARE    ( cgInt32, cgInt32Set )
 CGE_VECTOR_DECLARE          ( cgUInt32, cgUInt32Array )
 CGE_UNORDEREDSET_DECLARE    ( cgUInt32, cgUInt32Set )
 CGE_UNORDEREDMAP_DECLARE    ( cgUInt32, cgUInt32, cgUInt32IndexMap )
+CGE_VECTOR_DECLARE          ( cgInt, cgIntArray )
 CGE_VECTOR_DECLARE          ( cgFloat, cgFloatArray )
 CGE_VECTOR_DECLARE          ( cgDouble, cgDoubleArray )
 CGE_VECTOR_DECLARE          ( cgPoint, cgPointArray )

@@ -135,9 +135,11 @@ cgConfigResult::Base cgDXAudioDriver::loadConfig( const cgString & strFileName )
     // Retrieve configuration options if provided
     if ( strFileName.empty() == false )
     {
-        mConfig.sampleRate = GetPrivateProfileInt( _T("AudioDriver"), _T("SampleRate"), min( 48000, Caps.dwMaxSecondarySampleRate ), strFileName.c_str() );
-        mConfig.channels   = GetPrivateProfileInt( _T("AudioDriver"), _T("Channels"), (Caps.dwFlags & DSCAPS_PRIMARYSTEREO) ? 2 : 1, strFileName.c_str() );
-        mConfig.bitRate    = GetPrivateProfileInt( _T("AudioDriver"), _T("BitRate"), (Caps.dwFlags & DSCAPS_PRIMARY16BIT) ? 16 : 8, strFileName.c_str() );
+        // Result the configuration file location
+        cgString strResolvedFile = cgFileSystem::resolveFileLocation( strFileName );
+        mConfig.sampleRate = GetPrivateProfileInt( _T("AudioDriver"), _T("SampleRate"), min( 48000, Caps.dwMaxSecondarySampleRate ), strResolvedFile.c_str() );
+        mConfig.channels   = GetPrivateProfileInt( _T("AudioDriver"), _T("Channels"), (Caps.dwFlags & DSCAPS_PRIMARYSTEREO) ? 2 : 1, strResolvedFile.c_str() );
+        mConfig.bitRate    = GetPrivateProfileInt( _T("AudioDriver"), _T("BitRate"), (Caps.dwFlags & DSCAPS_PRIMARY16BIT) ? 16 : 8, strResolvedFile.c_str() );
         
     } // End if config provided
     
@@ -272,9 +274,10 @@ bool cgDXAudioDriver::saveConfig( const cgString & strFileName )
         return false;
 
     // Save configuration options
-    cgStringUtility::writePrivateProfileIntEx( _T("AudioDriver"), _T("SampleRate"), mConfig.sampleRate, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( _T("AudioDriver"), _T("Channels"), mConfig.channels, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( _T("AudioDriver"), _T("BitRate"), mConfig.bitRate, strFileName.c_str() );
+    cgString strResolvedFile = cgFileSystem::resolveFileLocation( strFileName );
+    cgStringUtility::writePrivateProfileIntEx( _T("AudioDriver"), _T("SampleRate"), mConfig.sampleRate, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( _T("AudioDriver"), _T("Channels"), mConfig.channels, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( _T("AudioDriver"), _T("BitRate"), mConfig.bitRate, strResolvedFile.c_str() );
     
     // Success!!
     return true;

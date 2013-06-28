@@ -340,6 +340,9 @@
     <Filter Include="Source Files\World\Graphs">
       <UniqueIdentifier>{fe31957a-3058-496e-bc86-bab8a0dfd8f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Scripting\Angelscript-JIT">
+      <UniqueIdentifier>{742dccde-f395-4763-9e0b-d77ce92a3168}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\cgBase.cpp">
@@ -1148,6 +1151,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\World\Elements\cgBSPVisTreeElement.cpp">
       <Filter>Source Files\World\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript-JIT\as_jit.cpp">
+      <Filter>Source Files\Scripting\Angelscript-JIT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript-JIT\virtual_asm_windows.cpp">
+      <Filter>Source Files\Scripting\Angelscript-JIT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript-JIT\virtual_asm_x86.cpp">
+      <Filter>Source Files\Scripting\Angelscript-JIT</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2069,6 +2081,9 @@
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\ParticleEmitter.h">
       <Filter>Header Files\Scripting\Packages\Core\World\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Skin.h">
+      <Filter>Header Files\Scripting\Packages\Core\World\Objects</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\WorldObject.h">
       <Filter>Header Files\Scripting\Packages\Core\World\Objects</Filter>
     </ClInclude>
@@ -2500,6 +2515,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\World\Elements\cgBSPVisTreeElement.h">
       <Filter>Header Files\World\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Lib\AngelScript-JIT\as_jit.h">
+      <Filter>Source Files\Scripting\Angelscript-JIT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

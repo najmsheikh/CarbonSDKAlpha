@@ -56,6 +56,9 @@ class ElevatorObjective : Objective
     private float           mOpenAmount; 
     private float           mTravelTime;
 
+    // Sound effects.
+    private SoundRef@       mTravelSoundChannel;    // Sound played during travel.
+
 	///////////////////////////////////////////////////////////////////////////
 	// Constructors & Destructors
 	///////////////////////////////////////////////////////////////////////////
@@ -78,16 +81,16 @@ class ElevatorObjective : Objective
 	void onAttach( ObjectNode @ object )
 	{
         // Initialize variables
-        mOpenAmount = 0.0f;
-        mState      = ElevatorState::Idle;
+        mOpenAmount             = 0.0f;
+        mState                  = ElevatorState::Idle;
+        @mTravelSoundChannel    = null;
 
         // Get properties
-        PropertyContainer @ properties = object.getCustomProperties();
-        mTeleportExitRef = uint(properties.getProperty( "teleport_exit_ref", uint(0) ));
-        uint entranceDoorRef1 = uint(properties.getProperty( "entrance_door_ref1", uint(0) ));
-        uint entranceDoorRef2 = uint(properties.getProperty( "entrance_door_ref2", uint(0) ));
-        uint exitDoorRef1 = uint(properties.getProperty( "exit_door_ref1", uint(0) ));
-        uint exitDoorRef2 = uint(properties.getProperty( "exit_door_ref2", uint(0) ));
+        mTeleportExitRef = uint(object.getCustomProperty( "teleport_exit_ref", 0 ));
+        uint entranceDoorRef1 = uint(object.getCustomProperty( "entrance_door_ref1", 0 ));
+        uint entranceDoorRef2 = uint(object.getCustomProperty( "entrance_door_ref2", 0 ));
+        uint exitDoorRef1 = uint(object.getCustomProperty( "exit_door_ref1", 0 ));
+        uint exitDoorRef2 = uint(object.getCustomProperty( "exit_door_ref2", 0 ));
 
         // Find the elevator door objects.
         Scene @ scene = object.getScene();
@@ -111,11 +114,12 @@ class ElevatorObjective : Objective
     void onDetach( ObjectNode @ object )
     {
         // Release references.
-        @mGamePlayState = null;
-        @mEntranceDoor1 = null;
-        @mEntranceDoor2 = null;
-        @mExitDoor1     = null;
-        @mExitDoor2     = null;
+        @mGamePlayState         = null;
+        @mEntranceDoor1         = null;
+        @mEntranceDoor2         = null;
+        @mExitDoor1             = null;
+        @mExitDoor2             = null;
+        @mTravelSoundChannel    = null;
 
         // Call base class implementation last
         Objective::onDetach( object );
@@ -128,12 +132,17 @@ class ElevatorObjective : Objective
 	void onUpdate( float elapsedTime )
 	{
         bool switchObjective = false;
+		bool playDoorSound = false;
 
         // What are we handling?
         if ( mState == ElevatorState::OpeningEntrance || mState == ElevatorState::OpeningExit )
         {
+            // Play the door open sound if we just started the process
+            if ( mOpenAmount == 0 )
+				playDoorSound = true;
+        
             // Compute amount to open.
-            float moveAmount = elapsedTime * 2.0f;
+            float moveAmount = elapsedTime * 0.60f;
             mOpenAmount += moveAmount;
             if ( mOpenAmount >  DoorMaxDistance )
             {
@@ -169,8 +178,12 @@ class ElevatorObjective : Objective
         } // End if opening entrance
         else if ( mState == ElevatorState::ClosingEntrance )
         {
+            // Play the door open sound if we just started the process
+            if ( mSequenceIdentifier != "escape_elevator_broken" && mOpenAmount == DoorMaxDistance )
+				playDoorSound = true;
+
             // Compute amount to close.
-            float moveAmount = elapsedTime * 2.0f;
+            float moveAmount = elapsedTime * 0.6f;
             mOpenAmount -= moveAmount;
             if ( mOpenAmount < 0 )
             {
@@ -198,6 +211,10 @@ class ElevatorObjective : Objective
                     // Switch to traveling state
                     mState = ElevatorState::Traveling;
                     mTravelTime = 0;
+                    
+                    // Play the elevator traveling sound
+                    AudioManager @ audioManager = getAudioManager();
+                    @mTravelSoundChannel = audioManager.playSound( "Sounds/Elevator Ride.ogg", false, false, 1.0f );
 
                     // Teleport the player to the elevator exit
                     // Get the object representing the teleport exit.
@@ -236,10 +253,22 @@ class ElevatorObjective : Objective
             {
                 mState = ElevatorState::OpeningExit;
                 mOpenAmount = 0.0f;
+                
+                // Stop the elevator traveling sound
+                AudioManager @ audioManager = getAudioManager();
+                audioManager.stopSound( mTravelSoundChannel );
             
             } // End if finished traveling
 
         } // End if traveling
+        
+        // Should we play the door open/close sound?
+        if ( playDoorSound )
+        {
+            AudioManager @ audioManager = getAudioManager();
+            Vector3 playerPosition = mGamePlayState.getPlayer().getSceneNode().getPosition();
+            audioManager.playSound( "Sounds/Elevator Doors.ogg", false, false, 1.0f, playerPosition, null );
+        }
         
         // Switch to next objective now?
         if ( switchObjective )
@@ -274,8 +303,8 @@ class ElevatorObjective : Objective
                 if ( @meshNode != null )
                 {
                     // First, get the identifiers of the materials we want to swap.
-                    uint litMaterialId   = meshNode.getCustomProperties().getProperty( "material_illuminated", 0 );
-                    uint unlitMaterialId = meshNode.getCustomProperties().getProperty( "material_deluminated", 0 );
+                    uint litMaterialId   = meshNode.getCustomProperty( "material_illuminated", 0 );
+                    uint unlitMaterialId = meshNode.getCustomProperty( "material_deluminated", 0 );
 
                     // Get the unlit material (should already be resident).
                     Scene @ scene = meshNode.getScene();
@@ -347,8 +376,8 @@ class ElevatorObjective : Objective
                 if ( @meshNode != null )
                 {
                     // First, get the identifiers of the materials we want to swap.
-                    uint litMaterialId   = meshNode.getCustomProperties().getProperty( "material_illuminated", 0 );
-                    uint unlitMaterialId = meshNode.getCustomProperties().getProperty( "material_deluminated", 0 );
+                    uint litMaterialId   = meshNode.getCustomProperty( "material_illuminated", 0 );
+                    uint unlitMaterialId = meshNode.getCustomProperty( "material_deluminated", 0 );
 
                     // Get the lit material (should already be resident).
                     Scene @ scene = meshNode.getScene();
@@ -379,6 +408,10 @@ class ElevatorObjective : Objective
                         emitter.enableLayerEmission( 0, true );
                     
                     } // End if found
+
+					// Play a sound to indicate a short
+                    AudioManager @ audioManager = getAudioManager();
+                    audioManager.playSound( "Sounds/Elevator Panel Fail.ogg", false, false, 0.5f );
 
                 } // End if found mesh node
 

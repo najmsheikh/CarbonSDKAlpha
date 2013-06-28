@@ -123,8 +123,9 @@ bool cgWinCursor::create( const cgPoint & hotSpot, const cgRect & source, const 
 
     // Create a DIB section with an alpha channel.
     cgByte * pDIBBits;
-    HDC hDC = GetDC(NULL);
+    HDC hDC = GetDC(GetDesktopWindow());
     HBITMAP hDIBSection = CreateDIBSection(hDC, (BITMAPINFO *)&bi, DIB_RGB_COLORS, (void **)&pDIBBits, NULL, (DWORD)0 );
+    ReleaseDC(GetDesktopWindow(),hDC);
 
     // Clear the DIB section initially.
     memset( pDIBBits, 0, 32 * 32 * 4 );

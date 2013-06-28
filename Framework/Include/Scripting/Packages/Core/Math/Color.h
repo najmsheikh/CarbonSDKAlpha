@@ -46,6 +46,9 @@ namespace Color
             // Cast operator overloads
             BINDSUCCESS( engine->registerObjectBehavior( "ColorValue", asBEHAVE_IMPLICIT_VALUE_CAST, "uint f()", asMETHODPR(cgColorValue, operator cgUInt32, () const, cgUInt32), asCALL_THISCALL) );
 
+            // Register methods
+            BINDSUCCESS( engine->registerObjectMethod( "ColorValue", "String toString(const String &in ) const", asMETHODPR(cgColorValue, toString, (const cgString&) const, cgString), asCALL_THISCALL) );
+
             // Register properties
             BINDSUCCESS( engine->registerObjectProperty( "ColorValue", "float r", offsetof(cgColorValue,r) ) );
             BINDSUCCESS( engine->registerObjectProperty( "ColorValue", "float g", offsetof(cgColorValue,g) ) );

@@ -73,6 +73,7 @@ namespace Actor
             BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "bool isAnimationTrackPlaying( const String&in ) const", asMETHODPR(cgActorNode, isAnimationTrackPlaying, ( const cgString& ) const, bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "bool isAnimationTrackPlaying( const String&in, bool ) const", asMETHODPR(cgActorNode, isAnimationTrackPlaying, ( const cgString&, bool ) const, bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "void setTrackFadeTimes( float, float )", asMETHODPR(cgActorNode, setTrackFadeTimes, ( cgFloat, cgFloat ), void ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ActorNode", "void enableSkeletonCollision( bool )", asMETHODPR(cgActorNode, enableSkeletonCollision, ( bool ), void ), asCALL_THISCALL) );
         }
 
     }; // End Class : Package

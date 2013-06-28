@@ -65,6 +65,8 @@ namespace Math
             BINDSUCCESS( engine->registerGlobalFunction("float randomFloat( float, float)", asFUNCTION(cgMathUtility::randomFloat), asCALL_CDECL) );
             BINDSUCCESS( engine->registerGlobalFunction("float CGEToDegree( float )", asFUNCTION(toDegree), asCALL_CDECL) );
             BINDSUCCESS( engine->registerGlobalFunction("float CGEToRadian( float )", asFUNCTION(toRadian), asCALL_CDECL) );
+            BINDSUCCESS( engine->registerGlobalFunction("uint closestPowerOfTwo( uint )", asFUNCTION(cgMathUtility::closestPowerOfTwo), asCALL_CDECL) );
+            BINDSUCCESS( engine->registerGlobalFunction("uint nextPowerOfTwo( uint )", asFUNCTION(cgMathUtility::nextPowerOfTwo), asCALL_CDECL) );
 
             // Constants
             // ToDo: Add as defines to script pre-processor rather than using global properties at some point.

@@ -39,9 +39,11 @@
 cgWinAppWindow::cgWinAppWindow()
 {
     // Clear variables
-    mWnd        = CG_NULL;
-    mOwnsWindow = false;
-    mFullScreen = false;
+    mWnd                = CG_NULL;
+    mClassAtom          = CG_NULL;
+    mOwnsWindow         = false;
+    mFullScreen         = false;
+    mCursorConstrained  = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -53,9 +55,11 @@ cgWinAppWindow::cgWinAppWindow()
 cgWinAppWindow::cgWinAppWindow( void * pNativeWindow ) : cgAppWindow( )
 {
     // Clear variables
-    mWnd        = (HWND)pNativeWindow;
-    mOwnsWindow = false;
-    mFullScreen = false;
+    mWnd                = (HWND)pNativeWindow;
+    mClassAtom          = CG_NULL;
+    mOwnsWindow         = false;
+    mFullScreen         = false;
+    mCursorConstrained  = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -79,17 +83,22 @@ cgWinAppWindow::~cgWinAppWindow()
 //-----------------------------------------------------------------------------
 void cgWinAppWindow::dispose( bool bDisposeBase )
 {
+    // Release cursor constraint
+    constrainCursor( false );
+
     // Clean up window data.
     if ( mWnd && mOwnsWindow )
     {
         DestroyWindow( mWnd );
-        UnregisterClass( mWndClass.lpszClassName, mWndClass.hInstance );
+        UnregisterClass( (LPCTSTR)mClassAtom, mWndClass.hInstance );
 
     } // End if created
 
     // Clear variables
-    mWnd        = CG_NULL;
-    mOwnsWindow = false;
+    mWnd                = CG_NULL;
+    mClassAtom          = CG_NULL;
+    mOwnsWindow         = false;
+    mCursorConstrained  = false;
 
     // Call base class implementation
     if ( bDisposeBase )
@@ -121,10 +130,10 @@ bool cgWinAppWindow::create( bool bFullscreen, cgUInt32 Width, cgUInt32 Height, 
     cgUInt32 StyleEx = 0;
 
     // Store details
-    mClassName = strTitle;
     mFullScreen = bFullscreen;
 
     // Register the new window's window class.
+    memset( &mWndClass, 0, sizeof(WNDCLASS));
     mWndClass.style            = CS_BYTEALIGNCLIENT | CS_HREDRAW | CS_VREDRAW;
     mWndClass.lpfnWndProc      = staticWndProc;
     mWndClass.cbClsExtra       = 0;
@@ -134,12 +143,10 @@ bool cgWinAppWindow::create( bool bFullscreen, cgUInt32 Width, cgUInt32 Height, 
     mWndClass.hCursor          = LoadCursor(NULL, IDC_ARROW);
     mWndClass.hbrBackground    = (HBRUSH )GetStockObject(BLACK_BRUSH);
     mWndClass.lpszMenuName     = NULL;
-    mWndClass.lpszClassName    = mClassName.c_str();
-
+    mWndClass.lpszClassName    = strTitle.c_str();
     if ( IconResource >= 0 )
         mWndClass.hIcon = LoadIcon( mWndClass.hInstance, MAKEINTRESOURCE( IconResource ) );
-
-    RegisterClass(&mWndClass);
+    mClassAtom = RegisterClass(&mWndClass);
 
     // Select the window layout
     if ( bFullscreen == true )
@@ -158,9 +165,8 @@ bool cgWinAppWindow::create( bool bFullscreen, cgUInt32 Width, cgUInt32 Height, 
     } // End if windowed
 
     // Create the window
-    mWnd = CreateWindowEx( StyleEx, strTitle.c_str(), strTitle.c_str(), Style, Left,
+    mWnd = CreateWindowEx( StyleEx, (LPCTSTR)mClassAtom, strTitle.c_str(), Style, Left,
                            Top, Width, Height, NULL, NULL, mWndClass.hInstance, this );
-
 
     // Success?
     mOwnsWindow = true;
@@ -297,6 +303,27 @@ LRESULT cgWinAppWindow::WndProc( HWND hWnd, cgUInt Message, WPARAM wParam, LPARA
     // Determine message type
     switch (Message)
     {
+        case WM_ACTIVATEAPP:
+            if ( wParam )
+            {
+                // Activating. Re-activate cursor constraint if necessary.
+                if ( mCursorConstrained )
+                {
+                    cgRect clipRect = cgAppWindow::clientToScreen(getClientRect());
+                    ClipCursor( (RECT*)&clipRect );
+                
+                } // End if constrained
+
+            } // End if activating
+            else
+            {
+                // De-activating, release the constraint
+                if ( mCursorConstrained )
+                    ClipCursor( CG_NULL );
+                
+            } // End if deactivating
+            break;
+
         case WM_CREATE:
             
             // Trigger creation message
@@ -352,6 +379,28 @@ LRESULT cgWinAppWindow::WndProc( HWND hWnd, cgUInt Message, WPARAM wParam, LPARA
 
     // Perform default processing
     return DefWindowProc(hWnd, Message, wParam, lParam);
+}
+
+//-----------------------------------------------------------------------------
+//  Name : showCursor ()
+/// <summary>
+/// Show or hide the platform cursor for this window. This is implemented
+/// as a counter whereby multiple calls to show the cursor are counted and
+/// thus will require the same number of matching calls to hide the cursor 
+/// before it will be hidden.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgWinAppWindow::showCursor( bool show )
+{
+    // Call base class implementation first
+    cgAppWindow::showCursor( show );
+
+    // If first time hidden, force window cursor update.
+    // Otherwise, force it to be shown.
+    if ( !mCursorVisCount )
+        SetCursor( NULL ); // Win API
+    else if ( mCursorVisCount == 1 )
+        setCursor( mCursor ); // Internal method
 }
 
 //-----------------------------------------------------------------------------
@@ -496,4 +545,35 @@ bool cgWinAppWindow::queryReferenceType( const cgUID & type ) const
 
     // Supported by base?
     return cgAppWindow::queryReferenceType( type );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : constrainCursor ()
+/// <summary>
+/// Enable / disable constraint that prevents cursor from leaving the client
+/// area of the window while it has focus. Only one window may constrain at
+/// a time.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgWinAppWindow::constrainCursor( bool enable )
+{
+    // No-op?
+    if ( mCursorConstrained == enable )
+        return;
+
+    // Capture cursor?
+    if ( enable )
+    {
+        cgRect clipRect = cgAppWindow::clientToScreen(getClientRect());
+        ClipCursor( (RECT*)&clipRect );
+    
+    } // End if enabled
+    else
+    {
+        ClipCursor( CG_NULL );
+
+    } // End if disabled
+
+    // Store local variable
+    mCursorConstrained = enable;
 }

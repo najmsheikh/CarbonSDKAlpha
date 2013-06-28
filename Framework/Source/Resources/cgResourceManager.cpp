@@ -174,6 +174,7 @@ void cgResourceManager::dispose( bool bDisposeBase )
     mRasterizerStateLUT.clear();
     mBlendStateLUT.clear();
     mRenderTargetLUT.clear();
+    mTextureLUT.clear();
 
     // Clear garbage list
     mResourceGarbage.clear();
@@ -277,11 +278,12 @@ bool cgResourceManager::loadConfig( const cgString & strFileName )
         return false;
 
     // Retrieve configuration options
-    mConfig.compressTextures  = GetPrivateProfileInt( _T("Resources"), _T("CompressTextures"), 1, strFileName.c_str() ) > 0;
-    mConfig.textureMipLevels  = GetPrivateProfileInt( _T("Resources"), _T("TextureMipLevels"), 0, strFileName.c_str() );
+    cgString strResolvedFile = cgFileSystem::resolveFileLocation( strFileName );
+    mConfig.compressTextures  = GetPrivateProfileInt( _T("Resources"), _T("CompressTextures"), 1, strResolvedFile.c_str() ) > 0;
+    mConfig.textureMipLevels  = GetPrivateProfileInt( _T("Resources"), _T("TextureMipLevels"), 0, strResolvedFile.c_str() );
     
     // Retrieve the default surface shader details
-    GetPrivateProfileString( _T("Resources"), _T("DefaultShader"), _T(""), strValue, MAX_PATH, strFileName.c_str() );
+    GetPrivateProfileString( _T("Resources"), _T("DefaultShader"), _T(""), strValue, MAX_PATH, strResolvedFile.c_str() );
     mConfig.defaultShaderFile = strValue;
     
     // Success!!
@@ -301,18 +303,17 @@ bool cgResourceManager::loadConfig( const cgString & strFileName )
 //-----------------------------------------------------------------------------
 bool cgResourceManager::saveConfig( const cgString & strFileName )
 {
-    cgString strBuffer;
-
     // Validate requirements
     if ( strFileName.empty() == true )
         return false;
 
     // Save configuration options
-    strBuffer = cgString::format( _T("%i"), mConfig.compressTextures );
-    WritePrivateProfileString( _T("Resources"), _T("CompressTextures"), strBuffer.c_str(), strFileName.c_str() );
+    cgString strResolvedFile = cgFileSystem::resolveFileLocation( strFileName );
+    cgString strBuffer = cgString::format( _T("%i"), mConfig.compressTextures );
+    WritePrivateProfileString( _T("Resources"), _T("CompressTextures"), strBuffer.c_str(), strResolvedFile.c_str() );
     strBuffer = cgString::format( _T("%i"), mConfig.textureMipLevels );
-    WritePrivateProfileString( _T("Resources"), _T("TextureMipLevels"), strBuffer.c_str(), strFileName.c_str() );
-    WritePrivateProfileString( _T("Resources"), _T("DefaultShader"), mConfig.defaultShaderFile.c_str(), strFileName.c_str() );
+    WritePrivateProfileString( _T("Resources"), _T("TextureMipLevels"), strBuffer.c_str(), strResolvedFile.c_str() );
+    WritePrivateProfileString( _T("Resources"), _T("DefaultShader"), mConfig.defaultShaderFile.c_str(), strResolvedFile.c_str() );
     
     // Success!!
     return true;
@@ -479,10 +480,21 @@ void cgResourceManager::releaseOwnedResources()
 //-----------------------------------------------------------------------------
 bool cgResourceManager::loadTexture( cgTextureHandle * hResOut, const cgInputStream & Stream, cgUInt32 nFlags /* = 0 */, const cgDebugSourceInfo & _debugSource /* = cgDebugSourceInfo(_T(""),0) */ )
 {
+    cgStreamType::Base StreamType = Stream.getType();
+    
+    // Generate the file name based key.
+    cgString strResourceKey = Stream.getName();
+    if ( StreamType != cgStreamType::Memory )
+    {
+        strResourceKey.replace( _T('\\'), _T('/') );
+        strResourceKey.toLower();
+    
+    } // End if actual file
+
     // Attempt to find the texture if it already exists and user is not forcing new.
     if ( !(nFlags & cgResourceFlags::ForceNew) )
     {
-        cgTexture * pExistingTexture = (cgTexture*)findTexture( Stream.getName() );
+        cgTexture * pExistingTexture = (cgTexture*)findTexture( strResourceKey );
         if ( pExistingTexture )
             return processExistingResource( hResOut, pExistingTexture, nFlags );
     
@@ -502,7 +514,15 @@ bool cgResourceManager::loadTexture( cgTextureHandle * hResOut, const cgInputStr
     cgTexture * pNewTexture = cgTexture::createInstance( cgReferenceManager::generateInternalRefId(), Stream, getRenderDriver(), mConfig.textureMipLevels );
 
     // Process the new resource
-    return processNewResource( hResOut, pNewTexture, mTextures, Stream.getName(), Stream.getType(), nFlags, _debugSource );
+    if ( !processNewResource( hResOut, pNewTexture, mTextures, Stream.getName(), StreamType, nFlags, _debugSource ) )
+        return false;
+
+    // Add to the lookup table if necessary
+    if ( !strResourceKey.empty() )
+        mTextureLUT[ strResourceKey ] = pNewTexture;
+
+    // Success!
+    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -580,6 +600,10 @@ bool cgResourceManager::createTexture( cgTextureHandle * hResOut, cgBezierSpline
     // Finish up (unlock and generate mip chain)
     pNewTexture->unlock( true );
 
+    // Add to the lookup table if necessary
+    if ( !strResourceName.empty() )
+        mTextureLUT[ strResourceName ] = pNewTexture;
+
     // Success!
     return true;
 }
@@ -605,7 +629,15 @@ bool cgResourceManager::createTexture( cgTextureHandle * hResOut, const cgImageI
     cgTexture * pNewTexture = cgTexture::createInstance( cgReferenceManager::generateInternalRefId(), Description );
 
     // Process the new resource
-    return processNewResource( hResOut, pNewTexture, mTextures, strResourceName, cgStreamType::Memory, nFlags, _debugSource );
+    if ( !processNewResource( hResOut, pNewTexture, mTextures, strResourceName, cgStreamType::Memory, nFlags, _debugSource ) )
+        return false;
+
+    // Add to the lookup table if necessary
+    if ( !strResourceName.empty() )
+        mTextureLUT[ strResourceName ] = pNewTexture;
+
+    // Success!
+    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -638,7 +670,15 @@ bool cgResourceManager::createTexture( cgTextureHandle * hResOut, cgBufferType::
     cgTexture * pNewTexture = cgTexture::createInstance( cgReferenceManager::generateInternalRefId(), Description );
 
     // Process the new resource
-    return processNewResource( hResOut, pNewTexture, mTextures, strResourceName, cgStreamType::Memory, nFlags, _debugSource );
+    if ( !processNewResource( hResOut, pNewTexture, mTextures, strResourceName, cgStreamType::Memory, nFlags, _debugSource ) )
+        return false;
+
+    // Add to the lookup table if necessary
+    if ( !strResourceName.empty() )
+        mTextureLUT[ strResourceName ] = pNewTexture;
+
+    // Success!
+    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -767,6 +807,10 @@ bool cgResourceManager::cloneTexture( cgTextureHandle * hResOut, cgTextureHandle
     
     } // End if failed
 
+    // Add to the lookup table if necessary
+    if ( !strResourceName.empty() )
+        mTextureLUT[ strResourceName ] = pNewTexture;
+
     // Success!
     return true;
 }
@@ -793,7 +837,15 @@ bool cgResourceManager::addTexture( cgTextureHandle * hResOut, cgTexture * pText
     } // End if resource name provided
 
     // Process the new resource
-    return processNewResource( hResOut, pTexture, mTextures, strResourceName, cgStreamType::Memory, nFlags, _debugSource );
+    if ( !processNewResource( hResOut, pTexture, mTextures, strResourceName, cgStreamType::Memory, nFlags, _debugSource ) )
+        return false;
+
+    // Add to the lookup table if necessary
+    if ( !strResourceName.empty() )
+        mTextureLUT[ strResourceName ] = pTexture;
+
+    // Success!
+    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -827,23 +879,14 @@ bool cgResourceManager::getTexture( cgTextureHandle * hResOut, const cgString & 
 //-----------------------------------------------------------------------------
 cgResource * cgResourceManager::findTexture( const cgString & strResourceName ) const
 {
-    ResourceItemList::const_iterator itItem;
-
     // Valid resource name?
-    if ( strResourceName.empty() == true )
+    if ( strResourceName.empty() )
         return CG_NULL;
 
-    // Loop through and see if this texture already exists.
-    for ( itItem = mTextures.begin(); itItem != mTextures.end(); ++itItem )
-    {
-        cgTexture * pResource = (cgTexture*)(*itItem);
-        if ( pResource == CG_NULL ) continue;
-
-        // Found one with matching details?
-        if ( strResourceName == pResource->getResourceName() ) 
-            return pResource;
-
-    } // Next Texture
+    // Use the lookup table to find a matching target with this name.
+    NamedResourceMap::const_iterator itResource = mTextureLUT.find( strResourceName );
+    if ( itResource != mTextureLUT.end() )
+        return itResource->second;
 
     // Nothing found
     return CG_NULL;
@@ -930,7 +973,7 @@ cgResource * cgResourceManager::findAudioBuffer( const cgString & strResourceNam
         if ( pResource == CG_NULL ) continue;
 
         // Found one with matching details?
-        if ( (strResourceName == pResource->getResourceName()) && (nCreationFlags = pResource->getCreationFlags()) ) 
+        if ( (strResourceName == pResource->getResourceName()) && (nCreationFlags == pResource->getCreationFlags()) ) 
             return pResource;
 
     } // Next Sound
@@ -1175,9 +1218,20 @@ bool cgResourceManager::loadScript( cgScriptHandle * hResOut, const cgInputStrea
     
     } // End if !ForceNew
 
-    // Validate requirements
+    // Valid file?
     if ( Stream.getType() == cgStreamType::None )
-        return false;
+    {
+        // Allow script with no valid source file to remain resident only if we're in sandbox mode
+        // (preview or full). This ensures that even if a script is not found, its information 
+        // will not be lost.
+        if ( cgGetSandboxMode() == cgSandboxMode::Disabled )
+        {
+            cgAppLog::write( cgAppLog::Warning, _T("Unable to create script from stream '%s' because the file or resource was not found.\n"), Stream.getName().c_str() );
+            return false;
+        
+        } // End if !sandbox
+
+    } // End if not found
 
     // No script found, so lets allocate a new one.
     cgScript * pNewScript = new cgScript( cgReferenceManager::generateInternalRefId(), Stream, strThisType, cgScriptEngine::getInstance() );
@@ -1712,10 +1766,11 @@ bool cgResourceManager::createRenderTarget( cgRenderTargetHandle * hResOut, cons
 bool cgResourceManager::getRenderTarget( cgRenderTargetHandle * hResOut, const cgString & strResourceName )
 {
     cgResource * pTarget = findRenderTarget( strResourceName );
-    if ( pTarget == CG_NULL ) return false;
+    if ( !pTarget )
+        return false;
 
     // Return the relevant target
-    if ( hResOut != CG_NULL )
+    if ( hResOut )
         *hResOut = cgRenderTargetHandle( (cgRenderTarget*)pTarget, hResOut->getDatabaseUpdate(), hResOut->getOwner() );
 
     // Target found
@@ -1733,10 +1788,8 @@ bool cgResourceManager::getRenderTarget( cgRenderTargetHandle * hResOut, const c
 //-----------------------------------------------------------------------------
 cgResource * cgResourceManager::findRenderTarget( const cgString & strResourceName ) const
 {
-    ResourceItemList::const_iterator itItem;
-
     // Valid resource name?
-    if ( strResourceName.empty() == true )
+    if ( strResourceName.empty() )
         return CG_NULL;
 
     // Use the lookup table to find a matching target with this name.
@@ -4021,6 +4074,24 @@ void cgResourceManager::removeResource( cgResource * pResource )
             break;
 
         } // End case RenderTarget
+        case cgResourceType::Texture:
+        {
+            // Generate the correct resource key if this is a file based resource.
+            cgString strResourceKey = pResource->getResourceName();
+            if ( pResource->getStreamType() != cgStreamType::Memory )
+            {
+                strResourceKey.replace( _T('\\'), _T('/') );
+                strResourceKey.toLower();
+            
+            } // End if file
+
+            // Remove from lookup table
+            NamedResourceMap::iterator itResource = mTextureLUT.find( strResourceKey );
+            if ( itResource != mTextureLUT.end() )
+                mTextureLUT.erase( itResource );
+            break;
+
+        } // End case Texture
         case cgResourceType::SamplerState:
         {
             cgSamplerState * pState = (cgSamplerState*)pResource;

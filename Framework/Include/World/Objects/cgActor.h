@@ -180,6 +180,7 @@ public:
     bool                        isAnimationTrackPlaying     ( const cgString & trackName ) const;
     bool                        isAnimationTrackPlaying     ( const cgString & trackName, bool includeFadeOut ) const;
     void                        setTrackFadeTimes           ( cgFloat fadeOutTime, cgFloat fadeInTime );
+    void                        enableSkeletonCollision     ( bool enable );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgGroupNode)
@@ -261,6 +262,7 @@ protected:
     // Protected Methods
     //-------------------------------------------------------------------------
     cgAnimationSetHandle    generateActorSnapshot   ( );
+    void                    enableSkeletonCollision ( cgObjectNode * node, bool enable );
 
     //-------------------------------------------------------------------------
     // Protected Variables

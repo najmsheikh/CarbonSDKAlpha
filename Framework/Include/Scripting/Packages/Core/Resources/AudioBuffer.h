@@ -45,10 +45,14 @@ namespace AudioBuffer
             BINDSUCCESS( engine->registerObjectMethod( "AudioBuffer", "bool isPlaying( ) const", asMETHODPR(cgAudioBuffer,isPlaying, () const, bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AudioBuffer", "bool play( bool )", asMETHODPR(cgAudioBuffer,play, (bool), bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AudioBuffer", "bool stop( )", asMETHODPR(cgAudioBuffer, stop, (), bool ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "AudioBuffer", "bool pause( )", asMETHODPR(cgAudioBuffer, pause, (), bool ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "AudioBuffer", "bool resume( )", asMETHODPR(cgAudioBuffer, resume, (), bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AudioBuffer", "bool setVolume( float )", asMETHODPR(cgAudioBuffer, setVolume, (cgFloat), bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AudioBuffer", "float getVolume( ) const", asMETHODPR(cgAudioBuffer, getVolume, () const, cgFloat ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AudioBuffer", "bool setPan( float )", asMETHODPR(cgAudioBuffer, setPan, (cgFloat), bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AudioBuffer", "float getPan( ) const", asMETHODPR(cgAudioBuffer, getPan, () const, cgFloat ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "AudioBuffer", "bool setPitch( float )", asMETHODPR(cgAudioBuffer, setPitch, (cgFloat), bool ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "AudioBuffer", "float getPitch( ) const", asMETHODPR(cgAudioBuffer, getPitch, () const, cgFloat ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AudioBuffer", "void set3DSoundPosition( const Vector3 &in )", asMETHODPR(cgAudioBuffer, set3DSoundPosition, ( const cgVector3 & ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AudioBuffer", "void set3DSoundVelocity( const Vector3 &in )", asMETHODPR(cgAudioBuffer, set3DSoundVelocity, ( const cgVector3 & ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AudioBuffer", "void set3DRangeProperties( float,float )", asMETHODPR(cgAudioBuffer, set3DRangeProperties, ( cgFloat, cgFloat ), void ), asCALL_THISCALL) );

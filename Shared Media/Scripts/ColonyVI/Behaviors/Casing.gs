@@ -8,13 +8,18 @@
 //                                                                           //
 //---------------------------------------------------------------------------//
 //                                                                           //
-// Name : Casing.gsh                                                         //
+// Name : Casing.gs                                                          //
 //                                                                           //
 // Desc : Behavior associated with casings ejected from a weapon.            //
 //                                                                           //
 //---------------------------------------------------------------------------//
 //      Copyright (c) 1997 - 2012 Game Institute. All Rights Reserved.       //
 //---------------------------------------------------------------------------//
+
+//-----------------------------------------------------------------------------
+// Script Includes
+//-----------------------------------------------------------------------------
+#include_once "../API/AudioManager.gsh"
 
 //-----------------------------------------------------------------------------
 // Class Definitions
@@ -28,9 +33,11 @@ shared class Casing : IScriptedObjectBehavior
     ///////////////////////////////////////////////////////////////////////////
 	// Private Member Variables
 	///////////////////////////////////////////////////////////////////////////
-    private ObjectNode@             mNode;                  // The node to which we are attached.
-    private Vector3                 mVelocity;              // Current velocity.
-    private float                   mTimeAlive;             // Amount of time this has been alive.
+    private ObjectNode@     mNode;                  // The node to which we are attached.
+    private Vector3         mVelocity;              // Current velocity.
+    private float           mTimeAlive;             // Amount of time this has been alive.
+    private int             mCasingDropSound;       // Sound that plays when a spent casing hits the ground.
+    private AudioManager@   mAudioManager;
     
 	///////////////////////////////////////////////////////////////////////////
 	// Constructors & Destructors
@@ -57,6 +64,10 @@ shared class Casing : IScriptedObjectBehavior
         @mNode     = object;
         mVelocity  = object.getXAxis() * randomFloat( 1.5f, 2.0f );
         mTimeAlive = 0;
+        
+        // Cache the bullet casing sound effect.
+        @mAudioManager = getAudioManager();
+        mCasingDropSound = mAudioManager.loadSound( "Sounds/Bullet Casing.ogg", true );
 	}
 
     //-------------------------------------------------------------------------
@@ -68,7 +79,7 @@ shared class Casing : IScriptedObjectBehavior
     {
         // Release our references.
         @mNode = null;
-    }
+	}
 
 	//-------------------------------------------------------------------------
 	// Name : onUpdate () (Event)
@@ -83,7 +94,13 @@ shared class Casing : IScriptedObjectBehavior
         // Destroy the casing after a second or so.
         mTimeAlive += elapsedTime;
         if ( mTimeAlive >= 1.0f )
+        {
+            // Play the casing sound.
+            mAudioManager.playSound( mCasingDropSound, false, false, 1.0f, mNode.getPosition(), null );
+			
+			// Unload the node
             mNode.unload();
+		}
 	}
 
 } // End Class Casing

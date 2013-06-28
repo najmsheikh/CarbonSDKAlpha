@@ -567,6 +567,12 @@ class StandardRenderControl : IScriptedRenderControl
 	//-----------------------------------------------------------------------------
 	void frameBegin( RenderView @ activeView, CameraNode @ activeCamera, RenderDriver @ renderDriver )
 	{
+        // If any of the shading qualities change, reconfigure before we begin.
+        if ( mShadingQuality != renderDriver.getSystemState( SystemState::ShadingQuality ) ||
+             mPostProcessQuality != renderDriver.getSystemState( SystemState::PostProcessQuality ) ||
+             mAntiAliasingQuality != renderDriver.getSystemState( SystemState::AntiAliasingQuality ) )
+            configure();
+
         // Get the rendering capabilities
         RenderingCapabilities @ capabilities = renderDriver.getCapabilities();
 
@@ -744,6 +750,12 @@ class StandardRenderControl : IScriptedRenderControl
 		mHDRILR             = false;
 		mAntialiasing       = AntialiasingMethod::None;
 
+        // Select features based on currently selected shading quality
+        RenderDriver @ renderDriver = mScene.getRenderDriver();
+        mShadingQuality      = renderDriver.getSystemState( SystemState::ShadingQuality );
+        mPostProcessQuality  = renderDriver.getSystemState( SystemState::PostProcessQuality );
+        mAntiAliasingQuality = renderDriver.getSystemState( SystemState::AntiAliasingQuality );
+
 		// Material preview mode is non-interlaced LDR only with no shadows and no environment
 		// effects. It uses full g-buffers to ensure all material features are visualized.
 		if ( isSandboxMaterial )
@@ -756,12 +768,6 @@ class StandardRenderControl : IScriptedRenderControl
         } // End if material preview mode
 		else
 		{
-			// Select features based on currently selected shading quality
-			RenderDriver @ renderDriver = mScene.getRenderDriver();
-			mShadingQuality      = renderDriver.getSystemState( SystemState::ShadingQuality );
-			mPostProcessQuality  = renderDriver.getSystemState( SystemState::PostProcessQuality );
-			mAntiAliasingQuality = renderDriver.getSystemState( SystemState::AntiAliasingQuality );
-
 			// Setup shading quality			
 			if ( mShadingQuality <= ShadingQuality::Medium )
 			{
@@ -1039,6 +1045,13 @@ class StandardRenderControl : IScriptedRenderControl
 		{
 			mImageProcessor.processDepthImage( mDepthStencilBuffer, mDepthBuffer, DepthType::NonLinearZ, DepthType::LinearZ_Packed );
 		}
+
+		// Create an object render class mask in depth.a based on the current stencil buffer settings (static/dynamic/first person)
+		mImageProcessor.testStencilBuffer( true, 1 ); // Dynamic objects
+		mImageProcessor.processColorImage( mDepthBuffer, ImageOperation::SetColorA, ColorValue(0,0,0,1) );
+		mImageProcessor.testStencilBuffer( true, 2 ); // First person objects
+		mImageProcessor.processColorImage( mDepthBuffer, ImageOperation::SetColorA, ColorValue(0,0,0,0.5) );
+		mImageProcessor.testStencilBuffer( false, 0 ); 
 		
 		// Downsample depth buffers 
 		int numLevels = mDepthChain0.getLevelCount();
@@ -1314,7 +1327,8 @@ class StandardRenderControl : IScriptedRenderControl
         if ( mDrawSky )
         {
             // Get the scene element that describes the approach to use for sky rendering.
-            array<SceneElement@> skyElements = mScene.getSceneElementsByType( RTID_SkyElement );
+            array<SceneElement@>@ skyElements = array<SceneElement@>();
+            mScene.getSceneElementsByType( RTID_SkyElement, skyElements );
             if ( skyElements.length() == 0 )
             {
                 mAtmospherics.drawSkyColor( ColorValue( 0xFF7D7D7D ), mDrawHDR, mCurrentSceneTarget );
@@ -1763,7 +1777,7 @@ class StandardRenderControl : IScriptedRenderControl
             // Draw effect geometry
             if ( mScene.beginRenderPass( "particles" ) )
             {
-                queue.begin( cameraVis );
+                queue.begin( cameraVis, QueueProcessHandler::DepthSortedBlending );
                 queue.renderClass( "Effects" );
                 queue.end( true );
 

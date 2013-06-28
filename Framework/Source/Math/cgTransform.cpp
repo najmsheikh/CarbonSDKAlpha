@@ -111,7 +111,11 @@ cgTransform::cgTransform( const cgQuaternion & qOrientation, const cgVector3 & v
 cgTransform & cgTransform::operator=( const cgMatrix & m )
 {
     _m = m;
-
+    
+    // Make sure identity column remains pure.
+    _m._14 = _m._24 = _m._34 = 0.0f;
+    _m._44 = 1.0f;
+    
     // Return reference to self in order to allow multiple assignments (i.e. a=b=c)
     return *this;
 }
@@ -184,6 +188,10 @@ cgTransform cgTransform::operator* (const cgTransform & t) const
 {
     cgTransform tOut;
     cgTransform::multiply( tOut, *this, t );
+    
+    // Make sure identity column remains pure.
+    tOut._m._14 = tOut._m._24 = tOut._m._34 = 0.0f;
+    tOut._m._44 = 1.0f;
     return tOut;
 }
 
@@ -195,7 +203,12 @@ cgTransform cgTransform::operator* (const cgTransform & t) const
 //-----------------------------------------------------------------------------
 cgTransform cgTransform::operator* ( cgFloat f ) const
 {
-    return cgTransform( _m * f );
+    cgTransform tOut( _m * f );
+    
+    // Make sure identity column remains pure.
+    tOut._m._14 = tOut._m._24 = tOut._m._34 = 0.0f;
+    tOut._m._44 = 1.0f;
+    return tOut;
 }
 
 //-----------------------------------------------------------------------------
@@ -232,6 +245,11 @@ cgTransform & cgTransform::operator*= (const cgTransform & t)
 cgTransform & cgTransform::operator*= (cgFloat f)
 {
     _m *= f;
+    
+    // Make sure identity column remains pure.
+    _m._14 = _m._24 = _m._34 = 0.0f;
+    _m._44 = 1.0f;
+
     return *this;
 }
 
@@ -711,6 +729,10 @@ cgTransform & cgTransform::compose( cgTransform & tOut, const cgQuaternion & qRo
 cgTransform & cgTransform::add( cgTransform & tOut, const cgTransform & t ) const
 {
     tOut._m = _m + t._m;
+    
+    // Make sure identity column remains pure.
+    tOut._m._14 = tOut._m._24 = tOut._m._34 = 0.0f;
+    tOut._m._44 = 1.0f;
     return tOut;
 }
 
@@ -723,6 +745,11 @@ cgTransform & cgTransform::add( cgTransform & tOut, const cgTransform & t ) cons
 cgTransform & cgTransform::add( cgTransform & tOut, const cgTransform & t1, const cgTransform & t2 )
 {
     tOut._m = t1._m + t2._m;
+
+    // Make sure identity column remains pure.
+    tOut._m._14 = tOut._m._24 = tOut._m._34 = 0.0f;
+    tOut._m._44 = 1.0f;
+
     return tOut;
 }
 
@@ -735,6 +762,10 @@ cgTransform & cgTransform::add( cgTransform & tOut, const cgTransform & t1, cons
 cgTransform & cgTransform::multiply( cgTransform & tOut, const cgTransform & t ) const
 {
     tOut._m = _m * t._m;
+    
+    // Make sure identity column remains pure.
+    tOut._m._14 = tOut._m._24 = tOut._m._34 = 0.0f;
+    tOut._m._44 = 1.0f;
     return tOut;
 }
 
@@ -758,6 +789,10 @@ cgTransform & cgTransform::multiply( cgTransform & tOut, const cgTransform & t1,
 cgTransform & cgTransform::inverse( cgTransform & tOut ) const
 {
     cgMatrix::inverse( tOut._m, _m );
+    
+    // Make sure identity column remains pure.
+    tOut._m._14 = tOut._m._24 = tOut._m._34 = 0.0f;
+    tOut._m._44 = 1.0f;
     return tOut;
 }
 
@@ -781,6 +816,10 @@ cgTransform & cgTransform::inverse( cgTransform & tOut, const cgTransform & t )
 cgTransform & cgTransform::invert( )
 {
     cgMatrix::inverse( _m, _m );
+    
+    // Make sure identity column remains pure.
+    _m._14 = _m._24 = _m._34 = 0.0f;
+    _m._44 = 1.0f;
     return *this;
 }
 
@@ -933,6 +972,10 @@ cgTransform & cgTransform::rotateLocal( cgFloat x, cgFloat y, cgFloat z )
     // Restore world space position.
     position() = vPos;
 
+    // Make sure identity column remains pure.
+    _m._14 = _m._24 = _m._34 = 0.0f;
+    _m._44 = 1.0f;
+
     // Return reference to self in order to allow consecutive operations (i.e. a.rotate(...).scale(...))
     return *this;
 }
@@ -961,6 +1004,10 @@ cgTransform & cgTransform::rotate( cgFloat x, cgFloat y, cgFloat z )
     // Restore the position
     position() = vPos;
 
+    // Make sure identity column remains pure.
+    _m._14 = _m._24 = _m._34 = 0.0f;
+    _m._44 = 1.0f;
+
     // Return reference to self in order to allow multiple operations (i.e. a.rotate(...).scale(...))
     return *this;
 }
@@ -987,6 +1034,10 @@ cgTransform & cgTransform::rotate( cgFloat x, cgFloat y, cgFloat z, const cgVect
 
     // Restore the position
     position() += RotationCenter;
+
+    // Make sure identity column remains pure.
+    _m._14 = _m._24 = _m._34 = 0.0f;
+    _m._44 = 1.0f;
 
     // Return reference to self in order to allow multiple operations (i.e. a.rotate(...).scale(...))
     return *this;
@@ -1017,6 +1068,10 @@ cgTransform & cgTransform::rotateAxis( cgFloat a, const cgVector3 & v )
     // Restore the position
     position() = vPos;
 
+    // Make sure identity column remains pure.
+    _m._14 = _m._24 = _m._34 = 0.0f;
+    _m._44 = 1.0f;
+
     // Return reference to self in order to allow multiple operations (i.e. a.rotate(...).scale(...))
     return *this;
 }
@@ -1043,6 +1098,10 @@ cgTransform & cgTransform::rotateAxis( cgFloat a, const cgVector3 & v, const cgV
 
     // Restore the position
     position() += RotationCenter;
+
+    // Make sure identity column remains pure.
+    _m._14 = _m._24 = _m._34 = 0.0f;
+    _m._44 = 1.0f;
 
     // Return reference to self in order to allow multiple operations (i.e. a.rotate(...).scale(...))
     return *this;
@@ -1080,6 +1139,10 @@ cgTransform & cgTransform::scaleLocal( cgFloat x, cgFloat y, cgFloat z )
     cgMatrix mtxScale;
     cgMatrix::scaling( mtxScale, x, y, z );
     _m = mtxScale * _m;
+
+    // Make sure identity column remains pure.
+    _m._14 = _m._24 = _m._34 = 0.0f;
+    _m._44 = 1.0f;
 
     // Return reference to self in order to allow multiple operations (i.e. a.rotate(...).scale(...))
     return *this;
@@ -1128,6 +1191,10 @@ cgTransform & cgTransform::scaleLocal( cgFloat x, cgFloat y, cgFloat z, const cg
     // Reposition the object
     position() = position() - (vScaledCenter - vOriginalCenter);
 
+    // Make sure identity column remains pure.
+    _m._14 = _m._24 = _m._34 = 0.0f;
+    _m._44 = 1.0f;
+
     // Return reference to self in order to allow multiple operations (i.e. a.rotate(...).scale(...))
     return *this;
 }
@@ -1156,6 +1223,10 @@ cgTransform & cgTransform::scale( cgFloat x, cgFloat y, cgFloat z )
     // Restore the position
     position() = vPos;
 
+    // Make sure identity column remains pure.
+    _m._14 = _m._24 = _m._34 = 0.0f;
+    _m._44 = 1.0f;
+
     // Return reference to self in order to allow multiple operations (i.e. a.rotate(...).scale(...))
     return *this;
 }
@@ -1182,6 +1253,10 @@ cgTransform & cgTransform::scale( cgFloat x, cgFloat y, cgFloat z, const cgVecto
 
     // Restore the position
     position() += ScalingCenter;
+
+    // Make sure identity column remains pure.
+    _m._14 = _m._24 = _m._34 = 0.0f;
+    _m._44 = 1.0f;
 
     // Return reference to self in order to allow multiple operations (i.e. a.rotate(...).scale(...))
     return *this;

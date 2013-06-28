@@ -145,11 +145,12 @@ bool cgProfiler::loadConfig( const cgString & strFileName )
         return false;
 
     // Retrieve configuration options
-    mConfig.enabled           = GetPrivateProfileInt( _T("Profiler"), _T("Enabled"), 0, strFileName.c_str() ) > 0;
-    mConfig.broadcastData     = GetPrivateProfileInt( _T("Profiler"), _T("BroadcastData"), 0, strFileName.c_str() ) > 0;
-    mConfig.broadcastPort     = GetPrivateProfileInt( _T("Profiler"), _T("BroadcastPort"), 46352, strFileName.c_str() );
-    mConfig.broadcastInterval = cgStringUtility::getPrivateProfileFloat( _T("Profiler"), _T("BroadcastInterval"), 0.25f, strFileName.c_str() );
-    mConfig.outputMarkers     = GetPrivateProfileInt( _T("Profiler"), _T("OutputMarkers"), 0, strFileName.c_str() ) > 0;
+    cgString strResolvedFile = cgFileSystem::resolveFileLocation( strFileName );
+    mConfig.enabled           = GetPrivateProfileInt( _T("Profiler"), _T("Enabled"), 0, strResolvedFile.c_str() ) > 0;
+    mConfig.broadcastData     = GetPrivateProfileInt( _T("Profiler"), _T("BroadcastData"), 0, strResolvedFile.c_str() ) > 0;
+    mConfig.broadcastPort     = GetPrivateProfileInt( _T("Profiler"), _T("BroadcastPort"), 46352, strResolvedFile.c_str() );
+    mConfig.broadcastInterval = cgStringUtility::getPrivateProfileFloat( _T("Profiler"), _T("BroadcastInterval"), 0.25f, strResolvedFile.c_str() );
+    mConfig.outputMarkers     = GetPrivateProfileInt( _T("Profiler"), _T("OutputMarkers"), 0, strResolvedFile.c_str() ) > 0;
     
     // Success!!
     return true;
@@ -168,18 +169,18 @@ bool cgProfiler::loadConfig( const cgString & strFileName )
 //-----------------------------------------------------------------------------
 bool cgProfiler::saveConfig( const cgString & strFileName )
 {
-    LPCTSTR strSection = _T("Profiler");
-
     // Validate requirements
     if ( strFileName.empty() )
         return false;
 
     // Save configuration options
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("Enabled"), mConfig.enabled, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("BroadcastData"), mConfig.broadcastData, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("BroadcastPort"), mConfig.broadcastPort, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileFloat( strSection, _T("BroadcastInterval"), mConfig.broadcastInterval, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("OutputMarkers"), mConfig.outputMarkers, strFileName.c_str() );
+    const cgTChar * strSection = _T("Profiler");
+    cgString strResolvedFile = cgFileSystem::resolveFileLocation( strFileName );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("Enabled"), mConfig.enabled, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("BroadcastData"), mConfig.broadcastData, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("BroadcastPort"), mConfig.broadcastPort, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileFloat( strSection, _T("BroadcastInterval"), mConfig.broadcastInterval, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("OutputMarkers"), mConfig.outputMarkers, strResolvedFile.c_str() );
     
     // Success!!
     return true;

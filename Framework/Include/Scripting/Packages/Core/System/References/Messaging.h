@@ -33,6 +33,18 @@ namespace Messaging
             using namespace cgScriptInterop::Utils;
 
             ///////////////////////////////////////////////////////////////////////
+            // cgSystemMessageGroups (Constants)
+            ///////////////////////////////////////////////////////////////////////
+            BINDSUCCESS( engine->registerGlobalProperty( "const UID MGID_RenderDriver"   , (void*)&cgSystemMessageGroups::MGID_RenderDriver ) );
+            BINDSUCCESS( engine->registerGlobalProperty( "const UID MGID_ResourceManager", (void*)&cgSystemMessageGroups::MGID_ResourceManager ) );
+            BINDSUCCESS( engine->registerGlobalProperty( "const UID MGID_MouseInput"     , (void*)&cgSystemMessageGroups::MGID_MouseInput ) );
+            BINDSUCCESS( engine->registerGlobalProperty( "const UID MGID_KeyboardInput"  , (void*)&cgSystemMessageGroups::MGID_KeyboardInput ) );
+            BINDSUCCESS( engine->registerGlobalProperty( "const UID MGID_Scene"          , (void*)&cgSystemMessageGroups::MGID_Scene ) );
+            BINDSUCCESS( engine->registerGlobalProperty( "const UID MGID_AppWindow"      , (void*)&cgSystemMessageGroups::MGID_AppWindow ) );
+            BINDSUCCESS( engine->registerGlobalProperty( "const UID MGID_World"          , (void*)&cgSystemMessageGroups::MGID_World ) );
+            BINDSUCCESS( engine->registerGlobalProperty( "const UID MGID_WorldComponent" , (void*)&cgSystemMessageGroups::MGID_WorldComponent ) );
+            
+            ///////////////////////////////////////////////////////////////////////
             // cgSystemMessages (Enum)
             ///////////////////////////////////////////////////////////////////////
 
@@ -82,7 +94,7 @@ namespace Messaging
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "UI_CheckBox_OnCheckedStateChange", cgSystemMessages::UI_CheckBox_OnCheckedStateChange ) );
 
             // Messages issued by cgSceneLoader
-            BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "SceneLoader_ProgressUpdated", cgSystemMessages::SceneLoader_ProgressUpdated ) );
+            BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "Scene_LoadProgressUpdate", cgSystemMessages::Scene_LoadProgressUpdate ) );
 
             // Messages issued by cgAppWindow
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "AppWindow_OnCreate", cgSystemMessages::AppWindow_OnCreate ) );

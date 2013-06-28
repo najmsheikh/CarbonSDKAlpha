@@ -40,6 +40,7 @@
 class cgDX9EnumDeviceOptions;
 class cgDX9EnumDevice;
 class cgDX9EnumAdapter;
+struct cgRenderDriverConfig;
 
 //-----------------------------------------------------------------------------
 // Name: vertexProcessingType (Enum)
@@ -188,8 +189,8 @@ public:
     HRESULT                 resetDisplay           ( IDirect3DDevice9 * device, cgDX9Settings& settings, HWND focusWindow = CG_NULL, HWND outputWindow = CG_NULL, 
                                                      bool createDepthBuffer = true );
     
-    bool                    findBestWindowedMode   ( cgDX9Settings & settings, bool requireHAL = false, bool requireREF = false );
-    bool                    findBestFullScreenMode ( cgDX9Settings & settings, D3DDISPLAYMODE * matchMode = CG_NULL, bool requireHAL = false, bool requireREF = false );
+    bool                    findBestWindowedMode   ( cgDX9Settings & settings, const cgRenderDriverConfig & currentConfig, bool requireHAL = false, bool requireREF = false, bool exactMatch = false );
+    bool                    findBestFullScreenMode ( cgDX9Settings & settings, const cgRenderDriverConfig & currentConfig, bool requireHAL = false, bool requireREF = false, bool exactMatch = false );
 
     D3DPRESENT_PARAMETERS   buildPresentParameters ( cgDX9Settings& settings, cgUInt32 flags = 0, bool createDepthBuffer = true );
     

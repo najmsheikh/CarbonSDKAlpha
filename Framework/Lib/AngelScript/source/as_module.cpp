@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2012 Andreas Jonsson
+   Copyright (c) 2003-2013 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied 
    warranty. In no event will the authors be held liable for any 
@@ -118,6 +118,12 @@ const char *asCModule::GetName() const
 }
 
 // interface
+const char *asCModule::GetDefaultNamespace() const
+{
+	return defaultNamespace->name.AddressOf();
+}
+
+// interface
 int asCModule::SetDefaultNamespace(const char *nameSpace)
 {
 	// TODO: cleanup: This function is similar to asCScriptEngine::SetDefaultNamespace. Can we reuse the code?
@@ -229,6 +235,17 @@ int asCModule::Build()
     JITCompile();
 
  	engine->PrepareEngine();
+
+#ifdef AS_DEBUG
+	// Verify that there are no unwanted gaps in the scriptFunctions array.
+	for( asUINT n = 1; n < engine->scriptFunctions.GetLength(); n++ )
+	{
+		int id = n;
+		if( engine->scriptFunctions[n] == 0 && !engine->freeScriptFunctionIds.Exists(id) )
+			asASSERT( false );
+	}
+#endif
+
 	engine->BuildCompleted();
 
 	// Initialize global variables
@@ -309,8 +326,8 @@ int asCModule::CallInit(asIScriptContext *myCtx)
 					asCScriptFunction *func = desc->GetInitFunc();
 
 					engine->WriteMessage(func->scriptSectionIdx >= 0 ? engine->scriptSectionNames[func->scriptSectionIdx]->AddressOf() : "",
-										 func->GetLineNumber(0) & 0xFFFFF, 
-										 func->GetLineNumber(0) >> 20,
+										 func->GetLineNumber(0, 0) & 0xFFFFF, 
+										 func->GetLineNumber(0, 0) >> 20,
 										 asMSGTYPE_ERROR,
 										 msg.AddressOf());
 										 
@@ -423,7 +440,7 @@ void asCModule::InternalReset()
 	{
 		if( bindInformations[n] )
 		{
-			asUINT id = bindInformations[n]->importedFunctionSignature->id & 0xFFFF;
+			asUINT id = bindInformations[n]->importedFunctionSignature->id & ~FUNC_IMPORTED;
 			engine->importedFunctions[id] = 0;
 			engine->freeImportedFunctionIdxs.PushLast(id);
 
@@ -434,6 +451,7 @@ void asCModule::InternalReset()
 	bindInformations.SetLength(0);
 
 	// Free declared types, including classes, typedefs, and enums
+	// TODO: optimize: Check if it is possible to destroy the object directly without notifying the GC
 	for( n = 0; n < classTypes.GetLength(); n++ )
 		classTypes[n]->Orphan(this);
 	classTypes.SetLength(0);
@@ -447,8 +465,8 @@ void asCModule::InternalReset()
 	// Free funcdefs
 	for( n = 0; n < funcDefs.GetLength(); n++ )
 	{
-		// TODO: funcdefs: These may be shared between modules, so we can't just remove them
-		engine->funcDefs.RemoveValue(funcDefs[n]);
+		// The funcdefs are not removed from the engine at this moment as they may still be referred
+		// to by other types. The engine's ClearUnusedTypes will take care of the clean up.
 		funcDefs[n]->Release();
 	}
 	funcDefs.SetLength(0);
@@ -686,7 +704,9 @@ int asCModule::GetGlobalVarIndexByDecl(const char *decl) const
 	asCString name;
 	asSNameSpace *nameSpace;
 	asCDataType dt;
-	bld.ParseVariableDeclaration(decl, defaultNamespace, name, nameSpace, dt);
+	int r = bld.ParseVariableDeclaration(decl, defaultNamespace, name, nameSpace, dt);
+	if( r < 0 )
+		return r;
 
 	// Search global variables for a match
 	int id = scriptGlobals.GetFirstIndex(nameSpace, name, asCCompGlobPropType(dt));
@@ -848,7 +868,7 @@ const char *asCModule::GetTypedefByIndex(asUINT index, int *typeId, const char *
 		return 0;
 
 	if( typeId )
-		*typeId = engine->GetTypeIdFromDataType(typeDefs[index]->templateSubType); 
+		*typeId = engine->GetTypeIdFromDataType(typeDefs[index]->templateSubTypes[0]); 
 
 	if( nameSpace )
 		*nameSpace = typeDefs[index]->nameSpace->name.AddressOf();
@@ -1178,6 +1198,16 @@ int asCModule::LoadByteCode(asIBinaryStream *in, bool *wasDebugInfoStripped)
 	r = read.Read(wasDebugInfoStripped);
 
     JITCompile();
+
+#ifdef AS_DEBUG
+	// Verify that there are no unwanted gaps in the scriptFunctions array.
+	for( asUINT n = 1; n < engine->scriptFunctions.GetLength(); n++ )
+	{
+		int id = n;
+		if( engine->scriptFunctions[n] == 0 && !engine->freeScriptFunctionIds.Exists(id) )
+			asASSERT( false );
+	}
+#endif
 
 	engine->BuildCompleted();
 

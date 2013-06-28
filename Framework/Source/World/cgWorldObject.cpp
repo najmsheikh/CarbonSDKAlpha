@@ -252,13 +252,15 @@ bool cgWorldObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const 
 //-----------------------------------------------------------------------------
 void cgWorldObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
+    cgScene * pScene = pIssuer->getScene();
+    const cgUID & ActiveCategoryId = pScene->getActiveObjectElementType();
+
     // Iterate through active sub-elements so that they can render their representation.
     // We skip nodes that are currently merged as closed groups since they we do not
     // technically consider them 'selected'.
-    if ( pIssuer->isSelected() && !pIssuer->isMergedAsGroup() )
+    bool isSelected = (pIssuer->isSelected() && !pIssuer->isMergedAsGroup());
+    if ( isSelected )
     {
-        cgScene * pScene = pIssuer->getScene();
-        const cgUID & ActiveCategoryId = pScene->getActiveObjectElementType();
         ElementCategoryMap::iterator itCategory = mSubElementCategories.find( ActiveCategoryId );
         if ( itCategory != mSubElementCategories.end() )
         {
@@ -270,6 +272,23 @@ void cgWorldObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVis
         } // End if valid category
     
     } // End if selected
+
+    // If we were instructed to draw collision shapes regardless
+    // (and we haven't already drawn them above), do so now.
+    bool alwaysShowShapes = ((flags & cgSandboxRenderFlags::ShowCollisionShapes) != 0);
+    if ( alwaysShowShapes && (!isSelected || ActiveCategoryId != OSECID_CollisionShapes ) )
+    {
+        ElementCategoryMap::iterator itCategory = mSubElementCategories.find( OSECID_CollisionShapes );
+        if ( itCategory != mSubElementCategories.end() )
+        {
+            // Allow the sub-elements to render.
+            cgObjectSubElementArray & aSubElements = itCategory->second;
+            for ( size_t i = 0; i < aSubElements.size(); ++i )
+                aSubElements[i]->sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
+
+        } // End if valid category
+
+    } // End if draw shape
 }
 
 //-----------------------------------------------------------------------------

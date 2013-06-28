@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 // Local Includes
 //-----------------------------------------------------------------------------
-#include_once "Agent.gsh"
+#include_once "../API/Agent.gsh"
 #include_once "Objective.gsh"
 #include_once "FirstPersonActor.gs"
 
@@ -53,22 +53,26 @@ shared class PlayerAgent : Agent
 	// Private Member Variables
 	///////////////////////////////////////////////////////////////////////////
     // Object references
-    private CameraNode@                 mCamera;            // The camera associated with the player.
-    private ActorNode@                  mFPActorNode;       // Spawned actor designed to represent the first person player model.
-    private FirstPersonActor@           mFPActor;           // Script object currently attached to the player's first person actor.
-    private CharacterController@        mController;        // Character controller associated with the player.
+    private CameraNode@                 mCamera;                // The camera associated with the player.
+    private ActorNode@                  mFPActorNode;           // Spawned actor designed to represent the first person player model.
+    private FirstPersonActor@           mFPActor;               // Script object currently attached to the player's first person actor.
+    private CharacterController@        mController;            // Character controller associated with the player.
 
     // States
-    private CharacterState              mPreviousState;     // Previous state of the character controller (for transitions -- air to floor, etc.)
-    private CharacterState              mCurrentState;      // Current state of the character controller.
-    private bool                        mLeftFootHit;       // Have we handled the left foot hit (mostly for sound effects).
-    private bool                        mRightFootHit;      // Have we handled the right foot hit (mostly for sound effects).
-
+    private CharacterState              mPreviousState;         // Previous state of the character controller (for transitions -- air to floor, etc.)
+    private CharacterState              mCurrentState;          // Current state of the character controller.
+    private bool                        mLeftFootHit;           // Have we handled the left foot hit (mostly for sound effects).
+    private bool                        mRightFootHit;          // Have we handled the right foot hit (mostly for sound effects).
+    private bool                        mArmorCharging;         // Is our armor currently charging?
+    private bool                        mInternalArmorCharge;   // Are we charging through internal means?
+	private bool                        mEnableAutoRecharge;    // Is automatic armor recharging enabled?
+    private bool                        mInvincible;            // Can the player taken any damage?
+	
     // Feedback
     private float                       mTimeSinceDamage;
 
     // Camera control
-    private Vector3                     mLastCamPos;        // Last computed position of the camera for smoothing.
+    private Vector3                     mLastCamPos;            // Last computed position of the camera for smoothing.
     private float                       mBobCycle;
     private Vector2                     mLastBobOffset;
     private bool                        mShakeCamera;
@@ -79,19 +83,26 @@ shared class PlayerAgent : Agent
     private Vector2                     mCameraShakeOffset;
 
     // Input
-    private Vector2                     mTotalOffset;       // Total amount of mouse motion recorded subsequent to previous update.
-	private Vector2                     mPrevRotation;      // Previous rotation angles used for a single frame average.
+    private Vector2                     mTotalOffset;           // Total amount of mouse motion recorded subsequent to previous update.
+	private Vector2                     mPrevRotation;          // Previous rotation angles used for a single frame average.
 
     // Sounds
-    private array<AudioBufferHandle>    mFootstepSounds;    // Array containing a random selection of footstep sounds for a metal surface.
+    private array<int>                  mFootstepSounds;        // Array containing a random selection of footstep sounds for a metal surface.
+    private array<int>                  mHeartBeatSounds;       // Array containing heartbeat sound effects (slow to fast).
+    private array<SoundRef@>            mHeartBeatSoundChannels;
+    private int                         mChargeArmorSound;      // Armor charging sound effect.
+    private SoundRef@                   mChargeArmorSoundChannel;
 
     // Right click physics grab
-    private ObjectNode@                 mSelectedNode;      // Node selected when right clicking to grab objects.
-    private KinematicControllerJoint@   mJoint;             // Joint used for the physics constraint.
-    private float                       mGrabDistance;      // Distance from the camera to the grabbed object on first click.
+    private ObjectNode@                 mSelectedNode;          // Node selected when right clicking to grab objects.
+    private KinematicControllerJoint@   mJoint;                 // Joint used for the physics constraint.
+    private float                       mGrabDistance;          // Distance from the camera to the grabbed object on first click.
 
     // Objectives
-    private Objective@                  mCurrentObjective;  // The player's current objective.
+    private Objective@                  mCurrentObjective;      // The player's current objective.
+
+    // Processing
+    private IntervalTimer               mCollectionTimer;
 
 	///////////////////////////////////////////////////////////////////////////
 	// Constructors & Destructors
@@ -103,8 +114,12 @@ shared class PlayerAgent : Agent
 	PlayerAgent( )
     {
         // Setup agent description
-        mMaximumHealth  = 100;
-        mMaximumArmor   = 100;
+        mMaximumHealth          = 500;
+        mMaximumArmor           = 200; 
+        mArmorCharging          = false;
+        mInternalArmorCharge    = false;
+		mEnableAutoRecharge     = true;
+        mShakeCamera            = false;
 
         // Initialize variables to sensible defaults.
         mTotalOffset    = Vector2( 0.0f, 0.0f );
@@ -138,7 +153,6 @@ shared class PlayerAgent : Agent
         mCamera.setFOV( 75.0f );
         mCamera.setNearClip( 0.2f );
         mCamera.setFarClip( 10000.01f );
-        //mCamera.setUpdateRate( UpdateRate::Always );
 
         // Offset the camera to "eye" level based on the configured height
         // of the character controller prior to attaching to the player.
@@ -176,17 +190,29 @@ shared class PlayerAgent : Agent
         mFootstepSounds.resize( 10 );
         for ( int i = 0; i < 5; ++i )
         {
-            String fileName = "Sounds/Footstep_Metal_L" + (i+1) + ".wav";
-            resources.loadAudioBuffer( mFootstepSounds[i], fileName, AudioBufferFlags::Complex, 0, DebugSource() );
-            fileName = "Sounds/Footstep_Metal_R" + (i+1) + ".wav";
-            resources.loadAudioBuffer( mFootstepSounds[i+5], fileName, AudioBufferFlags::Complex, 0, DebugSource() );
+            String fileName = "Sounds/Footstep_Metal_L" + (i+1) + ".ogg";
+            mFootstepSounds[i] = mAudioManager.loadSound( fileName, false );
+            fileName = "Sounds/Footstep_Metal_R" + (i+1) + ".ogg";
+            mFootstepSounds[i+5] = mAudioManager.loadSound( fileName, false );
             
         } // Next footstep
+
+        // Load all secondary sounds.
+        mHeartBeatSounds.resize( 2 );
+        mHeartBeatSoundChannels.resize( 2 );
+        mHeartBeatSounds[0] = mAudioManager.loadSound( "Sounds/Heartbeat Normal.ogg", false );
+        mHeartBeatSounds[1] = mAudioManager.loadSound( "Sounds/Heartbeat Fast.ogg", false );
+        mChargeArmorSound   = mAudioManager.loadSound( "Sounds/Charge Armor.ogg", false );
 
         // Setup initial states.
         mCurrentHealth      = mMaximumHealth;
         mCurrentArmor       = mMaximumArmor;
         mTimeSinceDamage    = 9999999.0f;
+        mShakeCamera        = false;
+        mInvincible         = false;
+
+        // Setup timers.
+        mCollectionTimer.setInterval( 0.3f, 0.3f );
 
         // Call base class implementation
         Agent::onAttach( object );
@@ -205,9 +231,6 @@ shared class PlayerAgent : Agent
         @mFPActor           = null;
         @mController        = null;
         @mCurrentObjective  = null;
-
-        // Close all resources
-        mFootstepSounds.resize( 0 );
 	}
 
 	//-------------------------------------------------------------------------
@@ -223,9 +246,39 @@ shared class PlayerAgent : Agent
         if ( @mNode == null || @mCamera == null || !isAlive() )
             return;
 
-        // Recharge armor after 6 seconds of no damage at a rate of 10 per second
-        if ( mTimeSinceDamage >= 6.0f && mCurrentArmor < mMaximumArmor )
-            mCurrentArmor = min( mMaximumArmor, mCurrentArmor + 10.0f * elapsedTime );
+        // Recharge armor after 6 seconds of no damage.
+        if ( !mArmorCharging )
+        {
+            if ( mTimeSinceDamage >= 6.0f && mCurrentArmor < mMaximumArmor && mEnableAutoRecharge )
+                setArmorCharging( true, true );
+        
+        } // End if !charging
+        else
+        {
+            // Automatically disable internal armor charge when we hit the maximum or we take damage.
+            if ( (mInternalArmorCharge && mEnableAutoRecharge) && (mCurrentArmor >= mMaximumArmor || mTimeSinceDamage < 6.0f) )
+                setArmorCharging( false, false );
+        
+        } // End if charging
+        
+        // Is our armor charging?
+        if ( mArmorCharging )
+        {
+            // Internal armor charge can charge at a rate of 10 units per second.
+            if ( mInternalArmorCharge )
+                mCurrentArmor = min( mMaximumArmor, mCurrentArmor + 10.0f * elapsedTime );
+
+            // Update armor charging sound effect volume
+            if ( mAudioManager.isSoundPlaying( mChargeArmorSoundChannel ) )
+            {
+                float t = mCurrentArmor / mMaximumArmor;
+                float volumeAmt = (0.01f * (1.0f-t)) + (0.1f * t);
+                mAudioManager.setSoundVolume( mChargeArmorSoundChannel, volumeAmt ); 
+                mAudioManager.setSoundPitch( mChargeArmorSoundChannel, t + 0.5f ); 
+            
+            } // End if loaded
+        
+        } // End if charging
 
         // Record new character state. We use these to check for
         // transitions from floor to air, and other events.
@@ -258,7 +311,91 @@ shared class PlayerAgent : Agent
                 mJoint.setPosition( rayOrigin + rayDir * mGrabDistance );
         
         } // End if holding an object
+
+        // Test for nearby objects on an interval timer
+        if ( mCollectionTimer.update( elapsedTime ) )
+        {
+            float collectRange = 1.8f;
+            array<ObjectNode@> nodes;
+            mNode.getScene().getObjectNodesByType( RTID_DummyObject, nodes );
+            for ( uint i = 0; i < nodes.length(); ++i )
+            {
+                ObjectNode @ testNode = nodes[i];
+                float distance = vec3Length( testNode.getPosition() - mNode.getPosition() );
+                if ( distance <= collectRange && testNode.getBehaviorCount() > 0 )
+                {
+                    // Should not be attached to a parent (i.e. dropped on the ground).
+                    if ( @testNode.getParent() != null )
+                        continue;
+
+                    // Is this a weapon that can be collected?
+                    Weapon @ weapon = cast<Weapon>(testNode.getScriptedBehavior(0));
+                    if ( @weapon == null || !weapon.canCollect() )
+                        continue;
+
+                    // Attempt to collect the weapon / the ammo from it.
+                    if ( mFPActor.attemptWeaponCollect( weapon ) )
+                    {
+                        // Remove the weapon from the world.
+                        testNode.unload( true );
+                    
+                    }  // End if collected
+                
+                } // End if dummy
+                                    
+            } // Next object
+
+        } // End if elapsed
 	}
+
+    //-------------------------------------------------------------------------
+	// Name : enableInvincibility ( )
+	// Desc : Enable / disable player invincibility.
+	//-------------------------------------------------------------------------
+    void enableInvincibility( bool enabled )
+    {
+        mInvincible = enabled;
+    }
+
+    //-------------------------------------------------------------------------
+	// Name : enableAutoArmorRecharge ( )
+	// Desc : Enable / disable automatic armor recharging behavior.
+	//-------------------------------------------------------------------------
+    void enableAutoArmorRecharge( bool enabled )
+    {
+		mEnableAutoRecharge = enabled;
+	}
+	
+    //-------------------------------------------------------------------------
+	// Name : setArmorCharging ( )
+	// Desc : Enable / disable armor recharge.
+	//-------------------------------------------------------------------------
+    void setArmorCharging( bool enabled, bool fromInternalSource )
+    {
+        // Is this a no-op?
+        if ( enabled != mArmorCharging )
+        {
+            if ( enabled )
+            {
+                // Play the armor charging sound effect
+                float t = mCurrentArmor / mMaximumArmor;
+                float volumeAmt = (0.01f * (1.0f-t)) + (0.1f * t);
+                @mChargeArmorSoundChannel = mAudioManager.playSound( mChargeArmorSound, false, true, volumeAmt, 0.0f, t + 0.5f );
+            
+            } // End if enabled
+            else
+            {
+                // Make sure the armor charging sound effect is not playing
+                mAudioManager.stopSound( mChargeArmorSoundChannel );
+
+            } // End if disabled
+        
+        } // End if !no-op
+
+        // Update variables
+        mArmorCharging = enabled;
+        mInternalArmorCharge = fromInternalSource;
+    }
 
 	//-------------------------------------------------------------------------
 	// Name : onKeyPressed ( ) (Event)
@@ -279,16 +416,10 @@ shared class PlayerAgent : Agent
                     mFPActor.requestWeaponSwitch( WeaponType::Beretta );
                 else if ( keyCode == Keys::D2 )
                     mFPActor.requestWeaponSwitch( WeaponType::M16 );
+                else if ( keyCode == Keys::D3 )
+                    mFPActor.requestWeaponSwitch( WeaponType::M72 );
 
             } // End if valid actor
-
-            // Debug: Replenish health
-            if ( keyCode == Keys::H )
-            {
-                mCurrentHealth = mMaximumHealth;
-                mCurrentArmor = mMaximumArmor;
-
-            } // End if H
 
             // Objective trigger?
             if ( @mCurrentObjective != null && mCurrentObjective.isObjectiveInRange( mNode.getPosition() ) )
@@ -406,8 +537,8 @@ shared class PlayerAgent : Agent
 	//-------------------------------------------------------------------------
     void onProjectileHit( Weapon @ weapon, ObjectNode @ intersectedNode, const Vector3 & from, const Vector3 & to )
     {
-        // Alive?
-        if ( !isAlive() )
+        // Cannot take damage if dead or invincible.
+        if ( !isAlive() || mInvincible )
             return;
 
         // Get a reference to the agent that is holding the weapon that shot us.
@@ -442,14 +573,7 @@ shared class PlayerAgent : Agent
 
         // Shake the camera if it isn't already
         if ( !mShakeCamera )
-        {
-            mShakeCamera = true;
-            mCameraShakeLength = 0.2f;
-            mCameraShakeTime = 0.0f;
-            mCameraShakeLastUpdate = 0.0f;
-            mCameraShakeMagnitude = 0.3f;
-        
-        } // End if not shaking
+            shakeCamera( 0.2f, 0.3f );
 
         // We were damaged
         mTimeSinceDamage = 0;
@@ -461,8 +585,8 @@ shared class PlayerAgent : Agent
 	//-------------------------------------------------------------------------
     void onExplosionHit( const Vector3 & source, float maxDamage, float damageScale, float force )
     {
-        // Alive?
-        if ( !isAlive() )
+        // Cannot take damage if dead or invincible.
+        if ( !isAlive() || mInvincible )
             return;
 
         // Compute total damage
@@ -500,11 +624,7 @@ shared class PlayerAgent : Agent
         } // End if !dead
 
         // Shake the camera
-        mShakeCamera = true;
-        mCameraShakeLength = 0.5f;
-        mCameraShakeTime = 0.0f;
-        mCameraShakeLastUpdate = 0.0f;
-        mCameraShakeMagnitude = 0.7f * min(1.0f,damageScale + 0.5f);
+        shakeCamera( 0.5f, 0.7f * min(1.0f,damageScale + 0.5f) );
 
         // We were damaged.
         mTimeSinceDamage = 0;
@@ -529,6 +649,9 @@ shared class PlayerAgent : Agent
         if ( !isAlive() )
             return;
 
+        // Call base class implementation
+        Agent::kill();
+
         // We are no longer alive.
         setAlive( false );
 
@@ -548,8 +671,8 @@ shared class PlayerAgent : Agent
 
         // Create a new dummy object for the death sequence.
         Scene @ scene = mCamera.getScene();
-        DummyNode @ dummy = cast<DummyNode@>(scene.createObjectNode( true, RTID_CameraObject, false ));
-
+        DummyNode @ dummy = cast<DummyNode@>(scene.createObjectNode( true, RTID_DummyObject, false ));
+        
         // Position it at the camera location
         dummy.setWorldTransform( mCamera.getWorldTransform() );
 
@@ -558,6 +681,7 @@ shared class PlayerAgent : Agent
 
         // Set its size to something reasonable and then enable rigid dynamics.
         // Dummy will fall to the floor and maybe even roll!
+        dummy.setSize( 1.0f );
         dummy.setPhysicsModel( PhysicsModel::RigidDynamic );
 
         // Apply a random torque.
@@ -567,6 +691,28 @@ shared class PlayerAgent : Agent
     ///////////////////////////////////////////////////////////////////////////
 	// Public Methods
 	///////////////////////////////////////////////////////////////////////////
+    //-------------------------------------------------------------------------
+	// Name : getCamera ()
+	// Desc : Retrieve the camera associated with the player.
+	//-------------------------------------------------------------------------
+    CameraNode @ getCamera( )
+    {
+        return mCamera;
+    }
+
+    //-------------------------------------------------------------------------
+	// Name : shakeCamera ()
+	// Desc : Apply a shake to the camera.
+	//-------------------------------------------------------------------------
+    void shakeCamera( float length, float magnitude )
+    {
+        mShakeCamera = true;
+        mCameraShakeTime = 0.0f;
+        mCameraShakeLastUpdate = 0.0f;
+        mCameraShakeLength = length;
+        mCameraShakeMagnitude = magnitude;
+    }
+
     //-------------------------------------------------------------------------
 	// Name : teleportTo ()
 	// Desc : Reposition the player at the specified location.
@@ -914,16 +1060,8 @@ shared class PlayerAgent : Agent
                 // left footstep yet, do so now. Also play if we are landing.
                 if ( (!mLeftFootHit && sideCycle < 0) || landing )
                 {
-                    // Play random left footstep
-                    AudioBuffer @ effect = mFootstepSounds[randomInt(0,4)].getResource(true);
-                    if ( @effect != null && effect.isLoaded() )
-                    {
-                        effect.setPan( -0.025f );                       // A little in the left speaker.
-                        effect.setVolume( (landing) ? 0.75f : 0.35f );  // Louder if we're landing.
-                        effect.setBufferPosition(0);                    // Play once from the start.
-                        effect.play( false );                           
-                    
-                    } // End if loaded
+                    // Play random left footstep a little in the left speaker.
+                    mAudioManager.playSound( mFootstepSounds[randomInt(0,4)], false, false, (landing) ? 0.75f : 0.35f, -0.0025f );
 
                     // Don't play again until we're back on this cycle.
                     mLeftFootHit  = !landing;
@@ -934,16 +1072,8 @@ shared class PlayerAgent : Agent
                 // Check the same again for the right side of the cycle (or landing)
                 if ( (!mRightFootHit && sideCycle > 0) || landing )
                 {
-                    // Play random right footstep
-                    AudioBuffer @ effect = mFootstepSounds[randomInt(5,9)].getResource(true);
-                    if ( @effect != null && effect.isLoaded() )
-                    {
-                        effect.setPan( 0.025f );                        // A little in the right speaker.
-                        effect.setVolume( (landing) ? 0.75f : 0.35f );  // Louder if we're landing.
-                        effect.setBufferPosition(0);                    // Play once from the start.
-                        effect.play( false );                           
-                    
-                    } // End if loaded
+                    // Play random right footstep a little in the right speaker.
+                    mAudioManager.playSound( mFootstepSounds[randomInt(0,4)], false, false, (landing) ? 0.75f : 0.35f, 0.0025f );
 
                     // Don't play again until we're back on this cycle.
                     mRightFootHit = !landing;
@@ -963,6 +1093,34 @@ shared class PlayerAgent : Agent
             } // End if reset
 
         } // End if on the floor
+    
+		// Use a heartbeat sound effect when the player's health starts dropping to dangerous levels
+		if ( !mInvincible && mCurrentHealth <= 20.0f )
+		{
+			// Stop standard HB, play fast HB
+            if ( !mAudioManager.isSoundPlaying( mHeartBeatSoundChannels[1] ) )
+            {
+                mAudioManager.stopSound( mHeartBeatSoundChannels[0] );
+                @mHeartBeatSoundChannels[1] = mAudioManager.playSound( mHeartBeatSounds[1], true, true, 1.0f );
+                
+            } // End if fast !playing
+		}
+		else if ( !mInvincible && mCurrentHealth <= 40.0f && mCurrentHealth > 20.0f )
+		{
+			// Play and ramp up volume on standard HB
+            float volumeAmt = ( (40.0f - mCurrentHealth) / 20.0f );
+            volumeAmt = min( volumeAmt, 1.0f );
+            volumeAmt = max( volumeAmt, 0.0f );
+            mAudioManager.setSoundVolume( mHeartBeatSoundChannels[0], volumeAmt );
+            if ( !mAudioManager.isSoundPlaying( mHeartBeatSoundChannels[0] ) )
+                @mHeartBeatSoundChannels[0] = mAudioManager.playSound( mHeartBeatSounds[0], true, true, volumeAmt );
+		}
+		else
+		{
+            // Make sure no heartbeat is playing
+			for ( int i = 0; i < mHeartBeatSoundChannels.length(); i++ )
+                mAudioManager.stopSound( mHeartBeatSoundChannels[i] );
+		}
     }
 
     //-------------------------------------------------------------------------

@@ -244,7 +244,6 @@ void cgDX9RenderDriver::dispose( bool bDisposeBase )
 cgConfigResult::Base cgDX9RenderDriver::loadConfig( const cgString & strFileName )
 {
     STRING_CONVERT;
-    D3DDISPLAYMODE  MatchMode;
     bool            bFoundMode = false;
     
     // Fail if config already loaded
@@ -255,22 +254,26 @@ cgConfigResult::Base cgDX9RenderDriver::loadConfig( const cgString & strFileName
     if ( !strFileName.empty() )
     {
         cgTChar Buffer[256];
-        LPCTSTR strSection          = _T("RenderDriver");
-        GetPrivateProfileString( strSection, _T("DeviceName"), _T(""), Buffer, 256, strFileName.c_str() );
-        mConfig.deviceName         = cgString::trim(Buffer);
-        mConfig.windowed           = GetPrivateProfileInt( strSection, _T("Windowed"), 0, strFileName.c_str() ) > 0;
-        mConfig.useHardwareTnL     = GetPrivateProfileInt( strSection, _T("UseHardwareTnL"), 1, strFileName.c_str() ) > 0;
-        mConfig.useVSync           = GetPrivateProfileInt( strSection, _T("UseVSync"), 1, strFileName.c_str() ) > 0;
-        mConfig.useTripleBuffering = GetPrivateProfileInt( strSection, _T("UseTripleBuffering"), 0, strFileName.c_str() ) > 0;
-        mConfig.primaryDepthBuffer = GetPrivateProfileInt( strSection, _T("PrimaryDepthBuffer"), 0, strFileName.c_str() ) > 0;
-        mConfig.width              = (cgUInt32)GetPrivateProfileInt( strSection, _T("Width"), 0, strFileName.c_str() );
-        mConfig.height             = (cgUInt32)GetPrivateProfileInt( strSection, _T("Height"), 0, strFileName.c_str() );
-        mConfig.refreshRate        = (cgUInt32)GetPrivateProfileInt( strSection, _T("RefreshRate"), 0, strFileName.c_str() );
-        mConfig.debugVShader       = GetPrivateProfileInt( strSection, _T("DebugVShader"), 0, strFileName.c_str() ) > 0;
-        mConfig.debugPShader       = GetPrivateProfileInt( strSection, _T("DebugPShader"), 0, strFileName.c_str() ) > 0;
-        mConfig.usePerfHUD         = GetPrivateProfileInt( strSection, _T("UsePerfHUD"), 0, strFileName.c_str() ) > 0;
-        mConfig.useVTFBlending     = GetPrivateProfileInt( strSection, _T("UseVTFBlending"), 0, strFileName.c_str() ) > 0;
-
+        const cgTChar * strSection = _T("RenderDriver");
+        cgString strResolvedFile = cgFileSystem::resolveFileLocation( strFileName );
+        GetPrivateProfileString( strSection, _T("DeviceName"), _T(""), Buffer, 256, strResolvedFile.c_str() );
+        mConfig.deviceName          = cgString::trim(Buffer);
+        mConfig.windowed            = GetPrivateProfileInt( strSection, _T("Windowed"), 0, strResolvedFile.c_str() ) > 0;
+        mConfig.useHardwareTnL      = GetPrivateProfileInt( strSection, _T("UseHardwareTnL"), 1, strResolvedFile.c_str() ) > 0;
+        mConfig.useVSync            = GetPrivateProfileInt( strSection, _T("UseVSync"), 1, strResolvedFile.c_str() ) > 0;
+        mConfig.useTripleBuffering  = GetPrivateProfileInt( strSection, _T("UseTripleBuffering"), 0, strResolvedFile.c_str() ) > 0;
+        mConfig.primaryDepthBuffer  = GetPrivateProfileInt( strSection, _T("PrimaryDepthBuffer"), 0, strResolvedFile.c_str() ) > 0;
+        mConfig.width               = (cgUInt32)GetPrivateProfileInt( strSection, _T("Width"), 0, strResolvedFile.c_str() );
+        mConfig.height              = (cgUInt32)GetPrivateProfileInt( strSection, _T("Height"), 0, strResolvedFile.c_str() );
+        mConfig.refreshRate         = (cgUInt32)GetPrivateProfileInt( strSection, _T("RefreshRate"), 0, strResolvedFile.c_str() );
+        mConfig.debugVShader        = GetPrivateProfileInt( strSection, _T("DebugVShader"), 0, strResolvedFile.c_str() ) > 0;
+        mConfig.debugPShader        = GetPrivateProfileInt( strSection, _T("DebugPShader"), 0, strResolvedFile.c_str() ) > 0;
+        mConfig.usePerfHUD          = GetPrivateProfileInt( strSection, _T("UsePerfHUD"), 0, strResolvedFile.c_str() ) > 0;
+        mConfig.useVTFBlending      = GetPrivateProfileInt( strSection, _T("UseVTFBlending"), 0, strResolvedFile.c_str() ) > 0;
+        mConfig.shadingQuality      = GetPrivateProfileInt( strSection, _T("ShadingQuality"), mConfig.shadingQuality, strResolvedFile.c_str() );
+        mConfig.postProcessQuality  = GetPrivateProfileInt( strSection, _T("PostProcessQuality"), mConfig.postProcessQuality, strResolvedFile.c_str() );
+        mConfig.antiAliasingQuality = GetPrivateProfileInt( strSection, _T("AntiAliasingQuality"), mConfig.antiAliasingQuality, strResolvedFile.c_str() );
+        
     } // End if config provided
 
     // Release previous D3D object if already created
@@ -303,7 +306,7 @@ cgConfigResult::Base cgDX9RenderDriver::loadConfig( const cgString & strFileName
     // Create an init item for enumeration (the second parameter instructs the init
     // class as to whether it should strictly enforce the configuration options, or simply
     // let the system find a good match).
-    mD3DInitialize = new cgDX9RenderDriverInit( mConfig, strFileName.empty() == false );
+    mD3DInitialize = new cgDX9RenderDriverInit( mConfig, false ); // strFileName.empty() == false );
     
     // Enumerate the system graphics adapters    
     if ( FAILED(mD3DInitialize->enumerate( mD3D )) )
@@ -314,18 +317,14 @@ cgConfigResult::Base cgDX9RenderDriver::loadConfig( const cgString & strFileName
     } // End if Failure
 
     // Attempt to find a good default fullscreen set
-    MatchMode.Width       = mConfig.width;
-    MatchMode.Height      = mConfig.height;
-    MatchMode.Format      = D3DFMT_UNKNOWN;
-    MatchMode.RefreshRate = mConfig.refreshRate;
-    bFoundMode            = mD3DInitialize->findBestFullScreenMode( mD3DSettings, &MatchMode, true, false );
+    bFoundMode = mD3DInitialize->findBestFullScreenMode( mD3DSettings, mConfig, true, false, (strFileName.empty() == false) );
     
     // Mismatched?
     if ( mConfig.windowed == false && bFoundMode == false )
         return cgConfigResult::Mismatch;
 
     // Attempt to find a good default windowed set
-    bFoundMode = mD3DInitialize->findBestWindowedMode( mD3DSettings, true, false );
+    bFoundMode = mD3DInitialize->findBestWindowedMode( mD3DSettings, mConfig, true, false, (strFileName.empty() == false) );
     
     // Mismatched?
     if ( mConfig.windowed == true && bFoundMode == false )
@@ -372,19 +371,22 @@ cgConfigResult::Base cgDX9RenderDriver::loadConfig( const cgString & strFileName
 cgConfigResult::Base cgDX9RenderDriver::loadDefaultConfig( bool bWindowed /* = false  */ )
 {
     // Pick sensible defaults for the mode matching
-    mConfig.deviceName         = cgString::Empty;
-    mConfig.windowed           = bWindowed;
-    mConfig.useHardwareTnL     = true;
-    mConfig.useVSync           = false;
-    mConfig.useTripleBuffering = false;
-    mConfig.primaryDepthBuffer = false;
-    mConfig.width              = 800;
-    mConfig.height             = 600;
-    mConfig.refreshRate        = 0;
-    mConfig.debugPShader       = false;
-    mConfig.debugVShader       = false;
-    mConfig.usePerfHUD         = false;
-    mConfig.useVTFBlending     = false;
+    mConfig.deviceName          = cgString::Empty;
+    mConfig.windowed            = bWindowed;
+    mConfig.useHardwareTnL      = true;
+    mConfig.useVSync            = false;
+    mConfig.useTripleBuffering  = false;
+    mConfig.primaryDepthBuffer  = false;
+    mConfig.width               = 800;
+    mConfig.height              = 600;
+    mConfig.refreshRate         = 0;
+    mConfig.debugPShader        = false;
+    mConfig.debugVShader        = false;
+    mConfig.usePerfHUD          = false;
+    mConfig.useVTFBlending      = false;
+    mConfig.shadingQuality      = 3; // HIGH
+    mConfig.postProcessQuality  = 3; // HIGH
+    mConfig.antiAliasingQuality = 3; // HIGH
     
     // Pass through to the LoadConfig function
     return loadConfig( _T("") );
@@ -403,26 +405,29 @@ cgConfigResult::Base cgDX9RenderDriver::loadDefaultConfig( bool bWindowed /* = f
 //-----------------------------------------------------------------------------
 bool cgDX9RenderDriver::saveConfig( const cgString & strFileName )
 {
-    LPCTSTR strSection = _T("RenderDriver");
-
     // Validate requirements
     if ( strFileName.empty() == true )
         return false;
 
     // Save configuration options
-    WritePrivateProfileString( strSection, _T("DeviceName"), mConfig.deviceName.c_str(), strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("Windowed"), mConfig.windowed, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("UseHardwareTnL"), mConfig.useHardwareTnL, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("UseVSync"), mConfig.useVSync, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("UseTripleBuffering"), mConfig.useTripleBuffering, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("PrimaryDepthBuffer"), mConfig.primaryDepthBuffer, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("Width"), mConfig.width, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("Height"), mConfig.height, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("RefreshRate"), mConfig.refreshRate, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("DebugVShader"), mConfig.debugVShader, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("DebugPShader"), mConfig.debugPShader, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("UsePerfHUD"), mConfig.usePerfHUD, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("UseVTFBlending"), mConfig.useVTFBlending, strFileName.c_str() );
+    const cgTChar * strSection = _T("RenderDriver");
+    cgString strResolvedFile = cgFileSystem::resolveFileLocation( strFileName );
+    WritePrivateProfileString( strSection, _T("DeviceName"), mConfig.deviceName.c_str(), strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("Windowed"), mConfig.windowed, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("UseHardwareTnL"), mConfig.useHardwareTnL, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("UseVSync"), mConfig.useVSync, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("UseTripleBuffering"), mConfig.useTripleBuffering, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("PrimaryDepthBuffer"), mConfig.primaryDepthBuffer, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("Width"), mConfig.width, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("Height"), mConfig.height, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("RefreshRate"), mConfig.refreshRate, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("DebugVShader"), mConfig.debugVShader, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("DebugPShader"), mConfig.debugPShader, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("UsePerfHUD"), mConfig.usePerfHUD, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("UseVTFBlending"), mConfig.useVTFBlending, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("ShadingQuality"), mConfig.shadingQuality, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("PostProcessQuality"), mConfig.postProcessQuality, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("AntiAliasingQuality"), mConfig.antiAliasingQuality, strResolvedFile.c_str() );
 
     // Success!!
     return true;
@@ -822,7 +827,7 @@ bool cgDX9RenderDriver::postInit()
         return false;
 
     } // End if failed
-    
+
     // Success!
     return true;
 }
@@ -1498,8 +1503,7 @@ bool cgDX9RenderDriver::setMaterialTerms( const cgMaterialTerms & Terms )
 	else
 		pMaterialData->gloss            = Terms.gloss;
 
-	// ToDo: 9999 - pMaterialData->alphaTestValue -- Currently unsupported, set to default.
-    pMaterialData->alphaTestValue       = 0.5f;
+    pMaterialData->alphaTestValue       = Terms.alphaTestValue;
     pMaterialData->reflectionIntensity  = Terms.reflectionIntensity;
     pMaterialData->reflectionBumpiness  = Terms.reflectionBumpiness;
     pMaterialData->reflectionMipLevel   = Terms.reflectionMipLevel;
@@ -3563,7 +3567,7 @@ IDirect3DDevice9 * cgDX9RenderDriver::getD3DDevice( ) const
 // Name : cgDX9RenderDriverInit () (Constructor)
 // Desc : Constructor for this class.
 //----------------------------------------------------------------------------
-cgDX9RenderDriverInit::cgDX9RenderDriverInit( const cgRenderDriver::InitConfig & Config, bool bEnforceConfig ) : cgDX9Initialize( )
+cgDX9RenderDriverInit::cgDX9RenderDriverInit( const cgRenderDriverConfig & Config, bool bEnforceConfig ) : cgDX9Initialize( )
 {
     // Store the configuration options
     mConfig   = Config;
@@ -3633,16 +3637,10 @@ bool cgDX9RenderDriverInit::validateDevice( cgDX9EnumAdapter * pAdapter, const D
 //----------------------------------------------------------------------------
 bool cgDX9RenderDriverInit::validateVertexProcessingType( const VERTEXPROCESSING_TYPE &Type )
 {
-    // Note: Uncomment relevant lines below to fall back to HARDWARE_VP or MIXED_VP.
-
-    // Hardware, mixed or software VP
-    if ( Type == PURE_HARDWARE_VP ) return false;
+    // Hardware, mixed or software only
+    if ( Type == PURE_HARDWARE_VP )
+        return false;
     
-    // Test Type, we must only use either mixed or software to allow our fallback paths
-    // to correctly function (methods such as per-susbet software skinning)
-    //if ( Type == HARDWARE_VP ) return false;
-    //else if ( Type == PURE_HARDWARE_VP ) return false;
-
     // Enforce vertex processing options?
     if ( mEnforce )
     {

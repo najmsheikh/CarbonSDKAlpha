@@ -75,6 +75,8 @@ namespace World
             BINDSUCCESS( engine->registerObjectMethod("World", "void rollbackTransaction( const String &in )", asMETHODPR(cgWorld,rollbackTransaction,( const cgString& ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod("World", "void rollbackTransaction( const String &in, bool )", asMETHODPR(cgWorld,rollbackTransaction,( const cgString&, bool ), void ), asCALL_THISCALL) );
 
+            BINDSUCCESS( engine->registerObjectMethod("World", "WorldObject@+ loadObject( const UID &in, uint, CloneMethod )", asMETHODPR(cgWorld,loadObject,( const cgUID&, cgUInt32, cgCloneMethod::Base ), cgWorldObject* ), asCALL_THISCALL) );
+
             ///////////////////////////////////////////////////////////////////////
             // cgWorldQuery (Class)
             ///////////////////////////////////////////////////////////////////////

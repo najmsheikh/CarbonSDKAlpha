@@ -66,6 +66,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
+    void            setDefaultConeLimit         ( cgFloat degrees );
     void            restoreHierarchy            ( bool restoreTransforms );
     void            applyImpulseTo              ( cgObjectNode * boneNode, const cgVector3 & impulse, const cgVector3 & at );
     void            applyImpulseTo              ( cgObjectNode * boneNode, const cgVector3 & impulse );
@@ -110,8 +111,9 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    BoneArray mBones;
-    BoneLUT   mBoneLUT;
+    BoneArray   mBones;
+    BoneLUT     mBoneLUT;
+    cgFloat     mDefaultConeLimit;
 };
 
 #endif // !_CGE_CGRAGDOLLCONTROLLER_H_

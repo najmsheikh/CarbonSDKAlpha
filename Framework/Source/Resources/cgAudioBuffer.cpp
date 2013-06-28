@@ -64,6 +64,7 @@ cgAudioBuffer::cgAudioBuffer( cgUInt32 nReferenceId, cgAudioDriver * pDriver ) :
     mNotifyCount          = 16;
     mStreamBufferLength   = 10.0f; // 10 second buffer when streaming.
     mLooping              = false;
+    mPaused               = false;
     mNextWriteOffset      = 0;
     mPlaybackComplete     = false;
     mFinalWriteOffset     = 0;
@@ -76,6 +77,8 @@ cgAudioBuffer::cgAudioBuffer( cgUInt32 nReferenceId, cgAudioDriver * pDriver ) :
     m3DVelocity           = cgVector3(0,0,0);
     m3DPosition           = cgVector3(0,0,0);
     mVolume               = 1.0f;
+    mMinBufferFrequency   = 0;
+    mMaxBufferFrequency   = 0;
 
     // Clear structures
     memset( &mBufferFormat, 0, sizeof(cgAudioBufferFormat) );
@@ -107,6 +110,7 @@ cgAudioBuffer::cgAudioBuffer( cgUInt32 nReferenceId, cgAudioDriver * pDriver, co
     mNotifyCount          = 16;
     mStreamBufferLength   = 10.0f; // 10 second buffer when streaming.
     mLooping              = false;
+    mPaused               = false;
     mNextWriteOffset      = 0;
     mPlaybackComplete     = false;
     mFinalWriteOffset     = 0;
@@ -119,6 +123,8 @@ cgAudioBuffer::cgAudioBuffer( cgUInt32 nReferenceId, cgAudioDriver * pDriver, co
     m3DVelocity           = cgVector3(0,0,0);
     m3DPosition           = cgVector3(0,0,0);
     mVolume               = 1.0f;
+    mMinBufferFrequency   = 0;
+    mMaxBufferFrequency   = 0;
 
     // Store the resource load data
     mInputStream          = Stream;
@@ -154,6 +160,7 @@ cgAudioBuffer::cgAudioBuffer( cgUInt32 nReferenceId, cgAudioDriver * pDriver, cg
     mNotifyCount          = 16;
     mStreamBufferLength   = 10.0f; // 10 second buffer when streaming.
     mLooping              = false;
+    mPaused               = false;
     mNextWriteOffset      = 0;
     mPlaybackComplete     = false;
     mFinalWriteOffset     = 0;
@@ -167,6 +174,8 @@ cgAudioBuffer::cgAudioBuffer( cgUInt32 nReferenceId, cgAudioDriver * pDriver, cg
     m3DVelocity           = cgVector3(0,0,0);
     m3DPosition           = cgVector3(0,0,0);
     mVolume               = 1.0f;
+    mMinBufferFrequency   = 0;
+    mMaxBufferFrequency   = 0;
     
     // Clear structures
     memset( &mBufferFormat, 0, sizeof(cgAudioBufferFormat) );
@@ -284,6 +293,7 @@ bool cgAudioBuffer::unloadResource( )
         CloseHandle( mNotifyEvent );
 
     // Clear Variables
+    mPaused               = false;
     mBufferSize           = 0;
     mBuffer               = CG_NULL;
     m3DBuffer             = CG_NULL;
@@ -469,10 +479,14 @@ bool cgAudioBuffer::duplicate( cgAudioBuffer * pBuffer )
     mBufferFormat  = pBuffer->getBufferFormat();
     mCreationFlags = pBuffer->getCreationFlags();
     mInputSource   = pBuffer->getInputSource();
+    mMinBufferFrequency = pBuffer->mMinBufferFrequency;
+    mMaxBufferFrequency = pBuffer->mMaxBufferFrequency;
 
     // Create a new codec for this input source
     mCodec = cgAudioDriver::createAudioCodec( mInputSource.codecId );
-    if ( mCodec->open( mInputSource.stream ) == false )
+
+    // Re-open the file immediately only if the buffer is being streamed.
+    if ( supportsMode( cgAudioBufferFlags::Streaming ) && !mCodec->open( mInputSource.stream ) )
     {
         cgAppLog::write( cgAppLog::Error, _T("PCM decoding codec unable to open stream for duplication '%s'.\n"), mInputSource.stream.getName().c_str() );
         return false;
@@ -582,7 +596,7 @@ bool cgAudioBuffer::load( cgInputStream Stream, cgUInt32 nFlags )
         } // End if full decode failed
 
         cgAppLog::write( cgAppLog::Debug, _T("BytesPerSecond=%i, BitsPerSample=%i, BlockAlign=%i, Channels=%i, FormatType=%i, SamplesPerSecond=%i, Size=%i.\n"), Format.averageBytesPerSecond, Format.bitsPerSample, Format.blockAlign, Format.channels, Format.formatType, Format.samplesPerSecond, Format.size );
-        cgAppLog::write( cgAppLog::Debug, _T("Creating audio buffer of size %i.\n"), nAudioSize );
+        cgAppLog::write( cgAppLog::Debug, _T("Creating audio buffer of size %i (%s).\n"), nAudioSize, Stream.getName().c_str() );
 
         // Create the buffer(s)
         if ( createAudioBuffer( nFlags, Format, nAudioSize, pAudioData, nAudioSize ) == false )
@@ -595,6 +609,9 @@ bool cgAudioBuffer::load( cgInputStream Stream, cgUInt32 nFlags )
 
         // Clean up
         delete []pAudioData;
+
+        // We're done with the file
+        mCodec->close();
         
     } // End if not streaming
     else
@@ -615,7 +632,7 @@ bool cgAudioBuffer::load( cgInputStream Stream, cgUInt32 nFlags )
         mNotifySize  = (cgInt32)(((cgFloat)Format.samplesPerSecond * (cgFloat)Format.blockAlign) * mStreamBufferLength) / mNotifyCount;
         mNotifySize -= mNotifySize % Format.blockAlign;
         cgAppLog::write( cgAppLog::Debug, _T("BytesPerSecond=%i, BitsPerSample=%i, BlockAlign=%i, Channels=%i, FormatType=%i, SamplesPerSecond=%i, Size=%i.\n"), Format.averageBytesPerSecond, Format.bitsPerSample, Format.blockAlign, Format.channels, Format.formatType, Format.samplesPerSecond, Format.size );
-        cgAppLog::write( cgAppLog::Debug, _T("Creating streaming audio buffer of size %i (block size %i and block count %i).\n"), mNotifySize * mNotifyCount, mNotifySize, mNotifyCount );
+        cgAppLog::write( cgAppLog::Debug, _T("Creating streaming audio buffer of size %i (%s - block size %i and block count %i).\n"), mNotifySize * mNotifyCount, Stream.getName().c_str(), mNotifySize, mNotifyCount );
 
         // Create the buffer(s)
         if ( createAudioBuffer( nFlags, Format, mNotifySize * mNotifyCount ) == false )
@@ -807,6 +824,14 @@ bool cgAudioBuffer::createAudioBuffer( cgUInt32 nFlags, cgAudioBufferFormat & Fo
 
     } // End if invalid cast
 
+    // Cache buffer capability information.
+    DSCAPS Caps;
+    memset( &Caps, 0, sizeof(Caps) );
+    Caps.dwSize = sizeof(DSCAPS);
+    pDS->GetCaps( &Caps );
+    mMinBufferFrequency = Caps.dwMinSecondarySampleRate;
+    mMaxBufferFrequency = Caps.dwMaxSecondarySampleRate;
+    
     // Create the buffer
     hRet = pDS->CreateSoundBuffer( &Desc, &mBuffer, CG_NULL );
 
@@ -1081,6 +1106,10 @@ bool cgAudioBuffer::isPlaying( ) const
     if ( mBuffer == CG_NULL || FAILED( mBuffer->GetStatus( &Status ) ) )
         return false;
 
+    // If we are currently paused, we must have previously been playing.
+    if ( mPaused )
+        return true;
+
     // Playing?
     if ( supportsMode( cgAudioBufferFlags::Streaming ) == false )
     {
@@ -1210,8 +1239,9 @@ bool cgAudioBuffer::play( bool bLoop /* = false */ )
     if ( !mBuffer || !mCodec )
         return false;
 
+    // Streaming buffers always loop.
     cgUInt32 nFlags = 0;
-    if ( bLoop )
+    if ( bLoop || supportsMode( cgAudioBufferFlags::Streaming ) )
         nFlags = DSBPLAY_LOOPING;
     bool bIsPlaying = isPlaying();
 
@@ -1222,12 +1252,12 @@ bool cgAudioBuffer::play( bool bLoop /* = false */ )
     // If this is a streaming sound, we must update some items
     if ( supportsMode( cgAudioBufferFlags::Streaming ) )
     {
-        mNextWriteOffset		= 0;
-        mFinalWriteOffset		= 0;
-		mStreamDataPlayed		= 0;
+        mNextWriteOffset	= 0;
+        mFinalWriteOffset	= 0;
+		mStreamDataPlayed	= 0;
 		mLastStreamPosition	= 0;
 		mStreamDataWritten	= 0;
-        mPlaybackComplete		= false;
+        mPlaybackComplete   = false;
 
         // Populate audio buffer with initial data, this is needed because it will begin by
         // playing this data, before we start streaming the next set.
@@ -1247,7 +1277,7 @@ bool cgAudioBuffer::play( bool bLoop /* = false */ )
 
     } // End if positional
 
-    // If we are already playing, simply reset it's position to the beginning
+    // If we are already playing, simply reset its position to the beginning
     if ( bIsPlaying )
     {
         // Move to beginning
@@ -1277,9 +1307,64 @@ bool cgAudioBuffer::play( bool bLoop /* = false */ )
     
     // Update looping flag
     mLooping = bLoop;
+
+    // We are no longer paused if we were previously.
+    mPaused = false;
     
     // Success!
     return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : pause ()
+/// <summary>
+/// Pause the audio buffer.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAudioBuffer::pause( )
+{
+    // Invalid or no-op?
+    if ( !mBuffer || mPaused )
+        return false;
+
+    // Can only pause if currently playing.
+    if ( isPlaying() )
+    {
+        // Signal the stop
+        if ( FAILED( mBuffer->Stop( ) ) )
+            return false;
+
+        // Paused.
+        mPaused = true;
+        
+    } // End if playing
+
+    // Not playing.
+    return false;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : resume ()
+/// <summary>
+/// Continue playing the audio buffer from where it was previously paused.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAudioBuffer::resume( )
+{
+    // Invalid or no-op?
+    if ( !mBuffer || !mPaused )
+        return false;
+
+    // Carry on from where we left off.
+    mPaused = false;
+
+    // Build playback flags (streaming buffers always loop).
+    cgUInt32 nFlags = 0;
+    if ( mLooping || supportsMode( cgAudioBufferFlags::Streaming ) )
+        nFlags = DSBPLAY_LOOPING;
+
+    // Resume buffer
+    return SUCCEEDED( mBuffer->Play( 0, 0, nFlags ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -1291,10 +1376,14 @@ bool cgAudioBuffer::play( bool bLoop /* = false */ )
 bool cgAudioBuffer::stop( )
 {
     // Validate requirements
-    if ( !mBuffer ) return false;
+    if ( !mBuffer )
+        return false;
 
-    // Signal the play
-    if ( FAILED( mBuffer->Stop( ) ) ) return false;
+    // If we were paused, we are no longer.
+    mPaused = false;
+
+    // Stop playback.
+    mBuffer->Stop( );
 
     // Move to beginning
     mBuffer->SetCurrentPosition( 0 );
@@ -1356,6 +1445,32 @@ bool cgAudioBuffer::setPan( cgFloat fPan )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : setPitch ()
+/// <summary>
+/// Set the pitch or frequency of this audio buffer as a scalar of the original
+/// frequency.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAudioBuffer::setPitch( cgFloat fPitch )
+{
+    // Validate Requirements
+    if ( mBuffer == CG_NULL || supportsMode( cgAudioBufferFlags::AllowPitch ) == false )
+        return false;
+
+    // Compute the new frequency.
+    cgUInt32 nFrequency = (cgUInt32)((cgFloat)mBufferFormat.samplesPerSecond * fPitch);
+
+    // Clamp the frequency to valid ranges.
+    if ( nFrequency < mMinBufferFrequency )
+        nFrequency = mMinBufferFrequency;
+    if ( nFrequency > mMaxBufferFrequency )
+        nFrequency = mMaxBufferFrequency;
+
+    // Set it to the buffer
+    return SUCCEEDED( mBuffer->SetFrequency( (cgUInt32)nFrequency ) );
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getVolume ()
 /// <summary>
 /// Retrieve the volume of the currently playing sound.
@@ -1397,6 +1512,31 @@ cgFloat cgAudioBuffer::getPan( ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getPitch ()
+/// <summary>
+/// Retrieve the pitch or frequency of this audio buffer as a scalar of the
+/// original buffer frequency.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloat cgAudioBuffer::getPitch( ) const
+{
+    cgUInt32 nFrequency;
+
+    // Validate requirements
+    if ( mBuffer == CG_NULL )
+        return 1.0f;
+    if ( supportsMode( cgAudioBufferFlags::AllowPitch ) == false )
+        return 1.0f;
+
+    // Query actual frequency
+    if ( FAILED(mBuffer->GetFrequency( &nFrequency ) ) )
+        return 1.0f;
+
+    // Convert to a scalar.
+    return (cgFloat)mBufferFormat.samplesPerSecond / (cgFloat)nFrequency;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : checkStreamUpdate ()
 /// <summary>
 /// Determine the status of the stream and update the buffer if
@@ -1410,6 +1550,10 @@ bool cgAudioBuffer::checkStreamUpdate( )
     cgByte * pLockedBuffer = CG_NULL, * pLockedBuffer2 = CG_NULL;
     cgUInt32 nLockSize, nLockSize2, nCurrentPlayCursor;
 	cgInt32  nBytesRead;
+
+    // Do nothing if we are paused.
+    if ( mPaused )
+        return true;
 
     // ToDo: Keep the stereo remix buffer allocated to save us having to
     // recreate one each time.
@@ -1437,8 +1581,8 @@ bool cgAudioBuffer::checkStreamUpdate( )
 		mStreamDataPlayed += nCurrentPlayCursor - mLastStreamPosition;
 	mLastStreamPosition = nCurrentPlayCursor;
 
-	// Skip if we are not yet playing the last most recently written block
-	if ( mStreamDataPlayed + mNotifySize < mStreamDataWritten )
+    // Skip if we are not yet playing the last most recently written block
+    if ( mStreamDataPlayed + mNotifySize < mStreamDataWritten )
 		return false;
 	
     // First make sure that we have focus / a valid and available audio buffer
@@ -1450,7 +1594,7 @@ bool cgAudioBuffer::checkStreamUpdate( )
     {
         if ( !populateAudioBuffer() )
             return false;
-    
+
     } // End if buffer was restored
 
     // Lock the buffer for the 'notification' area that we must update next
@@ -1460,7 +1604,7 @@ bool cgAudioBuffer::checkStreamUpdate( )
         return false;
 
     } // End if failed to lock
-    
+
     // Since the size of the buffer and the next write offset are both multiples of the notify size
     // the second buffer area (wrap around) should never be valid. if it is, something went horribly wrong.
     if ( pLockedBuffer2 )

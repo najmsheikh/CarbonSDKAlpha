@@ -126,6 +126,22 @@ public:
     cgParticleBlendMethod::Base         getParticleBlendMethod      ( cgUInt32 layerIndex ) const;
     const cgString                    & getParticleTexture          ( cgUInt32 layerIndex ) const;
 
+    // Animation keys
+    void                                setColorCurves              ( cgUInt32 layerIndex, const cgBezierSpline2 & r, const cgBezierSpline2 & g, const cgBezierSpline2 & b, const cgBezierSpline2 & a );
+    void                                setScaleCurves              ( cgUInt32 layerIndex, const cgBezierSpline2 & x, const cgBezierSpline2 & y );
+    void                                setColorRCurve              ( cgUInt32 layerIndex, const cgBezierSpline2 & curve );
+    void                                setColorGCurve              ( cgUInt32 layerIndex, const cgBezierSpline2 & curve );
+    void                                setColorBCurve              ( cgUInt32 layerIndex, const cgBezierSpline2 & curve );
+    void                                setColorACurve              ( cgUInt32 layerIndex, const cgBezierSpline2 & curve );
+    void                                setScaleXCurve              ( cgUInt32 layerIndex, const cgBezierSpline2 & curve );
+    void                                setScaleYCurve              ( cgUInt32 layerIndex, const cgBezierSpline2 & curve );
+    const cgBezierSpline2             & getColorRCurve              ( cgUInt32 layerIndex ) const;
+    const cgBezierSpline2             & getColorGCurve              ( cgUInt32 layerIndex ) const;
+    const cgBezierSpline2             & getColorBCurve              ( cgUInt32 layerIndex ) const;
+    const cgBezierSpline2             & getColorACurve              ( cgUInt32 layerIndex ) const;
+    const cgBezierSpline2             & getScaleXCurve              ( cgUInt32 layerIndex ) const;
+    const cgBezierSpline2             & getScaleYCurve              ( cgUInt32 layerIndex ) const;
+
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldObject)
     //-------------------------------------------------------------------------
@@ -192,6 +208,8 @@ protected:
     static cgWorldQuery     mUpdateReleaseProperties;
     static cgWorldQuery     mUpdateRenderingProperties;
     static cgWorldQuery     mUpdateParticleProperties;
+    static cgWorldQuery     mUpdateColorKeys;
+    static cgWorldQuery     mUpdateScaleKeys;
     static cgWorldQuery     mLoadEmitter;
     static cgWorldQuery     mLoadEmitterLayers;
 };
@@ -227,6 +245,7 @@ public:
     cgParticleEmitter         * getLayerEmitter         ( cgUInt32 layerIndex ) const;
     void                        enableLayerEmission     ( cgUInt32 layerIndex, bool enable );
     bool                        isLayerEmissionEnabled  ( cgUInt32 layerIndex ) const;
+    bool                        particlesSpent          ( bool includeAlive ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgObjectNode)
@@ -387,6 +406,46 @@ public:
         cgAssert( mReferencedObject != CG_NULL );
         ((cgParticleEmitterObject*)mReferencedObject)->setVelocityScaleStrength( layerIndex, strength );
     }
+    inline void setColorCurves( cgUInt32 layerIndex, const cgBezierSpline2 & r, const cgBezierSpline2 & g, const cgBezierSpline2 & b, const cgBezierSpline2 & a )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->setColorCurves( layerIndex, r, g, b, a );
+    }
+    inline void setScaleCurves( cgUInt32 layerIndex, const cgBezierSpline2 & x, const cgBezierSpline2 & y )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->setScaleCurves( layerIndex, x, y );
+    }
+    inline void setColorRCurve( cgUInt32 layerIndex, const cgBezierSpline2 & curve )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->setColorRCurve( layerIndex, curve );
+    }
+    inline void setColorGCurve( cgUInt32 layerIndex, const cgBezierSpline2 & curve )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->setColorGCurve( layerIndex, curve );
+    }
+    inline void setColorBCurve( cgUInt32 layerIndex, const cgBezierSpline2 & curve )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->setColorBCurve( layerIndex, curve );
+    }
+    inline void setColorACurve( cgUInt32 layerIndex, const cgBezierSpline2 & curve )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->setColorACurve( layerIndex, curve );
+    }
+    inline void setScaleXCurve( cgUInt32 layerIndex, const cgBezierSpline2 & curve )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->setScaleXCurve( layerIndex, curve );
+    }
+    inline void setScaleYCurve( cgUInt32 layerIndex, const cgBezierSpline2 & curve )
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        ((cgParticleEmitterObject*)mReferencedObject)->setScaleYCurve( layerIndex, curve );
+    }
     
     // Object Property 'Get' Routing
     inline cgUInt32 getLayerCount( ) const
@@ -513,6 +572,36 @@ public:
     {
         cgAssert( mReferencedObject != CG_NULL );
         return ((cgParticleEmitterObject*)mReferencedObject)->getVelocityScaleStrength( layerIndex );
+    }
+    inline const cgBezierSpline2 & getColorRCurve( cgUInt32 layerIndex ) const
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        return ((cgParticleEmitterObject*)mReferencedObject)->getColorRCurve( layerIndex );
+    }
+    inline const cgBezierSpline2 & getColorGCurve( cgUInt32 layerIndex ) const
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        return ((cgParticleEmitterObject*)mReferencedObject)->getColorGCurve( layerIndex );
+    }
+    inline const cgBezierSpline2 & getColorBCurve( cgUInt32 layerIndex ) const
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        return ((cgParticleEmitterObject*)mReferencedObject)->getColorBCurve( layerIndex );
+    }
+    inline const cgBezierSpline2 & getColorACurve( cgUInt32 layerIndex ) const
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        return ((cgParticleEmitterObject*)mReferencedObject)->getColorACurve( layerIndex );
+    }
+    inline const cgBezierSpline2 & getScaleXCurve( cgUInt32 layerIndex ) const
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        return ((cgParticleEmitterObject*)mReferencedObject)->getScaleXCurve( layerIndex );
+    }
+    inline const cgBezierSpline2 & getScaleYCurve( cgUInt32 layerIndex ) const
+    {
+        cgAssert( mReferencedObject != CG_NULL );
+        return ((cgParticleEmitterObject*)mReferencedObject)->getScaleYCurve( layerIndex );
     }
     
     //-------------------------------------------------------------------------

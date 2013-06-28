@@ -101,6 +101,7 @@ public:
     cgAppState    * getActiveState      ( );
     bool            setActiveState      ( const cgString & stateId );
     bool            getStateDesc        ( const cgString & stateId, StateDesc * descriptionOut );
+    cgAppState    * getState            ( const cgString & stateId );
     void            update              ( );
     void            render              ( );
     void            stop                ( );
@@ -121,7 +122,7 @@ private:
     //-------------------------------------------------------------------------
     bool            transitionState     ( cgAppState * fromState, const cgString & toStateId, const cgString & viaStateId );
     bool            transitionState     ( cgAppState * fromState, const cgString & toStateId );
-    bool            spawnChildState     ( cgAppState * parentState, const cgString & newStateId, bool suspendParent = false );
+    cgAppState    * spawnChildState     ( cgAppState * parentState, const cgString & newStateId, bool suspendParent = false );
     cgAppState    * allocateState       ( const cgString & stateUID );
     void            stateEnded          ( cgAppState * state );
 
@@ -189,8 +190,9 @@ public:
         cgUInt32        flags;
         cgString        toStateId;
         cgString        transitionStateId;
+        cgInt32         stackOffset;
 
-        EventActionDesc() : flags(0) {}
+        EventActionDesc() : flags(0), stackOffset(0) {}
     
     }; // End Struct EventActionDesc
 
@@ -215,7 +217,7 @@ public:
     const cgString        & getStateId              ( ) const;
     void                    raiseEvent              ( const cgString & eventName );
     cgAppStateManager     * getManager              ( );
-    bool                    spawnChildState         ( const cgString & stateId, bool suspendParent );
+    cgAppState            * spawnChildState         ( const cgString & stateId, bool suspendParent );
     const cgScriptHandle  & getScript               ( ) const;
     cgScriptObject        * getScriptObject         ( );
     
@@ -275,11 +277,13 @@ protected:
         cgScriptFunctionHandle  suspend;
         cgScriptFunctionHandle  resume;
         cgScriptFunctionHandle  processMessage;
+        cgScriptFunctionHandle  raiseEvent;
         
         // Constructor
         MethodHandles() :
             begin(CG_NULL), end(CG_NULL), initialize(CG_NULL), update(CG_NULL),
-            render(CG_NULL), suspend(CG_NULL), resume(CG_NULL), processMessage(CG_NULL) {}
+            render(CG_NULL), suspend(CG_NULL), resume(CG_NULL), processMessage(CG_NULL),
+            raiseEvent(CG_NULL) {}
     };
 
     CGE_MAP_DECLARE(cgString, EventActionDesc, EventActionMap)

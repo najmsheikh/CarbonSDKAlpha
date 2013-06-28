@@ -4605,8 +4605,9 @@ bool cgMesh::generateVertexNormals( cgUInt32 * pAdjacency, cgUInt32Array * pRema
         const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (Tri.indices[2] * nVertexStride) + nPositionOffset);
 
         // Compute the two edge vectors required for generating our normal
-        vecEdge1 = *v2 - *v1;
-        vecEdge2 = *v3 - *v1;
+        // We normalize here to prevent problems when the triangles are very small.
+        cgVector3::normalize( vecEdge1, *v2 - *v1 );
+        cgVector3::normalize( vecEdge2, *v3 - *v1 );
 
         // Generate the normal
         cgVector3::cross( vecNormal, vecEdge1, vecEdge2 );
@@ -4855,9 +4856,6 @@ bool cgMesh::generateVertexTangents( )
         const cgVector2 & Ft = *(cgVector2*)(pSrcVertices + (i2 * nVertexStride) + nTexCoordOffset);
         const cgVector2 & Gt = *(cgVector2*)(pSrcVertices + (i3 * nVertexStride) + nTexCoordOffset);
 
-        // Compute the triangle normal used for "handedness" detection
-        vNormal = *(cgVector3*)cgPlane::fromPoints( Plane, E, F, G );
-        
         // Compute the known variables P & Q, where "P = F-E" and "Q = G-E"
         // based on our original discussion of the tangent vector
         // calculation.

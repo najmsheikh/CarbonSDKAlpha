@@ -158,10 +158,11 @@ cgConfigResult::Base cgPhysicsEngine::loadConfig( const cgString & strFileName )
     // Retrieve configuration options if provided
     if ( strFileName.empty() == false )
     {
+        cgString strResolvedFile = cgFileSystem::resolveFileLocation( strFileName );
         const cgTChar * strSection   = _T("Physics");
-        mConfig.useVDB              = GetPrivateProfileInt( strSection, _T("UseVDB"), 0, strFileName.c_str() ) > 0;
-        mConfig.disableDeactivation = GetPrivateProfileInt( strSection, _T("DisableDeactivation"), 0, strFileName.c_str() ) > 0;
-        mConfig.verboseOutput       = GetPrivateProfileInt( strSection, _T("VerboseOutput"), 0, strFileName.c_str() ) > 0;
+        mConfig.useVDB              = GetPrivateProfileInt( strSection, _T("UseVDB"), 0, strResolvedFile.c_str() ) > 0;
+        mConfig.disableDeactivation = GetPrivateProfileInt( strSection, _T("DisableDeactivation"), 0, strResolvedFile.c_str() ) > 0;
+        mConfig.verboseOutput       = GetPrivateProfileInt( strSection, _T("VerboseOutput"), 0, strResolvedFile.c_str() ) > 0;
         
     } // End if config provided
 
@@ -200,16 +201,16 @@ cgConfigResult::Base cgPhysicsEngine::loadDefaultConfig( )
 //-----------------------------------------------------------------------------
 bool cgPhysicsEngine::saveConfig( const cgString & strFileName )
 {
-    const cgTChar * strSection = _T("Physics");
-
     // Validate requirements
     if ( strFileName.empty() == true )
         return false;
 
     // Save configuration options
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("UseVDB"), mConfig.useVDB, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("DisableDeactivation"), mConfig.disableDeactivation, strFileName.c_str() );
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("VerboseOutput"), mConfig.verboseOutput, strFileName.c_str() );
+    const cgTChar * strSection = _T("Physics");
+    cgString strResolvedFile = cgFileSystem::resolveFileLocation( strFileName );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("UseVDB"), mConfig.useVDB, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("DisableDeactivation"), mConfig.disableDeactivation, strResolvedFile.c_str() );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("VerboseOutput"), mConfig.verboseOutput, strResolvedFile.c_str() );
 
     // Success!!
     return true;

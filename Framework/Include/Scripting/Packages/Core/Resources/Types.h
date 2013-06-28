@@ -537,11 +537,12 @@ namespace Types
             BINDSUCCESS( engine->registerObjectProperty( "MaterialTerms", "float reflectionIntensity", offsetof(cgMaterialTerms,reflectionIntensity) ) );
             BINDSUCCESS( engine->registerObjectProperty( "MaterialTerms", "float reflectionBumpiness", offsetof(cgMaterialTerms,reflectionBumpiness) ) );
             BINDSUCCESS( engine->registerObjectProperty( "MaterialTerms", "float reflectionMipLevel" , offsetof(cgMaterialTerms,reflectionMipLevel) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "MaterialTerms", "float fresnelDiffuse"      , offsetof(cgMaterialTerms,fresnelDiffuse) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "MaterialTerms", "float fresnelSpecular"     , offsetof(cgMaterialTerms,fresnelSpecular) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "MaterialTerms", "float fresnelReflection"   , offsetof(cgMaterialTerms,fresnelReflection) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "MaterialTerms", "float fresnelOpacity"      , offsetof(cgMaterialTerms,fresnelOpacity) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "MaterialTerms", "float fresnelExponent"     , offsetof(cgMaterialTerms,fresnelExponent) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "MaterialTerms", "float fresnelDiffuse"     , offsetof(cgMaterialTerms,fresnelDiffuse) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "MaterialTerms", "float fresnelSpecular"    , offsetof(cgMaterialTerms,fresnelSpecular) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "MaterialTerms", "float fresnelReflection"  , offsetof(cgMaterialTerms,fresnelReflection) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "MaterialTerms", "float fresnelOpacity"     , offsetof(cgMaterialTerms,fresnelOpacity) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "MaterialTerms", "float fresnelExponent"    , offsetof(cgMaterialTerms,fresnelExponent) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "MaterialTerms", "float alphaTestValue"     , offsetof(cgMaterialTerms,alphaTestValue) ) );
             
             ///////////////////////////////////////////////////////////////////////
             // cgImageInfo (Struct)

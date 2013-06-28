@@ -219,6 +219,100 @@ const cgNavigationAgentCreateParams & cgNavigationAgent::getParameters( ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : setMoveTargetAtRange ()
+/// <summary>
+/// Attempt to navigate to a position on the boundary of a circle surrounding
+/// the specified position with a radius of 'distance'.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgNavigationAgent::setMoveTargetAtRange( const cgVector3 & position, cgFloat distance, cgFloat initAngleOffset, bool adjust )
+{
+    // Can just use the standard navigation?
+    if ( distance <= CGE_EPSILON_1MM )
+        return setMoveTarget( position, adjust );
+
+    // Local variables
+    static const cgFloat  tolerance = (5 * CGE_EPSILON_1CM);
+    dtNavMeshQuery      * navQuery = mHandler->mQuery;
+	dtCrowd             * crowd    = mHandler->mCrowd;
+	const dtQueryFilter * filter   = crowd->getFilter();
+	const cgFloat       * extents  = crowd->getQueryExtents();
+    cgUInt                newRef   = 0;
+    cgVector3             targetPosition;
+
+    // Depending on where the agent is with respect the circle, we'll
+    // try searching in a pattern that moves outward, away from the
+    // agent's location. This means that we'll try to pick points
+    // that are close to the agent's current location first, circling
+    // around the back as a last resort.
+    cgFloat angleOffset = 0;
+    cgVector2 direction = getPosition().xz() - position.xz();
+    if ( cgVector2::lengthSq( direction ) > (CGE_EPSILON_1MM * CGE_EPSILON_1MM) )
+    {
+        cgVector2::normalize( direction, direction );
+        angleOffset = cgVector2::dot( direction, cgVector2(0,1) );
+        angleOffset = min( 1.0f, angleOffset );
+        angleOffset = max( -1.0f, angleOffset );
+        angleOffset = acosf( angleOffset );
+        if ( direction.x < 0 )
+            angleOffset = -angleOffset;
+        angleOffset += initAngleOffset;
+
+    } // End if not equivalent
+
+    // Find a point on the navigation mesh that is on the boundary of 
+    // a circle surrounding the target position.
+    cgFloat a;
+    static const cgUInt32 steps = 20;
+    for ( cgUInt32 step = 1; step <= steps; ++step )
+    {
+        // Precompute any reusable values
+        if ( step % 2 )
+            a = ((CGE_PI / (cgFloat)steps) * -(cgFloat(step)-1)) + angleOffset;
+        else
+            a = ((CGE_PI / (cgFloat)steps) * cgFloat(step)) + angleOffset;
+
+        // Compute the location to test.
+        cgVector3 testPosition( position.x + sinf(a) * distance, position.y, position.z + cosf(a) * distance );
+
+        // Find the closest point that we can potentially navigate to.
+        navQuery->findNearestPoly( testPosition, extents, filter, &newRef, targetPosition);
+        if ( !newRef )
+            continue;
+
+        /*// On the bounds?
+        cgFloat distanceToPosition = cgVector2::length( targetPosition.xz() - position.xz() );
+        if ( distanceToPosition < (distance - tolerance) ||
+             distanceToPosition > (distance + tolerance) )
+        {
+            newRef = 0;
+            continue;
+        
+        } // End if !on the bounds*/
+
+        // We're done
+        break;
+
+    } // Next Slice
+
+    // Anything found?
+    if ( newRef )
+    {
+        mTargetRef = newRef;
+        mTargetPosition = targetPosition;
+
+        // Request that we navigate to this position.
+        const dtCrowdAgent * agent = crowd->getAgent( mDetourIndex );
+        if ( agent && agent->active )
+            return crowd->requestMoveTarget( mDetourIndex, mTargetRef, mTargetPosition );
+
+    } // End if valid
+
+    // Not a valid operation.
+    return false;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : setMoveTarget ()
 /// <summary>
 /// Attempt to navigate the specified position.
@@ -354,6 +448,20 @@ cgVector3 cgNavigationAgent::getActualVelocity( ) const
     if ( !agent || !agent->active )
         return cgVector3(0,0,0);
     return agent->vel;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getTargetPosition ()
+/// <summary>
+/// Retrieve the position that this agent is navigating toward.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgVector3 & cgNavigationAgent::getTargetPosition( ) const
+{
+    static const cgVector3 empty( 0,0,0 );
+    if ( mTargetRef )
+        return mTargetPosition;
+    return empty;
 }
 
 //-----------------------------------------------------------------------------

@@ -477,8 +477,11 @@ void cgObjectRenderQueue::renderClassDepthSortedBlending( cgUInt32 classId, cgQu
 
         // Compute distance for sorting based on the closest point on its bounding box
         const cgBoundingBox & objectBounds = objectNode->getBoundingBox();
-        context->mSortKey = cgVector3::lengthSq( objectBounds.closestPoint( sortOrigin ) - sortOrigin );
-
+        if ( objectBounds.containsPoint( sortOrigin ) )
+            context->mSortKey = cgVector3::lengthSq( objectBounds.getCenter() - sortOrigin );
+        else
+            context->mSortKey = cgVector3::lengthSq( objectBounds.closestPoint( sortOrigin ) - sortOrigin );
+        
         // Should light?
         if ( lightingHandler == cgQueueLightingHandler::Default )
         {

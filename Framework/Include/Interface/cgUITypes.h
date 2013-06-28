@@ -111,7 +111,8 @@ namespace cgUIFormStyle
 {
     enum Base
     {
-        Overlapped      = 0,       // Standard window type with caption bar.
+        Overlapped      = 0,        // Standard window type with caption bar.
+        Invisible       = 1         // Form elements are completely hidden.
     };
 
 }; // End Namespace : cgUIFormStyle

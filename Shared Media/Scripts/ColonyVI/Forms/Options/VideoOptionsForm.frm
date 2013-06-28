@@ -28,7 +28,7 @@
 // Name : VideoOptionsForm (Class)
 // Desc : Form used to present display options to the user.
 //-----------------------------------------------------------------------------
-shared class VideoOptionsForm : IScriptedForm
+class VideoOptionsForm : IScriptedForm
 {
     ///////////////////////////////////////////////////////////////////////////
 	// Private Member Variables
@@ -39,8 +39,6 @@ shared class VideoOptionsForm : IScriptedForm
     ///////////////////////////////////////////////////////////////////////////
 	// Public Member Variables
 	///////////////////////////////////////////////////////////////////////////
-    MainMenu@                   parentState;
-
     // Controls
     GroupBox@                   groupDisplayModes;
     GroupBox@                   groupQuality;
@@ -375,6 +373,9 @@ shared class VideoOptionsForm : IScriptedForm
             driver.setSystemState( SystemState::PostProcessQuality, comboPostProcessQuality.selectedIndex );
             driver.setSystemState( SystemState::AntiAliasingQuality, comboAntiAliasQuality.selectedIndex );
 
+            // Save the configuration.
+            driver.saveConfig( "sys://Config/SampleConfig.ini" );
+
         } // End if valid mode
     }
 
@@ -386,8 +387,7 @@ shared class VideoOptionsForm : IScriptedForm
     {
         // Trigger the 'apply' behavior then close the form.
         buttonApply_OnClick( buttonApply );
-        //mForm.close();
-        parentState.openMainMenu();
+        mForm.close();
     }
 
     //-------------------------------------------------------------------------
@@ -396,7 +396,7 @@ shared class VideoOptionsForm : IScriptedForm
     //-------------------------------------------------------------------------
     void buttonCancel_OnClick( UIControl @ control )
     {
-        parentState.openMainMenu(); //.close();
+        mForm.close();
     }
 
 } // End Class VideoOptionsForm

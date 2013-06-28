@@ -39,6 +39,9 @@ namespace Rect
             // Register property methods
             BINDSUCCESS( engine->registerObjectMethod( "Rect", "int get_width() const", asMETHODPR( cgRect, width, () const, cgInt32 ), asCALL_THISCALL ) );
             BINDSUCCESS( engine->registerObjectMethod( "Rect", "int get_height() const", asMETHODPR( cgRect, height, () const, cgInt32 ), asCALL_THISCALL ) );
+
+            // Register methods
+            BINDSUCCESS( engine->registerObjectMethod( "Rect", "bool containsPoint( const Point&in ) const", asMETHODPR( cgRect, containsPoint, ( const cgPoint&) const, bool ), asCALL_THISCALL ) );
         }
 
         //---------------------------------------------------------------------

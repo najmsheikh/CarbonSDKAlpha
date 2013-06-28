@@ -71,6 +71,10 @@ class Main : IScriptedAppState
     //-------------------------------------------------------------------------
     bool begin( )
     {
+        // Initialize variables
+        mLastBobOffset = Vector2(0,0);
+        mBobCycle      = 0;
+
         // Retrieve the application's main world object instance.
         @mWorld = getAppWorld();
 

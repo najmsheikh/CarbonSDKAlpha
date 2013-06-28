@@ -55,7 +55,11 @@ namespace Core {
         // Type declarations
         void declare( cgScriptEngine * engine )
         {
+            // Object Types
             BINDSUCCESS( engine->registerObjectType( "NullHandle", 0, asOBJ_REF ) );
+            
+            // Enumerations
+            BINDSUCCESS( engine->registerEnum( "ConfigResult" ) );
 
             // Register standard std::vector array types for *all* angelscript
             // supported primitive data types. This is necessary for the surface
@@ -84,6 +88,13 @@ namespace Core {
             ///////////////////////////////////////////////////////////////////////
             registerHandleBehaviors<NullHandle>( engine );
 
+            ///////////////////////////////////////////////////////////////////////
+            // cgConfigResult (Enum)
+            ///////////////////////////////////////////////////////////////////////
+            BINDSUCCESS( engine->registerEnumValue( "ConfigResult", "Valid"   , cgConfigResult::Valid ) );
+            BINDSUCCESS( engine->registerEnumValue( "ConfigResult", "Mismatch", cgConfigResult::Mismatch ) );
+            BINDSUCCESS( engine->registerEnumValue( "ConfigResult", "Error"   , cgConfigResult::Error ) );
+            
             // Register standard std::vector array types for *all* angelscript
             // supported primitive data types. This is necessary for the surface
             // shader permutation selection logic in which arrays will be expanded.

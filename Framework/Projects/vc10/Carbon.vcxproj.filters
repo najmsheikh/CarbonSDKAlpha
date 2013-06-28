@@ -340,6 +340,9 @@
     <Filter Include="Header Files\World\Graphs">
       <UniqueIdentifier>{b197fdec-4c8b-4385-8ae5-38ee8ef43aad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Scripting\Angelscript-JIT">
+      <UniqueIdentifier>{0eb77f0d-746c-4818-9e8e-811d43b200ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\cgBase.cpp">
@@ -1148,6 +1151,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\System\cgCursor.cpp">
       <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript-JIT\as_jit.cpp">
+      <Filter>Source Files\Scripting\Angelscript-JIT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript-JIT\virtual_asm_windows.cpp">
+      <Filter>Source Files\Scripting\Angelscript-JIT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript-JIT\virtual_asm_x86.cpp">
+      <Filter>Source Files\Scripting\Angelscript-JIT</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2069,6 +2081,9 @@
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\ParticleEmitter.h">
       <Filter>Header Files\Scripting\Packages\Core\World\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Skin.h">
+      <Filter>Header Files\Scripting\Packages\Core\World\Objects</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\WorldObject.h">
       <Filter>Header Files\Scripting\Packages\Core\World\Objects</Filter>
     </ClInclude>
@@ -2500,6 +2515,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\System\cgCursor.h">
       <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Lib\AngelScript-JIT\as_jit.h">
+      <Filter>Source Files\Scripting\Angelscript-JIT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Lib\AngelScript-JIT\virtual_asm.h">
+      <Filter>Source Files\Scripting\Angelscript-JIT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

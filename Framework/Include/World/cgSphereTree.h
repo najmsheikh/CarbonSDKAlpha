@@ -723,7 +723,7 @@ public:
 
         #ifdef _DEBUG
             cgFloat distance = cgVector3::length( this->position - node->position );
-            cgAssert( (distance + node->radius) <= radius );
+            //cgAssert( (distance + node->radius) <= radius );
         #endif
     }
 

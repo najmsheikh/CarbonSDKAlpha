@@ -84,8 +84,9 @@ namespace cgSandboxRenderFlags
 {
     enum Base
     {
-        Wireframe       = 0x1,
-        PostDepthClear  = 0x10
+        Wireframe           = 0x1,
+        PostDepthClear      = 0x10,
+        ShowCollisionShapes = 0x100
     };
 
 }; // End Namespace : cgSandboxRenderFlags

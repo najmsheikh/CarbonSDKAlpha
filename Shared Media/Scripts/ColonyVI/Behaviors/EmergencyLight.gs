@@ -101,4 +101,15 @@ shared class EmergencyLight : IScriptedObjectBehavior
         mNode.showNode( true, true );
         mNode.setUpdateRate( UpdateRate::Always );
     }
+
+    //-------------------------------------------------------------------------
+	// Name : deactivate ()
+	// Desc : Deactivate the emergency lights.
+	//-------------------------------------------------------------------------
+    void deactivate( )
+    {
+        mActivated = false;
+        mNode.showNode( false, true );
+        mNode.setUpdateRate( UpdateRate::Never );
+    }
 }

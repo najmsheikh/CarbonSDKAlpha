@@ -410,8 +410,13 @@ bool cgObjectBehavior::initialize( cgResourceManager * pResources, const cgStrin
         return false;
 
     // Attempt to load the behavior script.
-    if ( pResources->loadScript( &mScript, strScript, _T(""), strInstance, 0, cgDebugSource() ) == false )
-        return false;
+    if ( !pResources->loadScript( &mScript, strScript, _T(""), strInstance, 0, cgDebugSource() ) )
+    {
+        // Only bail at this point if we're in sandbox mode.
+        if ( cgGetSandboxMode() == cgSandboxMode::Disabled )
+            return false;
+    
+    } // End if failed
 
     // Create the scripted behavior object.
     cgScript * pScript = mScript.getResource(true);

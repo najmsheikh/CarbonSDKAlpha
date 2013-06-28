@@ -43,6 +43,7 @@ namespace RagdollController
             BINDSUCCESS( engine->registerObjectBehavior( "RagdollController", asBEHAVE_FACTORY, "RagdollController @ f( PhysicsWorld@+ )", asFUNCTIONPR(ragdollControllerFactory, ( cgPhysicsWorld* ), cgRagdollController*), asCALL_CDECL) );
 
             // Register the object methods
+            BINDSUCCESS( engine->registerObjectMethod( typeName, "void setDefaultConeLimit( float )", asMETHODPR(cgRagdollController, setDefaultConeLimit, ( cgFloat ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( typeName, "void restoreHierarchy( bool )", asMETHODPR(cgRagdollController, restoreHierarchy, ( bool ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( typeName, "void applyImpulseTo( ObjectNode@+, const Vector3 &in, const Vector3 &in )", asMETHODPR(cgRagdollController, applyImpulseTo, ( cgObjectNode*, const cgVector3&, const cgVector3& ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( typeName, "void applyImpulseTo( ObjectNode@+, const Vector3 &in )", asMETHODPR(cgRagdollController, applyImpulseTo, ( cgObjectNode*, const cgVector3& ), void ), asCALL_THISCALL) );

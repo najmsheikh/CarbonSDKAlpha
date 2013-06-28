@@ -225,6 +225,7 @@ private:
     //-------------------------------------------------------------------------
     InitConfig              mConfig;            // Interface manager configuration settings
     bool                    mConfigLoaded;      // Has the configuration been loaded yet?
+    bool                    mEmulatedCursor;    // Are we emulating the cursor?
     cgResourceManager     * mResourceManager;   // The resource manager responsible for all interface resources
     cgTextEngine          * mTextEngine;        // A text engine for this interface, allows us to draw text.
     cgString                mDefaultFont;       // The default font to use for the interface.

@@ -31,6 +31,10 @@
 #include <World/Elements/cgBSPVisTreeElement.h>
 #include <World/Objects/cgMeshObject.h>
 #include <World/cgBSPVisTree.h>
+#include <World/cgScene.h>
+#include <Rendering/cgVertexFormats.h>
+#include <Resources/cgResourceManager.h>
+#include <Resources/cgMesh.h>
 
 //-----------------------------------------------------------------------------
 // Static Member Definitions
@@ -465,10 +469,12 @@ bool cgBSPVisTreeElement::buildTree( cgBSPTree * tree )
     cgAppLog::write( cgAppLog::Debug | cgAppLog::Info, _T("Leaves: %d\n"), leaves.size() );
     cgAppLog::write( cgAppLog::Debug | cgAppLog::Info, _T("Visibility Set: %d bytes\n"), visibilityData.size() );
 
-    /*// Build a mesh to represent the portals.
+    // Build a mesh to represent the portals.
+//#define DEBUGPORTALS
+#if defined(DEBUGPORTALS)
     cgMesh * newMesh = new cgMesh( mWorld->generateRefId( true ), mWorld );
     cgVertexFormat * destFormat = cgVertexFormat::formatFromDeclarator( cgVertex::Declarator );
-    newMesh->prepareMesh( destFormat, false, getResourceManager() );
+    newMesh->prepareMesh( destFormat, false, mParentScene->getResourceManager() );
 
     // Add the portal triangle data.
     cgVertexFormat * srcFormat = cgVertexFormat::formatFromFVF( D3DFVF_XYZ );
@@ -496,10 +502,11 @@ bool cgBSPVisTreeElement::buildTree( cgBSPTree * tree )
     // Finish preparation
     cgMeshHandle meshHandle;
     newMesh->endPrepare( true, true, true );
-    getResourceManager()->addMesh( &meshHandle, newMesh, cgResourceFlags::ForceNew, _T("PortalData"), cgDebugSource() );
-    meshNode = (cgMeshNode*)createObjectNode( true, RTID_MeshObject, false );
+    mParentScene->getResourceManager()->addMesh( &meshHandle, newMesh, cgResourceFlags::ForceNew, _T("PortalData"), cgDebugSource() );
+    cgMeshNode * meshNode = (cgMeshNode*)mParentScene->createObjectNode( true, RTID_MeshObject, false );
     meshNode->setMesh( meshHandle );
-    meshNode->setNodeColor( 0xFF880000 );*/
+    meshNode->setNodeColor( 0xFF880000 );
+#endif
 
     // Success!
     return true;

@@ -145,6 +145,7 @@ cgScene::cgScene( cgWorld * world, const cgSceneDescriptor * description )  : cg
     {
         mUpdateBuckets[i].lastUpdateTime = -1.0f;
         mUpdateBuckets[i].nextUpdateTime = -1.0f;
+        mUpdateBuckets[i].locked         = false;
     
     } // Next interval
 
@@ -220,6 +221,7 @@ void cgScene::dispose( bool disposeBase )
     {
         mUpdateBuckets[i].lastUpdateTime = -1.0f;
         mUpdateBuckets[i].nextUpdateTime = -1.0f;
+        mUpdateBuckets[i].locked         = false;
         mUpdateBuckets[i].nodes.clear();
     
     } // Next interval
@@ -502,6 +504,9 @@ bool cgScene::load( )
     // We are in the process of loading.
     mIsLoading = true;
 
+    // Notify whoever is interested that loading has started.
+    onSceneLoadProgress( &cgSceneLoadProgressEventArgs( this ) );
+
     // Get access to required systems.
     cgResourceManager * resources  = cgResourceManager::getInstance();
     cgPhysicsEngine   * physics    = cgPhysicsEngine::getInstance();
@@ -542,6 +547,9 @@ bool cgScene::load( )
 
     } // End if failed to load render control script
 
+    // Step loading progress.
+    onSceneLoadProgress( &cgSceneLoadProgressEventArgs( this ) );
+
     // Instantiate the scripted render control class.
     try
     {
@@ -566,6 +574,9 @@ bool cgScene::load( )
 
     } // End catch exception
 
+    // Step loading progress.
+    onSceneLoadProgress( &cgSceneLoadProgressEventArgs( this ) );
+
     // Initialize the lighting system
     if ( !mLightingManager->initialize( mScriptObject ) )
     {
@@ -573,6 +584,9 @@ bool cgScene::load( )
         return false;
     
     } // End if failed
+
+    // Step loading progress.
+    onSceneLoadProgress( &cgSceneLoadProgressEventArgs( this ) );
 
     // Notify the script that we're about to load the scene.
     try
@@ -598,6 +612,9 @@ bool cgScene::load( )
         return false;
     
     } // End catch exception
+
+    // Step loading progress.
+    onSceneLoadProgress( &cgSceneLoadProgressEventArgs( this ) );
 
     // Begin loading the scene data
     try
@@ -643,11 +660,17 @@ bool cgScene::load( )
 
         } // End if has landscape
 
+        // Step loading progress.
+        onSceneLoadProgress( &cgSceneLoadProgressEventArgs( this ) );
+
         // Load the data associated with this scene (if not internal).
         if ( sceneId && !loadAllCells( ) )
             throw ResultException( cgString::format( _T("Unable to load initial scene cell data for scene id %i. World database has potentially become corrupt."), sceneId ), cgDebugSource() );
         if ( sceneId && !loadSceneElements( ) )
             throw ResultException( cgString::format( _T("Unable to load scene element data for scene id %i. World database has potentially become corrupt."), sceneId ), cgDebugSource() );
+
+        // Step loading progress.
+        onSceneLoadProgress( &cgSceneLoadProgressEventArgs( this ) );
 
         // Build static visibility tree if required.
         if ( cgGetSandboxMode() == cgSandboxMode::Disabled )
@@ -661,6 +684,9 @@ bool cgScene::load( )
             } // End if has visibility elements
         
         } // End if runtime
+
+        // Notify whoever is interested that loading progress is complete.
+        onSceneLoadProgress( &cgSceneLoadProgressEventArgs( this ) );
 
     } // End try
 
@@ -754,6 +780,8 @@ bool cgScene::load( )
 //-----------------------------------------------------------------------------
 bool cgScene::loadAllCells( )
 {
+    cgInt loadedCount = 0;
+
     // Begin loading the scene data
     try
     {
@@ -814,6 +842,8 @@ bool cgScene::loadAllCells( )
                 } // End if failed
                 for ( ; query.nextRow(); )
                 {
+                    loadedCount++;
+
                     // Get the reference identifier of the node to load.
                     cgUInt32 referenceId = 0;
                     query.getColumn( _T("RefId"), referenceId );
@@ -837,6 +867,10 @@ bool cgScene::loadAllCells( )
 
                     // Notify whoever is interested that the scene was modified
                     onNodeAdded( &cgNodeUpdatedEventArgs( this, node ) );
+
+                    // Notify whoever is interested that loading progress has taken place (once every 'n' nodes).
+                    if ( isLoading() && !(loadedCount % 10) )
+                        onSceneLoadProgress( &cgSceneLoadProgressEventArgs( this ) );
 
                 } // Next Node
 
@@ -1537,13 +1571,16 @@ void cgScene::unloadObjectNode( cgObjectNode * node, bool unloadChildren )
     if ( itNode != nodes.end() )
         nodes.erase( itNode );
 
-    // Remove the object from the appropriate update bucket.
+    // Remove the object from the appropriate update bucket if it is not locked.
     cgObjectNodeList * bucket = &mUpdateBuckets[ node->mUpdateRate ].nodes;
     for ( cgObjectNodeList::iterator itBucketNode = bucket->begin(); itBucketNode != bucket->end(); ++itBucketNode )
     {
         if ( *itBucketNode == node )
         {
-            bucket->erase( itBucketNode );
+            if ( mUpdateBuckets[ node->mUpdateRate ].locked )
+                *itBucketNode = CG_NULL;
+            else
+                bucket->erase( itBucketNode );
             break;
         
         } // End if matches
@@ -1554,7 +1591,7 @@ void cgScene::unloadObjectNode( cgObjectNode * node, bool unloadChildren )
     // remove it from the root node list first of all.
     if ( node->getParent() == CG_NULL )
         mRootNodes.erase( node->getReferenceId() );
-    
+
     // Remove from the scene. Will automatically be removed
     // from name usage map when node is disposed.
     mObjectNodes.erase( node->getReferenceId() );
@@ -1634,13 +1671,16 @@ void cgScene::unloadObjectNodes( cgObjectNodeMap & nodes )
 
         } // End if sandbox
 
-        // Remove the object from the appropriate update bucket.
+        // Remove the object from the appropriate update bucket if it is not locked.
         cgObjectNodeList * bucket = &mUpdateBuckets[ node->mUpdateRate ].nodes;
         for ( cgObjectNodeList::iterator itBucketNode = bucket->begin(); itBucketNode != bucket->end(); ++itBucketNode )
         {
             if ( *itBucketNode == node )
             {
-                bucket->erase( itBucketNode );
+                if ( mUpdateBuckets[ node->mUpdateRate ].locked )
+                    *itBucketNode = CG_NULL;
+                else
+                    bucket->erase( itBucketNode );
                 break;
             
             } // End if matches
@@ -2158,7 +2198,10 @@ void cgScene::setObjectUpdateRate( cgObjectNode * node, cgUpdateRate::Base rate 
     {
         if ( *itNode == node )
         {
-            bucket->erase( itNode );
+            if ( mUpdateBuckets[ node->mUpdateRate ].locked )
+                *itNode = CG_NULL;
+            else
+                bucket->erase( itNode );
             break;
         
         } // End if matches
@@ -2647,9 +2690,10 @@ void cgScene::onPhysicsStep( cgPhysicsWorld * sender, cgPhysicsWorldStepEventArg
 //-----------------------------------------------------------------------------
 void cgScene::update( )
 {
-    cgFloat  timeDelta   = cgTimer::getInstance()->getTimeElapsed();
-    cgDouble currentTime = cgTimer::getInstance()->getTime();
-    bool     fullSandbox = (cgGetSandboxMode() == cgSandboxMode::Enabled);
+    cgDouble timeDelta       = cgTimer::getInstance()->getTimeElapsed();
+    cgDouble currentTime     = cgTimer::getInstance()->getTime();
+    cgDouble simulationSpeed = cgTimer::getInstance()->getSimulationSpeed();
+    bool     fullSandbox     = (cgGetSandboxMode() == cgSandboxMode::Enabled);
 
     // Begin profiling scene update method.
     cgProfiler * profiler = cgProfiler::getInstance();
@@ -2660,7 +2704,7 @@ void cgScene::update( )
     {
         cgSceneController * controller = mSceneControllers[i];
         if ( controller != CG_NULL && controller->isControllerEnabled() == true )
-            controller->update( timeDelta );
+            controller->update( (cgFloat)timeDelta );
     
     } // Next Controller
 
@@ -2674,21 +2718,33 @@ void cgScene::update( )
     
     // Allow the physics world to update if enabled.
     if ( mPhysicsWorld && mDynamicsEnabled )
-        mPhysicsWorld->update( timeDelta );
+        mPhysicsWorld->update( (cgFloat)timeDelta );
 
     // Allow scene nodes to update. First iterate through the 'Always Update' list.
     cgObjectNodeList::iterator itNode;
+    mUpdateBuckets[ cgUpdateRate::Always ].locked = true;
     cgObjectNodeList * bucketNodes = &mUpdateBuckets[ cgUpdateRate::Always ].nodes;
     for ( itNode = bucketNodes->begin(); itNode != bucketNodes->end(); )
     {
-        // Increment as we go as the 'update' call may delete the node
-        cgObjectNode * node = *itNode++;
+        cgObjectNode * node = *itNode;
+
+        // Remove the item from the list if it is NULL
+        if ( !node )
+        {
+            itNode = bucketNodes->erase( itNode );
         
-        // Trigger the node's update process
-        if ( mUpdatingEnabled || (fullSandbox && node->allowSandboxUpdate()) )
-            node->update( timeDelta );    
+        } // End if invalid
+        else
+        {
+            // Trigger the node's update process
+            if ( mUpdatingEnabled || (fullSandbox && node->allowSandboxUpdate()) )
+                node->update( (cgFloat)timeDelta );
+            ++itNode;
+
+        } // End if valid
 
     } // Next scene node
+    mUpdateBuckets[ cgUpdateRate::Always ].locked = false;
 
     // Now iterate through all other update rate buckets
     for ( cgUInt32 i = cgUpdateRate::FPS1; i < cgUpdateRate::Count; ++i )
@@ -2704,22 +2760,34 @@ void cgScene::update( )
         // Are we due to execute the update process for this?
         if ( currentTime >= bucket->nextUpdateTime )
         {
-            cgFloat finalDelta = std::min<cgFloat>(1.0f,(cgFloat)(currentTime - bucket->lastUpdateTime));
+            cgFloat finalDelta = std::min<cgFloat>(1.0f,(cgFloat)((currentTime - bucket->lastUpdateTime) * simulationSpeed));
 
             // Step through the list and update unless updates are disabled.
             // Still allow schedule / housekeeping to update so that times don't
             // get wildly out of control.
-            cgObjectNodeList * bucketNodes = &mUpdateBuckets[i].nodes;
+            bucket->locked = true;
+            cgObjectNodeList * bucketNodes = &bucket->nodes;
             for ( itNode = bucketNodes->begin(); itNode != bucketNodes->end(); )
             {
-                // Increment as we go as the 'update' call may delete the node
-                cgObjectNode * node = *itNode++;
+                cgObjectNode * node = *itNode;
+
+                // Remove the item from the list if it is NULL
+                if ( !node )
+                {
+                    itNode = bucketNodes->erase( itNode );
                 
-                // Trigger the node's update process
-                if ( mUpdatingEnabled || (fullSandbox && node->allowSandboxUpdate()) )
-                    node->update( finalDelta );
+                } // End if invalid
+                else
+                {
+                    // Trigger the node's update process
+                    if ( mUpdatingEnabled || (fullSandbox && node->allowSandboxUpdate()) )
+                        node->update( finalDelta );
+                    ++itNode;
+                
+                } // End if valid
 
             } // Next scene object
+            bucket->locked = false;
             
             // Just for housekeeping purposes, record the last time an update was run
             bucket->lastUpdateTime = currentTime;
@@ -2798,11 +2866,7 @@ void cgScene::resolvePendingUpdates( )
     {
         cgObjectNode * node = mPendingUpdateFIFO.pop();
         if ( node )
-        {
-            node->setPendingUpdateEntry( CG_NULL );
             node->resolvePendingUpdates( cgDeferredUpdateFlags::All );
-        
-        } // End if valid
     
     } // Next test
 }
@@ -2820,7 +2884,6 @@ void cgScene::resolvePendingUpdates( )
 //-----------------------------------------------------------------------------
 void cgScene::queueNodeUpdates( cgObjectNode * node )
 {
-    // ToDo: Automatically remove from queue when a node is deleted / unloaded.
     node->setPendingUpdateEntry( mPendingUpdateFIFO.push( node ) );
 }
 
@@ -2833,6 +2896,12 @@ void cgScene::queueNodeUpdates( cgObjectNode * node )
 //-----------------------------------------------------------------------------
 void cgScene::resolvedNodeUpdates( cgObjectNode * node )
 {
+    // Clear from FIFO.
+    cgObjectNode ** entry = node->getPendingUpdateEntry();
+    if ( entry )
+        *entry = CG_NULL;
+
+    // No longer in FIFO.
     node->setPendingUpdateEntry( CG_NULL );
 }
 
@@ -2949,7 +3018,7 @@ void cgScene::render( )
         } // End if first time
 
         // Populate argument array.
-        timeDelta = cgTimer::getInstance()->getTimeElapsed();
+        timeDelta = (cgFloat)cgTimer::getInstance()->getTimeElapsed();
         mOnSceneRenderArgs[1].data = driver->getActiveRenderView();
 
         // Execute script method.
@@ -3909,13 +3978,16 @@ bool cgScene::deleteObjectNode( cgObjectNode * node )
     if ( itNode != nodes.end() )
         nodes.erase( itNode );
 
-    // Remove the object from the appropriate update bucketNodes.
+    // Remove the object from the appropriate update bucket if it is not locked.
     cgObjectNodeList * bucketNodes = &mUpdateBuckets[ node->mUpdateRate ].nodes;
     for ( cgObjectNodeList::iterator itBucketNode = bucketNodes->begin(); itBucketNode != bucketNodes->end(); ++itBucketNode )
     {
         if ( *itBucketNode == node )
         {
-            bucketNodes->erase( itBucketNode );
+            if ( mUpdateBuckets[ node->mUpdateRate ].locked )
+                *itBucketNode = CG_NULL;
+            else
+                bucketNodes->erase( itBucketNode );
             break;
         
         } // End if matches
@@ -4075,13 +4147,16 @@ bool cgScene::deleteObjectNodes( cgObjectNodeMap & nodes )
 
         } // End if sandbox
 
-        // Remove the object from the appropriate update bucketNodes.
+        // Remove the object from the appropriate update bucket if it is not locked.
         cgObjectNodeList * bucketNodes = &mUpdateBuckets[ node->mUpdateRate ].nodes;
         for ( cgObjectNodeList::iterator itBucketNode = bucketNodes->begin(); itBucketNode != bucketNodes->end(); ++itBucketNode )
         {
             if ( *itBucketNode == node )
             {
-                bucketNodes->erase( itBucketNode );
+                if ( mUpdateBuckets[ node->mUpdateRate ].locked )
+                    *itBucketNode = CG_NULL;
+                else
+                    bucketNodes->erase( itBucketNode );
                 break;
             
             } // End if matches
@@ -4973,6 +5048,26 @@ bool cgScene::isActiveMaterial( cgMaterial * material ) const
     if ( material )
         return ( mActiveMaterials.find( material->getReferenceId() ) != mActiveMaterials.end() );
     return false;
+}
+
+//-----------------------------------------------------------------------------
+// Name : onSceneLoadProgress () (Virtual)
+/// <summary>
+/// Can be overriden or called by derived class in order to trigger the event
+/// with matching name. All listeners will subsequently be notified.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScene::onSceneLoadProgress( cgSceneLoadProgressEventArgs * e )
+{
+    // Trigger 'onSceneLoadProgress' of all listeners.
+    EventListenerList::iterator itListener;
+    for ( itListener = mEventListeners.begin(); itListener != mEventListeners.end(); ++itListener )
+        ((cgSceneEventListener*)(*itListener))->onSceneLoadProgress( e );
+
+    // Also send message via messaging system.
+    cgMessage msg;
+    msg.messageId = cgSystemMessages::Scene_LoadProgressUpdate;
+    cgReferenceManager::sendMessageToGroup( getReferenceId(), cgSystemMessageGroups::MGID_Scene, &msg );
 }
 
 //-----------------------------------------------------------------------------

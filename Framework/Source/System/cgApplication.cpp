@@ -37,6 +37,7 @@
 #include <Resources/cgResourceManager.h>
 #include <Physics/cgPhysicsEngine.h>
 #include <Audio/cgAudioDriver.h>
+#include <Scripting/cgScriptEngine.h>
 #include <Input/cgInputDriver.h>
 #include <Interface/cgUIManager.h>
 #include <States/cgAppStateManager.h>
@@ -596,13 +597,16 @@ void cgApplication::loadConfig( const cgString & strFileName )
 {
     // Store the configuration file name so that other systems
     // have access to it during initialization.
-    mSystemConfig = cgFileSystem::resolveFileLocation( strFileName );
+    mSystemConfig = strFileName;
 
     // Get application configuration
-    mMaximumFPS          = cgStringUtility::getPrivateProfileFloat( _T("Application"), _T("MaxFrameRate"), 0, mSystemConfig.c_str() );
-    mMaximumSmoothedFPS  = cgStringUtility::getPrivateProfileFloat( _T("Application"), _T("MaxSmoothedFrameRate"), 59.9f, mSystemConfig.c_str() );
-    bool bTimerSmoothing = (GetPrivateProfileInt( _T("Application"), _T("TimerSmoothing"), 0, mSystemConfig.c_str() ) != 0);
+    cgString strResolvedFile = cgFileSystem::resolveFileLocation( strFileName );
+    mMaximumFPS          = cgStringUtility::getPrivateProfileFloat( _T("Application"), _T("MaxFrameRate"), 0, strResolvedFile.c_str() );
+    mMaximumSmoothedFPS  = cgStringUtility::getPrivateProfileFloat( _T("Application"), _T("MaxSmoothedFrameRate"), 59.9f, strResolvedFile.c_str() );
+    bool bTimerSmoothing = (GetPrivateProfileInt( _T("Application"), _T("TimerSmoothing"), 0, strResolvedFile.c_str() ) != 0);
     cgTimer::getInstance()->enableSmoothing( bTimerSmoothing );
+    bool bScriptWarnings = (GetPrivateProfileInt( _T("Application"), _T("ShowScriptWarnings"), 0, strResolvedFile.c_str() ) != 0);
+    cgScriptEngine::getInstance()->outputScriptWarnings( bScriptWarnings );
 }
 
 //-----------------------------------------------------------------------------
@@ -744,15 +748,16 @@ bool cgApplication::frameBegin( bool bRunSimulation /* = true */ )
         } // End if cap frame rate
 
         // Advance timer.
-        pTimer->setSimulationSpeed( 1.0f );
         pTimer->tick( fCap );
 
     } // End if bRunSimulation
     else
     {
         // Do not advance simulation time.
-        pTimer->setSimulationSpeed( 0.0f );
+        cgDouble fOldSimulationSpeed = pTimer->getSimulationSpeed();
+        pTimer->setSimulationSpeed( 0.0 );
         pTimer->tick();
+        pTimer->setSimulationSpeed( fOldSimulationSpeed );
     
     } // End if !bRunSimulation
 

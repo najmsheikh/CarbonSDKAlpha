@@ -164,7 +164,7 @@ void cgAppWindow::setCursor( cgCursor * pCursor )
 }
 
 //-----------------------------------------------------------------------------
-//  Name : setCursor ()
+//  Name : showCursor ()
 /// <summary>
 /// Show or hide the platform cursor for this window. This is implemented
 /// as a counter whereby multiple calls to show the cursor are counted and

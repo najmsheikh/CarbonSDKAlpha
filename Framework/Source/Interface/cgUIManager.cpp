@@ -36,6 +36,7 @@
 #include <Resources/cgResourceManager.h>
 #include <Rendering/cgBillboardBuffer.h>
 #include <Rendering/cgRenderDriver.h>
+#include <Rendering/cgRenderingCapabilities.h>
 #include <Input/cgInputTypes.h>
 #include <System/cgMessageTypes.h>
 #include <System/cgAppWindow.h>
@@ -70,6 +71,7 @@ cgUIManager::cgUIManager() : cgReference( cgReferenceManager::generateInternalRe
     mCursorAnimBegin = 0;
     mConfigLoaded    = false;
     mInitialized     = false;
+    mEmulatedCursor  = false;
 
     // Register us with the mouse and keyboard input messaging groups
     cgReferenceManager::subscribeToGroup( getReferenceId(), cgSystemMessageGroups::MGID_MouseInput );
@@ -105,7 +107,7 @@ void cgUIManager::dispose( bool bDisposeBase )
     if ( mInitialized )
     {
         cgAppWindow * pWindow = mResourceManager->getRenderDriver()->getFocusWindow();
-        if ( pWindow && !mConfig.useHardwareCursor )
+        if ( pWindow && !mConfig.useHardwareCursor && !mEmulatedCursor )
             pWindow->showCursor( true );
     
     } // End if initialized
@@ -210,8 +212,9 @@ cgConfigResult::Base cgUIManager::loadConfig( const cgString & strFileName )
     // Retrieve configuration options if provided
     if ( !strFileName.empty() )
     {
-        LPCTSTR strSection = _T("Interface");
-        mConfig.useHardwareCursor = GetPrivateProfileInt( strSection, _T("UseHardwareCursor"), 1, strFileName.c_str() ) > 0;
+        cgString strResolvedFile = cgFileSystem::resolveFileLocation( strFileName );
+        const cgTChar * strSection = _T("Interface");
+        mConfig.useHardwareCursor = GetPrivateProfileInt( strSection, _T("UseHardwareCursor"), 1, strResolvedFile.c_str() ) > 0;
 
     } // End if config provided
     
@@ -255,8 +258,9 @@ bool cgUIManager::saveConfig( const cgString & strFileName )
         return false;
 
     // Save configuration options
-    LPCTSTR strSection = _T("Interface");
-    cgStringUtility::writePrivateProfileIntEx( strSection, _T("UseHardwareCursor"), mConfig.useHardwareCursor, strFileName.c_str() );
+    const cgTChar * strSection = _T("Interface");
+    cgString strResolvedFile = cgFileSystem::resolveFileLocation( strFileName );
+    cgStringUtility::writePrivateProfileIntEx( strSection, _T("UseHardwareCursor"), mConfig.useHardwareCursor, strResolvedFile.c_str() );
 
     // Success!!
     return true;
@@ -297,10 +301,12 @@ bool cgUIManager::initialize( cgResourceManager * pResourceManager )
     // Store references
     mResourceManager = pResourceManager;
 
-    // Show/hide the focus window's platform cursor depending on whether
-    // 'hardware' cursors were enabled.
-    cgAppWindow * pWindow = mResourceManager->getRenderDriver()->getFocusWindow();
-    if ( !mConfig.useHardwareCursor )
+    // Hide the focus window's platform cursor depending on whether
+    // 'hardware' cursors were enabled (or not available).
+    cgRenderDriver * pDriver = mResourceManager->getRenderDriver();
+    mEmulatedCursor = (!mConfig.useHardwareCursor || pDriver->getCapabilities()->requiresCursorEmulation());
+    cgAppWindow * pWindow = pDriver->getFocusWindow();
+    if ( mEmulatedCursor )
         pWindow->showCursor( false );
         
     // Allocate a text engine
@@ -338,7 +344,7 @@ bool cgUIManager::begin( )
 
     // Show the emulated cursor if hardware cursors are not
     // enabled (hidden by default).
-    if ( !mConfig.useHardwareCursor )
+    if ( mEmulatedCursor )
         mCursorLayer->showCursor( true );
 
     // Select the default cursor.
@@ -444,6 +450,9 @@ cgUIForm * cgUIManager::loadForm( const cgInputStream & Stream, const cgString &
 
     // Also add the layer to the layer list
     mLayers.push_front( pLayer );
+
+    // Bring the layer to the front.
+    pLayer->bringToFront();
 
     // Success!
     return pForm;
@@ -1356,6 +1365,36 @@ bool cgUIManager::processMessage( cgMessage * pMessage )
                     break;
 
             } // Next Layer
+
+            // Do we need to switch from/to an emulated cursor?
+            if ( mConfig.useHardwareCursor )
+            {
+                cgRenderDriver * pDriver = mResourceManager->getRenderDriver();
+                bool newEmulatedState = pDriver->getCapabilities()->requiresCursorEmulation();
+                if ( mEmulatedCursor != newEmulatedState )
+                {
+                    cgAppWindow * pWindow = pDriver->getFocusWindow();
+
+                    // If we are becoming emulated, hide the focus window cursor
+                    // and show the emulated cursor layer. Otherwise, do the reverse.
+                    if ( newEmulatedState )
+                    {
+                        pWindow->showCursor( false );
+                        mCursorLayer->showCursor( true );
+
+                    } // End if emulating
+                    else
+                    {
+                        pWindow->showCursor( true );
+                        mCursorLayer->showCursor( false );
+
+                    } // End if !emulating
+                    
+                    mEmulatedCursor = newEmulatedState;
+
+                } // End if changing state
+
+            } // End if hardware possible
 
             // This message was processed by us
             return true;

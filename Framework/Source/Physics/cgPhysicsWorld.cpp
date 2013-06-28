@@ -172,6 +172,29 @@ bool cgPhysicsWorld::initialize( const cgBoundingBox & WorldSize )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : createMaterialGroup()
+/// <summary>
+/// Create a new custom physics material group to which bodies can be assigned.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt32 cgPhysicsWorld::createMaterialGroup( )
+{
+    return NewtonMaterialCreateGroupID( mWorld );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : enableMaterialCollision()
+/// <summary>
+/// Enable / disable collision between bodies belonging to specified material
+/// groups.
+/// </summary>
+//----------------------------------------------------------------------------
+void cgPhysicsWorld::enableMaterialCollision( cgInt32 group1, cgInt32 group2, bool collidable )
+{
+    NewtonMaterialSetDefaultCollidable( mWorld, group1, group2, collidable ? 1 : 0 );
+}
+
+//-----------------------------------------------------------------------------
 //  Name : update ()
 /// <summary>
 /// Allow the physics world to process.

@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------------------
 // Script Includes
 //-----------------------------------------------------------------------------
-#include_once "Weapon.gsh"
+#include_once "../API/Weapon.gsh"
 
 //-----------------------------------------------------------------------------
 // Class Definitions
@@ -54,10 +54,17 @@ shared class Weapon_Trooper_Rifle : Weapon
         mMaxDamageRange         = 100;
         mProjectileVelocity     = 100.0f;
 
+        // Can be collected by the player
+        mCanCollect              = true;
+        mWeaponCollectIdentifier = "Weapon_M16";
+        mAmmoCollectMagsMin      = 3;
+        mAmmoCollectMagsMax      = 5;
+
         // Setup the initial weapon state.
         mFiringMode             = WeaponFiringMode::FullyAutomatic;
         mCurrentMagazineRounds  = mRoundsPerMagazine;
         mTotalRounds            = mRoundsPerMagazine * 5000;
+        mMaximumRounds          = mTotalRounds;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -71,19 +78,19 @@ shared class Weapon_Trooper_Rifle : Weapon
 	void onAttach( ObjectNode @ object )
 	{
         // Setup base class with references to required objects.
-        @mMuzzleFlashEmitter = cast<ParticleEmitterNode>(object.findChild( "Muzzle_Flash_Trooper_Rifle" ));
+        mMuzzleFlashEmitters.resize(1);
+        @mMuzzleFlashEmitters[0] = cast<ParticleEmitterNode>(object.findChild( "Muzzle_Flash_Trooper_Rifle" ));
         //@mMuzzleFlashLight   = object.findChild( "Muzzle_Light_M16" );
         //@mEjectionPortSpawn  = object.findChild( "Weapon_Trooper_Rifle_Ejection" );
 
         // Load sound effects.
-        ResourceManager @ resources = object.getScene().getResourceManager();
-        resources.loadAudioBuffer( mReloadSound,   "Sounds/M16 Reload.wav", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mFireLoopSound, "Sounds/Carbine Fire.ogg", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mFireEndSound,  "Sounds/Carbine Fire End.ogg", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mFireOnceSound, "Sounds/Carbine Shot.wav", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mWeaponDrySound,  "Sounds/Carbine Dry.ogg", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mMagazineLowSound,  "Sounds/Magazine Low.wav", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mToggleModeSound,  "Sounds/Carbine Dry.ogg", AudioBufferFlags::Complex3D, 0, DebugSource() );
+        mReloadSound      = mAudioManager.loadSound( "Sounds/M16 Reload.ogg", true );
+        mFireLoopSound    = mAudioManager.loadSound( "Sounds/Carbine Fire.ogg", true );
+        mFireEndSound     = mAudioManager.loadSound( "Sounds/Carbine Fire End.ogg", true );
+        mFireOnceSound    = mAudioManager.loadSound( "Sounds/Carbine Shot.ogg", true );
+        mWeaponDrySound   = mAudioManager.loadSound( "Sounds/Carbine Dry.ogg", true );
+        mMagazineLowSound = mAudioManager.loadSound( "Sounds/Magazine Low.ogg", true );
+        mToggleModeSound  = mAudioManager.loadSound( "Sounds/Carbine Dry.ogg", true );
 
         // Trigger base class implementation
         Weapon::onAttach( object );

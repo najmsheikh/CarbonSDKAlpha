@@ -22,8 +22,10 @@ namespace Bone
         Core::World::Objects::ObjectNode::registerNodeMethods<type>( engine, typeName );
 
         // Register methods.
-        //BINDSUCCESS( engine->registerObjectMethod( typeName, "void setSize( float )", asMETHODPR(type, setSize, ( cgFloat ), void), asCALL_THISCALL) );
-        //BINDSUCCESS( engine->registerObjectMethod( typeName, "float getSize( ) const", asMETHODPR(type, getSize, ( ) const, cgFloat), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void setInitialCollisionState( bool )", asMETHODPR(type, setInitialCollisionState, ( bool ), void), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool getInitialCollisionState( ) const", asMETHODPR(type, getInitialCollisionState, ( ) const, bool), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void enableCollision( bool )", asMETHODPR(type, enableCollision, ( bool ), void), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool isCollisionEnabled( ) const", asMETHODPR(type, isCollisionEnabled, ( ) const, bool), asCALL_THISCALL) );
 
     } // End Method registerNodeMethods<>
 
@@ -39,8 +41,8 @@ namespace Bone
         Core::World::Objects::WorldObject::registerObjectMethods<type>( engine, typeName );
 
         // Register methods.
-        //BINDSUCCESS( engine->registerObjectMethod( typeName, "void setSize( float )", asMETHODPR(type, setSize, ( cgFloat ), void), asCALL_THISCALL) );
-        //BINDSUCCESS( engine->registerObjectMethod( typeName, "float getSize( ) const", asMETHODPR(type, getSize, ( ) const, cgFloat), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void setInitialCollisionState( bool )", asMETHODPR(type, setInitialCollisionState, ( bool ), void), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool getInitialCollisionState( ) const", asMETHODPR(type, getInitialCollisionState, ( ) const, bool), asCALL_THISCALL) );
 
     } // End Method registerObjectMethods<>
 

@@ -120,6 +120,7 @@ public:
     void                        enableContinuousCollision   ( bool enabled );
     bool                        isContinuousCollisionEnabled( ) const;
     void                        setMaterialGroupId          ( cgDefaultPhysicsMaterialGroup::Base defaultMaterial );
+    void                        setMaterialGroupId          ( cgInt32 group );
     
     // Internal utilities
     NewtonBody                * getInternalBody         ( ) const;

@@ -20,8 +20,8 @@
 //-----------------------------------------------------------------------------
 // Script Includes
 //-----------------------------------------------------------------------------
-#include_once "Agent.gsh"
-#include_once "Weapon.gsh"
+#include_once "../API/Agent.gsh"
+#include_once "../API/Weapon.gsh"
 
 //-----------------------------------------------------------------------------
 // Enumerations
@@ -31,7 +31,8 @@ shared enum WeaponType
     None    = 0,
     M16     = 1,    // 0x570,
     Beretta = 2,    // 0x584
-    Count   = 3
+    M72     = 3,    // 0xEEC
+    Count   = 4
 };
 
 shared enum FirstPersonActorState
@@ -63,6 +64,7 @@ shared class FirstPersonActor : IScriptedObjectBehavior
     private FirstPersonActorState   mState;                 // Current state of the weapon (i.e. idling, firing, etc.)
     
     private array<String>           mWeaponIds;             // Available weapon identifiers.
+    private array<Weapon@>          mWeapons;               // Available weapon scripts
     private WeaponType              mRequestedWeaponType;   // The weapon that it is requested we switch to whenever we're able.
     private WeaponType              mCurrentWeaponType;     // The reference identifier of the source weapon type currently equipped by the player.
     private ObjectNode@             mCurrentWeaponNode;     // The physical scene node of the weapon currently equipped by the player.
@@ -72,6 +74,9 @@ shared class FirstPersonActor : IScriptedObjectBehavior
     private bool                    mThrowGrenade;          // We're about to throw a grenade.
     private bool                    mMagHidden;             // Temporary state recording the state of the magazine during reload.
 
+	private int                     mAnimationTrack;        // The current weapon animation track assigned. 
+    private SoundRef@               mGrenadePinSound;        
+	
 	///////////////////////////////////////////////////////////////////////////
 	// Constructors & Destructors
 	///////////////////////////////////////////////////////////////////////////
@@ -82,9 +87,11 @@ shared class FirstPersonActor : IScriptedObjectBehavior
 	FirstPersonActor( )
     {
         // Configure available weapons for this player.
+        mWeapons.resize( WeaponType::Count );
         mWeaponIds.resize( WeaponType::Count );
         mWeaponIds[ WeaponType::M16 ]       = "Weapon_M16";
         mWeaponIds[ WeaponType::Beretta ]   = "Weapon_Beretta";
+        mWeaponIds[ WeaponType::M72 ]       = "Weapon_M72";
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -104,6 +111,7 @@ shared class FirstPersonActor : IScriptedObjectBehavior
         mAllowTriggerHold   = true;
         mMagHidden          = false;
         mThrowGrenade       = false;
+		mAnimationTrack     = 0;
 
         // Cache references to required objects.
         @mActor             = cast<ActorNode>(object);
@@ -111,15 +119,28 @@ shared class FirstPersonActor : IScriptedObjectBehavior
         // Setup the actor's animation controller.
         mActor.setTrackFadeTimes( 0.05f, 0.05f );
 
+        // Find all weapon scripts
+        for ( uint i = 1; i < WeaponType::Count; ++i )
+        {
+            ObjectNode @ weaponNode = mActor.findChild( mWeaponIds[i] );
+            if ( @weaponNode != null && weaponNode.getBehaviorCount() > 0 )
+            {
+                Weapon @ weapon = cast<Weapon>(weaponNode.getScriptedBehavior(0));
+                if ( @weapon != null )
+                    @mWeapons[i] = weapon;
+
+            } // End if found node
+
+        } // Next weapon node
+
         // Select the default initial weapon.
         mRequestedWeaponType    = WeaponType::M16;
         mCurrentWeaponType      = mRequestedWeaponType;
-        @mCurrentWeaponNode     = mActor.findChild( mWeaponIds[mCurrentWeaponType] );
-        @mCurrentWeapon         = cast<Weapon>(mCurrentWeaponNode.getScriptedBehavior(0));
+        @mCurrentWeaponNode     = mWeapons[mCurrentWeaponType].getSceneNode();
+        @mCurrentWeapon         = mWeapons[mCurrentWeaponType];
         @mCurrentADSNode        = mActor.findChild( mWeaponIds[mCurrentWeaponType] + "_ADS" );
 
         // Show the current weapon.
-        mCurrentWeapon.setOwnerAgent( mOwnerAgent );
         mCurrentWeapon.select( );
 
         // Auto raise weapon from lowered state.
@@ -133,6 +154,12 @@ shared class FirstPersonActor : IScriptedObjectBehavior
         @dummyMag = mActor.findChild( "Magazine_Beretta_Dummy" );
         if ( @dummyMag != null )
             dummyMag.showNode( false, true );
+
+        // Make sure collision volumes are disabled.
+        mActor.enableSkeletonCollision( false );
+	
+		// Clear pin sound
+		@mGrenadePinSound = null;
 	}
 
     //-------------------------------------------------------------------------
@@ -176,13 +203,9 @@ shared class FirstPersonActor : IScriptedObjectBehavior
 
                     // Select the new weapon.
                     mCurrentWeaponType  = mRequestedWeaponType;
-                    @mCurrentWeaponNode = mActor.findChild( mWeaponIds[mCurrentWeaponType] );
-                    @mCurrentWeapon     = cast<Weapon>(mCurrentWeaponNode.getScriptedBehavior(0));
+                    @mCurrentWeaponNode = mWeapons[mCurrentWeaponType].getSceneNode();
+                    @mCurrentWeapon     = mWeapons[mCurrentWeaponType];
                     @mCurrentADSNode    = mActor.findChild( mWeaponIds[mCurrentWeaponType] + "_ADS" );
-
-                    // Activate the new weapon.
-                    mCurrentWeapon.setOwnerAgent( mOwnerAgent );
-                    mCurrentWeapon.select( );
 
                     // Ready to raise
                     raiseWeapon = true;
@@ -193,7 +216,7 @@ shared class FirstPersonActor : IScriptedObjectBehavior
                 if ( raiseWeapon )
                 {
                     mState = FirstPersonActorState::Raising;
-                    mActor.playAnimationSet( "Action", mCurrentWeapon.getClass() + " Raise", AnimationPlaybackMode::PlayOnce );
+                    mAnimationTrack = mActor.playAnimationSet( "Action", mCurrentWeapon.getClass() + " Raise", AnimationPlaybackMode::PlayOnce );
 
                 } // End if LMB
                 break;
@@ -219,8 +242,9 @@ shared class FirstPersonActor : IScriptedObjectBehavior
                         grenade.setParent( attach );
 
                         // Play grenade animation and switch to appropriate state
-                        mActor.playAnimationSet( "Action", "Throw Grenade", AnimationPlaybackMode::PlayOnce, 1.3f, 0.0f );
+                        mAnimationTrack = mActor.playAnimationSet( "Action", "Throw Grenade", AnimationPlaybackMode::PlayOnce, 1.3f, 0.0f );
                         mState = FirstPersonActorState::ThrowGrenade;
+						
                         mThrowGrenade = false;
 
                     } // End if throw grenade
@@ -228,7 +252,7 @@ shared class FirstPersonActor : IScriptedObjectBehavior
                     {
                         // Switch to standard lowered state
                         mState = FirstPersonActorState::Lowered;
-                        mActor.playAnimationSet( "Primary", mCurrentWeapon.getClass() + " Lowered", AnimationPlaybackMode::PlayOnce );
+                        mAnimationTrack = mActor.playAnimationSet( "Primary", mCurrentWeapon.getClass() + " Lowered", AnimationPlaybackMode::PlayOnce );
 
                     } // End if lowered
                 
@@ -244,7 +268,7 @@ shared class FirstPersonActor : IScriptedObjectBehavior
                 if ( !mActor.isAnimationTrackPlaying( "Action", true ) )
                 {
                     mState = FirstPersonActorState::Idle;
-                    mActor.playAnimationSet( "Primary", mCurrentWeapon.getClass() + " Idle", AnimationPlaybackMode::Loop );
+                    mAnimationTrack = mActor.playAnimationSet( "Primary", mCurrentWeapon.getClass() + " Idle", AnimationPlaybackMode::Loop );
                 
                 } // End if complete
                 break;
@@ -255,9 +279,31 @@ shared class FirstPersonActor : IScriptedObjectBehavior
                 if ( !mActor.isAnimationTrackPlaying( "Action", true ) )
                 {
                     mState = FirstPersonActorState::Raising;
-                    mActor.playAnimationSet( "Action", mCurrentWeapon.getClass() + " Raise", AnimationPlaybackMode::PlayOnce );
+                    mAnimationTrack = mActor.playAnimationSet( "Action", mCurrentWeapon.getClass() + " Raise", AnimationPlaybackMode::PlayOnce );
                 
                 } // End if complete
+				else
+				{
+					// Still throwing the grenade.
+					double pos = controller.getTrackPosition( mAnimationTrack );
+					
+					// Play pin pull sound at frame X.
+					if ( pos >= (25.0f / 30.0f) && pos < (26.0f / 30.0f) )
+					{
+						AudioManager @ audioManager = getAudioManager();
+						if ( @mGrenadePinSound == null )
+						{
+							@mGrenadePinSound = audioManager.playSound( "Sounds/Grenade Pin Pull.ogg", true, false, 1.0f, Vector3(0,0,0), mActor );
+						}
+						if ( !audioManager.isSoundPlaying( mGrenadePinSound ) )
+						{
+							@mGrenadePinSound = audioManager.playSound( "Sounds/Grenade Pin Pull.ogg", true, false, 1.0f, Vector3(0,0,0), mActor );
+						}
+
+					} // End if
+
+				}
+				
                 break;
 
             case FirstPersonActorState::Idle:
@@ -271,7 +317,7 @@ shared class FirstPersonActor : IScriptedObjectBehavior
                 {
                     mState = FirstPersonActorState::Lowering;
                     mActor.stopAnimationTrack( "Primary" );
-                    mActor.playAnimationSet( "Action", mCurrentWeapon.getClass() + " Lower", AnimationPlaybackMode::PlayOnce );
+                    mAnimationTrack = mActor.playAnimationSet( "Action", mCurrentWeapon.getClass() + " Lower", AnimationPlaybackMode::PlayOnce );
                     break;
 
                 } // End if weapon swap
@@ -299,7 +345,7 @@ shared class FirstPersonActor : IScriptedObjectBehavior
                                 if ( mCurrentWeapon.getFiringMode() != WeaponFiringMode::SingleShot )
                                 {
                                     // Looped fire cycle.
-                                    mActor.playAnimationSet( "Primary", mCurrentWeapon.getClass() + " Fire Cycle", AnimationPlaybackMode::Loop );
+                                    mAnimationTrack = mActor.playAnimationSet( "Primary", mCurrentWeapon.getClass() + " Fire Cycle", AnimationPlaybackMode::Loop );
                                 
                                 } // End if !single shot
                                 else
@@ -307,7 +353,7 @@ shared class FirstPersonActor : IScriptedObjectBehavior
                                     // Single shot case. Stop and restart the animation to ensure 
                                     // rapid fire cases are handled.
                                     mActor.stopAnimationTrack( "Action", true );
-                                    mActor.playAnimationSet( "Action", mCurrentWeapon.getClass() + " Fire", AnimationPlaybackMode::PlayOnce );
+                                    mAnimationTrack = mActor.playAnimationSet( "Action", mCurrentWeapon.getClass() + " Fire", AnimationPlaybackMode::PlayOnce );
 
                                 } // End if single shot
 
@@ -341,7 +387,7 @@ shared class FirstPersonActor : IScriptedObjectBehavior
                         {
                             // Play reload animation
                             mActor.stopAnimationTrack( "Primary" );
-                            mActor.playAnimationSet( "Action", mCurrentWeapon.getClass() + " Reload", AnimationPlaybackMode::PlayOnce, 1, 0.1f );
+                            mAnimationTrack = mActor.playAnimationSet( "Action", mCurrentWeapon.getClass() + " Reload", AnimationPlaybackMode::PlayOnce, 1, 0.1f );
 
                             // Switch to reload state.
                             mState = FirstPersonActorState::Reloading;
@@ -365,7 +411,7 @@ shared class FirstPersonActor : IScriptedObjectBehavior
 
                     // Switch back to idle state
                     mState = FirstPersonActorState::Idle;
-                    mActor.playAnimationSet( "Primary", mCurrentWeapon.getClass() + " Idle", AnimationPlaybackMode::Loop );
+                    mAnimationTrack = mActor.playAnimationSet( "Primary", mCurrentWeapon.getClass() + " Idle", AnimationPlaybackMode::Loop );
 
                 } // End if !LMB
                 break;
@@ -377,7 +423,7 @@ shared class FirstPersonActor : IScriptedObjectBehavior
                 {
                     // Switch back to idle.
                     mState = FirstPersonActorState::Idle;
-                    mActor.playAnimationSet( "Primary", mCurrentWeapon.getClass() + " Idle", AnimationPlaybackMode::Loop );
+                    mAnimationTrack = mActor.playAnimationSet( "Primary", mCurrentWeapon.getClass() + " Idle", AnimationPlaybackMode::Loop );
 
                     // Next action *can* be automatically triggered by holding the 
                     // button (i.e. reload back into firing immediately).
@@ -387,8 +433,8 @@ shared class FirstPersonActor : IScriptedObjectBehavior
                 else
                 {
                     // Get the current position of the reload animation.
-                    int track = mActor.playAnimationSet( "Action", mCurrentWeapon.getClass() + " Reload", AnimationPlaybackMode::PlayOnce );
-                    double pos = controller.getTrackPosition( track );
+                    mAnimationTrack = mActor.playAnimationSet( "Action", mCurrentWeapon.getClass() + " Reload", AnimationPlaybackMode::PlayOnce );
+                    double pos = controller.getTrackPosition( mAnimationTrack );
 
                     if ( mCurrentWeaponType == WeaponType::M16 )
                     {
@@ -475,6 +521,24 @@ shared class FirstPersonActor : IScriptedObjectBehavior
 	// Public Methods
 	///////////////////////////////////////////////////////////////////////////
     //-------------------------------------------------------------------------
+	// Name : attemptWeaponCollect ()
+	// Desc : Attempt to collect ammunition from the specified weapon.
+	//-------------------------------------------------------------------------
+    bool attemptWeaponCollect( Weapon @ weapon )
+    {
+        // Any of our weapons can collect?
+        for ( uint i = 0; i < mWeapons.length(); ++i )
+        {
+            if ( @mWeapons[i] != null && mWeapons[i].attemptWeaponCollect( weapon ) )
+                return true;
+
+        } // Next weapon
+
+        // Not collected.
+        return false;
+    }
+
+    //-------------------------------------------------------------------------
 	// Name : setOwnerAgent ()
 	// Desc : Set the agent that owns this actor.
 	//-------------------------------------------------------------------------
@@ -482,9 +546,9 @@ shared class FirstPersonActor : IScriptedObjectBehavior
     {
         @mOwnerAgent = agent;
 
-        // Update the owner agent of the current weapon.
-        if ( @mCurrentWeapon != null )
-            mCurrentWeapon.setOwnerAgent( agent );
+        // Update the owner agent of all weapons.
+        for ( uint i = 1; i < WeaponType::Count; ++i )
+            mWeapons[i].setOwnerAgent( agent );
     }
     
     //-------------------------------------------------------------------------
@@ -512,6 +576,9 @@ shared class FirstPersonActor : IScriptedObjectBehavior
 	//-------------------------------------------------------------------------
     void requestWeaponSwitch( WeaponType weapon )
     {
+        // Can we honor this request?
+        if ( weapon != WeaponType::None && !mWeapons[weapon].canSelect() )
+            return;
         mRequestedWeaponType = weapon;
     }
 

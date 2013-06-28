@@ -1546,7 +1546,7 @@ cgInt32 cgPointLightNode::beginShadowFill( cgTexturePool * pPool )
     cgUInt32 shadowUpdateRate = getShadowUpdateRate();
     if ( shadowUpdateRate > 0 )
     {
-        mShadowTimeSinceLast += cgTimer::getInstance()->getTimeElapsed();
+        mShadowTimeSinceLast += (cgFloat)cgTimer::getInstance()->getTimeElapsed();
         if ( mShadowTimeSinceLast < (1.0f / (cgFloat)shadowUpdateRate) )
             timeToUpdate = false;
         else

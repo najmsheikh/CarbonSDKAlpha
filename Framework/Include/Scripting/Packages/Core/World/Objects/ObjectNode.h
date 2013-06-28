@@ -47,6 +47,12 @@ namespace ObjectNode
         BINDSUCCESS( engine->registerObjectMethod(typeName, "PropertyContainer @+ getCustomProperties( )", asMETHODPR(type,getCustomProperties,(), cgPropertyContainer&), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "const PropertyContainer @+ getCustomProperties( ) const", asMETHODPR(type,getCustomProperties,() const, const cgPropertyContainer&), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void setCustomProperties( PropertyContainer @+ )", asMETHODPR(type,setCustomProperties,( const cgPropertyContainer&), void), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "Variant & getCustomProperty( const String&in )", asMETHODPR(type,getCustomProperty,( const cgString&), cgVariant&), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "const Variant & getCustomProperty( const String&in ) const", asMETHODPR(type,getCustomProperty,( const cgString&) const, const cgVariant&), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "Variant getCustomProperty( const String&in, const Variant &in ) const", asMETHODPR(type,getCustomProperty,( const cgString&, const cgVariant&) const, cgVariant), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "bool setCustomProperty( const String&in, const Variant &in )", asMETHODPR(type,setCustomProperty,( const cgString&, const cgVariant&), bool), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "bool removeCustomProperty( const String&in )", asMETHODPR(type,removeCustomProperty,( const cgString& ), bool), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "bool clearCustomProperties( )", asMETHODPR(type,clearCustomProperties,( ), bool), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "const BoundingBox & getBoundingBox( )", asMETHODPR(type,getBoundingBox,(),const cgBoundingBox&), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "BoundingBox getLocalBoundingBox( )", asMETHODPR(type,getLocalBoundingBox,(),cgBoundingBox), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "const UID & getObjectType( ) const", asMETHODPR(type,getObjectType,() const,const cgUID&), asCALL_THISCALL) );
@@ -59,10 +65,12 @@ namespace ObjectNode
         BINDSUCCESS( engine->registerObjectMethod(typeName, "const Transform & getWorldTransform( )", asMETHODPR(type,getWorldTransform,(),const cgTransform&), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "const Transform & getWorldTransform( bool )", asMETHODPR(type,getWorldTransform,(bool),const cgTransform&), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "const Vector3 & getPosition( bool )", asMETHODPR(type,getPosition,(bool),const cgVector3&), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "Quaternion getOrientation( bool )", asMETHODPR(type,getOrientation,(bool),cgQuaternion), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "Vector3 getXAxis( bool )", asMETHODPR(type,getXAxis,(bool),cgVector3), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "Vector3 getYAxis( bool )", asMETHODPR(type,getYAxis,(bool),cgVector3), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "Vector3 getZAxis( bool )", asMETHODPR(type,getZAxis,(bool),cgVector3), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "const Vector3 & getPosition( )", asMETHODPR(type,getPosition,(),const cgVector3&), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "Quaternion getOrientation( )", asMETHODPR(type,getOrientation,(),cgQuaternion), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "Vector3 getXAxis( )", asMETHODPR(type,getXAxis,(),cgVector3), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "Vector3 getYAxis( )", asMETHODPR(type,getYAxis,(),cgVector3), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "Vector3 getZAxis( )", asMETHODPR(type,getZAxis,(),cgVector3), asCALL_THISCALL) );

@@ -231,4 +231,17 @@ bool cgDX11RenderingCapabilities::getDisplayModes( cgDisplayMode::Array & modes 
     return true;
 }
 
+//-----------------------------------------------------------------------------
+//  Name : requiresCursorEmulation () (Virtual)
+/// <summary>
+/// Determine if cursor emulation is required given the current state of the
+/// device.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgDX11RenderingCapabilities::requiresCursorEmulation( ) const
+{
+    // DX10+ never requires cursor emulation.
+    return false;
+}
+
 #endif // CGE_DX11_RENDER_SUPPORT

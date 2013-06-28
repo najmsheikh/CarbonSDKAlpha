@@ -39,7 +39,7 @@ shared class Objective : IScriptedObjectBehavior
     private ObjectNode@     mNode;                  // The node to which we are attached.
 
     // Objective description.
-    private float           mMaxTriggerRange;       // Maximum range at which this objective can be triggered.
+    private float           mMaxTriggerRange;       // Maximum range at which this objective can be triggered (<= 0 cannot be triggered).
     private uint            mNextObjectiveId;       // Reference ID of next objective.
     private String          mSequenceIdentifier;    // Name of the game-play sequence triggered when the objective is activated.
 
@@ -68,14 +68,13 @@ shared class Objective : IScriptedObjectBehavior
         @mNode = object;
 
         // Get properties
-        PropertyContainer @ properties = object.getCustomProperties();
-        mMaxTriggerRange = float(properties.getProperty( "trigger_range", 2.0f ));
-        mSequenceIdentifier = String(properties.getProperty( "sequence_id", "" ));
-        mNextObjectiveId = uint(properties.getProperty( "next_objective", uint(0) ));
+        mMaxTriggerRange = float(object.getCustomProperty( "trigger_range", 2.0f ));
+        mSequenceIdentifier = String(object.getCustomProperty( "sequence_id", Variant("") ));
+        mNextObjectiveId = uint(object.getCustomProperty( "next_objective", 0 ));
 
         // Get the currently active state (GamePlay)
         AppStateManager @ stateManager = getAppStateManager();
-        AppState @ state = stateManager.getActiveState();
+        AppState @ state = stateManager.getState( "GamePlay" );
         if ( @state != null )
             @mGamePlayState = cast<GamePlay>( state.getScriptObject() );
 
@@ -109,6 +108,8 @@ shared class Objective : IScriptedObjectBehavior
 	//-------------------------------------------------------------------------
     bool isObjectiveInRange( Vector3 sourcePosition )
     {
+        if ( mMaxTriggerRange <= 0 )
+            return false;
         return (vec3LengthSq( mNode.getPosition() - sourcePosition ) <= (mMaxTriggerRange * mMaxTriggerRange));
     }
 

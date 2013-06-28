@@ -182,7 +182,7 @@ public:
     // Public Inline Methods
     //-------------------------------------------------------------------------
     // Object Property 'Set' Routing
-    inline void setShadowStage( cgSceneProcessStage::Base stage ) const
+    inline void setShadowStage( cgSceneProcessStage::Base stage )
     {
         ((cgSkinObject*)mReferencedObject)->setShadowStage( stage );
     }

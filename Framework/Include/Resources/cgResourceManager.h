@@ -478,6 +478,7 @@ protected:
     RasterizerStateMap          mRasterizerStateLUT;            // Rasterizer state dictionary for fast lookup by state values.
     BlendStateMap               mBlendStateLUT;                 // Blend state dictionary for fast lookup by state values.
     NamedResourceMap            mRenderTargetLUT;               // Render target dictionary for fast lookup by resource name.
+    NamedResourceMap            mTextureLUT;                    // Texture dictionary for fast lookup by resource name.
     
     // Material Data
     ResourceItemList            mMaterials;                     // List of material resources.

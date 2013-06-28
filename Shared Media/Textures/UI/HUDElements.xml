@@ -6,5 +6,7 @@
 	<Image x="0" y="357" width="226" height="155" name="stats_background"/>
 	<Image x="377" y="378" width="66" height="132" name="armor_bar"/>
 	<Image x="445" y="378" width="66" height="132" name="health_bar"/>
+	<Image x="0" y="42" width="15" height="15" name="cross_hair"/>
+	<Image x="11" y="158" width="485" height="103" name="gi_logo"/>
   </Group>
 </ImageAtlas>

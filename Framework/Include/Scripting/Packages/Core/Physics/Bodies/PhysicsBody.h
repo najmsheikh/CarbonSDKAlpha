@@ -44,6 +44,7 @@ namespace PhysicsBody
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void enableContinuousCollision( bool )", asMETHODPR(type, enableContinuousCollision, ( bool ), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "bool isContinuousCollisionEnabled( ) const", asMETHODPR(type, isContinuousCollisionEnabled, ( ) const, bool ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void setMaterialGroupId( DefaultPhysicsMaterialGroup )", asMETHODPR(type, setMaterialGroupId, ( cgDefaultPhysicsMaterialGroup::Base ), void), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void setMaterialGroupId( int )", asMETHODPR(type, setMaterialGroupId, ( cgInt32 ), void), asCALL_THISCALL) );
         
         // ToDo: ? virtual void                onPhysicsBodyTransformed( cgPhysicsBodyTransformedEventArgs * e );
     

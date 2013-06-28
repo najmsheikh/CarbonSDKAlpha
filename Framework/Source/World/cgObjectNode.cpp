@@ -77,6 +77,8 @@ cgWorldQuery                    cgObjectNode::mNodeUpdatePhysicsProperties;
 cgWorldQuery                    cgObjectNode::mNodeUpdateUpdateRate;
 cgWorldQuery                    cgObjectNode::mNodeUpdateTargetReference;
 cgWorldQuery                    cgObjectNode::mNodeClearCustomProperties;
+cgWorldQuery                    cgObjectNode::mNodeRemoveCustomProperty;
+cgWorldQuery                    cgObjectNode::mNodeUpdateCustomProperty;
 cgWorldQuery                    cgObjectNode::mNodeInsertCustomProperty;
 cgWorldQuery                    cgObjectNode::mNodeDeleteBehavior;
 cgWorldQuery                    cgObjectNode::mNodeInsertBehavior;
@@ -266,8 +268,6 @@ void cgObjectNode::dispose( bool disposeBase )
 
     // Remove from name usage map
     setName( cgString::Empty );
-
-    // ToDo: 9999 - What's happening with the spatial tree?
 
     // Silently remove this node from any parent cell
     if ( mParentCell )
@@ -1635,6 +1635,18 @@ const cgVector3 & cgObjectNode::getPosition( )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getOrientation()
+/// <summary>
+/// Retrieve the current orientation of the node in world space.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgQuaternion cgObjectNode::getOrientation( )
+{
+    resolvePendingUpdates( cgDeferredUpdateFlags::Transforms );
+    return mCellTransform.orientation();
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getXAxis()
 /// <summary>
 /// Retrieve the current orientation of the node in world space.
@@ -1720,6 +1732,19 @@ const cgVector3 & cgObjectNode::getPosition( bool atPivot )
             return SourceTransform.position() + mParentCell->getWorldOrigin();
     
     } // End if at object*/
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getOrientation()
+/// <summary>
+/// Retrieve the current orientation of the node in world space.
+/// Optionally, caller can retrieve the orientation at the pivot point or 
+/// otherwise.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgQuaternion cgObjectNode::getOrientation( bool atPivot )
+{
+    return getWorldTransform(atPivot).orientation();
 }
 
 //-----------------------------------------------------------------------------
@@ -2544,9 +2569,6 @@ bool cgObjectNode::onNodeCreated( const cgUID & objectType, cgCloneMethod::Base 
     // Mark object as dirty immediately upon its creation and ensure that
     // its bounding box and ownership status are computed.
     nodeUpdated( cgDeferredUpdateFlags::BoundingBox | cgDeferredUpdateFlags::OwnershipStatus, 0 );
-
-    // Build the physics body if appropriate.
-    buildPhysicsBody();
     
     // Success!
     return true;
@@ -2773,9 +2795,6 @@ bool cgObjectNode::onNodeLoading( const cgUID & objectType, cgWorldQuery * nodeD
     // that its bounding box and ownership status are up to date.
     nodeUpdated( cgDeferredUpdateFlags::BoundingBox | cgDeferredUpdateFlags::OwnershipStatus, 0 );
 
-    // Build the physics body if appropriate.
-    buildPhysicsBody();
-    
     // ToDo: 9999
     /*// Make a temporary copy of the event to avoid possibility of
     // a race condition if the last subscriber unsubscribes
@@ -2821,6 +2840,9 @@ bool cgObjectNode::onNodeInit( const cgUInt32IndexMap & nodeReferenceRemap )
         
     } // End if re-attach
     mCustomProperties->removeProperty( _T("Core::NodeInitData::TargetId") );
+
+    // Build the physics body if appropriate.
+    buildPhysicsBody();
 
     // Trigger behavior 'onAttach'
     for ( size_t i = 0; i < mBehaviors.size(); ++i )
@@ -3123,6 +3145,162 @@ const cgPropertyContainer & cgObjectNode::getCustomProperties( ) const
 cgPropertyContainer & cgObjectNode::getCustomProperties( )
 {
     return *mCustomProperties;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getCustomProperty()
+/// <summary>
+/// Retrieve the value of the custom property with the specified name.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgVariant & cgObjectNode::getCustomProperty( const cgString & propertyName )
+{
+    return mCustomProperties->getProperty( propertyName );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getCustomProperty()
+/// <summary>
+/// Retrieve the value of the custom property with the specified name.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgVariant & cgObjectNode::getCustomProperty( const cgString & propertyName ) const
+{
+    return mCustomProperties->getProperty( propertyName );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getCustomProperty()
+/// <summary>
+/// Retrieve the value of the custom property with the specified name. If a
+/// property with the specified name is not found, the default value supplied
+/// will be returned.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgVariant cgObjectNode::getCustomProperty( const cgString & propertyName, const cgVariant & defaultValue ) const
+{
+    return mCustomProperties->getProperty( propertyName, defaultValue );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setCustomProperty()
+/// <summary>
+/// Insert or replace a property with the specified name and value into this
+/// node's custom property container.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgObjectNode::setCustomProperty( const cgString & propertyName, const cgVariant & value )
+{
+    // Update the database as necessary.
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+
+        // If property already exists, update. Otherwise, insert.
+        if ( mCustomProperties->isPropertyDefined( propertyName ) )
+        {
+            mNodeUpdateCustomProperty.bindParameter( 1, (cgInt)value.getType() );
+            mNodeUpdateCustomProperty.bindParameter( 2, value.getData(), value.getSize() );
+            mNodeUpdateCustomProperty.bindParameter( 3, propertyName );
+            mNodeUpdateCustomProperty.bindParameter( 4, mReferenceId );
+            if ( !mNodeUpdateCustomProperty.step( true ) )
+            {
+                cgString error;
+                mNodeUpdateCustomProperty.getLastError( error );
+                cgAppLog::write( cgAppLog::Error, _T("Failed to update custom property '%s' for object node '0x%x'. Error: %s\n"), propertyName.c_str(), mReferenceId, error.c_str() );
+                return false;
+            
+            } // End if failed
+
+        } // End if UPDATE
+        else
+        {
+            mNodeInsertCustomProperty.bindParameter( 1, mReferenceId );
+            mNodeInsertCustomProperty.bindParameter( 2, propertyName );
+            mNodeInsertCustomProperty.bindParameter( 3, (cgInt)value.getType() );
+            mNodeInsertCustomProperty.bindParameter( 4, value.getData(), value.getSize() );
+            if ( !mNodeInsertCustomProperty.step( true ) )
+            {
+                cgString error;
+                mNodeInsertCustomProperty.getLastError( error );
+                cgAppLog::write( cgAppLog::Error, _T("Failed to insert custom property '%s' for object node '0x%x'. Error: %s\n"), propertyName.c_str(), mReferenceId, error.c_str() );
+                return false;
+            
+            } // End if failed
+
+        } // End if INSERT
+
+    } // End if serialize
+
+    // Update local property container.
+    mCustomProperties->setProperty( propertyName, value );
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : removeCustomProperty()
+/// <summary>
+/// Remove the custom property with specified name
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgObjectNode::removeCustomProperty( const cgString & propertyName )
+{
+    // Update the database as necessary.
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mNodeRemoveCustomProperty.bindParameter( 1, propertyName );
+        mNodeRemoveCustomProperty.bindParameter( 2, mReferenceId );
+        if ( !mNodeRemoveCustomProperty.step( true ) )
+        {
+            cgString error;
+            mNodeRemoveCustomProperty.getLastError( error );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to remove custom property '%s' for object node '0x%x'. Error: %s\n"), propertyName.c_str(), mReferenceId, error.c_str() );
+            return false;
+        
+        } // End if failed
+
+    } // End if serialize
+
+    // Update local property container.
+    mCustomProperties->removeProperty( propertyName );
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : clearCustomProperties()
+/// <summary>
+/// Clear and release memory allocated for the storage of custom properties
+/// associated with this node.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgObjectNode::clearCustomProperties( )
+{
+    // Update the database as necessary.
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mNodeClearCustomProperties.bindParameter( 1, mReferenceId );
+        if ( !mNodeClearCustomProperties.step( true ) )
+        {
+            cgString error;
+            mNodeClearCustomProperties.getLastError( error );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to clear custom properties for object node '0x%x'. Error: %s\n"), mReferenceId, error.c_str() );
+            return false;
+        
+        } // End if failed
+
+    } // End if serialize
+
+    // Clear local property container.
+    mCustomProperties->clear();
+
+    // Success!
+    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -3906,6 +4084,10 @@ bool cgObjectNode::setParent( cgObjectNode * parent, bool constructing )
     
     } // End if valid parent
 
+    // Before we do anything, make sure that all pending transform 
+    // operations are resolved (including those applied to our parent).
+    resolvePendingUpdates( cgDeferredUpdateFlags::Transforms );
+
     // Update database reference only if we are not disposing or loading.
     if ( shouldSerialize() && mParentCell )
     {
@@ -4492,6 +4674,20 @@ void cgObjectNode::prepareQueries()
         {
             cgString statement = _T("DELETE FROM 'Nodes::CustomProperties' WHERE NodeId=?1");
             mNodeClearCustomProperties.prepare( world, statement, true );
+
+        } // End if !prepared
+
+        if ( !mNodeRemoveCustomProperty.isPrepared() )
+        {
+            cgString statement = _T("DELETE FROM 'Nodes::CustomProperties' WHERE Name=?1 AND NodeId=?2");
+            mNodeRemoveCustomProperty.prepare( world, statement, true );
+
+        } // End if !prepared
+
+        if ( !mNodeUpdateCustomProperty.isPrepared() )
+        {
+            cgString statement = _T("UPDATE 'Nodes::CustomProperties' SET Type=?1, Value=?2 WHERE Name=?3 AND NodeID=?4");
+            mNodeUpdateCustomProperty.prepare( world, statement, true );
 
         } // End if !prepared
 
@@ -5486,7 +5682,7 @@ void cgObjectNode::onNavigationAgentReposition ( cgNavigationAgent * sender, cgN
 
         // Smoothly interpolate.
         cgQuaternion newOrientation = newTransform.orientation();
-        cgQuaternion::slerp( newOrientation, oldOrientation, newOrientation, cgTimer::getInstance()->getTimeElapsed() * 4 );
+        cgQuaternion::slerp( newOrientation, oldOrientation, newOrientation, (cgFloat)(cgTimer::getInstance()->getTimeElapsed() * 4) );
         newTransform.setOrientation( newOrientation );
 
     } // End if has direction

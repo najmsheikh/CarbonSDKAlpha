@@ -297,11 +297,10 @@ bool cgButtonControl::onMouseButtonDown( cgInt32 nButtons, const cgPoint & Posit
             // Control is enabled?
             if ( isEnabled() )
             {
-                // Use "pressed" image and offset the label 
+                // Use "pressed" image and offset the label / image
                 setRenderMode( RenderMode_Pressed );
-                mLabel->setPosition( 1, 1 );
-
-                // ToDo: Shift image too so it looks like it's clicking down
+                mLabel->move( 1, 1 );
+                mImage->move( 1, 1 );
 
             } // End if enabled
 
@@ -346,7 +345,8 @@ bool cgButtonControl::onMouseButtonUp( cgInt32 nButtons, const cgPoint & Positio
         {
             // Set back to normal image and reset the label 
             setRenderMode( RenderMode_Normal );
-            mLabel->setPosition( 0, 0 );
+            mLabel->move( -1, -1 );
+            mImage->move( -1, -1 );
 
         } // End if enabled
 

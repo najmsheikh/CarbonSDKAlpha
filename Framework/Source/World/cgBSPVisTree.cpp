@@ -29,6 +29,7 @@
 #include <Resources/cgMesh.h>
 #include <Rendering/cgVertexFormats.h>
 #include <Math/cgCollision.h>
+#include <Math/cgMathUtility.h>
 #include <Math/cgBoundingSphere.h>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,8 +42,8 @@
 cgBSPTree::cgBSPTree( )
 {
     // Initialize variables to sensible defaults
-    mSplitterSample = 60;
-    mSplitHeuristic = 3.0f;
+    mSplitterSample = 120;
+    mSplitHeuristic = 2.0f;
     mInputWindings  = CG_NULL;
 }
 
@@ -543,6 +544,8 @@ bool cgBSPTree::compilePVS( )
     
     // Perform actual full PVS calculation
     calculatePortalVis( portals );
+
+    // Just use possible vis.
     /*for ( size_t i = 0; i < portals.size(); ++i )
         portals[i].actualVis = portals[i].possibleVis;*/
     
@@ -889,7 +892,8 @@ void cgBSPTree::recursePVS( PVSPortalArray & portals, cgUInt32 leafIndex, PVSPor
         if ( fabsf(reverseGenPlane.a - prevData.targetPlane.a) < CGE_EPSILON &&
              fabsf(reverseGenPlane.b - prevData.targetPlane.b) < CGE_EPSILON &&
              fabsf(reverseGenPlane.c - prevData.targetPlane.c) < CGE_EPSILON &&
-             fabsf(reverseGenPlane.d - prevData.targetPlane.d) < CGE_EPSILON )
+             cgMathUtility::dynamicEpsilonTest( reverseGenPlane.d, prevData.targetPlane.d, 10 )
+             /*fabsf(reverseGenPlane.d - prevData.targetPlane.d) < CGE_EPSILON*/ )
              continue;
 
         // Clip the generator portal to the source. If none remains, continue.
@@ -1783,7 +1787,8 @@ void cgBSPTree::buildPlaneSet( )
             if ( fabsf(testPlane.a - plane.a) < CGE_EPSILON &&
                  fabsf(testPlane.b - plane.b) < CGE_EPSILON &&
                  fabsf(testPlane.c - plane.c) < CGE_EPSILON &&
-                 fabsf(testPlane.d - plane.d) < CGE_EPSILON )
+                 cgMathUtility::dynamicEpsilonTest( testPlane.d, plane.d, 10 )  )
+                 /*fabsf(testPlane.d - plane.d) < CGE_EPSILON )*/
             {
                 // Just use this plane
                 winding->plane = j;

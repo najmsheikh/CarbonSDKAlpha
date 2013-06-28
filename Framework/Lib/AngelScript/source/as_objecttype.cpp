@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2012 Andreas Jonsson
+   Copyright (c) 2003-2013 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied 
    warranty. In no event will the authors be held liable for any 
@@ -170,6 +170,11 @@ void asCObjectType::Orphan(asCModule *mod)
 		{
 			// Tell the GC that this type exists so it can resolve potential circular references
 			engine->gc.AddScriptObjectToGC(this, &engine->objectTypeBehaviours);
+
+			// It's necessary to orphan the template instance types that refer to this object type,
+			// otherwise the garbage collector cannot identify the circular references that involve 
+			// the type and the template type
+			engine->OrphanTemplateInstances(this);
 		}
 	}
 
@@ -243,28 +248,19 @@ void asCObjectType::SetGCFlag()
 
 asCObjectType::~asCObjectType()
 {
-	// Release the object type held by the templateSubType
-	if( templateSubType.GetObjectType() )
-		templateSubType.GetObjectType()->Release();
+	// Release the object types held by the templateSubTypes
+	for( asUINT subtypeIndex = 0; subtypeIndex < templateSubTypes.GetLength(); subtypeIndex++ )
+	{
+		if( templateSubTypes[subtypeIndex].GetObjectType() )
+			templateSubTypes[subtypeIndex].GetObjectType()->Release();
+	}
 
 	if( derivedFrom )
 		derivedFrom->Release();
 
 	asUINT n;
-	for( n = 0; n < properties.GetLength(); n++ )
-		if( properties[n] ) 
-		{
-			if( flags & asOBJ_SCRIPT_OBJECT )
-			{
-				// Release the config group for script classes that are being destroyed
-				asCConfigGroup *group = engine->FindConfigGroupForObjectType(properties[n]->type.GetObjectType());
-				if( group != 0 ) group->Release();
-			}
 
-			asDELETE(properties[n],asCObjectProperty);
-		}
-
-	properties.SetLength(0);
+	ReleaseAllProperties();
 
 	ReleaseAllFunctions();
 
@@ -363,13 +359,14 @@ int asCObjectType::GetTypeId() const
 }
 
 // interface
-int asCObjectType::GetSubTypeId() const
+int asCObjectType::GetSubTypeId(asUINT subtypeIndex) const
 {
-	// TODO: template: This method should allow indexing multiple template subtypes
-
 	if( flags & asOBJ_TEMPLATE )
 	{
-		return engine->GetTypeIdFromDataType(templateSubType);
+		if( subtypeIndex >= templateSubTypes.GetLength() )
+			return asINVALID_ARG;
+
+		return engine->GetTypeIdFromDataType(templateSubTypes[subtypeIndex]);
 	}
 
 	// Only template types have sub types
@@ -377,26 +374,35 @@ int asCObjectType::GetSubTypeId() const
 }
 
 // interface
-asIObjectType *asCObjectType::GetSubType() const
+asIObjectType *asCObjectType::GetSubType(asUINT subtypeIndex) const
 {
-	// TODO: template: This method should allow indexing multiple template subtypes
 	if( flags & asOBJ_TEMPLATE )
 	{
-		return templateSubType.GetObjectType();
+		if( subtypeIndex >= templateSubTypes.GetLength() )
+			return 0;
+
+		return templateSubTypes[subtypeIndex].GetObjectType();
 	}
 
 	return 0;
 }
 
-// AMH: Added to support primitive array type detection
-int asCObjectType::GetSubTypeToken() const
+asUINT asCObjectType::GetSubTypeCount() const
 {
-    return (int)templateSubType.GetTokenType();
+	return asUINT(templateSubTypes.GetLength());
+}
+
+// AMH: Added to support primitive array type detection
+int asCObjectType::GetSubTypeToken(asUINT subtypeIndex) const
+{
+    if( subtypeIndex >= templateSubTypes.GetLength() )
+        return 0;
+    return (int)templateSubTypes[subtypeIndex].GetTokenType();
 }
 
 asUINT asCObjectType::GetInterfaceCount() const
 {
-	return (asUINT)interfaces.GetLength();
+	return asUINT(interfaces.GetLength());
 }
 
 asIObjectType *asCObjectType::GetInterface(asUINT index) const
@@ -800,6 +806,7 @@ asDWORD asCObjectType::GetAccessMask() const
 // internal
 asCObjectProperty *asCObjectType::AddPropertyToClass(const asCString &name, const asCDataType &dt, bool isPrivate)
 {
+	asASSERT( flags & asOBJ_SCRIPT_OBJECT );
 	asASSERT( dt.CanBeInstanciated() );
 	asASSERT( !IsInterface() );
 
@@ -838,13 +845,45 @@ asCObjectProperty *asCObjectType::AddPropertyToClass(const asCString &name, cons
 	asCConfigGroup *group = engine->FindConfigGroupForObjectType(prop->type.GetObjectType());
 	if( group != 0 ) group->AddRef();
 
+	// Add reference to object types
+	asCObjectType *type = prop->type.GetObjectType();
+	if( type )
+		type->AddRef();
+
 	return prop;
+}
+
+// internal
+void asCObjectType::ReleaseAllProperties()
+{
+	for( asUINT n = 0; n < properties.GetLength(); n++ )
+	{
+		if( properties[n] ) 
+		{
+			if( flags & asOBJ_SCRIPT_OBJECT )
+			{
+				// Release the config group for script classes that are being destroyed
+				asCConfigGroup *group = engine->FindConfigGroupForObjectType(properties[n]->type.GetObjectType());
+				if( group != 0 ) group->Release();
+
+				// Release references to objects types
+				asCObjectType *type = properties[n]->type.GetObjectType();
+				if( type )
+					type->Release();
+			}
+
+			asDELETE(properties[n],asCObjectProperty);
+		}
+	}
+
+	properties.SetLength(0);
 }
 
 // internal
 void asCObjectType::ReleaseAllHandles(asIScriptEngine *)
 {
 	ReleaseAllFunctions();
+	ReleaseAllProperties();
 }
 
 // internal
@@ -990,6 +1029,17 @@ void asCObjectType::EnumReferences(asIScriptEngine *)
 	for( asUINT d = 0; d < virtualFunctionTable.GetLength(); d++ )
 		if( virtualFunctionTable[d] )
 			engine->GCEnumCallback(virtualFunctionTable[d]);
+
+	for( asUINT p = 0; p < properties.GetLength(); p++ )
+	{
+		asCObjectType *type = properties[p]->type.GetObjectType();
+		if( type )
+			engine->GCEnumCallback(type);
+	}
+
+	for( asUINT t = 0; t < templateSubTypes.GetLength(); t++ )
+		if( templateSubTypes[t].GetObjectType() )
+			engine->GCEnumCallback(templateSubTypes[t].GetObjectType());
 }
 
 END_AS_NAMESPACE

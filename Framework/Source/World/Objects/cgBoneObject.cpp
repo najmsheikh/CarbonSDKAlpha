@@ -58,7 +58,7 @@ cgWorldQuery cgBoneObject::mLoadBone;
 cgBoneObject::cgBoneObject( cgUInt32 referenceId, cgWorld * world ) : cgWorldObject( referenceId, world )
 {
     // Initialize members to sensible defaults
-    mHasCollisionVolume = false;
+    mInitialCollisionState = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -71,7 +71,7 @@ cgBoneObject::cgBoneObject( cgUInt32 referenceId, cgWorld * world, cgWorldObject
 {
     // Duplicate values from object to clone.
     cgBoneObject * pObject = (cgBoneObject*)init;
-    mHasCollisionVolume = pObject->mHasCollisionVolume;
+    mInitialCollisionState = pObject->mInitialCollisionState;
 }
 
 //-----------------------------------------------------------------------------
@@ -454,28 +454,28 @@ bool cgBoneObject::createSandboxMeshes( )
 }
 
 //-----------------------------------------------------------------------------
-//  Name : hasCollisionVolume()
+//  Name : getInitialCollisionState()
 /// <summary>
 /// Determine if the collision volume is enabled for this bone for the purposes
 /// of ray testing, etc.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgBoneObject::hasCollisionVolume( ) const
+bool cgBoneObject::getInitialCollisionState( ) const
 {
-    return mHasCollisionVolume;
+    return mInitialCollisionState;
 }
 
 //-----------------------------------------------------------------------------
-//  Name : enableCollisionVolume()
+//  Name : setInitialCollisionState()
 /// <summary>
 /// Enable / disable the collision volume for this bone for the purposes
 /// of ray testing, etc.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgBoneObject::enableCollisionVolume( bool enable )
+void cgBoneObject::setInitialCollisionState( bool enable )
 {
     // Is this a no-op?
-    if ( mHasCollisionVolume == enable )
+    if ( mInitialCollisionState == enable )
         return;
 
     // Update world database
@@ -498,10 +498,10 @@ void cgBoneObject::enableCollisionVolume( bool enable )
     } // End if serialize
 
     // Update value.
-    mHasCollisionVolume = enable;
+    mInitialCollisionState = enable;
 
     // Notify listeners that property was altered
-    static const cgString modificationContext = _T("HasCollisionVolume");
+    static const cgString modificationContext = _T("InitialCollisionState");
     onComponentModified( &cgComponentModifiedEventArgs( modificationContext ) );
 }
 
@@ -566,7 +566,7 @@ bool cgBoneObject::insertComponentData( )
         // Update database.
         prepareQueries();
         mInsertBone.bindParameter( 1, mReferenceId );
-        mInsertBone.bindParameter( 2, mHasCollisionVolume );
+        mInsertBone.bindParameter( 2, mInitialCollisionState );
         mInsertBone.bindParameter( 6, mSoftRefCount );
 
         // Execute
@@ -620,7 +620,7 @@ bool cgBoneObject::onComponentLoading( cgComponentLoadingEventArgs * e )
     e->componentData = &mLoadBone;
 
     // Update our local members
-    mLoadBone.getColumn( _T("HasCollisionVolume"), mHasCollisionVolume );
+    mLoadBone.getColumn( _T("HasCollisionVolume"), mInitialCollisionState );
     
     // Call base class implementation to read remaining data.
     if ( !cgWorldObject::onComponentLoading( e ) )
@@ -675,7 +675,7 @@ cgBoneNode::cgBoneNode( cgUInt32 referenceId, cgScene * scene ) : cgObjectNode( 
 {
     // Default the node color
     mColor                = 0xFFAEBACB;
-    mDisableChildUpdates  = false;
+    mCollisionEnabled     = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -686,7 +686,9 @@ cgBoneNode::cgBoneNode( cgUInt32 referenceId, cgScene * scene ) : cgObjectNode( 
 //-----------------------------------------------------------------------------
 cgBoneNode::cgBoneNode( cgUInt32 referenceId, cgScene * scene, cgObjectNode * init, cgCloneMethod::Base initMethod, const cgTransform & initTransform ) : cgObjectNode( referenceId, scene, init, initMethod, initTransform )
 {
-    mDisableChildUpdates  = false;
+    // Clone properties
+    cgBoneNode * node = (cgBoneNode*)init;
+    mCollisionEnabled = node->mCollisionEnabled;
 
     // Set default instance identifier
     mInstanceIdentifier = cgString::format( _T("Bone%X"), referenceId );
@@ -735,6 +737,20 @@ cgObjectNode * cgBoneNode::allocateClone( const cgUID & type, cgUInt32 reference
 void cgBoneNode::onComponentModified( cgComponentModifiedEventArgs * e )
 {
     // What was modified?
+    if ( e->context == _T("InitialCollisionState") )
+    {
+        // If we're in sandbox mode, update our own internal 
+        // collision enabled state, and rebuild physics body immediately.
+        if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
+        {
+            mCollisionEnabled = getInitialCollisionState();
+            
+            // Add / remove physics body.
+            buildPhysicsBody();
+        
+        } // End if sandbox mode
+
+    } // End if HasCollisionVolume
     
     // Call base class implementation last
     cgObjectNode::onComponentModified( e );
@@ -989,18 +1005,6 @@ bool cgBoneNode::generateCollisionShape( cgMesh * mesh, cgUInt32 boneIndex /* = 
 }
 
 //-----------------------------------------------------------------------------
-// Name : enableChildUpdates()
-/// <summary>
-/// Enable or disable the automatic repositioning of child bones when the 
-/// length of this bone is modified.
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgBoneNode::enableChildUpdates( bool enable )
-{
-    mDisableChildUpdates = !enable;
-}
-
-//-----------------------------------------------------------------------------
 //  Name : getSubElementCategories () (Virtual)
 /// <summary>
 /// Enumerate the list of sub-element categories and types that can be accessed
@@ -1029,9 +1033,18 @@ bool cgBoneNode::getSubElementCategories( cgObjectSubElementCategory::Map & cate
 //-----------------------------------------------------------------------------
 void cgBoneNode::buildPhysicsBody( )
 {
-    // Override 'None' case for bones.
-    if ( mPhysicsModel == cgPhysicsModel::None )
+    // Override 'None' case for bones if we should build a collision volume.
+    if ( isCollisionEnabled() && mPhysicsModel == cgPhysicsModel::None )
     {
+        // Release the previous physics body (if any).
+        if ( mPhysicsBody )
+        {
+            mPhysicsBody->unregisterEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
+            mPhysicsBody->removeReference( this );
+            mPhysicsBody = CG_NULL;
+        
+        } // End if exists
+
         // Search through collision shapes in the referenced object if any.
         const cgObjectSubElementArray & objectShapes = getSubElements( OSECID_CollisionShapes );
 
@@ -1046,20 +1059,10 @@ void cgBoneNode::buildPhysicsBody( )
 
         } // Next sub-element
 
-        // If there are no shapes, remove any prior physics body if there was one and then bail.
+        // If there are no shapes, just bail.
         if ( physicsShapes.empty() )
-        {
-            if ( mPhysicsBody )
-            {
-                //mPhysicsBody->unregisterEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
-                mPhysicsBody->removeReference( this );
-            
-            } // End if exists
-            mPhysicsBody = CG_NULL;
             return;
         
-        } // End if no shapes
-
         // If there was more than one shape, we need to build a compound shape.
         // If there were *no* shapes however, assign a 'null' shape that allows 
         // the object to act like a rigid body without any collision geometry.
@@ -1067,12 +1070,6 @@ void cgBoneNode::buildPhysicsBody( )
         if ( physicsShapes.size() > 1 )
         {
             cgToDoAssert( "Physics", "Compound shape!" );
-            if ( mPhysicsBody )
-            {
-                mPhysicsBody->unregisterEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
-                mPhysicsBody->removeReference( this );
-            
-            } // End if exists
             for ( size_t i = 0; i < physicsShapes.size(); ++i )
                 physicsShapes[i]->deleteReference();
             mPhysicsBody = CG_NULL;
@@ -1097,20 +1094,9 @@ void cgBoneNode::buildPhysicsBody( )
         // current velocity, torque, etc.
         cgRigidBody * rigidBody = new cgRigidBody( mParentScene->getPhysicsWorld(), primaryShape, cp, mPhysicsBody );
 
-        // Release the previous physics body (if any).
-        if ( mPhysicsBody )
-        {
-            //mPhysicsBody->unregisterEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
-            mPhysicsBody->removeReference( this );
-        
-        } // End if exists
-
         // Take ownership of the new rigid body.
         mPhysicsBody = rigidBody;
         mPhysicsBody->addReference( this );
-
-        // Listen for events
-        //mPhysicsBody->registerEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );
 
         // Assign to the 'cast only' material group so that it cannot collide with anything else.
         mPhysicsBody->setMaterialGroupId( cgDefaultPhysicsMaterialGroup::CastOnly );
@@ -1123,4 +1109,54 @@ void cgBoneNode::buildPhysicsBody( )
 
     } // End if other model
 
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isCollisionEnabled()
+/// <summary>
+/// Determine if the collision volume is enabled for this bone for the purposes
+/// of ray testing, etc.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgBoneNode::isCollisionEnabled( ) const
+{
+    return mCollisionEnabled;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : enableCollision()
+/// <summary>
+/// Enable / disable the collision volume for this bone for the purposes
+/// of ray testing, etc.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgBoneNode::enableCollision( bool enable )
+{
+    // Is this a no-op?
+    if ( mCollisionEnabled == enable )
+        return;
+
+    // Update local member and then rebuild physics body if necessary.
+    mCollisionEnabled = enable;
+    buildPhysicsBody();
+}
+
+//-----------------------------------------------------------------------------
+// Name : onNodeInit () (Virtual)
+/// <summary>
+/// Optional method called both after creation and during loading to allow the
+/// node to finally initialize itself with all relevant scene data it may
+/// depend upon being available. In cases where reference identifiers pointing 
+/// to nodes may have been remapped during loading (i.e. in cases where 
+/// performing a cloned load), information about the remapping is provided to 
+/// allow the node (or its underlying object) to take appropriate action.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgBoneNode::onNodeInit( const cgUInt32IndexMap & nodeReferenceRemap )
+{
+    // Collision initially enabled?
+    mCollisionEnabled = getInitialCollisionState();
+
+    // Call base class implementation.
+    return cgObjectNode::onNodeInit( nodeReferenceRemap );
 }

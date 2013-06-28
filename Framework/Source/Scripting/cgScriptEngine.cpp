@@ -35,6 +35,7 @@
 
 // Angelscript
 #include <angelscript.h>
+#include <AngelScript-JIT/as_jit.h>
 
 //-----------------------------------------------------------------------------
 // Static member definitions.
@@ -53,8 +54,10 @@ cgScriptEngine * cgScriptEngine::mSingleton = CG_NULL;
 cgScriptEngine::cgScriptEngine()
 {
     // Initialize variables to sensible defaults
-    mEngine = CG_NULL;
-    mVerboseOutput = true;
+    mEngine         = CG_NULL;
+    mJITEngine      = CG_NULL;
+    mVerboseOutput  = true;
+    mOutputWarnings = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -89,6 +92,9 @@ cgScriptEngine::~cgScriptEngine()
     if ( mEngine != CG_NULL )
         mEngine->Release();
     mEngine = CG_NULL;
+
+    // Release the JIT compiler
+    delete mJITEngine;
 
     // Destroy all linked C++ scripting packages.
     unbindPackage( &mRootPackage );
@@ -136,6 +142,17 @@ void cgScriptEngine::destroySingleton( )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : outputScriptWarnings ()
+/// <summary>
+/// Enable / disable the output of warnings during script compilation.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScriptEngine::outputScriptWarnings( bool enable )
+{
+    mOutputWarnings = enable;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : messageCallback () (Private, Static)
 /// <summary>
 /// Called by angelscript whenever an error occured during compilation.
@@ -157,11 +174,16 @@ void cgScriptEngine::messageCallback(const asSMessageInfo *msg, void *param )
     // Determine the message type
     if ( msg->type == asMSGTYPE_WARNING ) 
     {
+        if ( !((cgScriptEngine*)param)->mOutputWarnings )
+            return;
         strMessageType = _T("Warning");
         nType          = cgAppLog::Debug | cgAppLog::Warning;
     }
     else if( msg->type == asMSGTYPE_INFORMATION ) 
     {
+        // Skip information messages currently.
+        return;
+
         strMessageType = _T("Info   ");
         nType          = cgAppLog::Debug;
     }
@@ -215,7 +237,14 @@ bool cgScriptEngine::initialize( )
     cgScriptInterop::Types::ScriptArray::bind( mEngine );
 
     // Mark the above array type as the default implementation.
-     mEngine->RegisterDefaultArrayType( "array<T>" );
+    mEngine->RegisterDefaultArrayType( "array<T>" );
+
+     // Create and bind the JIT compiler.
+#   if defined(CGE_SCRIPT_JIT_SUPPORTED)
+    mJITEngine = new asCJITCompiler(JIT_NO_SUSPEND | JIT_SYSCALL_FPU_NORESET | JIT_ALLOC_SIMPLE);
+    mEngine->SetEngineProperty(asEP_INCLUDE_JIT_INSTRUCTIONS, 1);
+    mEngine->SetJITCompiler(mJITEngine);
+#   endif
 
     // Success!
     return true;

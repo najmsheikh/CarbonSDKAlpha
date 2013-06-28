@@ -45,7 +45,7 @@ namespace AppState
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void raiseEvent( const String&in, bool )", asMETHODPR(type, raiseEvent, ( const cgString&,bool), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "bool registerEventAction( const String&in, const AppStateEventActionDesc &in )", asMETHODPR(type, registerEventAction, ( const cgString& , const cgAppState::EventActionDesc& ), bool ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void unregisterEventAction( const String&in )", asMETHODPR(type, unregisterEventAction, ( const cgString& ), void ), asCALL_THISCALL) );
-        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool spawnChildState( const String&in, bool )", asMETHODPR(type, spawnChildState, ( const cgString&, bool ), bool ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "AppState @+ spawnChildState( const String&in, bool )", asMETHODPR(type, spawnChildState, ( const cgString&, bool ), cgAppState* ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "IScriptedAppState@ getScriptObject( )", asFUNCTIONPR(getScriptObject,( type* ), asIScriptObject*), asCALL_CDECL_OBJLAST ) );
     
     } // End Method registerStateMethods<>
@@ -128,7 +128,8 @@ namespace AppState
             BINDSUCCESS( engine->registerObjectProperty( "AppStateEventActionDesc", "AppStateEventActionType actionType", offsetof(cgAppState::EventActionDesc,actionType) ) );
             BINDSUCCESS( engine->registerObjectProperty( "AppStateEventActionDesc", "uint flags", offsetof(cgAppState::EventActionDesc,flags) ) );
             BINDSUCCESS( engine->registerObjectProperty( "AppStateEventActionDesc", "String toStateId", offsetof(cgAppState::EventActionDesc,toStateId) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "AppStateEventActionDesc", "String transitionStateId", offsetof(cgAppState::EventActionDesc,transitionStateId) ) );            
+            BINDSUCCESS( engine->registerObjectProperty( "AppStateEventActionDesc", "String transitionStateId", offsetof(cgAppState::EventActionDesc,transitionStateId) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "AppStateEventActionDesc", "int stackOffset", offsetof(cgAppState::EventActionDesc,stackOffset) ) );
 
             ///////////////////////////////////////////////////////////////////////
             // cgAppState (Class)

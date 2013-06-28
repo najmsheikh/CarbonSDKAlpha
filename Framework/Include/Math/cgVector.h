@@ -37,177 +37,175 @@
 // Forward Declarations
 //-----------------------------------------------------------------------------
 class cgMatrix;
-class cgVector3;
-class cgVector2;
 
 //-----------------------------------------------------------------------------
 // Main class declarations
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-//  Name : cgVector4 (Class)
+//  Name : cgVector2 (Class)
 /// <summary>
-/// Storage for three dimensional coordinates.
+/// Storage for two dimensional coordinates.
 /// </summary>
 //-----------------------------------------------------------------------------
-class cgVector4
+class cgVector2
 {
     //-------------------------------------------------------------------------
     // Friend List
     //-------------------------------------------------------------------------
-    friend cgVector4 operator * ( cgFloat s, const cgVector4 & v );
+    friend cgVector2 operator * ( cgFloat s, const cgVector2 & v );
 
 public:
     //-------------------------------------------------------------------------
     // Constructors & Destructors
     //-------------------------------------------------------------------------
-    cgVector4() {};
-    cgVector4( const cgFloat * v ) : 
-        x(v[0]), y(v[1]), z(v[2]), w(v[3]) {}
-    cgVector4( const cgHalf * v ) :
-        x(v[0]), y(v[1]), z(v[2]), w(v[3]) {}
-    cgVector4( cgFloat _x, cgFloat _y, cgFloat _z, cgFloat _w ) :
-        x(_x), y(_y), z(_z), w(_w) {}
+    cgVector2() {};
+    cgVector2( const cgFloat * v ) : 
+        x(v[0]), y(v[1]) {}
+    cgVector2( const cgHalf * v ) :
+        x(v[0]), y(v[1]) {}
+    cgVector2( cgFloat _x, cgFloat _y ) :
+        x(_x), y(_y) {}
 
     //-------------------------------------------------------------------------
     // Public Static Methods
     //-------------------------------------------------------------------------
-    inline static cgFloat cgVector4::dot( const cgVector4 & v1, const cgVector4 & v2 )
+    inline static cgFloat cgVector2::dot( const cgVector2 & v1, const cgVector2 & v2 )
     {
-        return D3DXVec4Dot( (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2 );
+        return D3DXVec2Dot( (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2 );
     }
-    inline static cgVector4 * cgVector4::cross( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2, const cgVector4 & v3 )
+    inline static cgFloat cgVector2::ccw( const cgVector2 & v1, const cgVector2 & v2 )
     {
-        return (cgVector4*)D3DXVec4Cross( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2, (D3DXVECTOR4*)&v3 );
+        return D3DXVec2CCW( (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2 );
     }
-    inline static cgFloat cgVector4::length( const cgVector4 & v )
+    inline static cgFloat cgVector2::length( const cgVector2 & v )
     {
-        return D3DXVec4Length( (D3DXVECTOR4*)&v );
+        return D3DXVec2Length( (D3DXVECTOR2*)&v );
     }
-    inline static cgFloat cgVector4::lengthSq( const cgVector4 & v )
+    inline static cgFloat cgVector2::lengthSq( const cgVector2 & v )
     {
-        return D3DXVec4LengthSq( (D3DXVECTOR4*)&v );
+        return D3DXVec2LengthSq( (D3DXVECTOR2*)&v );
     }
-    inline static cgVector4 * cgVector4::normalize( cgVector4 & out, const cgVector4 & v )
+    inline static cgVector2 * cgVector2::normalize( cgVector2 & out, const cgVector2 & v )
     {
-        return (cgVector4*)D3DXVec4Normalize( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v );
+        return (cgVector2*)D3DXVec2Normalize( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v );
     }
-    inline static cgVector4 * cgVector4::transform( cgVector4 & out, const cgVector4 & v, const cgMatrix & m )
+    inline static cgVector2 * cgVector2::transformCoord( cgVector2 & out, const cgVector2 & v, const cgMatrix & m )
     {
-        return (cgVector4*)D3DXVec4Transform( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v, (D3DXMATRIX*)&m );
+        return (cgVector2*)D3DXVec2TransformCoord( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v, (D3DXMATRIX*)&m );
     }
-    inline static cgVector4 * cgVector4::add( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2 )
+    inline static cgVector2 * cgVector2::transformNormal( cgVector2 & out, const cgVector2 & v, const cgMatrix & m )
     {
-        return (cgVector4*)D3DXVec4Add( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2 );
+        return (cgVector2*)D3DXVec2TransformNormal( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v, (D3DXMATRIX*)&m );
     }
-    inline static cgVector4 * cgVector4::subtract( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2 )
+    inline static cgVector4 * cgVector2::transform( cgVector4 & out, const cgVector2 & v, const cgMatrix & m )
     {
-        return (cgVector4*)D3DXVec4Subtract( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2 );
+        return (cgVector4*)D3DXVec2Transform( (D3DXVECTOR4*)&out, (D3DXVECTOR2*)&v, (D3DXMATRIX*)&m );
     }
-    inline static cgVector4 * cgVector4::minimize( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2 )
+    inline static cgVector2 * cgVector2::add( cgVector2 & out, const cgVector2 & v1, const cgVector2 & v2 )
     {
-        return (cgVector4*)D3DXVec4Minimize( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2 );
+        return (cgVector2*)D3DXVec2Add( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2 );
     }
-    inline static cgVector4 * cgVector4::maximize( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2 )
+    inline static cgVector2 * cgVector2::subtract( cgVector2 & out, const cgVector2 & v1, const cgVector2 & v2 )
     {
-        return (cgVector4*)D3DXVec4Maximize( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2 );
+        return (cgVector2*)D3DXVec2Subtract( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2 );
     }
-    inline static cgVector4 * cgVector4::scale( cgVector4 & out, const cgVector4 & v, cgFloat s )
+    inline static cgVector2 * cgVector2::minimize( cgVector2 & out, const cgVector2 & v1, const cgVector2 & v2 )
     {
-        return (cgVector4*)D3DXVec4Scale( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v, s );
+        return (cgVector2*)D3DXVec2Minimize( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2 );
     }
-    inline static cgVector4 * cgVector4::lerp( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2, cgFloat s )
+    inline static cgVector2 * cgVector2::maximize( cgVector2 & out, const cgVector2 & v1, const cgVector2 & v2 )
     {
-        return (cgVector4*)D3DXVec4Lerp( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2, s );
+        return (cgVector2*)D3DXVec2Maximize( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2 );
     }
-    inline static cgVector4 * cgVector4::hermite( cgVector4 & out, const cgVector4 & v1, const cgVector4 & t1, const cgVector4 & v2, const cgVector4 & t2, cgFloat s )
+    inline static cgVector2 * cgVector2::scale( cgVector2 & out, const cgVector2 & v, cgFloat s )
     {
-        return (cgVector4*)D3DXVec4Hermite( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&t1, (D3DXVECTOR4*)&v2, (D3DXVECTOR4*)&t2, s );
+        return (cgVector2*)D3DXVec2Scale( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v, s );
     }
-    inline static cgVector4 * cgVector4::catmullRom( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2, const cgVector4 & v3, const cgVector4 & v4, cgFloat s )
+    inline static cgVector2 * cgVector2::lerp( cgVector2 & out, const cgVector2 & v1, const cgVector2 & v2, cgFloat s )
     {
-        return (cgVector4*)D3DXVec4CatmullRom( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2, (D3DXVECTOR4*)&v3, (D3DXVECTOR4*)&v4, s );
+        return (cgVector2*)D3DXVec2Lerp( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2, s );
     }
-    inline static cgVector4 * cgVector4::baryCentric( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2, const cgVector4 & v3, cgFloat f, cgFloat g )
+    inline static cgVector2 * cgVector2::hermite( cgVector2 & out, const cgVector2 & v1, const cgVector2 & t1, const cgVector2 & v2, const cgVector2 & t2, cgFloat s )
     {
-        return (cgVector4*)D3DXVec4BaryCentric( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2, (D3DXVECTOR4*)&v3, f, g );
+        return (cgVector2*)D3DXVec2Hermite( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&t1, (D3DXVECTOR2*)&v2, (D3DXVECTOR2*)&t2, s );
+    }
+    inline static cgVector2 * cgVector2::catmullRom( cgVector2 & out, const cgVector2 & v1, const cgVector2 & v2, const cgVector2 & v3, const cgVector2 & v4, cgFloat s )
+    {
+        return (cgVector2*)D3DXVec2CatmullRom( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2, (D3DXVECTOR2*)&v3, (D3DXVECTOR2*)&v4, s );
+    }
+    inline static cgVector2 * cgVector2::baryCentric( cgVector2 & out, const cgVector2 & v1, const cgVector2 & v2, const cgVector2 & v3, cgFloat f, cgFloat g )
+    {
+        return (cgVector2*)D3DXVec2BaryCentric( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2, (D3DXVECTOR2*)&v3, f, g );
     }
 
     //-------------------------------------------------------------------------
     // Public Operators
     //-------------------------------------------------------------------------
-    inline cgVector4 operator + ( const cgVector4 & v ) const
+    inline cgVector2 operator + ( const cgVector2 & v ) const
     {
-        return cgVector4( x + v.x, y + v.y, z + v.z, w + v.w );
+        return cgVector2( x + v.x, y + v.y );
     }
 
-    inline cgVector4 operator - ( const cgVector4 & v ) const
+    inline cgVector2 operator - ( const cgVector2 & v ) const
     {
-        return cgVector4( x - v.x, y - v.y, z - v.z, w - v.w );
+        return cgVector2( x - v.x, y - v.y );
     }
 
-    inline cgVector4 operator * ( cgFloat s ) const
+    inline cgVector2 operator * ( cgFloat s ) const
     {
-        return cgVector4( x * s, y * s, z * s, w * s );
+        return cgVector2( x * s, y * s );
     }
 
-    inline cgVector4 operator / ( cgFloat s ) const
+    inline cgVector2 operator / ( cgFloat s ) const
     {
-        return cgVector4( x / s, y / s, z / s, w / s );
+        return cgVector2( x / s, y / s );
     }
 
-    inline cgVector4 & operator += ( const cgVector4 & v )
+    inline cgVector2 & operator += ( const cgVector2 & v )
     {
         x += v.x;
         y += v.y;
-        z += v.z;
-        w += v.w;
         return *this;
     }
 
-    inline cgVector4 & operator -= ( const cgVector4 & v )
+    inline cgVector2 & operator -= ( const cgVector2 & v )
     {
         x -= v.x;
         y -= v.y;
-        z -= v.z;
-        w -= v.w;
         return *this;
     }
 
-    inline cgVector4 & operator *= ( cgFloat s )
+    inline cgVector2 & operator *= ( cgFloat s )
     {
         x *= s;
         y *= s;
-        z *= s;
-        w *= s;
         return *this;
     }
 
-    inline cgVector4 & operator /= ( cgFloat s )
+    inline cgVector2 & operator /= ( cgFloat s )
     {
         x /= s;
         y /= s;
-        z /= s;
-        w /= s;
         return *this;
     }
-    inline cgVector4 operator + () const
+    inline cgVector2 operator + () const
     {
         return *this;
     }
 
-    inline cgVector4 operator - () const
+    inline cgVector2 operator - () const
     {
-        return cgVector4( -x, -y, -z, -w );
+        return cgVector2( -x, -y );
     }
 
-    inline bool operator == ( const cgVector4 & v ) const
+    inline bool operator == ( const cgVector2 & v ) const
     {
-        return x == v.x && y == v.y && z == v.z && w == v.w;
+        return x == v.x && y == v.y;
     }
 
-    inline bool operator != ( const cgVector4 & v ) const
+    inline bool operator != ( const cgVector2 & v ) const
     {
-        return x != v.x || y != v.y || z != v.z || w != v.w;
+        return x != v.x || y != v.y;
     }
 
     inline operator cgFloat* ()
@@ -220,14 +218,10 @@ public:
         return &x;
     }
 
-    // Component Access
-    inline const cgVector3    & xyz () const { return (const cgVector3&)x; }
-    inline const cgVector2    & xy  () const { return (const cgVector2&)x; }
-    
     //-------------------------------------------------------------------------
     // Public Members
     //-------------------------------------------------------------------------
-    cgFloat x, y, z, w;
+    cgFloat x, y;
 };
 
 //-----------------------------------------------------------------------------
@@ -413,6 +407,8 @@ public:
 
     // Component Access
     inline const cgVector2    & xy  () const { return (const cgVector2&)x; }
+    inline const cgVector2    & yz  () const { return (const cgVector2&)y; }
+    inline cgVector2            xz  () const { return cgVector2(x,z); }
 
     //-------------------------------------------------------------------------
     // Public Members
@@ -421,170 +417,170 @@ public:
 };
 
 //-----------------------------------------------------------------------------
-//  Name : cgVector2 (Class)
+//  Name : cgVector4 (Class)
 /// <summary>
-/// Storage for two dimensional coordinates.
+/// Storage for three dimensional coordinates.
 /// </summary>
 //-----------------------------------------------------------------------------
-class cgVector2
+class cgVector4
 {
     //-------------------------------------------------------------------------
     // Friend List
     //-------------------------------------------------------------------------
-    friend cgVector2 operator * ( cgFloat s, const cgVector2 & v );
+    friend cgVector4 operator * ( cgFloat s, const cgVector4 & v );
 
 public:
     //-------------------------------------------------------------------------
     // Constructors & Destructors
     //-------------------------------------------------------------------------
-    cgVector2() {};
-    cgVector2( const cgFloat * v ) : 
-        x(v[0]), y(v[1]) {}
-    cgVector2( const cgHalf * v ) :
-        x(v[0]), y(v[1]) {}
-    cgVector2( cgFloat _x, cgFloat _y ) :
-        x(_x), y(_y) {}
+    cgVector4() {};
+    cgVector4( const cgFloat * v ) : 
+        x(v[0]), y(v[1]), z(v[2]), w(v[3]) {}
+    cgVector4( const cgHalf * v ) :
+        x(v[0]), y(v[1]), z(v[2]), w(v[3]) {}
+    cgVector4( cgFloat _x, cgFloat _y, cgFloat _z, cgFloat _w ) :
+        x(_x), y(_y), z(_z), w(_w) {}
 
     //-------------------------------------------------------------------------
     // Public Static Methods
     //-------------------------------------------------------------------------
-    inline static cgFloat cgVector2::dot( const cgVector2 & v1, const cgVector2 & v2 )
+    inline static cgFloat cgVector4::dot( const cgVector4 & v1, const cgVector4 & v2 )
     {
-        return D3DXVec2Dot( (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2 );
+        return D3DXVec4Dot( (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2 );
     }
-    inline static cgFloat cgVector2::ccw( const cgVector2 & v1, const cgVector2 & v2 )
+    inline static cgVector4 * cgVector4::cross( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2, const cgVector4 & v3 )
     {
-        return D3DXVec2CCW( (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2 );
+        return (cgVector4*)D3DXVec4Cross( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2, (D3DXVECTOR4*)&v3 );
     }
-    inline static cgFloat cgVector2::length( const cgVector2 & v )
+    inline static cgFloat cgVector4::length( const cgVector4 & v )
     {
-        return D3DXVec2Length( (D3DXVECTOR2*)&v );
+        return D3DXVec4Length( (D3DXVECTOR4*)&v );
     }
-    inline static cgFloat cgVector2::lengthSq( const cgVector2 & v )
+    inline static cgFloat cgVector4::lengthSq( const cgVector4 & v )
     {
-        return D3DXVec2LengthSq( (D3DXVECTOR2*)&v );
+        return D3DXVec4LengthSq( (D3DXVECTOR4*)&v );
     }
-    inline static cgVector2 * cgVector2::normalize( cgVector2 & out, const cgVector2 & v )
+    inline static cgVector4 * cgVector4::normalize( cgVector4 & out, const cgVector4 & v )
     {
-        return (cgVector2*)D3DXVec2Normalize( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v );
+        return (cgVector4*)D3DXVec4Normalize( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v );
     }
-    inline static cgVector2 * cgVector2::transformCoord( cgVector2 & out, const cgVector2 & v, const cgMatrix & m )
+    inline static cgVector4 * cgVector4::transform( cgVector4 & out, const cgVector4 & v, const cgMatrix & m )
     {
-        return (cgVector2*)D3DXVec2TransformCoord( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v, (D3DXMATRIX*)&m );
+        return (cgVector4*)D3DXVec4Transform( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v, (D3DXMATRIX*)&m );
     }
-    inline static cgVector2 * cgVector2::transformNormal( cgVector2 & out, const cgVector2 & v, const cgMatrix & m )
+    inline static cgVector4 * cgVector4::add( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2 )
     {
-        return (cgVector2*)D3DXVec2TransformNormal( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v, (D3DXMATRIX*)&m );
+        return (cgVector4*)D3DXVec4Add( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2 );
     }
-    inline static cgVector4 * cgVector2::transform( cgVector4 & out, const cgVector2 & v, const cgMatrix & m )
+    inline static cgVector4 * cgVector4::subtract( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2 )
     {
-        return (cgVector4*)D3DXVec2Transform( (D3DXVECTOR4*)&out, (D3DXVECTOR2*)&v, (D3DXMATRIX*)&m );
+        return (cgVector4*)D3DXVec4Subtract( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2 );
     }
-    inline static cgVector2 * cgVector2::add( cgVector2 & out, const cgVector2 & v1, const cgVector2 & v2 )
+    inline static cgVector4 * cgVector4::minimize( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2 )
     {
-        return (cgVector2*)D3DXVec2Add( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2 );
+        return (cgVector4*)D3DXVec4Minimize( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2 );
     }
-    inline static cgVector2 * cgVector2::subtract( cgVector2 & out, const cgVector2 & v1, const cgVector2 & v2 )
+    inline static cgVector4 * cgVector4::maximize( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2 )
     {
-        return (cgVector2*)D3DXVec2Subtract( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2 );
+        return (cgVector4*)D3DXVec4Maximize( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2 );
     }
-    inline static cgVector2 * cgVector2::minimize( cgVector2 & out, const cgVector2 & v1, const cgVector2 & v2 )
+    inline static cgVector4 * cgVector4::scale( cgVector4 & out, const cgVector4 & v, cgFloat s )
     {
-        return (cgVector2*)D3DXVec2Minimize( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2 );
+        return (cgVector4*)D3DXVec4Scale( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v, s );
     }
-    inline static cgVector2 * cgVector2::maximize( cgVector2 & out, const cgVector2 & v1, const cgVector2 & v2 )
+    inline static cgVector4 * cgVector4::lerp( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2, cgFloat s )
     {
-        return (cgVector2*)D3DXVec2Maximize( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2 );
+        return (cgVector4*)D3DXVec4Lerp( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2, s );
     }
-    inline static cgVector2 * cgVector2::scale( cgVector2 & out, const cgVector2 & v, cgFloat s )
+    inline static cgVector4 * cgVector4::hermite( cgVector4 & out, const cgVector4 & v1, const cgVector4 & t1, const cgVector4 & v2, const cgVector4 & t2, cgFloat s )
     {
-        return (cgVector2*)D3DXVec2Scale( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v, s );
+        return (cgVector4*)D3DXVec4Hermite( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&t1, (D3DXVECTOR4*)&v2, (D3DXVECTOR4*)&t2, s );
     }
-    inline static cgVector2 * cgVector2::lerp( cgVector2 & out, const cgVector2 & v1, const cgVector2 & v2, cgFloat s )
+    inline static cgVector4 * cgVector4::catmullRom( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2, const cgVector4 & v3, const cgVector4 & v4, cgFloat s )
     {
-        return (cgVector2*)D3DXVec2Lerp( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2, s );
+        return (cgVector4*)D3DXVec4CatmullRom( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2, (D3DXVECTOR4*)&v3, (D3DXVECTOR4*)&v4, s );
     }
-    inline static cgVector2 * cgVector2::hermite( cgVector2 & out, const cgVector2 & v1, const cgVector2 & t1, const cgVector2 & v2, const cgVector2 & t2, cgFloat s )
+    inline static cgVector4 * cgVector4::baryCentric( cgVector4 & out, const cgVector4 & v1, const cgVector4 & v2, const cgVector4 & v3, cgFloat f, cgFloat g )
     {
-        return (cgVector2*)D3DXVec2Hermite( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&t1, (D3DXVECTOR2*)&v2, (D3DXVECTOR2*)&t2, s );
-    }
-    inline static cgVector2 * cgVector2::catmullRom( cgVector2 & out, const cgVector2 & v1, const cgVector2 & v2, const cgVector2 & v3, const cgVector2 & v4, cgFloat s )
-    {
-        return (cgVector2*)D3DXVec2CatmullRom( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2, (D3DXVECTOR2*)&v3, (D3DXVECTOR2*)&v4, s );
-    }
-    inline static cgVector2 * cgVector2::baryCentric( cgVector2 & out, const cgVector2 & v1, const cgVector2 & v2, const cgVector2 & v3, cgFloat f, cgFloat g )
-    {
-        return (cgVector2*)D3DXVec2BaryCentric( (D3DXVECTOR2*)&out, (D3DXVECTOR2*)&v1, (D3DXVECTOR2*)&v2, (D3DXVECTOR2*)&v3, f, g );
+        return (cgVector4*)D3DXVec4BaryCentric( (D3DXVECTOR4*)&out, (D3DXVECTOR4*)&v1, (D3DXVECTOR4*)&v2, (D3DXVECTOR4*)&v3, f, g );
     }
 
     //-------------------------------------------------------------------------
     // Public Operators
     //-------------------------------------------------------------------------
-    inline cgVector2 operator + ( const cgVector2 & v ) const
+    inline cgVector4 operator + ( const cgVector4 & v ) const
     {
-        return cgVector2( x + v.x, y + v.y );
+        return cgVector4( x + v.x, y + v.y, z + v.z, w + v.w );
     }
 
-    inline cgVector2 operator - ( const cgVector2 & v ) const
+    inline cgVector4 operator - ( const cgVector4 & v ) const
     {
-        return cgVector2( x - v.x, y - v.y );
+        return cgVector4( x - v.x, y - v.y, z - v.z, w - v.w );
     }
 
-    inline cgVector2 operator * ( cgFloat s ) const
+    inline cgVector4 operator * ( cgFloat s ) const
     {
-        return cgVector2( x * s, y * s );
+        return cgVector4( x * s, y * s, z * s, w * s );
     }
 
-    inline cgVector2 operator / ( cgFloat s ) const
+    inline cgVector4 operator / ( cgFloat s ) const
     {
-        return cgVector2( x / s, y / s );
+        return cgVector4( x / s, y / s, z / s, w / s );
     }
 
-    inline cgVector2 & operator += ( const cgVector2 & v )
+    inline cgVector4 & operator += ( const cgVector4 & v )
     {
         x += v.x;
         y += v.y;
+        z += v.z;
+        w += v.w;
         return *this;
     }
 
-    inline cgVector2 & operator -= ( const cgVector2 & v )
+    inline cgVector4 & operator -= ( const cgVector4 & v )
     {
         x -= v.x;
         y -= v.y;
+        z -= v.z;
+        w -= v.w;
         return *this;
     }
 
-    inline cgVector2 & operator *= ( cgFloat s )
+    inline cgVector4 & operator *= ( cgFloat s )
     {
         x *= s;
         y *= s;
+        z *= s;
+        w *= s;
         return *this;
     }
 
-    inline cgVector2 & operator /= ( cgFloat s )
+    inline cgVector4 & operator /= ( cgFloat s )
     {
         x /= s;
         y /= s;
+        z /= s;
+        w /= s;
         return *this;
     }
-    inline cgVector2 operator + () const
+    inline cgVector4 operator + () const
     {
         return *this;
     }
 
-    inline cgVector2 operator - () const
+    inline cgVector4 operator - () const
     {
-        return cgVector2( -x, -y );
+        return cgVector4( -x, -y, -z, -w );
     }
 
-    inline bool operator == ( const cgVector2 & v ) const
+    inline bool operator == ( const cgVector4 & v ) const
     {
-        return x == v.x && y == v.y;
+        return x == v.x && y == v.y && z == v.z && w == v.w;
     }
 
-    inline bool operator != ( const cgVector2 & v ) const
+    inline bool operator != ( const cgVector4 & v ) const
     {
-        return x != v.x || y != v.y;
+        return x != v.x || y != v.y || z != v.z || w != v.w;
     }
 
     inline operator cgFloat* ()
@@ -597,10 +593,17 @@ public:
         return &x;
     }
 
+    // Component Access
+    inline const cgVector3    & xyz () const { return (const cgVector3&)x; }
+    inline const cgVector3    & yzw () const { return (const cgVector3&)y; }
+    inline const cgVector2    & xy  () const { return (const cgVector2&)x; }
+    inline const cgVector2    & yz  () const { return (const cgVector2&)y; }
+    inline const cgVector2    & zw  () const { return (const cgVector2&)z; }
+    
     //-------------------------------------------------------------------------
     // Public Members
     //-------------------------------------------------------------------------
-    cgFloat x, y;
+    cgFloat x, y, z, w;
 };
 
 //-----------------------------------------------------------------------------

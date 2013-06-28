@@ -130,6 +130,8 @@ public:
     const cgQuaternion            & getSuggestedHeading     ( ) const;
     bool                            isFlyModeEnabled        ( ) const;
     bool                            navigateTo              ( const cgVector3 & position );
+    bool                            navigateToAtRange       ( const cgVector3 & position, cgFloat distance, cgFloat initAngleOffset );
+    const cgVector3               & getNavigationTarget     ( ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgPhysicsController)

@@ -76,6 +76,8 @@ public:
     virtual void            setClientSize       ( const cgSize & size );
     virtual void            setFullScreenMode   ( bool fullScreen );
     virtual void            setCursor           ( cgCursor * cursor );
+    virtual void            showCursor          ( bool show );
+    virtual void            constrainCursor     ( bool enable );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
@@ -101,7 +103,8 @@ protected:
     bool        mOwnsWindow;        // Were we responsible for creating the above window handle?
     bool        mFullScreen;        // Is the window currently in fullscreen mode?
     WNDCLASS	mWndClass;
-    cgString    mClassName;         // Name assigned to the window class.
+    ATOM        mClassAtom;         // ATOM of the window class generated for this window.
+    bool        mCursorConstrained; // Is the cursor currently constrained?
 
 private:
     //-------------------------------------------------------------------------

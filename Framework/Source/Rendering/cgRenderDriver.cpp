@@ -334,7 +334,7 @@ void cgRenderDriver::dispose( bool bDisposeBase )
     mConstantsDirty         = 0;
 
     // Clear any memory as required
-    mConfig = InitConfig();
+    mConfig = cgRenderDriverConfig();
     while (mRenderPassStack.size() > 0)
         mRenderPassStack.pop();
     while (mOverrideMethodStack.size() > 0)
@@ -539,7 +539,7 @@ bool cgRenderDriver::queryReferenceType( const cgUID & type ) const
 /// Retrieve the configuration options for the render driver.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgRenderDriver::InitConfig cgRenderDriver::getConfig( ) const
+cgRenderDriverConfig cgRenderDriver::getConfig( ) const
 {
     return mConfig;
 }
@@ -707,6 +707,11 @@ bool cgRenderDriver::postInit()
     // order to bind system data to the shader system.
     if ( initShaderSystem() == false )
         return false;
+
+    // Setup default system states.
+    setSystemState( cgSystemState::ShadingQuality, mConfig.shadingQuality );
+    setSystemState( cgSystemState::PostProcessQuality, mConfig.postProcessQuality );
+    setSystemState( cgSystemState::AntiAliasingQuality, mConfig.antiAliasingQuality );
 
     // Allow resource manager to perform its post-initialization processes.
     if ( mResourceManager->postInit( ) == false )
@@ -1253,12 +1258,15 @@ bool cgRenderDriver::setSystemState( cgSystemState::Base State, cgInt32 Value )
     {
         case cgSystemState::ShadingQuality:
             *mSystemExportVars.shadingQuality = Value;
+            mConfig.shadingQuality = Value; // Update config
             break;
 		case cgSystemState::PostProcessQuality:
 			*mSystemExportVars.postProcessQuality = Value;
+            mConfig.postProcessQuality = Value; // Update config
 			break;
 		case cgSystemState::AntiAliasingQuality:
 			*mSystemExportVars.antiAliasingQuality = Value;
+            mConfig.antiAliasingQuality = Value; // Update config
 			break;
         case cgSystemState::OutputEncodingType:
             *mSystemExportVars.outputEncodingType = Value;
@@ -4036,6 +4044,118 @@ void cgRenderDriver::drawRectangle( const cgRect & rcScreen, const cgColorValue 
     popBlendState();
     popVertexShader();
     popPixelShader();
+}
+
+//-----------------------------------------------------------------------------
+//  Name : drawCircle()
+/// <summary>
+/// Draw a simple circle to the screen with the specified thickness and color.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgRenderDriver::drawCircle( const cgVector2 & position, cgFloat radius, const cgColorValue & color, cgFloat thickness, cgUInt32 requestedSegments )
+{
+    drawCircle( position, radius, color, thickness, requestedSegments, 0, 360.0f );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : drawCircle()
+/// <summary>
+/// Draw a simple circle to the screen with the specified thickness and color.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgRenderDriver::drawCircle( const cgVector2 & position, cgFloat radius, const cgColorValue & color, cgFloat thickness, cgUInt32 requestedSegments, cgFloat arcBeginDegrees, cgFloat arcEndDegrees )
+{
+    // Validate requirements
+    cgAssert( isInitialized() == true );
+
+    // Compile / load required shaders
+    cgVertexShaderHandle vertexShader = mDriverShader->getVertexShader( _T("transformScreenElement") );
+    cgPixelShaderHandle pixelShader = mDriverShader->getPixelShader( _T("drawScreenElement") );
+    if ( !vertexShader.isValid() || !pixelShader.isValid() )
+        return;
+
+    const cgFloat arcBegin = CGEToRadian((arcBeginDegrees < arcEndDegrees) ? arcBeginDegrees : arcEndDegrees);
+    const cgFloat arcEnd   = CGEToRadian((arcBeginDegrees < arcEndDegrees) ? arcEndDegrees : arcBeginDegrees);
+    const cgUInt32 colorValue = color;
+    const bool thickLine = ( thickness > 1.0f );
+    const cgInt segments = (cgInt)requestedSegments;
+    cgScreenVertex * circleBuffer = new cgScreenVertex[(thickLine) ? (segments+1)*2 : segments+1];
+    if ( thickLine )
+    {
+        const cgFloat halfThickness = thickness * 0.5f;
+
+        // Build a screen space unit circle.
+        const cgFloat delta = ((arcEnd-arcBegin) / (cgFloat)segments);
+        for ( cgInt i = 0, point = 0; i < segments + 1; ++i )
+        {
+            const cgFloat ratio = (delta * (cgFloat)i) + arcBegin;
+            const cgFloat sinr = sinf(ratio);
+            const cgFloat cosr = cosf(ratio);
+            circleBuffer[point].position.x = position.x + (sinr * (radius - halfThickness));
+            circleBuffer[point].position.y = position.y - (cosr * (radius - halfThickness));
+            circleBuffer[point].position.z = 0.0f;
+            circleBuffer[point].position.w = 1.0f;
+            circleBuffer[point++].color    = colorValue;
+            circleBuffer[point].position.x = position.x + (sinr * (radius + halfThickness));
+            circleBuffer[point].position.y = position.y - (cosr * (radius + halfThickness));
+            circleBuffer[point].position.z = 0.0f;
+            circleBuffer[point].position.w = 1.0f;
+            circleBuffer[point++].color    = colorValue;
+        
+        } // Next point
+
+    } // End if variable thickness
+    else
+    {
+        // Build a screen space unit circle.
+        const cgFloat delta = ((arcEnd-arcBegin) / (cgFloat)segments);
+        for ( cgInt i = 0; i < segments + 1; ++i )
+        {
+            const cgFloat ratio = (delta * (cgFloat)i) + arcBegin;
+            const cgFloat sinr = sinf(ratio);
+            const cgFloat cosr = cosf(ratio);
+            circleBuffer[i].position.x = position.x + (sinr * radius);
+            circleBuffer[i].position.y = position.y - (cosr * radius);
+            circleBuffer[i].position.z = 0.0f;
+            circleBuffer[i].position.w = 1.0f;
+            circleBuffer[i].color      = colorValue;
+        
+        } // Next point
+
+    } // End if 1 pixel thick
+
+    // Setup vertex and pixel shaders.
+    pushVertexShader( vertexShader );
+    pushPixelShader( pixelShader );
+
+    // Setup blending states (basic alpha blending enabled)
+    pushBlendState( mElementBlendState );
+
+    // Disable depth buffering and stencil operations
+    pushDepthStencilState( mElementDepthState );
+
+    // Use default rasterizer states.
+    pushRasterizerState( mDefaultRasterizerState );
+
+    // Set the vertex format
+    pushVertexFormat( mScreenSpaceFormat );
+
+    // Draw
+    if ( thickLine )
+        drawPrimitiveUP( cgPrimitiveType::TriangleStrip, segments*2, (void*)circleBuffer );
+    else
+        drawPrimitiveUP( cgPrimitiveType::LineStrip, segments, (void*)circleBuffer );
+    
+    // Restore modified states.
+    popVertexFormat();
+    popRasterizerState();
+    popDepthStencilState();
+    popBlendState();
+    popVertexShader();
+    popPixelShader();
+
+    // Clean up
+    delete []circleBuffer;
 }
 
 //-----------------------------------------------------------------------------

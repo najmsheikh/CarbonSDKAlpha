@@ -399,23 +399,25 @@ bool cgAppStateManager::transitionState( cgAppState * pFromState, const cgString
 /// mode.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgAppStateManager::spawnChildState( cgAppState * pParentState, const cgString & strNewStateId, bool bSuspendParent /* = false */ )
+cgAppState * cgAppStateManager::spawnChildState( cgAppState * pParentState, const cgString & strNewStateId, bool bSuspendParent /* = false */ )
 {
     StateDesc     Desc;
     cgAppState * pSelectedState = CG_NULL, * pState = CG_NULL;
 
     // Nothing to do if there is no active state
-    if ( mActiveState == CG_NULL ) return false;
+    if ( !mActiveState )
+        return CG_NULL;
     
     // Now retrieve the selected state of the correct type
-    if ( !getStateDesc( strNewStateId, &Desc ) ) return false;
+    if ( !getStateDesc( strNewStateId, &Desc ) )
+        return CG_NULL;
     pSelectedState = Desc.state;
 
     // Is this state already begun?
-    if ( pSelectedState->isBegun() == true )
+    if ( pSelectedState->isBegun() )
     {
         cgAppLog::write( cgAppLog::Debug | cgAppLog::Error, _T("Attempting to spawn a new child game state which is already active.\n") );
-        return false;
+        return CG_NULL;
     
     } // End if state is in use
     
@@ -429,11 +431,15 @@ bool cgAppStateManager::spawnChildState( cgAppState * pParentState, const cgStri
         mActiveState = pSelectedState;
 
     // Begin the new state
-    if ( pSelectedState->isBegun() == false )
+    if ( !pSelectedState->isBegun() )
         pSelectedState->begin();
 
+    // Suspend the parent state?
+    if ( bSuspendParent )
+        pParentState->suspend();
+
     // Success!
-    return true;
+    return pSelectedState;
 }
 
 //-----------------------------------------------------------------------------
@@ -465,6 +471,22 @@ bool cgAppStateManager::getStateDesc( const cgString & strStateId, StateDesc * p
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getState()
+/// <summary>
+/// Retrieve the state state associated the specified identifier.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgAppState * cgAppStateManager::getState( const cgString & strStateId )
+{
+    // First retrieve the details about the state specified, if none
+    // was found this is clearly an invalid state identifier.
+    StateMap::iterator itState = mRegisteredStates.find( strStateId );
+    if ( itState == mRegisteredStates.end() )
+        return CG_NULL;
+    return itState->second.state;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : stateEnded () (Private)
 /// <summary>
 /// A state has ended, we should update our internal data to reflect that
@@ -484,6 +506,10 @@ void cgAppStateManager::stateEnded( cgAppState * pState )
     // If this was at the root of the state history, we're all out of states
     if ( pState == mStateHistory )
         mStateHistory = CG_NULL;
+
+    // If currently active state is suspended, resume it.
+    if ( mActiveState && mActiveState->isSuspended() )
+        mActiveState->resume();
 }
 
 //-----------------------------------------------------------------------------
@@ -815,6 +841,7 @@ bool cgAppState::initialize()
                 mScriptMethods.render     = mScriptObject->getMethodHandle( _T("void render()") );
                 mScriptMethods.suspend    = mScriptObject->getMethodHandle( _T("void suspend()") );
                 mScriptMethods.resume     = mScriptObject->getMethodHandle( _T("void resume()") );
+                mScriptMethods.raiseEvent = mScriptObject->getMethodHandle( _T("bool raiseEvent( const String& )") );
                 mScriptMethods.processMessage = mScriptObject->getMethodHandle( _T("bool processMessage( Message& )") );
 
                 // Attempt to call the 'initialize' method (optional).
@@ -1004,6 +1031,11 @@ void cgAppState::render( )
 //-----------------------------------------------------------------------------
 void cgAppState::suspend( )
 {
+    // Is this a no-op?
+    if ( mStateSuspended )
+        return;
+
+    // Suspend
     mStateSuspended = true;
 
     // Notify the script (if any).
@@ -1034,6 +1066,11 @@ void cgAppState::suspend( )
 //-----------------------------------------------------------------------------
 void cgAppState::resume( )
 {
+    // Is this a no-op?
+    if ( !mStateSuspended )
+        return;
+
+    // Resume
     mStateSuspended = false;
 
     // Notify the script (if any).
@@ -1117,6 +1154,29 @@ void cgAppState::raiseEvent( const cgString & strEventName, bool bForce )
     if ( bForce == false && this->isActive() == false )
         return;
 
+    // Notify the script (if any).
+    if ( mScriptObject && mScriptMethods.raiseEvent )
+    {
+        try
+        {
+            cgScriptArgument::Array ScriptArgs;
+            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Address, _T("const String&in"), &strEventName ) );
+            bool bResult = *(bool*)mScriptObject->executeMethod( mScriptMethods.raiseEvent, ScriptArgs );
+
+            // Wanted to prevent event from being raised?
+            if ( !bResult )
+                return;
+        
+        } // End try to execute
+        catch ( cgScriptInterop::Exceptions::ExecuteException & e )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to execute raiseEvent() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+            return;
+        
+        } // End catch exception
+
+    } // End if valid
+
     // Process the event!
     processEvent( strEventName );
 }
@@ -1140,23 +1200,28 @@ void cgAppState::processEvent( const cgString & strEventName )
     // An action was found, let's retrieve it
     EventActionDesc & Desc = itEventAction->second;
 
+    // Select the state we're operating on in the stack based on the action stack offset.
+    cgAppState * pSelectedState = this;
+    for ( cgInt32 i = 0; i < Desc.stackOffset && pSelectedState->getParentState(); ++i )
+        pSelectedState = pSelectedState->getParentState();
+
     // Now process based on the type of the event action
     switch ( Desc.actionType )
     {
         case ActionType_Transition:
-            
+
             // This type will transition the state on which the event was raised, to a new state.
             if ( Desc.flags & ActionFlag_UseTransitionState )
             {
                 // The application requested that we should use a transition 
                 // state to perform a more comprehensive transition process.
-                mStateManager->transitionState( this, Desc.toStateId, Desc.transitionStateId );
+                mStateManager->transitionState( pSelectedState, Desc.toStateId, Desc.transitionStateId );
 
             } // End if use transition state
             else
             {
                 // Just transition immediately
-                mStateManager->transitionState( this, Desc.toStateId );
+                mStateManager->transitionState( pSelectedState, Desc.toStateId );
 
             } // End if immediate / simple transition
 
@@ -1183,13 +1248,13 @@ void cgAppState::processEvent( const cgString & strEventName )
             break;
 
         case ActionType_SpawnChild:
-            spawnChildState( Desc.toStateId, (Desc.flags & ActionFlag_SuspendParent) != 0 );
+            pSelectedState->spawnChildState( Desc.toStateId, (Desc.flags & ActionFlag_SuspendParent) != 0 );
             break;
 
         case ActionType_EndState:
 
             // The state should simply end
-            end();
+            pSelectedState->end();
             break;
 
         case ActionType_EndRoot:
@@ -1201,13 +1266,15 @@ void cgAppState::processEvent( const cgString & strEventName )
         case ActionType_PassUp:
             
             // This action should simply pass the message on to a parent (if any)
-            if ( mParentState ) mParentState->raiseEvent( strEventName, true );
+            if ( mParentState )
+                mParentState->raiseEvent( strEventName, true );
             break;
 
         case ActionType_PassDown:
             
             // This action should simply pass the message on to a child (if any)
-            if ( mChildState ) mChildState->raiseEvent( strEventName, true );
+            if ( mChildState )
+                mChildState->raiseEvent( strEventName, true );
             break;
     
     } // End Switch actionType
@@ -1219,7 +1286,7 @@ void cgAppState::processEvent( const cgString & strEventName )
 /// Spawn a new child state and, if requested, also suspend this state.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgAppState::spawnChildState( const cgString & stateId, bool suspendParent )
+cgAppState * cgAppState::spawnChildState( const cgString & stateId, bool suspendParent )
 {
     return mStateManager->spawnChildState( this, stateId, suspendParent );
 }

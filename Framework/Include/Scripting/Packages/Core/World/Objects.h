@@ -12,6 +12,7 @@
 #include "Objects/Actor.h"
 #include "Objects/Dummy.h"
 #include "Objects/Mesh.h"
+#include "Objects/Skin.h"
 #include "Objects/Bone.h"
 #include "Objects/ParticleEmitter.h"
 #include "Objects/ObjectBehavior.h"
@@ -39,6 +40,7 @@ namespace Objects
             DECLARE_PACKAGE_CHILD( Bone )
             DECLARE_PACKAGE_CHILD( Dummy )
             DECLARE_PACKAGE_CHILD( Mesh )
+            DECLARE_PACKAGE_CHILD( Skin )
             DECLARE_PACKAGE_CHILD( ParticleEmitter )
             DECLARE_PACKAGE_CHILD( Billboard )
         END_SCRIPT_PACKAGE( )

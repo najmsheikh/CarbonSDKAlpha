@@ -235,6 +235,7 @@ namespace cgScriptInterop
             void            resize              ( cgUInt32 elements );
             cgUInt32        getSize             ( );
             void          * at                  ( cgUInt32 index );
+            void            setValue            ( cgUInt32 index, void * value );
 
             //-------------------------------------------------------------------------
             // Public Static Methods

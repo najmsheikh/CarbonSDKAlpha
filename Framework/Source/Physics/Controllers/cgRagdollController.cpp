@@ -35,6 +35,7 @@
 #include <Physics/Joints/cgBallJoint.h>
 #include <World/Objects/cgBoneObject.h>
 #include <World/Objects/cgDummyObject.h>
+#include <World/Objects/Elements/cgCollisionShapeElement.h>
 
 // Newton Game Dynamics
 #include <Newton.h>
@@ -51,6 +52,7 @@
 cgRagdollController::cgRagdollController( cgPhysicsWorld * world ) : cgPhysicsController( world )
 {
     // Initialize variables to sensible defaults
+    mDefaultConeLimit = 20;
 }
 
 //-----------------------------------------------------------------------------
@@ -146,6 +148,18 @@ bool cgRagdollController::initialize(  )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : setDefaultConeLimit()
+/// <summary>
+/// Set the default cone limit for the ball joints constructed between
+/// the ragdoll bones.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgRagdollController::setDefaultConeLimit( cgFloat degrees )
+{
+    mDefaultConeLimit = degrees;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : restoreHierarchy()
 /// <summary>
 /// This method can be called in order to destroy all of the physics bodies
@@ -238,7 +252,8 @@ void cgRagdollController::applyImpulseTo( cgObjectNode * boneNode, const cgVecto
 void cgRagdollController::constructHierarchy( cgObjectNode * currentNode, cgInt parentBoneIndex )
 {
     // Do nothing for now unless this is a bone.
-    if ( !currentNode->queryObjectType( RTID_BoneObject ) &&
+    bool isBone;
+    if ( !(isBone = currentNode->queryObjectType( RTID_BoneObject )) &&
          !currentNode->queryObjectType( RTID_DummyObject ) )
         return;
 
@@ -246,6 +261,10 @@ void cgRagdollController::constructHierarchy( cgObjectNode * currentNode, cgInt 
     cgPropertyContainer & properties = currentNode->getCustomProperties();
     if ( !properties.getProperty( _T("ragdoll_participate"), true ) )
         return;
+
+    // If it is a bone, remove its own physics representation from the world.
+    if ( isBone )
+        ((cgBoneNode*)currentNode)->enableCollision( false );
 
     // Compute the bounding box of this bone, taking into account any local scale.
     cgBoundingBox bounds = currentNode->getLocalBoundingBox();
@@ -268,6 +287,45 @@ void cgRagdollController::constructHierarchy( cgObjectNode * currentNode, cgInt 
     // Create a shape for this bone.
     //cgPhysicsShape * shape = new cgCapsuleShape( mWorld, bounds );
     cgPhysicsShape * shape = new cgSphereShape( mWorld, bounds );
+    /*cgPhysicsShape * shape = CG_NULL;
+
+    // Search through collision shapes in the referenced object if any.
+    const cgObjectSubElementArray & objectShapes = currentNode->getSubElements( OSECID_CollisionShapes );
+
+    // Iterate through the shape sub elements and construct a list
+    // of matching physics shape objects.
+    std::vector<cgPhysicsShape*> physicsShapes;
+    for ( size_t i = 0; i < objectShapes.size(); ++i )
+    {
+        cgPhysicsShape * newShape = ((cgCollisionShapeElement*)objectShapes[i])->generatePhysicsShape( mWorld );
+        if ( newShape )
+            physicsShapes.push_back( newShape );
+
+    } // Next sub-element
+
+    // If there was more than one shape, we need to build a compound shape.
+    // If there were *no* shapes however, we want to generate one.
+    cgPhysicsShape * primaryShape = CG_NULL;
+    if ( physicsShapes.size() > 1 )
+    {
+        cgToDoAssert( "Physics", "Compound shape!" );
+        for ( size_t i = 0; i < physicsShapes.size(); ++i )
+            physicsShapes[i]->deleteReference();
+    
+    } // End if needs compound
+    else if ( physicsShapes.empty() )
+    {
+    
+    } // End if no shapes
+    else
+    {
+        shape = physicsShapes[0];
+    
+    } // End if single shape
+
+    // If no shape is selected, generate a default.
+    if ( !shape )
+        shape = new cgCapsuleShape( mWorld, bounds );*/
 
     // Define the properties of the rigid body to represent this bone.
     cgRigidBodyCreateParams cp;
@@ -303,7 +361,7 @@ void cgRagdollController::constructHierarchy( cgObjectNode * currentNode, cgInt 
         joint->enableBodyCollision( false );
         joint->enableLimits( true );
         joint->setTwistLimits( properties.getProperty( _T("ragdoll_mintwist"), 0), properties.getProperty( _T("ragdoll_maxtwist"), 0) );
-        joint->setConeLimit( properties.getProperty( _T("ragdoll_cone"), 20) );
+        joint->setConeLimit( properties.getProperty( _T("ragdoll_cone"), mDefaultConeLimit ) );
         joint->addReference( CG_NULL );
 
     } // End if !root

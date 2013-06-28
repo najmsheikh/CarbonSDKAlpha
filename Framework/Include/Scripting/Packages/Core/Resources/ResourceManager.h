@@ -61,7 +61,13 @@ namespace ResourceManager
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "void debugResources()", asMETHODPR(cgResourceManager,debugResources,(), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "void enableDestruction( bool )", asMETHODPR(cgResourceManager,enableDestruction,( bool ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool isDestructionEnabled( ) const", asMETHODPR(cgResourceManager,isDestructionEnabled,( ) const, bool), asCALL_THISCALL) );
-            
+
+            // Meshes
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool addMesh( MeshHandle &inout, Mesh@+, uint, const String &in, const DebugSource &in )", asMETHODPR(cgResourceManager,addMesh,(cgMeshHandle*,cgMesh*,cgUInt32,const cgString&,const cgDebugSourceInfo&), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool getMesh( MeshHandle &inout, const String &in )", asMETHODPR(cgResourceManager,getMesh,(cgMeshHandle*,const cgString&), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool getMesh( MeshHandle &inout, uint )", asMETHODPR(cgResourceManager,getMesh,(cgMeshHandle*,cgUInt32), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool loadMesh( MeshHandle &inout, World@+, uint, bool, bool, uint, const DebugSource &in )", asMETHODPR(cgResourceManager,loadMesh,(cgMeshHandle*, cgWorld*, cgUInt32, bool, bool, cgUInt32, const cgDebugSourceInfo&), bool), asCALL_THISCALL) );
+
             // Textures
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool addTexture( TextureHandle &inout, Texture@+, uint, const String &in, const DebugSource &in )", asMETHODPR(cgResourceManager,addTexture,(cgTextureHandle*,cgTexture*,cgUInt32,const cgString&,const cgDebugSourceInfo&), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool getTexture( TextureHandle &inout, const String &in )", asMETHODPR(cgResourceManager,getTexture,(cgTextureHandle*,const cgString&), bool), asCALL_THISCALL) );

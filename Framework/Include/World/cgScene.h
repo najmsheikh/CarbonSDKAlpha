@@ -144,6 +144,13 @@ public:
 
 }; // End Struct cgSceneMaterialEventArgs
 
+struct CGE_API cgSceneLoadProgressEventArgs : public cgSceneEventArgs
+{
+    cgSceneLoadProgressEventArgs( cgScene * _scene ) :
+        cgSceneEventArgs( _scene ) {}
+
+}; // End Struct cgSceneLoadProgressEventArgs
+
 //-----------------------------------------------------------------------------
 // Global Structures
 //-----------------------------------------------------------------------------
@@ -180,6 +187,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
+    virtual void    onSceneLoadProgress     ( cgSceneLoadProgressEventArgs * e ) {};
     virtual void    onSceneDirtyChange      ( cgSceneEventArgs * e ) {};
     virtual void    onNodeAdded             ( cgNodeUpdatedEventArgs * e ) {};
     virtual void    onNodeDeleted           ( cgNodeUpdatedEventArgs * e ) {};
@@ -535,7 +543,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
-    // Sandbox Event Dispatchers
+    virtual void                onSceneLoadProgress         ( cgSceneLoadProgressEventArgs * e );
     virtual void                onSceneDirtyChange          ( cgSceneEventArgs * e );
     virtual void                onNodeAdded                 ( cgNodeUpdatedEventArgs * e );
     virtual void                onNodeNameChange            ( cgNodeUpdatedEventArgs * e );
@@ -577,6 +585,7 @@ protected:
     // Struct containing a list of nodes to be updated and at what time.
     struct UpdateBucket
     {
+        bool             locked;            // This bucket is currently being processed and should not be modified.
         cgObjectNodeList nodes;             // List of nodes to be updated at this interval
         cgDouble         lastUpdateTime;    // The last time at which these objects were updated
         cgDouble         nextUpdateTime;    // The next time at which these objects are scheduled to be updated

@@ -55,7 +55,7 @@ bool cApplication::initInstance( const cgString & commandLine )
     // demo we want to load data from the shared media folder.
     setRootDataPath( cgFileSystem::getAppDirectory() + _T("../../Shared Media/") );
     //setRootDataPath( cgFileSystem::getAppDirectory() + _T("Data/") );
-    //cgFileSystem::addPackage( _T("Data.pkg") );
+    cgFileSystem::addPackage( cgFileSystem::getAppDirectory() + _T("../../Shared Media/Audio.pkg") );
 
     // Setup the application and window display data.
     setVersionData( cgStringUtility::fromStringTable( CG_NULL, IDS_VERSION ) );
@@ -141,16 +141,6 @@ void cApplication::frameEnd()
     //                                       _T("Press [c=#ffff0000]<Tab>[/c] to show/hide spawn menu.\n")
     //                                       _T("Press [c=#ffff0000]<C>[/c] to call creatures to your location."), 
     //                                       cgTextFlags::Multiline | cgTextFlags::AllowFormatCode, 0xFFFFFFFF, 0, 10 );*/
-
-    // Render a basic crosshair
-    cgFloat halfWidth = screenSize.width / 2.0f, halfHeight = screenSize.height / 2.0f;
-    cgVector2 crosshair[8] = {
-        cgVector2( halfWidth - 8.0f, halfHeight ), cgVector2( halfWidth - 3.0f, halfHeight ),
-        cgVector2( halfWidth + 3.0f, halfHeight ), cgVector2( halfWidth + 8.0f, halfHeight ),
-        cgVector2( halfWidth, halfHeight - 8.0f ), cgVector2( halfWidth, halfHeight - 3.0f ),
-        cgVector2( halfWidth, halfHeight + 3.0f ), cgVector2( halfWidth, halfHeight + 8.0f )
-    };  
-    renderDriver->drawLines( crosshair, 4, 0xAAFFFFFF );
 
     // Allow base application to process.
     cgApplication::frameEnd();

@@ -130,8 +130,8 @@ public:
     void                        setTransmissionCurve        ( const cgBezierSpline2 & curve );
     const cgBezierSpline2     & getTransmissionCurve        ( ) const;
     const cgMaterialTerms     & getMaterialTerms            ( ) const;
-    cgReflectionMode::Base      getReflectionMode           ( ) const;
     bool                        isSpecularOpacityLinked     ( ) const;
+    cgReflectionMode::Base      getReflectionMode           ( ) const;
     const SamplerArray        & getSamplers                 ( ) const;
     cgSampler                 * getSamplerByName            ( const cgString & name );
     cgSampler                 * addSampler                  ( const cgString & name );
@@ -139,6 +139,42 @@ public:
     cgSampler                 * addSampler                  ( const cgString & name, cgInputStream texture, cgUInt32 textureLoadFlags = 0, const cgDebugSourceInfo & debugSource = cgDebugSourceInfo(_T(""),0) );
     bool                        removeSampler               ( const cgString & name );
     void                        applySamplers               ( );
+
+    //-------------------------------------------------------------------------
+    // Public Inline Methods
+    //-------------------------------------------------------------------------
+    inline const cgColorValue & getDiffuse( ) const
+    {
+        return mMaterialTerms.diffuse;
+    }
+    inline const cgColorValue & getAmbient( ) const
+    {
+        return mMaterialTerms.ambient;
+    }
+    inline const cgColorValue & getSpecular( ) const
+    {
+        return mMaterialTerms.specular;
+    }
+    inline const cgColorValue & getEmissive( ) const
+    {
+        return mMaterialTerms.emissive;
+    }
+    inline cgFloat getGloss( ) const
+    {
+        return mMaterialTerms.gloss;
+    }
+    inline cgFloat getOpacity( ) const
+    {
+        return mMaterialTerms.diffuse.a;
+    }
+    inline cgFloat getSpecularOpacity( ) const
+    {
+        return mMaterialTerms.specular.a;
+    }
+    inline cgFloat getEmissiveHDRScale( ) const
+    {
+        return mMaterialTerms.emissiveHDRScale;
+    }
 
 protected:
     //-------------------------------------------------------------------------

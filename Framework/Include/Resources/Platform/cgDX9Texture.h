@@ -834,7 +834,7 @@ bool cgDX9Texture<_BaseClass>::getImageData( cgImage & imageOut )
     // Validate Requirements
     if ( !mTexture )
         return false;
-
+    
     // Make sure the texture is up to date.
     update();
 
@@ -845,7 +845,7 @@ bool cgDX9Texture<_BaseClass>::getImageData( cgImage & imageOut )
         LPDIRECT3DTEXTURE9 texture = NULL;
         if ( FAILED( mTexture->QueryInterface( IID_IDirect3DTexture9, (void**)&texture ) ) )
             return false;
-
+    
         // Read from the top level surface
         texture->GetSurfaceLevel( 0, &textureSurface );
         texture->Release();
@@ -856,7 +856,7 @@ bool cgDX9Texture<_BaseClass>::getImageData( cgImage & imageOut )
         LPDIRECT3DCUBETEXTURE9 texture = NULL;
         if ( FAILED( mTexture->QueryInterface( IID_IDirect3DCubeTexture9, (void**)&texture ) ) )
             return false;
-
+    
         // Read from the top level surface of the relevant face
         texture->GetCubeMapSurface( (D3DCUBEMAP_FACES)mCurrentCubeFace, 0, &textureSurface );
         texture->Release();

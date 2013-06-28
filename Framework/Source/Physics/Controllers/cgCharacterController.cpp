@@ -554,6 +554,36 @@ bool cgCharacterController::navigateTo( const cgVector3 & position )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : navigateToAtRange ()
+/// <summary>
+/// When navigation is enabled for this controller, use this method to request
+/// the object autonomously navigate to any available point AT the specified 
+/// distance away from the world space position if possible.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgCharacterController::navigateToAtRange( const cgVector3 & position, cgFloat distance, cgFloat initAngleOffset )
+{
+    if ( !mNavAgent )
+        return false;
+    return mNavAgent->setMoveTargetAtRange( position, distance, initAngleOffset, false );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getNavigationTarget ()
+/// <summary>
+/// When navigation is enabled, this method can be used to determine the 
+/// position to which the underlying agent is currently targeting.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgVector3 & cgCharacterController::getNavigationTarget( ) const
+{
+    static const cgVector3 empty(0,0,0);
+    if ( mNavAgent )
+        return mNavAgent->getTargetPosition();
+    return empty;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : preStep ()
 /// <summary>
 /// Called just prior to the upcoming physics simulation step.
@@ -1042,12 +1072,12 @@ void cgCharacterController::preProcessOnRamp( cgVector3 & currentPosition, cgFlo
 
     // Adjust velocity to slide vector *only* if the velocity
     // describes motion up / into the ramp.
-    //mVelocity += mGravity * timeDelta;
+    mVelocity += mGravity * timeDelta;
     cgFloat dot = cgVector3::dot( mVelocity, mFloorNormal );
     if ( dot < 0 )
         mVelocity -= mFloorNormal * dot;
 
-    // Now step forwardDirection along the horizontal velocity in order to ensure
+    // Now step forward along the horizontal velocity in order to ensure
     // that the body does not penetrate any other objects.
     mVelocity = stepForward( currentPosition, mVelocity, mUpAxis, timeDelta );
 }

@@ -178,6 +178,9 @@ bool cgEngineInit( const CGEConfig & Config, cgLogOutput * pOutput /* = CG_NULL 
     // Record selected engine configuration.
     EngineConfig = Config;
 
+    // Disable window ghosting
+    DisableProcessWindowsGhosting();
+
     // ToDo: kernel32.dll for 64 bit too?
     // Determine if specific functions are available on this system
     HMODULE hLibrary = ::LoadLibrary( _T("kernel32.dll") );

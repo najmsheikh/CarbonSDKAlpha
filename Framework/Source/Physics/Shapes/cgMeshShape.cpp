@@ -621,7 +621,7 @@ bool cgMeshShape::rayTest( BVHNode * node, const cgVector3 & from, const cgVecto
 
             // Ray test!
             cgFloat t;
-            if ( cgCollision::rayIntersectTriangle( from, to-from, v0, v1, v2, normal, t, CGE_EPSILON, false, true ) )
+            if ( cgCollision::rayIntersectTriangle( from, to-from, v0, v1, v2, normal, t, CGE_EPSILON, true, true ) )
             {
                 // Closest so far?
                 if ( t < closestDistance )

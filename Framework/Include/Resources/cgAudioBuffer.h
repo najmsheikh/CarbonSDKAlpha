@@ -93,12 +93,16 @@ public:
     bool                        isPlaying               ( ) const;
     bool                        play                    ( bool loop = false );
     bool                        stop                    ( );
+    bool                        pause                   ( );
+    bool                        resume                  ( );
 
     // Audio Control
     bool                        setVolume               ( cgFloat volume );
     bool                        setPan                  ( cgFloat pan );
+    bool                        setPitch                ( cgFloat pitch );
     cgFloat                     getVolume               ( ) const;
     cgFloat                     getPan                  ( ) const;
+    cgFloat                     getPitch                ( ) const;
 
     // Streaming support
     bool                        checkStreamUpdate       ( );
@@ -153,6 +157,7 @@ private:
     InputSource             mInputSource;           // Information about the source file / memory buffer used to load the audio data
     cgAudioBufferFormat     mBufferFormat;          // The format information for the data in the buffer
     bool                    mLooping;               // Is this buffer looping
+    bool                    mPaused;                // Is the buffer playing, but currently paused?
 
     // Stream Handling
     cgFloat                 mStreamBufferLength;    // Number of seconds of available audio data to buffer whilst streaming
@@ -174,6 +179,10 @@ private:
     cgVector3               m3DPosition;
     cgVector3               m3DVelocity;
     cgRangeF                m3DRanges;
+
+    // Caps
+    cgUInt32                mMinBufferFrequency;
+    cgUInt32                mMaxBufferFrequency;
 };
 
 #endif // !_CGE_CGAUDIOBUFFER_H_

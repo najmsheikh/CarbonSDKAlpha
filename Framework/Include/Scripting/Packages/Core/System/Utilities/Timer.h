@@ -32,14 +32,15 @@ namespace Timer
 
             // Register the object methods
             BINDSUCCESS( engine->registerObjectMethod( "Timer", "void tick()", asMETHODPR(cgTimer, tick, (), void), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Timer", "void tick( float )", asMETHODPR(cgTimer, tick, ( cgFloat ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Timer", "void tick( double )", asMETHODPR(cgTimer, tick, ( cgDouble ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Timer", "uint getFrameRate( ) const", asMETHODPR(cgTimer, getFrameRate, ( ) const, cgUInt32), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Timer", "void setSimulationSpeed( float )", asMETHODPR(cgTimer, setSimulationSpeed, ( cgFloat ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Timer", "void setSimulationSpeed( double )", asMETHODPR(cgTimer, setSimulationSpeed, ( cgDouble ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Timer", "void incrementFrameCounter( )", asMETHODPR(cgTimer, incrementFrameCounter, ( ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Timer", "uint getFrameCounter( ) const", asMETHODPR(cgTimer, getFrameCounter, ( ) const, cgUInt32), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Timer", "float getTimeElapsed( ) const", asMETHODPR(cgTimer, getTimeElapsed, ( ) const, cgFloat), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Timer", "double getTimeElapsed( ) const", asMETHODPR(cgTimer, getTimeElapsed, ( ) const, cgDouble), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Timer", "double getTime( ) const", asMETHODPR(cgTimer, getTime, ( ) const, cgDouble), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Timer", "double getTime( bool ) const", asMETHODPR(cgTimer, getTime, ( bool ) const, cgDouble), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Timer", "double getSimulationSpeed( ) const", asMETHODPR(cgTimer, getSimulationSpeed, ( ) const, cgDouble), asCALL_THISCALL) );
             
             ///////////////////////////////////////////////////////////////////////
             // Global Functions

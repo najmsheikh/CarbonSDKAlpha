@@ -315,7 +315,7 @@ void cGamePlayState::update( )
 
             // Advance the 'head bob cycle' based on the speed.
             cgFloat bobSpeed = 1.5f * characterSpeed;
-            mBobCycle += timer->getTimeElapsed() * bobSpeed;
+            mBobCycle += (cgFloat)timer->getTimeElapsed() * bobSpeed;
 
             // Based on the current cycle of the head bob, compute the amount by 
             // which we want to offset the camera along its local X and Y axes
@@ -339,7 +339,7 @@ void cGamePlayState::update( )
 
         // Smooth any computed offsets so that we get a more elastic
         // and gradual adjustment as its magnitude changes over time.
-        cgFloat bobSmoothFactor = 0.05f / timer->getTimeElapsed();
+        cgFloat bobSmoothFactor = 0.05f / (cgFloat)timer->getTimeElapsed();
         bobOffset.x = cgMathUtility::smooth( bobOffset.x, mLastBobOffset.x, bobSmoothFactor );
         bobOffset.y = cgMathUtility::smooth( bobOffset.y, mLastBobOffset.y, bobSmoothFactor );
         mLastBobOffset = bobOffset;
@@ -351,11 +351,11 @@ void cGamePlayState::update( )
         // up stairs without the camera bouncing up each step quite so dramatically.
         // We'll start by selecting the smoothing amounts we want on each axis
         // independently.
-        cgFloat verticalSmoothFactor, horizontalSmoothFactor = 0.05f / timer->getTimeElapsed();
+        cgFloat verticalSmoothFactor, horizontalSmoothFactor = 0.05f / (cgFloat)timer->getTimeElapsed();
         if ( controller->getCharacterState() != cgCharacterController::OnFloor )
-            verticalSmoothFactor = 0.03f / timer->getTimeElapsed();
+            verticalSmoothFactor = 0.03f / (cgFloat)timer->getTimeElapsed();
         else
-            verticalSmoothFactor = 0.08f / timer->getTimeElapsed();
+            verticalSmoothFactor = 0.08f / (cgFloat)timer->getTimeElapsed();
 
         // Now smoothly transition camera position frame to frame.
         cgVector3 newPosition = mPlayer->getPosition();        

@@ -36,6 +36,7 @@ class cgResourceManager;
 class cgScriptLibrary;
 class cgScriptPackage;
 class cgScript;
+class asCJITCompiler;
 
 //-----------------------------------------------------------------------------
 // Main Class Declarations
@@ -74,6 +75,7 @@ public:
     // Public Methods
     //-------------------------------------------------------------------------
     bool                initialize                  ( );
+    void                outputScriptWarnings        ( bool enable );
     bool                isLibraryDeclared           ( const cgString & library ) const;
     bool                isLibraryLinked             ( const cgString & library ) const;
     bool                declareLibrary              ( const cgString & library );
@@ -136,6 +138,7 @@ protected:
     // Protected Variables
     //-------------------------------------------------------------------------
     asIScriptEngine   * mEngine;                // Core angelscript engine object
+    asCJITCompiler    * mJITEngine;             // JIT compiler for angelscript.
     ContextList         mExecuteContexts;       // A list of contexts in which scripts will execute.
     PackageEntry        mRootPackage;           // Root of hierarchical structure of registered script packages (arranged by namespace).
     /// ToDo: 6767 - Can C++ side library stuff go?
@@ -143,6 +146,7 @@ protected:
     ScriptedLibraryMap  mScriptedLibraries;     // Array containing /scripted/ libraries that have been linked with this engine
     LoadedScriptSet     mLoadedScripts;         // Scripts currently bound to this engine.
     bool                mVerboseOutput;         // Output compiler failures to log?
+    bool                mOutputWarnings;        // Output warnings to log?
 
 private:
     //-------------------------------------------------------------------------

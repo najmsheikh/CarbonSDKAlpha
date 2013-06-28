@@ -21,6 +21,12 @@ namespace PointLight
         // Register base class object methods
         Core::World::Objects::Lights::Light::registerNodeMethods<type>( engine, typeName );
 
+        // Register object methods
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void setOuterRange( float )", asMETHODPR(type, setOuterRange, ( cgFloat ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void setInnerRange( float )", asMETHODPR(type, setInnerRange, ( cgFloat ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "float getOuterRange( ) const", asMETHODPR(type, getOuterRange, ( ) const, cgFloat ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "float getInnerRange( ) const", asMETHODPR(type, getInnerRange, ( ) const, cgFloat ), asCALL_THISCALL) );
+
     } // End Method registerNodeMethods<>
 
     //-------------------------------------------------------------------------
@@ -33,6 +39,12 @@ namespace PointLight
     {
         // Register base class object methods
         Core::World::Objects::Lights::Light::registerObjectMethods<type>( engine, typeName );
+
+        // Register object methods
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void setOuterRange( float )", asMETHODPR(type, setOuterRange, ( cgFloat ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "void setInnerRange( float )", asMETHODPR(type, setInnerRange, ( cgFloat ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "float getOuterRange( ) const", asMETHODPR(type, getOuterRange, ( ) const, cgFloat ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "float getInnerRange( ) const", asMETHODPR(type, getInnerRange, ( ) const, cgFloat ), asCALL_THISCALL) );
 
     } // End Method registerObjectMethods<>
 

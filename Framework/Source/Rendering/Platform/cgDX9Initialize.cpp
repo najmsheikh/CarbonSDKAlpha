@@ -75,6 +75,7 @@
 // cgDX9Initialize Module Includes
 //-----------------------------------------------------------------------------
 #include <Rendering/Platform/cgDX9Initialize.h>
+#include <Rendering/cgRenderDriver.h>
 #include <iostream>
 #include <dxerr.h>
 
@@ -928,7 +929,7 @@ D3DPRESENT_PARAMETERS cgDX9Initialize::buildPresentParameters( cgDX9Settings& D3
 /// Find the best windowed mode, and fill out our D3DSettings structure.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgDX9Initialize::findBestWindowedMode( cgDX9Settings & D3DSettings, bool bRequireHAL, bool bRequireREF )
+bool cgDX9Initialize::findBestWindowedMode( cgDX9Settings & D3DSettings, const cgRenderDriverConfig & CurrentConfig, bool bRequireHAL, bool bRequireREF, bool bExactMatch )
 {
     D3DDISPLAYMODE           DisplayMode;
     cgDX9EnumAdapter        *pBestAdapter = CG_NULL;
@@ -943,6 +944,16 @@ bool cgDX9Initialize::findBestWindowedMode( cgDX9Settings & D3DSettings, bool bR
     for ( cgUInt32 i = 0; i < getAdapterCount(); i++ )
     {
         cgDX9EnumAdapter * pAdapter = mAdapters[ i ];
+
+        // Ignore if the device name does not match the adapter description
+        if ( bExactMatch && !CurrentConfig.deviceName.empty() )
+        {
+            STRING_CONVERT;
+            cgString strDeviceName = cgString::trim(stringConvertA2CT(pAdapter->identifier.Description));
+            if ( !(strDeviceName == CurrentConfig.deviceName) )
+                continue;
+
+        } // End if match device name
         
         // Loop through each device
         for ( size_t j = 0; j < pAdapter->devices.size(); j++ )
@@ -958,12 +969,83 @@ bool cgDX9Initialize::findBestWindowedMode( cgDX9Settings & D3DSettings, bool bR
             {
                 cgDX9EnumDeviceOptions * pOptions = pDevice->options[ k ];
 
+                // Skip if this is not windowed, and formats don't match
+                if (!pOptions->windowed) 
+                    continue;
+                if ( pOptions->adapterFormat != DisplayMode.Format) 
+                    continue;
+
+                // Skip if vsync is required, but is not supported
+                // or vsync is not required, but is the only option.
+                if ( CurrentConfig.useVSync )
+                {
+                    size_t l;
+                    for ( l = 0; l < pOptions->presentIntervals.size(); ++l )
+                    {
+                        if ( pOptions->presentIntervals[l] == D3DPRESENT_INTERVAL_ONE )
+                            break;
+
+                    } // Next interval
+
+                    // If we reached the end, it was not supported.
+                    if ( l == pOptions->presentIntervals.size() )
+                        continue;
+
+                } // End if use vsync
+                else
+                {
+                    size_t l;
+                    for ( l = 0; l < pOptions->presentIntervals.size(); ++l )
+                    {
+                        if ( pOptions->presentIntervals[l] == D3DPRESENT_INTERVAL_IMMEDIATE )
+                            break;
+
+                    } // Next interval
+
+                    // If we reached the end, it was not supported.
+                    if ( l == pOptions->presentIntervals.size() )
+                        continue;
+
+                } // End if no vsync
+
+                // Skip if software vertex processing is required,
+                // but is not available. Also skip if hardware processing
+                // is required, but is not available.
+                if ( CurrentConfig.useHardwareTnL )
+                {
+                    size_t l;
+                    for ( l = 0; l < pOptions->vertexProcessingTypes.size(); ++l )
+                    {
+                        if ( pOptions->vertexProcessingTypes[l] == HARDWARE_VP ||
+                             pOptions->vertexProcessingTypes[l] == PURE_HARDWARE_VP ||
+                             pOptions->vertexProcessingTypes[l] == MIXED_VP )
+                             break;
+                    
+                    } // Next type
+
+                    // If we reached the end, it was not supported.
+                    if ( l == pOptions->vertexProcessingTypes.size() )
+                        continue;
+
+                } // End if use hardware TnL
+                else
+                {
+                    size_t l;
+                    for ( l = 0; l < pOptions->vertexProcessingTypes.size(); ++l )
+                    {
+                        if ( pOptions->vertexProcessingTypes[l] == SOFTWARE_VP )
+                             break;
+                    
+                    } // Next type
+
+                    // If we reached the end, it was not supported.
+                    if ( l == pOptions->vertexProcessingTypes.size() )
+                        continue;
+
+                } // End if use software TnL
+
                 // Determine if back buffer format matches adapter 
                 bool MatchedBB = (pOptions->backBufferFormat == pOptions->adapterFormat );
-
-                // Skip if this is not windowed, and formats don't match
-                if (!pOptions->windowed) continue;
-                if ( pOptions->adapterFormat != DisplayMode.Format) continue;
 
                 // If we haven't found a compatible option set yet, or if this set
                 // is better (because it's HAL / formats match better) then save it.
@@ -1003,9 +1085,19 @@ EndWindowedDeviceOptionSearch:
     pSettings->depthStencilFormat      = pBestOptions->depthFormats[ 0 ];
     pSettings->multiSampleType         = pBestOptions->multiSampleTypes[ 0 ];
     pSettings->multiSampleQuality      = 0;
-    pSettings->vertexProcessingType    = pBestOptions->vertexProcessingTypes[ 0 ];
-    pSettings->presentInterval         = pBestOptions->presentIntervals[ 0 ];
     pSettings->tripleBuffering         = false; // Default option
+
+    // Select the required hardware processing type.
+    if ( CurrentConfig.useHardwareTnL )
+        pSettings->vertexProcessingType = pBestOptions->vertexProcessingTypes[ 0 ];
+    else
+        pSettings->vertexProcessingType = SOFTWARE_VP;    
+
+    // Select the required presentation interval.
+    if ( CurrentConfig.useVSync )
+        pSettings->presentInterval = D3DPRESENT_INTERVAL_ONE;
+    else
+        pSettings->presentInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
     // We found a mode
     return true;
@@ -1017,7 +1109,7 @@ EndWindowedDeviceOptionSearch:
 /// Find the best fullscreen mode, and fill out our D3DSettings structure.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgDX9Initialize::findBestFullScreenMode( cgDX9Settings & D3DSettings, D3DDISPLAYMODE * pMatchMode, bool bRequireHAL, bool bRequireREF )
+bool cgDX9Initialize::findBestFullScreenMode( cgDX9Settings & D3DSettings, const cgRenderDriverConfig & CurrentConfig, bool bRequireHAL, bool bRequireREF, bool bExactMatch )
 {
     // For fullscreen, default to first HAL option that supports the current desktop 
     // display mode, or any display mode if HAL is not compatible with the desktop mode, or 
@@ -1040,25 +1132,34 @@ bool cgDX9Initialize::findBestFullScreenMode( cgDX9Settings & D3DSettings, D3DDI
     for ( cgUInt32 i = 0; i < getAdapterCount(); i++ )
     {
         cgDX9EnumAdapter * pAdapter = mAdapters[ i ];
+
+        // Ignore if the device name does not match the adapter description
+        if ( bExactMatch && !CurrentConfig.deviceName.empty() )
+        {
+            STRING_CONVERT;
+            cgString strDeviceName = cgString::trim(stringConvertA2CT(pAdapter->identifier.Description));
+            if ( !(strDeviceName == CurrentConfig.deviceName) )
+                continue;
+
+        } // End if match device name
         
         // Retrieve the desktop display mode
         mD3D->GetAdapterDisplayMode( pAdapter->ordinal, &AdapterDisplayMode );
 
-        // If any settings were passed, overwrite to test for matches
-        if ( pMatchMode ) 
-        {
-            if ( pMatchMode->Width  != 0 ) AdapterDisplayMode.Width  = pMatchMode->Width;
-            if ( pMatchMode->Height != 0 ) AdapterDisplayMode.Height = pMatchMode->Height;
-            if ( pMatchMode->Format != D3DFMT_UNKNOWN ) AdapterDisplayMode.Format = pMatchMode->Format;
-            if ( pMatchMode->RefreshRate != 0 ) AdapterDisplayMode.RefreshRate = pMatchMode->RefreshRate;
-
-        } // End if match mode passed
+        // Set the mode we're matching against based on any
+        // provided configuration values.
+        if ( CurrentConfig.width != 0 )
+            AdapterDisplayMode.Width = CurrentConfig.width;
+        if ( CurrentConfig.height != 0 )
+            AdapterDisplayMode.Height = CurrentConfig.height;
+        if ( CurrentConfig.refreshRate != 0 )
+            AdapterDisplayMode.RefreshRate = CurrentConfig.refreshRate;
 
         // Loop through each device
         for ( size_t j = 0; j < pAdapter->devices.size(); j++ )
         {
             cgDX9EnumDevice * pDevice = pAdapter->devices[ j ];
-            
+
             // Skip if this is not of the required type
             if ( bRequireHAL && pDevice->deviceType != D3DDEVTYPE_HAL ) continue;
             if ( bRequireREF && pDevice->deviceType != D3DDEVTYPE_REF ) continue;
@@ -1068,12 +1169,82 @@ bool cgDX9Initialize::findBestFullScreenMode( cgDX9Settings & D3DSettings, D3DDI
             {
                 cgDX9EnumDeviceOptions * pOptions = pDevice->options[ k ];
 
+                // Skip if this is not full screen
+                if ( pOptions->windowed )
+                    continue;
+
+                // Skip if vsync is required, but is not supported
+                // or vsync is not required, but is the only option.
+                if ( CurrentConfig.useVSync )
+                {
+                    size_t l;
+                    for ( l = 0; l < pOptions->presentIntervals.size(); ++l )
+                    {
+                        if ( pOptions->presentIntervals[l] == D3DPRESENT_INTERVAL_ONE )
+                            break;
+
+                    } // Next interval
+
+                    // If we reached the end, it was not supported.
+                    if ( l == pOptions->presentIntervals.size() )
+                        continue;
+
+                } // End if use vsync
+                else
+                {
+                    size_t l;
+                    for ( l = 0; l < pOptions->presentIntervals.size(); ++l )
+                    {
+                        if ( pOptions->presentIntervals[l] == D3DPRESENT_INTERVAL_IMMEDIATE )
+                            break;
+
+                    } // Next interval
+
+                    // If we reached the end, it was not supported.
+                    if ( l == pOptions->presentIntervals.size() )
+                        continue;
+
+                } // End if no vsync
+
+                // Skip if software vertex processing is required,
+                // but is not available. Also skip if hardware processing
+                // is required, but is not available.
+                if ( CurrentConfig.useHardwareTnL )
+                {
+                    size_t l;
+                    for ( l = 0; l < pOptions->vertexProcessingTypes.size(); ++l )
+                    {
+                        if ( pOptions->vertexProcessingTypes[l] == HARDWARE_VP ||
+                             pOptions->vertexProcessingTypes[l] == PURE_HARDWARE_VP ||
+                             pOptions->vertexProcessingTypes[l] == MIXED_VP )
+                             break;
+                    
+                    } // Next type
+
+                    // If we reached the end, it was not supported.
+                    if ( l == pOptions->vertexProcessingTypes.size() )
+                        continue;
+
+                } // End if use hardware TnL
+                else
+                {
+                    size_t l;
+                    for ( l = 0; l < pOptions->vertexProcessingTypes.size(); ++l )
+                    {
+                        if ( pOptions->vertexProcessingTypes[l] == SOFTWARE_VP )
+                             break;
+                    
+                    } // Next type
+
+                    // If we reached the end, it was not supported.
+                    if ( l == pOptions->vertexProcessingTypes.size() )
+                        continue;
+
+                } // End if use software TnL
+
                 // Determine if back buffer format matches adapter 
                 bool MatchedBB = (pOptions->backBufferFormat == pOptions->adapterFormat );
                 bool MatchedDesktop = (pOptions->adapterFormat == AdapterDisplayMode.Format);
-                
-                // Skip if this is not fullscreen
-                if ( pOptions->windowed ) continue;
 
                 // If we haven't found a compatible option set yet, or if this set
                 // is better (because it's HAL / formats match better) then save it.
@@ -1104,7 +1275,8 @@ bool cgDX9Initialize::findBestFullScreenMode( cgDX9Settings & D3DSettings, D3DDI
 
 EndFullscreenDeviceOptionSearch:
     
-    if ( pBestOptions == CG_NULL) return false;
+    if ( !pBestOptions )
+        return false;
 
     // Need to find a display mode on the best adapter that uses pBestOptions->adapterFormat
     // and is as close to BestAdapterDisplayMode's res as possible
@@ -1114,13 +1286,25 @@ EndFullscreenDeviceOptionSearch:
     BestDisplayMode.RefreshRate = 0;
 
     // Loop through valid display modes
+    bool bFoundMode = false;
     for( size_t i = 0; i < pBestAdapter->modes.size(); i++ )
     {
         D3DDISPLAYMODE Mode = pBestAdapter->modes[ i ];
         
         // Skip if it doesn't match our best format
-        if( Mode.Format != pBestOptions->adapterFormat ) continue;
+        if( Mode.Format != pBestOptions->adapterFormat )
+            continue;
 
+        // Skip if requires an exact match.
+        if ( bExactMatch )
+        {
+            // All details must match exactly
+            if ( Mode.Width != CurrentConfig.width || Mode.Height != CurrentConfig.height ||
+                 (CurrentConfig.refreshRate != 0 && Mode.RefreshRate != CurrentConfig.refreshRate) )
+                 continue;
+
+        } // End if requires exact match
+        
         // Determine how good a match this is
         if( Mode.Width == BestAdapterDisplayMode.Width &&
             Mode.Height == BestAdapterDisplayMode.Height && 
@@ -1128,6 +1312,7 @@ EndFullscreenDeviceOptionSearch:
         {
             // found a perfect match, so stop
             BestDisplayMode = Mode;
+            bFoundMode = true;
             break;
 
         } // End if Perfect Match
@@ -1138,22 +1323,29 @@ EndFullscreenDeviceOptionSearch:
             // refresh rate doesn't match, but width/height match, so keep this
             // and keep looking
             BestDisplayMode = Mode;
+            bFoundMode = true;
         }
         else if( Mode.Width == BestAdapterDisplayMode.Width )
         {
             // width matches, so keep this and keep looking
             BestDisplayMode = Mode;
+            bFoundMode = true;
         }
         else if( BestDisplayMode.Width == 0 )
         {
             // we don't have anything better yet, so keep this and keep looking
             BestDisplayMode = Mode;
+            bFoundMode = true;
         
         } // End if 
     
     } // Next Mode
 
-        // Fill out passed settings details
+    // Any modes found?
+    if ( !bFoundMode )
+        return false;
+
+    // Fill out passed settings details
     D3DSettings.windowed               = false;
     pSettings                          = D3DSettings.getSettings();
     pSettings->adapterOrdinal          = pBestOptions->adapterOrdinal;
@@ -1163,9 +1355,19 @@ EndFullscreenDeviceOptionSearch:
     pSettings->depthStencilFormat      = pBestOptions->depthFormats[ 0 ];
     pSettings->multiSampleType         = pBestOptions->multiSampleTypes[ 0 ];
     pSettings->multiSampleQuality      = 0;
-    pSettings->vertexProcessingType    = pBestOptions->vertexProcessingTypes[ 0 ];
-    pSettings->presentInterval         = pBestOptions->presentIntervals[ 0 ];
     pSettings->tripleBuffering         = false; // Default option
+
+    // Select the required hardware processing type.
+    if ( CurrentConfig.useHardwareTnL )
+        pSettings->vertexProcessingType = pBestOptions->vertexProcessingTypes[ 0 ];
+    else
+        pSettings->vertexProcessingType = SOFTWARE_VP;    
+
+    // Select the required presentation interval.
+    if ( CurrentConfig.useVSync )
+        pSettings->presentInterval = D3DPRESENT_INTERVAL_ONE;
+    else
+        pSettings->presentInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
     // Success!
     return true;

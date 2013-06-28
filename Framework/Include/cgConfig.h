@@ -74,6 +74,7 @@
 //#undef CGE_GL_RENDER_SUPPORT
 #endif
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // System configuration defines. Do not modify.
 ///////////////////////////////////////////////////////////////////////////////
@@ -82,10 +83,16 @@
 // Engine Configuration
 //-----------------------------------------------------------------------------
 
+// Script JIT compilation is only available when compiled with VC++ 2010 or above.
+
+#if (_MSC_VER >= 1600 )
+#define CGE_SCRIPT_JIT_SUPPORTED
+#endif
+
 // Engine versioning information
 #define CGE_ENGINE_VERSION      0
 #define CGE_ENGINE_SUBVERSION   8
-#define CGE_ENGINE_REVISION     11
+#define CGE_ENGINE_REVISION     12
 
 //-----------------------------------------------------------------------------
 // World Configuration
@@ -98,7 +105,7 @@
 #define CGE_WORLD_SUBVERSION    0   
 
 // Current world database revision number
-#define CGE_WORLD_REVISION      6
+#define CGE_WORLD_REVISION      7
 
 // Minimum supported world database major version number
 #define CGE_WORLD_MIN_VERSION       1   

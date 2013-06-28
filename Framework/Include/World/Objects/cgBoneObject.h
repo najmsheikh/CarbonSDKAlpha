@@ -75,8 +75,8 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    void                        enableCollisionVolume   ( bool enable );
-    bool                        hasCollisionVolume      ( ) const;
+    void                        setInitialCollisionState( bool enable );
+    bool                        getInitialCollisionState( ) const;
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (cgWorldObject)
@@ -114,9 +114,9 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    bool            mHasCollisionVolume;    // Bone should be included in collision testing (i.e., for ray tests).
-    cgMeshHandle    mSandboxMesh;           // Representation of this bone for sandbox rendering.
-    cgMeshHandle    mSandboxLinkMesh;       // Representation of this bone for sandbox rendering.
+    bool            mInitialCollisionState;     // Initial state of whether or not bone should be included in collision testing (i.e., for ray tests).
+    cgMeshHandle    mSandboxMesh;               // Representation of this bone for sandbox rendering.
+    cgMeshHandle    mSandboxLinkMesh;           // Representation of this bone for sandbox rendering.
 
     //-------------------------------------------------------------------------
     // Protected Static Variables
@@ -157,13 +157,15 @@ public:
     //-------------------------------------------------------------------------
     cgVector3                   getDirection            ( );
     void                        setBoneOrientation      ( const cgVector3 & source, const cgVector3 & destination, const cgVector3 & up );
-    void                        enableChildUpdates      ( bool enable );
     bool                        generateCollisionShape  ( cgMesh * mesh, cgUInt32 boneIndex = cgUInt32(-1) );
+    bool                        isCollisionEnabled      ( ) const;
+    void                        enableCollision         ( bool enable );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgObjectNode)
     //-------------------------------------------------------------------------
     virtual void                onComponentModified     ( cgComponentModifiedEventArgs * e );
+    virtual bool                onNodeInit              ( const cgUInt32IndexMap & nodeReferenceRemap );
     virtual void                move                    ( const cgVector3 & amount );
     virtual void                moveLocal               ( const cgVector3 & amount );
     virtual bool                getSubElementCategories ( cgObjectSubElementCategory::Map & categoriesOut ) const;
@@ -177,15 +179,15 @@ public:
     // Public Inline Methods
     //-------------------------------------------------------------------------
     // Object Property 'Set' Routing
-    inline void enableCollisionVolume( bool enable )
+    inline void setInitialCollisionState( bool enable )
     {
-        ((cgBoneObject*)mReferencedObject)->enableCollisionVolume( enable );
+        ((cgBoneObject*)mReferencedObject)->setInitialCollisionState( enable );
     }
 
     // Object Property 'Get' Routing
-    inline bool hasCollisionVolume( ) const
+    inline bool getInitialCollisionState( ) const
     {
-        return ((cgBoneObject*)mReferencedObject)->hasCollisionVolume();
+        return ((cgBoneObject*)mReferencedObject)->getInitialCollisionState();
     }
     
     //-------------------------------------------------------------------------
@@ -198,7 +200,7 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    bool    mDisableChildUpdates; // When length is recalculated, should child bones be updated?
+    bool    mCollisionEnabled;    // Current state of whether or not collision volume should be used.
 };
 
 #endif // !_CGE_CGBONEOBJECT_H_

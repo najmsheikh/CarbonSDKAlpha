@@ -60,6 +60,50 @@ const cgUID RTID_RenderDriver = {0x33C117AF, 0x6968, 0x4F03, {0xBE, 0x17, 0xB4, 
 const cgUID RTID_RenderView   = {0x5E748E40, 0x4062, 0x4105, {0x92, 0xAF, 0xC6, 0xE5, 0x9F, 0x36, 0x3E, 0xAA}};
 
 //-----------------------------------------------------------------------------
+// Global Structures
+//-----------------------------------------------------------------------------
+struct CGE_API cgRenderDriverConfig
+{
+    cgString            deviceName;         // Name of the device to which we will attach
+    bool                windowed;           // If true, device should create in windowed mode
+    cgInt32             width;              // Width of the frame buffer / window
+    cgInt32             height;             // Height of the frame buffer / window
+    cgInt32             refreshRate;        // Rate at which the screen is refreshed
+    bool                useHardwareTnL;     // Enable the use of hardware transformation and lighting on the device
+    bool                useVSync;           // Synchronize frame presentation to the vertical trace of the screen
+    bool                useTripleBuffering; // Enable triple buffering.
+    bool                primaryDepthBuffer; // Allocate a depth buffer for the primary view?
+    bool                debugVShader;       // Enable the debugging of vertex shaders
+    bool                debugPShader;       // Enable the debugging of pixel shaders
+    bool                usePerfHUD;         // Enable support for NVIDIA's PerfHUD profiling tool if available.
+    bool                useVTFBlending;     // Enable support for vertex-texture-fetch for vertex blending (required for instancing).
+    cgInt32             shadingQuality;
+    cgInt32             antiAliasingQuality;
+    cgInt32             postProcessQuality;
+
+    // Constructor
+    cgRenderDriverConfig()
+    {
+        windowed            = false;
+        width               = 0;
+        height              = 0;
+        refreshRate         = 0;
+        useHardwareTnL      = false;
+        useVSync            = false;
+        useTripleBuffering  = false;
+        primaryDepthBuffer  = false;
+        debugVShader        = false;
+        debugPShader        = false;
+        usePerfHUD          = false;
+        useVTFBlending      = false;
+        shadingQuality      = 3; // HIGH!
+        antiAliasingQuality = 3; // HIGH!
+        postProcessQuality  = 3; // HIGH!
+    
+    } // End Constructor
+};
+
+//-----------------------------------------------------------------------------
 // Main Class Declarations
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -88,44 +132,6 @@ public:
     static const cgInt MaxClipPlaneSlots      = 6;
     static const cgInt MaxStreamSlots         = 16;
     static const cgInt MaxConstantBufferSlots = 14;
-
-    //-------------------------------------------------------------------------
-    // Public Structures
-    //-------------------------------------------------------------------------
-    struct CGE_API InitConfig                   // The selected render driver configuration options
-    {
-        cgString            deviceName;         // Name of the device to which we will attach
-        bool                windowed;           // If true, device should create in windowed mode
-        cgInt32             width;              // Width of the frame buffer / window
-        cgInt32             height;             // Height of the frame buffer / window
-        cgInt32             refreshRate;        // Rate at which the screen is refreshed
-        bool                useHardwareTnL;     // Enable the use of hardware transformation and lighting on the device
-        bool                useVSync;           // Synchronize frame presentation to the vertical trace of the screen
-        bool                useTripleBuffering; // Enable triple buffering.
-        bool                primaryDepthBuffer; // Allocate a depth buffer for the primary view?
-        bool                debugVShader;       // Enable the debugging of vertex shaders
-        bool                debugPShader;       // Enable the debugging of pixel shaders
-        bool                usePerfHUD;         // Enable support for NVIDIA's PerfHUD profiling tool if available.
-        bool                useVTFBlending;     // Enable support for vertex-texture-fetch for vertex blending (required for instancing).
-
-        // Constructor
-        InitConfig()
-        {
-            windowed            = false;
-            width               = 0;
-            height              = 0;
-            refreshRate         = 0;
-            useHardwareTnL      = false;
-            useVSync            = false;
-            useTripleBuffering  = false;
-            primaryDepthBuffer  = false;
-            debugVShader        = false;
-            debugPShader        = false;
-            usePerfHUD          = false;
-            useVTFBlending      = false;
-        
-        } // End Constructor
-    };
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors
@@ -204,7 +210,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    InitConfig                      getConfig               ( ) const;
+    cgRenderDriverConfig            getConfig               ( ) const;
     
     // Object query functions
     cgResourceManager             * getResourceManager      ( ) const;
@@ -220,6 +226,8 @@ public:
     cgRenderingCapabilities       * getCapabilities         ( ) const;
 
     // Render related functions
+    void                            drawCircle              ( const cgVector2 & position, cgFloat radius, const cgColorValue & color, cgFloat thickness, cgUInt32 segments );
+    void                            drawCircle              ( const cgVector2 & position, cgFloat radius, const cgColorValue & color, cgFloat thickness, cgUInt32 segments, cgFloat arcBeginDegrees, cgFloat arcEndDegrees );
     void                            drawRectangle           ( const cgRect & bounds, const cgColorValue & color, bool filled );
     void                            drawEllipse             ( const cgRect & bounds, const cgColorValue & color, bool filled );
     void                            drawLines               ( cgVector2 points[], cgUInt32 lineCount, const cgColorValue & color, bool stripBehavior = false );
@@ -596,7 +604,7 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables.
     //-------------------------------------------------------------------------
-    InitConfig                  mConfig;                                // Render driver configuration settings
+    cgRenderDriverConfig        mConfig;                                // Render driver configuration settings
     bool                        mConfigLoaded;                          // Has the configuration been loaded yet?
     bool                        mInitialized;                           // Has the driver been initialized?
     cgResourceManager         * mResourceManager;                       // The manager that is in charge of resources tied to this device / render driver

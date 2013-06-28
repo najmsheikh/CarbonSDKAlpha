@@ -124,8 +124,8 @@ public:
     static cgAudioDriver  * createInstance          ( );
     static void             createSingleton         ( );
     static void             destroySingleton        ( );
-    static void             PCM16StereoToMono       ( cgInt16 destSamples[], cgInt16 srcSamples[], cgUInt32 sampleCount, cgDouble gain = -3.3 );
-    static void             PCM8StereoToMono        ( cgByte destSamples[], cgByte srcSamples[], cgUInt32 sampleCount, cgDouble gain = -3.3 );
+    static void             PCM16StereoToMono       ( cgInt16 destSamples[], cgInt16 srcSamples[], cgUInt32 sampleCount, cgDouble gain = -6.0206f );
+    static void             PCM8StereoToMono        ( cgByte destSamples[], cgByte srcSamples[], cgUInt32 sampleCount, cgDouble gain = -6.0206f );
     
     // Audio codecs
     static cgAudioCodec   * createAudioCodec        ( cgUInt32 index );
@@ -147,19 +147,25 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
-    virtual bool            initialize              ( cgResourceManager * resourceManager, cgAppWindow * focusWindow );
-    virtual void            releaseOwnedResources   ( );
+    virtual bool            initialize                  ( cgResourceManager * resourceManager, cgAppWindow * focusWindow );
+    virtual void            releaseOwnedResources       ( );
 
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    InitConfig              getConfig               ( ) const;
+    InitConfig              getConfig                   ( ) const;
     
     // Ambient Tracks
-    bool                    loadAmbientTrack        ( const cgString & trackName, cgInputStream stream, cgFloat initialVolume = 1.0f, cgFloat requestedVolume = 1.0f );
-    bool                    stopAmbientTrack        ( const cgString & trackname );
-    bool                    isAmbientTrackPlaying   ( const cgString & trackName );
-    void                    setTrackFadeTimes       ( cgFloat fadeOutTime, cgFloat fadeInTime );
+    bool                    loadAmbientTrack            ( const cgString & trackName, cgInputStream stream, cgFloat initialVolume = 1.0f, cgFloat requestedVolume = 1.0f );
+    bool                    loadAmbientTrack            ( const cgString & trackName, cgInputStream stream, cgFloat initialVolume, cgFloat requestedVolume, bool loop );
+    bool                    stopAmbientTrack            ( const cgString & trackname );
+    bool                    setAmbientTrackPitch        ( const cgString & trackname, cgFloat pitch );
+    bool                    setAmbientTrackVolume       ( const cgString & trackname, cgFloat volume );
+    void                    stopAmbientTracks           ( );
+    void                    pauseAmbientTracks          ( );
+    void                    resumeAmbientTracks         ( );
+    bool                    isAmbientTrackPlaying       ( const cgString & trackName );
+    void                    setTrackFadeTimes           ( cgFloat fadeOutTime, cgFloat fadeInTime );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)
@@ -187,6 +193,7 @@ protected:
         cgAudioBufferHandle buffer;
         FadeState           state;
         cgFloat             requestedVolume;
+        bool                looping;
     };
 
     //-------------------------------------------------------------------------

@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------------------
 // Script Includes
 //-----------------------------------------------------------------------------
-#include_once "Weapon.gsh"
+#include_once "../API/Weapon.gsh"
 
 //-----------------------------------------------------------------------------
 // Class Definitions
@@ -56,7 +56,8 @@ shared class Weapon_M16 : Weapon
         // Setup the initial weapon state.
         mFiringMode             = WeaponFiringMode::FullyAutomatic;
         mCurrentMagazineRounds  = mRoundsPerMagazine;
-        mTotalRounds            = mRoundsPerMagazine * 5;
+        mTotalRounds            = mRoundsPerMagazine * 7;
+        mMaximumRounds          = mTotalRounds;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -70,19 +71,20 @@ shared class Weapon_M16 : Weapon
 	void onAttach( ObjectNode @ object )
 	{
         // Setup base class with references to required objects.
-        @mMuzzleFlashEmitter = cast<ParticleEmitterNode>(object.findChild( "Muzzle_Flash_M16" ));
-        @mMuzzleFlashLight   = object.findChild( "Muzzle_Light_M16" );
-        @mEjectionPortSpawn  = object.findChild( "Weapon_M16_Ejection" );
+        mMuzzleFlashEmitters.resize( 1 );
+        @mMuzzleFlashEmitters[0] = cast<ParticleEmitterNode>(object.findChild( "Muzzle_Flash_M16" ));
+        @mMuzzleFlashLight       = object.findChild( "Muzzle_Light_M16" );
+        @mEjectionPortSpawn      = object.findChild( "Weapon_M16_Ejection" );
 
         // Load sound effects.
-        ResourceManager @ resources = object.getScene().getResourceManager();
-        resources.loadAudioBuffer( mReloadSound,   "Sounds/M16 Reload.wav", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mFireLoopSound, "Sounds/Carbine Fire.ogg", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mFireEndSound,  "Sounds/Carbine Fire End.ogg", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mFireOnceSound, "Sounds/Carbine Shot.wav", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mWeaponDrySound,  "Sounds/Carbine Dry.ogg", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mMagazineLowSound,  "Sounds/Magazine Low.wav", AudioBufferFlags::Complex3D, 0, DebugSource() );
-        resources.loadAudioBuffer( mToggleModeSound,  "Sounds/Carbine Dry.ogg", AudioBufferFlags::Complex3D, 0, DebugSource() );
+        mReloadSound        = mAudioManager.loadSound( "Sounds/M16 Reload.ogg", true );
+        mFireLoopSound      = mAudioManager.loadSound( "Sounds/Carbine Fire.ogg", true );
+        mFireEndSound       = mAudioManager.loadSound( "Sounds/Carbine Fire End.ogg", true );
+        mFireOnceSound      = mAudioManager.loadSound( "Sounds/Carbine Shot.ogg", true );
+        mWeaponDrySound     = mAudioManager.loadSound( "Sounds/Carbine Dry.ogg", true );
+        mMagazineLowSound   = mAudioManager.loadSound( "Sounds/Magazine Low.ogg", true );
+        mToggleModeSound    = mAudioManager.loadSound( "Sounds/Carbine Dry.ogg", true );
+        mWeaponCollectSound = mAudioManager.loadSound( "Sounds/Weapon Collect.ogg", true );
 
         // Trigger base class implementation
         Weapon::onAttach( object );
@@ -112,6 +114,36 @@ shared class Weapon_M16 : Weapon
     ///////////////////////////////////////////////////////////////////////////
 	// Public Method Overrides (Weapon)
 	///////////////////////////////////////////////////////////////////////////
+    //-------------------------------------------------------------------------
+	// Name : attemptWeaponCollect ()
+	// Desc : Attempt to collect ammunition from the specified weapon.
+	//-------------------------------------------------------------------------
+    bool attemptWeaponCollect( Weapon @ weapon )
+    {
+        // If we have no space left for ammo, don't collect.
+        if ( mTotalRounds >= mMaximumRounds )
+            return false;
+
+        // Should we try and collect?
+        if ( weapon.canCollect() && weapon.getWeaponCollectIdentifier() == "Weapon_M16" )
+        {
+            int numMagazines = randomInt( weapon.getAmmoCollectMagsMin(), weapon.getAmmoCollectMagsMax() );
+            mTotalRounds += weapon.getRoundsPerMagazine() * numMagazines;
+            if ( mTotalRounds > mMaximumRounds )
+                mTotalRounds = mMaximumRounds;
+
+            // Play the weapon collect sound.
+            mAudioManager.playSound( mWeaponCollectSound, true, false, 1.0f, Vector3(0,0,0), mNode );
+
+            // Collected
+            return true;
+
+        } // End if can collect
+        
+        // Pass down to base
+        return Weapon::attemptWeaponCollect( weapon );
+    }
+
     //-------------------------------------------------------------------------
 	// Name : getClass ()
 	// Desc : Retrieve the class of this weapon (i.e. Pistol, Rifle, etc.)

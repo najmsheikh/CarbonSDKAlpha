@@ -46,6 +46,8 @@ cgWorldQuery cgParticleEmitterObject::mUpdateParticleCounts;
 cgWorldQuery cgParticleEmitterObject::mUpdateReleaseProperties;
 cgWorldQuery cgParticleEmitterObject::mUpdateRenderingProperties;
 cgWorldQuery cgParticleEmitterObject::mUpdateParticleProperties;
+cgWorldQuery cgParticleEmitterObject::mUpdateColorKeys;
+cgWorldQuery cgParticleEmitterObject::mUpdateScaleKeys;
 cgWorldQuery cgParticleEmitterObject::mLoadEmitter;
 cgWorldQuery cgParticleEmitterObject::mLoadEmitterLayers;
 
@@ -1125,6 +1127,14 @@ void cgParticleEmitterObject::prepareQueries()
             mUpdateParticleProperties.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET MinSpeed=?1, MaxSpeed=?2, MinMass=?3, MaxMass=?4, MinAngularSpeed=?5,")
                                                        _T("MaxAngularSpeed=?6, MinBaseScale=?7, MaxBaseScale=?8, MinLifetime=?9, MaxLifetime=?10, BaseSizeX=?11,")
                                                        _T("BaseSizeY=?12, AirResistance=?13, ParticleTexture=?14, ApplyGravity=?15 WHERE LayerId=?16"), true );
+        if ( !mUpdateColorKeys.isPrepared() )
+            mUpdateColorKeys.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET ColorRCurveType=?1, ColorRCurveSize=?2, ColorRCurve=?3,")
+                                              _T("ColorGCurveType=?4, ColorGCurveSize=?5, ColorGCurve=?6,")
+                                              _T("ColorBCurveType=?7, ColorBCurveSize=?8, ColorBCurve=?9,")
+                                              _T("ColorACurveType=?10, ColorACurveSize=?11, ColorACurve=?12 WHERE LayerId=?13"), true );
+        if ( !mUpdateScaleKeys.isPrepared() )
+            mUpdateScaleKeys.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET ScaleXCurveType=?1, ScaleXCurveSize=?2, ScaleXCurve=?3,")
+                                              _T("ScaleYCurveType=?4, ScaleYCurveSize=?5, ScaleYCurve=?6 WHERE LayerId=?7"), true );
     } // End if sandbox
 
     // Read queries
@@ -1249,6 +1259,78 @@ cgFloat cgParticleEmitterObject::getBirthFrequency( cgUInt32 layerIndex ) const
 cgFloat cgParticleEmitterObject::getHDRScale( cgUInt32 layerIndex ) const
 {
     return mLayers[layerIndex].properties.hdrScale;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getColorRCurve ()
+/// <summary>
+/// Get the bezier curve that describes the red component of the color to apply
+/// to each particle over its lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgBezierSpline2 & cgParticleEmitterObject::getColorRCurve( cgUInt32 layerIndex ) const
+{
+    return mLayers[layerIndex].properties.colorRCurve;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getColorGCurve ()
+/// <summary>
+/// Get the bezier curve that describes the green component of the color to
+/// apply to each particle over its lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgBezierSpline2 & cgParticleEmitterObject::getColorGCurve( cgUInt32 layerIndex ) const
+{
+    return mLayers[layerIndex].properties.colorGCurve;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getColorBCurve ()
+/// <summary>
+/// Get the bezier curve that describes the blue component of the color to
+/// apply to each particle over its lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgBezierSpline2 & cgParticleEmitterObject::getColorBCurve( cgUInt32 layerIndex ) const
+{
+    return mLayers[layerIndex].properties.colorBCurve;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getColorACurve ()
+/// <summary>
+/// Get the bezier curve that describes the alpha component of the color to
+/// apply to each particle over its lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgBezierSpline2 & cgParticleEmitterObject::getColorACurve( cgUInt32 layerIndex ) const
+{
+    return mLayers[layerIndex].properties.colorACurve;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getScaleXCurve ()
+/// <summary>
+/// Get the bezier curve that describes the X component of the scale to
+/// apply to each particle over its lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgBezierSpline2 & cgParticleEmitterObject::getScaleXCurve( cgUInt32 layerIndex ) const
+{
+    return mLayers[layerIndex].properties.scaleXCurve;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getScaleYCurve ()
+/// <summary>
+/// Get the bezier curve that describes the Y component of the scale to
+/// apply to each particle over its lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgBezierSpline2 & cgParticleEmitterObject::getScaleYCurve( cgUInt32 layerIndex ) const
+{
+    return mLayers[layerIndex].properties.scaleYCurve;
 }
 
 //-----------------------------------------------------------------------------
@@ -2649,6 +2731,258 @@ void cgParticleEmitterObject::setInitialEnabledState( cgUInt32 layerIndex, bool 
     onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
 }
 
+//-----------------------------------------------------------------------------
+//  Name : setColorCurves ()
+/// <summary>
+/// Set the bezier curves that describe the four components of the color to 
+/// apply to each particle over its lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::setColorCurves( cgUInt32 layerIndex, const cgBezierSpline2 & r, const cgBezierSpline2 & g, const cgBezierSpline2 & b, const cgBezierSpline2 & a )
+{
+    Layer & layer = mLayers[layerIndex];
+
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+
+        // Red
+        cgUInt32 curveType = (cgUInt32)r.getDescription();
+        mUpdateColorKeys.bindParameter( 1, curveType  );
+        if ( curveType == cgBezierSpline2::Custom )
+        {
+            mUpdateColorKeys.bindParameter( 2, r.getPointCount() );
+            mUpdateColorKeys.bindParameter( 3, &r.getSplinePoints()[0], r.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+        
+        } // End if custom
+        else
+        {
+            mUpdateColorKeys.bindParameter( 2, 0 );
+            mUpdateColorKeys.bindParameter( 3, CG_NULL, 0 );
+        
+        } // End if described
+
+        // Green
+        curveType = (cgUInt32)g.getDescription();
+        mUpdateColorKeys.bindParameter( 4, curveType  );
+        if ( curveType == cgBezierSpline2::Custom )
+        {
+            mUpdateColorKeys.bindParameter( 5, g.getPointCount() );
+            mUpdateColorKeys.bindParameter( 6, &g.getSplinePoints()[0], g.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+        
+        } // End if custom
+        else
+        {
+            mUpdateColorKeys.bindParameter( 5, 0 );
+            mUpdateColorKeys.bindParameter( 6, CG_NULL, 0 );
+        
+        } // End if described
+
+        // Blue
+        curveType = (cgUInt32)b.getDescription();
+        mUpdateColorKeys.bindParameter( 7, curveType  );
+        if ( curveType == cgBezierSpline2::Custom )
+        {
+            mUpdateColorKeys.bindParameter( 8, b.getPointCount() );
+            mUpdateColorKeys.bindParameter( 9, &b.getSplinePoints()[0], b.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+        
+        } // End if custom
+        else
+        {
+            mUpdateColorKeys.bindParameter( 8, 0 );
+            mUpdateColorKeys.bindParameter( 9, CG_NULL, 0 );
+        
+        } // End if described
+
+        // Alpha
+        curveType = (cgUInt32)a.getDescription();
+        mUpdateColorKeys.bindParameter( 10, curveType  );
+        if ( curveType == cgBezierSpline2::Custom )
+        {
+            mUpdateColorKeys.bindParameter( 11, a.getPointCount() );
+            mUpdateColorKeys.bindParameter( 12, &a.getSplinePoints()[0], a.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+        
+        } // End if custom
+        else
+        {
+            mUpdateColorKeys.bindParameter( 11, 0 );
+            mUpdateColorKeys.bindParameter( 12, CG_NULL, 0 );
+        
+        } // End if described
+        mUpdateColorKeys.bindParameter( 13, layer.databaseId );
+        
+        // Execute
+        if ( !mUpdateColorKeys.step( true ) )
+        {
+            cgString strError;
+            mUpdateColorKeys.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update particle color animation curves for particle emitter '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
+    // Update local members
+    layer.properties.colorRCurve = r;
+    layer.properties.colorGCurve = g;
+    layer.properties.colorBCurve = b;
+    layer.properties.colorACurve = a;
+
+    // Notify listeners that object data has changed.
+    static const cgString strContext = _T("ColorCurves");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setScaleCurves ()
+/// <summary>
+/// Set the bezier curves that describe the two components of the scale to 
+/// apply to each particle over its lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::setScaleCurves( cgUInt32 layerIndex, const cgBezierSpline2 & x, const cgBezierSpline2 & y )
+{
+    Layer & layer = mLayers[layerIndex];
+
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+
+        // X
+        cgUInt32 curveType = (cgUInt32)x.getDescription();
+        mUpdateScaleKeys.bindParameter( 1, curveType  );
+        if ( curveType == cgBezierSpline2::Custom )
+        {
+            mUpdateScaleKeys.bindParameter( 2, x.getPointCount() );
+            mUpdateScaleKeys.bindParameter( 3, &x.getSplinePoints()[0], x.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+        
+        } // End if custom
+        else
+        {
+            mUpdateScaleKeys.bindParameter( 2, 0 );
+            mUpdateScaleKeys.bindParameter( 3, CG_NULL, 0 );
+        
+        } // End if described
+
+        // Y
+        curveType = (cgUInt32)y.getDescription();
+        mUpdateScaleKeys.bindParameter( 4, curveType  );
+        if ( curveType == cgBezierSpline2::Custom )
+        {
+            mUpdateScaleKeys.bindParameter( 5, y.getPointCount() );
+            mUpdateScaleKeys.bindParameter( 6, &y.getSplinePoints()[0], y.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+        
+        } // End if custom
+        else
+        {
+            mUpdateScaleKeys.bindParameter( 5, 0 );
+            mUpdateScaleKeys.bindParameter( 6, CG_NULL, 0 );
+        
+        } // End if described
+        mUpdateScaleKeys.bindParameter( 7, layer.databaseId );
+        
+        // Execute
+        if ( !mUpdateScaleKeys.step( true ) )
+        {
+            cgString strError;
+            mUpdateScaleKeys.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update particle scale animation curves for particle emitter '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
+    // Update local members
+    layer.properties.scaleXCurve = x;
+    layer.properties.scaleYCurve = y;
+    
+    // Notify listeners that object data has changed.
+    static const cgString strContext = _T("ScaleCurves");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setColorRCurve ()
+/// <summary>
+/// Set the bezier curve that describes the red component of the color to apply
+/// to each particle over its lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::setColorRCurve( cgUInt32 layerIndex, const cgBezierSpline2 & curve )
+{
+    Layer & layer = mLayers[layerIndex];
+    setColorCurves( layerIndex, curve, layer.properties.colorGCurve, layer.properties.colorBCurve, layer.properties.colorACurve );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setColorGCurve ()
+/// <summary>
+/// Set the bezier curve that describes the green component of the color to
+/// apply to each particle over its lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::setColorGCurve( cgUInt32 layerIndex, const cgBezierSpline2 & curve )
+{
+    Layer & layer = mLayers[layerIndex];
+    setColorCurves( layerIndex, layer.properties.colorRCurve, curve, layer.properties.colorBCurve, layer.properties.colorACurve );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setColorBCurve ()
+/// <summary>
+/// Set the bezier curve that describes the blue component of the color to
+/// apply to each particle over its lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::setColorBCurve( cgUInt32 layerIndex, const cgBezierSpline2 & curve )
+{
+    Layer & layer = mLayers[layerIndex];
+    setColorCurves( layerIndex, layer.properties.colorRCurve, layer.properties.colorGCurve, curve, layer.properties.colorACurve );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setColorACurve ()
+/// <summary>
+/// Set the bezier curve that describes the alpha component of the color to
+/// apply to each particle over its lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::setColorACurve( cgUInt32 layerIndex, const cgBezierSpline2 & curve )
+{
+    Layer & layer = mLayers[layerIndex];
+    setColorCurves( layerIndex, layer.properties.colorRCurve, layer.properties.colorGCurve, layer.properties.colorBCurve, curve );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setScaleXCurve ()
+/// <summary>
+/// Set the bezier curve that describes the X component of the scale to apply
+/// to each particle over its lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::setScaleXCurve( cgUInt32 layerIndex, const cgBezierSpline2 & curve )
+{
+    Layer & layer = mLayers[layerIndex];
+    setScaleCurves( layerIndex, curve, layer.properties.scaleYCurve );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setScaleYCurve ()
+/// <summary>
+/// Set the bezier curve that describes the Y component of the scale to apply
+/// to each particle over its lifetime.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgParticleEmitterObject::setScaleYCurve( cgUInt32 layerIndex, const cgBezierSpline2 & curve )
+{
+    Layer & layer = mLayers[layerIndex];
+    setScaleCurves( layerIndex, layer.properties.scaleXCurve, curve );
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // cgParticleEmitterNode Member Definitions
 ///////////////////////////////////////////////////////////////////////////////
@@ -2995,6 +3329,31 @@ bool cgParticleEmitterNode::registerVisibility( cgVisibilitySet * pSet )
         pSet->addVisibleMaterial( cgMaterialHandle::Null, this );
     
     // We modified the visibility set.
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : particlesSpent ()
+/// <summary>
+/// Determine if all particles have been spent.
+/// Note : If you want to ensure that all fired particles are dead, make sure
+/// that you specify a value of true to the 'bIncludeAlive' parameter.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgParticleEmitterNode::particlesSpent( bool includeAlive ) const
+{
+    for ( size_t i = 0; i < mEmitters.size(); ++i )
+    {
+        if ( mEmitters[i] )
+        {
+            if ( !mEmitters[i]->particlesSpent( includeAlive ) )
+                return false;
+        
+        } // End if valid
+    
+    } // Next emitter
+
+    // All particles spent!
     return true;
 }
 

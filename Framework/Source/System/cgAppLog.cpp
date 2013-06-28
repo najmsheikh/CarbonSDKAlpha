@@ -357,7 +357,7 @@ cgLogOutputFile::~cgLogOutputFile()
 //-----------------------------------------------------------------------------
 void cgLogOutputFile::write( cgUInt32 nType, const cgString & strMessage )
 {
-    cgTChar  strDate[128], strTime[128];
+    cgTChar  strTime[128];
     cgString strType = _T("&nbsp;"), strOutput;
 
     // Validate requirements
@@ -385,10 +385,11 @@ void cgLogOutputFile::write( cgUInt32 nType, const cgString & strMessage )
     else if ( nType & cgAppLog::Internal )
         strType = _T("&nbsp;");
 
-    // Get Time and Date
-    _tzset();
-    _tstrdate( strDate );
-    _tstrtime( strTime );
+    // Compute an accurate current time.
+    // Portability warning -- use gettimeofday() and strftime() on alternative platforms.
+    SYSTEMTIME systemTime;
+    GetSystemTime( &systemTime );
+    _sntprintf( strTime, 128, _T("%02d:%02d:%02d.%03d"), systemTime.wHour, systemTime.wMinute, systemTime.wSecond, systemTime.wMilliseconds );
 
     // Build HTML for message
     mFile << _T("  <tr>\n")

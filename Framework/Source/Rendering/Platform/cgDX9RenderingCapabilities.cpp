@@ -251,5 +251,17 @@ bool cgDX9RenderingCapabilities::getDisplayModes( cgDisplayMode::Array & modes )
     return true;
 }
 
+//-----------------------------------------------------------------------------
+//  Name : requiresCursorEmulation () (Virtual)
+/// <summary>
+/// Determine if cursor emulation is required given the current state of the
+/// device.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgDX9RenderingCapabilities::requiresCursorEmulation( ) const
+{
+    // Cursor emulation is required only in full screen mode.
+    return !mDriver->isWindowed();
+}
 
 #endif // CGE_DX9_RENDER_SUPPORT

@@ -1,0 +1,133 @@
+bool upgrade_1000006_to_1000007( World @ world )
+{
+    String sql;
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Add 'AlphaTestValue' column to 'Materials::Standard'
+    ///////////////////////////////////////////////////////////////////////////
+
+    // Copy existing table data into temporary table and drop the original.
+    sql  = "CREATE TEMPORARY TABLE [TEMP_Materials::Standard] AS SELECT * FROM [Materials::Standard];";
+    sql += "DROP TABLE [Materials::Standard];";
+
+    // Rebuild 'Materials::Standard' table.
+    sql += "CREATE TABLE [Materials::Standard] (";
+    sql += "  [RefId] integer NOT NULL PRIMARY KEY, ";
+    sql += "  [Name] varchar(128), ";
+    sql += "  [PropertiesHighPart] integer DEFAULT(0),";
+    sql += "  [PropertiesLowPart]  integer DEFAULT(0),";
+    sql += "  [DiffuseReflectanceR] real DEFAULT (1), ";
+    sql += "  [DiffuseReflectanceG] real DEFAULT (1), ";
+    sql += "  [DiffuseReflectanceB] real DEFAULT (1), ";
+    sql += "  [AmbientReflectanceR] real DEFAULT (0), ";
+    sql += "  [AmbientReflectanceG] real DEFAULT (0), ";
+    sql += "  [AmbientReflectanceB] real DEFAULT (0), ";
+    sql += "  [SpecularReflectanceR] real DEFAULT (0), ";
+    sql += "  [SpecularReflectanceG] real DEFAULT (0), ";
+    sql += "  [SpecularReflectanceB] real DEFAULT (0), ";
+    sql += "  [Gloss] real DEFAULT (5), ";
+    sql += "  [EmissiveColorR] real DEFAULT (0), ";
+    sql += "  [EmissiveColorG] real DEFAULT (0), ";
+    sql += "  [EmissiveColorB] real DEFAULT (0), ";
+    sql += "  [EmissiveHDRScalar] real DEFAULT (1), ";
+    sql += "  [MetalnessAmount] REAL DEFAULT (0), ";
+    sql += "  [MetalnessDiffuse] REAL DEFAULT (1), ";
+    sql += "  [MetalnessSpecular] REAL DEFAULT (1), ";
+    sql += "  [RimIntensity] REAL DEFAULT (0), ";
+    sql += "  [RimExponent] REAL DEFAULT (1), ";
+    sql += "  [ReflectionMode] SMALLINT DEFAULT (0), ";
+    sql += "  [ReflectionIntensity] REAL DEFAULT (1), ";
+    sql += "  [ReflectionBumpiness] REAL DEFAULT (1), ";
+    sql += "  [ReflectionMipLevel] REAL DEFAULT (0), ";
+    sql += "  [FresnelExponent] REAL DEFAULT (5), ";
+    sql += "  [FresnelDiffuse] REAL DEFAULT (0), ";
+    sql += "  [FresnelSpecular] REAL DEFAULT (0), ";
+    sql += "  [FresnelReflection] REAL DEFAULT (0), ";
+    sql += "  [FresnelOpacity] REAL DEFAULT (0), ";
+    sql += "  [BlendingMode] smallint DEFAULT (0), ";
+    sql += "  [Opacity] real DEFAULT (1), ";
+    sql += "  [AlphaTestValue] real DEFAULT (0.5), ";
+    sql += "  [SpecularOpacity] REAL DEFAULT (1), ";
+    sql += "  [SpecularOpacityLinked] TINYINT(1) DEFAULT (1), ";
+    sql += "  [DiffuseOpacityMapStrength] REAL DEFAULT (1), ";
+    sql += "  [SpecularOpacityMapStrength] REAL DEFAULT (1), ";
+    sql += "  [TransmissionType] SMALLINT DEFAULT (1), ";
+    sql += "  [TransmissionCurveSize] SMALLINT DEFAULT (0), ";
+    sql += "  [TransmissionCurve] BLOB, ";
+    sql += "  [ShaderFlags] smallint DEFAULT (0), ";
+    sql += "  [ShaderSource] path[Shader], ";
+    sql += "  [PreviewImage] blob, ";
+    sql += "  [RefCount] integer DEFAULT (0));";
+
+    sql += "CREATE TRIGGER [Materials::Standard_OnDelete]";
+    sql += "  BEFORE DELETE";
+    sql += "  ON [Materials::Standard]";
+    sql += "  BEGIN";
+    sql += "    DELETE FROM [Materials::Standard::Parameters] WHERE MaterialId=old.RefId;";
+    sql += "    DELETE FROM [Materials::Standard::Samplers] WHERE MaterialId=old.RefId;  ";
+    sql += "    DELETE FROM [Scenes::MaterialUsage] WHERE MaterialId=old.RefId;";
+    sql += "  END;";
+
+    // Copy data over to new table.
+    sql += "INSERT INTO [Materials::Standard] SELECT ";
+    sql += "  [RefId],";
+    sql += "  [Name],";
+    sql += "  [PropertiesHighPart],";
+    sql += "  [PropertiesLowPart],";
+    sql += "  [DiffuseReflectanceR],";
+    sql += "  [DiffuseReflectanceG],";
+    sql += "  [DiffuseReflectanceB],";
+    sql += "  [AmbientReflectanceR],";
+    sql += "  [AmbientReflectanceG],";
+    sql += "  [AmbientReflectanceB],";
+    sql += "  [SpecularReflectanceR],";
+    sql += "  [SpecularReflectanceG],";
+    sql += "  [SpecularReflectanceB],";
+    sql += "  [Gloss],";
+    sql += "  [EmissiveColorR],";
+    sql += "  [EmissiveColorG],";
+    sql += "  [EmissiveColorB],";
+    sql += "  [EmissiveHDRScalar],";
+    sql += "  [MetalnessAmount],";
+    sql += "  [MetalnessDiffuse],";
+    sql += "  [MetalnessSpecular],";
+    sql += "  [RimIntensity],";
+    sql += "  [RimExponent],";
+    sql += "  [ReflectionMode],";
+    sql += "  [ReflectionIntensity],";
+    sql += "  [ReflectionBumpiness],";
+    sql += "  [ReflectionMipLevel],";
+    sql += "  [FresnelExponent],";
+    sql += "  [FresnelDiffuse],";
+    sql += "  [FresnelSpecular],";
+    sql += "  [FresnelReflection],";
+    sql += "  [FresnelOpacity],";
+    sql += "  [BlendingMode],";
+    sql += "  [Opacity],";
+    sql += "  0.5,";
+    sql += "  [SpecularOpacity],";
+    sql += "  [SpecularOpacityLinked],";
+    sql += "  [DiffuseOpacityMapStrength],";
+    sql += "  [SpecularOpacityMapStrength],";
+    sql += "  [TransmissionType],";
+    sql += "  [TransmissionCurveSize],";
+    sql += "  [TransmissionCurve],";
+    sql += "  [ShaderFlags],";
+    sql += "  [ShaderSource],";
+    sql += "  [PreviewImage],";
+    sql += "  [RefCount] FROM [TEMP_Materials::Standard];";
+
+    // Drop the temporary table.
+    sql += "DROP TABLE [TEMP_Materials::Standard];";
+
+    // Execute the query
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+
+    // Update version number to 1.00.0007
+    if ( !world.executeQuery( "UPDATE [Configuration] SET Version=1,Subversion=0,Revision=7 WHERE Type='Primary'", false ) )
+        return false;
+
+    // Success!
+    return true;
+}

@@ -465,13 +465,23 @@ NewtonBody * cgPhysicsBody::getInternalBody( ) const
 //-----------------------------------------------------------------------------
 //  Name : setMaterialGroupId()
 /// <summary>
-/// Set the material group id of this physics body to one of the defined
-/// world default material groups.
+/// Assign this physics body to one the world default material groups.
 /// </summary>
 //-----------------------------------------------------------------------------
 void cgPhysicsBody::setMaterialGroupId( cgDefaultPhysicsMaterialGroup::Base defaultMaterial )
 {
     NewtonBodySetMaterialGroupID( mBody, mWorld->getDefaultMaterialGroupId( defaultMaterial ) );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setMaterialGroupId()
+/// <summary>
+/// Assign this physics body to the custom material group with the specified id
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgPhysicsBody::setMaterialGroupId( cgInt32 group )
+{
+    NewtonBodySetMaterialGroupID( mBody, group );
 }
 
 //-----------------------------------------------------------------------------

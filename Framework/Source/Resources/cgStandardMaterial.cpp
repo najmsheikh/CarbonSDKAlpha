@@ -262,7 +262,7 @@ void cgStandardMaterial::prepareQueries()
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         if ( mInsertMaterial.isPrepared() == false )
-            mInsertMaterial.prepare( mWorld, _T("INSERT INTO 'Materials::Standard' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44,?45)"), true );  
+            mInsertMaterial.prepare( mWorld, _T("INSERT INTO 'Materials::Standard' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44,?45,?46)"), true );  
         if ( mInsertSampler.isPrepared() == false )
             mInsertSampler.prepare( mWorld, _T("INSERT INTO 'Materials::Standard::Samplers' VALUES(NULL,?1,?2)"), true );  
         if ( mDeleteSamplers.isPrepared() == false )
@@ -288,7 +288,7 @@ void cgStandardMaterial::prepareQueries()
         if ( mUpdateFresnel.isPrepared() == false )
             mUpdateFresnel.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET FresnelDiffuse=?1, FresnelSpecular=?2, FresnelReflection=?3, FresnelOpacity=?4, FresnelExponent=?5 WHERE RefId=?6"), true );  
         if ( mUpdateBlending.isPrepared() == false )
-            mUpdateBlending.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET BlendingMode=?1, Opacity=?2, SpecularOpacity=?3, SpecularOpacityLinked=?4, DiffuseOpacityMapStrength=?5, SpecularOpacityMapStrength=?6 WHERE RefId=?7"), true );  
+            mUpdateBlending.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET BlendingMode=?1, Opacity=?2, AlphaTestValue=?3, SpecularOpacity=?4, SpecularOpacityLinked=?5, DiffuseOpacityMapStrength=?6, SpecularOpacityMapStrength=?7 WHERE RefId=?8"), true );  
         if ( mUpdateTransmission.isPrepared() == false )
             mUpdateTransmission.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET TransmissionType=?1, TransmissionCurveSize=?2, TransmissionCurve=?3 WHERE RefId=?4"), true );  
         if ( mUpdateShader.isPrepared() == false )
@@ -376,33 +376,34 @@ bool cgStandardMaterial::serializeMaterial( )
             cgUInt32 nTransmissionType = mTransmissionCurve.getDescription();
             mInsertMaterial.bindParameter( 33, (cgUInt32)0 ); // ToDo: 9999 - BlendingMode
             mInsertMaterial.bindParameter( 34, p.diffuse.a );
-            mInsertMaterial.bindParameter( 35, p.specular.a );
-            mInsertMaterial.bindParameter( 36, mSpecularOpacityLinked );
-            mInsertMaterial.bindParameter( 37, p.diffuseOpacityMapStrength );
-            mInsertMaterial.bindParameter( 38, p.specularOpacityMapStrength );
-            mInsertMaterial.bindParameter( 39, (cgUInt32)nTransmissionType );
+            mInsertMaterial.bindParameter( 35, p.alphaTestValue );
+            mInsertMaterial.bindParameter( 36, p.specular.a );
+            mInsertMaterial.bindParameter( 37, mSpecularOpacityLinked );
+            mInsertMaterial.bindParameter( 38, p.diffuseOpacityMapStrength );
+            mInsertMaterial.bindParameter( 39, p.specularOpacityMapStrength );
+            mInsertMaterial.bindParameter( 40, (cgUInt32)nTransmissionType );
             if ( nTransmissionType == cgBezierSpline2::Custom )
             {
-                mInsertMaterial.bindParameter( 40, mTransmissionCurve.getPointCount() );
-                mInsertMaterial.bindParameter( 41, &mTransmissionCurve.getSplinePoints()[0], mTransmissionCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+                mInsertMaterial.bindParameter( 41, mTransmissionCurve.getPointCount() );
+                mInsertMaterial.bindParameter( 42, &mTransmissionCurve.getSplinePoints()[0], mTransmissionCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
             
             } // End if custom
             else
             {
-                mInsertMaterial.bindParameter( 40, 0 );
-                mInsertMaterial.bindParameter( 41, CG_NULL, 0 );
+                mInsertMaterial.bindParameter( 41, 0 );
+                mInsertMaterial.bindParameter( 42, CG_NULL, 0 );
             
             } // End if described
 
             // Surface shader
-            mInsertMaterial.bindParameter( 42, (cgUInt32)0 ); // ShaderFlags: 0 = Auto, 1 = Compiled, 2 = Source
-            mInsertMaterial.bindParameter( 43, cgString::Empty );
+            mInsertMaterial.bindParameter( 43, (cgUInt32)0 ); // ShaderFlags: 0 = Auto, 1 = Compiled, 2 = Source
+            mInsertMaterial.bindParameter( 44, cgString::Empty );
 
             // Preview Image
-            mInsertMaterial.bindParameter( 44, CG_NULL, 0 );
+            mInsertMaterial.bindParameter( 45, CG_NULL, 0 );
 
             // Database ref count (just in case it has already been adjusted)
-            mInsertMaterial.bindParameter( 45, mSoftRefCount );
+            mInsertMaterial.bindParameter( 46, mSoftRefCount );
 
             // Process!
             if ( mInsertMaterial.step( true ) == false )
@@ -564,11 +565,12 @@ bool cgStandardMaterial::serializeMaterial( )
             // Update blending.
             mUpdateBlending.bindParameter( 1, (cgUInt32)0 );                  // ToDo: 9999 - BlendingMode
             mUpdateBlending.bindParameter( 2, mMaterialTerms.diffuse.a );    // Opacity
-            mUpdateBlending.bindParameter( 3, mMaterialTerms.specular.a );   // Specular opacity
-            mUpdateBlending.bindParameter( 4, mSpecularOpacityLinked );
-            mUpdateBlending.bindParameter( 5, mMaterialTerms.diffuseOpacityMapStrength );
-            mUpdateBlending.bindParameter( 6, mMaterialTerms.specularOpacityMapStrength );
-            mUpdateBlending.bindParameter( 7, mReferenceId );
+            mUpdateBlending.bindParameter( 3, mMaterialTerms.alphaTestValue );
+            mUpdateBlending.bindParameter( 4, mMaterialTerms.specular.a );   // Specular opacity
+            mUpdateBlending.bindParameter( 5, mSpecularOpacityLinked );
+            mUpdateBlending.bindParameter( 6, mMaterialTerms.diffuseOpacityMapStrength );
+            mUpdateBlending.bindParameter( 7, mMaterialTerms.specularOpacityMapStrength );
+            mUpdateBlending.bindParameter( 8, mReferenceId );
             
             // Process!
             if ( mUpdateBlending.step( true ) == false )
@@ -882,6 +884,7 @@ bool cgStandardMaterial::loadMaterial( cgUInt32 nSourceRefId, cgResourceManager 
         cgUInt32 nTransmissionType;
         //mLoadMaterial.getColumn( 18, (cgUInt32)0 ); // ToDo: 9999 - BlendingMode
         mLoadMaterial.getColumn( _T("Opacity"), p.diffuse.a );
+        mLoadMaterial.getColumn( _T("AlphaTestValue"), p.alphaTestValue );
         mLoadMaterial.getColumn( _T("SpecularOpacity"), p.specular.a );
         mLoadMaterial.getColumn( _T("SpecularOpacityLinked"), mSpecularOpacityLinked );
         mLoadMaterial.getColumn( _T("DiffuseOpacityMapStrength"), p.diffuseOpacityMapStrength );
@@ -1780,6 +1783,7 @@ void cgStandardMaterial::setMaterialTerms( const cgMaterialTerms & Terms )
     nDirtyFlags |= (p1.fresnelOpacity != p2.fresnelOpacity) ? FresnelDirty : 0;
     nDirtyFlags |= (p1.diffuse.a != p2.diffuse.a) ? BlendingDirty : 0;
     nDirtyFlags |= (p1.specular.a != p2.specular.a) ? BlendingDirty : 0;
+    nDirtyFlags |= (p1.alphaTestValue != p2.alphaTestValue) ? BlendingDirty : 0;
     nDirtyFlags |= (p1.diffuseOpacityMapStrength != p2.diffuseOpacityMapStrength) ? BlendingDirty : 0;
     nDirtyFlags |= (p1.specularOpacityMapStrength != p2.specularOpacityMapStrength) ? BlendingDirty : 0;
 

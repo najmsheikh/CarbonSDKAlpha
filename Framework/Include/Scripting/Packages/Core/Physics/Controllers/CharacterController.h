@@ -116,6 +116,8 @@ namespace CharacterController
             BINDSUCCESS( engine->registerObjectMethod( typeName, "bool isFlyModeEnabled( ) const", asMETHODPR(cgCharacterController, isFlyModeEnabled, ( ) const, bool ), asCALL_THISCALL) );
 
             BINDSUCCESS( engine->registerObjectMethod( typeName, "bool navigateTo( const Vector3 &in )", asMETHODPR(cgCharacterController, navigateTo, ( const cgVector3& ), bool ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( typeName, "bool navigateToAtRange( const Vector3 &in, float, float )", asMETHODPR(cgCharacterController, navigateToAtRange, ( const cgVector3&, cgFloat, cgFloat ), bool ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( typeName, "const Vector3 & getNavigationTarget( ) const", asMETHODPR(cgCharacterController, getNavigationTarget, ( ) const, const cgVector3& ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( typeName, "void applyImpulse( const Vector3 &in )", asMETHODPR(cgCharacterController, applyImpulse, ( const cgVector3& ), void ), asCALL_THISCALL) );
 
         }

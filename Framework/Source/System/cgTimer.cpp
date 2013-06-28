@@ -48,9 +48,9 @@ namespace
 {
     int FrameTimeSort( const void * pKey1, const void * pKey2 )
     {
-        if ( *((cgFloat*)pKey1) == *((cgFloat*)pKey2) )
+        if ( *((cgDouble*)pKey1) == *((cgDouble*)pKey2) )
             return 0;
-        return (*((cgFloat*)pKey1) < *((cgFloat*)pKey2)) ? -1 : 1;
+        return (*((cgDouble*)pKey1) < *((cgDouble*)pKey2)) ? -1 : 1;
     }
 };
 
@@ -79,19 +79,19 @@ cgTimer::cgTimer()
     } // End If No Hardware
 
 	// Clear any needed values
-    mUseSmoothing             = false;
+    mUseSmoothing          = false;
     mStartTime             = mLastTime;
     mCurrentTime           = mLastTime;
-    mCurrentTimeSeconds        = (cgDouble)(mCurrentTime - mStartTime) * mTimeScale;
-    mTimeElapsed           = 0.0f;
-    mPrevTimeElapsed       = 0.0f;
-    mSimulationSpeed       = 1.0f;
-    mSimulationTimeElapsed = 0.0f;
-    mTimeDebt              = 0.0f;
-    mRateLimit             = 0.0f;
+    mCurrentTimeSeconds    = (cgDouble)(mCurrentTime - mStartTime) * mTimeScale;
+    mTimeElapsed           = 0.0;
+    mPrevTimeElapsed       = 0.0;
+    mSimulationSpeed       = 1.0;
+    mSimulationTimeElapsed = 0.0;
+    mTimeDebt              = 0.0;
+    mRateLimit             = 0.0;
     mFrameRate             = 0;
     mFPSFrameCount         = 0;
-    mFPSTimeElapsed        = 0.0f;
+    mFPSTimeElapsed        = 0.0;
     mFrameCounter         = 0;
     memset( mFrameTime, 0, sizeof(mFrameTime) );
 }
@@ -159,9 +159,9 @@ void cgTimer::tick( )
 {
     tick( 0.0f );
 }
-void cgTimer::tick( cgFloat fLockFPS )
+void cgTimer::tick( cgDouble fLockFPS )
 {
-    cgFloat fTimeElapsed;
+    cgDouble fTimeElapsed;
 
     // Is performance hardware available?
 	if ( mUsePerfHardware ) 
@@ -177,19 +177,19 @@ void cgTimer::tick( cgFloat fLockFPS )
 	} // End If no hardware available
 
 	// Calculate elapsed time in seconds
-	fTimeElapsed = (mCurrentTime - mLastTime) * (cgFloat)mTimeScale;
+	fTimeElapsed = (cgDouble)(mCurrentTime - mLastTime) * mTimeScale;
 
     // Smoothly ramp up frame rate to prevent jittering
-    //if ( fLockFPS == 0.0f && mTimeElapsed > 0 ) fLockFPS = (1.0f / mTimeElapsed) + 20.0f;
+    //if ( fLockFPS == 0.0 && mTimeElapsed > 0 ) fLockFPS = (1.0 / mTimeElapsed) + 20.0;
 
     // Any permanent rate limit applied?
-    if ( fLockFPS <= 0.0f )
+    if ( fLockFPS <= 0.0 )
         fLockFPS = mRateLimit;
     
     // Should we lock the frame rate ?
-    if ( fLockFPS > 0.0f )
+    if ( fLockFPS > 0.0 )
     {
-        while ( fTimeElapsed < (1.0f / fLockFPS))
+        while ( fTimeElapsed < (1.0 / fLockFPS))
         {
             // Is performance hardware available?
 	        if ( mUsePerfHardware ) 
@@ -205,7 +205,7 @@ void cgTimer::tick( cgFloat fLockFPS )
 	        } // End If no hardware available
 
 	        // Calculate elapsed time in seconds
-	        fTimeElapsed = (mCurrentTime - mLastTime) * (cgFloat)mTimeScale;
+	        fTimeElapsed = (cgDouble)(mCurrentTime - mLastTime) * mTimeScale;
 
         } // End While
 
@@ -227,7 +227,7 @@ void cgTimer::tick( cgFloat fLockFPS )
     {
         //for ( cgInt i = 10; i > 0; --i )
             //mFrameTime[i] = mFrameTime[i-1];
-        memmove( &mFrameTime[1], mFrameTime, 10 * sizeof(cgFloat) );
+        memmove( &mFrameTime[1], mFrameTime, 10 * sizeof(cgDouble) );
         mFrameTime[ 0 ] = fTimeElapsed;
     
     } // End if > 11
@@ -235,11 +235,11 @@ void cgTimer::tick( cgFloat fLockFPS )
 	// Calculate Frame Rate
 	mFPSFrameCount++;
 	mFPSTimeElapsed += fTimeElapsed;
-	if ( mFPSTimeElapsed > 1.0f) 
+	if ( mFPSTimeElapsed > 1.0) 
     {
-		mFrameRate			= mFPSFrameCount;
-		mFPSFrameCount		= 0;
-		mFPSTimeElapsed	= 0.0f;
+		mFrameRate		= mFPSFrameCount;
+		mFPSFrameCount  = 0;
+		mFPSTimeElapsed	= 0.0;
 	
     } // End If Second Elapsed
 
@@ -251,15 +251,15 @@ void cgTimer::tick( cgFloat fLockFPS )
         // Compute the mean of the frame time, discarding the two highest
         // and two lowest outliers (we use a quicksort to achieve this).
         mTimeElapsed = 0.0f;
-        cgFloat Samples[11];
+        cgDouble Samples[11];
         memcpy( Samples, mFrameTime, sizeof(mFrameTime) );
-        qsort( Samples, 11, sizeof(cgFloat), FrameTimeSort );
+        qsort( Samples, 11, sizeof(cgDouble), FrameTimeSort );
         for ( cgInt i = 2; i < 9; ++i )
             mTimeElapsed += Samples[i];
-        mTimeElapsed /= 7.0f;
+        mTimeElapsed /= 7.0;
 
         // Smooth time step from previous frame.
-        mTimeElapsed = (0.2f * mTimeElapsed) + (0.8f * mPrevTimeElapsed);
+        mTimeElapsed = (0.2 * mTimeElapsed) + (0.8 * mPrevTimeElapsed);
 
         // Keep track of the time 'debt'; the difference between the sum of all
         // smoothed time deltas (in total, over time) and the real world clock.
@@ -277,7 +277,7 @@ void cgTimer::tick( cgFloat fLockFPS )
     
     // Store current time and final simulation elapsed time in seconds
     // to save the multiply in each call to the various accessors.
-    mCurrentTimeSeconds        = (cgDouble)(mCurrentTime - mStartTime) * mTimeScale;
+    mCurrentTimeSeconds    = (cgDouble)(mCurrentTime - mStartTime) * mTimeScale;
     mSimulationTimeElapsed = mTimeElapsed * mSimulationSpeed;
     mFrameCounter++;
 }
@@ -382,7 +382,7 @@ cgUInt32 cgTimer::getFrameRate( ) const
 /// directly to the 'tick()' method. Set to a value <= 0 to disable.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgTimer::setRateLimit( cgFloat fRateLimit )
+void cgTimer::setRateLimit( cgDouble fRateLimit )
 {
     mRateLimit = fRateLimit;
 }

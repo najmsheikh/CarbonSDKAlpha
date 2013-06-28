@@ -106,8 +106,8 @@ shared class DestructibleLight : IScriptedObjectBehavior
 
         // Replace any emissive material with its non emissive variant.
         // First, get the identifiers of the materials we want to swap.
-        uint litMaterialId   = mMesh.getCustomProperties().getProperty( "material_illuminated", 0 );
-        uint unlitMaterialId = mMesh.getCustomProperties().getProperty( "material_deluminated", 0 );
+        uint litMaterialId   = mMesh.getCustomProperty( "material_illuminated", 0 );
+        uint unlitMaterialId = mMesh.getCustomProperty( "material_deluminated", 0 );
 
         // Get the lit material (should already be resident).
         MaterialHandle litMaterial, unlitMaterial;

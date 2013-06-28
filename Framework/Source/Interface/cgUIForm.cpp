@@ -312,6 +312,23 @@ bool cgUIForm::createForm( const cgString & strName )
 
     } // End if failed to init
 
+    // If the invisible form style is selected, forcibly disable 
+    // form manipulation.
+    if ( mProperties.style == cgUIFormStyle::Invisible )
+    {
+        mProperties.sizable = false;
+        mProperties.movable = false;
+        mProperties.canClose = false;
+        mProperties.canMaximize = false;
+        mProperties.canMinimize = false;
+        mCaption->setVisible( false );
+
+        // Switch to simple control style with an invisible frame.
+        mControlMode = Simple;
+        mSkinElement = cgString::Empty;
+    
+    } // End if invisible
+
     // Execute the form initialization routine
     if ( !onCreateForm( ) )
     {
@@ -376,26 +393,31 @@ bool cgUIForm::createForm( const cgString & strName )
 
     } // End if failed to prepare
 
-    // Retrieve the form description from the current skin
-    const cgUIFormStyleDesc & FormDesc = pCurrentSkin->getFormStyleDefinition( cgUIFormStyle::Overlapped );
-    
-    // Position and size the caption
-    rcControl = elementAreaToClientRect( FormDesc.caption );
-    mCaption->setPosition( rcControl.left, rcControl.top );
-    mCaption->setSize( rcControl.right - rcControl.left, rcControl.bottom - rcControl.top );
+    // Position form elements as required.
+    if ( mProperties.style != cgUIFormStyle::Invisible )
+    {
+        // Retrieve the form description from the current skin
+        const cgUIFormStyleDesc & FormDesc = pCurrentSkin->getFormStyleDefinition( mProperties.style );
+        
+        // Position and size the caption
+        rcControl = elementAreaToClientRect( FormDesc.caption );
+        mCaption->setPosition( rcControl.left, rcControl.top );
+        mCaption->setSize( rcControl.right - rcControl.left, rcControl.bottom - rcControl.top );
 
-    // Position the control buttons
-    rcControl = elementAreaToClientRect( FormDesc.buttonClose );
-    if ( mCloseButton )
-        mCloseButton->setPosition( rcControl.left, rcControl.top );
+        // Position the control buttons
+        rcControl = elementAreaToClientRect( FormDesc.buttonClose );
+        if ( mCloseButton )
+            mCloseButton->setPosition( rcControl.left, rcControl.top );
 
-    rcControl = elementAreaToClientRect( FormDesc.buttonMinimize );
-    if ( mMinimizeButton )
-        mMinimizeButton->setPosition( rcControl.left, rcControl.top );
-    
-    rcControl = elementAreaToClientRect( FormDesc.buttonMaximize );
-    if ( mMaximizeButton )
-        mMaximizeButton->setPosition( rcControl.left, rcControl.top );
+        rcControl = elementAreaToClientRect( FormDesc.buttonMinimize );
+        if ( mMinimizeButton )
+            mMinimizeButton->setPosition( rcControl.left, rcControl.top );
+        
+        rcControl = elementAreaToClientRect( FormDesc.buttonMaximize );
+        if ( mMaximizeButton )
+            mMaximizeButton->setPosition( rcControl.left, rcControl.top );
+
+    } // End if !invisible
 
     // Set up the caption label rendering style
     mCaption->setMultiline( false );

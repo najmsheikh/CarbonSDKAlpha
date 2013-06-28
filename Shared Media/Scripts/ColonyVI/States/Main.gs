@@ -121,40 +121,84 @@ class Main : IScriptedAppState
     //-------------------------------------------------------------------------
     private bool constructAppStates( )
     {
+        AppStateEventActionDesc desc;
         AppStateManager @ manager = mState.getManager();
+
+        ///////////////////////////////////////////////////////////////////////
+        // Main Menu
+        ///////////////////////////////////////////////////////////////////////
 
         // Construct a new application state for the main menu.
         AppState @ mainMenuState = AppState( "MainMenu", "Scripts/ColonyVI/States/MainMenu.gs", getAppResourceManager() );
         manager.registerState( mainMenuState );
 
-        // Register events for main menu
-        AppStateEventActionDesc desc;
+        // Launch new game
+        desc            = AppStateEventActionDesc();
         desc.actionType = AppStateEventActionType::Transition;
-        desc.flags      = 0;
         desc.toStateId  = "GamePlay";
         mainMenuState.registerEventAction( "New Game", desc );
 
-        // Register events for main menu
+        // Exit to desktop
+        desc            = AppStateEventActionDesc();
         desc.actionType = AppStateEventActionType::EndRoot;
-        desc.flags      = 0;
-        desc.toStateId  = "";
         mainMenuState.registerEventAction( "Exit", desc );
+
+        ///////////////////////////////////////////////////////////////////////
+        // In Game Menu
+        ///////////////////////////////////////////////////////////////////////
+
+        // Construct a new application state for the in-game menu.
+        AppState @ inGameMenuState = AppState( "InGameMenu", "Scripts/ColonyVI/States/InGameMenu.gs", getAppResourceManager() );
+        manager.registerState( inGameMenuState );
+
+        // Resume game
+        desc            = AppStateEventActionDesc();
+        desc.actionType = AppStateEventActionType::EndState;
+        inGameMenuState.registerEventAction( "Resume", desc );
+
+        // Restart game
+        desc            = AppStateEventActionDesc();
+        desc.actionType = AppStateEventActionType::PassUp;
+        inGameMenuState.registerEventAction( "Restart", desc );
+
+        // Exit to desktop
+        desc            = AppStateEventActionDesc();
+        desc.actionType = AppStateEventActionType::PassUp;
+        inGameMenuState.registerEventAction( "Exit", desc );
+
+        ///////////////////////////////////////////////////////////////////////
+        // Main Game Play
+        ///////////////////////////////////////////////////////////////////////
 
         // Construct a new application state for the main game play.
         AppState @ gamePlayState = AppState( "GamePlay", "Scripts/ColonyVI/States/GamePlay.gs", getAppResourceManager() );
         manager.registerState( gamePlayState );
 
-        // Register events for game play
+        // Exit to desktop
+        desc            = AppStateEventActionDesc();
         desc.actionType = AppStateEventActionType::EndRoot;
-        desc.flags      = 0;
-        desc.toStateId  = "";
         gamePlayState.registerEventAction( "Exit", desc );
 
-        // Register events for game play
+        // Restart game
+        desc            = AppStateEventActionDesc();
         desc.actionType = AppStateEventActionType::Transition;
-        desc.flags      = 0;
         desc.toStateId  = "GamePlay";
         gamePlayState.registerEventAction( "Restart", desc );
+
+        // Pause game
+        desc            = AppStateEventActionDesc();
+        desc.actionType = AppStateEventActionType::SpawnChild;
+        desc.flags      = AppStateEventActionFlags::SuspendParent;
+        desc.toStateId  = "InGameMenu";
+        gamePlayState.registerEventAction( "Pause", desc );
+
+        ///////////////////////////////////////////////////////////////////////
+        // Loading Screen
+        ///////////////////////////////////////////////////////////////////////
+
+        // Construct a new application state for the loading screen.
+        AppState @ loadingState = AppState( "Loading", "Scripts/ColonyVI/States/Loading.gs", getAppResourceManager() );
+        manager.registerState( loadingState );
         
         // Success!
         return true;

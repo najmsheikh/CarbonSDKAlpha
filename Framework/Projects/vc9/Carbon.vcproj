@@ -44,7 +44,7 @@
 				Optimization="0"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				PreprocessorDefinitions="WINVER=0x0501;_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="2"
 				BasicRuntimeChecks="3"
@@ -69,7 +69,7 @@
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="false"
 				AdditionalOptions="/ignore:4006 /ignore:4221"
-				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
+				AdditionalDependencies="../../Lib/vorbis/vorbis_static.lib ../../Lib/vorbis/vorbisfile_static.lib ../../Lib/vorbis/ogg/ogg_static.lib. ../../Lib/giEXCore/giEXCore.lib ../../Lib/Newton/newton.lib ../../Lib/Newton/dScene.lib dsound.lib dxguid.lib d3d9.lib d3dx9.lib dinput8.lib dxerr.lib ws2_32.lib winmm.lib user32.lib gdiplus.lib"
 				OutputFile="$(OutDir)/$(ProjectName)d.lib"
 				AdditionalLibraryDirectories="$(DXSDK_DIR)Lib\x86"
 			/>
@@ -120,7 +120,7 @@
 				OmitFramePointers="false"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				PreprocessorDefinitions="WINVER=0x0501;_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -194,7 +194,7 @@
 				Optimization="0"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;_DEBUG;_LIB;CGE_DLL_EXPORTS;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				PreprocessorDefinitions="WINVER=0x0501;_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;_DEBUG;_LIB;CGE_DLL_EXPORTS;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="2"
 				BasicRuntimeChecks="0"
@@ -274,7 +274,7 @@
 				OmitFramePointers="true"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;NDEBUG;_LIB;CGE_DLL_EXPORTS"
+				PreprocessorDefinitions="WINVER=0x0501;_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;NDEBUG;_LIB;CGE_DLL_EXPORTS"
 				StringPooling="true"
 				ExceptionHandling="2"
 				RuntimeLibrary="2"
@@ -355,7 +355,7 @@
 				OmitFramePointers="false"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				PreprocessorDefinitions="WINVER=0x0501;_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="0"
@@ -430,7 +430,7 @@
 				Optimization="0"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				PreprocessorDefinitions="WINVER=0x0501;CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="2"
 				BasicRuntimeChecks="3"
@@ -506,7 +506,7 @@
 				OmitFramePointers="false"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				PreprocessorDefinitions="WINVER=0x0501;CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="0"
@@ -583,7 +583,7 @@
 				OmitFramePointers="false"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton"
-				PreprocessorDefinitions="CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				PreprocessorDefinitions="WINVER=0x0501;CGE_DX11_RENDER_SUPPORT;_NEWTON_USE_LIB;_NEWTON_STATIC_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -6856,6 +6856,10 @@
 								</File>
 								<File
 									RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\ParticleEmitter.h"
+									>
+								</File>
+								<File
+									RelativePath="..\..\Include\Scripting\Packages\Core\World\Objects\Skin.h"
 									>
 								</File>
 								<File

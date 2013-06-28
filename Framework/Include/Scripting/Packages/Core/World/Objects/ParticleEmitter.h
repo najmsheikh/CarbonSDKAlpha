@@ -102,6 +102,8 @@ namespace ParticleEmitter
             BINDSUCCESS( engine->registerObjectMethod( "ParticleEmitterNode", "const SizeF& getParticleSize( uint ) const", asMETHODPR(cgParticleEmitterNode, getParticleSize, ( cgUInt32 ) const, const cgSizeF&), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ParticleEmitterNode", "float getParticleAirResistance( uint ) const", asMETHODPR(cgParticleEmitterNode, getParticleAirResistance, ( cgUInt32 ) const, cgFloat), asCALL_THISCALL) );
             // ToDo: cgParticleBlendMethod::Base getParticleBlendMethod( cgUInt32 layerIndex ) const
+
+            BINDSUCCESS( engine->registerObjectMethod( "ParticleEmitterNode", "bool particlesSpent( bool ) const", asMETHODPR(cgParticleEmitterNode, particlesSpent, ( bool ) const, bool), asCALL_THISCALL) );
         }
 
     }; // End Class : Package

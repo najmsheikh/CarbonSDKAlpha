@@ -33,6 +33,7 @@ class PartObjective : Objective
     ///////////////////////////////////////////////////////////////////////////
 	// Private Member Variables
 	///////////////////////////////////////////////////////////////////////////
+    private uint mPartRefId;
 
 	///////////////////////////////////////////////////////////////////////////
 	// Constructors & Destructors
@@ -55,20 +56,17 @@ class PartObjective : Objective
 	//-------------------------------------------------------------------------
 	void onAttach( ObjectNode @ object )
 	{
-        // Get properties
-        PropertyContainer @ properties = object.getCustomProperties();
-
         // Don't run update process until we're ready.
         object.setUpdateRate( UpdateRate::Never );
 
+        // Get the reference ID of the part being collected.
+        mPartRefId = uint(object.getCustomProperty( "part_refid", 0 ));
+
         // Get the currently active state (GamePlay)
         AppStateManager @ stateManager = getAppStateManager();
-        AppState @ state = stateManager.getActiveState();
+        AppState @ state = stateManager.getState( "GamePlay" );
         if ( @state != null )
-        {
             @mGamePlayState = cast<GamePlay>( state.getScriptObject() );
-        
-        } // End if active
 
         // Call base class implementation last.
         Objective::onAttach( object );
@@ -105,13 +103,18 @@ class PartObjective : Objective
 	//-------------------------------------------------------------------------
     Objective @ onActivate( ObjectNode @ issuer )
     {
+        // Hide the collected part.
+        Scene @ scene = mNode.getScene();
+        ObjectNode @ partNode = scene.getObjectNodeById( mPartRefId );
+        if ( @partNode != null )
+            partNode.unload();
+
         // Trigger this gameplay sequence.
         mGamePlayState.setCurrentGameSequence( mSequenceIdentifier );
 
         // Switch to next objective
         if ( mNextObjectiveId != 0 )
         {
-            Scene @ scene = mNode.getScene();
             ObjectNode @ objectiveNode = scene.getObjectNodeById( mNextObjectiveId );
             if ( objectiveNode.getBehaviorCount() > 0 )
                 return cast<Objective>(objectiveNode.getScriptedBehavior(0));

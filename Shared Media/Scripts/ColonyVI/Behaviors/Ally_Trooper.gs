@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 // Script Includes
 //-----------------------------------------------------------------------------
-#include_once "NPCAgent.gsh"
+#include_once "../API/NPCAgent.gsh"
 
 //-----------------------------------------------------------------------------
 // Class Definitions
@@ -33,6 +33,7 @@ shared class Ally_Trooper : NPCAgent
     ///////////////////////////////////////////////////////////////////////////
 	// Private Member Variables
 	///////////////////////////////////////////////////////////////////////////
+    float mLastAimAngle;
     
 	///////////////////////////////////////////////////////////////////////////
 	// Constructors & Destructors
@@ -44,22 +45,29 @@ shared class Ally_Trooper : NPCAgent
 	Ally_Trooper( )
     {
         // Setup NPC description
+        mFactionId                  = 0;
         maxDetectionConeH           = 200.0f;
         maxDetectionConeV           = 90.0f;
         maxDetectionRange           = 40.0f;
         maxFiringConeH              = 15.0f;
         maxFiringConeV              = 45.0f;
         maxFiringRange              = 30.0f;
-        maxSpeed                    = 8.0f;
+        minFiringRange              = 16.0f;
+        idealFiringRange            = 17.0f;
+        maxSpeed                    = 5.0f;
+        canFireWhileMoving          = false;
         walkAnimationName           = "Weapon Move Fast";
+        backpeddleAnimationName     = "Weapon Move Fast";
         strafeLeftAnimationName     = "Weapon Strafe Left";
         strafeRightAnimationName    = "Weapon Strafe Right";
         firingAnimationName         = "Weapon Stand Fire Loop";
-        canFireWhileMoving          = false;
+        walkAnimationSpeed          = 0.625f;
+        backpeddleAnimationSpeed    = -0.625f;
+        strafeAnimationSpeed        = 0.625f;
 
         // Setup agent description
-        mMaximumHealth              = 100;
-        mMaximumArmor               = 100;
+        mMaximumHealth              = 200;
+        mMaximumArmor               = 200;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -78,6 +86,7 @@ shared class Ally_Trooper : NPCAgent
         // Setup initial states.
         mCurrentHealth      = mMaximumHealth;
         mCurrentArmor       = mMaximumArmor;
+        mLastAimAngle       = 0.0f;
 
         // Trigger base class implementation
         NPCAgent::onAttach( object );
@@ -111,36 +120,45 @@ shared class Ally_Trooper : NPCAgent
 	{
         // Call base class implementation
         NPCAgent::onUpdate( elapsedTime );
+
+        // Should we be aiming?
+        float angle = 0.0f;
+        if ( targetAcquired )
+        {
+            // Compute the angle to the target.
+            Vector3 dir;
+            Vector3 from = actor.getPosition() + (actor.getYAxis() * getHeight() * 0.66f);
+            Vector3 to   = targetLastKnownPos + actor.getYAxis() * (targetHeight * 0.66f);
+            vec3Normalize( dir, to - from );
+            angle = dir.y;
+            if ( angle < -1.0f )
+                angle = -1.0f;
+            if ( angle > 1.0f )
+                angle = 1.0f;
+            angle = CGEToDegree(asin( angle ));
+        
+        } // End if has target
+        
+        // Smooth angle over time
+        float aimSmoothFactor = 0.1f / elapsedTime;
+        angle = smooth( angle, mLastAimAngle, aimSmoothFactor );
+        mLastAimAngle = angle;
+
+        // If there is any adjustment to be made, do it.
+        if ( angle < -0.1f || angle > 0.1f )
+        {
+            // Adjust skeleton
+            // TODO: Cache object
+            ObjectNode @ joint = actor.findChild( "joint12", true );
+            joint.rotateAxis( -angle, actor.getXAxis(), joint.getPosition() );
+        
+        } // End if acquired
+
 	}
 
     ///////////////////////////////////////////////////////////////////////////
 	// Public Method Overrides (NPCAgent)
 	///////////////////////////////////////////////////////////////////////////
-    //-------------------------------------------------------------------------
-	// Name : isPlayerVisible ()
-	// Desc : Determine if the player is currently visible to this NPC.
-	//-------------------------------------------------------------------------
-    bool isPlayerVisible( bool & canFire, bool & performedLoS, float & visibilityScore )
-    {
-        // ToDo: temp - troopers currently act as hostile. Disable their visibility 
-        // of the player so they don't shoot at us.
-        canFire = false;
-        performedLoS = false;
-        visibilityScore = 0.0f;
-        return false;
-    }
-
-    //-------------------------------------------------------------------------
-	// Name : updateTargetStatus ()
-	// Desc : Check to see if an enemy target is visible / within range.
-	//-------------------------------------------------------------------------
-    void updateTargetStatus( float elapsedTime )
-    {
-        // ToDo: temp - troopers currently act as hostile. Disable their target update
-        // so they don't shoot at us.
-        return;
-    }
-
     //-------------------------------------------------------------------------
 	// Name : kill ()
 	// Desc : Trigger NPC death and apply an impulse to the specified node

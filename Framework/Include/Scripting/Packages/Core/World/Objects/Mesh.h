@@ -29,6 +29,12 @@ namespace Mesh
         BINDSUCCESS( engine->registerObjectMethod( typeName, "bool replaceMaterial( const MaterialHandle &in, const MaterialHandle &in )", asMETHODPR(type, replaceMaterial, ( const cgMaterialHandle&, const cgMaterialHandle& ), bool ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "void setShadowStage( SceneProcessStage )", asMETHODPR(type, setShadowStage, ( cgSceneProcessStage::Base ), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod( typeName, "SceneProcessStage getShadowStage( ) const", asMETHODPR(type, getShadowStage, ( ) const, cgSceneProcessStage::Base ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool createBox( float, float, float, uint, uint, uint, bool, MeshCreateOrigin )", asMETHODPR(type,createBox, ( cgFloat, cgFloat, cgFloat, cgUInt32, cgUInt32, cgUInt32, bool, cgMeshCreateOrigin::Base ), bool ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool createSphere( float, uint, uint, bool, MeshCreateOrigin )", asMETHODPR(type,createSphere, ( cgFloat, cgUInt32, cgUInt32, bool, cgMeshCreateOrigin::Base ), bool ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool createCylinder( float, float, uint, uint, bool, MeshCreateOrigin )", asMETHODPR(type,createCylinder, ( cgFloat, cgFloat, cgUInt32, cgUInt32, bool, cgMeshCreateOrigin::Base ), bool ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool createCapsule( float, float, uint, uint, bool, MeshCreateOrigin )", asMETHODPR(type,createCapsule, ( cgFloat, cgFloat, cgUInt32, cgUInt32, bool, cgMeshCreateOrigin::Base ), bool ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool createCone( float, float, float, uint, uint, bool, MeshCreateOrigin )", asMETHODPR(type,createCone, ( cgFloat, cgFloat, cgFloat, cgUInt32, cgUInt32, bool, cgMeshCreateOrigin::Base ), bool ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod( typeName, "bool createTorus( float, float, uint, uint, bool, MeshCreateOrigin )", asMETHODPR(type,createTorus, ( cgFloat, cgFloat, cgUInt32, cgUInt32, bool, cgMeshCreateOrigin::Base ), bool ), asCALL_THISCALL) );
 
     } // End Method registerNodeMethods<>
 

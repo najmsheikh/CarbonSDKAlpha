@@ -149,7 +149,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
     //-------------------------------------------------------------------------
-    virtual void                Dispose                 ( bool bDisposeBase );
+    virtual void                dispose                 ( bool disposeBase );
 
 private:
     //-------------------------------------------------------------------------

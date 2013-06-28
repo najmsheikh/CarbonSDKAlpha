@@ -39,6 +39,9 @@ namespace RectF
             // Register property methods
             BINDSUCCESS( engine->registerObjectMethod( "RectF", "float get_width() const", asMETHODPR( cgRectF, width, () const, cgFloat ), asCALL_THISCALL ) );
             BINDSUCCESS( engine->registerObjectMethod( "RectF", "float get_height() const", asMETHODPR( cgRectF, height, () const, cgFloat ), asCALL_THISCALL ) );
+
+            // Register methods
+            BINDSUCCESS( engine->registerObjectMethod( "RectF", "bool containsPoint( const PointF&in ) const", asMETHODPR( cgRectF, containsPoint, ( const cgPointF&) const, bool ), asCALL_THISCALL ) );
         }
 
         //---------------------------------------------------------------------

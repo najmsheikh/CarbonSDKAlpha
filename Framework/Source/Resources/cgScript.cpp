@@ -757,7 +757,18 @@ asIScriptContext * cgScript::scriptExecute( cgScriptFunctionHandle pFunctionHand
     
     // An error occured?
     if ( nResult == asEXECUTION_EXCEPTION )
-        throw ExecuteException( pInternalContext->GetExceptionString(), getResourceName(), pInternalContext->GetExceptionLineNumber() );
+    {
+        asIScriptFunction * pFunction = pInternalContext->GetExceptionFunction();
+        if ( !pFunction )
+            throw ExecuteException( pInternalContext->GetExceptionString(), getResourceName(), pInternalContext->GetExceptionLineNumber() );
+        else
+        {
+            STRING_CONVERT;
+            throw ExecuteException( pInternalContext->GetExceptionString(), stringConvertA2CT(pFunction->GetScriptSectionName()), pInternalContext->GetExceptionLineNumber() );
+        
+        } // End if has function
+    
+    } // End if exception
     else if ( nResult == asERROR )
         throw ExecuteException( "The script failed to execute due to previous errors. Check function call declaration.", getResourceName(), 0 );
 
@@ -1541,7 +1552,18 @@ asIScriptContext * cgScriptObject::scriptExecute( cgScriptFunctionHandle pMethod
     
     // An error occured?
     if ( nResult == asEXECUTION_EXCEPTION )
-        throw ExecuteException( pInternalContext->GetExceptionString(), mScript->getResourceName(), pInternalContext->GetExceptionLineNumber() );
+    {
+        asIScriptFunction * pFunction = pInternalContext->GetExceptionFunction();
+        if ( !pFunction )
+            throw ExecuteException( pInternalContext->GetExceptionString(), mScript->getResourceName(), pInternalContext->GetExceptionLineNumber() );
+        else
+        {
+            STRING_CONVERT;
+            throw ExecuteException( pInternalContext->GetExceptionString(), stringConvertA2CT(pFunction->GetScriptSectionName()), pInternalContext->GetExceptionLineNumber() );
+        
+        } // End if has function
+    
+    } // End if exception
     else if ( nResult == asERROR )
         throw ExecuteException( "The script method failed to execute due to previous errors. Check method call declaration.", mScript->getResourceName(), 0 );
 

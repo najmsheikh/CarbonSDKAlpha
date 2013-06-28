@@ -189,7 +189,7 @@ bool cgAudioDriver::processMessage( cgMessage * pMessage )
 void cgAudioDriver::releaseOwnedResources()
 {
     // Bail if nothing to release
-    if ( mAmbientTracks.empty() == true )
+    if ( mAmbientTracks.empty() )
         return;
 
     // Lock ambient track data
@@ -327,7 +327,7 @@ bool cgAudioDriver::initialize( cgResourceManager * pResources, cgAppWindow * pF
 /// Mix a set of stereo 16 bit PCM samples down to a mono buffer.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgAudioDriver::PCM16StereoToMono( cgInt16 pDestSamples[], cgInt16 pSrcSamples[], cgUInt32 nSampleCount, cgDouble fGain /* = -3.3 */ )
+void cgAudioDriver::PCM16StereoToMono( cgInt16 pDestSamples[], cgInt16 pSrcSamples[], cgUInt32 nSampleCount, cgDouble fGain )
 {
     cgUInt32 i;
     int      nMixedSample, nLeftSample, nRightSample;
@@ -364,7 +364,7 @@ void cgAudioDriver::PCM16StereoToMono( cgInt16 pDestSamples[], cgInt16 pSrcSampl
 /// Mix a set of stereo 8 bit PCM samples down to a mono buffer.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgAudioDriver::PCM8StereoToMono( cgByte pDestSamples[], cgByte pSrcSamples[], cgUInt32 nSampleCount, cgDouble fGain /* = -3.3 */ )
+void cgAudioDriver::PCM8StereoToMono( cgByte pDestSamples[], cgByte pSrcSamples[], cgUInt32 nSampleCount, cgDouble fGain )
 {
     cgUInt32 i;
     cgInt16  nMixedSample, nLeftSample, nRightSample;
@@ -442,6 +442,98 @@ void cgAudioDriver::releaseAudioCodec( cgAudioCodec * pCodec )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : stopAmbientTracks ()
+/// <summary>
+/// Completely stop all currently playing ambient tracks.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgAudioDriver::stopAmbientTracks( )
+{
+    // Lock ambient track data
+    mAmbientSection->enter();
+
+    // Iterate through all ambient tracks and pause them.
+    AmbientTrackMap::iterator itTrack;
+    for ( itTrack = mAmbientTracks.begin(); itTrack != mAmbientTracks.end(); ++itTrack )
+    {
+        // Get the last item that was added and fade it.
+        AmbientBufferList & List = itTrack->second;
+        if ( List.empty() )
+            continue;
+
+        AmbientItem * pItem = List.back();
+        if ( pItem != CG_NULL )
+            pItem->state = Fade_Out;
+
+    } // Next track
+
+    // Unlock ambient track data
+    mAmbientSection->exit();   
+}
+
+//-----------------------------------------------------------------------------
+//  Name : pauseAmbientTracks ()
+/// <summary>
+/// Pause all currently playing ambient tracks.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgAudioDriver::pauseAmbientTracks( )
+{
+    // Lock ambient track data
+    mAmbientSection->enter();
+
+    // Iterate through all ambient tracks and pause them.
+    AmbientTrackMap::iterator itTrack;
+    for ( itTrack = mAmbientTracks.begin(); itTrack != mAmbientTracks.end(); ++itTrack )
+    {
+        AmbientBufferList::iterator itBuffer;
+        AmbientBufferList & Tracks = itTrack->second;
+        for ( itBuffer = Tracks.begin(); itBuffer != Tracks.end(); ++itBuffer )
+        {
+            AmbientItem * pItem = *itBuffer;
+            if ( pItem && pItem->buffer.isValid() )
+                pItem->buffer->pause();
+
+        } // Next buffer
+
+    } // Next track
+
+    // Unlock ambient track data
+    mAmbientSection->exit();    
+}
+
+//-----------------------------------------------------------------------------
+//  Name : resumeAmbientTracks ()
+/// <summary>
+/// Resume all previously paused ambient tracks.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgAudioDriver::resumeAmbientTracks( )
+{
+    // Lock ambient track data
+    mAmbientSection->enter();
+
+    // Iterate through all ambient tracks and resume them.
+    AmbientTrackMap::iterator itTrack;
+    for ( itTrack = mAmbientTracks.begin(); itTrack != mAmbientTracks.end(); ++itTrack )
+    {
+        AmbientBufferList::iterator itBuffer;
+        AmbientBufferList & Tracks = itTrack->second;
+        for ( itBuffer = Tracks.begin(); itBuffer != Tracks.end(); ++itBuffer )
+        {
+            AmbientItem * pItem = *itBuffer;
+            if ( pItem && pItem->buffer.isValid() )
+                pItem->buffer->resume();
+
+        } // Next buffer
+
+    } // Next track
+
+    // Unlock ambient track data
+    mAmbientSection->exit();
+}
+
+//-----------------------------------------------------------------------------
 //  Name : loadAmbientTrack ()
 /// <summary>
 /// Load and play the specified file as the current ambient clip in the
@@ -450,10 +542,22 @@ void cgAudioDriver::releaseAudioCodec( cgAudioCodec * pCodec )
 //-----------------------------------------------------------------------------
 bool cgAudioDriver::loadAmbientTrack( const cgString & strTrackName, cgInputStream Stream, cgFloat fInitialVolume /* = 1.0f */, cgFloat fRequestedVolume /* = 1.0f */ )
 {
+    return loadAmbientTrack( strTrackName, Stream, fInitialVolume, fRequestedVolume, true );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : loadAmbientTrack ()
+/// <summary>
+/// Load and play the specified file as the current ambient clip in the
+/// track specified.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAudioDriver::loadAmbientTrack( const cgString & strTrackName, cgInputStream Stream, cgFloat fInitialVolume, cgFloat fRequestedVolume, bool loop )
+{
     cgAudioBufferHandle hBuffer;
     
     // Attempt to load the specified ambient file as a streaming sound effect
-    cgUInt32 nAudioFlags = cgAudioBufferFlags::Streaming | cgAudioBufferFlags::AllowVolume;
+    cgUInt32 nAudioFlags = cgAudioBufferFlags::Streaming | cgAudioBufferFlags::AllowVolume | cgAudioBufferFlags::AllowPitch;
     if ( mResourceManager->loadAudioBuffer( &hBuffer, Stream, nAudioFlags, 0, cgDebugSource() ) == false )
     {
         cgAppLog::write( cgAppLog::Error, _T("Unable to load ambient sound '%s' into track '%s'.\n"), Stream.getName().c_str(), strTrackName.c_str() );
@@ -465,10 +569,11 @@ bool cgAudioDriver::loadAmbientTrack( const cgString & strTrackName, cgInputStre
     stopAmbientTrack( strTrackName );
 
     // Generate the new ambient item
-    AmbientItem * pNewItem = new AmbientItem();
-    pNewItem->buffer        = hBuffer;
+    AmbientItem * pNewItem    = new AmbientItem();
+    pNewItem->buffer          = hBuffer;
     pNewItem->state           = Fade_In;
     pNewItem->requestedVolume = fRequestedVolume;
+    pNewItem->looping         = loop;
 
     // Lock ambient track data
     mAmbientSection->enter();
@@ -481,7 +586,7 @@ bool cgAudioDriver::loadAmbientTrack( const cgString & strTrackName, cgInputStre
     if ( pSound != CG_NULL )
     {
         pSound->setVolume( fInitialVolume );
-        pSound->play( true );
+        pSound->play( loop );
 
     } // End if sound loaded
 
@@ -517,7 +622,7 @@ bool cgAudioDriver::stopAmbientTrack( const cgString & strTrackName )
 
     // Other sound currently playing?
     AmbientBufferList & List = it->second;
-    if ( List.empty() == false )
+    if ( !List.empty() )
     {
         // Get the last item that was added
         AmbientItem * pItem = List.back();
@@ -533,6 +638,89 @@ bool cgAudioDriver::stopAmbientTrack( const cgString & strTrackName )
 
     // No ambient sound playing in this track
     return false;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setAmbientTrackPitch ()
+/// <summary>
+/// Set the pitch of the specified ambient track.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAudioDriver::setAmbientTrackPitch( const cgString & strTrackName, cgFloat fPitch )
+{
+    AmbientTrackMap::iterator it;
+
+    // Lock ambient track data
+    mAmbientSection->enter();
+
+    // Get the specified ambient track data
+    it = mAmbientTracks.find( strTrackName );
+    if ( it == mAmbientTracks.end() )
+    {
+        // Unlock ambient track data
+        mAmbientSection->exit();
+        return false;
+    
+    } // End if no track found with this name
+
+    // Set the pitch of playing sounds.
+    AmbientBufferList & List = it->second;
+    AmbientBufferList::iterator itBuffer;
+    for ( itBuffer = List.begin(); itBuffer != List.end(); ++itBuffer )
+    {
+        AmbientItem * pItem = *itBuffer;
+        if ( pItem->buffer.isValid() )
+            pItem->buffer->setPitch( fPitch );
+
+    } // Next buffer
+
+    // Unlock ambient track data
+    mAmbientSection->exit();
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setAmbientTrackVolume ()
+/// <summary>
+/// Set the volume of the specified ambient track.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAudioDriver::setAmbientTrackVolume( const cgString & strTrackName, cgFloat fVolume )
+{
+    AmbientTrackMap::iterator it;
+
+    // Lock ambient track data
+    mAmbientSection->enter();
+
+    // Get the specified ambient track data
+    it = mAmbientTracks.find( strTrackName );
+    if ( it == mAmbientTracks.end() )
+    {
+        // Unlock ambient track data
+        mAmbientSection->exit();
+        return false;
+    
+    } // End if no track found with this name
+
+    // Get the last item in the list and adjust its volume / fade
+    AmbientBufferList & List = it->second;
+    if ( !List.empty() )
+    {
+        AmbientItem * pItem = List.back();
+        if ( pItem->state == Fade_In )
+            pItem->requestedVolume = fVolume;
+        else if ( pItem->state == Fade_None && pItem->buffer.isValid() )
+            pItem->buffer->setVolume( fVolume );
+
+    } // End if has items
+    
+    // Unlock ambient track data
+    mAmbientSection->exit();
+
+    // Success!
+    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -560,7 +748,7 @@ bool cgAudioDriver::isAmbientTrackPlaying( const cgString & strTrackName )
 
     // Sounds in the list?
     AmbientBufferList & List = it->second;
-    if ( List.empty() == false )
+    if ( !List.empty() )
     {
         // Unlock ambient track data
         mAmbientSection->exit();
@@ -702,8 +890,8 @@ cgUInt32 cgAudioDriver::updateAudioThread( cgThread * pThread, void * pContext )
                 AmbientItem * pItem = *itBuffer++;
                 if ( pItem == CG_NULL ) continue;
 
-                // Not fading?
-                if ( pItem->state == Fade_None )
+                // We can ignore this item if it's not fading, only if it is a looping track.
+                if ( pItem->state == Fade_None && pItem->looping )
                     continue;
 
                 // Retrieve underlying buffer resources
@@ -717,7 +905,7 @@ cgUInt32 cgAudioDriver::updateAudioThread( cgThread * pThread, void * pContext )
                     if ( pThis->mFadeInTime < CGE_EPSILON )
                         fNewVolume = pItem->requestedVolume;
                     else
-                        fNewVolume = std::min<cgFloat>( pItem->requestedVolume, pBuffer->getVolume() + (UpdateTimer.getTimeElapsed() / pThis->mFadeInTime) );
+                        fNewVolume = std::min<cgFloat>( pItem->requestedVolume, pBuffer->getVolume() + ((cgFloat)UpdateTimer.getTimeElapsed() / pThis->mFadeInTime) );
 
                     // Set the volume
                     pBuffer->setVolume( fNewVolume );
@@ -737,7 +925,7 @@ cgUInt32 cgAudioDriver::updateAudioThread( cgThread * pThread, void * pContext )
                     if ( pThis->mFadeOutTime < CGE_EPSILON )
                         fNewVolume = 0.0f;
                     else
-                        fNewVolume = std::max<cgFloat>( 0.0f, pBuffer->getVolume() - (UpdateTimer.getTimeElapsed() / pThis->mFadeOutTime ) );
+                        fNewVolume = std::max<cgFloat>( 0.0f, pBuffer->getVolume() - ((cgFloat)UpdateTimer.getTimeElapsed() / pThis->mFadeOutTime ) );
 
                     // Set the volume
                     pBuffer->setVolume( fNewVolume );
@@ -757,6 +945,13 @@ cgUInt32 cgAudioDriver::updateAudioThread( cgThread * pThread, void * pContext )
                     } // End if completely faded
 
                 } // End if fading out
+                else if ( !pItem->looping && !pBuffer->isPlaying() )
+                {
+                    // Stop release the buffer
+                    delete pItem;
+                    List.erase( itCurrent );
+
+                } // End if finished playing
 
             } // Next sound item
 

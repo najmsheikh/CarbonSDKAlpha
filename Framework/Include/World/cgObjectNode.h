@@ -146,6 +146,12 @@ public:
     cgPropertyContainer           & getCustomProperties     ( );
     const cgPropertyContainer     & getCustomProperties     ( ) const;
     void                            setCustomProperties     ( const cgPropertyContainer & properties );
+    cgVariant                     & getCustomProperty       ( const cgString & propertyName );
+    const cgVariant               & getCustomProperty       ( const cgString & propertyName ) const;
+    cgVariant                       getCustomProperty       ( const cgString & propertyName, const cgVariant & defaultValue ) const;
+    bool                            setCustomProperty       ( const cgString & propertyName, const cgVariant & value );
+    bool                            removeCustomProperty    ( const cgString & propertyName );
+    bool                            clearCustomProperties   ( );
 
     // Type Information
     const cgUID                   & getObjectType           ( ) const;
@@ -159,10 +165,12 @@ public:
     const cgTransform             & getWorldTransform       ( );
     const cgTransform             & getWorldTransform       ( bool atPivot );
     const cgVector3               & getPosition             ( bool atPivot );
+    cgQuaternion                    getOrientation          ( bool atPivot );
     cgVector3                       getXAxis                ( bool atPivot );
     cgVector3                       getYAxis                ( bool atPivot );
     cgVector3                       getZAxis                ( bool atPivot );
     const cgVector3               & getPosition             ( );
+    cgQuaternion                    getOrientation          ( );
     cgVector3                       getXAxis                ( );
     cgVector3                       getYAxis                ( );
     cgVector3                       getZAxis                ( );
@@ -555,6 +563,10 @@ protected:
     static cgWorldQuery mNodeUpdateTargetReference;
     /// <summary>Remove all custom properties associated with this node.</summary>
     static cgWorldQuery mNodeClearCustomProperties;
+    /// <summary>Remove the custom properties with the specified name.</summary>
+    static cgWorldQuery mNodeRemoveCustomProperty;
+    /// <summary>Update an existing custom property associated with this node.</summary>
+    static cgWorldQuery mNodeUpdateCustomProperty;
     /// <summary>Insert a new custom property associated with this node.</summary>
     static cgWorldQuery mNodeInsertCustomProperty;
     /// <summary>Remove specific behavior data associated with this node from the database.</summary>

@@ -411,6 +411,50 @@ void * ScriptArray::at( cgUInt32 nIndex )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : setValue ()
+/// <summary>
+/// Set the value of an existing element of this array.
+/// </summary>
+//-----------------------------------------------------------------------------
+void ScriptArray::setValue( cgUInt32 index, void * value )
+{
+	// At() will take care of the out-of-bounds checking, though  
+	// if called from the application then nothing will be done
+	void * ptr = at(index);
+	if ( !ptr )
+        return;
+
+	if ( (mSubTypeId & ~asTYPEID_MASK_SEQNBR) && !(mSubTypeId & asTYPEID_OBJHANDLE) )
+    {
+		mObjectType->GetEngine()->AssignScriptObject(ptr, value, mSubTypeId);
+    }
+	else if ( mSubTypeId & asTYPEID_OBJHANDLE )
+	{
+		void *tmp = *(void**)ptr;
+		*(void**)ptr = *(void**)value;
+		mObjectType->GetEngine()->AddRefScriptObject(*(void**)value, mObjectType->GetSubType());
+		if ( tmp )
+			mObjectType->GetEngine()->ReleaseScriptObject(tmp, mObjectType->GetSubType());
+	}
+	else if ( mSubTypeId == asTYPEID_BOOL ||
+			  mSubTypeId == asTYPEID_INT8 ||
+			  mSubTypeId == asTYPEID_UINT8 )
+		*(char*)ptr = *(char*)value;
+	else if ( mSubTypeId == asTYPEID_INT16 ||
+			  mSubTypeId == asTYPEID_UINT16 )
+		*(short*)ptr = *(short*)value;
+	else if ( mSubTypeId == asTYPEID_INT32 ||
+			  mSubTypeId == asTYPEID_UINT32 ||
+			  mSubTypeId == asTYPEID_FLOAT ||
+			  mSubTypeId > asTYPEID_DOUBLE ) // enums have a type id larger than doubles
+		*(int*)ptr = *(int*)value;
+	else if ( mSubTypeId == asTYPEID_INT64 ||
+			  mSubTypeId == asTYPEID_UINT64 ||
+			  mSubTypeId == asTYPEID_DOUBLE )
+		*(double*)ptr = *(double*)value;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : createBuffer () (Protected)
 /// <summary>
 /// Allocate the array's internal buffer.

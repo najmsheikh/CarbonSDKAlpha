@@ -22,7 +22,7 @@ namespace RenderDriver
         // Type declarations
         void declare( cgScriptEngine * engine )
         {
-            BINDSUCCESS( engine->registerObjectType( "RenderDriverConfig", sizeof(cgRenderDriver::InitConfig), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
+            BINDSUCCESS( engine->registerObjectType( "RenderDriverConfig", sizeof(cgRenderDriverConfig), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
             BINDSUCCESS( engine->registerObjectType( "RenderDriver", 0, asOBJ_REF ) );
         }
 
@@ -32,25 +32,28 @@ namespace RenderDriver
             using namespace cgScriptInterop::Utils;
 
             ///////////////////////////////////////////////////////////////////////
-            // cgRenderDriver::InitConfig (Struct)
+            // cgRenderDriverConfig (Struct)
             ///////////////////////////////////////////////////////////////////////
             
             // Register the default constructor, destructor and assignment operators.
-            registerDefaultCDA<cgRenderDriver::InitConfig>( engine, "RenderDriverConfig" );
+            registerDefaultCDA<cgRenderDriverConfig>( engine, "RenderDriverConfig" );
             
             // Register properties
-            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "String deviceName"      , offsetof(cgRenderDriver::InitConfig,deviceName) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool windowed"          , offsetof(cgRenderDriver::InitConfig,windowed) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "int width"              , offsetof(cgRenderDriver::InitConfig,width) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "int height"             , offsetof(cgRenderDriver::InitConfig,height) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "int refreshRate"        , offsetof(cgRenderDriver::InitConfig,refreshRate) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool useHardwareTnL"    , offsetof(cgRenderDriver::InitConfig,useHardwareTnL) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool useVSync"          , offsetof(cgRenderDriver::InitConfig,useVSync) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool useTripleBuffering", offsetof(cgRenderDriver::InitConfig,useTripleBuffering) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool debugVShader"      , offsetof(cgRenderDriver::InitConfig,debugVShader) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool debugPShader"      , offsetof(cgRenderDriver::InitConfig,debugPShader) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool usePerfHUD"        , offsetof(cgRenderDriver::InitConfig,usePerfHUD) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool useVTFBlending"    , offsetof(cgRenderDriver::InitConfig,useVTFBlending) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "String deviceName"      , offsetof(cgRenderDriverConfig,deviceName) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool windowed"          , offsetof(cgRenderDriverConfig,windowed) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "int width"              , offsetof(cgRenderDriverConfig,width) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "int height"             , offsetof(cgRenderDriverConfig,height) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "int refreshRate"        , offsetof(cgRenderDriverConfig,refreshRate) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool useHardwareTnL"    , offsetof(cgRenderDriverConfig,useHardwareTnL) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool useVSync"          , offsetof(cgRenderDriverConfig,useVSync) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool useTripleBuffering", offsetof(cgRenderDriverConfig,useTripleBuffering) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool debugVShader"      , offsetof(cgRenderDriverConfig,debugVShader) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool debugPShader"      , offsetof(cgRenderDriverConfig,debugPShader) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool usePerfHUD"        , offsetof(cgRenderDriverConfig,usePerfHUD) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "bool useVTFBlending"    , offsetof(cgRenderDriverConfig,useVTFBlending) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "int shadingQuality"     , offsetof(cgRenderDriverConfig,shadingQuality) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "int postProcessQuality" , offsetof(cgRenderDriverConfig,postProcessQuality) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "RenderDriverConfig", "int antiAliasingQuality", offsetof(cgRenderDriverConfig,antiAliasingQuality) ) );
 
             ///////////////////////////////////////////////////////////////////////
             // cgRenderDriver (Class)
@@ -64,7 +67,10 @@ namespace RenderDriver
 
             // Register the object methods
             // Configuration and Capabilities
-            BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "RenderDriverConfig getConfig() const", asMETHODPR(cgRenderDriver, getConfig, () const, cgRenderDriver::InitConfig), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "RenderDriverConfig getConfig() const", asMETHODPR(cgRenderDriver, getConfig, () const, cgRenderDriverConfig), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "ConfigResult loadConfig( const String &in )", asMETHODPR(cgRenderDriver, loadConfig, ( const cgString& ), cgConfigResult::Base), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "ConfigResult loadDefaultConfig( bool )", asMETHODPR(cgRenderDriver, loadDefaultConfig, ( bool ), cgConfigResult::Base), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool saveConfig( const String &in )", asMETHODPR(cgRenderDriver, saveConfig, ( const cgString& ), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "ResourceManager@+ getResourceManager( ) const", asMETHODPR(cgRenderDriver,getResourceManager,() const,cgResourceManager*), asCALL_THISCALL) );
 			BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "RenderingCapabilities@+ getCapabilities( ) const", asMETHODPR(cgRenderDriver,getCapabilities,() const,cgRenderingCapabilities*), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool updateDisplayMode( const DisplayMode &in, bool, bool )", asMETHODPR(cgRenderDriver,updateDisplayMode,( const cgDisplayMode&, bool, bool ),bool), asCALL_THISCALL) );
@@ -83,6 +89,8 @@ namespace RenderDriver
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "void releaseOwnedResources( )", asMETHODPR(cgRenderDriver, releaseOwnedResources, (), void), asCALL_THISCALL) );
 
             // Render related functions
+            BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "void drawCircle( const Vector2 &in, float, const ColorValue &in, float, uint )", asMETHODPR(cgRenderDriver,drawCircle,( const cgVector2 &, cgFloat, const cgColorValue &, cgFloat, cgUInt32 ), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "void drawCircle( const Vector2 &in, float, const ColorValue &in, float, uint, float, float )", asMETHODPR(cgRenderDriver,drawCircle,( const cgVector2 &, cgFloat, const cgColorValue &, cgFloat, cgUInt32, cgFloat, cgFloat ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "void drawRectangle( const Rect &in, const ColorValue &in, bool )", asMETHODPR(cgRenderDriver,drawRectangle,( const cgRect &, const cgColorValue &, bool ), void), asCALL_THISCALL) );
             // ToDo: void                            DrawLines               ( cgVector2 Points[], cgUInt32 nLineCount, const cgColorValue & Color, bool bStripBehavior = false );
             // ToDo: void                            DrawOOBB                ( const cgBoundingBox & Bounds, cgFloat fGrowAmount, const cgMatrix & mtxObject, const cgColorValue & Color, bool bSealedEdges = false );

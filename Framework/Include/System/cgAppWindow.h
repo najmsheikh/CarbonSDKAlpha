@@ -82,8 +82,7 @@ public:
 	//-------------------------------------------------------------------------
     cgRect                  screenToClient          ( const cgRect & screenRectangle );
     cgRect                  clientToScreen          ( const cgRect & clientRectangle );
-    void                    showCursor              ( bool show );
-
+    
     //-------------------------------------------------------------------------
 	// Public Virtual Methods
 	//-------------------------------------------------------------------------
@@ -100,6 +99,8 @@ public:
     virtual void            setClientSize           ( const cgSize & size ) = 0;
     virtual void            setFullScreenMode       ( bool fullScreen ) = 0;
     virtual void            setCursor               ( cgCursor * cursor );
+    virtual void            constrainCursor         ( bool enable ) = 0;
+    virtual void            showCursor              ( bool show );
 
     // Events
     virtual void            onSize                  ( const cgSize & size, bool minimized );
@@ -124,7 +125,6 @@ protected:
     //-------------------------------------------------------------------------
     cgCursor  * mCursor;            // Cursor icon to be applied automatically when the user's cursor is over this window.
     cgInt       mCursorVisCount;    // Hidden <= 0 < Visible
-
 };
 
 #endif // !_CGE_CGAPPWINDOW_H_

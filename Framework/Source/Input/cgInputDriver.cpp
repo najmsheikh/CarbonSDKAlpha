@@ -78,17 +78,17 @@ cgInputDriver::cgInputDriver() : cgReference( cgReferenceManager::generateIntern
 cgInputDriver::~cgInputDriver()
 {
     // Release allocated memory
-    Dispose( false );
+    dispose( false );
 }
 
 //-----------------------------------------------------------------------------
-//  Name : Dispose () (Virtual)
+//  Name : dispose () (Virtual)
 /// <summary>
 /// Release any memory, references or resources allocated by this object.
 /// </summary>
-/// <copydetails cref="cgScriptInterop::DisposableScriptObject::Dispose()" />
+/// <copydetails cref="cgScriptInterop::DisposableScriptObject::dispose()" />
 //-----------------------------------------------------------------------------
-void cgInputDriver::Dispose( bool bDisposeBase )
+void cgInputDriver::dispose( bool bDisposeBase )
 {
     // Release DirectX objects
     if ( mDIKeyboard ) mDIKeyboard->Release();
@@ -96,8 +96,8 @@ void cgInputDriver::Dispose( bool bDisposeBase )
     if ( mDI         ) mDI->Release();
 
     // Remove any defined clip region
-    if ( mInitialized == true )
-        ClipCursor( CG_NULL );
+    if ( mFocusWnd )
+        mFocusWnd->constrainCursor( false );
 
     // Reset any variables
     mConfigLoaded = false;
@@ -185,9 +185,6 @@ bool cgInputDriver::queryReferenceType( const cgUID & type ) const
 //-----------------------------------------------------------------------------
 cgConfigResult::Base cgInputDriver::loadConfig( const cgString & strFileName )
 {
-    HRESULT         hRet;
-    const cgTChar * strSection;
-
     // Fail if config already loaded
     if ( mConfigLoaded == true )
         return cgConfigResult::Error;
@@ -195,21 +192,23 @@ cgConfigResult::Base cgInputDriver::loadConfig( const cgString & strFileName )
     // Retrieve configuration options if provided
     if ( strFileName.empty() == false )
     {
-        strSection = _T("InputDriver");
-        mConfig.ignoreWindowsKey   = GetPrivateProfileInt( strSection, _T("IgnoreWindowsKey"), true, strFileName.c_str() ) > 0;
-        mConfig.keyRepeatDelay     = GetPrivateProfileInt( strSection, _T("KeyRepeatDelay"), 500, strFileName.c_str() );
-        mConfig.keyRepeatRate      = GetPrivateProfileInt( strSection, _T("KeyRepeatRate"), 50, strFileName.c_str() );
-        mConfig.keyboardBufferSize = max( 0, GetPrivateProfileInt( strSection, _T("KeyboardBufferSize"), 512, strFileName.c_str() ) );
-        mConfig.mouseSensitivity   = cgStringUtility::getPrivateProfileFloat( strSection, _T("MouseSensitivity"), 1.0f, strFileName.c_str() );
+        cgString strResolvedFile = cgFileSystem::resolveFileLocation( strFileName );
+        const cgTChar * strSection = _T("InputDriver");
+        mConfig.ignoreWindowsKey   = GetPrivateProfileInt( strSection, _T("IgnoreWindowsKey"), true, strResolvedFile.c_str() ) > 0;
+        mConfig.keyRepeatDelay     = GetPrivateProfileInt( strSection, _T("KeyRepeatDelay"), 500, strResolvedFile.c_str() );
+        mConfig.keyRepeatRate      = GetPrivateProfileInt( strSection, _T("KeyRepeatRate"), 50, strResolvedFile.c_str() );
+        mConfig.keyboardBufferSize = max( 0, GetPrivateProfileInt( strSection, _T("KeyboardBufferSize"), 512, strResolvedFile.c_str() ) );
+        mConfig.mouseSensitivity   = cgStringUtility::getPrivateProfileFloat( strSection, _T("MouseSensitivity"), 1.0f, strResolvedFile.c_str() );
 
     } // End if config provided
 
     // Release previous DirectInput object if already created
-    if ( mDI ) mDI->Release();
+    if ( mDI )
+        mDI->Release();
 
     // Create a DirectInput Object (We may need this to query properties etc).
-    hRet = DirectInput8Create( GetModuleHandle(CG_NULL), DIRECTINPUT_VERSION,
-                               IID_IDirectInput8, (void**)&mDI, CG_NULL );
+    HRESULT hRet = DirectInput8Create( GetModuleHandle(CG_NULL), DIRECTINPUT_VERSION,
+                                       IID_IDirectInput8, (void**)&mDI, CG_NULL );
     if ( FAILED(hRet) ) 
     {
         cgAppLog::write( cgAppLog::Error, _T( "No compatible DirectInput object could be created.\n") );
@@ -256,19 +255,19 @@ cgConfigResult::Base cgInputDriver::loadDefaultConfig( )
 //-----------------------------------------------------------------------------
 bool cgInputDriver::saveConfig( const cgString & strFileName )
 {
-    LPCTSTR strSection = _T("InputDriver");
-
     // Validate requirements
     if ( strFileName.empty() == true )
         return false;
 
     // Save configuration options
     using namespace cgStringUtility;
-    writePrivateProfileIntEx( strSection, _T("IgnoreWindowsKey")  , mConfig.ignoreWindowsKey  , strFileName.c_str() );
-    writePrivateProfileIntEx( strSection, _T("KeyRepeatDelay")    , mConfig.keyRepeatDelay    , strFileName.c_str() );
-    writePrivateProfileIntEx( strSection, _T("KeyRepeatRate")     , mConfig.keyRepeatRate     , strFileName.c_str() );
-    writePrivateProfileIntEx( strSection, _T("KeyboardBufferSize"), mConfig.keyboardBufferSize, strFileName.c_str() );
-    writePrivateProfileFloat( strSection, _T("MouseSensitivity")  , mConfig.mouseSensitivity  , strFileName.c_str() );
+    const cgTChar * strSection = _T("InputDriver");
+    cgString strResolvedFile = cgFileSystem::resolveFileLocation( strFileName );
+    writePrivateProfileIntEx( strSection, _T("IgnoreWindowsKey")  , mConfig.ignoreWindowsKey  , strResolvedFile.c_str() );
+    writePrivateProfileIntEx( strSection, _T("KeyRepeatDelay")    , mConfig.keyRepeatDelay    , strResolvedFile.c_str() );
+    writePrivateProfileIntEx( strSection, _T("KeyRepeatRate")     , mConfig.keyRepeatRate     , strResolvedFile.c_str() );
+    writePrivateProfileIntEx( strSection, _T("KeyboardBufferSize"), mConfig.keyboardBufferSize, strResolvedFile.c_str() );
+    writePrivateProfileFloat( strSection, _T("MouseSensitivity")  , mConfig.mouseSensitivity  , strResolvedFile.c_str() );
 
     // Success!!
     return true;
@@ -304,7 +303,11 @@ void cgInputDriver::setMouseMode( cgMouseHandlerMode::Base Mode )
     // and restore the last known cursor position.
     if ( Mode != cgMouseHandlerMode::Direct )
     {
-        ::ClipCursor( CG_NULL );
+        // Remove any cursor constraint
+        if ( mFocusWnd )
+            mFocusWnd->constrainCursor( false );
+
+        // Restore last known cursor position
         cgPoint ptScreen = mFocusWnd->clientToScreen( mMousePosition );
         ::SetCursorPos( ptScreen.x, ptScreen.y );
 
@@ -316,6 +319,10 @@ void cgInputDriver::setMouseMode( cgMouseHandlerMode::Base Mode )
     {
         // Hide cursor
         mFocusWnd->showCursor( false );
+
+        // Enable cursor constraint
+        if ( mFocusWnd )
+            mFocusWnd->constrainCursor( true );
 
     } // End if direct
 }
@@ -533,16 +540,7 @@ void cgInputDriver::poll(  )
                 // when in cursor mode.
                 if ( mMouseMode == cgMouseHandlerMode::Cursor )
                     mMousePosition = ptClient;
-
-                // If we're in direct mouse mode, we should clip (restrict) the
-                // cursor to the interior of the window.
-                if ( mMouseMode == cgMouseHandlerMode::Direct )
-                {
-                    cgRect rcClip = mFocusWnd->clientToScreen( rcClient );
-                    ::ClipCursor( (RECT*)&rcClip );
-
-                } // End if outside client area
-
+                
                 // Notify all required items
                 onMouseMove( mMousePosition, Offset );
 

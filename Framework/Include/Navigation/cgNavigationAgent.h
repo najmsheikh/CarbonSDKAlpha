@@ -100,17 +100,19 @@ public:
     //-------------------------------------------------------------------------
     // Public Methods
     //-------------------------------------------------------------------------
-    bool                            initialize          ( const cgNavigationAgentCreateParams & params, const cgVector3 & position );
-    bool                            setMoveTarget       ( const cgVector3 & position, bool adjust );
-    bool                            setMoveVelocity     ( const cgVector3 & velocity );
-    cgVector3                       getPosition         ( ) const;
-    cgVector3                       getDesiredVelocity  ( ) const;
-    cgVector3                       getActualVelocity   ( ) const;
-    cgNavigationAgentState::Base    getAgentState       ( ) const;
-    cgNavigationTargetState::Base   getTargetState      ( ) const;
-    cgNavigationHandler           * getHandler          ( ) const;
-    void                            updateParameters    ( const cgNavigationAgentCreateParams & params );
-    const cgNavigationAgentCreateParams & getParameters ( ) const;
+    bool                            initialize              ( const cgNavigationAgentCreateParams & params, const cgVector3 & position );
+    bool                            setMoveTarget           ( const cgVector3 & position, bool adjust );
+    bool                            setMoveTargetAtRange    ( const cgVector3 & position, cgFloat distance, cgFloat initAngleOffset, bool adjust );
+    bool                            setMoveVelocity         ( const cgVector3 & velocity );
+    cgVector3                       getPosition             ( ) const;
+    cgVector3                       getDesiredVelocity      ( ) const;
+    cgVector3                       getActualVelocity       ( ) const;
+    const cgVector3               & getTargetPosition       ( ) const;
+    cgNavigationAgentState::Base    getAgentState           ( ) const;
+    cgNavigationTargetState::Base   getTargetState          ( ) const;
+    cgNavigationHandler           * getHandler              ( ) const;
+    void                            updateParameters        ( const cgNavigationAgentCreateParams & params );
+    const cgNavigationAgentCreateParams & getParameters     ( ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods

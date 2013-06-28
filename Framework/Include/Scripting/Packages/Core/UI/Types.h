@@ -60,7 +60,8 @@ namespace Types
             ///////////////////////////////////////////////////////////////////////
             // cgUIFormStyle (Enum)
             ///////////////////////////////////////////////////////////////////////
-            BINDSUCCESS( engine->registerEnumValue( "FormStyle", "Overlapped" , cgUIFormStyle::Overlapped ) );
+            BINDSUCCESS( engine->registerEnumValue( "FormStyle", "Overlapped", cgUIFormStyle::Overlapped ) );
+            BINDSUCCESS( engine->registerEnumValue( "FormStyle", "Invisible" , cgUIFormStyle::Invisible ) );
 
             ///////////////////////////////////////////////////////////////////////
             // cgUILayerType (Enum)

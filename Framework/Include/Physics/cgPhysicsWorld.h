@@ -140,6 +140,8 @@ public:
 
     // Material management
     cgInt32             getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Base group ) const;
+    cgInt32             createMaterialGroup     ( );
+    void                enableMaterialCollision ( cgInt32 group1, cgInt32 group2, bool collidable );
     
     //-------------------------------------------------------------------------
     // Public Inline Methods

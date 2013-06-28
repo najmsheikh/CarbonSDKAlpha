@@ -207,6 +207,30 @@ public:
     {
         return ((cgMeshObject*)mReferencedObject)->replaceMaterial( oldMaterial, newMaterial );
     }
+    inline bool createBox( cgFloat width, cgFloat height, cgFloat depth, cgUInt32 widthSegments, cgUInt32 heightSegments, cgUInt32 depthSegments, bool inverted, cgMeshCreateOrigin::Base origin )
+    {
+        return ((cgMeshObject*)mReferencedObject)->createBox( width, height, depth, widthSegments, heightSegments, depthSegments, inverted, origin );
+    }
+    inline bool createSphere( cgFloat radius, cgUInt32 stacks, cgUInt32 slices, bool inverted, cgMeshCreateOrigin::Base origin )
+    {
+        return ((cgMeshObject*)mReferencedObject)->createSphere( radius, stacks, slices, inverted, origin );
+    }
+    inline bool createCylinder( cgFloat radius, cgFloat height, cgUInt32 stacks, cgUInt32 slices, bool inverted, cgMeshCreateOrigin::Base origin )
+    {
+        return ((cgMeshObject*)mReferencedObject)->createCylinder( radius, height, stacks, slices, inverted, origin );
+    }
+    inline bool createCapsule( cgFloat radius, cgFloat height, cgUInt32 stacks, cgUInt32 slices, bool inverted, cgMeshCreateOrigin::Base origin )
+    {
+        return ((cgMeshObject*)mReferencedObject)->createCapsule( radius, height, stacks, slices, inverted, origin );
+    }
+    inline bool createCone( cgFloat radius, cgFloat radiusTip, cgFloat height, cgUInt32 stacks, cgUInt32 slices, bool inverted, cgMeshCreateOrigin::Base origin )
+    {
+        return ((cgMeshObject*)mReferencedObject)->createCone( radius, radiusTip, height, stacks, slices, inverted, origin );
+    }
+    inline bool createTorus( cgFloat outerRadius, cgFloat innerRadius, cgUInt32 bands, cgUInt32 sides, bool inverted, cgMeshCreateOrigin::Base origin )
+    {
+        return ((cgMeshObject*)mReferencedObject)->createTorus( outerRadius, innerRadius, bands, sides, inverted, origin );
+    }
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgObjectNode)

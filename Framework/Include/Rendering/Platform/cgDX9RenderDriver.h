@@ -336,7 +336,7 @@ public:
     //-------------------------------------------------------------------------
     // Constructors & Destructors
     //-------------------------------------------------------------------------
-    cgDX9RenderDriverInit   ( const cgRenderDriver::InitConfig & config, bool enforceConfig );
+    cgDX9RenderDriverInit   ( const cgRenderDriverConfig & config, bool enforceConfig );
     
 private:
     //-------------------------------------------------------------------------
@@ -351,8 +351,8 @@ private:
     //-------------------------------------------------------------------------
     // Private Variables
     //-------------------------------------------------------------------------
-    cgRenderDriver::InitConfig  mConfig;    // Requested configuration options during initialization
-    bool                        mEnforce;   // Should we strictly enforce the configuration options?
+    cgRenderDriverConfig    mConfig;    // Requested configuration options during initialization
+    bool                    mEnforce;   // Should we strictly enforce the configuration options?
 };
 
 #endif // CGE_DX9_RENDER_SUPPORT

@@ -78,6 +78,7 @@ CREATE TABLE [Materials::Standard] (
   [FresnelOpacity] REAL DEFAULT (0), 
   [BlendingMode] smallint DEFAULT (0), 
   [Opacity] real DEFAULT (1), 
+  [AlphaTestValue] real DEFAULT (0.5),
   [SpecularOpacity] REAL DEFAULT (1), 
   [SpecularOpacityLinked] TINYINT(1) DEFAULT (1), 
   [DiffuseOpacityMapStrength] REAL DEFAULT (1), 
