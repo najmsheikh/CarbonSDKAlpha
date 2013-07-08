@@ -1,21 +1,46 @@
-Controls
---------
+General Controls
+----------------
+Pause & Menu       = Escape
 
-WASD   = Move & Strafe
-Shift  = Walk
-Space  = Jump
-Ctrl   = Crouch
-LMB    = Shoot
-RMB    = Aim
-1      = Pistol
-2      = M16
-G      = Grenade
-F9     = Restart
-Escape = Exit
 
-Credits
--------
+Movement Controls
+-----------------
+Forward            = W
+Backward           = S
+Strafe Left        = A
+Strafe Right       = D
+Walk               = Shift
+Crouch             = Control
+Jump               = Space
 
-All Music by Kevin MacLeod (http://incompetech.com/)
+
+Weapon Controls
+---------------
+Fire               = Left Mouse Button
+Aim                = Right Mouse Button
+Reload             = R
+Change Fire Mode   = X
+Throw Grenade      = G
+Select Pistol      = 1
+Select Rifle       = 2
+Select RPG         = 3 (When collected)
+
+
+
+
+Attributions - Music
+--------------------
+'Mechanolith' courtesy of Kevin MacLeod (incompetech.com)
+'Mistake the Getaway' courtesy of Kevin MacLeod (incompetech.com)
+'The Descent' courtesy of Kevin MacLeod (incompetech.com)
+
 Licensed under Creative Commons: By Attribution 3.0
 http://creativecommons.org/licenses/by/3.0/
+
+Attributions - Imagery
+----------------------
+Mars color and elevation maps courtesy of NASA/USGS.
+Tycho star map courtesy of NASA/JPL - Caltech.
+
+
+Some other assets used under license, and are copyright their respective authors. Do not re-distribute.

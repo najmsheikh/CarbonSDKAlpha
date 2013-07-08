@@ -203,12 +203,23 @@ shared class FirstPersonActor : IScriptedObjectBehavior
 
                     // Select the new weapon.
                     mCurrentWeaponType  = mRequestedWeaponType;
-                    @mCurrentWeaponNode = mWeapons[mCurrentWeaponType].getSceneNode();
-                    @mCurrentWeapon     = mWeapons[mCurrentWeaponType];
-                    @mCurrentADSNode    = mActor.findChild( mWeaponIds[mCurrentWeaponType] + "_ADS" );
+                    if ( mCurrentWeaponType != WeaponType::None )
+                    {
+                        @mCurrentWeaponNode = mWeapons[mCurrentWeaponType].getSceneNode();
+                        @mCurrentWeapon     = mWeapons[mCurrentWeaponType];
+                        @mCurrentADSNode    = mActor.findChild( mWeaponIds[mCurrentWeaponType] + "_ADS" );
 
-                    // Ready to raise
-                    raiseWeapon = true;
+                        // Ready to raise
+                        raiseWeapon = true;
+                    
+                    } // End if weapon
+                    else
+                    {
+                        @mCurrentWeaponNode = null;
+                        @mCurrentWeapon     = null;
+                        @mCurrentADSNode    = null;
+
+                    } // End if no weapon
 
                 } // End if weapon switch
 

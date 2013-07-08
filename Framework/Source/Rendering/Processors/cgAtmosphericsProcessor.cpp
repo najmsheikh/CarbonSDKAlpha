@@ -179,9 +179,18 @@ void cgAtmosphericsProcessor::drawSky( cgSkyElement * element, bool decodeSRGB, 
     
     // Select shaders
     bool hdrLighting = (mDriver->getSystemState( cgSystemState::HDRLighting ) != 0);
-    if ( !mAtmosphericsShader->selectVertexShader( _T("transform"), false, true ) ||
-         !mAtmosphericsShader->selectPixelShader( _T("drawSkyBox"), decodeSRGB, hdrLighting ) )
-        return;
+    switch ( element->getSkyType() )
+    {
+        case cgSkyElementType::SkyBox:
+            if ( !mAtmosphericsShader->selectVertexShader( _T("transform"), false, true ) ||
+                 !mAtmosphericsShader->selectPixelShader( _T("drawSkyBox"), decodeSRGB, hdrLighting ) )
+                return;
+        case cgSkyElementType::SimpleImage:
+            if ( !mAtmosphericsShader->selectVertexShader( _T("transform"), true, false ) ||
+                 !mAtmosphericsShader->selectPixelShader( _T("drawSkyImage"), decodeSRGB, hdrLighting ) )
+                return;
+
+    } // End switch type
 
     // Update the constant buffer
     mSkyConfig.hdrScale = element->getBaseHDRScale();

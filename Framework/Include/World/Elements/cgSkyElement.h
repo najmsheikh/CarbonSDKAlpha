@@ -47,7 +47,8 @@ namespace cgSkyElementType
 {
     enum Base
     {
-        SkyBox  = 0
+        SkyBox  = 0,
+        SimpleImage = 1
     };
 
 } // End Namespace : cgSkyElementType

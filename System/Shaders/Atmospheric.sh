@@ -55,6 +55,7 @@ class AtmosphericShader : ISurfaceShader
     ///////////////////////////////////////////////////////////////////////////
     <?samplers
         SamplerCube sSkyBox     : register(s0);
+        Sampler2D   sSkyImage   : register(s0);
         Sampler2D   sDepth      : register(s0);
     ?>
 
@@ -110,6 +111,12 @@ class AtmosphericShader : ISurfaceShader
 				float3 eyeDir       : TEXCOORD0;
 			?>	
 		}
+        if ( passTexCoords )
+        {
+            <?out
+                float2 texCoords    : TEXCOORD1;
+            ?>
+        }
 
         // Constant buffer usage.
         <?cbufferrefs
@@ -137,6 +144,18 @@ class AtmosphericShader : ISurfaceShader
 			eyeDir = mul( viewPosition, _inverseViewMatrix );
 			?>
 		}
+
+        // Compute tex coords
+        if ( passTexCoords )
+        {
+            <?
+            // Get the screen coords into range [0,1]
+            texCoords.xy = float2( clipPosition.x, -clipPosition.y ) * 0.5 + 0.5;
+
+            // Adjust screen coords to take into account the optional half pixel offset. 
+            texCoords.xy = texCoords.xy + _screenUVAdjustBias;
+            ?>
+        }
 
 		// Valid shader
 		return true;
@@ -178,6 +197,51 @@ class AtmosphericShader : ISurfaceShader
         // Shader Code
         /////////////////////////////////////////////
 		<?data0 = sampleCube( sSkyBoxTex, sSkyBox, eyeDir );?>	
+
+		if ( decodeSRGB )
+			<?data0.rgb = SRGBToLinear( data0.rgb );?>
+
+		if ( hdrLighting )
+            <?data0.rgb *= hdrScale;?>
+
+		<?data0.a = dot( data0.rgb, float3( 0.2125, 0.7154, 0.0721 ) );?>
+
+        // Valid shader
+        return true;
+    }
+
+    //-----------------------------------------------------------------------------
+	// Name : drawSkyBox()
+	// Desc : Simple background sky image shader
+	// ToDo : Temporary ILR alpha output. Should come from texture. HDR should
+	//        also be provided via texture (perhaps just lookup a different sampler?). 
+	//-----------------------------------------------------------------------------
+    bool drawSkyImage( bool decodeSRGB, bool hdrLighting )
+    {
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Define shader inputs.
+        <?in
+            float4 screenPosition : SV_POSITION;
+            float2 texCoords      : TEXCOORD1;
+        ?>
+
+        // Define shader outputs.
+        <?out
+            float4 data0 : SV_TARGET0;
+        ?>
+
+        // Constant buffer usage.
+        <?cbufferrefs
+            _cbScene;
+            cbSkyData;
+        ?>
+
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+		<?data0 = sample2D( sSkyImageTex, sSkyImage, texCoords );?>	
 
 		if ( decodeSRGB )
 			<?data0.rgb = SRGBToLinear( data0.rgb );?>
