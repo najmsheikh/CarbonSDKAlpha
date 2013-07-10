@@ -105,6 +105,7 @@ void cgInputDriver::dispose( bool bDisposeBase )
     mDI           = CG_NULL;
     mDIKeyboard   = CG_NULL;
     mDIMouse      = CG_NULL;
+    mFocusWnd     = CG_NULL;
 
     // Clear any memory as required
     memset( &mConfig, 0, sizeof(InitConfig) );

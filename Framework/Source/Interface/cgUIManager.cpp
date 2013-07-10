@@ -1627,7 +1627,7 @@ void cgUIManager::selectCursor( const cgString & strCursor )
 /// through the 'drawImage' method.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgUIManager::addImage( cgInputStream ImageFile, const cgString & strReferenceName )
+bool cgUIManager::addImage( const cgInputStream & ImageFile, const cgString & strReferenceName )
 {
     cgBillboardBuffer * pBuffer = CG_NULL;
 
@@ -1669,7 +1669,7 @@ bool cgUIManager::addImage( cgInputStream ImageFile, const cgString & strReferen
 /// image atlas definition file specified.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgUIManager::addImageLibrary( cgInputStream AtlasFile, const cgString & strReferenceName )
+bool cgUIManager::addImageLibrary( const cgInputStream & AtlasFile, const cgString & strReferenceName )
 {
     cgBillboardBuffer * pBuffer = CG_NULL;
 

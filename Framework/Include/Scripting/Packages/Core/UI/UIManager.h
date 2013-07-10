@@ -95,8 +95,9 @@ namespace UIManager
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "Form@+ loadForm( const String &in, const String &in)", asFUNCTIONPR(managerLoadForm, ( const cgString&, const cgString&, cgUIManager*), cgUIForm* ), asCALL_CDECL_OBJLAST) );
 
             // Images / Glyphs / Icons
-            BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool addImage( InputStream, const String &in )", asMETHODPR(cgUIManager, addImage, ( cgInputStream, const cgString&), bool ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool addImageLibrary( InputStream, const String &in )", asMETHODPR(cgUIManager, addImageLibrary, ( cgInputStream, const cgString&), bool ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool addImage( const InputStream &in, const String &in )", asMETHODPR(cgUIManager, addImage, ( const cgInputStream&, const cgString&), bool ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool addImage( const String &in, const String &in )", asFUNCTIONPR(addImage, ( const cgString&, const cgString&, cgUIManager*), bool ), asCALL_CDECL_OBJLAST) );
+            BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool addImageLibrary( const InputStream &in, const String &in )", asMETHODPR(cgUIManager, addImageLibrary, ( const cgInputStream&, const cgString&), bool ), asCALL_THISCALL) );
 			BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool addImageLibrary( const String &in, const String &in )", asFUNCTIONPR(addImageLibrary, ( const cgString&, const cgString&, cgUIManager*), bool ), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool removeImageLibrary( const String &in )", asMETHODPR(cgUIManager, removeImageLibrary, ( const cgString&), bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool isImageLibraryLoaded( const String &in ) const", asMETHODPR(cgUIManager, isImageLibraryLoaded, ( const cgString&) const, bool ), asCALL_THISCALL) );
@@ -147,6 +148,20 @@ namespace UIManager
         static cgUIForm * managerLoadForm( const cgString & stream, const cgString & name, cgUIManager * thisPointer )
         {
             return thisPointer->loadForm( stream, name );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : addImage () (Static)
+        /// <summary>
+        /// Provides an alternative overload for the script accessible
+        /// UIManager::addImage() method that allows the script to pass a
+        /// string type directly (no implicit cast is supported to the required
+        /// InputStream type).
+        /// </summary>
+        //---------------------------------------------------------------------
+        static bool addImage( const cgString & stream, const cgString & referenceName, cgUIManager * thisPointer )
+        {
+            return thisPointer->addImage( stream, referenceName );
         }
 
 		//---------------------------------------------------------------------

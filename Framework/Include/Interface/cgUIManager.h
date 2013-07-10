@@ -159,8 +159,8 @@ public:
     cgUIForm              * loadForm            ( const cgInputStream & stream, const cgString & name );
 
     // Images / Glyphs / Icons
-    bool                    addImage            ( cgInputStream imageFile, const cgString & referenceName );
-    bool                    addImageLibrary     ( cgInputStream atlasFile, const cgString & referenceName );
+    bool                    addImage            ( const cgInputStream & imageFile, const cgString & referenceName );
+    bool                    addImageLibrary     ( const cgInputStream & atlasFile, const cgString & referenceName );
     bool                    removeImageLibrary  ( const cgString & referenceName );
     bool                    isImageLibraryLoaded( const cgString & referenceName ) const;
     cgSize                  getImageSize        ( const cgString & referenceName ) const;
