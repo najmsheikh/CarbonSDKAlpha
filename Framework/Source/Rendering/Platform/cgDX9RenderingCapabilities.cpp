@@ -74,7 +74,7 @@ cgDX9RenderingCapabilities::~cgDX9RenderingCapabilities( )
 void cgDX9RenderingCapabilities::dispose( bool bDisposeBase )
 {
     // Release allocated memory
-    mDisplayModes.clear();
+    mAdapters.clear();
 
     // Call base class implementation on request
     if ( bDisposeBase )
@@ -129,19 +129,48 @@ bool cgDX9RenderingCapabilities::enumerate( )
 //-----------------------------------------------------------------------------
 bool cgDX9RenderingCapabilities::postInit( cgDX9Initialize * data, cgUInt32 fullScreenAdapter )
 {
-    // Populate the list of available full screen display modes for this device.
-    const cgDX9EnumAdapter * pAdapter = data->getAdapter( fullScreenAdapter );
-    DX9VectorDisplayMode::const_iterator itMode;
-    for ( itMode = pAdapter->modes.begin(); itMode != pAdapter->modes.end(); ++itMode )
-    {
-        cgDisplayMode mode;
-        mode.width          = itMode->Width;
-        mode.height         = itMode->Height;
-        mode.refreshRate    = (cgDouble)itMode->RefreshRate;
-        mode.bitDepth       = cgBufferFormatEnum::formatBitsPerPixel(cgDX9BufferFormatEnum::formatFromNative(itMode->Format));
-        mDisplayModes.push_back( mode );
+    STRING_CONVERT;
 
-    } // Next mode
+    // Populate the list of adapters for this device.
+    cgUInt32 adapters = data->getAdapterCount();
+    mAdapters.resize( adapters );
+    for ( cgUInt32 i = 0; i < adapters; ++i )
+    {
+        const cgDX9EnumAdapter * enumAdapter = data->getAdapter( i );
+        
+        // Configure adapter data.
+        cgAdapter & adapter = mAdapters[i];
+        adapter.ordinal     = i;
+        adapter.deviceName  = cgString::trim(stringConvertA2T(enumAdapter->identifier.DeviceName));
+        adapter.description = cgString::trim(stringConvertA2T(enumAdapter->identifier.Description));
+        adapter.configName  = adapter.deviceName;
+        adapter.configName  += _T(" (");
+        adapter.configName  += adapter.description;
+        adapter.configName  += _T(")");
+        adapter.displayName = adapter.deviceName;
+        adapter.displayName.replace( _T("\\\\.\\"), _T("") );
+        adapter.displayName += _T(" (");
+        adapter.displayName += adapter.description;
+        adapter.displayName += _T(")");
+        adapter.deviceId    = enumAdapter->identifier.DeviceId;
+        adapter.vendorId    = enumAdapter->identifier.VendorId;
+        adapter.subSysId    = enumAdapter->identifier.SubSysId;
+        memcpy( &adapter.identifier, &enumAdapter->identifier.DeviceIdentifier, sizeof(cgUID) );
+        
+        // Populate the list of available display modes for this adapter.
+        DX9VectorDisplayMode::const_iterator itMode;
+        for ( itMode = enumAdapter->modes.begin(); itMode != enumAdapter->modes.end(); ++itMode )
+        {
+            cgDisplayMode mode;
+            mode.width          = itMode->Width;
+            mode.height         = itMode->Height;
+            mode.refreshRate    = (cgDouble)itMode->RefreshRate;
+            mode.bitDepth       = cgBufferFormatEnum::formatBitsPerPixel(cgDX9BufferFormatEnum::formatFromNative(itMode->Format));
+            adapter.modes.push_back( mode );
+
+        } // Next mode
+
+    } // Next adapter
 
     // Success
     return true;
@@ -241,13 +270,27 @@ bool cgDX9RenderingCapabilities::supportsDepthStencilReading ( ) const
 //-----------------------------------------------------------------------------
 //  Name : getDisplayModes () (Virtual)
 /// <summary>
-/// Retrieve a list of all full screen display modes supported by this
-/// device.
+/// Retrieve a list of all full screen display modes supported by the specified
+/// adapter.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgDX9RenderingCapabilities::getDisplayModes( cgDisplayMode::Array & modes ) const
+bool cgDX9RenderingCapabilities::getDisplayModes( cgInt32 adapterOrdinal, cgDisplayMode::Array & modes ) const
 {
-    modes = mDisplayModes;
+    if ( adapterOrdinal < 0 || adapterOrdinal >= (cgInt32)mAdapters.size() )
+        return false;
+    modes = mAdapters[adapterOrdinal].modes;
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getAdapters () (Virtual)
+/// <summary>
+/// Retrieve a list of all adapters installed in this system.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgDX9RenderingCapabilities::getAdapters( cgAdapter::Array & adapters ) const
+{
+    adapters = mAdapters;
     return true;
 }
 

@@ -613,3 +613,125 @@ void cgUICursorLayer::render( )
     if ( mCursor->getVisible() && cgInputDriver::getInstance()->getMouseMode() == cgMouseHandlerMode::Cursor )
         mBillboards->render();
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// cgUIModalFormLayer Member Functions
+///////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------
+//  Name : cgUIModalFormLayer () (Constructor)
+/// <summary>
+/// Constructor for this class.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgUIModalFormLayer::cgUIModalFormLayer( cgUIManager * pManager, cgInt32 nLayerDepth /* = -1 */ ) : cgUIControlLayer( pManager, cgUILayerType::TopMostLayer, nLayerDepth )
+{
+}
+
+//-----------------------------------------------------------------------------
+//  Name : render () (Virtual)
+/// <summary>
+/// Render the contents of this layer.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIModalFormLayer::render( )
+{
+    cgRenderDriver * driver = mUIManager->getRenderDriver();
+    cgViewport viewport = driver->getViewport();
+    cgRect bounds( viewport.x, viewport.y, viewport.x + viewport.width, viewport.y + viewport.height );
+    driver->drawRectangle( bounds, cgColorValue(0,0,0,0.4f), true );
+
+    // Now allow layer to render normally.
+    cgUIControlLayer::render();
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onMouseMove () (Virtual)
+/// <summary>
+/// This method is called whenever the mouse has moved.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgUIModalFormLayer::onMouseMove( const cgPoint & Position, const cgPointF & Offset )
+{
+    // Call base class, but ALWAYS prevent message getting to lower layers.
+    cgUIControlLayer::onMouseMove( Position, Offset );
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onMouseButtonDown () (Virtual)
+/// <summary>
+/// This method is called whenever a mouse button is pressed.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgUIModalFormLayer::onMouseButtonDown( cgInt32 nButtons, const cgPoint & Position )
+{
+    // Call base class, but ALWAYS prevent message getting to lower layers.
+    cgUIControlLayer::onMouseButtonDown( nButtons, Position );
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onMouseButtonUp () (Virtual)
+/// <summary>
+/// This method is called whenever a mouse button is released.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgUIModalFormLayer::onMouseButtonUp( cgInt32 nButtons, const cgPoint & Position )
+{
+    // Call base class, but ALWAYS prevent message getting to lower layers.
+    cgUIControlLayer::onMouseButtonUp( nButtons, Position );
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onMouseWheelScroll () (Virtual)
+/// <summary>
+/// This method is called whenever the mouse wheel is scrolled.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgUIModalFormLayer::onMouseWheelScroll( cgInt32 nDelta, const cgPoint & Position )
+{
+    // Call base class, but ALWAYS prevent message getting to lower layers.
+    cgUIControlLayer::onMouseWheelScroll( nDelta, Position );
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onKeyDown () (Virtual)
+/// <summary>
+/// This method is called whenever a key is first pressed.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgUIModalFormLayer::onKeyDown( cgInt32 nKeyCode, cgUInt32 nModifiers )
+{
+    // Call base class, but ALWAYS prevent message getting to lower layers.
+    cgUIControlLayer::onKeyDown( nKeyCode, nModifiers );
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onKeyUp () (Virtual)
+/// <summary>
+/// This method is called whenever a key is released.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgUIModalFormLayer::onKeyUp( cgInt32 nKeyCode, cgUInt32 nModifiers )
+{
+    // Call base class, but ALWAYS prevent message getting to lower layers.
+    cgUIControlLayer::onKeyUp( nKeyCode, nModifiers );
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onKeyPressed () (Virtual)
+/// <summary>
+/// This method is called whenever a key is pressed, and subsequent times
+/// if the key is held taking into account repeat delay and rate.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgUIModalFormLayer::onKeyPressed( cgInt32 nKeyCode, cgUInt32 nModifiers )
+{
+    // Call base class, but ALWAYS prevent message getting to lower layers.
+    cgUIControlLayer::onKeyPressed( nKeyCode, nModifiers );
+    return true;
+}

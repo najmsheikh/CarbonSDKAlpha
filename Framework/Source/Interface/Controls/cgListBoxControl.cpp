@@ -135,6 +135,26 @@ cgInt32 cgListBoxControl::addItem( const cgString & value )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : clear()
+/// <summary>
+/// Clear existing items from the list box control.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgListBoxControl::clear( )
+{
+    // Clear list of items.
+    mItems.clear();
+
+    // Recalculate list item text metrics if visible, otherwise mark 
+    // as dirty for update when we next become visible.
+    if ( isVisible( true ) )
+        computeTextMetrics();
+    else
+        mMetricsDirty = true;
+
+}
+
+//-----------------------------------------------------------------------------
 //  Name : onSize () (Virtual)
 /// <summary>
 /// Triggered whenever the layout of the control has been recomputed.
@@ -506,7 +526,7 @@ void cgListBoxControl::computeTextMetrics()
     cgTextEngine * pEngine  = mUIManager->getTextEngine();
 
     // First build metric computation flags.
-    cgUInt32 nFlags = cgTextFlags::ClipRectangle | cgTextFlags::Multiline;
+    cgUInt32 nFlags = cgTextFlags::ClipRectangle | cgTextFlags::Multiline | cgTextFlags::NoWrap;
     /*if ( mAllowFormatCode )
         nFlags |= cgTextFlags::AllowFormatCode;*/
 

@@ -22,6 +22,7 @@ namespace Types
             // Value Types / Structures
             BINDSUCCESS( engine->registerObjectType( "Viewport", sizeof(cgViewport), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS ) );
             BINDSUCCESS( engine->registerObjectType( "DisplayMode", sizeof(cgDisplayMode), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS ) );
+            BINDSUCCESS( engine->registerObjectType( "Adapter", sizeof(cgAdapter), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
             BINDSUCCESS( engine->registerObjectType( "SamplerStateDesc", sizeof(cgSamplerStateDesc), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
             BINDSUCCESS( engine->registerObjectType( "TargetBlendStateDesc", sizeof(cgTargetBlendStateDesc), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CDA ) );
             BINDSUCCESS( engine->registerObjectType( "BlendStateDesc", sizeof(cgBlendStateDesc), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
@@ -558,6 +559,31 @@ namespace Types
             // Requires array type for several methods in the render driver interface.
             BINDSUCCESS( engine->registerObjectType( "DisplayMode[]", sizeof(std::vector<cgDisplayMode>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
             STDVectorHelper<cgDisplayMode>::registerMethods( engine, "DisplayMode[]", "DisplayMode" );
+
+            ///////////////////////////////////////////////////////////////////////
+            // cgAdapter (Struct)
+            ///////////////////////////////////////////////////////////////////////
+            
+            typeName = "Adapter";
+
+            // Register the default constructor, destructor and assignment operators.
+            registerDefaultCDA<cgAdapter>( engine, typeName );
+
+            // Register properties
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "int ordinal"        , offsetof(cgAdapter,ordinal) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "String deviceName"  , offsetof(cgAdapter,deviceName) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "String description" , offsetof(cgAdapter,description) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "String configName"  , offsetof(cgAdapter,configName) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "String displayName" , offsetof(cgAdapter,displayName) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "UID identifier"     , offsetof(cgAdapter,identifier) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "uint deviceId"      , offsetof(cgAdapter,deviceId) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "uint vendorId"      , offsetof(cgAdapter,vendorId) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "uint subSysId"      , offsetof(cgAdapter,subSysId) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "DisplayMode[] modes", offsetof(cgAdapter,modes) ) );
+
+            // Requires array type for several methods in the render driver interface.
+            BINDSUCCESS( engine->registerObjectType( "Adapter[]", sizeof(std::vector<cgAdapter>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
+            STDVectorHelper<cgAdapter>::registerMethods( engine, "Adapter[]", "Adapter" );
 
             ///////////////////////////////////////////////////////////////////////
             // cgSamplerStateDesc (Struct)

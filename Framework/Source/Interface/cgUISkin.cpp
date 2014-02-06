@@ -912,6 +912,10 @@ bool cgUISkin::prepareCursorFrames( cgBillboardBuffer * pBuffer, cgRenderDriver 
                 Type.platformCursors.push_back( pCursor );
 
             } // Next frame
+
+            // We're done with the cursor.
+            delete pCursorImage;
+            pCursorImage = NULL;
         
         } // End if hardware cursor
 

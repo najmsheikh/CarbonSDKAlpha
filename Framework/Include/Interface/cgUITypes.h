@@ -40,7 +40,8 @@ namespace cgTextFlags
     enum Base
     {
         ClipRectangle           = 0x1,          // Instructs the DrawText function to clip the text to the specified rectangle
-        Multiline               = 0x2,          // Allow text to span multiple lines, will perform word wrapping (warn: performance implications).
+        Multiline               = 0x2,          // Allow text to span multiple lines, will perform word wrapping by default (warn: performance implications).
+        NoWrap                  = 0x4,          // Disable word wrapping.
         AlignCenter             = 0x10,         // Horizontally align the text to the center of the specified rectangle
         AlignRight              = 0x20,         // Horizontally align the text to the right of the specified rectangle
         VAlignCenter            = 0x40,         // Vertically align the text to the center of the specified rectangle
@@ -83,7 +84,8 @@ namespace cgUILayerType
     enum Base
     {
         UserLayer       = 0,    // Standard user layer to which forms / widgets can be attached
-        SystemLayer     = 1     // A system layer cannot be arranged, and exists always at the specified depth
+        TopMostLayer    = 1,    // Standard user layer on which forms / widgets can be attached -- always stays above UserLayer but below SystemLayer
+        SystemLayer     = 2     // A system layer cannot be arranged, and exists always at the specified depth
     };
 
 }; // End Namespace : cgUILayerType

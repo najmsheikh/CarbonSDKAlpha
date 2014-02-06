@@ -55,7 +55,7 @@ bool cApplication::initInstance( const cgString & commandLine )
     // demo we want to load data from the shared media folder.
     setRootDataPath( cgFileSystem::getAppDirectory() + _T("../../Shared Media/") );
     //setRootDataPath( cgFileSystem::getAppDirectory() + _T("Data/") );
-    cgFileSystem::addPackage( cgFileSystem::getAppDirectory() + _T("../../Shared Media/Audio.pkg") );
+    //cgFileSystem::addPackage( cgFileSystem::getAppDirectory() + _T("Data/base.pkg") );
 
     // Setup the application and window display data.
     setVersionData( cgStringUtility::fromStringTable( CG_NULL, IDS_VERSION ) );

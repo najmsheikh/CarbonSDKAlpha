@@ -1,0 +1,1886 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugExports|Win32">
+      <Configuration>DebugExports</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug (DX9 Only)|Win32">
+      <Configuration>Debug (DX9 Only)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release (DX9 Only)|Win32">
+      <Configuration>Release (DX9 Only)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Publish|Win32">
+      <Configuration>Publish</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseExports|Win32">
+      <Configuration>ReleaseExports</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Publish (DX9 Only)|Win32">
+      <Configuration>Publish (DX9 Only)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{457F7CC1-087A-47A4-811B-D0E606CC9C96}</ProjectGuid>
+    <RootNamespace>Carbon</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">../../Bin/Lib/</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../Bin/Lib/</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">$(ProjectDir)Compiled\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)Compiled\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">../../Bin/Lib/</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">../../Bin/Lib/</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">$(ProjectDir)Compiled\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">$(ProjectDir)Compiled\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">../../Bin/Dll/</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">$(ProjectDir)Compiled\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">../../Bin/Dll/</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">$(ProjectDir)Compiled\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">../../Bin/Lib/</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../Bin/Lib/</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">$(ProjectDir)Compiled\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)Compiled\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>$(ProjectName)d</TargetName>
+    <IncludePath>$(VCInstallDir)include;$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+    <TargetName>$(ProjectName)d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+    <TargetName>$(ProjectName)d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(VCInstallDir)include;$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+    <IncludePath>$(VCInstallDir)include;$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0501;_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>cgPrecompiled.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <Lib>
+      <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)d.lib</OutputFile>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0501;CGE_DX11_RENDER_SUPPORT;_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>cgPrecompiled.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <Lib>
+      <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;d3d11.lib;d3dx11.lib;dxgi.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)d.lib</OutputFile>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0501;_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>cgPrecompiled.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>None</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0501;CGE_DX11_RENDER_SUPPORT;_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>cgPrecompiled.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>None</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;d3d11.lib;d3dx11.lib;dxgi.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0501;_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;_DEBUG;_LIB;CGE_DLL_EXPORTS;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>cgPrecompiled.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/Zm125 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)dExports.lib</OutputFile>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;dxgi.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0501;_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;CGE_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>cgPrecompiled.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <AdditionalOptions>/Zm125 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)Exports.lib</OutputFile>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0501;_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>cgPrecompiled.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>None</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;..\..\Include;..\..\Lib\;..\..\Lib\AngelScript\Include;..\..\Lib\Recast\Include;..\..\Lib\Detour\Include;..\..\Lib\DetourCrowd\Include;..\..\Lib\Newton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0501;CGE_DX11_RENDER_SUPPORT;_NEWTON_STATIC_LIB;_NEWTON_USE_LIB;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_SECURE_NO_WARNINGS=1;_CRT_NONSTDC_NO_DEPRECATE=1;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>cgPrecompiled.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>None</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>../../Lib/vorbis/vorbis_static.lib;../../Lib/vorbis/vorbisfile_static.lib;../../Lib/vorbis/ogg/ogg_static.lib;../../Lib/giEXCore/giEXCore.lib;../../Lib/Newton/newton.lib;../../Lib/Newton/dScene.lib;dsound.lib;d3d11.lib;d3dx11.lib;dxgi.lib;dxguid.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxerr.lib;ws2_32.lib;winmm.lib;user32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Lib\AngelScript-JIT\as_jit.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript-JIT\virtual_asm_windows.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript-JIT\virtual_asm_x86.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\DetourCrowd\Source\DetourCrowd.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\DetourCrowd\Source\DetourLocalBoundary.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\DetourCrowd\Source\DetourObstacleAvoidance.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\DetourCrowd\Source\DetourPathCorridor.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\DetourCrowd\Source\DetourPathQueue.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\DetourCrowd\Source\DetourProximityGrid.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Detour\Source\DetourAlloc.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Detour\Source\DetourCommon.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Detour\Source\DetourNavMesh.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Detour\Source\DetourNavMeshBuilder.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Detour\Source\DetourNavMeshQuery.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Detour\Source\DetourNode.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Recast\Source\Recast.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Recast\Source\RecastAlloc.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Recast\Source\RecastArea.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Recast\Source\RecastContour.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Recast\Source\RecastFilter.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Recast\Source\RecastLayers.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Recast\Source\RecastMesh.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Recast\Source\RecastMeshDetail.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Recast\Source\RecastRasterization.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\Recast\Source\RecastRegion.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\cgBase.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\cgPrecompiled.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">cgPrecompiled.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cgPrecompiled.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">cgPrecompiled.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">cgPrecompiled.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Audio\cgAudioDriver.cpp" />
+    <ClCompile Include="..\..\Source\Audio\Codecs\cgAudioCodec_Ogg.cpp" />
+    <ClCompile Include="..\..\Source\Audio\Codecs\cgAudioCodec_Wav.cpp" />
+    <ClCompile Include="..\..\Source\Audio\Platform\cgDXAudioDriver.cpp" />
+    <ClCompile Include="..\..\Source\Input\cgInputDriver.cpp" />
+    <ClCompile Include="..\..\Source\Interface\cgTextEngine.cpp" />
+    <ClCompile Include="..\..\Source\Interface\cgUIControl.cpp" />
+    <ClCompile Include="..\..\Source\Interface\cgUIForm.cpp" />
+    <ClCompile Include="..\..\Source\Interface\cgUILayers.cpp" />
+    <ClCompile Include="..\..\Source\Interface\cgUIManager.cpp" />
+    <ClCompile Include="..\..\Source\Interface\cgUISkin.cpp" />
+    <ClCompile Include="..\..\Source\Interface\Controls\cgButtonControl.cpp" />
+    <ClCompile Include="..\..\Source\Interface\Controls\cgCheckBoxControl.cpp" />
+    <ClCompile Include="..\..\Source\Interface\Controls\cgComboBoxControl.cpp" />
+    <ClCompile Include="..\..\Source\Interface\Controls\cgGroupBoxControl.cpp" />
+    <ClCompile Include="..\..\Source\Interface\Controls\cgImageBoxControl.cpp" />
+    <ClCompile Include="..\..\Source\Interface\Controls\cgLabelControl.cpp" />
+    <ClCompile Include="..\..\Source\Interface\Controls\cgListBoxControl.cpp" />
+    <ClCompile Include="..\..\Source\Interface\Controls\cgScrollBarControl.cpp" />
+    <ClCompile Include="..\..\Source\Interface\Controls\cgTextBoxControl.cpp" />
+    <ClCompile Include="..\..\Source\Math\cgBezierSpline.cpp" />
+    <ClCompile Include="..\..\Source\Math\cgBoundingBox.cpp" />
+    <ClCompile Include="..\..\Source\Math\cgChecksum.cpp" />
+    <ClCompile Include="..\..\Source\Math\cgCollision.cpp" />
+    <ClCompile Include="..\..\Source\Math\cgEulerAngles.cpp" />
+    <ClCompile Include="..\..\Source\Math\cgExtrudedBoundingBox.cpp" />
+    <ClCompile Include="..\..\Source\Math\cgFrustum.cpp" />
+    <ClCompile Include="..\..\Source\Math\cgMathUtility.cpp" />
+    <ClCompile Include="..\..\Source\Math\cgMatrix.cpp" />
+    <ClCompile Include="..\..\Source\Math\cgPolynomial.cpp" />
+    <ClCompile Include="..\..\Source\Math\cgRandom.cpp" />
+    <ClCompile Include="..\..\Source\Math\cgTransform.cpp" />
+    <ClCompile Include="..\..\Source\Navigation\cgNavigationAgent.cpp" />
+    <ClCompile Include="..\..\Source\Navigation\cgNavigationHandler.cpp" />
+    <ClCompile Include="..\..\Source\Navigation\cgNavigationMesh.cpp" />
+    <ClCompile Include="..\..\Source\Navigation\cgNavigationTile.cpp" />
+    <ClCompile Include="..\..\Source\Physics\cgPhysicsBody.cpp" />
+    <ClCompile Include="..\..\Source\Physics\cgPhysicsController.cpp" />
+    <ClCompile Include="..\..\Source\Physics\cgPhysicsEngine.cpp" />
+    <ClCompile Include="..\..\Source\Physics\cgPhysicsEntity.cpp" />
+    <ClCompile Include="..\..\Source\Physics\cgPhysicsJoint.cpp" />
+    <ClCompile Include="..\..\Source\Physics\cgPhysicsShape.cpp" />
+    <ClCompile Include="..\..\Source\Physics\cgPhysicsWorld.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Controllers\cgCharacterController.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Bodies\cgRigidBody.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Controllers\cgRagdollController.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Joints\cgBallJoint.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Shapes\cgBoxShape.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Shapes\cgCapsuleShape.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Shapes\cgConeShape.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Shapes\cgConvexHullShape.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Shapes\cgConvexShape.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Shapes\cgCylinderShape.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Shapes\cgMeshShape.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Shapes\cgNullShape.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Shapes\cgSphereShape.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Joints\cgFixedAxisJoint.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Joints\cgHingeJoint.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Joints\cgKinematicControllerJoint.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\cgBillboardBuffer.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\cgImageProcessor.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\cgObjectRenderContext.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\cgObjectRenderQueue.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\cgParticleEmitter.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\cgRenderDriver.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\cgRenderingCapabilities.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\cgResampleChain.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\cgSampler.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\cgVertexFormats.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\Platform\cgDX11Initialize.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\Platform\cgDX11RenderDriver.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\Platform\cgDX11RenderingCapabilities.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\Platform\cgDX9Initialize.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\Platform\cgDX9RenderDriver.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\Platform\cgDX9RenderingCapabilities.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\Processors\cgAntialiasProcessor.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\Processors\cgAtmosphericsProcessor.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\Processors\cgDepthOfFieldProcessor.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\Processors\cgGlareProcessor.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\Processors\cgMotionBlurProcessor.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\Processors\cgSSAOProcessor.cpp" />
+    <ClCompile Include="..\..\Source\Rendering\Processors\cgTonemapProcessor.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgAnimationSet.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgAudioBuffer.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgBufferFormatEnum.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgConstantBuffer.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgDepthStencilTarget.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgHardwareShaders.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgHeightMap.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgIndexBuffer.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgMaterial.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgMesh.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgRenderTarget.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgResource.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgResourceManager.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgResourceTypes.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgScript.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgStateBlocks.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgSurfaceShader.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgSurfaceShaderScript.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgTexture.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgTexturePool.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgVertexBuffer.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX11BufferFormatEnum.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX11ConstantBuffer.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX11DepthStencilTarget.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX11HardwareShaders.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX11IndexBuffer.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX11RenderTarget.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX11StateBlocks.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX11VertexBuffer.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX9BufferFormatEnum.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX9ConstantBuffer.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX9DepthStencilTarget.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX9HardwareShaders.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX9IndexBuffer.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX9RenderTarget.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX9StateBlocks.cpp" />
+    <ClCompile Include="..\..\Source\Resources\Platform\cgDX9VertexBuffer.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgLandscapeLayerMaterial.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgStandardMaterial.cpp" />
+    <ClCompile Include="..\..\Source\System\cgCursor.cpp" />
+    <ClCompile Include="..\..\Source\System\Platform\cgWinCursor.cpp" />
+    <ClCompile Include="..\..\Source\World\cgBSPVisTree.cpp" />
+    <ClCompile Include="..\..\Source\World\cgLandscape.cpp" />
+    <ClCompile Include="..\..\Source\World\cgObjectBehavior.cpp" />
+    <ClCompile Include="..\..\Source\World\cgObjectNode.cpp" />
+    <ClCompile Include="..\..\Source\World\cgObjectSubElement.cpp" />
+    <ClCompile Include="..\..\Source\World\cgOctree.cpp" />
+    <ClCompile Include="..\..\Source\World\cgScene.cpp" />
+    <ClCompile Include="..\..\Source\World\cgSceneCell.cpp" />
+    <ClCompile Include="..\..\Source\World\cgSceneController.cpp" />
+    <ClCompile Include="..\..\Source\World\cgSceneElement.cpp" />
+    <ClCompile Include="..\..\Source\World\cgSpatialTree.cpp" />
+    <ClCompile Include="..\..\Source\World\cgSphereTree.cpp" />
+    <ClCompile Include="..\..\Source\World\cgVisibilitySet.cpp" />
+    <ClCompile Include="..\..\Source\World\cgWorld.cpp" />
+    <ClCompile Include="..\..\Source\World\cgWorldComponent.cpp" />
+    <ClCompile Include="..\..\Source\World\cgWorldConfiguration.cpp" />
+    <ClCompile Include="..\..\Source\World\cgWorldObject.cpp" />
+    <ClCompile Include="..\..\Source\World\cgWorldQuery.cpp" />
+    <ClCompile Include="..\..\Source\World\cgWorldResourceComponent.cpp" />
+    <ClCompile Include="..\..\Source\World\Elements\cgBSPVisTreeElement.cpp" />
+    <ClCompile Include="..\..\Source\World\Elements\cgNavigationMeshElement.cpp" />
+    <ClCompile Include="..\..\Source\World\Elements\cgSkyElement.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgActor.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgBillboardObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgBoneObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgCameraObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgDummyObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgGroupObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgMeshObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgNavigationPatrolPoint.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgNavigationWaypoint.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgParticleEmitterObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgSkinObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgSoundEmitterObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgSplineObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgTargetObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgDirectionalLight.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgHemisphereLight.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgLightObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgPointLight.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgProjectorLight.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgSpotLight.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgSpatialTreeObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\Elements\cgAnimationSetElement.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\Elements\cgBoxCollisionShapeElement.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\Elements\cgCapsuleCollisionShapeElement.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\Elements\cgCollisionShapeElement.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\Elements\cgConeCollisionShapeElement.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\Elements\cgCylinderCollisionShapeElement.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\Elements\cgHullCollisionShapeElement.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\Elements\cgSphereCollisionShapeElement.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgFixedAxisJointObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgHingeJointObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgJointObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgKinematicControllerJointObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Lighting\cgLightingManager.cpp" />
+    <ClCompile Include="..\..\Source\World\Lighting\cgLightingTypes.cpp" />
+    <ClCompile Include="..\..\Source\World\Lighting\cgRadianceGrid.cpp" />
+    <ClCompile Include="..\..\Source\World\Lighting\cgShadowGenerator.cpp" />
+    <ClCompile Include="..\..\Source\Scripting\cgScriptEngine.cpp" />
+    <ClCompile Include="..\..\Source\Scripting\cgScriptInterop.cpp" />
+    <ClCompile Include="..\..\Source\Scripting\cgScriptLibrary.cpp" />
+    <ClCompile Include="..\..\Source\Scripting\cgScriptPreprocessor.cpp" />
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_atomic.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_builder.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_bytecode.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_callfunc.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_callfunc_x86.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_compiler.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_configgroup.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_context.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_datatype.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_gc.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_generic.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_globalproperty.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_memory.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_module.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_objecttype.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_outputbuffer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_parser.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_restore.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_scriptcode.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_scriptengine.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_scriptfunction.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_scriptnode.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_scriptobject.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_string.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_string_util.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_thread.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_tokenizer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_typeinfo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Lib\AngelScript\source\as_variablescope.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\States\cgAppStateManager.cpp" />
+    <ClCompile Include="..\..\Source\System\cgApplication.cpp" />
+    <ClCompile Include="..\..\Source\System\cgAppLog.cpp" />
+    <ClCompile Include="..\..\Source\System\cgAppWindow.cpp" />
+    <ClCompile Include="..\..\Source\System\cgEventDispatcher.cpp" />
+    <ClCompile Include="..\..\Source\System\cgExceptions.cpp" />
+    <ClCompile Include="..\..\Source\System\cgFileSystem.cpp" />
+    <ClCompile Include="..\..\Source\System\cgFilterExpression.cpp" />
+    <ClCompile Include="..\..\Source\System\cgImage.cpp" />
+    <ClCompile Include="..\..\Source\System\cgProfiler.cpp" />
+    <ClCompile Include="..\..\Source\System\cgPropertyContainer.cpp" />
+    <ClCompile Include="..\..\Source\System\cgReference.cpp" />
+    <ClCompile Include="..\..\Source\System\cgReferenceManager.cpp" />
+    <ClCompile Include="..\..\Source\System\cgStringUtility.cpp" />
+    <ClCompile Include="..\..\Source\System\cgThreading.cpp" />
+    <ClCompile Include="..\..\Source\System\cgTimer.cpp" />
+    <ClCompile Include="..\..\Source\System\cgUID.cpp" />
+    <ClCompile Include="..\..\Source\System\cgVariant.cpp" />
+    <ClCompile Include="..\..\Source\System\cgXML.cpp" />
+    <ClCompile Include="..\..\Source\System\Platform\cgWinAppWindow.cpp" />
+    <ClCompile Include="..\..\Source\System\Platform\cgWinImage.cpp" />
+    <ClCompile Include="..\..\Source\System\Platform\cgWinThreading.cpp" />
+    <ClCompile Include="..\..\Lib\SQLite\sqlite3.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">
+      </PrecompiledHeader>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug (DX9 Only)|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Publish (DX9 Only)|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='DebugExports|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='ReleaseExports|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release (DX9 Only)|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Publish|Win32'">SQLITE_OMIT_WAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Network\cgBroadcast.cpp" />
+    <ClCompile Include="..\..\Source\Network\cgBroadcastClient.cpp" />
+    <ClCompile Include="..\..\Source\Network\Platform\cgWinsockBroadcast.cpp" />
+    <ClCompile Include="..\..\Source\Network\Platform\cgWinsockBroadcastClient.cpp" />
+    <ClCompile Include="..\..\Source\Animation\cgAnimationController.cpp" />
+    <ClCompile Include="..\..\Source\Animation\cgAnimationTarget.cpp" />
+    <ClCompile Include="..\..\Source\Animation\cgAnimationTypes.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Include\Carbon.h" />
+    <ClInclude Include="..\..\Include\Interface\Controls\cgCheckBoxControl.h" />
+    <ClInclude Include="..\..\Include\Navigation\cgNavigationAgent.h" />
+    <ClInclude Include="..\..\Include\Navigation\cgNavigationHandler.h" />
+    <ClInclude Include="..\..\Include\Navigation\cgNavigationMesh.h" />
+    <ClInclude Include="..\..\Include\Navigation\cgNavigationTile.h" />
+    <ClInclude Include="..\..\Include\Navigation\cgNavigationTypes.h" />
+    <ClInclude Include="..\..\Include\Physics\Controllers\cgRagdollController.h" />
+    <ClInclude Include="..\..\Include\Physics\Joints\cgBallJoint.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Animation\Types.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Audio.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Audio\AudioDriver.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Audio\Types.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Navigation.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Navigation\Types.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Controllers.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Controllers\CharacterController.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Controllers\PhysicsController.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Controllers\RagdollController.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Types.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\BillboardBuffer.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\States.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\States\AppState.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\States\AppStateManager.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\States\AppTransitionState.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Controls\CheckBox.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Elements.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Elements\SceneElement.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Elements\SkyElement.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Billboard.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Bone.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Dummy.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\DirectionalLight.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\HemisphereLight.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\PointLight.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\ProjectorLight.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\SpotLight.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Mesh.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Navigation.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Navigation\NavigationPatrolPoint.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Navigation\NavigationWaypoint.h" />
+    <ClInclude Include="..\..\Include\System\cgCursor.h" />
+    <ClInclude Include="..\..\Include\System\Platform\cgWinCursor.h" />
+    <ClInclude Include="..\..\Include\World\cgBSPVisTree.h" />
+    <ClInclude Include="..\..\Include\World\cgOctree.h" />
+    <ClInclude Include="..\..\Include\World\cgSceneElement.h" />
+    <ClInclude Include="..\..\Include\World\cgSphereTree.h" />
+    <ClInclude Include="..\..\Include\World\Elements\cgBSPVisTreeElement.h" />
+    <ClInclude Include="..\..\Include\World\Elements\cgNavigationMeshElement.h" />
+    <ClInclude Include="..\..\Include\World\Elements\cgSkyElement.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgBillboardObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgNavigationPatrolPoint.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgNavigationWaypoint.h" />
+    <ClInclude Include="..\..\Lib\AngelScript-JIT\as_jit.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\include\angelscript.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_array.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_atomic.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_builder.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_bytecode.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_callfunc.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_compiler.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_config.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_configgroup.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_context.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_criticalsection.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_datatype.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_debug.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_gc.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_generic.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_map.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_memory.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_module.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_objecttype.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_outputbuffer.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_parser.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_property.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_restore.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_scriptcode.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_scriptengine.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_scriptfunction.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_scriptnode.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_scriptobject.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_string.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_string_util.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_symboltable.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_texts.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_thread.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_tokendef.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_tokenizer.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_typeinfo.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_variablescope.h" />
+    <ClInclude Include="..\..\Include\cgAPI.h" />
+    <ClInclude Include="..\..\Include\cgBase.h" />
+    <ClInclude Include="..\..\Include\cgBaseTypes.h" />
+    <ClInclude Include="..\..\Include\cgConfig.h" />
+    <ClInclude Include="..\..\Include\cgPrecompiled.h" />
+    <ClInclude Include="..\..\Include\Audio\cgAudioDriver.h" />
+    <ClInclude Include="..\..\Include\Audio\cgAudioTypes.h" />
+    <ClInclude Include="..\..\Include\Audio\Codecs\cgAudioCodec_Ogg.h" />
+    <ClInclude Include="..\..\Include\Audio\Codecs\cgAudioCodec_Wav.h" />
+    <ClInclude Include="..\..\Include\Audio\Platform\cgDXAudioDriver.h" />
+    <ClInclude Include="..\..\Include\Input\cgInputDriver.h" />
+    <ClInclude Include="..\..\Include\Input\cgInputTypes.h" />
+    <ClInclude Include="..\..\Include\Interface\cgTextEngine.h" />
+    <ClInclude Include="..\..\Include\Interface\cgUIControl.h" />
+    <ClInclude Include="..\..\Include\Interface\cgUIForm.h" />
+    <ClInclude Include="..\..\Include\Interface\cgUILayers.h" />
+    <ClInclude Include="..\..\Include\Interface\cgUIManager.h" />
+    <ClInclude Include="..\..\Include\Interface\cgUISkin.h" />
+    <ClInclude Include="..\..\Include\Interface\cgUITypes.h" />
+    <ClInclude Include="..\..\Include\Interface\Controls\cgButtonControl.h" />
+    <ClInclude Include="..\..\Include\Interface\Controls\cgComboBoxControl.h" />
+    <ClInclude Include="..\..\Include\Interface\Controls\cgGroupBoxControl.h" />
+    <ClInclude Include="..\..\Include\Interface\Controls\cgImageBoxControl.h" />
+    <ClInclude Include="..\..\Include\Interface\Controls\cgLabelControl.h" />
+    <ClInclude Include="..\..\Include\Interface\Controls\cgListBoxControl.h" />
+    <ClInclude Include="..\..\Include\Interface\Controls\cgScrollBarControl.h" />
+    <ClInclude Include="..\..\Include\Interface\Controls\cgTextBoxControl.h" />
+    <ClInclude Include="..\..\Include\Math\cgBezierSpline.h" />
+    <ClInclude Include="..\..\Include\Math\cgBoundingBox.h" />
+    <ClInclude Include="..\..\Include\Math\cgChecksum.h" />
+    <ClInclude Include="..\..\Include\Math\cgCollision.h" />
+    <ClInclude Include="..\..\Include\Math\cgEulerAngles.h" />
+    <ClInclude Include="..\..\Include\Math\cgExtrudedBoundingBox.h" />
+    <ClInclude Include="..\..\Include\Math\cgFrustum.h" />
+    <ClInclude Include="..\..\Include\Math\cgLeastSquares.h" />
+    <ClInclude Include="..\..\Include\Math\cgMathTypes.h" />
+    <ClInclude Include="..\..\Include\Math\cgMathUtility.h" />
+    <ClInclude Include="..\..\Include\Math\cgMatrix.h" />
+    <ClInclude Include="..\..\Include\Math\cgPlane.h" />
+    <ClInclude Include="..\..\Include\Math\cgPolynomial.h" />
+    <ClInclude Include="..\..\Include\Math\cgQuaternion.h" />
+    <ClInclude Include="..\..\Include\Math\cgRandom.h" />
+    <ClInclude Include="..\..\Include\Math\cgTransform.h" />
+    <ClInclude Include="..\..\Include\Math\cgVector.h" />
+    <ClInclude Include="..\..\Include\Physics\cgPhysicsBody.h" />
+    <ClInclude Include="..\..\Include\Physics\cgPhysicsController.h" />
+    <ClInclude Include="..\..\Include\Physics\cgPhysicsEngine.h" />
+    <ClInclude Include="..\..\Include\Physics\cgPhysicsEntity.h" />
+    <ClInclude Include="..\..\Include\Physics\cgPhysicsJoint.h" />
+    <ClInclude Include="..\..\Include\Physics\cgPhysicsShape.h" />
+    <ClInclude Include="..\..\Include\Physics\cgPhysicsTypes.h" />
+    <ClInclude Include="..\..\Include\Physics\cgPhysicsWorld.h" />
+    <ClInclude Include="..\..\Include\Physics\Controllers\cgCharacterController.h" />
+    <ClInclude Include="..\..\Include\Physics\Bodies\cgRigidBody.h" />
+    <ClInclude Include="..\..\Include\Physics\Shapes\cgBoxShape.h" />
+    <ClInclude Include="..\..\Include\Physics\Shapes\cgCapsuleShape.h" />
+    <ClInclude Include="..\..\Include\Physics\Shapes\cgConeShape.h" />
+    <ClInclude Include="..\..\Include\Physics\Shapes\cgConvexHullShape.h" />
+    <ClInclude Include="..\..\Include\Physics\Shapes\cgConvexShape.h" />
+    <ClInclude Include="..\..\Include\Physics\Shapes\cgCylinderShape.h" />
+    <ClInclude Include="..\..\Include\Physics\Shapes\cgMeshShape.h" />
+    <ClInclude Include="..\..\Include\Physics\Shapes\cgNullShape.h" />
+    <ClInclude Include="..\..\Include\Physics\Shapes\cgSphereShape.h" />
+    <ClInclude Include="..\..\Include\Physics\Joints\cgFixedAxisJoint.h" />
+    <ClInclude Include="..\..\Include\Physics\Joints\cgHingeJoint.h" />
+    <ClInclude Include="..\..\Include\Physics\Joints\cgKinematicControllerJoint.h" />
+    <ClInclude Include="..\..\Include\Resources\cgAnimationSet.h" />
+    <ClInclude Include="..\..\Include\Resources\cgAudioBuffer.h" />
+    <ClInclude Include="..\..\Include\Resources\cgBufferFormatEnum.h" />
+    <ClInclude Include="..\..\Include\Resources\cgConstantBuffer.h" />
+    <ClInclude Include="..\..\Include\Resources\cgDepthStencilTarget.h" />
+    <ClInclude Include="..\..\Include\Resources\cgHardwareShaders.h" />
+    <ClInclude Include="..\..\Include\Resources\cgHeightMap.h" />
+    <ClInclude Include="..\..\Include\Resources\cgIndexBuffer.h" />
+    <ClInclude Include="..\..\Include\Resources\cgMaterial.h" />
+    <ClInclude Include="..\..\Include\Resources\cgMesh.h" />
+    <ClInclude Include="..\..\Include\Resources\cgRenderTarget.h" />
+    <ClInclude Include="..\..\Include\Resources\cgResource.h" />
+    <ClInclude Include="..\..\Include\Resources\cgResourceHandles.h" />
+    <ClInclude Include="..\..\Include\Resources\cgResourceManager.h" />
+    <ClInclude Include="..\..\Include\Resources\cgResourceTypes.h" />
+    <ClInclude Include="..\..\Include\Resources\cgScript.h" />
+    <ClInclude Include="..\..\Include\Resources\cgStateBlocks.h" />
+    <ClInclude Include="..\..\Include\Resources\cgSurfaceShader.h" />
+    <ClInclude Include="..\..\Include\Resources\cgSurfaceShaderScript.h" />
+    <ClInclude Include="..\..\Include\Resources\cgTexture.h" />
+    <ClInclude Include="..\..\Include\Resources\cgTexturePool.h" />
+    <ClInclude Include="..\..\Include\Resources\cgVertexBuffer.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX11BufferFormatEnum.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX11ConstantBuffer.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX11DepthStencilTarget.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX11HardwareShaders.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX11IndexBuffer.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX11RenderTarget.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX11StateBlocks.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX11Texture.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX11VertexBuffer.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX9BufferFormatEnum.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX9ConstantBuffer.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX9DepthStencilTarget.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX9HardwareShaders.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX9IndexBuffer.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX9RenderTarget.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX9StateBlocks.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX9Texture.h" />
+    <ClInclude Include="..\..\Include\Resources\Platform\cgDX9VertexBuffer.h" />
+    <ClInclude Include="..\..\Include\Resources\cgLandscapeLayerMaterial.h" />
+    <ClInclude Include="..\..\Include\Resources\cgStandardMaterial.h" />
+    <ClInclude Include="..\..\Include\World\cgLandscape.h" />
+    <ClInclude Include="..\..\Include\World\cgLandscapeTypes.h" />
+    <ClInclude Include="..\..\Include\World\cgObjectBehavior.h" />
+    <ClInclude Include="..\..\Include\World\cgObjectNode.h" />
+    <ClInclude Include="..\..\Include\World\cgObjectSubElement.h" />
+    <ClInclude Include="..\..\Include\World\cgScene.h" />
+    <ClInclude Include="..\..\Include\World\cgSceneCell.h" />
+    <ClInclude Include="..\..\Include\World\cgSceneController.h" />
+    <ClInclude Include="..\..\Include\World\cgSpatialTree.h" />
+    <ClInclude Include="..\..\Include\World\cgVisibilitySet.h" />
+    <ClInclude Include="..\..\Include\World\cgWorld.h" />
+    <ClInclude Include="..\..\Include\World\cgWorldComponent.h" />
+    <ClInclude Include="..\..\Include\World\cgWorldConfiguration.h" />
+    <ClInclude Include="..\..\Include\World\cgWorldObject.h" />
+    <ClInclude Include="..\..\Include\World\cgWorldQuery.h" />
+    <ClInclude Include="..\..\Include\World\cgWorldResourceComponent.h" />
+    <ClInclude Include="..\..\Include\World\cgWorldTypes.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgActor.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgBoneObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgCameraObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgDummyObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgGroupObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgMeshObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgParticleEmitterObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgSkinObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgSoundEmitterObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgSplineObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgTargetObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgDirectionalLight.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgHemisphereLight.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgLightObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgPointLight.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgProjectorLight.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgSpotLight.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgSpatialTreeObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\Elements\cgAnimationSetElement.h" />
+    <ClInclude Include="..\..\Include\World\Objects\Elements\cgBoxCollisionShapeElement.h" />
+    <ClInclude Include="..\..\Include\World\Objects\Elements\cgCapsuleCollisionShapeElement.h" />
+    <ClInclude Include="..\..\Include\World\Objects\Elements\cgCollisionShapeElement.h" />
+    <ClInclude Include="..\..\Include\World\Objects\Elements\cgConeCollisionShapeElement.h" />
+    <ClInclude Include="..\..\Include\World\Objects\Elements\cgCylinderCollisionShapeElement.h" />
+    <ClInclude Include="..\..\Include\World\Objects\Elements\cgHullCollisionShapeElement.h" />
+    <ClInclude Include="..\..\Include\World\Objects\Elements\cgSphereCollisionShapeElement.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgFixedAxisJointObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgHingeJointObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgJointObject.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgKinematicControllerJointObject.h" />
+    <ClInclude Include="..\..\Include\World\Lighting\cgLightingManager.h" />
+    <ClInclude Include="..\..\Include\World\Lighting\cgLightingTypes.h" />
+    <ClInclude Include="..\..\Include\World\Lighting\cgRadianceGrid.h" />
+    <ClInclude Include="..\..\Include\World\Lighting\cgShadowGenerator.h" />
+    <ClInclude Include="..\..\Include\Scripting\cgBindingUtils.h" />
+    <ClInclude Include="..\..\Include\Scripting\cgScriptEngine.h" />
+    <ClInclude Include="..\..\Include\Scripting\cgScriptInterop.h" />
+    <ClInclude Include="..\..\Include\Scripting\cgScriptLibrary.h" />
+    <ClInclude Include="..\..\Include\Scripting\cgScriptPackage.h" />
+    <ClInclude Include="..\..\Include\Scripting\cgScriptPreprocessor.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Animation.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Input.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Math.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\DebugSource.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\Events.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\IO.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\Point.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\PointF.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\PropertyContainer.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\Range.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\RangeF.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\Rect.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\RectF.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\References.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\Size.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\SizeF.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\String.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\UID.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\Utilities.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\Variant.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\References\Management.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\References\Messaging.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\References\Reference.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\Events\EventDispatcher.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\Events\EventListener.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\IO\InputStream.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\IO\Logging.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\IO\Types.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\Utilities\FilterExpression.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\Utilities\Profiler.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\System\Utilities\Timer.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Math\BoundingBox.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Math\Color.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Math\Matrix.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Math\Plane.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Math\Quaternion.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Math\Transform.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Math\Types.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Math\Vector2.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Math\Vector3.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Math\Vector4.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\ImageProcessor.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\ObjectRenderContext.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\ObjectRenderQueue.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\Processors.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\RenderControl.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\RenderDriver.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\RenderingCapabilities.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\RenderView.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\ResampleChain.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\Sampler.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\Types.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\Processors\AntialiasProcessor.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\Processors\AtmosphericsProcessor.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\Processors\DepthOfFieldProcessor.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\Processors\GlareProcessor.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\Processors\MotionBlurProcessor.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\Processors\SSAOProcessor.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Rendering\Processors\ToneMapProcessor.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\AnimationSet.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\AudioBuffer.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\ConstantBuffer.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\DepthStencilTarget.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\IndexBuffer.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\Materials.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\Mesh.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\PixelShader.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\RenderTarget.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\Resource.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\ResourceManager.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\Script.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\StateBlocks.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\SurfaceShader.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\Texture.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\TexturePool.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\Types.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\VertexBuffer.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\VertexShader.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\Materials\Material.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\Materials\StandardMaterial.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\StateBlocks\BlendState.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\StateBlocks\DepthStencilState.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\StateBlocks\RasterizerState.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Resources\StateBlocks\SamplerState.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Landscape.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Lighting.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Scene.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Types.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Visibility.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\World.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\WorldComponent.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Actor.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Camera.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Group.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\ObjectBehavior.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\ObjectNode.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\ParticleEmitter.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Skin.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\WorldObject.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Lights\Light.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Lighting\LightingManager.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Visibility\VisibilitySet.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Animation\AnimationController.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Animation\AnimationTarget.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Input\InputDriver.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Input\InputListener.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Input\Types.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Controls.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Form.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Layers.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Types.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\UIManager.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Controls\Button.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Controls\ComboBox.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Controls\GroupBox.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Controls\ImageBox.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Controls\Label.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Controls\ListBox.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Controls\ScrollBar.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Controls\TextBox.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Controls\UIControl.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Layers\ControlLayer.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Layers\CursorLayer.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\UI\Layers\UILayer.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Bodies.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Joints.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\PhysicsEntity.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\PhysicsWorld.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Bodies\PhysicsBody.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Bodies\RigidBody.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Joints\KinematicControllerJoint.h" />
+    <ClInclude Include="..\..\Include\Scripting\Packages\Core\Physics\Joints\PhysicsJoint.h" />
+    <ClInclude Include="..\..\Include\States\cgAppStateManager.h" />
+    <ClInclude Include="..\..\Include\System\cgApplication.h" />
+    <ClInclude Include="..\..\Include\System\cgAppLog.h" />
+    <ClInclude Include="..\..\Include\System\cgAppWindow.h" />
+    <ClInclude Include="..\..\Include\System\cgEventDispatcher.h" />
+    <ClInclude Include="..\..\Include\System\cgExceptions.h" />
+    <ClInclude Include="..\..\Include\System\cgFileSystem.h" />
+    <ClInclude Include="..\..\Include\System\cgFilterExpression.h" />
+    <ClInclude Include="..\..\Include\System\cgImage.h" />
+    <ClInclude Include="..\..\Include\System\cgMessageTypes.h" />
+    <ClInclude Include="..\..\Include\System\cgPoolAllocator.h" />
+    <ClInclude Include="..\..\Include\System\cgProfiler.h" />
+    <ClInclude Include="..\..\Include\System\cgPropertyContainer.h" />
+    <ClInclude Include="..\..\Include\System\cgReference.h" />
+    <ClInclude Include="..\..\Include\System\cgReferenceManager.h" />
+    <ClInclude Include="..\..\Include\System\cgString.h" />
+    <ClInclude Include="..\..\Include\System\cgStringUtility.h" />
+    <ClInclude Include="..\..\Include\System\cgThreading.h" />
+    <ClInclude Include="..\..\Include\System\cgTimer.h" />
+    <ClInclude Include="..\..\Include\System\cgUID.h" />
+    <ClInclude Include="..\..\Include\System\cgVariant.h" />
+    <ClInclude Include="..\..\Include\System\cgXML.h" />
+    <ClInclude Include="..\..\Include\System\Platform\cgWinAppWindow.h" />
+    <ClInclude Include="..\..\Include\System\Platform\cgWinImage.h" />
+    <ClInclude Include="..\..\Include\System\Platform\cgWinThreading.h" />
+    <ClInclude Include="..\..\Include\Rendering\cgBillboardBuffer.h" />
+    <ClInclude Include="..\..\Include\Rendering\cgImageProcessor.h" />
+    <ClInclude Include="..\..\Include\Rendering\cgObjectRenderContext.h" />
+    <ClInclude Include="..\..\Include\Rendering\cgObjectRenderQueue.h" />
+    <ClInclude Include="..\..\Include\Rendering\cgParticleEmitter.h" />
+    <ClInclude Include="..\..\Include\Rendering\cgRenderDriver.h" />
+    <ClInclude Include="..\..\Include\Rendering\cgRenderingCapabilities.h" />
+    <ClInclude Include="..\..\Include\Rendering\cgRenderingTypes.h" />
+    <ClInclude Include="..\..\Include\Rendering\cgResampleChain.h" />
+    <ClInclude Include="..\..\Include\Rendering\cgSampler.h" />
+    <ClInclude Include="..\..\Include\Rendering\cgVertexFormats.h" />
+    <ClInclude Include="..\..\Include\Rendering\Platform\cgDX11Initialize.h" />
+    <CustomBuildStep Include="..\..\Include\Rendering\Platform\cgDX11RenderDriver.h" />
+    <ClInclude Include="..\..\Include\Rendering\Platform\cgDX11RenderingCapabilities.h" />
+    <ClInclude Include="..\..\Include\Rendering\Platform\cgDX9Initialize.h" />
+    <ClInclude Include="..\..\Include\Rendering\Platform\cgDX9RenderDriver.h" />
+    <ClInclude Include="..\..\Include\Rendering\Platform\cgDX9RenderingCapabilities.h" />
+    <ClInclude Include="..\..\Include\Rendering\Processors\cgAntialiasProcessor.h" />
+    <ClInclude Include="..\..\Include\Rendering\Processors\cgAtmosphericsProcessor.h" />
+    <ClInclude Include="..\..\Include\Rendering\Processors\cgDepthOfFieldProcessor.h" />
+    <ClInclude Include="..\..\Include\Rendering\Processors\cgGlareProcessor.h" />
+    <ClInclude Include="..\..\Include\Rendering\Processors\cgMotionBlurProcessor.h" />
+    <ClInclude Include="..\..\Include\Rendering\Processors\cgSSAOProcessor.h" />
+    <ClInclude Include="..\..\Include\Rendering\Processors\cgToneMapProcessor.h" />
+    <ClInclude Include="..\..\Include\Network\cgBroadcast.h" />
+    <ClInclude Include="..\..\Include\Network\cgBroadcastClient.h" />
+    <ClInclude Include="..\..\Include\Network\Platform\cgWinsockBroadcast.h" />
+    <ClInclude Include="..\..\Include\Network\Platform\cgWinsockBroadcastClient.h" />
+    <ClInclude Include="..\..\Include\Animation\cgAnimationController.h" />
+    <ClInclude Include="..\..\Include\Animation\cgAnimationTarget.h" />
+    <ClInclude Include="..\..\Include\Animation\cgAnimationTypes.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

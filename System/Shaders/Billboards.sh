@@ -269,8 +269,14 @@ class BillboardShader : ISurfaceShader
         mDriver.setSamplerState( 0, mSamplerStateLinear );
 
         // Select shaders
-        if ( !mOwner.selectVertexShader( null ) ||
-             !mOwner.selectPixelShader( "drawBillboard2D" ) )
+        #ifndef DX9C
+            if ( !mOwner.selectVertexShader( "transformBillboard2D" ) )
+                return TechniqueResult::Abort;
+        #else
+            if ( !mOwner.selectVertexShader( null ) )
+                return TechniqueResult::Abort;
+        #endif
+        if ( !mOwner.selectPixelShader( "drawBillboard2D" ) )
             return TechniqueResult::Abort;
 
         // Single-pass. Process is complete.

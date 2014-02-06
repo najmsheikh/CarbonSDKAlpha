@@ -36,6 +36,7 @@ namespace ComboBox
             // Register object methods
             BINDSUCCESS( engine->registerObjectMethod( "ComboBox", "void onSelectedIndexChange( int, int )", asMETHODPR(cgComboBoxControl, onSelectedIndexChange, ( cgInt32, cgInt32 ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ComboBox", "int addItem( const String &in )", asMETHODPR(cgComboBoxControl, addItem, ( const cgString& ), cgInt32 ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ComboBox", "void clear()", asMETHODPR(cgComboBoxControl, clear, ( ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ComboBox", "void setSelectedIndex( int )", asMETHODPR(cgComboBoxControl, setSelectedIndex, ( cgInt32 ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ComboBox", "int getSelectedIndex( ) const", asMETHODPR(cgComboBoxControl, getSelectedIndex, ( ) const, cgInt32 ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ComboBox", "void showDropDown( bool )", asMETHODPR(cgComboBoxControl, showDropDown, ( bool ), void ), asCALL_THISCALL) );

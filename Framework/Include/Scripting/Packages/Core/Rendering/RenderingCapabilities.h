@@ -40,7 +40,8 @@ namespace RenderingCapabilities
 			BINDSUCCESS( engine->registerObjectMethod( "RenderingCapabilities", "bool supportsDepthStencilReading( ) const", asMETHODPR(cgRenderingCapabilities, supportsDepthStencilReading, () const, bool), asCALL_THISCALL) );
 			BINDSUCCESS( engine->registerObjectMethod( "RenderingCapabilities", "bool supportsFastStencilFill( ) const", asMETHODPR(cgRenderingCapabilities, supportsFastStencilFill, () const, bool), asCALL_THISCALL) );
 			BINDSUCCESS( engine->registerObjectMethod( "RenderingCapabilities", "bool supportsNonPow2Textures( ) const", asMETHODPR(cgRenderingCapabilities, supportsNonPow2Textures, () const, bool), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "RenderingCapabilities", "bool getDisplayModes( array<DisplayMode> &inout ) const", asMETHODPR(cgRenderingCapabilities, getDisplayModes, ( cgDisplayMode::Array& ) const, bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "RenderingCapabilities", "bool getDisplayModes( int, array<DisplayMode> &inout ) const", asMETHODPR(cgRenderingCapabilities, getDisplayModes, ( cgInt32, cgDisplayMode::Array& ) const, bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "RenderingCapabilities", "bool getAdapters( array<Adapter> &inout ) const", asMETHODPR(cgRenderingCapabilities, getAdapters, ( cgAdapter::Array& ) const, bool), asCALL_THISCALL) );
 		}
 
 	}; // End Class : Package

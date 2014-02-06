@@ -83,6 +83,7 @@ public:
     // Public Methods
     //-------------------------------------------------------------------------
     cgInt32                 addItem                 ( const cgString & value );
+    void                    clear                   ( );
     void                    setSelectedIndex        ( cgInt32 index );
     cgInt32                 getSelectedIndex        ( ) const;
     void                    scrollToSelection       ( );

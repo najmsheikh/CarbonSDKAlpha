@@ -78,7 +78,8 @@ public:
 	virtual bool                    supportsDepthStencilReading ( ) const = 0;
     virtual bool                    supportsShaderModel         ( cgShaderModel::Base model ) const = 0;
     virtual bool                    requiresCursorEmulation     ( ) const = 0;
-    virtual bool                    getDisplayModes             ( cgDisplayMode::Array & modes ) const = 0;
+    virtual bool                    getAdapters                 ( cgAdapter::Array & adapters ) const = 0;
+    virtual bool                    getDisplayModes             ( cgInt32 adapterOrdinal, cgDisplayMode::Array & modes ) const = 0;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)

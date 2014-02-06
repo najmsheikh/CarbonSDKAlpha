@@ -949,7 +949,10 @@ bool cgDX9Initialize::findBestWindowedMode( cgDX9Settings & D3DSettings, const c
         if ( bExactMatch && !CurrentConfig.deviceName.empty() )
         {
             STRING_CONVERT;
-            cgString strDeviceName = cgString::trim(stringConvertA2CT(pAdapter->identifier.Description));
+            cgString strDeviceName = cgString::trim(stringConvertA2CT(pAdapter->identifier.DeviceName));
+            strDeviceName += _T(" (");
+            strDeviceName += cgString::trim(stringConvertA2T(pAdapter->identifier.Description));
+            strDeviceName += _T(")");
             if ( !(strDeviceName == CurrentConfig.deviceName) )
                 continue;
 
@@ -1137,7 +1140,10 @@ bool cgDX9Initialize::findBestFullScreenMode( cgDX9Settings & D3DSettings, const
         if ( bExactMatch && !CurrentConfig.deviceName.empty() )
         {
             STRING_CONVERT;
-            cgString strDeviceName = cgString::trim(stringConvertA2CT(pAdapter->identifier.Description));
+            cgString strDeviceName = cgString::trim(stringConvertA2CT(pAdapter->identifier.DeviceName));
+            strDeviceName += _T(" (");
+            strDeviceName += cgString::trim(stringConvertA2T(pAdapter->identifier.Description));
+            strDeviceName += _T(")");
             if ( !(strDeviceName == CurrentConfig.deviceName) )
                 continue;
 

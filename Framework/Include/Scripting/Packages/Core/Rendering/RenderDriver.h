@@ -73,6 +73,7 @@ namespace RenderDriver
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool saveConfig( const String &in )", asMETHODPR(cgRenderDriver, saveConfig, ( const cgString& ), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "ResourceManager@+ getResourceManager( ) const", asMETHODPR(cgRenderDriver,getResourceManager,() const,cgResourceManager*), asCALL_THISCALL) );
 			BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "RenderingCapabilities@+ getCapabilities( ) const", asMETHODPR(cgRenderDriver,getCapabilities,() const,cgRenderingCapabilities*), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool updateAdapter( int, const DisplayMode &in, bool, bool )", asMETHODPR(cgRenderDriver,updateAdapter,( cgInt32, const cgDisplayMode&, bool, bool ),bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "bool updateDisplayMode( const DisplayMode &in, bool, bool )", asMETHODPR(cgRenderDriver,updateDisplayMode,( const cgDisplayMode&, bool, bool ),bool), asCALL_THISCALL) );
 			
 			// ToDo: BINDSUCCESS( engine->registerObjectMethod( "RenderDriver", "AppWindow@+ getWindow( ) const", asMETHODPR(cgRenderDriver, GetWindow, () const, cgAppWindow*), asCALL_THISCALL) );

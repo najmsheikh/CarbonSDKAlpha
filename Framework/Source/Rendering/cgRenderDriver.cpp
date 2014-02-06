@@ -974,8 +974,7 @@ bool cgRenderDriver::initShaderSystem()
     mDriverShader = mDriverShaderHandle.getResource(true);
 
     // In sandbox mode, the sandbox surface shader is available for additional rendering tasks.
-    // TODO: Uncomment the following
-    //if ( cgGetSandboxMode() != cgSandboxMode::Disabled )
+    if ( cgGetSandboxMode() != cgSandboxMode::Disabled )
     {
         if ( !mResourceManager->createSurfaceShader( &mSandboxShader, _T("sys://Shaders/SandboxElements.sh"), 0, cgDebugSource() ) )
         {

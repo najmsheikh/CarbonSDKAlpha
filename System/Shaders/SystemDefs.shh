@@ -352,11 +352,13 @@ class SystemExports
 
 					"#define Texture1D   texture\n"
                     "#define Texture2D   texture\n"
+                    "#define Texture2DMS texture\n"
                     "#define Texture3D   texture\n"
                     "#define TextureCube texture\n"                    
 
 					"#define Sampler1D   sampler1D\n"
                     "#define Sampler2D   sampler2D\n"
+                    "#define Sampler2DMS sampler2D\n"
                     "#define Sampler2DCmp sampler2D\n"
                     "#define Sampler3D   sampler3D\n"
                     "#define SamplerCube samplerCUBE\n"
@@ -367,6 +369,7 @@ class SystemExports
                 strCommon.append(
                     "#define Sampler1D   SamplerState\n"
                     "#define Sampler2D   SamplerState\n"
+                    "#define Sampler2DMS SamplerState\n"
                     "#define Sampler2DCmp SamplerComparisonState\n"
                     "#define Sampler3D   SamplerState\n"
                     "#define SamplerCube SamplerState\n"

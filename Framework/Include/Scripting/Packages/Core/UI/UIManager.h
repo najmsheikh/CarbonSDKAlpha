@@ -91,6 +91,8 @@ namespace UIManager
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "void setFocus( UIControl@+ )", asMETHODPR(cgUIManager, setFocus, ( cgUIControl* ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "UIControl@+ getFocus( )", asMETHODPR(cgUIManager, getFocus, ( ), cgUIControl* ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "Form@+ createForm( const String &in, const String &in)", asMETHODPR(cgUIManager, createForm, ( const cgString&, const cgString&), cgUIForm* ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "UIManager", "Form@+ loadForm( const InputStream &in, const String &in, bool)", asMETHODPR(cgUIManager, loadForm, ( const cgInputStream&, const cgString&, bool), cgUIForm* ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "UIManager", "Form@+ loadForm( const String &in, const String &in, bool)", asFUNCTIONPR(managerLoadForm, ( const cgString&, const cgString&, bool, cgUIManager*), cgUIForm* ), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "Form@+ loadForm( const InputStream &in, const String &in)", asMETHODPR(cgUIManager, loadForm, ( const cgInputStream&, const cgString&), cgUIForm* ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "Form@+ loadForm( const String &in, const String &in)", asFUNCTIONPR(managerLoadForm, ( const cgString&, const cgString&, cgUIManager*), cgUIForm* ), asCALL_CDECL_OBJLAST) );
 
@@ -148,6 +150,20 @@ namespace UIManager
         static cgUIForm * managerLoadForm( const cgString & stream, const cgString & name, cgUIManager * thisPointer )
         {
             return thisPointer->loadForm( stream, name );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : managerLoadForm () (Static)
+        /// <summary>
+        /// Provides an alternative overload for the script accessible
+        /// UIManager::loadForm() method that allows the script to pass a
+        /// string type directly (no implicit cast is supported to the required
+        /// InputStream type).
+        /// </summary>
+        //---------------------------------------------------------------------
+        static cgUIForm * managerLoadForm( const cgString & stream, const cgString & name, bool modal, cgUIManager * thisPointer )
+        {
+            return thisPointer->loadForm( stream, name, modal );
         }
 
         //---------------------------------------------------------------------

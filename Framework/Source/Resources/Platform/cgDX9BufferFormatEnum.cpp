@@ -269,6 +269,7 @@ bool cgDX9BufferFormatEnum::enumerate( cgRenderDriver * pDriver )
     for ( Iterator = mDepthStencil.begin(); Iterator != mDepthStencil.end(); ++Iterator )
     {
         cgUInt32 NativeFormat = formatToNative(Iterator->first);
+        Iterator->second = 0;
         if ( NativeFormat != D3DFMT_UNKNOWN )
         {
             if ( HardwareType == cgHardwareType::AMD && (Iterator->first == cgBufferFormat::DF16 || Iterator->first == cgBufferFormat::DF24) )
@@ -279,28 +280,39 @@ bool cgDX9BufferFormatEnum::enumerate( cgRenderDriver * pDriver )
                     Iterator->second |= cgBufferFormatCaps::CanSample | cgBufferFormatCaps::CanWrite | cgBufferFormatCaps::CanGather;
 
             } // End if ATI DF16 | DF24
-            else if ( HardwareType == cgHardwareType::NVIDIA && (Iterator->first == cgBufferFormat::D24_UNorm_S8_UInt || Iterator->first == cgBufferFormat::D24_UNorm_X8_Typeless || Iterator->first == cgBufferFormat::D16 ) )
+            else if ( Iterator->first == cgBufferFormat::D24_UNorm_S8_UInt || Iterator->first == cgBufferFormat::D24_UNorm_X8_Typeless )
             {
                 // Supports depth sampling?
                 if ( SUCCEEDED( pD3D->CheckDeviceFormat( Params.AdapterOrdinal, Params.DeviceType, Mode.Format,
                                                          D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_TEXTURE, (D3DFORMAT)NativeFormat ) ) )
                     Iterator->second |= cgBufferFormatCaps::CanSample | cgBufferFormatCaps::CanWrite | cgBufferFormatCaps::CanCompare;
 
-            } // End if NVIDIA D24S8 | D24X8 | D16
-            else if ( HardwareType != cgHardwareType::AMD && (Iterator->first == cgBufferFormat::INTZ || Iterator->first == cgBufferFormat::RAWZ) )
+            } // End if D24S8 | D24X8
+            else if ( HardwareType == cgHardwareType::NVIDIA && Iterator->first == cgBufferFormat::D16 )
+            {
+                // Supports depth sampling?
+                if ( SUCCEEDED( pD3D->CheckDeviceFormat( Params.AdapterOrdinal, Params.DeviceType, Mode.Format,
+                                                         D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_TEXTURE, (D3DFORMAT)NativeFormat ) ) )
+                    Iterator->second |= cgBufferFormatCaps::CanSample | cgBufferFormatCaps::CanWrite | cgBufferFormatCaps::CanCompare;
+
+            } // End if NVIDIA D16
+            else if ( Iterator->first == cgBufferFormat::INTZ || Iterator->first == cgBufferFormat::RAWZ )
             {
                 // Supports depth sampling?
                 if ( SUCCEEDED( pD3D->CheckDeviceFormat( Params.AdapterOrdinal, Params.DeviceType, Mode.Format,
                                                          D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_TEXTURE, (D3DFORMAT)NativeFormat ) ) )
                     Iterator->second |= cgBufferFormatCaps::CanSample | cgBufferFormatCaps::CanWrite;
 
-            } // End if !ATI INTZ | RAWZ
-            else
+            } // End if INTZ | RAWZ
+            
+            // Supported methods found?
+            if ( Iterator->second == 0 )
             {
                 // Supports writing (as regular surface)?
                 if ( SUCCEEDED( pD3D->CheckDeviceFormat( Params.AdapterOrdinal, Params.DeviceType, Mode.Format,
                                                          D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, (D3DFORMAT)NativeFormat ) ) )
                     Iterator->second |= cgBufferFormatCaps::CanWrite;
+
 
                 // Supports regular depth sample
                 if ( SUCCEEDED( pD3D->CheckDeviceFormat( Params.AdapterOrdinal, Params.DeviceType, Mode.Format,
@@ -313,7 +325,7 @@ bool cgDX9BufferFormatEnum::enumerate( cgRenderDriver * pDriver )
         
     } // Next format
 
-    // Output debug info regarding formats thats upport linear filter.
+    // Output debug info regarding formats that support linear filter.
     cgAppLog::write( cgAppLog::Debug | cgAppLog::Info, _T("Hardware supports linear texture filtering for render targets with the following formats: %s.\n"), strLinearSupporting.c_str() );
 
     // Release D3D objects.

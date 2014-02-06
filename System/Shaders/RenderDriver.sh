@@ -55,9 +55,9 @@ class RenderDriverShader : ISurfaceShader
     ///////////////////////////////////////////////////////////////////////////
     <?samplers
 		// Generic image samplers
-        Sampler1D sImage1D  : register(s0);
-        Sampler2D sImage2D0 : register(s0);
-        Sampler2D sImage2D1 : register(s1);
+        Sampler1D   sImage1D    : register(s0);
+        Sampler2D   sImage2D0   : register(s0);
+        Sampler2D   sImage2D1   : register(s1);
     ?>
 
     ///////////////////////////////////////////////////////////////////////////
@@ -218,6 +218,49 @@ class RenderDriverShader : ISurfaceShader
     }
 
     //-------------------------------------------------------------------------
+    // Name : transformStretchRect() (Vertex Shader)
+    // Desc : Standard 2D stretch rect vertex shader (D3D11 passthrough).
+    //-----------------------------------------------------------------------------
+    bool transformStretchRect( )
+    {
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Define shader inputs.
+		<?in
+            float4 sourcePosition   : POSITION;
+            float2 sourceTexCoords  : TEXCOORD0;
+		?>
+
+        // Define shader outputs.
+        <?out
+            float4 screenPosition  : SV_POSITION;
+            float2 texCoords       : TEXCOORD0;
+        ?>
+
+        // Constant buffer usage.
+        <?cbufferrefs
+            _cbCamera;
+        ?>
+
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+        <?
+            // Screen space to clip space
+            screenPosition.x = ((sourcePosition.x - _viewportOffset.x) * (_viewportSize.z * 2.0f)) - 1.0f;
+            screenPosition.y = -((sourcePosition.y - _viewportOffset.y) * (_viewportSize.w * 2.0f)) + 1.0f;
+            screenPosition.z = sourcePosition.z;
+            screenPosition.w = 1;
+            texCoords        = sourceTexCoords;
+
+        ?>
+        
+        // Valid shader
+        return true;
+    }
+
+    //-------------------------------------------------------------------------
     // Name : defaultVertexShader() (Vertex Shader)
     // Desc : System level default vertex shader (there must always be one).
     //-------------------------------------------------------------------------
@@ -261,6 +304,40 @@ class RenderDriverShader : ISurfaceShader
         // Shader Code
         /////////////////////////////////////////////
         <?data0 = color;?>
+        
+        // Valid shader
+        return true;
+    }
+
+    //-------------------------------------------------------------------------
+    // Name : drawStretchRect() (Pixel Shader)
+    // Desc : 2D stretchRect pixel shader.
+    //-------------------------------------------------------------------------
+    bool drawStretchRect( )
+    {
+        /////////////////////////////////////////////
+        // Definitions
+        /////////////////////////////////////////////
+        // Define shader inputs.
+		<?in
+            float4 screenPosition : SV_POSITION;
+            float2 texCoords      : TEXCOORD0;
+		?>
+
+        // Define shader outputs.
+        <?out
+            float4 data0 : SV_TARGET0;
+        ?>
+
+
+        /////////////////////////////////////////////
+        // Shader Code
+        /////////////////////////////////////////////
+        <?
+            // Always forcibly sample from the top mip level to ensure that the hardware does
+            // not mis-interpret our having scaled the geometry, in turn modifying the pixel aspect (DX11).
+            data0 = sample2DLevel( sImage2D0Tex, sImage2D0, texCoords, 0 );
+        ?>
         
         // Valid shader
         return true;

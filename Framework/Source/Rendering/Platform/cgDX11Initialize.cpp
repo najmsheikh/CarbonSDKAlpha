@@ -847,7 +847,7 @@ DXGI_SWAP_CHAIN_DESC cgDX11Initialize::buildSwapChainParameters( cgDX11Settings 
 /// Find the best windowed mode, and fill out our D3DSettings structure.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgDX11Initialize::findBestWindowedMode( cgDX11Settings & D3DSettings, bool bRequireHAL, bool bRequireREF )
+bool cgDX11Initialize::findBestWindowedMode( cgDX11Settings & D3DSettings, const cgRenderDriverConfig & CurrentConfig, bool bRequireHAL, bool bRequireREF, bool bExactMatch )
 {
     DXGI_MODE_DESC            BestDisplayMode;
     cgDX11EnumAdapter        *pBestAdapter = CG_NULL;
@@ -865,6 +865,19 @@ bool cgDX11Initialize::findBestWindowedMode( cgDX11Settings & D3DSettings, bool 
         for ( size_t j = 0; j < pAdapter->outputs.size(); ++j )
         {
             cgDX11EnumOutput * pOutput = pAdapter->outputs[j];
+
+            // Ignore if the device name does not match the adapter description
+            if ( bExactMatch && !CurrentConfig.deviceName.empty() )
+            {
+                STRING_CONVERT;
+                cgString strDeviceName = cgString::trim(stringConvertW2CT(pOutput->details.DeviceName));
+                strDeviceName += _T(" (");
+                strDeviceName += cgString::trim(stringConvertW2CT(pAdapter->details.Description));
+                strDeviceName += _T(")");
+                if ( !(strDeviceName == CurrentConfig.deviceName) )
+                    continue;
+
+            } // End if match device name
 
             // Find mode that most closesly resembles the desktop for this output on this adapter.
             DXGI_MODE_DESC MatchMode, ClosestOutputMode;
@@ -900,6 +913,10 @@ bool cgDX11Initialize::findBestWindowedMode( cgDX11Settings & D3DSettings, bool 
             
             // Skip if this is not a windowed option
             if ( !pOptions->windowed )
+                continue;
+
+            // Skip if these options aren't associated with the chosen output.
+            if ( pOptions->outputOrdinal != nBestOutput )
                 continue;
 
             // Skip if the driver is not of the required type
@@ -960,7 +977,7 @@ EndWindowedDeviceOptionSearch:
 /// </summary>
 //-----------------------------------------------------------------------------
 cgToDo( "Carbon General", "Revisit this whole thing to allow correct selection of specific outputs per display." )
-bool cgDX11Initialize::findBestFullScreenMode( cgDX11Settings & D3DSettings, DXGI_MODE_DESC * pMatchMode, bool bRequireHAL, bool bRequireREF )
+bool cgDX11Initialize::findBestFullScreenMode( cgDX11Settings & D3DSettings, const cgRenderDriverConfig & CurrentConfig, bool bRequireHAL, bool bRequireREF, bool bExactMatch )
 {
     DXGI_MODE_DESC            BestDisplayMode, BestOutputMode;
     cgDX11EnumAdapter        *pBestAdapter = CG_NULL;
@@ -978,9 +995,46 @@ bool cgDX11Initialize::findBestFullScreenMode( cgDX11Settings & D3DSettings, DXG
         {
             cgDX11EnumOutput * pOutput = pAdapter->outputs[j];
 
+            // Ignore if the device name does not match the adapter description
+            if ( bExactMatch && !CurrentConfig.deviceName.empty() )
+            {
+                STRING_CONVERT;
+                cgString strDeviceName = cgString::trim(stringConvertW2CT(pOutput->details.DeviceName));
+                strDeviceName += _T(" (");
+                strDeviceName += cgString::trim(stringConvertW2CT(pAdapter->details.Description));
+                strDeviceName += _T(")");
+                if ( !(strDeviceName == CurrentConfig.deviceName) )
+                    continue;
+
+            } // End if match device name
+
+            // Get current mode
+            DXGI_MODE_DESC  MatchMode;
+            DXGI_OUTPUT_DESC OutputDesc;
+            pOutput->output->GetDesc( &OutputDesc );
+            MatchMode.Width             = OutputDesc.DesktopCoordinates.right - OutputDesc.DesktopCoordinates.left;
+            MatchMode.Height            = OutputDesc.DesktopCoordinates.bottom - OutputDesc.DesktopCoordinates.top;
+            MatchMode.Format            = DXGI_FORMAT_R8G8B8A8_UNORM;
+            MatchMode.RefreshRate.Numerator = 0;
+            MatchMode.RefreshRate.Denominator = 0;
+            MatchMode.Scaling           = DXGI_MODE_SCALING_UNSPECIFIED; // Stretched or centered.
+            MatchMode.ScanlineOrdering  = DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE;
+
+            // Set the mode we're matching against based on any
+            // provided configuration values.
+            if ( CurrentConfig.width != 0 )
+                MatchMode.Width = CurrentConfig.width;
+            if ( CurrentConfig.height != 0 )
+                MatchMode.Height = CurrentConfig.height;
+            if ( CurrentConfig.refreshRate != 0 )
+            {
+                MatchMode.RefreshRate.Numerator = CurrentConfig.refreshRate;
+                MatchMode.RefreshRate.Denominator = 1;
+            } // End if has refresh rate
+            
             // Find a good matching mode for this output on this adapter.
             DXGI_MODE_DESC ClosestOutputMode;
-            if ( FAILED( pOutput->output->FindClosestMatchingMode( pMatchMode, &ClosestOutputMode, CG_NULL ) ) )
+            if ( FAILED( pOutput->output->FindClosestMatchingMode( &MatchMode, &ClosestOutputMode, CG_NULL ) ) )
                 continue;
 
             // Use the first one we find if we don't have one yet,
@@ -995,10 +1049,10 @@ bool cgDX11Initialize::findBestFullScreenMode( cgDX11Settings & D3DSettings, DXG
             else
             {
                 // Does this more closesly match the requested resolution?
-                if ( (abs((cgInt)ClosestOutputMode.Width - (cgInt)pMatchMode->Width) <
-                      abs((cgInt)BestOutputMode.Width - (cgInt)pMatchMode->Width) ) ||
-                     (abs((cgInt)ClosestOutputMode.Height - (cgInt)pMatchMode->Height) <
-                      abs((cgInt)BestOutputMode.Height - (cgInt)pMatchMode->Height) ) )
+                if ( (abs((cgInt)ClosestOutputMode.Width - (cgInt)MatchMode.Width) <
+                      abs((cgInt)BestOutputMode.Width - (cgInt)MatchMode.Width) ) ||
+                     (abs((cgInt)ClosestOutputMode.Height - (cgInt)MatchMode.Height) <
+                      abs((cgInt)BestOutputMode.Height - (cgInt)MatchMode.Height) ) )
                 {
                     BestOutputMode = ClosestOutputMode;
                     nBestOutput = j;

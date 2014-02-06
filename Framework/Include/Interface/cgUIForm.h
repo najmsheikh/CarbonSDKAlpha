@@ -108,6 +108,7 @@ public:
     //-------------------------------------------------------------------------
     virtual const cgUID       & getReferenceType        ( ) const { return RTID_UIForm; }
     virtual bool                queryReferenceType      ( const cgUID & type ) const;
+    virtual bool                processMessage          ( cgMessage * message );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)

@@ -83,18 +83,19 @@ public:
 	virtual bool        supportsDepthStencilReading ( ) const;
     virtual bool        supportsShaderModel			( cgShaderModel::Base model ) const;
     virtual bool        requiresCursorEmulation     ( ) const;
-    virtual bool        getDisplayModes             ( cgDisplayMode::Array & modes ) const;
+    virtual bool        getDisplayModes             ( cgInt32 adapterOrdinal, cgDisplayMode::Array & modes ) const;
+    virtual bool        getAdapters                 ( cgAdapter::Array & modes ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
     //-------------------------------------------------------------------------
-    virtual void        dispose                 ( bool disposeBase );
+    virtual void        dispose                     ( bool disposeBase );
 
 protected:
     //-------------------------------------------------------------------------
     // Protected Member Variables
     //-------------------------------------------------------------------------
-    cgDisplayMode::Array    mDisplayModes;      // Enumerated full screen display modes available for selection.
+    cgAdapter::Array    mAdapters;      // Enumerated adapters available for selection.
 };
 
 #endif // CGE_DX11_RENDER_SUPPORT

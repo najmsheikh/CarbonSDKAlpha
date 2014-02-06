@@ -19,6 +19,7 @@
 //-----------------------------------------------------------------------------
 // Local Includes
 //-----------------------------------------------------------------------------
+#include_once "../Forms/Options/VideoOptionsForm.frm"
 
 //-----------------------------------------------------------------------------
 // Class Definitions
@@ -442,7 +443,15 @@ shared class MainMenu : IScriptedAppState
 	///////////////////////////////////////////////////////////////////////////
     private void formClosed( UIControl @ sender )
     {
+        // Was a restart requested?
+        bool requiresRestart = cast<VideoOptionsForm>(mMainForm.getScriptObject()).requiresRestart;
+
+        // Clean up
         @mMainForm = null;
+
+        // Exit if requested
+        if ( requiresRestart )
+            exit();
     }
     
 };

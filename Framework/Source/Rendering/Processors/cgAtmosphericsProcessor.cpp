@@ -185,10 +185,12 @@ void cgAtmosphericsProcessor::drawSky( cgSkyElement * element, bool decodeSRGB, 
             if ( !mAtmosphericsShader->selectVertexShader( _T("transform"), false, true ) ||
                  !mAtmosphericsShader->selectPixelShader( _T("drawSkyBox"), decodeSRGB, hdrLighting ) )
                 return;
+            break;
         case cgSkyElementType::SimpleImage:
             if ( !mAtmosphericsShader->selectVertexShader( _T("transform"), true, false ) ||
                  !mAtmosphericsShader->selectPixelShader( _T("drawSkyImage"), decodeSRGB, hdrLighting ) )
                 return;
+            break;
 
     } // End switch type
 

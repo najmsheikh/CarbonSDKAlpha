@@ -36,6 +36,7 @@ namespace ListBox
             // Register object methods
             BINDSUCCESS( engine->registerObjectMethod( "ListBox", "void onSelectedIndexChange( int, int )", asMETHODPR(cgListBoxControl, onSelectedIndexChange, ( cgInt32, cgInt32 ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ListBox", "int addItem( const String &in )", asMETHODPR(cgListBoxControl, addItem, ( const cgString& ), cgInt32 ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ListBox", "void clear()", asMETHODPR(cgListBoxControl, clear, ( ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ListBox", "void setSelectedIndex( int )", asMETHODPR(cgListBoxControl, setSelectedIndex, ( cgInt32 ), void ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ListBox", "int getSelectedIndex( ) const", asMETHODPR(cgListBoxControl, getSelectedIndex, ( ) const, cgInt32 ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "ListBox", "void scrollToSelection( )", asMETHODPR(cgListBoxControl, scrollToSelection, ( ), void ), asCALL_THISCALL) );

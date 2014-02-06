@@ -272,6 +272,10 @@ shared class GamePlay : IScriptedAppState
         @mWorld         = null;
         @mAgentManager  = null;
         @mAudioManager  = null;
+		mProcessQuakes  = false;
+		mQuakeDustEnabled = false;
+		mQuakeTimer     = 0;
+		mReactorStage   = ReactorShutdownStage::None;
     }
 
     //-------------------------------------------------------------------------
@@ -307,6 +311,20 @@ shared class GamePlay : IScriptedAppState
     {
         if ( eventId == "Restart" )
         {
+			// Restore the materials for the destructible light sources.
+            array<ObjectNode@> nodes;
+            mScene.getObjectNodesByType( RTID_MeshObject, nodes );
+            for ( uint i = 0; i < nodes.length(); ++i )
+            {
+                ObjectNode @ node = nodes[i];
+                if ( node.getBehaviorCount() == 0 )
+                    continue;
+                DestructibleLight @ light = cast<DestructibleLight>(node.getScriptedBehavior(0));
+                if ( @light != null )
+                    light.restoreMaterial();
+            
+            } // Next node
+            
             // Delay the unloading of all resources.
             getAppResourceManager().enableDestruction( false );
         

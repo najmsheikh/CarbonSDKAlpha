@@ -66,8 +66,9 @@ namespace Types
             ///////////////////////////////////////////////////////////////////////
             // cgUILayerType (Enum)
             ///////////////////////////////////////////////////////////////////////
-            BINDSUCCESS( engine->registerEnumValue( "UILayerType", "UserLayer"  , cgUILayerType::UserLayer ) );
-            BINDSUCCESS( engine->registerEnumValue( "UILayerType", "SystemLayer", cgUILayerType::SystemLayer ) );
+            BINDSUCCESS( engine->registerEnumValue( "UILayerType", "UserLayer"   , cgUILayerType::UserLayer ) );
+            BINDSUCCESS( engine->registerEnumValue( "UILayerType", "TopMostLayer", cgUILayerType::TopMostLayer ) );
+            BINDSUCCESS( engine->registerEnumValue( "UILayerType", "SystemLayer" , cgUILayerType::SystemLayer ) );
 
             ///////////////////////////////////////////////////////////////////////
             // cgHorizontalAlignment (Enum)
@@ -104,6 +105,7 @@ namespace Types
             ///////////////////////////////////////////////////////////////////////
             BINDSUCCESS( engine->registerEnumValue( "TextFlags", "ClipRectangle"  , cgTextFlags::ClipRectangle ) );
             BINDSUCCESS( engine->registerEnumValue( "TextFlags", "Multiline"      , cgTextFlags::Multiline ) );
+            BINDSUCCESS( engine->registerEnumValue( "TextFlags", "NoWrap"         , cgTextFlags::NoWrap ) );
             BINDSUCCESS( engine->registerEnumValue( "TextFlags", "AlignCenter"    , cgTextFlags::AlignCenter ) );
             BINDSUCCESS( engine->registerEnumValue( "TextFlags", "AlignRight"     , cgTextFlags::AlignRight ) );
             BINDSUCCESS( engine->registerEnumValue( "TextFlags", "VAlignCenter"   , cgTextFlags::VAlignCenter ) );

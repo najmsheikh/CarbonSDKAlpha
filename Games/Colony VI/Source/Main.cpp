@@ -96,6 +96,7 @@ int WINAPI _tWinMain( HINSTANCE instance, HINSTANCE previousInstance, LPTSTR com
     // between all sample applications.
     cgFileSystem::addPathProtocol( _T("sys"), cgFileSystem::getAppDirectory() + _T("../../System/") );
     //cgFileSystem::addPathProtocol( _T("sys"), cgFileSystem::getAppDirectory() + _T("System/") );
+	//cgFileSystem::addPackage( cgFileSystem::getAppDirectory() + _T("System/base.pkg") );
 
     // Select the requested outputs for application debug information.
     cgAppLog::registerOutput( new cgLogOutputFile( _T("./DebugLog.html") ) );

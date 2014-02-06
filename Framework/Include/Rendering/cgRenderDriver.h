@@ -156,6 +156,7 @@ public:
     virtual cgConfigResult::Base    loadConfig              ( const cgString & fileName ) = 0;
     virtual cgConfigResult::Base    loadDefaultConfig       ( bool windowed = false ) = 0;
     virtual bool                    saveConfig              ( const cgString & fileName ) = 0;
+    virtual bool                    updateAdapter           ( cgInt32 adapterIndex, const cgDisplayMode & mode, bool windowed, bool verticalSync ) = 0;
     virtual bool                    updateDisplayMode       ( const cgDisplayMode & mode, bool windowed, bool verticalSync ) = 0;
     virtual void                    windowResized           ( cgInt32 width, cgInt32 height );
     virtual void                    releaseOwnedResources   ( );

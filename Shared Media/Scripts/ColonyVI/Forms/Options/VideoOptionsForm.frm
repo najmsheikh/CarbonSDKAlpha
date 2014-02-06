@@ -28,23 +28,27 @@
 // Name : VideoOptionsForm (Class)
 // Desc : Form used to present display options to the user.
 //-----------------------------------------------------------------------------
-class VideoOptionsForm : IScriptedForm
+shared class VideoOptionsForm : IScriptedForm
 {
     ///////////////////////////////////////////////////////////////////////////
 	// Private Member Variables
 	///////////////////////////////////////////////////////////////////////////
     private Form@               mForm;
+    private int                 mInitialAdapter;
     private array<DisplayMode>  mDisplayModes;
+    private array<Adapter>      mAdapters;
     
     ///////////////////////////////////////////////////////////////////////////
 	// Public Member Variables
 	///////////////////////////////////////////////////////////////////////////
     // Controls
+    bool                        requiresRestart;
     GroupBox@                   groupDisplayModes;
     GroupBox@                   groupQuality;
     Button@                     buttonApply;
     Button@                     buttonAccept;
     Button@                     buttonCancel;
+    ComboBox@                   comboAdapters;
     ListBox@                    listDisplayModes;
     CheckBox@                   checkFullScreen;
     Label@                      labelShadingQuality;
@@ -68,6 +72,7 @@ class VideoOptionsForm : IScriptedForm
 	VideoOptionsForm( Form @ owner )
     {
         @mForm = owner;
+        requiresRestart = false;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -121,16 +126,23 @@ class VideoOptionsForm : IScriptedForm
         groupDisplayModes.size        = Size( (mForm.clientSize.width / 2) - 5, mForm.clientSize.height - 30 );
         groupDisplayModes.controlText = "Display Mode";
 
+        // Create the adapters list box.
+        @comboAdapters = createComboBox( "comboAdapters", groupDisplayModes );
+        comboAdapters.position = Point( 0, 2 );
+        comboAdapters.size = Size( groupDisplayModes.clientSize.width, 17 );
+        comboAdapters.font = "fixed_v01_white_plain";
+        comboAdapters.textColor = ColorValue( 0, 0, 0, 1 ); // Black
+
         // Create the display mode list.
         @listDisplayModes = createListBox( "listBoxModes", groupDisplayModes );
-        listDisplayModes.position = Point( 0, 0 );
-        listDisplayModes.size = Size( groupDisplayModes.clientSize.width, groupDisplayModes.clientSize.height - 20 );
+        listDisplayModes.position = Point( 0, 22 );
+        listDisplayModes.size = Size( groupDisplayModes.clientSize.width, groupDisplayModes.clientSize.height - 42 );
         listDisplayModes.font = "fixed_v01_white_plain";
         listDisplayModes.textColor = ColorValue( 0, 0, 0, 1 ); // Black
 
         // Full screen check box
         @checkFullScreen = createCheckBox( "checkFullScreen", groupDisplayModes );
-        checkFullScreen.position = Point( 0, listDisplayModes.size.height + 5 );
+        checkFullScreen.position = Point( 0, listDisplayModes.size.height + 22 + 5 );
         checkFullScreen.size = Size( groupDisplayModes.clientSize.width / 2, 15 );
         checkFullScreen.controlText = "Full Screen";
         checkFullScreen.checked = !driver.getConfig().windowed;
@@ -236,8 +248,8 @@ class VideoOptionsForm : IScriptedForm
         buttonCancel.controlText = "Cancel";
         buttonCancel.registerEventHandler( SystemMessages::UI_Button_OnClick, "buttonCancel_OnClick", this );
 
-        // Fill the display mode list box with the available display modes.
-        populateDisplayModes();
+        // Fill the adapter combo box.
+        populateAdapters();
         
         // Success!
         return true;
@@ -251,21 +263,57 @@ class VideoOptionsForm : IScriptedForm
 	// Private Methods
 	///////////////////////////////////////////////////////////////////////////
     //-------------------------------------------------------------------------
+    // Name : populateAdapters()
+    // Desc : Called in order to re-populate the adapters combo box
+    //        with the currently available adapters.
+    //-------------------------------------------------------------------------
+    private void populateAdapters( )
+    {
+        // Get the current render driver configuration so we can determine
+        // which adapter is currently selected.
+        RenderDriver @ driver = getAppRenderDriver();
+        RenderDriverConfig config = driver.getConfig();
+
+        // Get the list of available adapters.
+        RenderingCapabilities @ caps = driver.getCapabilities();
+        caps.getAdapters( mAdapters );
+        mInitialAdapter = -1;
+        for ( uint i = 0; i < mAdapters.length(); ++i )
+        {
+            comboAdapters.addItem( mAdapters[i].displayName );
+            if ( mInitialAdapter < 0 && mAdapters[i].configName == config.deviceName )
+                mInitialAdapter = i;
+
+        } // Next adapter
+
+        // Just select the first if none was found.
+        if ( mInitialAdapter < 0 )
+            mInitialAdapter = 0;
+
+        // We need to re-populate display modes when the selected adapter changes.
+        comboAdapters.registerEventHandler( SystemMessages::UI_ComboBox_OnSelectedIndexChange, "comboAdapters_OnSelectedIndexChange", this );
+
+        // Select the appropriate adapter
+        if ( mInitialAdapter >= 0 )
+            comboAdapters.selectedIndex = mInitialAdapter;
+    }
+
+    //-------------------------------------------------------------------------
     // Name : populateDisplayModes()
     // Desc : Called in order to re-populate the display mode list box
     //        with the currently available display modes.
     //-------------------------------------------------------------------------
-    void populateDisplayModes( )
+    private void populateDisplayModes( int adapter )
     {
-        // Get the list of available display modes for the current device.
+        // Clear previous list of display modes.
+        listDisplayModes.clear();
+
+        // Get the list of available display modes for the current adapter.
         RenderDriver @ driver = getAppRenderDriver();
         RenderingCapabilities @ caps = driver.getCapabilities();
-        caps.getDisplayModes( mDisplayModes );
-
-        // Get the current render driver configuration so we can select the 
-        // current mode from the list on completion.
         RenderDriverConfig config = driver.getConfig();
-        
+        caps.getDisplayModes( adapter, mDisplayModes );
+
         // Add each mode to the display mode list.
         int currentMode = -1;
         for ( uint i = 0; i < mDisplayModes.length(); ++i )
@@ -289,6 +337,15 @@ class VideoOptionsForm : IScriptedForm
 	// Event Handlers
 	///////////////////////////////////////////////////////////////////////////
     //-------------------------------------------------------------------------
+    // Name : comboAdapters_OnSelectedIndexChange() (Event)
+    // Desc : Called when a new adapter is selected.
+    //-------------------------------------------------------------------------
+    void comboAdapters_OnSelectedIndexChange( UIControl @ control, int oldIndex, int newIndex )
+    {
+        populateDisplayModes( comboAdapters.selectedIndex );
+    }
+
+    //-------------------------------------------------------------------------
     // Name : form_OnSize() (Event)
     // Desc : Called whenever the main form is resized.
     //-------------------------------------------------------------------------
@@ -298,8 +355,9 @@ class VideoOptionsForm : IScriptedForm
 
         // Resize the display mode group
         groupDisplayModes.size = Size( (clientArea.width / 2) - 5, clientArea.height - 30 );
-        listDisplayModes.size = Size( groupDisplayModes.clientSize.width, groupDisplayModes.clientSize.height - 20 );
-        checkFullScreen.position = Point( 0, listDisplayModes.size.height + 5 );
+        comboAdapters.size = Size( groupDisplayModes.clientSize.width, 17 );
+        listDisplayModes.size = Size( groupDisplayModes.clientSize.width, groupDisplayModes.clientSize.height - 42 );
+        checkFullScreen.position = Point( 0, listDisplayModes.size.height + 22 + 5 );
         checkFullScreen.size = Size( groupDisplayModes.clientSize.width / 2, 15 );
 
         // Resize the rendering quality group.
@@ -359,24 +417,51 @@ class VideoOptionsForm : IScriptedForm
     //-------------------------------------------------------------------------
     void buttonApply_OnClick( UIControl @ control )
     {
-        // Get the currently selected display mode.
+        // Set quality
+        RenderDriver @ driver = getAppRenderDriver();
+        driver.setSystemState( SystemState::ShadingQuality, comboShadingQuality.selectedIndex );
+        driver.setSystemState( SystemState::PostProcessQuality, comboPostProcessQuality.selectedIndex );
+        driver.setSystemState( SystemState::AntiAliasingQuality, comboAntiAliasQuality.selectedIndex );
+
+        // Has the adapter been modified?
+        bool modeUpdated = false;
+        int selectedAdapterIndex = comboAdapters.selectedIndex;
+        if ( selectedAdapterIndex >= 0 && selectedAdapterIndex < mAdapters.length() && selectedAdapterIndex != mInitialAdapter )
+        {
+            int selectedModeIndex = listDisplayModes.selectedIndex;
+            if ( selectedModeIndex >= 0 && selectedModeIndex < mDisplayModes.length() )
+            {
+                // Alter the selected adapter (initial mode must be set at the same time).
+                DisplayMode mode = mDisplayModes[selectedModeIndex];
+                if ( driver.updateAdapter( selectedAdapterIndex, mode, !checkFullScreen.checked, checkVerticalSync.checked ) )
+                    requiresRestart = true;
+                modeUpdated = true;
+            
+            } // End if valid mode
+
+        } // End if adapter changed
+
+        // Update the display mode (if necessary)
         int selectedModeIndex = listDisplayModes.selectedIndex;
-        if ( selectedModeIndex >= 0 && selectedModeIndex < mDisplayModes.length() )
+        if ( !modeUpdated && (selectedModeIndex >= 0 && selectedModeIndex < mDisplayModes.length()) )
         {
             // Alter the display mode.
             DisplayMode mode = mDisplayModes[selectedModeIndex];
-            RenderDriver @ driver = getAppRenderDriver();
             driver.updateDisplayMode( mode, !checkFullScreen.checked, checkVerticalSync.checked );
 
-            // Set quality
-            driver.setSystemState( SystemState::ShadingQuality, comboShadingQuality.selectedIndex );
-            driver.setSystemState( SystemState::PostProcessQuality, comboPostProcessQuality.selectedIndex );
-            driver.setSystemState( SystemState::AntiAliasingQuality, comboAntiAliasQuality.selectedIndex );
-
-            // Save the configuration.
-            driver.saveConfig( "sys://Config/SampleConfig.ini" );
-
         } // End if valid mode
+
+        // Save the configuration.
+        driver.saveConfig( "sys://Config/SampleConfig.ini" );
+
+        // Show restart required dialog if required.
+        if ( requiresRestart )
+        {
+            UIManager @ interfaceManager = getAppUIManager();
+            Form @ form = interfaceManager.loadForm( "Scripts/ColonyVI/Forms/RestartRequiredForm.frm", "frmMain", true );
+            form.registerEventHandler( SystemMessages::UI_OnClose, "restartRequiredFormClosed", this );
+        
+        } // End if restart required
     }
 
     //-------------------------------------------------------------------------
@@ -385,9 +470,12 @@ class VideoOptionsForm : IScriptedForm
     //-------------------------------------------------------------------------
     void buttonAccept_OnClick( UIControl @ control )
     {
-        // Trigger the 'apply' behavior then close the form.
+        // Trigger the 'apply' behavior
         buttonApply_OnClick( buttonApply );
-        mForm.close();
+
+        // If restart was not required, just close the form.
+        if ( !requiresRestart )
+            mForm.close();
     }
 
     //-------------------------------------------------------------------------
@@ -396,6 +484,16 @@ class VideoOptionsForm : IScriptedForm
     //-------------------------------------------------------------------------
     void buttonCancel_OnClick( UIControl @ control )
     {
+        mForm.close();
+    }
+
+    //-------------------------------------------------------------------------
+    // Name : restartRequiredFormClosed() (Event)
+    // Desc : Triggered when the restart confirmation dialog is closed.
+    //-------------------------------------------------------------------------
+    void restartRequiredFormClosed( UIControl @ sender )
+    {
+        // We're done.
         mForm.close();
     }
 

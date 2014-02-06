@@ -83,6 +83,35 @@ shared class DestructibleLight : IScriptedObjectBehavior
     ///////////////////////////////////////////////////////////////////////////
 	// Public Methods
 	///////////////////////////////////////////////////////////////////////////
+	//-------------------------------------------------------------------------
+	// Name : restoreMaterial ()
+	// Desc : Restore the material for this light source.
+	//-------------------------------------------------------------------------
+    void restoreMaterial( )
+    {
+        Scene @ scene = mMesh.getScene();
+    
+        // Replace any emissive material with its non emissive variant.
+        // First, get the identifiers of the materials we want to swap.
+        uint litMaterialId   = mMesh.getCustomProperty( "material_illuminated", 0 );
+        uint unlitMaterialId = mMesh.getCustomProperty( "material_deluminated", 0 );
+
+        // Get the unlit material (should already be resident).
+        MaterialHandle litMaterial, unlitMaterial;
+        ResourceManager @ resources = scene.getResourceManager();
+        if ( resources.getMaterialFromId( unlitMaterial, unlitMaterialId ) )
+        {
+            // Get/load the lit material.
+            if ( resources.loadMaterial( litMaterial, scene.getParentWorld(), MaterialType::Standard, litMaterialId, false, 0, DebugSource() ) )
+            {
+                // Swap!
+                mMesh.replaceMaterial( unlitMaterial, litMaterial );
+            
+            } // End if found lit
+
+        } // End if found unlit
+    }
+    
     //-------------------------------------------------------------------------
 	// Name : deactivate ()
 	// Desc : Deactivate this light source.

@@ -1376,9 +1376,6 @@ void cgTexturePool::buildDepthFormatArray( )
 {
     // DirectX9 has some caveats we need to handle
 	bool bIsDirectX9 = cgGetEngineConfig().renderAPI == cgRenderAPI::DirectX9;
-	
-	// Get access to the render driver (temporary until enum is up to snuff)
-	cgRenderDriver * pDriver = mResources->getRenderDriver();
 
 	// Get the buffer format enumerator
 	const cgBufferFormatEnum & Enum = mResources->getBufferFormats();
@@ -1392,15 +1389,12 @@ void cgTexturePool::buildDepthFormatArray( )
 	// Create a list of depth formats for testing
     cgTexturePoolDepthFormatDesc DepthFormats[] =
     {
-	    cgTexturePoolDepthFormatDesc(cgBufferFormat::D16, 16, 0),
 	    cgTexturePoolDepthFormatDesc(cgBufferFormat::DF16, 16, 0),
-	    cgTexturePoolDepthFormatDesc(cgBufferFormat::D24S8, 24, 8),
-	    cgTexturePoolDepthFormatDesc(cgBufferFormat::D24X8, 24, 0),
-	    cgTexturePoolDepthFormatDesc(cgBufferFormat::D24FS8, 24, 8),
-	    cgTexturePoolDepthFormatDesc(cgBufferFormat::D24_UNorm_X8_Typeless, 24, 0),
+        cgTexturePoolDepthFormatDesc(cgBufferFormat::D16, 16, 0),
+        cgTexturePoolDepthFormatDesc(cgBufferFormat::DF24, 24, 0),
 	    cgTexturePoolDepthFormatDesc(cgBufferFormat::D24_Float_S8_UInt, 24, 8),
 	    cgTexturePoolDepthFormatDesc(cgBufferFormat::D24_UNorm_S8_UInt, 24, 8),
-	    cgTexturePoolDepthFormatDesc(cgBufferFormat::DF24, 24, 0),
+        cgTexturePoolDepthFormatDesc(cgBufferFormat::D24_UNorm_X8_Typeless, 24, 0),
 	    cgTexturePoolDepthFormatDesc(cgBufferFormat::INTZ, 24, 0),
 	    cgTexturePoolDepthFormatDesc(cgBufferFormat::RAWZ, 24, 0),
 	    cgTexturePoolDepthFormatDesc(cgBufferFormat::D32_Float, 32, 0)

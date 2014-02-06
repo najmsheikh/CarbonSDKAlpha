@@ -258,7 +258,7 @@ void cgComboBoxControl::setTextColor( const cgColorValue & Color )
 //-----------------------------------------------------------------------------
 //  Name : addItem()
 /// <summary>
-/// Add a new string to the list box item array. Returns the index of the
+/// Add a new string to the combo box item array. Returns the index of the
 /// newly added item.
 /// </summary>
 //-----------------------------------------------------------------------------
@@ -272,6 +272,19 @@ cgInt32 cgComboBoxControl::addItem( const cgString & value )
 
     // Return the index of the most recently added item.
     return (cgInt32)mItems.size() - 1;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : clear()
+/// <summary>
+/// Clear existing items from the combo box control.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgComboBoxControl::clear( )
+{
+    // Clear list of items.
+    mItems.clear();
+    mDropDownList->clear();
 }
 
 //-----------------------------------------------------------------------------

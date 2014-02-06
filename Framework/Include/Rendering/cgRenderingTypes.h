@@ -876,4 +876,24 @@ struct cgDisplayMode
 
 }; // End Struct : cgDisplayMode
 
+struct cgAdapter
+{
+    // Typedefs
+    CGE_VECTOR_DECLARE( cgAdapter, Array )
+
+    // Members
+    cgInt32                 ordinal;
+    cgString                deviceName;
+    cgString                description;
+    cgString                configName;
+    cgString                displayName;
+    cgUID                   identifier;
+    cgUInt32                deviceId;
+    cgUInt32                vendorId;
+    cgUInt32                subSysId;
+    cgDisplayMode::Array    modes;
+
+
+}; // End Struct : cgAdapter
+
 #endif // !_CGE_CGRENDERINGTYPES_H_

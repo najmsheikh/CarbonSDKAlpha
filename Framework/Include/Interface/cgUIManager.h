@@ -157,6 +157,7 @@ public:
     cgUIControl           * getFocus            ( ) { return mFocusControl; }
     cgUIForm              * createForm          ( const cgString & type, const cgString & name );
     cgUIForm              * loadForm            ( const cgInputStream & stream, const cgString & name );
+    cgUIForm              * loadForm            ( const cgInputStream & stream, const cgString & name, bool modal );
 
     // Images / Glyphs / Icons
     bool                    addImage            ( const cgInputStream & imageFile, const cgString & referenceName );

@@ -153,6 +153,7 @@ void cgDX11RenderDriver::releaseOwnedResources()
     mVertexBlendingConstants.close(true);
     mVertexBlendingTexture.close( true );
     mVertexBlendingSampler.close( true );
+    mLinearStretchSampler.close( true );
 
     // Release internal vertex buffer caches.
     UserPointerVerticesMap::iterator itVertices;
@@ -294,7 +295,7 @@ cgConfigResult::Base cgDX11RenderDriver::loadConfig( const cgString & strFileNam
         mConfig.debugVShader        = GetPrivateProfileInt( strSection, _T("DebugVShader"), 0, strResolvedFile.c_str() ) > 0;
         mConfig.debugPShader        = GetPrivateProfileInt( strSection, _T("DebugPShader"), 0, strResolvedFile.c_str() ) > 0;
         mConfig.usePerfHUD          = GetPrivateProfileInt( strSection, _T("UsePerfHUD"), 0, strResolvedFile.c_str() ) > 0;
-        mConfig.useVTFBlending      = GetPrivateProfileInt( strSection, _T("UseVTFBlending"), 0, strResolvedFile.c_str() ) > 0;
+        mConfig.useVTFBlending      = GetPrivateProfileInt( strSection, _T("UseVTFBlending"), 1, strResolvedFile.c_str() ) > 0;
         mConfig.shadingQuality      = GetPrivateProfileInt( strSection, _T("ShadingQuality"), mConfig.shadingQuality, strResolvedFile.c_str() );
         mConfig.postProcessQuality  = GetPrivateProfileInt( strSection, _T("PostProcessQuality"), mConfig.postProcessQuality, strResolvedFile.c_str() );
         mConfig.antiAliasingQuality = GetPrivateProfileInt( strSection, _T("AntiAliasingQuality"), mConfig.antiAliasingQuality, strResolvedFile.c_str() );
@@ -319,7 +320,7 @@ cgConfigResult::Base cgDX11RenderDriver::loadConfig( const cgString & strFileNam
     // Create an init item for enumeration (the second parameter instructs the init
     // class as to whether it should strictly enforce the configuration options, or simply
     // let the system find a good match).
-    mD3DInitialize = new cgDX11RenderDriverInit( mConfig, strFileName.empty() == false );
+    mD3DInitialize = new cgDX11RenderDriverInit( mConfig, false ); // strFileName.empty() == false );
     
     // Enumerate the system graphics adapters    
     if ( FAILED(mD3DInitialize->enumerate( )) )
@@ -330,22 +331,14 @@ cgConfigResult::Base cgDX11RenderDriver::loadConfig( const cgString & strFileNam
     } // End if Failure
 
     // Attempt to find a good default fullscreen set
-    DXGI_MODE_DESC  MatchMode;
-    MatchMode.Width             = mConfig.width;
-    MatchMode.Height            = mConfig.height;
-    MatchMode.Format            = DXGI_FORMAT_R8G8B8A8_UNORM;
-    MatchMode.RefreshRate.Numerator = mConfig.refreshRate;
-    MatchMode.RefreshRate.Denominator = (mConfig.refreshRate == 0) ? 0 : 1;
-    MatchMode.Scaling           = DXGI_MODE_SCALING_UNSPECIFIED; // Stretched or centered.
-    MatchMode.ScanlineOrdering  = DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE;
-    bool bFoundMode             = mD3DInitialize->findBestFullScreenMode( mD3DSettings, &MatchMode, true, false );
+    bool bFoundMode = mD3DInitialize->findBestFullScreenMode( mD3DSettings, mConfig, true, false, (strFileName.empty() == false) );
     
     // Mismatched?
     if ( !mConfig.windowed && !bFoundMode )
         return cgConfigResult::Mismatch;
 
     // Attempt to find a good default windowed set
-    bFoundMode = mD3DInitialize->findBestWindowedMode( mD3DSettings, true, false );
+    bFoundMode = mD3DInitialize->findBestWindowedMode( mD3DSettings, mConfig, true, false, (strFileName.empty() == false) );
     
     // Mismatched?
     if ( mConfig.windowed && !bFoundMode )
@@ -372,7 +365,10 @@ cgConfigResult::Base cgDX11RenderDriver::loadConfig( const cgString & strFileNam
     STRING_CONVERT;
     cgDX11Settings::Settings * pSettings = mD3DSettings.getSettings();
     const cgDX11EnumAdapter  * pAdapter  = mD3DInitialize->getAdapter( pSettings->adapterOrdinal );
-    mConfig.deviceName = cgString::trim(stringConvertW2CT(pAdapter->details.Description));
+    mConfig.deviceName = cgString::trim(stringConvertW2CT(pAdapter->outputs[pSettings->outputOrdinal]->details.DeviceName));
+    mConfig.deviceName += _T(" (");
+    mConfig.deviceName += cgString::trim(stringConvertW2CT(pAdapter->details.Description));
+    mConfig.deviceName += _T(")");
 
     // Signal that we have settled on good config options
     mConfigLoaded = true;
@@ -402,7 +398,7 @@ cgConfigResult::Base cgDX11RenderDriver::loadDefaultConfig( bool bWindowed /* = 
     mConfig.debugPShader        = false;
     mConfig.debugVShader        = false;
     mConfig.usePerfHUD          = false;
-    mConfig.useVTFBlending      = false;
+    mConfig.useVTFBlending      = true;
     mConfig.shadingQuality      = 3; // HIGH
     mConfig.postProcessQuality  = 3; // HIGH
     mConfig.antiAliasingQuality = 3; // HIGH
@@ -639,6 +635,58 @@ bool cgDX11RenderDriver::initialize( cgResourceManager * pResources, const cgStr
 
     // Call base class implementation to finish up.
     return cgRenderDriver::initialize( pResources, WindowTitle, IconResource );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : updateAdapter () (Virtual)
+/// <summary>
+/// Alter the adapter and/or display mode in the device configuration. Returns 
+/// true if a restart will be required.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgDX11RenderDriver::updateAdapter( cgInt32 adapterIndex, const cgDisplayMode & mode, bool windowed, bool verticalSync )
+{
+    // Get the list of enumerated adapters.
+    cgAdapter::Array adapters;
+    if ( !mCaps->getAdapters( adapters ) )
+        return false;
+    if ( adapterIndex < 0 || adapterIndex >= (cgInt32)adapters.size() )
+        return false;
+
+    // Find the current adapter.
+    cgInt32 currentAdapter = -1;
+    for ( size_t i = 0; i < adapters.size(); ++i )
+    {
+        if ( adapters[i].configName == mConfig.deviceName )
+        {
+            currentAdapter = i;
+            break;
+        
+        } // End if match
+    
+    } // Next adapter
+
+    // Is this a no-op?
+    if ( currentAdapter == adapterIndex && mConfig.width == mode.width && mConfig.height == mode.height && 
+         mConfig.refreshRate == mode.refreshRate && mConfig.windowed == windowed )
+         return false;
+
+    // Update what we need to update.
+    mConfig.width       = mode.width;
+    mConfig.height      = mode.height;
+    mConfig.refreshRate = (cgInt32)mode.refreshRate;
+    mConfig.windowed    = windowed;
+    mConfig.useVSync    = verticalSync;
+    mConfig.deviceName  = adapters[adapterIndex].configName;
+
+    // Log the changes being made.
+    cgString modeInfo = cgString::format( _T("Application selected a new adapter (%s) with a %s display mode of %ix%ix%ibpp @ %ihz. A restart is required."), 
+                                         adapters[adapterIndex].configName.c_str(), (windowed) ? _T("windowed") : _T("fullscreen"), mode.width, mode.height, 
+                                         mode.bitDepth, mode.refreshRate );
+    cgAppLog::write( cgAppLog::Info, _T("%s\n"), modeInfo.c_str() );
+
+    // Done
+    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -923,6 +971,20 @@ bool cgDX11RenderDriver::postInit()
         } // End if failed
 
     } // End if useVTFBlending
+
+    // Create the samplers to use for 'stretchRect()' operations.
+    cgSamplerStateDesc SamplerDesc;
+    SamplerDesc.addressU = cgAddressingMode::Clamp;
+    SamplerDesc.addressV = cgAddressingMode::Clamp;
+    SamplerDesc.minificationFilter  = cgFilterMethod::Linear;
+    SamplerDesc.magnificationFilter = cgFilterMethod::Linear;
+    SamplerDesc.mipmapFilter        = cgFilterMethod::None;
+    if ( !mResourceManager->createSamplerState( &mLinearStretchSampler, SamplerDesc, cgResourceFlags::ForceNew, cgDebugSource() ) )
+    {
+        cgAppLog::write( cgAppLog::Error, _T("Failed to create linear stretch blit sampler states on the selected device.\n") );
+        return false;
+
+    } // End if failed
 
     // Create initial 'default' render target data stack entry.
     if ( !beginTargetRender( mDeviceFrameBuffer, mDeviceDepthStencilTarget ) )
@@ -3384,8 +3446,9 @@ bool cgDX11RenderDriver::stretchRect( cgTextureHandle & hSource, const cgRect * 
     // supplied by the caller. Start with the source rectangle.
     cgRect rcSrc;
     const cgImageInfo & SrcInfo = pSrcTexture->getInfo();
+    cgRect rcSrcBounds = cgRect( 0, 0, SrcInfo.width, SrcInfo.height );
     if ( !pSrcRect )
-        rcSrc = cgRect( 0, 0, SrcInfo.width, SrcInfo.height );
+        rcSrc = rcSrcBounds;
     else
         rcSrc = *pSrcRect;
     
@@ -3444,8 +3507,76 @@ bool cgDX11RenderDriver::stretchRect( cgTextureHandle & hSource, const cgRect * 
     } // End if same size
     else
     {
-        cgToDo( "DX11", "Needs to utilize a shader draw if the source and destination rectangles are not the same size / format!" );
-        bResult = false;
+        if ( pDstTexture->getResourceType() == cgResourceType::RenderTarget )
+        {
+            // Compile / load required shaders.
+            cgVertexShaderHandle hVertexShader = mDriverShader->getVertexShader( _T("transformStretchRect") );
+            cgPixelShaderHandle hPixelShader = mDriverShader->getPixelShader( _T("drawStretchRect") );
+            if ( !hPixelShader.isValid() )
+                return false;
+
+            // Compute the texture coordinates.
+            cgFloat texLeft   = rcSrc.left   / (cgFloat)rcSrcBounds.width();
+            cgFloat texRight  = rcSrc.right  / (cgFloat)rcSrcBounds.width();
+            cgFloat texTop    = rcSrc.top    / (cgFloat)rcSrcBounds.height();
+            cgFloat texBottom = rcSrc.bottom / (cgFloat)rcSrcBounds.height();
+
+            // Build the screen space rectangle
+            const cgUInt32 nColor = 0xFFFFFFFF;
+            cgScreenVertex pRectangleBuffer[] = {
+                cgScreenVertex( (cgFloat)rcDst.left, (cgFloat)rcDst.top, 0, 1, texLeft, texTop ),
+                cgScreenVertex( (cgFloat)rcDst.right, (cgFloat)rcDst.top, 0, 1, texRight, texTop ),
+                cgScreenVertex( (cgFloat)rcDst.right, (cgFloat)rcDst.bottom, 0, 1, texRight, texBottom ),
+                cgScreenVertex( (cgFloat)rcDst.left, (cgFloat)rcDst.bottom, 0, 1, texLeft, texBottom )
+            };
+
+            // Setup vertex and pixel shaders.
+            pushVertexShader( hVertexShader );
+            pushPixelShader( hPixelShader );
+
+            // Setup blending states (no blending)
+            pushBlendState( cgBlendStateHandle::Null );
+
+            // Disable depth buffering and stencil operations
+            pushDepthStencilState( mElementDepthState );
+
+            // Use default rasterizer states.
+            pushRasterizerState( mDefaultRasterizerState );
+
+            // Set the vertex format
+            pushVertexFormat( mScreenSpaceFormat );
+
+            // Setup the sampler state
+            pushSamplerState( 0, mLinearStretchSampler );
+
+            // Setup the texture
+            pushTexture( 0, hSource );
+
+            // Begin drawing to the destination
+            if ( beginTargetRender( cgRenderTargetHandle((cgRenderTarget*)pDstTexture), 0, true, cgDepthStencilTargetHandle::Null ) )
+            {
+                // Draw
+                cgUInt32 Indices[] = { 0, 1, 3, 2 };
+                drawIndexedPrimitiveUP( cgPrimitiveType::TriangleStrip, 0, 4, 2, Indices, cgBufferFormat::Index32, (void*)pRectangleBuffer );
+                endTargetRender();
+            
+            } // End if success
+            else
+                bResult = false;
+
+            // Restore modified states.
+            popVertexFormat();
+            popRasterizerState();
+            popDepthStencilState();
+            popBlendState();
+            popVertexShader();
+            popPixelShader();
+            popSamplerState(0);
+            popTexture(0);
+
+        }
+        else
+            bResult = false;
 
     } // End if stretching
     

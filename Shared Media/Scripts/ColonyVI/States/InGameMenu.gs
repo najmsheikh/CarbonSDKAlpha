@@ -20,6 +20,7 @@
 // Local Includes
 //-----------------------------------------------------------------------------
 #include_once "../Forms/InGameMenuForm.frm"
+#include_once "../Forms/Options/VideoOptionsForm.frm"
 
 //-----------------------------------------------------------------------------
 // Name : InGameMenu (Class)
@@ -175,7 +176,20 @@ shared class InGameMenu : IScriptedAppState
 	///////////////////////////////////////////////////////////////////////////
     private void formClosed( UIControl @ sender )
     {
+        bool requiresRestart = false;
+        if ( mReopenMenu )
+            requiresRestart = cast<VideoOptionsForm>(mMainForm.getScriptObject()).requiresRestart;
+
+        // Clean up
         @mMainForm = null;
+
+        // Exit if required.
+        if ( requiresRestart )
+        {
+            mState.raiseEvent( "Exit" );
+            return;
+        
+        } // End if restartRequired
 
         // Reopen the main menu when form is closed?
         if ( mReopenMenu )

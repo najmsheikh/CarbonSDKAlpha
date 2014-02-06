@@ -473,6 +473,7 @@ bool cgTextEngine::computeTextMetrics( const cgRect & destination, cgUInt32 flag
 
     // Multiline requested?
     bool multiline = ( (flags & cgTextFlags::Multiline) == cgTextFlags::Multiline );
+    bool noWrap = ( (flags & cgTextFlags::NoWrap) == cgTextFlags::NoWrap );
 
     // Set up metric properties
     metrics.mFontSet         = mCurrentFont;
@@ -642,7 +643,7 @@ bool cgTextEngine::computeTextMetrics( const cgRect & destination, cgUInt32 flag
         // *******************************************************************************************
 
         // Do we need to break onto a new line?
-        if ( multiline && ((currentX + characterDesc->offsetX + characterDesc->width) > width) )
+        if ( !noWrap && multiline && ((currentX + characterDesc->offsetX + characterDesc->width) > width) )
         {
             // Wrapping onto next line, first make a backup of the current line data
             // and then reset the current line storage

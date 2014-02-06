@@ -181,8 +181,8 @@ public:
                                                           WNDPROC windowProcedure = CG_NULL, LPCTSTR windowTitle = CG_NULL, cgUInt32 width = CW_USEDEFAULT, 
                                                           cgUInt32 height = CW_USEDEFAULT, LPVOID lparam = CG_NULL, bool modifyWindow = true, bool attachPerfHUD = false );
 
-    bool                        findBestWindowedMode    ( cgDX11Settings & settings, bool requireHAL = false, bool requireREF = false );
-    bool                        findBestFullScreenMode  ( cgDX11Settings & settings, DXGI_MODE_DESC * matchMode = CG_NULL, bool requireHAL = false, bool requireREF = false );
+    bool                        findBestWindowedMode    ( cgDX11Settings & settings, const cgRenderDriverConfig & currentConfig, bool requireHAL = false, bool requireREF = false, bool exactMatch = false );
+    bool                        findBestFullScreenMode  ( cgDX11Settings & settings, const cgRenderDriverConfig & currentConfig, bool requireHAL = false, bool requireREF = false, bool exactMatch = false );
 
     DXGI_SWAP_CHAIN_DESC        buildSwapChainParameters( cgDX11Settings & settings, HWND hWnd, cgUInt32 flags = 0  );
     

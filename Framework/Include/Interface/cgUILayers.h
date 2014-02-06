@@ -200,4 +200,38 @@ protected:
     bool                        mCursorVisible;     // Is the cursor currently visible?
 };
 
+//-----------------------------------------------------------------------------
+//  Name : cgUIModalFormLayer (Class)
+/// <summary>
+/// A system layer which manages the rendering of modal forms.
+/// </summary>
+//-----------------------------------------------------------------------------
+class CGE_API cgUIModalFormLayer : public cgUIControlLayer
+{
+    DECLARE_DERIVED_SCRIPTOBJECT( cgUIModalFormLayer, cgUIControlLayer, "ModalFormLayer" )
+
+public:
+    //-------------------------------------------------------------------------
+    // Constructors & Destructors
+    //-------------------------------------------------------------------------
+    cgUIModalFormLayer( cgUIManager * manager, cgInt32 layerDepth = -1 );
+
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods (Overrides cgUILayer)
+    //-------------------------------------------------------------------------
+    virtual void        render              ( );
+    virtual bool        onMouseMove         ( const cgPoint & position, const cgPointF & offset );
+    virtual bool        onMouseButtonDown   ( cgInt32 buttons, const cgPoint & position );
+    virtual bool        onMouseButtonUp     ( cgInt32 buttons, const cgPoint & position );
+    virtual bool        onMouseWheelScroll  ( cgInt32 delta, const cgPoint & position );
+    virtual bool        onKeyDown           ( cgInt32 keyCode, cgUInt32 modifiers );
+    virtual bool        onKeyUp             ( cgInt32 keyCode, cgUInt32 modifiers );
+    virtual bool        onKeyPressed        ( cgInt32 keyCode, cgUInt32 modifiers );
+
+protected:
+    //-------------------------------------------------------------------------
+    // Protected Variables
+    //-------------------------------------------------------------------------
+};
+
 #endif // !_CGE_CGUILAYERS_H_

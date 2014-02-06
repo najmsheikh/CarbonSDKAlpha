@@ -269,7 +269,7 @@ cgConfigResult::Base cgDX9RenderDriver::loadConfig( const cgString & strFileName
         mConfig.debugVShader        = GetPrivateProfileInt( strSection, _T("DebugVShader"), 0, strResolvedFile.c_str() ) > 0;
         mConfig.debugPShader        = GetPrivateProfileInt( strSection, _T("DebugPShader"), 0, strResolvedFile.c_str() ) > 0;
         mConfig.usePerfHUD          = GetPrivateProfileInt( strSection, _T("UsePerfHUD"), 0, strResolvedFile.c_str() ) > 0;
-        mConfig.useVTFBlending      = GetPrivateProfileInt( strSection, _T("UseVTFBlending"), 0, strResolvedFile.c_str() ) > 0;
+        mConfig.useVTFBlending      = GetPrivateProfileInt( strSection, _T("UseVTFBlending"), 1, strResolvedFile.c_str() ) > 0;
         mConfig.shadingQuality      = GetPrivateProfileInt( strSection, _T("ShadingQuality"), mConfig.shadingQuality, strResolvedFile.c_str() );
         mConfig.postProcessQuality  = GetPrivateProfileInt( strSection, _T("PostProcessQuality"), mConfig.postProcessQuality, strResolvedFile.c_str() );
         mConfig.antiAliasingQuality = GetPrivateProfileInt( strSection, _T("AntiAliasingQuality"), mConfig.antiAliasingQuality, strResolvedFile.c_str() );
@@ -353,7 +353,10 @@ cgConfigResult::Base cgDX9RenderDriver::loadConfig( const cgString & strFileName
     // Retrieve selected adapter information and store it in the configuration
     D3DADAPTER_IDENTIFIER9 Identifier;
     mD3D->GetAdapterIdentifier( pSettings->adapterOrdinal, 0, &Identifier );
-    mConfig.deviceName = cgString::trim(stringConvertA2CT(Identifier.Description));
+    mConfig.deviceName = cgString::trim(stringConvertA2CT(Identifier.DeviceName));
+    mConfig.deviceName += _T(" (");
+    mConfig.deviceName += cgString::trim(stringConvertA2T(Identifier.Description));
+    mConfig.deviceName += _T(")");
 
     // Signal that we have settled on good config options
     mConfigLoaded = true;
@@ -383,7 +386,7 @@ cgConfigResult::Base cgDX9RenderDriver::loadDefaultConfig( bool bWindowed /* = f
     mConfig.debugPShader        = false;
     mConfig.debugVShader        = false;
     mConfig.usePerfHUD          = false;
-    mConfig.useVTFBlending      = false;
+    mConfig.useVTFBlending      = true;
     mConfig.shadingQuality      = 3; // HIGH
     mConfig.postProcessQuality  = 3; // HIGH
     mConfig.antiAliasingQuality = 3; // HIGH
@@ -584,6 +587,58 @@ bool cgDX9RenderDriver::initialize( cgResourceManager * pResources, const cgStri
 
     // Call base class implementation to finish up.
     return cgRenderDriver::initialize( pResources, WindowTitle, IconResource );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : updateAdapter () (Virtual)
+/// <summary>
+/// Alter the adapter and/or display mode in the device configuration. Returns 
+/// true if a restart will be required.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgDX9RenderDriver::updateAdapter( cgInt32 adapterIndex, const cgDisplayMode & mode, bool windowed, bool verticalSync )
+{
+    // Get the list of enumerated adapters.
+    cgAdapter::Array adapters;
+    if ( !mCaps->getAdapters( adapters ) )
+        return false;
+    if ( adapterIndex < 0 || adapterIndex >= (cgInt32)adapters.size() )
+        return false;
+
+    // Find the current adapter.
+    cgInt32 currentAdapter = -1;
+    for ( size_t i = 0; i < adapters.size(); ++i )
+    {
+        if ( adapters[i].configName == mConfig.deviceName )
+        {
+            currentAdapter = i;
+            break;
+        
+        } // End if match
+    
+    } // Next adapter
+
+    // Is this a no-op?
+    if ( currentAdapter == adapterIndex && mConfig.width == mode.width && mConfig.height == mode.height && 
+         mConfig.refreshRate == mode.refreshRate && mConfig.windowed == windowed )
+         return false;
+
+    // Update what we need to update.
+    mConfig.width       = mode.width;
+    mConfig.height      = mode.height;
+    mConfig.refreshRate = (cgInt32)mode.refreshRate;
+    mConfig.windowed    = windowed;
+    mConfig.useVSync    = verticalSync;
+    mConfig.deviceName  = adapters[adapterIndex].configName;
+
+    // Log the changes being made.
+    cgString modeInfo = cgString::format( _T("Application selected a new adapter (%s) with a %s display mode of %ix%ix%ibpp @ %ihz. A restart is required."), 
+                                         adapters[adapterIndex].configName.c_str(), (windowed) ? _T("windowed") : _T("fullscreen"), mode.width, mode.height, 
+                                         mode.bitDepth, mode.refreshRate );
+    cgAppLog::write( cgAppLog::Info, _T("%s\n"), modeInfo.c_str() );
+
+    // Done
+    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -3620,7 +3675,10 @@ bool cgDX9RenderDriverInit::validateDevice( cgDX9EnumAdapter * pAdapter, const D
     {
         // Ignore if the device name does not match the adapter description
         STRING_CONVERT;
-        cgString strDeviceName = cgString::trim(stringConvertA2CT(pAdapter->identifier.Description));
+        cgString strDeviceName = cgString::trim(stringConvertA2CT(pAdapter->identifier.DeviceName));
+        strDeviceName += _T(" (");
+        strDeviceName += cgString::trim(stringConvertA2T(pAdapter->identifier.Description));
+        strDeviceName += _T(")");
         if ( !(strDeviceName == mConfig.deviceName)  )
             return false;
 

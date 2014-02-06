@@ -73,7 +73,7 @@ cgDX11RenderingCapabilities::~cgDX11RenderingCapabilities( )
 void cgDX11RenderingCapabilities::dispose( bool bDisposeBase )
 {
     // Clear variables.
-    mDisplayModes.clear();
+    mAdapters.clear();
 
     // Call base class implementation as required.
     if ( bDisposeBase )
@@ -104,23 +104,64 @@ bool cgDX11RenderingCapabilities::enumerate( )
 //-----------------------------------------------------------------------------
 bool cgDX11RenderingCapabilities::postInit( cgDX11Initialize * data, cgUInt32 fullScreenAdapter, cgUInt32 fullScreenOutput )
 {
-    // Populate the list of available full screen display modes for this device.
-    const cgDX11EnumAdapter * pAdapter = data->getAdapter( fullScreenAdapter );
-    const cgDX11EnumOutput * pOutput = pAdapter->outputs[fullScreenOutput];
-    for ( size_t j = 0; j < pOutput->modes.size(); ++j )
-    {
-        const DXGI_MODE_DESC & sourceMode = pOutput->modes[j];
-        
-        // Store display mode.
-        cgDisplayMode mode;
-        mode.width          = sourceMode.Width;
-        mode.height         = sourceMode.Height;
-        cgUInt denominator  = max( 1, sourceMode.RefreshRate.Denominator );
-        mode.refreshRate    = sourceMode.RefreshRate.Numerator / (cgDouble)denominator;
-        mode.bitDepth       = cgBufferFormatEnum::formatBitsPerPixel(cgDX11BufferFormatEnum::formatFromNative(sourceMode.Format));
-        mDisplayModes.push_back( mode );
+    STRING_CONVERT;
 
-    } // Next mode
+    // Populate the list of adapters for this device.
+    cgInt32 ordinal = 0;
+    cgUInt32 adapters = data->getAdapterCount();
+    for ( cgUInt32 i = 0; i < adapters; ++i )
+    {
+        const cgDX11EnumAdapter * enumAdapter = data->getAdapter( i );
+        for ( cgUInt32 j = 0; j < enumAdapter->outputs.size(); ++j )
+        {
+            const cgDX11EnumOutput * enumOutput = enumAdapter->outputs[j];
+        
+            // Configure adapter data.
+            mAdapters.resize( mAdapters.size() + 1 );
+            cgAdapter & adapter = mAdapters.back();
+            adapter.ordinal     = ordinal++;
+            adapter.deviceName  = cgString::trim(stringConvertW2CT(enumOutput->details.DeviceName));
+            adapter.description = cgString::trim(stringConvertW2CT(enumAdapter->details.Description));
+            adapter.configName  = adapter.deviceName;
+            adapter.configName  += _T(" (");
+            adapter.configName  += adapter.description;
+            adapter.configName  += _T(")");
+            adapter.displayName = adapter.deviceName;
+            adapter.displayName.replace( _T("\\\\.\\"), _T("") );
+            adapter.displayName += _T(" (");
+            adapter.displayName += adapter.description;
+            adapter.displayName += _T(")");
+            adapter.deviceId    = enumAdapter->details.DeviceId;
+            adapter.vendorId    = enumAdapter->details.VendorId;
+            adapter.subSysId    = enumAdapter->details.SubSysId;
+            memset( &adapter.identifier, 0, sizeof(cgUID) );
+        
+            // Populate the list of available display modes for this adapter.
+            DX11VectorDisplayMode::const_iterator itMode;
+            for ( itMode = enumOutput->modes.begin(); itMode != enumOutput->modes.end(); ++itMode )
+            {
+                const DXGI_MODE_DESC & sourceMode = *itMode;
+                if ( sourceMode.Scaling != DXGI_MODE_SCALING_CENTERED )
+                    continue;
+                if ( sourceMode.ScanlineOrdering != DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE )
+                    continue;
+                if ( sourceMode.Format != DXGI_FORMAT_R8G8B8A8_UNORM )
+                    continue;
+
+                // Store mode
+                cgDisplayMode mode;
+                mode.width          = sourceMode.Width;
+                mode.height         = sourceMode.Height;
+                cgUInt denominator  = max( 1, sourceMode.RefreshRate.Denominator );
+                mode.refreshRate    = sourceMode.RefreshRate.Numerator / (cgDouble)denominator;
+                mode.bitDepth       = cgBufferFormatEnum::formatBitsPerPixel(cgDX11BufferFormatEnum::formatFromNative(sourceMode.Format));
+                adapter.modes.push_back( mode );
+
+            } // Next mode
+
+        } // Next output
+
+    } // Next adapter
     
     // Success
     return true;
@@ -225,9 +266,23 @@ bool cgDX11RenderingCapabilities::supportsDepthStencilReading ( ) const
 /// device.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgDX11RenderingCapabilities::getDisplayModes( cgDisplayMode::Array & modes ) const
+bool cgDX11RenderingCapabilities::getDisplayModes( cgInt32 adapterOrdinal, cgDisplayMode::Array & modes ) const
 {
-    modes = mDisplayModes;
+    if ( adapterOrdinal < 0 || adapterOrdinal >= (cgInt32)mAdapters.size() )
+        return false;
+    modes = mAdapters[adapterOrdinal].modes;
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getAdapters () (Virtual)
+/// <summary>
+/// Retrieve a list of all adapters installed in this system.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgDX11RenderingCapabilities::getAdapters( cgAdapter::Array & adapters ) const
+{
+    adapters = mAdapters;
     return true;
 }
 

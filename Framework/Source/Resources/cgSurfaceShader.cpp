@@ -2283,6 +2283,11 @@ cgPixelShaderHandle cgSurfaceShader::getPixelShader( const cgString & strName, c
                             strSamplers.append( _T("Texture3D ") );
                         else if ( sDesc.typeName.compare( _T("SamplerCube"), true ) == 0 )
                             strSamplers.append( _T("TextureCube ") );
+                        else if ( sDesc.typeName.compare( _T("Sampler2DMS"), true ) == 0 )
+                        {
+                            bAppendTexture = false;
+                        
+                        } // End if Sampler2DMS
                         else if ( sDesc.typeName.compare( _T("Sampler2DCmp"), true ) == 0 )
                         {
                             bAppendTexture = false;

@@ -427,8 +427,23 @@ cgUIForm * cgUIManager::createForm( const cgString & strFormType, const cgString
 //-----------------------------------------------------------------------------
 cgUIForm * cgUIManager::loadForm( const cgInputStream & Stream, const cgString & strFormName )
 {
+    return loadForm( Stream, strFormName, false );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : loadForm ()
+/// <summary>
+/// Load a form from a script ready for display.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgUIForm * cgUIManager::loadForm( const cgInputStream & Stream, const cgString & strFormName, bool modal )
+{
     // Allocate a new control layer to attach the form to
-    cgUIControlLayer * pLayer = new cgUIControlLayer( this, cgUILayerType::UserLayer, -1 );
+    cgUIControlLayer * pLayer = CG_NULL;
+    if ( modal )
+        pLayer = new cgUIModalFormLayer( this, -1 );
+    else
+        pLayer = new cgUIControlLayer( this, cgUILayerType::UserLayer, -1 );
 
     // Allocate the form object
     cgUIForm * pForm = new cgUIForm( pLayer );
@@ -514,7 +529,35 @@ void cgUIManager::addLayer( cgUILayer * pLayer )
 
         } // End if yes
     
-    } // End if system
+    } // End if System
+    else if ( pLayer->getLayerType() == cgUILayerType::TopMostLayer )
+    {
+        // Insert below current top most layers.
+        LayerList::iterator itLayer;
+        for ( itLayer = mLayers.begin(); itLayer != mLayers.end(); ++itLayer )
+        {
+            // If this is the first system or top most layer, we have found our top most item
+            if ( (*itLayer)->getLayerType() == cgUILayerType::SystemLayer ||
+                 (*itLayer)->getLayerType() == cgUILayerType::TopMostLayer )
+                 break;
+
+        } // Next Layer
+
+        // Did we find a layer?
+        if ( itLayer == mLayers.end() )
+        {
+            // We didn't find one, just insert back at the end
+            mLayers.push_back( pLayer );
+        
+        } // End if no
+        else
+        {
+            // First non-system / non-topmost layer found, insert just prior to this
+            mLayers.insert( itLayer, pLayer );
+
+        } // End if yes
+    
+    } // End if TopMost
     else
         mLayers.push_front( pLayer );
 }
@@ -556,17 +599,36 @@ void cgUIManager::bringLayerToFront( cgUILayer * pLayer )
     // First, remove this layer from the list.
     mLayers.remove( pLayer );
 
-    // Now, find the top most (non system) layer in its class
-    for ( itLayer = mLayers.begin(); itLayer != mLayers.end(); ++itLayer )
+    // Now, find the top most layer in its class
+    if ( pLayer->getLayerType() == cgUILayerType::TopMostLayer )
     {
-        // Retrieve the layer we're testing against
-        pTestLayer = *itLayer;
+        for ( itLayer = mLayers.begin(); itLayer != mLayers.end(); ++itLayer )
+        {
+            // Retrieve the layer we're testing against
+            pTestLayer = *itLayer;
 
-        // If this is the first system layer, we have found our top most item
-        if ( pTestLayer->getLayerType() == cgUILayerType::SystemLayer )
-             break;
+            // If this is the first system layer, we have found our top most item
+            if ( pTestLayer->getLayerType() == cgUILayerType::SystemLayer )
+                 break;
 
-    } // Next Layer
+        } // Next Layer
+
+    } // End if TopMostLayer
+    else if ( pLayer->getLayerType() == cgUILayerType::UserLayer )
+    {
+        for ( itLayer = mLayers.begin(); itLayer != mLayers.end(); ++itLayer )
+        {
+            // Retrieve the layer we're testing against
+            pTestLayer = *itLayer;
+
+            // If this is the first non user layer, we have found our top most item
+            if ( pTestLayer->getLayerType() == cgUILayerType::SystemLayer ||
+                 pTestLayer->getLayerType() == cgUILayerType::TopMostLayer )
+                 break;
+
+        } // Next Layer
+
+    } // End if UserLayer
 
     // Did we find a system layer?
     if ( itLayer == mLayers.end() )
@@ -577,7 +639,7 @@ void cgUIManager::bringLayerToFront( cgUILayer * pLayer )
     } // End if no
     else
     {
-        // First non-system layer found, insert just prior to this
+        // Correct layer found, insert just prior to this
         mLayers.insert( itLayer, pLayer );
 
     } // End if yes
@@ -599,8 +661,41 @@ void cgUIManager::sendLayerToBack( cgUILayer * pLayer )
     // First, remove this layer from the list.
     mLayers.remove( pLayer );
 
-    // Just insert at the head, no other layer types will affect this at the moment
-    mLayers.push_front( pLayer );
+    // What type of layer is this?
+    if ( pLayer->getLayerType() == cgUILayerType::TopMostLayer )
+    {
+        // Insert below current top most layers.
+        LayerList::iterator itLayer;
+        for ( itLayer = mLayers.begin(); itLayer != mLayers.end(); ++itLayer )
+        {
+            // If this is the first system or top most layer, we have found our top most item
+            if ( (*itLayer)->getLayerType() == cgUILayerType::SystemLayer ||
+                 (*itLayer)->getLayerType() == cgUILayerType::TopMostLayer )
+                 break;
+
+        } // Next Layer
+
+        // Did we find a layer?
+        if ( itLayer == mLayers.end() )
+        {
+            // We didn't find one, just insert at the end
+            mLayers.push_back( pLayer );
+        
+        } // End if no
+        else
+        {
+            // Correct layer found, insert just prior to this
+            mLayers.insert( itLayer, pLayer );
+
+        } // End if yes
+
+    } // End if TopMost
+    else
+    {
+        // Just insert at the head.
+        mLayers.push_front( pLayer );
+
+    } // End if 
 }
 
 //-----------------------------------------------------------------------------

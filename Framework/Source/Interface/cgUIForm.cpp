@@ -934,3 +934,40 @@ cgRect cgUIForm::elementAreaToClientRect( const cgUIElementArea & Area )
     // Return the rectangle
     return rcClient;
 }
+
+//-----------------------------------------------------------------------------
+//  Name : processMessage ()
+/// <summary>
+/// Process any messages sent to us from other objects, or other parts
+/// of the system via the reference messaging system (cgReference).
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgUIForm::processMessage( cgMessage * pMessage )
+{
+    // Bail if the message source has been unregistered since it
+    // was sent. It will no longer be of interest to us.
+    if ( pMessage->sourceUnregistered == true )
+        return cgUIControl::processMessage( pMessage );
+
+    // What is the message?
+    switch ( pMessage->messageId )
+    {
+        case cgSystemMessages::UI_Button_OnClick:
+
+            // Who is the source of the message?
+            if ( mCloseButton && pMessage->fromId == mCloseButton->getReferenceId() )
+            {
+                // Close the form
+                close();
+
+                // We processed this message.
+                return true;
+            
+            } // End if close button
+            break;
+
+    } // End switch message ID
+
+    // Message was not processed, pass to base.
+    return cgUIControl::processMessage( pMessage );
+}
