@@ -231,6 +231,7 @@ public:
     // Physics
     void                            setPhysicsController    ( cgPhysicsController * controller );
     void                            setPhysicsModel         ( cgPhysicsModel::Base model );
+    void                            setPhysicsModel         ( cgPhysicsModel::Base model, cgDefaultPhysicsShape::Base defaultShape );
     cgPhysicsModel::Base            getPhysicsModel         ( ) const;
     void                            setSimulationQuality    ( cgSimulationQuality::Base quality );
     cgSimulationQuality::Base       getSimulationQuality    ( ) const;

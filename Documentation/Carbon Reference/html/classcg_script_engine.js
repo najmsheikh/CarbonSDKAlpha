@@ -18,6 +18,7 @@ var classcg_script_engine =
     [ "isLibraryLinked", "classcg_script_engine.html#a1a212d172fddd51a6c91e5b8d008d049", null ],
     [ "linkLibrary", "classcg_script_engine.html#aaabf359eab8a0b300107039ef157612b", null ],
     [ "linkLibrary", "classcg_script_engine.html#a56f03a98d53025e6224a0b513e453969", null ],
+    [ "outputScriptWarnings", "classcg_script_engine.html#afd059322fad7791b5653a37848f84d46", null ],
     [ "registerEnum", "classcg_script_engine.html#a6dffa2a26651c492e7e41649bf585645", null ],
     [ "registerEnumValue", "classcg_script_engine.html#a11c5f120e5459526e16c52b0ac4a847c", null ],
     [ "registerGlobalFunction", "classcg_script_engine.html#a6182d3affcd8ba8edbc2cdedd86dd70a", null ],
@@ -35,8 +36,10 @@ var classcg_script_engine =
     [ "cgScript", "classcg_script_engine.html#ad181d5f7b5478d1803f343da2f6bc6fb", null ],
     [ "mEngine", "classcg_script_engine.html#ab209d7740084759d21bad5d2eca3df9e", null ],
     [ "mExecuteContexts", "classcg_script_engine.html#abf50895af9cc0b1cbf2f13c343ba7d79", null ],
+    [ "mJITEngine", "classcg_script_engine.html#a2746907ff0714df0fd15d86db7caf5bd", null ],
     [ "mLinkedLibraries", "classcg_script_engine.html#ad3a23c2059ab6eb6d7653ec4e36fb8ea", null ],
     [ "mLoadedScripts", "classcg_script_engine.html#a0bbbf5f91dc8eb593ed0ce569be3f0ac", null ],
+    [ "mOutputWarnings", "classcg_script_engine.html#a99ad97d8b5e86f399a33087127a39374", null ],
     [ "mRootPackage", "classcg_script_engine.html#a71e021d37239bd6008ba6e34c0198b05", null ],
     [ "mScriptedLibraries", "classcg_script_engine.html#a8a3c6ada46d4b20293db46520ce271b5", null ],
     [ "mVerboseOutput", "classcg_script_engine.html#a1a2f110a33c56d3b84b3da3ffdd5f3d9", null ]

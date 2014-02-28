@@ -46,6 +46,7 @@
 #include <Resources/cgScript.h>
 #include <System/cgStringUtility.h>
 #include <System/cgExceptions.h>
+#include <System/cgMessageTypes.h>
 #include <Math/cgMathUtility.h>
 
 // Auto-create initial physics shape.
@@ -54,6 +55,7 @@
 #include <World/Objects/Elements/cgCylinderCollisionShapeElement.h>
 #include <World/Objects/Elements/cgCapsuleCollisionShapeElement.h>
 #include <World/Objects/Elements/cgConeCollisionShapeElement.h>
+#include <World/Objects/Elements/cgHullCollisionShapeElement.h>
 
 // ToDo: Check error paths (i.e. setCellTransform() can fail).
 //       Alternatively, move back to exceptions for DB access.
@@ -126,6 +128,10 @@ cgObjectNode::cgObjectNode( cgUInt32 referenceId, cgScene * scene ) : cgAnimatio
 
     // Assign a default color to the node
     mColor = cgMathUtility::randomColor( );
+
+    // Subscribe to necessary messaging groups.
+    cgReferenceManager::subscribeToGroup( getReferenceId(), cgSystemMessageGroups::MGID_ResourceManager );
+    cgReferenceManager::subscribeToGroup( getReferenceId(), cgSystemMessageGroups::MGID_System );
 }
 
 //-----------------------------------------------------------------------------
@@ -215,6 +221,10 @@ cgObjectNode::cgObjectNode( cgUInt32 referenceId, cgScene * scene, cgObjectNode 
     
     // Listen for any changes made to the object
     mReferencedObject->registerEventListener( static_cast<cgWorldComponentEventListener*>(this) );
+
+    // Subscribe to necessary messaging groups.
+    cgReferenceManager::subscribeToGroup( getReferenceId(), cgSystemMessageGroups::MGID_ResourceManager );
+    cgReferenceManager::subscribeToGroup( getReferenceId(), cgSystemMessageGroups::MGID_System );
 }
 
 //-----------------------------------------------------------------------------
@@ -1152,6 +1162,19 @@ cgPhysicsModel::Base cgObjectNode::getPhysicsModel( ) const
 //-----------------------------------------------------------------------------
 void cgObjectNode::setPhysicsModel( cgPhysicsModel::Base model )
 {
+    setPhysicsModel( model, cgDefaultPhysicsShape::Auto );
+}
+
+//-----------------------------------------------------------------------------
+// Name : setPhysicsModel ( ) (Virtual)
+/// <summary>
+/// Set the model that should be used when simulating physics for this
+/// object. The model may dictate the types of sub-elements that are available
+/// and the properties that can be defined.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgObjectNode::setPhysicsModel( cgPhysicsModel::Base model, cgDefaultPhysicsShape::Base defaultShape )
+{
     // Update database reference only if we are not disposing
     // or are in sandbox mode.
     if ( shouldSerialize() )
@@ -1182,24 +1205,55 @@ void cgObjectNode::setPhysicsModel( cgPhysicsModel::Base model )
         const cgObjectSubElementArray & aCollisionShapes = mReferencedObject->getSubElements( OSECID_CollisionShapes );
         if ( aCollisionShapes.empty() )
         {
-            // Guess an appropriate initial shape from the name of the node.
-            cgString name = cgString::toLower(getName());
-            if ( name.find( _T("cylinder") ) != cgString::npos ||
-                 name.find( _T("barrel") ) != cgString::npos ||
-                 name.find( _T("column") ) != cgString::npos )            
-                mReferencedObject->createSubElement( OSECID_CollisionShapes, RTID_CylinderCollisionShapeElement );
-            else if ( name.find( _T("capsule") ) != cgString::npos )
-                mReferencedObject->createSubElement( OSECID_CollisionShapes, RTID_CapsuleCollisionShapeElement );
-            else if ( name.find( _T("cone") ) != cgString::npos )
-                mReferencedObject->createSubElement( OSECID_CollisionShapes, RTID_ConeCollisionShapeElement );
-            else if ( name.find( _T("sphere") ) != cgString::npos ||
-                      name.find( _T("ball") ) != cgString::npos ||
-                      name.find( _T("moon") ) != cgString::npos ||
-                      name.find( _T("planet") ) != cgString::npos ||
-                      name.find( _T("earth") ) != cgString::npos )
-                mReferencedObject->createSubElement( OSECID_CollisionShapes, RTID_SphereCollisionShapeElement );
+            if ( defaultShape == cgDefaultPhysicsShape::Auto )
+            {
+                // Guess an appropriate initial shape from the name of the node.
+                cgString name = cgString::toLower(getName());
+                if ( name.find( _T("cylinder") ) != cgString::npos ||
+                     name.find( _T("barrel") ) != cgString::npos ||
+                     name.find( _T("column") ) != cgString::npos )            
+                    mReferencedObject->createSubElement( OSECID_CollisionShapes, RTID_CylinderCollisionShapeElement );
+                else if ( name.find( _T("capsule") ) != cgString::npos )
+                    mReferencedObject->createSubElement( OSECID_CollisionShapes, RTID_CapsuleCollisionShapeElement );
+                else if ( name.find( _T("cone") ) != cgString::npos )
+                    mReferencedObject->createSubElement( OSECID_CollisionShapes, RTID_ConeCollisionShapeElement );
+                else if ( name.find( _T("sphere") ) != cgString::npos ||
+                          name.find( _T("ball") ) != cgString::npos ||
+                          name.find( _T("moon") ) != cgString::npos ||
+                          name.find( _T("planet") ) != cgString::npos ||
+                          name.find( _T("earth") ) != cgString::npos )
+                    mReferencedObject->createSubElement( OSECID_CollisionShapes, RTID_SphereCollisionShapeElement );
+                else
+                    mReferencedObject->createSubElement( OSECID_CollisionShapes, RTID_BoxCollisionShapeElement );
+
+            } // End if Auto
             else
-                mReferencedObject->createSubElement( OSECID_CollisionShapes, RTID_BoxCollisionShapeElement );
+            {
+                cgUID shapeType = RTID_BoxCollisionShapeElement;
+                switch ( defaultShape )
+                {
+                    case cgDefaultPhysicsShape::Sphere:
+                        shapeType = RTID_SphereCollisionShapeElement;
+                        break;
+                    case cgDefaultPhysicsShape::Cylinder:
+                        shapeType = RTID_CylinderCollisionShapeElement;
+                        break;
+                    case cgDefaultPhysicsShape::Cone:
+                        shapeType = RTID_ConeCollisionShapeElement;
+                        break;
+                    case cgDefaultPhysicsShape::Capsule:
+                        shapeType = RTID_CapsuleCollisionShapeElement;
+                        break;
+                    case cgDefaultPhysicsShape::ConvexHull:
+                        shapeType = RTID_HullCollisionShapeElement;
+                        break;
+
+                } // End Switch Shape
+
+                // Create the sub element.
+                mReferencedObject->createSubElement( OSECID_CollisionShapes, shapeType);
+
+            } // End if other
         
         } // End if no collision shapes
 

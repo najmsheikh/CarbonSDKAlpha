@@ -223,6 +223,17 @@ cgMeshHandle cgMeshObject::getMesh( ) const
 //-----------------------------------------------------------------------------
 bool cgMeshObject::createBox( cgFloat fWidth, cgFloat fHeight, cgFloat fDepth, cgUInt32 nWidthSegs, cgUInt32 nHeightSegs, cgUInt32 nDepthSegs, bool bInverted, cgMeshCreateOrigin::Base Origin )
 {
+    return createBox( fWidth, fHeight, fDepth, nWidthSegs, nHeightSegs, nDepthSegs, 1.0f, 1.0f, bInverted, Origin );
+}
+
+//-----------------------------------------------------------------------------
+// Name : createBox()
+/// <summary>
+/// Simple utility function to create a box mesh of the specified size.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgMeshObject::createBox( cgFloat fWidth, cgFloat fHeight, cgFloat fDepth, cgUInt32 nWidthSegs, cgUInt32 nHeightSegs, cgUInt32 nDepthSegs, cgFloat fTexUScale, cgFloat fTexVScale, bool bInverted, cgMeshCreateOrigin::Base Origin )
+{
     // Size must not be entirely degenerate on more than one axis.
     // If it is, the welding process undertaken during 'EndPrepare()'
     // will collapse the entire mesh and remove all faces.
@@ -244,7 +255,7 @@ bool cgMeshObject::createBox( cgFloat fWidth, cgFloat fHeight, cgFloat fDepth, c
         cgResourceManager * pResources = cgResourceManager::getInstance();
         cgVertexFormat * pFormat = cgVertexFormat::formatFromDeclarator( cgVertex::Declarator );
         if ( pMesh->createBox( pFormat, fWidth, fHeight, fDepth, nWidthSegs, nHeightSegs, nDepthSegs, 
-                               bInverted, Origin, true, pResources ) == true )
+                               fTexUScale, fTexVScale, bInverted, Origin, true, pResources ) == true )
             pResources->addMesh( &mMesh, pMesh, cgResourceFlags::ForceNew, _T("Core::Mesh::Box"), cgDebugSource() );
         
         // Did the box creation succeed?
@@ -262,7 +273,7 @@ bool cgMeshObject::createBox( cgFloat fWidth, cgFloat fHeight, cgFloat fDepth, c
         cgResourceManager * pResources = cgResourceManager::getInstance();
         cgVertexFormat * pFormat = cgVertexFormat::formatFromDeclarator( cgVertex::Declarator );
         if ( pMesh->createBox( pFormat, fWidth, fHeight, fDepth, nWidthSegs, nHeightSegs, nDepthSegs, 
-                               bInverted, Origin, true, pResources ) == false )
+                               fTexUScale, fTexVScale, bInverted, Origin, true, pResources ) == false )
         {
             mMesh.close( true );
             return false;

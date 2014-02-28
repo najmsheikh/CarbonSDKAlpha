@@ -266,6 +266,7 @@ public:
     bool                        loadScript                  ( cgScriptHandle * resourceOut, const cgInputStream & stream, const cgString & thisType, cgUInt32 flags = 0, const cgDebugSourceInfo & _debugSource = cgDebugSourceInfo(_T(""),0) );
     bool                        loadScript                  ( cgScriptHandle * resourceOut, const cgInputStream & stream, const cgString & thisType, const cgString & instanceId, cgUInt32 flags = 0, const cgDebugSourceInfo & _debugSource = cgDebugSourceInfo(_T(""),0) );
     bool                        reloadScripts               ( cgFloat delay = 0.0f );
+    bool                        reloadScript                ( const cgString & resourceName );
 
     // Surface Shaders
     bool                        createSurfaceShader         ( cgSurfaceShaderHandle * resourceOut, const cgInputStream & stream, cgUInt32 flags = 0, const cgDebugSourceInfo & _debugSource = cgDebugSourceInfo(_T(""),0) );

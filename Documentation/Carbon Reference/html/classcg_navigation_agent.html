@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -141,6 +141,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0dfa5864a2f40666f6cd7d2f650af85f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_agent.html#a0dfa5864a2f40666f6cd7d2f650af85f">setMoveTarget</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;position, bool adjust)</td></tr>
 <tr class="memdesc:a0dfa5864a2f40666f6cd7d2f650af85f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempt to navigate the specified position.  <a href="#a0dfa5864a2f40666f6cd7d2f650af85f"></a><br/></td></tr>
 <tr class="separator:a0dfa5864a2f40666f6cd7d2f650af85f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad023581e09557c2d5513a9672e8da40e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_agent.html#ad023581e09557c2d5513a9672e8da40e">setMoveTargetAtRange</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;position, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> distance, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> initAngleOffset, bool adjust)</td></tr>
+<tr class="memdesc:ad023581e09557c2d5513a9672e8da40e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempt to navigate to a position on the boundary of a circle surrounding the specified position with a radius of 'distance'.  <a href="#ad023581e09557c2d5513a9672e8da40e"></a><br/></td></tr>
+<tr class="separator:ad023581e09557c2d5513a9672e8da40e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfbec9b8439497cecfe34fb28b3ea09a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_agent.html#adfbec9b8439497cecfe34fb28b3ea09a">setMoveVelocity</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;velocity)</td></tr>
 <tr class="memdesc:adfbec9b8439497cecfe34fb28b3ea09a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempt to move the agent based on the specified velocity.  <a href="#adfbec9b8439497cecfe34fb28b3ea09a"></a><br/></td></tr>
 <tr class="separator:adfbec9b8439497cecfe34fb28b3ea09a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -153,6 +156,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0f13f07f8c1645b2a7286a5d3c3b5a76"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_vector3.html">cgVector3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_agent.html#a0f13f07f8c1645b2a7286a5d3c3b5a76">getActualVelocity</a> () const </td></tr>
 <tr class="memdesc:a0f13f07f8c1645b2a7286a5d3c3b5a76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the current actual velocity for the agent.  <a href="#a0f13f07f8c1645b2a7286a5d3c3b5a76"></a><br/></td></tr>
 <tr class="separator:a0f13f07f8c1645b2a7286a5d3c3b5a76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2301eebf9e7bd79506dbe09121cc929d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_agent.html#a2301eebf9e7bd79506dbe09121cc929d">getTargetPosition</a> () const </td></tr>
+<tr class="memdesc:a2301eebf9e7bd79506dbe09121cc929d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the position that this agent is navigating toward.  <a href="#a2301eebf9e7bd79506dbe09121cc929d"></a><br/></td></tr>
+<tr class="separator:a2301eebf9e7bd79506dbe09121cc929d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac75b82b819eb40ce4491836ef4d31045"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_navigation_agent_state.html#a25fca29c965a742ded6f89c7da2c7610">cgNavigationAgentState::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_agent.html#ac75b82b819eb40ce4491836ef4d31045">getAgentState</a> () const </td></tr>
 <tr class="memdesc:ac75b82b819eb40ce4491836ef4d31045"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the current state of the agent, i.e. whether it is currently in a position to receieve navigation requests.  <a href="#ac75b82b819eb40ce4491836ef4d31045"></a><br/></td></tr>
 <tr class="separator:ac75b82b819eb40ce4491836ef4d31045"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -497,6 +503,23 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a2301eebf9e7bd79506dbe09121cc929d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp; cgNavigationAgent::getTargetPosition </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the position that this agent is navigating toward. </p>
+
+</div>
+</div>
 <a class="anchor" id="a75c163b181a053624f1092303314d42e"></a>
 <div class="memitem">
 <div class="memproto">
@@ -621,6 +644,46 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Attempt to navigate the specified position. </p>
+
+</div>
+</div>
+<a class="anchor" id="ad023581e09557c2d5513a9672e8da40e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgNavigationAgent::setMoveTargetAtRange </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
+          <td class="paramname"><em>position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>distance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>initAngleOffset</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>adjust</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Attempt to navigate to a position on the boundary of a circle surrounding the specified position with a radius of 'distance'. </p>
 
 </div>
 </div>
@@ -771,7 +834,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_navigation_agent.html">cgNavigationAgent</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:37 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:06 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

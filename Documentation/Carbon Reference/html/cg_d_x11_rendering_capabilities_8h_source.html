@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -122,7 +122,7 @@ $(document).ready(function(){initNavTree('cg_d_x11_rendering_capabilities_8h_sou
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">//        and so on.                                                         //</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">//                                                                           //</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">//---------------------------------------------------------------------------//</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">//---------------------------------------------------------------------------//</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#pragma once</span></div>
@@ -183,30 +183,32 @@ $(document).ready(function(){initNavTree('cg_d_x11_rendering_capabilities_8h_sou
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    virtual <span class="keywordtype">bool</span>        supportsNonPow2Textures     ( ) const;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    virtual <span class="keywordtype">bool</span>        supportsDepthStencilReading ( ) const;</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    virtual <span class="keywordtype">bool</span>        supportsShaderModel         ( cgShaderModel::<a class="code" href="namespacecg_animation_target_controller_type.html#a8a83988dfb5a843bf03e592d24f37617">Base</a> model ) const;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    virtual <span class="keywordtype">bool</span>        getDisplayModes             ( <a class="code" href="structcg_display_mode.html">cgDisplayMode</a>::<a class="code" href="namespacecg_script_argument_type.html#a5650d75b4dfb5bdcafcbab0cc6aacd0fa40cffdcbb1e9350cd512af0851ea3561">Array</a> &amp; modes ) const;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides DisposableScriptObject)</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    virtual <span class="keywordtype">bool</span>        requiresCursorEmulation     ( ) const;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    virtual <span class="keywordtype">bool</span>        getDisplayModes             ( <a class="code" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> adapterOrdinal, <a class="code" href="structcg_display_mode.html">cgDisplayMode</a>::<a class="code" href="namespacecg_script_argument_type.html#a5650d75b4dfb5bdcafcbab0cc6aacd0fa40cffdcbb1e9350cd512af0851ea3561">Array</a> &amp; modes ) const;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    virtual <span class="keywordtype">bool</span>        getAdapters                 ( <a class="code" href="structcg_adapter.html">cgAdapter</a>::<a class="code" href="namespacecg_script_argument_type.html#a5650d75b4dfb5bdcafcbab0cc6aacd0fa40cffdcbb1e9350cd512af0851ea3561">Array</a> &amp; modes ) const;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    virtual <span class="keywordtype">void</span>        dispose                 ( <span class="keywordtype">bool</span> disposeBase );</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;protected:</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="comment">// Protected Member Variables</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides DisposableScriptObject)</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    virtual <span class="keywordtype">void</span>        dispose                     ( <span class="keywordtype">bool</span> disposeBase );</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;protected:</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <a class="code" href="structcg_display_mode.html">cgDisplayMode</a>::<a class="code" href="namespacecg_script_argument_type.html#a5650d75b4dfb5bdcafcbab0cc6aacd0fa40cffdcbb1e9350cd512af0851ea3561">Array</a>    mDisplayModes;      <span class="comment">// Enumerated full screen display modes available for selection.</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;};</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#endif // CGE_DX11_RENDER_SUPPORT</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#endif // !_CGE_CGDX11RENDERINGCAPABILITIES_H_</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="comment">// Protected Member Variables</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <a class="code" href="structcg_adapter.html">cgAdapter</a>::<a class="code" href="namespacecg_script_argument_type.html#a5650d75b4dfb5bdcafcbab0cc6aacd0fa40cffdcbb1e9350cd512af0851ea3561">Array</a>    mAdapters;      <span class="comment">// Enumerated adapters available for selection.</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;};</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#endif // CGE_DX11_RENDER_SUPPORT</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor">#endif // !_CGE_CGDX11RENDERINGCAPABILITIES_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_367fc5490f641a53521a809d3b81b462.html">Rendering</a></li><li class="navelem"><a class="el" href="dir_23624af54ccc8279f970897986a44585.html">Platform</a></li><li class="navelem"><a class="el" href="cg_d_x11_rendering_capabilities_8h.html">cgDX11RenderingCapabilities.h</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:47:52 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:27:51 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

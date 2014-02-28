@@ -29,6 +29,7 @@
 //-----------------------------------------------------------------------------
 #include <World/Objects/cgBoneObject.h>
 #include <World/Objects/cgCameraObject.h>
+#include <World/Objects/cgGroupObject.h>
 #include <World/Objects/Elements/cgCollisionShapeElement.h>
 #include <World/Objects/Elements/cgCapsuleCollisionShapeElement.h>
 #include <World/cgScene.h>
@@ -277,6 +278,10 @@ bool cgBoneObject::pick( cgCameraNode * camera, cgObjectNode * issuer, const cgS
 //-----------------------------------------------------------------------------
 void cgBoneObject::sandboxRender( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer )
 {
+    // Always draw bones if requested. Otherwise, only show them if it belongs to an open group (or no group at all)
+    if ( !(flags & cgSandboxRenderFlags::ShowBones) && issuer->getOwnerGroup() && !issuer->getOwnerGroup()->isOpen()  )
+        return;
+
     // ONLY post-clear rendering.
     if ( !(flags & cgSandboxRenderFlags::PostDepthClear) )
     {

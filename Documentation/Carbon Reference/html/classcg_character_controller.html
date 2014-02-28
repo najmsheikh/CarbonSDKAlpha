@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -294,6 +294,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3612e6d748950e49bf81a5c2c4268810"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a3612e6d748950e49bf81a5c2c4268810">navigateTo</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;position)</td></tr>
 <tr class="memdesc:a3612e6d748950e49bf81a5c2c4268810"><td class="mdescLeft">&#160;</td><td class="mdescRight">When navigation is enabled for this controller, use this method to request the object to autonomously navigate to the specified world space position if possible.  <a href="#a3612e6d748950e49bf81a5c2c4268810"></a><br/></td></tr>
 <tr class="separator:a3612e6d748950e49bf81a5c2c4268810"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cc4f5ec774ff7ce452b2d886d44af3a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a4cc4f5ec774ff7ce452b2d886d44af3a">navigateToAtRange</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;position, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> distance, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> initAngleOffset)</td></tr>
+<tr class="memdesc:a4cc4f5ec774ff7ce452b2d886d44af3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">When navigation is enabled for this controller, use this method to request the object autonomously navigate to any available point AT the specified distance away from the world space position if possible.  <a href="#a4cc4f5ec774ff7ce452b2d886d44af3a"></a><br/></td></tr>
+<tr class="separator:a4cc4f5ec774ff7ce452b2d886d44af3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47f41367371c60235cb22ee1a22df333"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#a47f41367371c60235cb22ee1a22df333">getNavigationTarget</a> () const </td></tr>
+<tr class="memdesc:a47f41367371c60235cb22ee1a22df333"><td class="mdescLeft">&#160;</td><td class="mdescRight">When navigation is enabled, this method can be used to determine the position to which the underlying agent is currently targeting.  <a href="#a47f41367371c60235cb22ee1a22df333"></a><br/></td></tr>
+<tr class="separator:a47f41367371c60235cb22ee1a22df333"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc270d7794d749f31b201a63212e5f18"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_character_controller.html#afc270d7794d749f31b201a63212e5f18">preStep</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> timeDelta)</td></tr>
 <tr class="memdesc:afc270d7794d749f31b201a63212e5f18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called just prior to the upcoming physics simulation step.  <a href="#afc270d7794d749f31b201a63212e5f18"></a><br/></td></tr>
 <tr class="separator:afc270d7794d749f31b201a63212e5f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1124,6 +1130,23 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a47f41367371c60235cb22ee1a22df333"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp; cgCharacterController::getNavigationTarget </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>When navigation is enabled, this method can be used to determine the position to which the underlying agent is currently targeting. </p>
+
+</div>
+</div>
 <a class="anchor" id="acb8370ecfa35f9de4d6f91a3a7a0cf59"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1286,6 +1309,40 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>When navigation is enabled for this controller, use this method to request the object to autonomously navigate to the specified world space position if possible. </p>
+
+</div>
+</div>
+<a class="anchor" id="a4cc4f5ec774ff7ce452b2d886d44af3a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgCharacterController::navigateToAtRange </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
+          <td class="paramname"><em>position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>distance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>initAngleOffset</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>When navigation is enabled for this controller, use this method to request the object autonomously navigate to any available point AT the specified distance away from the world space position if possible. </p>
 
 </div>
 </div>
@@ -2817,7 +2874,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_character_controller.html">cgCharacterController</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:17 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:01 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

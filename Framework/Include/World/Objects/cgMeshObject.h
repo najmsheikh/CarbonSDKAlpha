@@ -77,6 +77,7 @@ public:
     void                        setMesh                 ( const cgMeshHandle & mesh );
     cgMeshHandle                getMesh                 ( ) const;
     bool                        createBox               ( cgFloat width, cgFloat height, cgFloat depth, cgUInt32 widthSegments, cgUInt32 heightSegments, cgUInt32 depthSegments, bool inverted, cgMeshCreateOrigin::Base origin );
+    bool                        createBox               ( cgFloat width, cgFloat height, cgFloat depth, cgUInt32 widthSegments, cgUInt32 heightSegments, cgUInt32 depthSegments, cgFloat texUScale, cgFloat texVScale, bool inverted, cgMeshCreateOrigin::Base origin );
     bool                        createSphere            ( cgFloat radius, cgUInt32 stacks, cgUInt32 slices, bool inverted, cgMeshCreateOrigin::Base origin );
     bool                        createCylinder          ( cgFloat radius, cgFloat height, cgUInt32 stacks, cgUInt32 slices, bool inverted, cgMeshCreateOrigin::Base origin );
     bool                        createCapsule           ( cgFloat radius, cgFloat height, cgUInt32 stacks, cgUInt32 slices, bool inverted, cgMeshCreateOrigin::Base origin );
@@ -210,6 +211,10 @@ public:
     inline bool createBox( cgFloat width, cgFloat height, cgFloat depth, cgUInt32 widthSegments, cgUInt32 heightSegments, cgUInt32 depthSegments, bool inverted, cgMeshCreateOrigin::Base origin )
     {
         return ((cgMeshObject*)mReferencedObject)->createBox( width, height, depth, widthSegments, heightSegments, depthSegments, inverted, origin );
+    }
+    inline bool createBox( cgFloat width, cgFloat height, cgFloat depth, cgUInt32 widthSegments, cgUInt32 heightSegments, cgUInt32 depthSegments, cgFloat texUScale, cgFloat texVScale, bool inverted, cgMeshCreateOrigin::Base origin )
+    {
+        return ((cgMeshObject*)mReferencedObject)->createBox( width, height, depth, widthSegments, heightSegments, depthSegments, texUScale, texVScale, inverted, origin );
     }
     inline bool createSphere( cgFloat radius, cgUInt32 stacks, cgUInt32 slices, bool inverted, cgMeshCreateOrigin::Base origin )
     {

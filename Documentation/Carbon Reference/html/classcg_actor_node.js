@@ -13,6 +13,8 @@ var classcg_actor_node =
     [ "allocateClone", "classcg_actor_node.html#a9aa0efbdb9975f2bb184bdf78018d4c9", null ],
     [ "allocateNew", "classcg_actor_node.html#a2140761acb24d63db5d9106c84814529", null ],
     [ "dispose", "classcg_actor_node.html#adaf0b99dd2fc14331889450567ccf730", null ],
+    [ "enableSkeletonCollision", "classcg_actor_node.html#adf72acecd14ced3965436212b29d8866", null ],
+    [ "enableSkeletonCollision", "classcg_actor_node.html#a05fa4044f15ce007677b70df8457b065", null ],
     [ "generateActorSnapshot", "classcg_actor_node.html#ae61584ff64150f1ed4db61406cc9b7cd", null ],
     [ "getAnimationController", "classcg_actor_node.html#abd84cc930bff4bbdd6a25b24eebb0129", null ],
     [ "getAnimationSet", "classcg_actor_node.html#a8a49a87b70c75cba413bce2e7c2b46f1", null ],

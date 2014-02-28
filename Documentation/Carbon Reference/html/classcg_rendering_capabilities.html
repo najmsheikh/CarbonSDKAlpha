@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -152,8 +152,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac42d7d62e956d1393c2ef31bd6038e1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64ae7ee0a36b26ff3aecd9e2884c538b"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_rendering_capabilities.html#a64ae7ee0a36b26ff3aecd9e2884c538b">supportsShaderModel</a> (<a class="el" href="namespacecg_shader_model.html#a723bcb710fc1fce42e427d8158f86e48">cgShaderModel::Base</a> model) const =0</td></tr>
 <tr class="separator:a64ae7ee0a36b26ff3aecd9e2884c538b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae36c76739510a90fa16c81dca38144df"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_rendering_capabilities.html#ae36c76739510a90fa16c81dca38144df">getDisplayModes</a> (cgDisplayMode::Array &amp;modes) const =0</td></tr>
-<tr class="separator:ae36c76739510a90fa16c81dca38144df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a506bea58e180d25e91c8cc777df580b1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_rendering_capabilities.html#a506bea58e180d25e91c8cc777df580b1">requiresCursorEmulation</a> () const =0</td></tr>
+<tr class="separator:a506bea58e180d25e91c8cc777df580b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af81a2ca0072aefe89c111f6f36496a9a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_rendering_capabilities.html#af81a2ca0072aefe89c111f6f36496a9a">getAdapters</a> (cgAdapter::Array &amp;adapters) const =0</td></tr>
+<tr class="separator:af81a2ca0072aefe89c111f6f36496a9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7f136d3264b4e1536dcb62cecb35741"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_rendering_capabilities.html#ab7f136d3264b4e1536dcb62cecb35741">getDisplayModes</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> adapterOrdinal, cgDisplayMode::Array &amp;modes) const =0</td></tr>
+<tr class="separator:ab7f136d3264b4e1536dcb62cecb35741"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81c245cd1852adc2df733e1dd5e5293c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_rendering_capabilities.html#a81c245cd1852adc2df733e1dd5e5293c">dispose</a> (bool disposeBase)</td></tr>
 <tr class="memdesc:a81c245cd1852adc2df733e1dd5e5293c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any memory, references or resources allocated by this object.  <a href="#a81c245cd1852adc2df733e1dd5e5293c"></a><br/></td></tr>
 <tr class="separator:a81c245cd1852adc2df733e1dd5e5293c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -316,6 +320,30 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="af81a2ca0072aefe89c111f6f36496a9a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool cgRenderingCapabilities::getAdapters </td>
+          <td>(</td>
+          <td class="paramtype">cgAdapter::Array &amp;&#160;</td>
+          <td class="paramname"><em>adapters</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="aab20f5e68fc49fdc092f41a488638fd0"></a>
 <div class="memitem">
 <div class="memproto">
@@ -367,7 +395,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ae36c76739510a90fa16c81dca38144df"></a>
+<a class="anchor" id="ab7f136d3264b4e1536dcb62cecb35741"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -377,9 +405,19 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual bool cgRenderingCapabilities::getDisplayModes </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
+          <td class="paramname"><em>adapterOrdinal</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">cgDisplayMode::Array &amp;&#160;</td>
-          <td class="paramname"><em>modes</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramname"><em>modes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
   </td>
@@ -423,6 +461,29 @@ Protected Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">virtual <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> cgRenderingCapabilities::getMaxBlendTransforms </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a506bea58e180d25e91c8cc777df580b1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool cgRenderingCapabilities::requiresCursorEmulation </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -581,7 +642,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_rendering_capabilities.html">cgRenderingCapabilities</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:44 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:08 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

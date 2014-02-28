@@ -23,7 +23,7 @@
 // cApplication Module Includes
 //-----------------------------------------------------------------------------
 #include "cApplication.h"
-#include "Res/resource.h"
+#include "Main.h"
 
 //-----------------------------------------------------------------------------
 // Name : cApplication () (Constructor)

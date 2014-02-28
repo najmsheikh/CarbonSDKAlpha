@@ -134,6 +134,13 @@ struct CGEConfig
 
 }; // End struct CGEConfig
 
+// Contains the information relating to a sandbox mode change.
+struct cgSandboxModeChangeEventArgs
+{
+    cgSandboxMode::Base oldMode;
+    cgSandboxMode::Base newMode;
+};
+
 //-----------------------------------------------------------------------------
 // Global Function Declarations
 //-----------------------------------------------------------------------------

@@ -14,6 +14,7 @@ var classcg_landscape_texture_data =
     [ "filterPaintLayer", "classcg_landscape_texture_data.html#a9068d6e57cbd23029c21189017f5a93b", null ],
     [ "getBlendMapArea", "classcg_landscape_texture_data.html#a15c92c7a6b12a13fbd0c042fe8afa3ee", null ],
     [ "getBlendMapWorldArea", "classcg_landscape_texture_data.html#aec7e0ad45ffd9c0d07069ebfb8c30e04", null ],
+    [ "getLayers", "classcg_landscape_texture_data.html#ae8910a605d4f22b04451769379ef38ba", null ],
     [ "getPaintData", "classcg_landscape_texture_data.html#ad6267e8132615400cd830dc2050164eb", null ],
     [ "getPaintRectangle", "classcg_landscape_texture_data.html#a548aefaa734bd4a739485704bc8177da", null ],
     [ "isEmpty", "classcg_landscape_texture_data.html#a81044286b67f4de7753578864ec7e558", null ],

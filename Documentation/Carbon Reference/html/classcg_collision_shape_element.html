@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -164,6 +164,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aad32ac5c0032e07b8b5ce790e296502e"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_transform.html">cgTransform</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_collision_shape_element.html#aad32ac5c0032e07b8b5ce790e296502e">getTransform</a> () const </td></tr>
 <tr class="memdesc:aad32ac5c0032e07b8b5ce790e296502e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the parent relative (or offset) transform for this shape.  <a href="#aad32ac5c0032e07b8b5ce790e296502e"></a><br/></td></tr>
 <tr class="separator:aad32ac5c0032e07b8b5ce790e296502e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace39e615084bd1df2f7ebbe4ace0460d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_collision_shape_element.html#ace39e615084bd1df2f7ebbe4ace0460d">fitToBounds</a> (const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;bounds, <a class="el" href="classcg_collision_shape_element.html#a214e8c88caa87d62c7a89fc97c1822c6">AutoFitType</a> type)</td></tr>
+<tr class="memdesc:ace39e615084bd1df2f7ebbe4ace0460d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Regenerate the element so that it fits the specified bounds, along the specified auto fit axes.  <a href="#ace39e615084bd1df2f7ebbe4ace0460d"></a><br/></td></tr>
+<tr class="separator:ace39e615084bd1df2f7ebbe4ace0460d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92c85d45eeeeaabf920056bbae1f8720"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_collision_shape_element.html#a92c85d45eeeeaabf920056bbae1f8720">sandboxRender</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, <a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, const <a class="el" href="classcg_plane.html">cgPlane</a> &amp;gridPlane, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer)</td></tr>
 <tr class="memdesc:a92c85d45eeeeaabf920056bbae1f8720"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the sub element to render its 'sandbox' representation &ndash; that is the representation to be displayed within an editing environment assuming element editing for this type is active.  <a href="#a92c85d45eeeeaabf920056bbae1f8720"></a><br/></td></tr>
 <tr class="separator:a92c85d45eeeeaabf920056bbae1f8720"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -343,6 +346,8 @@ Protected Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a7bc16540456f5356381dc4374cb69de9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_bounding_box.html">cgBoundingBox</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_collision_shape_element.html#a7bc16540456f5356381dc4374cb69de9">mBounds</a></td></tr>
 <tr class="separator:a7bc16540456f5356381dc4374cb69de9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b100072de77146e676368f875193264"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_collision_shape_element.html#a5b100072de77146e676368f875193264">mBoundsOverride</a></td></tr>
+<tr class="separator:a5b100072de77146e676368f875193264"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6016d67fc85776e745958cce5e8d3ce1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_transform.html">cgTransform</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_collision_shape_element.html#a6016d67fc85776e745958cce5e8d3ce1">mTransform</a></td></tr>
 <tr class="separator:a6016d67fc85776e745958cce5e8d3ce1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6714eca9d1843b4504cc189a429abe90"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#aac27e59605e95cac10a13c9f3857f0c8">cgMeshHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_collision_shape_element.html#a6714eca9d1843b4504cc189a429abe90">mSandboxMesh</a></td></tr>
@@ -690,6 +695,34 @@ cgObjectSubElementTypeDesc::Map &amp;&#160;</td><td class="memItemRight" valign=
 <p>Reimplemented from <a class="el" href="classcg_object_sub_element.html#a1e79fd2c9990ee1b8ca9a51e294c68cb">cgObjectSubElement</a>.</p>
 
 <p>Reimplemented in <a class="el" href="classcg_capsule_collision_shape_element.html#a35ed06218b001121356e539b66753cf0">cgCapsuleCollisionShapeElement</a>, <a class="el" href="classcg_hull_collision_shape_element.html#ad4a6afbbe599b1d96eac94a3dedf5c9a">cgHullCollisionShapeElement</a>, <a class="el" href="classcg_box_collision_shape_element.html#ac6217823e8b3bcfbdbe9a74eff46a42d">cgBoxCollisionShapeElement</a>, <a class="el" href="classcg_cone_collision_shape_element.html#a3561ab63c8ffc137a645978be7fbe831">cgConeCollisionShapeElement</a>, <a class="el" href="classcg_cylinder_collision_shape_element.html#a5b1d04bbe2efa47d0cb5ddcd4c3a699e">cgCylinderCollisionShapeElement</a>, and <a class="el" href="classcg_sphere_collision_shape_element.html#a623de71c907ec6d42c96467ff9b4957e">cgSphereCollisionShapeElement</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ace39e615084bd1df2f7ebbe4ace0460d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgCollisionShapeElement::fitToBounds </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;&#160;</td>
+          <td class="paramname"><em>bounds</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcg_collision_shape_element.html#a214e8c88caa87d62c7a89fc97c1822c6">AutoFitType</a>&#160;</td>
+          <td class="paramname"><em>type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Regenerate the element so that it fits the specified bounds, along the specified auto fit axes. </p>
 
 </div>
 </div>
@@ -1149,6 +1182,26 @@ cgObjectSubElementTypeDesc::Map &amp;&#160;</td><td class="memItemRight" valign=
 
 </div>
 </div>
+<a class="anchor" id="a5b100072de77146e676368f875193264"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgCollisionShapeElement::mBoundsOverride</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a50c907684ed1011a3a97921bd7e697c9"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1259,7 +1312,7 @@ cgObjectSubElementTypeDesc::Map &amp;&#160;</td><td class="memItemRight" valign=
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_collision_shape_element.html">cgCollisionShapeElement</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:18 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:01 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -24,6 +24,7 @@ namespace Types
             BINDSUCCESS( engine->registerObjectType( "CollisionContact"     , sizeof(cgCollisionContact), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
 
             // Enumerations
+            BINDSUCCESS( engine->registerEnum( "DefaultPhysicsShape" ) );
             BINDSUCCESS( engine->registerEnum( "PhysicsModel" ) );
             BINDSUCCESS( engine->registerEnum( "SimulationQuality" ) );
             BINDSUCCESS( engine->registerEnum( "DefaultPhysicsMaterialGroup" ) );
@@ -35,9 +36,23 @@ namespace Types
             using namespace cgScriptInterop::Utils;
 
             ///////////////////////////////////////////////////////////////////////
+            // cgDefaultPhysicsShape (Enum)
+            ///////////////////////////////////////////////////////////////////////
+            const cgChar * typeName = "DefaultPhysicsShape";
+
+            // Register values
+            BINDSUCCESS( engine->registerEnumValue( typeName, "Auto"       , cgDefaultPhysicsShape::Auto ) );
+            BINDSUCCESS( engine->registerEnumValue( typeName, "Box"        , cgDefaultPhysicsShape::Box ) );
+            BINDSUCCESS( engine->registerEnumValue( typeName, "Sphere"     , cgDefaultPhysicsShape::Sphere ) );
+            BINDSUCCESS( engine->registerEnumValue( typeName, "Cylinder"   , cgDefaultPhysicsShape::Cylinder ) );
+            BINDSUCCESS( engine->registerEnumValue( typeName, "Cone"       , cgDefaultPhysicsShape::Cone ) );
+            BINDSUCCESS( engine->registerEnumValue( typeName, "Capsule"    , cgDefaultPhysicsShape::Capsule ) );
+            BINDSUCCESS( engine->registerEnumValue( typeName, "ConvexHull" , cgDefaultPhysicsShape::ConvexHull ) );
+
+            ///////////////////////////////////////////////////////////////////////
             // cgPhysicsModel (Enum)
             ///////////////////////////////////////////////////////////////////////
-            const cgChar * typeName = "PhysicsModel";
+            typeName = "PhysicsModel";
 
             // Register values
             BINDSUCCESS( engine->registerEnumValue( typeName, "None"         , cgPhysicsModel::None ) );

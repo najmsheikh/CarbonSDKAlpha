@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -196,8 +196,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad39dec80d30f42ab2ebf3df11d78bd3b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_behavior.html#ad39dec80d30f42ab2ebf3df11d78bd3b">onDetach</a> (<a class="el" href="classcg_object_node.html">cgObjectNode</a> *node)</td></tr>
 <tr class="memdesc:ad39dec80d30f42ab2ebf3df11d78bd3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method is triggered when the behavior is being detached from a parent object, usually through a call to <a class="el" href="classcg_object_behavior.html#ab9834ced23019ef34bd154945fe1c6c8" title="Call this function to update the controllers parent object. Note : This is a protected function...">setParentObject()</a>  <a href="#ad39dec80d30f42ab2ebf3df11d78bd3b"></a><br/></td></tr>
 <tr class="separator:ad39dec80d30f42ab2ebf3df11d78bd3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11fe3e006d62fea7b0d3e05158619d2b"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_behavior.html#a11fe3e006d62fea7b0d3e05158619d2b">processMessage</a> (<a class="el" href="classcg_message.html">cgMessage</a> *message)</td></tr>
-<tr class="separator:a11fe3e006d62fea7b0d3e05158619d2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae89c78f87f13be681c2866f8e9157dd5"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_behavior.html#ae89c78f87f13be681c2866f8e9157dd5">processMessage</a> (<a class="el" href="classcg_message.html">cgMessage</a> *message)</td></tr>
+<tr class="memdesc:ae89c78f87f13be681c2866f8e9157dd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process any messages sent to us from other objects, or other parts of the system via the reference messaging system (<a class="el" href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat...">cgReference</a>).  <a href="#ae89c78f87f13be681c2866f8e9157dd5"></a><br/></td></tr>
+<tr class="separator:ae89c78f87f13be681c2866f8e9157dd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76f21422cb869da876daea6c97770217"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_behavior.html#a76f21422cb869da876daea6c97770217">supportsInputChannels</a> () const </td></tr>
 <tr class="memdesc:a76f21422cb869da876daea6c97770217"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this behavior supports the reading of input channel states from its parent object in order to apply motion (rather than through direct force or velocity manipulation).  <a href="#a76f21422cb869da876daea6c97770217"></a><br/></td></tr>
 <tr class="separator:a76f21422cb869da876daea6c97770217"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -276,6 +277,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:ab9834ced23019ef34bd154945fe1c6c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_behavior.html#ab9834ced23019ef34bd154945fe1c6c8">setParentObject</a> (<a class="el" href="classcg_object_node.html">cgObjectNode</a> *parentNode)</td></tr>
 <tr class="memdesc:ab9834ced23019ef34bd154945fe1c6c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call this function to update the controllers parent object. Note : This is a protected function, and is called by the cgObjectNode::AddBehavior function when attaching this to an object.  <a href="#ab9834ced23019ef34bd154945fe1c6c8"></a><br/></td></tr>
 <tr class="separator:ab9834ced23019ef34bd154945fe1c6c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e38067b2bb53bffb3e5c2d8a2270f72"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_behavior.html#a4e38067b2bb53bffb3e5c2d8a2270f72">bindToScript</a> ()</td></tr>
+<tr class="memdesc:a4e38067b2bb53bffb3e5c2d8a2270f72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called internally to instantiate the relevant script object and to collect references to any provided behavior override methods.  <a href="#a4e38067b2bb53bffb3e5c2d8a2270f72"></a><br/></td></tr>
+<tr class="separator:a4e38067b2bb53bffb3e5c2d8a2270f72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -351,6 +355,31 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a4e38067b2bb53bffb3e5c2d8a2270f72"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgObjectBehavior::bindToScript </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called internally to instantiate the relevant script object and to collect references to any provided behavior override methods. </p>
+
+</div>
+</div>
 <a class="anchor" id="a4e226f22f3acc9fe49c698e71f428ca6"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1094,7 +1123,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a11fe3e006d62fea7b0d3e05158619d2b"></a>
+<a class="anchor" id="ae89c78f87f13be681c2866f8e9157dd5"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1102,7 +1131,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool cgObjectBehavior::processMessage </td>
+          <td class="memname">bool cgObjectBehavior::processMessage </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classcg_message.html">cgMessage</a> *&#160;</td>
           <td class="paramname"><em>message</em></td><td>)</td>
@@ -1111,10 +1140,12 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Process any messages sent to us from other objects, or other parts of the system via the reference messaging system (<a class="el" href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat...">cgReference</a>). </p>
 
 </div>
 </div>
@@ -1440,7 +1471,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_object_behavior.html">cgObjectBehavior</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:39 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:06 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

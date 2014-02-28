@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -103,6 +103,7 @@ $(document).ready(function(){initNavTree('classcg_navigation_mesh_element.html',
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
@@ -132,6 +133,13 @@ Inheritance diagram for cgNavigationMeshElement:</div>
 </map>
  </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a9c58d3f2aea4659dc4d2679017416998"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998">SandboxRenderMethod</a> { <a class="el" href="classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998a84d410ee1e5b25af1bd33d56b0dfb866">Hidden</a> = 0, 
+<a class="el" href="classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998a41e258f8e284f7643e5058214e049f78">ShowAll</a>
+ }</td></tr>
+<tr class="separator:a9c58d3f2aea4659dc4d2679017416998"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ac9011ff6966f01fdbef763d642fc4b83"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_mesh_element.html#ac9011ff6966f01fdbef763d642fc4b83">cgNavigationMeshElement</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> referenceId, <a class="el" href="classcg_scene.html">cgScene</a> *scene)</td></tr>
@@ -155,6 +163,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3d66835e4843a1c30f295a5202beddbe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_mesh_element.html#a3d66835e4843a1c30f295a5202beddbe">setParameters</a> (const <a class="el" href="structcg_navigation_mesh_create_params.html">cgNavigationMeshCreateParams</a> &amp;params, bool rebuild=false)</td></tr>
 <tr class="memdesc:a3d66835e4843a1c30f295a5202beddbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the creation parameters that describe how the navigation mesh should be generated based on current scene data. Specify 'true' to the 'rebuild' parameter to automatically rebuild the mesh immediately, or call '<a class="el" href="classcg_navigation_mesh_element.html#ab1ecfe15607a4227827243831ab0e7e9" title="Construct the navigation mesh based on the specified parameters. ">buildMesh()</a>' once all changes have been made.  <a href="#a3d66835e4843a1c30f295a5202beddbe"></a><br/></td></tr>
 <tr class="separator:a3d66835e4843a1c30f295a5202beddbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc815ebe1db50e9b54bff83167742ab6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_mesh_element.html#afc815ebe1db50e9b54bff83167742ab6">setSandboxRenderMethod</a> (<a class="el" href="classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998">SandboxRenderMethod</a> method)</td></tr>
+<tr class="memdesc:afc815ebe1db50e9b54bff83167742ab6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the approach used when rendering this navigation mesh element within the sandbox / world editor.  <a href="#afc815ebe1db50e9b54bff83167742ab6"></a><br/></td></tr>
+<tr class="separator:afc815ebe1db50e9b54bff83167742ab6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1ecfe15607a4227827243831ab0e7e9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_mesh_element.html#ab1ecfe15607a4227827243831ab0e7e9">buildMesh</a> ()</td></tr>
 <tr class="memdesc:ab1ecfe15607a4227827243831ab0e7e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the navigation mesh based on the specified parameters.  <a href="#ab1ecfe15607a4227827243831ab0e7e9"></a><br/></td></tr>
 <tr class="separator:ab1ecfe15607a4227827243831ab0e7e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,6 +179,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6555dce2a7525723ae6f7af1ea707759"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_navigation_handler.html">cgNavigationHandler</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_mesh_element.html#a6555dce2a7525723ae6f7af1ea707759">getNavigationHandler</a> () const </td></tr>
 <tr class="memdesc:a6555dce2a7525723ae6f7af1ea707759"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the navigation handler (crowd) that is responsible for managing the agents that will navigate this mesh.  <a href="#a6555dce2a7525723ae6f7af1ea707759"></a><br/></td></tr>
 <tr class="separator:a6555dce2a7525723ae6f7af1ea707759"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0f40f0a852672091748e06c20dd3c79"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998">SandboxRenderMethod</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_mesh_element.html#ac0f40f0a852672091748e06c20dd3c79">getSandboxRenderMethod</a> () const </td></tr>
+<tr class="memdesc:ac0f40f0a852672091748e06c20dd3c79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the approach used when rendering this navigation mesh element within the sandbox / world editor.  <a href="#ac0f40f0a852672091748e06c20dd3c79"></a><br/></td></tr>
+<tr class="separator:ac0f40f0a852672091748e06c20dd3c79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a246c19eb14e57919eebbe58c9cf2429d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_mesh_element.html#a246c19eb14e57919eebbe58c9cf2429d">update</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> timeDelta)</td></tr>
 <tr class="memdesc:a246c19eb14e57919eebbe58c9cf2429d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the element to perform any necessary updates during the scene's update process.  <a href="#a246c19eb14e57919eebbe58c9cf2429d"></a><br/></td></tr>
 <tr class="separator:a246c19eb14e57919eebbe58c9cf2429d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -324,6 +338,8 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
+<tr class="memitem:a52172f98c747e0b25ae58426e7f2a116"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998">SandboxRenderMethod</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_mesh_element.html#a52172f98c747e0b25ae58426e7f2a116">mSandboxRenderMethod</a></td></tr>
+<tr class="separator:a52172f98c747e0b25ae58426e7f2a116"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b9826d9187960ab3ce2689ed649547b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_navigation_mesh.html">cgNavigationMesh</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_mesh_element.html#a3b9826d9187960ab3ce2689ed649547b">mNavMesh</a></td></tr>
 <tr class="separator:a3b9826d9187960ab3ce2689ed649547b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4f1cb1b9ded1dc0add3be4d90c2c27b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_navigation_handler.html">cgNavigationHandler</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_navigation_mesh_element.html#ab4f1cb1b9ded1dc0add3be4d90c2c27b">mHandler</a></td></tr>
@@ -373,7 +389,28 @@ Static Protected Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that provides configuration and management of scene navigation data, exposed as a scene element type. This provides the integration between the application (such as the editing environment) and the relevant components of the navigation system. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Enumeration Documentation</h2>
+<a class="anchor" id="a9c58d3f2aea4659dc4d2679017416998"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998">cgNavigationMeshElement::SandboxRenderMethod</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" id="a9c58d3f2aea4659dc4d2679017416998a84d410ee1e5b25af1bd33d56b0dfb866"></a>Hidden</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a9c58d3f2aea4659dc4d2679017416998a41e258f8e284f7643e5058214e049f78"></a>ShowAll</em>&nbsp;</td><td>
+</td></tr>
+</table>
+</dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ac9011ff6966f01fdbef763d642fc4b83"></a>
 <div class="memitem">
 <div class="memproto">
@@ -627,6 +664,23 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented from <a class="el" href="classcg_scene_element.html#ae456e18bcddbea01c21cd5dda64b0e6e">cgSceneElement</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac0f40f0a852672091748e06c20dd3c79"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998">cgNavigationMeshElement::SandboxRenderMethod</a> cgNavigationMeshElement::getSandboxRenderMethod </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the approach used when rendering this navigation mesh element within the sandbox / world editor. </p>
 
 </div>
 </div>
@@ -969,6 +1023,24 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="afc815ebe1db50e9b54bff83167742ab6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgNavigationMeshElement::setSandboxRenderMethod </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998">SandboxRenderMethod</a>&#160;</td>
+          <td class="paramname"><em>method</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the approach used when rendering this navigation mesh element within the sandbox / world editor. </p>
+
+</div>
+</div>
 <a class="anchor" id="a246c19eb14e57919eebbe58c9cf2429d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1098,6 +1170,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a52172f98c747e0b25ae58426e7f2a116"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998">SandboxRenderMethod</a> cgNavigationMeshElement::mSandboxRenderMethod</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="ab414bd4c00abd2d621c6c57032654e05"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1128,7 +1220,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_navigation_mesh_element.html">cgNavigationMeshElement</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:37 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:06 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

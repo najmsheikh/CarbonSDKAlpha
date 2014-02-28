@@ -25,6 +25,7 @@
 // cgPhysicsTypes Header Includes
 //-----------------------------------------------------------------------------
 #include <cgBaseTypes.h>
+#include <Math/cgTransform.h>
 
 //-----------------------------------------------------------------------------
 // Forward Declarations
@@ -46,6 +47,21 @@ namespace cgPhysicsModel
     };
 
 }; // End Namespace : cgPhysicsModel
+
+namespace cgDefaultPhysicsShape
+{
+    enum Base
+    {
+        Auto = 0,
+        Box,
+        Sphere,
+        Cylinder,
+        Cone,
+        Capsule,
+        ConvexHull
+    };
+
+}; // End Namespace : cgDefaultPhysicsShape
 
 namespace cgSimulationQuality
 {

@@ -1,8 +1,8 @@
 var cg_vector_8h =
 [
-    [ "cgVector4", "classcg_vector4.html", "classcg_vector4" ],
-    [ "cgVector3", "classcg_vector3.html", "classcg_vector3" ],
     [ "cgVector2", "classcg_vector2.html", "classcg_vector2" ],
+    [ "cgVector3", "classcg_vector3.html", "classcg_vector3" ],
+    [ "cgVector4", "classcg_vector4.html", "classcg_vector4" ],
     [ "_CGE_CGVECTOR_H_", "cg_vector_8h.html#a34b496ed5884919949662e1457f58076", null ],
     [ "WIN32_LEAN_AND_MEAN", "cg_vector_8h.html#ac7bef5d85e3dcd73eef56ad39ffc84a9", null ],
     [ "operator*", "cg_vector_8h.html#a752807c855e4131c0575f16987366def", null ],

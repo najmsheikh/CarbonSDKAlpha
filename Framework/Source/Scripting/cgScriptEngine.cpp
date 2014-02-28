@@ -169,7 +169,7 @@ void cgScriptEngine::messageCallback(const asSMessageInfo *msg, void *param )
     // Build output message.
     STRING_CONVERT; // For string conversion
     const cgTChar * strMessageType = _T("Error  ");
-    cgUInt32        nType          = cgAppLog::Debug | cgAppLog::Error;
+    cgUInt32        nType          = cgAppLog::Error;
 
     // Determine the message type
     if ( msg->type == asMSGTYPE_WARNING ) 
@@ -177,7 +177,7 @@ void cgScriptEngine::messageCallback(const asSMessageInfo *msg, void *param )
         if ( !((cgScriptEngine*)param)->mOutputWarnings )
             return;
         strMessageType = _T("Warning");
-        nType          = cgAppLog::Debug | cgAppLog::Warning;
+        nType          = cgAppLog::Warning;
     }
     else if( msg->type == asMSGTYPE_INFORMATION ) 
     {

@@ -1,5 +1,9 @@
 var classcg_navigation_mesh_element =
 [
+    [ "SandboxRenderMethod", "classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998", [
+      [ "Hidden", "classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998a84d410ee1e5b25af1bd33d56b0dfb866", null ],
+      [ "ShowAll", "classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998a41e258f8e284f7643e5058214e049f78", null ]
+    ] ],
     [ "cgNavigationMeshElement", "classcg_navigation_mesh_element.html#ac9011ff6966f01fdbef763d642fc4b83", null ],
     [ "~cgNavigationMeshElement", "classcg_navigation_mesh_element.html#aea0a3943bbc141052ef1910ff14c69c1", null ],
     [ "allocateNew", "classcg_navigation_mesh_element.html#a6a32d310b96ab348811a6f505b0e7e53", null ],
@@ -10,6 +14,7 @@ var classcg_navigation_mesh_element =
     [ "getNavigationHandler", "classcg_navigation_mesh_element.html#a6555dce2a7525723ae6f7af1ea707759", null ],
     [ "getParameters", "classcg_navigation_mesh_element.html#a920ddaee645e7b5d15c502aedb2a61d1", null ],
     [ "getReferenceType", "classcg_navigation_mesh_element.html#ad7dca21901db96d0dddd279e96c6894a", null ],
+    [ "getSandboxRenderMethod", "classcg_navigation_mesh_element.html#ac0f40f0a852672091748e06c20dd3c79", null ],
     [ "insertComponentData", "classcg_navigation_mesh_element.html#a303e320cecafb4583245c536d62fb7ea", null ],
     [ "onComponentCreated", "classcg_navigation_mesh_element.html#ac008bab42b98a3ff32a5b3b0d74556d0", null ],
     [ "onComponentDeleted", "classcg_navigation_mesh_element.html#a6f86c9f95681316bf323695a17277be7", null ],
@@ -22,11 +27,13 @@ var classcg_navigation_mesh_element =
     [ "setAgentMaximumStepHeight", "classcg_navigation_mesh_element.html#a6e004ca529781dbec2bd8c1b3cb71676", null ],
     [ "setAgentRadius", "classcg_navigation_mesh_element.html#a31f3422538a2e1c35cedcd8b047b7f90", null ],
     [ "setParameters", "classcg_navigation_mesh_element.html#a3d66835e4843a1c30f295a5202beddbe", null ],
+    [ "setSandboxRenderMethod", "classcg_navigation_mesh_element.html#afc815ebe1db50e9b54bff83167742ab6", null ],
     [ "update", "classcg_navigation_mesh_element.html#a246c19eb14e57919eebbe58c9cf2429d", null ],
     [ "mHandler", "classcg_navigation_mesh_element.html#ab4f1cb1b9ded1dc0add3be4d90c2c27b", null ],
     [ "mInsertMeshParams", "classcg_navigation_mesh_element.html#ac328fb08e7d125c71847852a8cb18c3f", null ],
     [ "mLoadMeshParams", "classcg_navigation_mesh_element.html#afad6a315f51c117a97fe167ba87dfbf5", null ],
     [ "mNavMesh", "classcg_navigation_mesh_element.html#a3b9826d9187960ab3ce2689ed649547b", null ],
     [ "mParams", "classcg_navigation_mesh_element.html#a23221a81aace18c8186d1245fe088462", null ],
+    [ "mSandboxRenderMethod", "classcg_navigation_mesh_element.html#a52172f98c747e0b25ae58426e7f2a116", null ],
     [ "mUpdateMeshParams", "classcg_navigation_mesh_element.html#ab414bd4c00abd2d621c6c57032654e05", null ]
 ];

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -161,10 +161,11 @@ Enumerations</h2></td></tr>
 <tr class="memitem:a6ae3c390692254f8778ab5ebc0765be0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_text_flags.html#a6ae3c390692254f8778ab5ebc0765be0">cgTextFlags::Base</a> { <br/>
 &#160;&#160;<a class="el" href="namespacecg_text_flags.html#a6ae3c390692254f8778ab5ebc0765be0afc15958aaf97f88c668b2ba457922d50">cgTextFlags::ClipRectangle</a> = 0x1, 
 <a class="el" href="namespacecg_text_flags.html#a6ae3c390692254f8778ab5ebc0765be0a2ea669b4a6e95c60afe59d43a0941b96">cgTextFlags::Multiline</a> = 0x2, 
+<a class="el" href="namespacecg_text_flags.html#a6ae3c390692254f8778ab5ebc0765be0a54275cd7f498f0e3bb100a2fa1c39345">cgTextFlags::NoWrap</a> = 0x4, 
 <a class="el" href="namespacecg_text_flags.html#a6ae3c390692254f8778ab5ebc0765be0a62198b7ae418afc6092bf6e5162e8807">cgTextFlags::AlignCenter</a> = 0x10, 
-<a class="el" href="namespacecg_text_flags.html#a6ae3c390692254f8778ab5ebc0765be0ad887f15d1dc32e99bac02cad5308431c">cgTextFlags::AlignRight</a> = 0x20, 
 <br/>
-&#160;&#160;<a class="el" href="namespacecg_text_flags.html#a6ae3c390692254f8778ab5ebc0765be0ab5a604bcf54a984962f16954bef4aafb">cgTextFlags::VAlignCenter</a> = 0x40, 
+&#160;&#160;<a class="el" href="namespacecg_text_flags.html#a6ae3c390692254f8778ab5ebc0765be0ad887f15d1dc32e99bac02cad5308431c">cgTextFlags::AlignRight</a> = 0x20, 
+<a class="el" href="namespacecg_text_flags.html#a6ae3c390692254f8778ab5ebc0765be0ab5a604bcf54a984962f16954bef4aafb">cgTextFlags::VAlignCenter</a> = 0x40, 
 <a class="el" href="namespacecg_text_flags.html#a6ae3c390692254f8778ab5ebc0765be0aaf7441fc7975cf3786ea201ba5b502d5">cgTextFlags::VAlignBottom</a> = 0x80, 
 <a class="el" href="namespacecg_text_flags.html#a6ae3c390692254f8778ab5ebc0765be0aae5a91c70a651708c1321f170a8431e9">cgTextFlags::AllowFormatCode</a> = 0x100
 <br/>
@@ -187,7 +188,8 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="separator:a7fd84dbaac4b48e73b5cd30890bedf38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a228ffc83974ad6052465452c293fa4fb"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_u_i_layer_type.html#a228ffc83974ad6052465452c293fa4fb">cgUILayerType::Base</a> { <a class="el" href="namespacecg_u_i_layer_type.html#a228ffc83974ad6052465452c293fa4fba9309a8dd11ac4bcc82e4c65aa1857d1d">cgUILayerType::UserLayer</a> = 0, 
-<a class="el" href="namespacecg_u_i_layer_type.html#a228ffc83974ad6052465452c293fa4fba7b12b16e40d48d2423229b0b7fc5fb6b">cgUILayerType::SystemLayer</a> = 1
+<a class="el" href="namespacecg_u_i_layer_type.html#a228ffc83974ad6052465452c293fa4fba663f14b68f259cbb6404c17e80cce7bd">cgUILayerType::TopMostLayer</a> = 1, 
+<a class="el" href="namespacecg_u_i_layer_type.html#a228ffc83974ad6052465452c293fa4fba7b12b16e40d48d2423229b0b7fc5fb6b">cgUILayerType::SystemLayer</a> = 2
  }</td></tr>
 <tr class="separator:a228ffc83974ad6052465452c293fa4fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8814bb2fefce9a15e4a9e009aae677a6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_u_i_handle_type.html#a8814bb2fefce9a15e4a9e009aae677a6">cgUIHandleType::Base</a> { <br/>
@@ -205,7 +207,8 @@ Enumerations</h2></td></tr>
 <br/>
  }</td></tr>
 <tr class="separator:a8814bb2fefce9a15e4a9e009aae677a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2b82fc18350441afe405908f998af40"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_u_i_form_style.html#aa2b82fc18350441afe405908f998af40">cgUIFormStyle::Base</a> { <a class="el" href="namespacecg_u_i_form_style.html#aa2b82fc18350441afe405908f998af40ac4a355a4a45d271ce857494f4cdd420c">cgUIFormStyle::Overlapped</a> = 0
+<tr class="memitem:aa2b82fc18350441afe405908f998af40"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_u_i_form_style.html#aa2b82fc18350441afe405908f998af40">cgUIFormStyle::Base</a> { <a class="el" href="namespacecg_u_i_form_style.html#aa2b82fc18350441afe405908f998af40ac4a355a4a45d271ce857494f4cdd420c">cgUIFormStyle::Overlapped</a> = 0, 
+<a class="el" href="namespacecg_u_i_form_style.html#aa2b82fc18350441afe405908f998af40a56e398dd0f70231e4a238ca5ff83fcb5">cgUIFormStyle::Invisible</a> = 1
  }</td></tr>
 <tr class="separator:aa2b82fc18350441afe405908f998af40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc254d1a59e364ec3f53d1e4fb0b4c0a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_horizontal_alignment.html#afc254d1a59e364ec3f53d1e4fb0b4c0a">cgHorizontalAlignment::Base</a> { <a class="el" href="namespacecg_horizontal_alignment.html#afc254d1a59e364ec3f53d1e4fb0b4c0aae9ad30da090f3f4f2fdfa5c3764bf198">cgHorizontalAlignment::Left</a> = 0, 
@@ -253,7 +256,7 @@ Enumerations</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_ffcb1a4721a645d0b89dc3720494ffda.html">Interface</a></li><li class="navelem"><a class="el" href="cg_u_i_types_8h.html">cgUITypes.h</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:08 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:27:58 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

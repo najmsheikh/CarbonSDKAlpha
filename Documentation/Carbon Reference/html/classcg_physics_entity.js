@@ -4,6 +4,7 @@ var classcg_physics_entity =
     [ "~cgPhysicsEntity", "classcg_physics_entity.html#a94e284eb58d28345d94d10e2b7f5f898", null ],
     [ "clearForces", "classcg_physics_entity.html#a0190516df1575dc742d9da919579c77d", null ],
     [ "dispose", "classcg_physics_entity.html#a244be64d1a68d927ffdf37be7d5e9a4a", null ],
+    [ "getPhysicsWorld", "classcg_physics_entity.html#a95354af1cfa309c66cdd9915d226f19c", null ],
     [ "getReferenceType", "classcg_physics_entity.html#ae390195e57525c23732160d4e98337d7", null ],
     [ "getTransform", "classcg_physics_entity.html#a1ccc5a2e156492693e46a2ddc7afa987", null ],
     [ "queryReferenceType", "classcg_physics_entity.html#ab3baf140034491f4b45f7a29641635a8", null ],

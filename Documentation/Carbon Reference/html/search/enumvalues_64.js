@@ -23,6 +23,7 @@ var searchData=
   ['data',['Data',['../namespacecg_world_type.html#ae25700bef3e243c265450227a0ceb796a685a9d6a57b7b48dd0303f2c578f9938',1,'cgWorldType']]],
   ['datainstance',['DataInstance',['../namespacecg_clone_method.html#a9c3d9d845b3fb56c57f151799de5b4fea7ef192a3b5d1a81df69375163ae8c15f',1,'cgCloneMethod']]],
   ['debug',['Debug',['../classcg_app_log.html#a4f23012a29495ee0f69a95f4c499726ca6d612b37c667699d1c653e0ad051d2e9',1,'cgAppLog']]],
+  ['decimeters',['Decimeters',['../namespacecg_unit_type.html#a3cddff019459e19bbec2d48d5887ea46aa74e5229841d46eebbe7ba25995817cb',1,'cgUnitType']]],
   ['declaration',['Declaration',['../namespacecg_x_m_l_tokens.html#a8f956909b7acf6dc9df33c64ae4cef5aaffbf60f407131267e79c29f7fca8de19',1,'cgXMLTokens']]],
   ['decodesrgb',['DecodeSRGB',['../classcg_render_driver.html#a277e73b233f4d3d8aec4a7e18b7432dbad087b1288cff404cc89acb2d5224d114',1,'cgRenderDriver::DecodeSRGB()'],['../namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8aa576a5f33ff4657918ed9e0865b0f291',1,'cgSystemState::DecodeSRGB()']]],
   ['decr',['Decr',['../namespacecg_stencil_operation.html#ad20a21b804457c5d7d2d7eb2c1de2f96a584ae0c50d76dfdc0069773436e8053d',1,'cgStencilOperation']]],

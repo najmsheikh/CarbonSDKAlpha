@@ -1,8 +1,15 @@
 var cg_resource_manager_8h =
 [
+    [ "cgResourceUpdateEventArgs", "structcg_resource_update_event_args.html", "structcg_resource_update_event_args" ],
+    [ "cgResourceManagerEventListener", "classcg_resource_manager_event_listener.html", "classcg_resource_manager_event_listener" ],
     [ "cgResourceManager", "classcg_resource_manager.html", "classcg_resource_manager" ],
     [ "InitConfig", "structcg_resource_manager_1_1_init_config.html", "structcg_resource_manager_1_1_init_config" ],
     [ "MaterialKey", "structcg_resource_manager_1_1_material_key.html", "structcg_resource_manager_1_1_material_key" ],
+    [ "ShaderKey", "structcg_resource_manager_1_1_shader_key.html", "structcg_resource_manager_1_1_shader_key" ],
+    [ "SamplerStateKey", "structcg_resource_manager_1_1_sampler_state_key.html", "structcg_resource_manager_1_1_sampler_state_key" ],
+    [ "DepthStencilStateKey", "structcg_resource_manager_1_1_depth_stencil_state_key.html", "structcg_resource_manager_1_1_depth_stencil_state_key" ],
+    [ "RasterizerStateKey", "structcg_resource_manager_1_1_rasterizer_state_key.html", "structcg_resource_manager_1_1_rasterizer_state_key" ],
+    [ "BlendStateKey", "structcg_resource_manager_1_1_blend_state_key.html", "structcg_resource_manager_1_1_blend_state_key" ],
     [ "_CGE_CGRESOURCEMANAGER_H_", "cg_resource_manager_8h.html#a0c7bab4c8bedc302d1a3925b50c9a391", null ],
     [ "operator<", "cg_resource_manager_8h.html#a9ea640587fc3bb0cbd237a6fc44a2714", null ],
     [ "operator<", "cg_resource_manager_8h.html#a8972b33cb118e3483a16ad2448750086", null ],

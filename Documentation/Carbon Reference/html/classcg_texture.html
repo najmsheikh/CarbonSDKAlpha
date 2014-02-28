@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -196,6 +196,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a00791c542cc5151e4a8859adc058c9b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae11fea8415f4f943f359049f45e7b6d1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_texture.html#ae11fea8415f4f943f359049f45e7b6d1">updateMipLevels</a> ()=0</td></tr>
 <tr class="separator:ae11fea8415f4f943f359049f45e7b6d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a067c2215268df54e1565885b04ba39"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_texture.html#a2a067c2215268df54e1565885b04ba39">clone</a> (<a class="el" href="classcg_texture.html">cgTexture</a> *destinationTexture, const <a class="el" href="structcg_rect.html">cgRect</a> &amp;sourceRectangle, const <a class="el" href="structcg_rect.html">cgRect</a> &amp;destinationRectangle)=0</td></tr>
+<tr class="separator:a2a067c2215268df54e1565885b04ba39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a031a6b378df1caa22a10ff0357d82b16"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_texture.html#a031a6b378df1caa22a10ff0357d82b16">loadResource</a> ()</td></tr>
 <tr class="memdesc:a031a6b378df1caa22a10ff0357d82b16"><td class="mdescLeft">&#160;</td><td class="mdescRight">If deferred loading is employed, load the underlying resources.  <a href="#a031a6b378df1caa22a10ff0357d82b16"></a><br/></td></tr>
 <tr class="separator:a031a6b378df1caa22a10ff0357d82b16"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,6 +238,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab570671b2bf5d7f8c3e2c9508b02eaa6 inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0e9c746739983ecfbbe25eb9c4efdb1 inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_resource_type.html#ab3ea99a2ba657fda52b52d2d23099ed9">cgResourceType::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#ae0e9c746739983ecfbbe25eb9c4efdb1">getResourceType</a> () const </td></tr>
 <tr class="separator:ae0e9c746739983ecfbbe25eb9c4efdb1 inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f078bb6adfd44214d893a31b6bfc68b inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_stream_type.html#a51fb2dd6b8e37d239ef6a4e5167f8956">cgStreamType::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#a1f078bb6adfd44214d893a31b6bfc68b">getStreamType</a> () const </td></tr>
+<tr class="separator:a1f078bb6adfd44214d893a31b6bfc68b inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01b0d6309f1cfe4f75648bc5c1f5e228 inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource_manager.html">cgResourceManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#a01b0d6309f1cfe4f75648bc5c1f5e228">getManager</a> () const </td></tr>
 <tr class="separator:a01b0d6309f1cfe4f75648bc5c1f5e228 inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a470d6c37c04beb8c53f75919541bfe2b inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#a470d6c37c04beb8c53f75919541bfe2b">canEvict</a> () const </td></tr>
@@ -587,6 +591,46 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a2a067c2215268df54e1565885b04ba39"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool cgTexture::clone </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_texture.html">cgTexture</a> *&#160;</td>
+          <td class="paramname"><em>destinationTexture</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_rect.html">cgRect</a> &amp;&#160;</td>
+          <td class="paramname"><em>sourceRectangle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_rect.html">cgRect</a> &amp;&#160;</td>
+          <td class="paramname"><em>destinationRectangle</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="abab1cc34378817357dac5baef542b6a8"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1414,7 +1458,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_texture.html">cgTexture</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:55 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:12 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -43,6 +43,7 @@ var classcg_surface_shader =
     [ "getPixelShader", "classcg_surface_shader.html#adb878e6b48b6419584f8dbd7e157804c", null ],
     [ "getPixelShader", "classcg_surface_shader.html#aa15f6baf97278dcb0d04519802e62094", null ],
     [ "getReferenceType", "classcg_surface_shader.html#aef6b0862fe7700a2081e6d5a337855f3", null ],
+    [ "getShaderIdentifier", "classcg_surface_shader.html#a898b88f3678a80bf9d9c075fa406495a", null ],
     [ "getTechnique", "classcg_surface_shader.html#ae1d0503eabe945ca82afa3d14879c95e", null ],
     [ "getValue", "classcg_surface_shader.html#a3c372f60627593bc6715366f00cd3e74", null ],
     [ "getVector", "classcg_surface_shader.html#ad2b031b4d84226629013fe7110de7ac1", null ],

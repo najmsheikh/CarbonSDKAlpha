@@ -592,10 +592,14 @@ const cgVector3 & cgCharacterController::getNavigationTarget( ) const
 void cgCharacterController::preStep( cgFloat timeDelta )
 {
     // Call into the correct pre-step method.
-    if ( mPlayerControlled )
-        preStepPlayer( timeDelta );
-    else
-        preStepNPC( timeDelta );
+    if ( mBody )
+    {
+        if ( mPlayerControlled )
+            preStepPlayer( timeDelta );
+        else
+            preStepNPC( timeDelta );
+    
+    } // End if initialized
 
     // Call base class implementation.
     cgPhysicsController::preStep( timeDelta );
@@ -922,10 +926,14 @@ void cgCharacterController::preStepNPC( cgFloat timeDelta )
 void cgCharacterController::postStep( cgFloat timeDelta )
 {
     // Call into the correct post-step method.
-    if ( mPlayerControlled )
-        postStepPlayer( timeDelta );
-    else
-        postStepNPC( timeDelta );
+    if ( mBody )
+    {
+        if ( mPlayerControlled )
+            postStepPlayer( timeDelta );
+        else
+            postStepNPC( timeDelta );
+    
+    } // End if initialized
 
     // Call base class implementation.
     cgPhysicsController::postStep( timeDelta );

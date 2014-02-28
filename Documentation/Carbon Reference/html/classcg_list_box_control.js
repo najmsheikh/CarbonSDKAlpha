@@ -4,6 +4,7 @@ var classcg_list_box_control =
     [ "cgListBoxControl", "classcg_list_box_control.html#a4236b310043f145253118fc9f333cff8", null ],
     [ "~cgListBoxControl", "classcg_list_box_control.html#a8008988a4cff141b077955945f4f91c5", null ],
     [ "addItem", "classcg_list_box_control.html#a325cbf339d3d7ab3ced34d9d8891f25d", null ],
+    [ "clear", "classcg_list_box_control.html#aa3426f723411081c88249c099ea9f92e", null ],
     [ "computeTextMetrics", "classcg_list_box_control.html#a38b349b6a004a7f9249c439fc96decbb", null ],
     [ "dispose", "classcg_list_box_control.html#ab2a113063b9bbb27a0ea6ea1af022457", null ],
     [ "getItemArea", "classcg_list_box_control.html#aa86a45702e70cc9b06c6f66d8f7775bf", null ],

@@ -257,6 +257,17 @@ void cgScene::dispose( bool disposeBase )
     mElements.clear();
     mElementTypes.clear();
 
+    // If there is a scene tree, record the visibility sets
+    // that were still alive after all nodes were destroyed.
+    // We may need this information if the tree is to be 
+    // reconstituted.
+    if ( mSceneTree )
+    {
+        const cgSphereTree::VisibilitySetArray & sets = mSceneTree->getVisibilitySets();
+        mOrphanVisSets = sets;
+    
+    } // End if has tree
+
     // Destroy scene tree.
     if ( mSceneTree )
         mSceneTree->scriptSafeDispose();
@@ -279,6 +290,7 @@ void cgScene::dispose( bool disposeBase )
     mCells.clear();
     mObjectNodeTypes.clear();
     mObjectNodes.clear();
+    mRootNodes.clear();
     mNameUsage.clear();
     mSelectedNodes.clear();
     mSelectedNodesOrdered.clear();
@@ -326,14 +338,18 @@ bool cgScene::processMessage( cgMessage * message )
     {
         case cgSystemMessages::Resources_ReloadScripts:
 
-            // Recreate the scripted render control class. There is no
-            // need to reload the script because the resource manager
-            // will already have taken care of that aspect.
-            reloadRenderControl( false );
-            
-            // Processed message
-            return true;
-    
+            // Has our script been reloaded?
+            if ( mRenderScript.isValid() && (!message->messageData || *(cgUInt32*)message->messageData == mRenderScript.getReferenceId()) )
+            {
+                // Recreate the scripted render control class. There is no
+                // need to reload the script because the resource manager
+                // will already have taken care of that aspect.
+                reloadRenderControl( false );
+
+            } // End if our script
+   
+            break;
+
     } // End message type switch
     
     // Message was not processed, pass to base.
@@ -458,7 +474,10 @@ bool cgScene::reload( )
     mUpdatingEnabled = oldUpdating;
 
     // Reload the scene
-    return load();
+    bool result = load();
+    
+    // We're done.
+    return result;
 }
 
 //-----------------------------------------------------------------------------
@@ -514,6 +533,11 @@ bool cgScene::load( )
     // Allocate scene tree data
     mStaticVisTree = new cgBSPTree();
     mSceneTree = new cgSphereTree( 10000, 5, 0.6f, mStaticVisTree ); // TODO: Tailor sizes.
+
+    // Re-add any orphan visibility sets to the scene tree that may exist (during reloading).
+    for ( size_t i = 0; i < mOrphanVisSets.size(); ++i )
+        mSceneTree->addVisibilitySet( mOrphanVisSets[i] );
+    mOrphanVisSets.clear();
 
     // Create and initialize a new physics world for this scene
     mPhysicsWorld = physics->createWorld( );

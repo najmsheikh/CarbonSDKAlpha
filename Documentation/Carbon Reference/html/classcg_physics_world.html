@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -198,6 +198,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a763d2d123414e0415765ef5b5190a252"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#a763d2d123414e0415765ef5b5190a252">getDefaultMaterialGroupId</a> (<a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181">cgDefaultPhysicsMaterialGroup::Base</a> group) const </td></tr>
 <tr class="memdesc:a763d2d123414e0415765ef5b5190a252"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the material group id of the specified default material group that will be automatically assigned (by default) to certain types of objects in the world.  <a href="#a763d2d123414e0415765ef5b5190a252"></a><br/></td></tr>
 <tr class="separator:a763d2d123414e0415765ef5b5190a252"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1aeaca2c7c294f82dd1db4cb46f16541"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#a1aeaca2c7c294f82dd1db4cb46f16541">createMaterialGroup</a> ()</td></tr>
+<tr class="memdesc:a1aeaca2c7c294f82dd1db4cb46f16541"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new custom physics material group to which bodies can be assigned.  <a href="#a1aeaca2c7c294f82dd1db4cb46f16541"></a><br/></td></tr>
+<tr class="separator:a1aeaca2c7c294f82dd1db4cb46f16541"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc13f60e993a8d490caf1c39e4785330"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#acc13f60e993a8d490caf1c39e4785330">enableMaterialCollision</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> group1, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> group2, bool collidable)</td></tr>
+<tr class="memdesc:acc13f60e993a8d490caf1c39e4785330"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable / disable collision between bodies belonging to specified material groups.  <a href="#acc13f60e993a8d490caf1c39e4785330"></a><br/></td></tr>
+<tr class="separator:acc13f60e993a8d490caf1c39e4785330"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad48404f97d9eeeb2cc6b44146532baea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#ad48404f97d9eeeb2cc6b44146532baea">toPhysicsScale</a> () const </td></tr>
 <tr class="separator:ad48404f97d9eeeb2cc6b44146532baea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fb6d0b143ed65005a08a568466a64bf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_world.html#a4fb6d0b143ed65005a08a568466a64bf">fromPhysicsScale</a> () const </td></tr>
@@ -445,6 +451,23 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a1aeaca2c7c294f82dd1db4cb46f16541"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> cgPhysicsWorld::createMaterialGroup </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create a new custom physics material group to which bodies can be assigned. </p>
+
+</div>
+</div>
 <a class="anchor" id="aaa4a0ff4b6a927b1be9cfa122f2d6d69"></a>
 <div class="memitem">
 <div class="memproto">
@@ -470,6 +493,40 @@ Protected Attributes</h2></td></tr>
 <p>Release any resources allocated by the physics world. </p>
 
 <p>Reimplemented from <a class="el" href="classcg_event_dispatcher.html#ac05ce05aae448863ede19d9543c04fc9">cgEventDispatcher</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="acc13f60e993a8d490caf1c39e4785330"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgPhysicsWorld::enableMaterialCollision </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
+          <td class="paramname"><em>group1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
+          <td class="paramname"><em>group2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>collidable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable / disable collision between bodies belonging to specified material groups. </p>
 
 </div>
 </div>
@@ -1402,7 +1459,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_physics_world.html">cgPhysicsWorld</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:41 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:07 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

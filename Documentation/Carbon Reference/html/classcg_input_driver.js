@@ -5,7 +5,7 @@ var classcg_input_driver =
     [ "~cgInputDriver", "classcg_input_driver.html#a83185fa82a0c9740c9033fb98652be6c", null ],
     [ "createSingleton", "classcg_input_driver.html#a6668af87b008e929f37d939b77eab8b4", null ],
     [ "destroySingleton", "classcg_input_driver.html#a4dbb22659e3afb6bac591b324ee3086d", null ],
-    [ "Dispose", "classcg_input_driver.html#af4869c931a73d14ee3d370d7834dbe09", null ],
+    [ "dispose", "classcg_input_driver.html#af704b16f2bc093e24e4842ae8bac8a0e", null ],
     [ "getConfig", "classcg_input_driver.html#a141975c6ad58d6ac6c94717135784653", null ],
     [ "getCursorPosition", "classcg_input_driver.html#a3d9a51e673ca8a4059c386da89e5be87", null ],
     [ "getInstance", "classcg_input_driver.html#a83360cac64d0921a692350d840cb8f0d", null ],

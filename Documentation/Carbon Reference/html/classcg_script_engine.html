@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -135,6 +135,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2de941eb8605a6196e64a9185555c670"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_engine.html#a2de941eb8605a6196e64a9185555c670">initialize</a> ()</td></tr>
 <tr class="memdesc:a2de941eb8605a6196e64a9185555c670"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the scripting engine.  <a href="#a2de941eb8605a6196e64a9185555c670"></a><br/></td></tr>
 <tr class="separator:a2de941eb8605a6196e64a9185555c670"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd059322fad7791b5653a37848f84d46"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_engine.html#afd059322fad7791b5653a37848f84d46">outputScriptWarnings</a> (bool enable)</td></tr>
+<tr class="memdesc:afd059322fad7791b5653a37848f84d46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable / disable the output of warnings during script compilation.  <a href="#afd059322fad7791b5653a37848f84d46"></a><br/></td></tr>
+<tr class="separator:afd059322fad7791b5653a37848f84d46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27ae79e947d4a3114aafe97e0658b52c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_engine.html#a27ae79e947d4a3114aafe97e0658b52c">isLibraryDeclared</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;library) const </td></tr>
 <tr class="memdesc:a27ae79e947d4a3114aafe97e0658b52c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the specified script library has already provided its public declarations with this engine instance.  <a href="#a27ae79e947d4a3114aafe97e0658b52c"></a><br/></td></tr>
 <tr class="separator:a27ae79e947d4a3114aafe97e0658b52c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,6 +232,8 @@ Protected Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:ab209d7740084759d21bad5d2eca3df9e"><td class="memItemLeft" align="right" valign="top">asIScriptEngine *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_engine.html#ab209d7740084759d21bad5d2eca3df9e">mEngine</a></td></tr>
 <tr class="separator:ab209d7740084759d21bad5d2eca3df9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2746907ff0714df0fd15d86db7caf5bd"><td class="memItemLeft" align="right" valign="top">asCJITCompiler *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_engine.html#a2746907ff0714df0fd15d86db7caf5bd">mJITEngine</a></td></tr>
+<tr class="separator:a2746907ff0714df0fd15d86db7caf5bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf50895af9cc0b1cbf2f13c343ba7d79"><td class="memItemLeft" align="right" valign="top">ContextList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_engine.html#abf50895af9cc0b1cbf2f13c343ba7d79">mExecuteContexts</a></td></tr>
 <tr class="separator:abf50895af9cc0b1cbf2f13c343ba7d79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71e021d37239bd6008ba6e34c0198b05"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_script_engine_1_1_package_entry.html">PackageEntry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_engine.html#a71e021d37239bd6008ba6e34c0198b05">mRootPackage</a></td></tr>
@@ -242,6 +247,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a0bbbf5f91dc8eb593ed0ce569be3f0ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a2f110a33c56d3b84b3da3ffdd5f3d9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_engine.html#a1a2f110a33c56d3b84b3da3ffdd5f3d9">mVerboseOutput</a></td></tr>
 <tr class="separator:a1a2f110a33c56d3b84b3da3ffdd5f3d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99ad97d8b5e86f399a33087127a39374"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_engine.html#a99ad97d8b5e86f399a33087127a39374">mOutputWarnings</a></td></tr>
+<tr class="separator:a99ad97d8b5e86f399a33087127a39374"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The scripting engine class is designed as a base class from which the engine or application can derive their own engine types. This is not a requirement however as the combination of the base script engine class and appropriate binding packages should suffice. </p>
@@ -615,6 +622,24 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Load the specified script to use as a scripted library file. Functions exposed by this library can be imported by other scripts. </p>
+
+</div>
+</div>
+<a class="anchor" id="afd059322fad7791b5653a37848f84d46"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgScriptEngine::outputScriptWarnings </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable / disable the output of warnings during script compilation. </p>
 
 </div>
 </div>
@@ -1068,6 +1093,26 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a2746907ff0714df0fd15d86db7caf5bd"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">asCJITCompiler* cgScriptEngine::mJITEngine</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="ad3a23c2059ab6eb6d7653ec4e36fb8ea"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1099,6 +1144,26 @@ Protected Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">LoadedScriptSet cgScriptEngine::mLoadedScripts</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a99ad97d8b5e86f399a33087127a39374"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgScriptEngine::mOutputWarnings</td>
         </tr>
       </table>
   </td>
@@ -1180,7 +1245,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_script_engine.html">cgScriptEngine</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:48 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:10 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

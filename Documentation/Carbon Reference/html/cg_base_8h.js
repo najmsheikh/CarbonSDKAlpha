@@ -1,6 +1,7 @@
 var cg_base_8h =
 [
     [ "CGEConfig", "struct_c_g_e_config.html", "struct_c_g_e_config" ],
+    [ "cgSandboxModeChangeEventArgs", "structcg_sandbox_mode_change_event_args.html", "structcg_sandbox_mode_change_event_args" ],
     [ "_CGE_CGBASE_H_", "cg_base_8h.html#a845f8489d64e5c47cdc6ba282eefc48b", null ],
     [ "_WIN32_WINNT", "cg_base_8h.html#ac50762666aa00bd3a4308158510f1748", null ],
     [ "Base", "cg_base_8h.html#a446a0d273ff8b4f240f1f0f0d18c3e69", [

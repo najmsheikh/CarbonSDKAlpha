@@ -73,6 +73,7 @@ public:
     void            incrementFrameCounter           ( ) { ++mFrameCounter; }
 
     // Inlines for rapid access to internal data
+    inline void     setFrameCounter                 ( cgUInt32 counter ) { mFrameCounter = counter; }
     inline cgUInt32 getFrameCounter                 ( ) const { return mFrameCounter; }
     inline cgDouble getTimeElapsed                  ( ) const { return mSimulationTimeElapsed; }
     inline cgInt64  getPerformanceCounterOrigin     ( ) const { return mStartTime; }

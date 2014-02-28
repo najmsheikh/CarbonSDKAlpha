@@ -193,7 +193,6 @@ void cgSphereTree::addRecompute( cgSphereTreeSubNode * node )
 /// supplied frustum.
 /// </summary>
 //-----------------------------------------------------------------------------
-#include <Input/cgInputDriver.h>
 void cgSphereTree::computeVisibility( const cgFrustum & frustum, cgVisibilitySet * visibilityData, cgUInt32 flags )
 {
     // Find the index of the set in the list.
@@ -209,22 +208,13 @@ void cgSphereTree::computeVisibility( const cgFrustum & frustum, cgVisibilitySet
     if ( setIndex != mSets.size() )
     {
         static std::map<const cgFrustum*,cgVector3> lastFrustumPosition;
-        static bool locked = false;
-        
-        cgInputDriver * input = cgInputDriver::getInstance();
-        if ( !(flags & cgVisibilitySearchFlags::MustCastShadows) && input->isKeyPressed( cgKeys::V, true ) )
-            locked = !locked;
-
-        cgVector3 position = frustum.position;
-        if ( locked )
-            position = lastFrustumPosition[&frustum];
-        lastFrustumPosition[&frustum] = position;;
+        lastFrustumPosition[&frustum] = frustum.position;
 
         // If a static PVS tree is available, find the source leaf in which the
         // frustum is currently positioned (for the purposes of visibility flow).
         cgUInt32 sourceLeaf = cgBSPTree::InvalidLeaf;
         if ( mStaticVisTree )
-            sourceLeaf = mStaticVisTree->findLeaf( position );
+            sourceLeaf = mStaticVisTree->findLeaf( frustum.position );
 
         const cgByte * sourceLeafVis = CG_NULL;
         if ( sourceLeaf != cgBSPTree::InvalidLeaf && sourceLeaf != cgBSPTree::SolidLeaf )

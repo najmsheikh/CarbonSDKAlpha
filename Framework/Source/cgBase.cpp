@@ -757,6 +757,33 @@ bool cgSetSandboxMode( cgSandboxMode::Base mode )
 {
     if ( EngineConfig.sandboxMode == cgSandboxMode::Disabled )
         return false;
+    if ( EngineConfig.sandboxMode == mode )
+        return true;
+    
+    // Build event arguments structure.
+    cgSandboxMode::Base oldMode = EngineConfig.sandboxMode;
+    cgSandboxModeChangeEventArgs args;
+    args.oldMode = oldMode;
+    args.newMode = mode;
+
+    // Build message structure.
+    cgMessage msg;
+    msg.messageId = cgSystemMessages::System_SandboxModeChange;
+    msg.messageData = &args;
+    
+    // If we're switching FROM preview mode, send the message 
+    // before making the mode switch.
+    if ( mode == cgSandboxMode::Enabled )
+        cgReferenceManager::sendMessageToGroup( 0, cgSystemMessageGroups::MGID_System, &msg, 0 );
+    
+    // Switch mode
     EngineConfig.sandboxMode = mode;
+
+    // If we're switching TO preview mode, send the message 
+    // after making the mode switch.
+    if ( mode == cgSandboxMode::Preview )
+        cgReferenceManager::sendMessageToGroup( 0, cgSystemMessageGroups::MGID_System, &msg, 0 );
+
+    // Done.
     return true;
 }

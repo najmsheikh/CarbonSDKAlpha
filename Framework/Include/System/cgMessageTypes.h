@@ -43,6 +43,7 @@ namespace cgSystemMessages
         Resources_ReloadScripts         = 1003,
         Resources_ResourceAdded         = 1004,
         Resources_ResourceRemoved       = 1005,
+        Resources_ResourceUpdated       = 1006,
 
         // Messages issued by cgInputDriver
         InputDriver_MouseMoved          = 2001,
@@ -106,12 +107,17 @@ namespace cgSystemMessages
         // Messages issued by cgWorldObject
         WorldObject_PropertyChange      = 9001,
 
+        // Messages issued by high level system.
+        System_SandboxModeChange        = 100001,
+
     };
 
 } // cgSystemMessages
 
 namespace cgSystemMessageGroups
 {
+    // {9B167EC2-5DD5-402a-8541-9960EF99C31B}
+    const cgUID MGID_System          = { 0x9b167ec2, 0x5dd5, 0x402a, { 0x85, 0x41, 0x99, 0x60, 0xef, 0x99, 0xc3, 0x1b } };
     // {D2C75758-EBBF-45E4-B463-E0B5854D1F1F}
     const cgUID MGID_RenderDriver    = { 0xD2C75758, 0xEBBF, 0x45E4, { 0xB4, 0x63, 0xE0, 0xB5, 0x85, 0x4D, 0x1F, 0x1F } };
     // {379C5DE3-9026-4A95-9797-AE6C964D4349}

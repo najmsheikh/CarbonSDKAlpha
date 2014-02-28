@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -120,7 +120,7 @@ $(document).ready(function(){initNavTree('cg_skin_object_8h_source.html','');});
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">//        skinned mesh data.                                                 //</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">//                                                                           //</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">//---------------------------------------------------------------------------//</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">//---------------------------------------------------------------------------//</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#pragma once</span></div>
@@ -254,75 +254,76 @@ $(document).ready(function(){initNavTree('cg_skin_object_8h_source.html','');});
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="comment">// Public Methods</span></div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keywordtype">bool</span>                        attachBone              ( <a class="code" href="classcg_bone_node.html" title="Custom node type for the bone object. Manages additional properties that may need to be overriden by ...">cgBoneNode</a> * pBone );</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides cgObjectNode)</span></div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    virtual <span class="keywordtype">bool</span>                onNodeCreated           ( const <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a> &amp; objectType, cgCloneMethod::<a class="code" href="namespacecg_animation_target_controller_type.html#a8a83988dfb5a843bf03e592d24f37617">Base</a> cloneMethod );</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    virtual <span class="keywordtype">bool</span>                onNodeLoading           ( const <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a> &amp; objectType, <a class="code" href="classcg_world_query.html">cgWorldQuery</a> * nodeData, <a class="code" href="classcg_scene_cell.html" title="An individual cell designed to break down the scene into broad spatial sub-areas that serve as a cont...">cgSceneCell</a> * parentCell, cgCloneMethod::<a class="code" href="namespacecg_animation_target_controller_type.html#a8a83988dfb5a843bf03e592d24f37617">Base</a> cloneMethod );</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    virtual <span class="keywordtype">bool</span>                onNodeInit              ( const cgUInt32IndexMap &amp; NodeReferenceRemap );</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    virtual <span class="keywordtype">bool</span>                onNodeDeleted           ( );</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    virtual <a class="code" href="classcg_bounding_box.html" title="Storage for box vector values and wraps up common functionality ">cgBoundingBox</a>       getLocalBoundingBox     ( );</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides cgReference)</span></div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00172"></a><span class="lineno"><a class="code" href="classcg_skin_node.html#a5fc2d6db18139412d6e6fe346d300654">  172</a></span>&#160;    virtual const <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a>       &amp; getReferenceType        ( )<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="cg_skin_object_8h.html#a7a5fc132fc62b9ff2975664acc60e4d3">RTID_SkinNode</a>; }</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span>                <a class="code" href="classcg_mesh_node.html#ae9589e56abb2665eed1b60628fa11aa6" title="Allows the application to determine if the inheritance hierarchy supports a particular interface...">queryReferenceType</a>      ( <span class="keyword">const</span> <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a> &amp; type ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides DisposableScriptObject)</span></div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>                <a class="code" href="classcg_object_node.html#a77ea7a6dbbb7cd539e73900aedd6b702" title="Release any memory, references or resources allocated by this object. ">dispose</a>                 ( <span class="keywordtype">bool</span> disposeBase );</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <span class="comment">// Public Inline Methods</span></div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="comment">// Object Property &#39;Set&#39; Routing</span></div>
-<div class="line"><a name="l00184"></a><span class="lineno"><a class="code" href="classcg_skin_node.html#aebbab06571d5592bd0956dd4144b411b">  184</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classcg_mesh_node.html#ada61fbed5e4c496af9a3532b2e74f7c0">setShadowStage</a>( <a class="code" href="namespacecg_scene_process_stage.html#a10de22dd3a4008f10e36240e6839c114">cgSceneProcessStage::Base</a> stage )<span class="keyword"> const</span></div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        ((<a class="code" href="classcg_skin_object.html" title="Maintains information about any skinned mesh that has been created / loaded and inserted into the sce...">cgSkinObject</a>*)mReferencedObject)-&gt;setShadowStage( stage );</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    }</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="comment">// Protected Typedefs</span></div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a039577f149faea30818835c30af20fe5" title="Simple map typedef. No export required.">CGE_MAP_DECLARE</a>( <a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a>, <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>, BoneInstanceMap )</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <span class="comment">// Protected Methods</span></div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    void                        prepareQueries          ( );</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <span class="comment">// Protected Virtual Methods (Overrides cgObjectNode)</span></div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    virtual <span class="keywordtype">void</span>                buildPhysicsBody        ( );</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <span class="comment">// Protected Variables</span></div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00209"></a><span class="lineno"><a class="code" href="classcg_skin_node.html#ab31fd13e2b9390d5ee5250ba04bac1f7">  209</a></span>&#160;<span class="comment"></span>    cgUInt32Set         mBoneReferences;</div>
-<div class="line"><a name="l00211"></a><span class="lineno"><a class="code" href="classcg_skin_node.html#aab26dafc24c3af2bdb35bcb4da6e9320">  211</a></span>&#160;    BoneInstanceMap     mBoneInstanceIdentifiers;</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    <span class="comment">// Protected Static Variables</span></div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="comment">// Cached database queries.</span></div>
-<div class="line"><a name="l00217"></a><span class="lineno"><a class="code" href="classcg_skin_node.html#ab4a0bf4548372608575b4d59c848e208">  217</a></span>&#160;    static <a class="code" href="classcg_world_query.html">cgWorldQuery</a> mInsertAttachedBone;</div>
-<div class="line"><a name="l00218"></a><span class="lineno"><a class="code" href="classcg_skin_node.html#ad3e4601aa68d5e7f628209cbc0e4b388">  218</a></span>&#160;    static <a class="code" href="classcg_world_query.html">cgWorldQuery</a> mDeleteAttachedBones;</div>
-<div class="line"><a name="l00219"></a><span class="lineno"><a class="code" href="classcg_skin_node.html#ab0448260081633bb555bf0712bfce3fa">  219</a></span>&#160;    static <a class="code" href="classcg_world_query.html">cgWorldQuery</a> mLoadAttachedBones;</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;};</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="preprocessor">#endif // !_CGE_CGSKINOBJECT_H_</span></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordtype">void</span>                        generateBoneShapes      ( );</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides cgObjectNode)</span></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    virtual <span class="keywordtype">bool</span>                onNodeCreated           ( const <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a> &amp; objectType, cgCloneMethod::<a class="code" href="namespacecg_animation_target_controller_type.html#a8a83988dfb5a843bf03e592d24f37617">Base</a> cloneMethod );</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    virtual <span class="keywordtype">bool</span>                onNodeLoading           ( const <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a> &amp; objectType, <a class="code" href="classcg_world_query.html">cgWorldQuery</a> * nodeData, <a class="code" href="classcg_scene_cell.html" title="An individual cell designed to break down the scene into broad spatial sub-areas that serve as a cont...">cgSceneCell</a> * parentCell, cgCloneMethod::<a class="code" href="namespacecg_animation_target_controller_type.html#a8a83988dfb5a843bf03e592d24f37617">Base</a> cloneMethod );</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    virtual <span class="keywordtype">bool</span>                onNodeInit              ( const cgUInt32IndexMap &amp; NodeReferenceRemap );</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    virtual <span class="keywordtype">bool</span>                onNodeDeleted           ( );</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    virtual <a class="code" href="classcg_bounding_box.html" title="Storage for box vector values and wraps up common functionality ">cgBoundingBox</a>       getLocalBoundingBox     ( );</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides cgReference)</span></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00173"></a><span class="lineno"><a class="code" href="classcg_skin_node.html#a5fc2d6db18139412d6e6fe346d300654">  173</a></span>&#160;    virtual const <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a>       &amp; getReferenceType        ( )<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="cg_skin_object_8h.html#a7a5fc132fc62b9ff2975664acc60e4d3">RTID_SkinNode</a>; }</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span>                <a class="code" href="classcg_mesh_node.html#ae9589e56abb2665eed1b60628fa11aa6" title="Allows the application to determine if the inheritance hierarchy supports a particular interface...">queryReferenceType</a>      ( <span class="keyword">const</span> <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a> &amp; type ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="comment">// Public Virtual Methods (Overrides DisposableScriptObject)</span></div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>                <a class="code" href="classcg_object_node.html#a77ea7a6dbbb7cd539e73900aedd6b702" title="Release any memory, references or resources allocated by this object. ">dispose</a>                 ( <span class="keywordtype">bool</span> disposeBase );</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="comment">// Public Inline Methods</span></div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <span class="comment">// Object Property &#39;Set&#39; Routing</span></div>
+<div class="line"><a name="l00185"></a><span class="lineno"><a class="code" href="classcg_skin_node.html#ad906bc5a32be2429b238e2aa9cd1ef05">  185</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classcg_mesh_node.html#ada61fbed5e4c496af9a3532b2e74f7c0">setShadowStage</a>( <a class="code" href="namespacecg_scene_process_stage.html#a10de22dd3a4008f10e36240e6839c114">cgSceneProcessStage::Base</a> stage )</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    {</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        ((<a class="code" href="classcg_skin_object.html" title="Maintains information about any skinned mesh that has been created / loaded and inserted into the sce...">cgSkinObject</a>*)mReferencedObject)-&gt;setShadowStage( stage );</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    }</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <span class="comment">// Protected Typedefs</span></div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a039577f149faea30818835c30af20fe5" title="Simple map typedef. No export required.">CGE_MAP_DECLARE</a>( <a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a>, <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>, BoneInstanceMap )</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <span class="comment">// Protected Methods</span></div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    void                        prepareQueries          ( );</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    <span class="comment">// Protected Virtual Methods (Overrides cgObjectNode)</span></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    virtual <span class="keywordtype">void</span>                buildPhysicsBody        ( );</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="comment">// Protected Variables</span></div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00210"></a><span class="lineno"><a class="code" href="classcg_skin_node.html#ab31fd13e2b9390d5ee5250ba04bac1f7">  210</a></span>&#160;<span class="comment"></span>    cgUInt32Set         mBoneReferences;</div>
+<div class="line"><a name="l00212"></a><span class="lineno"><a class="code" href="classcg_skin_node.html#aab26dafc24c3af2bdb35bcb4da6e9320">  212</a></span>&#160;    BoneInstanceMap     mBoneInstanceIdentifiers;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="comment">// Protected Static Variables</span></div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="comment">// Cached database queries.</span></div>
+<div class="line"><a name="l00218"></a><span class="lineno"><a class="code" href="classcg_skin_node.html#ab4a0bf4548372608575b4d59c848e208">  218</a></span>&#160;    static <a class="code" href="classcg_world_query.html">cgWorldQuery</a> mInsertAttachedBone;</div>
+<div class="line"><a name="l00219"></a><span class="lineno"><a class="code" href="classcg_skin_node.html#ad3e4601aa68d5e7f628209cbc0e4b388">  219</a></span>&#160;    static <a class="code" href="classcg_world_query.html">cgWorldQuery</a> mDeleteAttachedBones;</div>
+<div class="line"><a name="l00220"></a><span class="lineno"><a class="code" href="classcg_skin_node.html#ab0448260081633bb555bf0712bfce3fa">  220</a></span>&#160;    static <a class="code" href="classcg_world_query.html">cgWorldQuery</a> mLoadAttachedBones;</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;};</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;<span class="preprocessor">#endif // !_CGE_CGSKINOBJECT_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_cace410e69155a0a769d51256a788445.html">World</a></li><li class="navelem"><a class="el" href="dir_d5152914ff20e26ccc9e916ca036159b.html">Objects</a></li><li class="navelem"><a class="el" href="cg_skin_object_8h.html">cgSkinObject.h</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:47:56 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:27:52 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

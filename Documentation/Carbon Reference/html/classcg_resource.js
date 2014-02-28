@@ -12,6 +12,7 @@ var classcg_resource =
     [ "getResourceName", "classcg_resource.html#ab9c6181c1b6c98823d30c44592a9b18c", null ],
     [ "getResourceSource", "classcg_resource.html#abc13480fbc780791645daeaed48da589", null ],
     [ "getResourceType", "classcg_resource.html#ae0e9c746739983ecfbbe25eb9c4efdb1", null ],
+    [ "getStreamType", "classcg_resource.html#a1f078bb6adfd44214d893a31b6bfc68b", null ],
     [ "isLoaded", "classcg_resource.html#ac1524460d7e6a93aba41269cc6db6bb6", null ],
     [ "isResourceLost", "classcg_resource.html#a3b5e8c46b515fa936448480518687ba5", null ],
     [ "loadResource", "classcg_resource.html#abb485181a625add191badbd7ef78cd6b", null ],

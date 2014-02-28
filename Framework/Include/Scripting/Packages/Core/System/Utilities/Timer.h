@@ -37,6 +37,7 @@ namespace Timer
             BINDSUCCESS( engine->registerObjectMethod( "Timer", "void setSimulationSpeed( double )", asMETHODPR(cgTimer, setSimulationSpeed, ( cgDouble ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Timer", "void incrementFrameCounter( )", asMETHODPR(cgTimer, incrementFrameCounter, ( ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Timer", "uint getFrameCounter( ) const", asMETHODPR(cgTimer, getFrameCounter, ( ) const, cgUInt32), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Timer", "void setFrameCounter( uint )", asMETHODPR(cgTimer, setFrameCounter, ( cgUInt32 ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Timer", "double getTimeElapsed( ) const", asMETHODPR(cgTimer, getTimeElapsed, ( ) const, cgDouble), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Timer", "double getTime( ) const", asMETHODPR(cgTimer, getTime, ( ) const, cgDouble), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Timer", "double getTime( bool ) const", asMETHODPR(cgTimer, getTime, ( bool ) const, cgDouble), asCALL_THISCALL) );

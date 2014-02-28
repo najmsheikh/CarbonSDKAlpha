@@ -989,13 +989,14 @@ bool cgShadowGenerator::computeVisibilitySet( cgCameraNode * pSceneCamera, bool 
 
     } // End if Standard
 
-    // Visibility has been recomputed on this frame.
-    mLastVisibilityFrame = cgTimer::getInstance()->getFrameCounter();
-
     // If there is nothing for us to do, we can let the caller 
     // know to turn shadows off.
     if ( pFrustumVis->isEmpty() )
     {
+        // Visibility has been recomputed on this frame.
+        mLastVisibilityFrame = cgTimer::getInstance()->getFrameCounter();
+
+        // No regen required.
         mRegenerate = false;
         return false;
     
@@ -1020,6 +1021,9 @@ bool cgShadowGenerator::computeVisibilitySet( cgCameraNode * pSceneCamera, bool 
         } // Next object
 
     } // End if !regenerate
+
+    // Visibility has been recomputed on this frame.
+    mLastVisibilityFrame = cgTimer::getInstance()->getFrameCounter();
 
     // Casters are visible!
     return true;

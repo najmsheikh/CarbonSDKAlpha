@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -123,7 +123,7 @@ $(document).ready(function(){initNavTree('cg_u_i_skin_8h_source.html','');});
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">//        system.                                                            //</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">//                                                                           //</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">//---------------------------------------------------------------------------//</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">//---------------------------------------------------------------------------//</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#pragma once</span></div>
@@ -221,7 +221,7 @@ $(document).ready(function(){initNavTree('cg_u_i_skin_8h_source.html','');});
 <div class="line"><a name="l00119"></a><span class="lineno"><a class="code" href="classcg_u_i_skin.html#abcdd4d83d6d6b315f54f5a9936b31741">  119</a></span>&#160;    <span class="keyword">const</span> <a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a>            &amp; <a class="code" href="classcg_u_i_skin.html#abcdd4d83d6d6b315f54f5a9936b31741">getTextureName</a>          ( )<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mTextureFile; }</div>
 <div class="line"><a name="l00120"></a><span class="lineno"><a class="code" href="classcg_u_i_skin.html#a451f5ee654603bf2203a6f670f94b8a1">  120</a></span>&#160;    <span class="keyword">const</span> <a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a>            &amp; <a class="code" href="classcg_u_i_skin.html#a451f5ee654603bf2203a6f670f94b8a1">getGlyphDefinition</a>      ( )<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mGlyphAtlas; }</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordtype">bool</span>                        prepareControlFrames    ( <a class="code" href="classcg_u_i_control_layer.html" title="This is a layer which can contain a single item derived from cgUIControl (such as a form)...">cgUIControlLayer</a> * layer, <a class="code" href="namespacecg_u_i_form_style.html#aa2b82fc18350441afe405908f998af40">cgUIFormStyle::Base</a> style );</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordtype">bool</span>                        prepareCursorFrames     ( <a class="code" href="classcg_billboard_buffer.html" title="A container for billboards which share the same texture and effect. Allows optimized drawing of all b...">cgBillboardBuffer</a> * buffer );</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordtype">bool</span>                        prepareCursorFrames     ( <a class="code" href="classcg_billboard_buffer.html" title="A container for billboards which share the same texture and effect. Allows optimized drawing of all b...">cgBillboardBuffer</a> * buffer, <a class="code" href="classcg_render_driver.html" title="Class that contains our core rendering / render initialization logic. ">cgRenderDriver</a> * renderDriver );</div>
 <div class="line"><a name="l00123"></a><span class="lineno"><a class="code" href="classcg_u_i_skin.html#a9d7ef39fa04791d67a8a3559b2f89800">  123</a></span>&#160;    <span class="keyword">const</span> <a class="code" href="structcg_u_i_cursor_desc.html">cgUICursorDesc</a>      &amp; <a class="code" href="classcg_u_i_skin.html#a9d7ef39fa04791d67a8a3559b2f89800">getCursorDefinition</a>     ( )<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mCursorDefinition; }</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keyword">const</span> <a class="code" href="structcg_u_i_form_style_desc.html">cgUIFormStyleDesc</a>   &amp; getFormStyleDefinition  ( <a class="code" href="namespacecg_u_i_form_style.html#aa2b82fc18350441afe405908f998af40">cgUIFormStyle::Base</a> type ) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00125"></a><span class="lineno"><a class="code" href="classcg_u_i_skin.html#a7aaa29968a8ddf075e565b3c2ab6babe">  125</a></span>&#160;    <span class="keyword">const</span> <a class="code" href="structcg_u_i_skin_1_1_control_config.html">ControlConfig</a>       &amp; <a class="code" href="classcg_u_i_skin.html#a7aaa29968a8ddf075e565b3c2ab6babe">getControlConfig</a>        ( )<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mControlConfig; }</div>
@@ -264,7 +264,7 @@ $(document).ready(function(){initNavTree('cg_u_i_skin_8h_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_ffcb1a4721a645d0b89dc3720494ffda.html">Interface</a></li><li class="navelem"><a class="el" href="cg_u_i_skin_8h.html">cgUISkin.h</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:47:57 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:27:53 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -226,6 +226,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae672a362a1e0900f3d3c2e59b27961a9 inherit pub_methods_classcg_physics_body"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_body.html#ae672a362a1e0900f3d3c2e59b27961a9">isContinuousCollisionEnabled</a> () const </td></tr>
 <tr class="memdesc:ae672a362a1e0900f3d3c2e59b27961a9 inherit pub_methods_classcg_physics_body"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the continuous collision detection feature is enabled for this physics body.  <a href="#ae672a362a1e0900f3d3c2e59b27961a9"></a><br/></td></tr>
 <tr class="separator:ae672a362a1e0900f3d3c2e59b27961a9 inherit pub_methods_classcg_physics_body"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27f7badbc9925380f62c2f88d08e156c inherit pub_methods_classcg_physics_body"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_body.html#a27f7badbc9925380f62c2f88d08e156c">setMaterialGroupId</a> (<a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181">cgDefaultPhysicsMaterialGroup::Base</a> defaultMaterial)</td></tr>
+<tr class="memdesc:a27f7badbc9925380f62c2f88d08e156c inherit pub_methods_classcg_physics_body"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign this physics body to one the world default material groups.  <a href="#a27f7badbc9925380f62c2f88d08e156c"></a><br/></td></tr>
+<tr class="separator:a27f7badbc9925380f62c2f88d08e156c inherit pub_methods_classcg_physics_body"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93e67c5a1f68443ca0d54d33cd4b72a5 inherit pub_methods_classcg_physics_body"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_body.html#a93e67c5a1f68443ca0d54d33cd4b72a5">setMaterialGroupId</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> group)</td></tr>
+<tr class="memdesc:a93e67c5a1f68443ca0d54d33cd4b72a5 inherit pub_methods_classcg_physics_body"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign this physics body to the custom material group with the specified id  <a href="#a93e67c5a1f68443ca0d54d33cd4b72a5"></a><br/></td></tr>
+<tr class="separator:a93e67c5a1f68443ca0d54d33cd4b72a5 inherit pub_methods_classcg_physics_body"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad052a5581ee87f1e794d780fbed0ed21 inherit pub_methods_classcg_physics_body"><td class="memItemLeft" align="right" valign="top">NewtonBody *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_body.html#ad052a5581ee87f1e794d780fbed0ed21">getInternalBody</a> () const </td></tr>
 <tr class="memdesc:ad052a5581ee87f1e794d780fbed0ed21 inherit pub_methods_classcg_physics_body"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the internal body object specific to Newton. This is not technically part of the public interface and should not be called by the application directly.  <a href="#ad052a5581ee87f1e794d780fbed0ed21"></a><br/></td></tr>
 <tr class="separator:ad052a5581ee87f1e794d780fbed0ed21 inherit pub_methods_classcg_physics_body"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -242,6 +248,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a94e284eb58d28345d94d10e2b7f5f898 inherit pub_methods_classcg_physics_entity"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_entity.html#a94e284eb58d28345d94d10e2b7f5f898">~cgPhysicsEntity</a> ()</td></tr>
 <tr class="memdesc:a94e284eb58d28345d94d10e2b7f5f898 inherit pub_methods_classcg_physics_entity"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for this class.  <a href="#a94e284eb58d28345d94d10e2b7f5f898"></a><br/></td></tr>
 <tr class="separator:a94e284eb58d28345d94d10e2b7f5f898 inherit pub_methods_classcg_physics_entity"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95354af1cfa309c66cdd9915d226f19c inherit pub_methods_classcg_physics_entity"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_physics_world.html">cgPhysicsWorld</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_entity.html#a95354af1cfa309c66cdd9915d226f19c">getPhysicsWorld</a> () const </td></tr>
+<tr class="memdesc:a95354af1cfa309c66cdd9915d226f19c inherit pub_methods_classcg_physics_entity"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the physics world in which this body was created.  <a href="#a95354af1cfa309c66cdd9915d226f19c"></a><br/></td></tr>
+<tr class="separator:a95354af1cfa309c66cdd9915d226f19c inherit pub_methods_classcg_physics_entity"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classcg_reference"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcg_reference')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcg_reference.html">cgReference</a></td></tr>
 <tr class="memitem:aa8f452d66f4666a9b79f1c00d65c6fc6 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#aa8f452d66f4666a9b79f1c00d65c6fc6">cgReference</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> referenceId)</td></tr>
 <tr class="separator:aa8f452d66f4666a9b79f1c00d65c6fc6 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -799,7 +808,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_rigid_body.html">cgRigidBody</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:45 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:09 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -28,6 +28,7 @@ var classcg_billboard_buffer =
     [ "getFrameGroupIndex", "classcg_billboard_buffer.html#a4da567c17eb5537b85825bf498b7ed54", null ],
     [ "getFrameIndex", "classcg_billboard_buffer.html#ad78238d9844f7213f80ed4dc8c899b04", null ],
     [ "getSurfaceShader", "classcg_billboard_buffer.html#a19c48bf1215ef1136a571ade4151ca93", null ],
+    [ "getTexture", "classcg_billboard_buffer.html#a863ff94d6e44b51c6e5de6bbdfcadf9d", null ],
     [ "prepareBuffer", "classcg_billboard_buffer.html#a665bc22bb5b400c8f987437cc86fe238", null ],
     [ "prepareBuffer", "classcg_billboard_buffer.html#a50166821dd5859a35f66305eb77e5d06", null ],
     [ "prepareBufferFromAtlas", "classcg_billboard_buffer.html#a9dce4d949f2b7758beae7555029c4a4f", null ],

@@ -7754,6 +7754,18 @@ void cgLandscapeTextureData::filterPaintLayer( cgByteArray & aData )
 }
 
 //-----------------------------------------------------------------------------
+// Name : getLayers()
+/// <summary>
+/// Retrieve a list of all the terrain texture layers associated with this
+/// block.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgLandscapeTextureData::LayerReferenceArray & cgLandscapeTextureData::getLayers( ) const
+{
+    return mLayers;
+}
+
+//-----------------------------------------------------------------------------
 // Name : updatePaintPreview() (Protected)
 /// <summary>
 /// Update textures for preview during the painting process.

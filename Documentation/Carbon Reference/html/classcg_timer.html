@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -136,8 +136,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a19429b1378df38c0d9fd1838684c3846"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#a19429b1378df38c0d9fd1838684c3846">tick</a> ()</td></tr>
 <tr class="memdesc:a19429b1378df38c0d9fd1838684c3846"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function which signals that frame has advanced Note : You can specify a number of frames per second to lock the frame rate to. This will simply soak up the remaining time to hit that target.  <a href="#a19429b1378df38c0d9fd1838684c3846"></a><br/></td></tr>
 <tr class="separator:a19429b1378df38c0d9fd1838684c3846"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab898e63af13675c8ef8bfe7bfe23fb57"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#ab898e63af13675c8ef8bfe7bfe23fb57">tick</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> lockFPS)</td></tr>
-<tr class="separator:ab898e63af13675c8ef8bfe7bfe23fb57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec4d5d3ebc57499e0088a8d35d84fa73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#aec4d5d3ebc57499e0088a8d35d84fa73">tick</a> (<a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> lockFPS)</td></tr>
+<tr class="separator:aec4d5d3ebc57499e0088a8d35d84fa73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aadfc8d64fdb45de467f5adf44363dfaa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#aadfc8d64fdb45de467f5adf44363dfaa">enableSmoothing</a> (bool enabled)</td></tr>
 <tr class="memdesc:aadfc8d64fdb45de467f5adf44363dfaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable elapsed time smoothing.  <a href="#aadfc8d64fdb45de467f5adf44363dfaa"></a><br/></td></tr>
 <tr class="separator:aadfc8d64fdb45de467f5adf44363dfaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,23 +150,27 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae3daa34fd9e9f4ead87099b4c08e60ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab037d153f81fed3e1e3daff2b3bc2ff7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#ab037d153f81fed3e1e3daff2b3bc2ff7">measurePeriod</a> (<a class="el" href="cg_base_types_8h.html#a8c369e0396bc366ab94f56167659ed2b">cgInt64</a> counterBegin, <a class="el" href="cg_base_types_8h.html#a8c369e0396bc366ab94f56167659ed2b">cgInt64</a> counterEnd) const </td></tr>
 <tr class="separator:ab037d153f81fed3e1e3daff2b3bc2ff7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab69a6ab3896fe2d088b13f1b69a94603"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#ab69a6ab3896fe2d088b13f1b69a94603">setSimulationSpeed</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> speed)</td></tr>
-<tr class="separator:ab69a6ab3896fe2d088b13f1b69a94603"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b36aa69c2ade2909191564716e9770d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#a0b36aa69c2ade2909191564716e9770d">setRateLimit</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> rateLimit)</td></tr>
-<tr class="memdesc:a0b36aa69c2ade2909191564716e9770d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the permanent frame rate limit to use (if any) when none is supplied directly to the '<a class="el" href="classcg_timer.html#a19429b1378df38c0d9fd1838684c3846" title="Function which signals that frame has advanced Note : You can specify a number of frames per second t...">tick()</a>' method. Set to a value &lt;= 0 to disable.  <a href="#a0b36aa69c2ade2909191564716e9770d"></a><br/></td></tr>
-<tr class="separator:a0b36aa69c2ade2909191564716e9770d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af20a3ffc0e04e2d9d9af6fedaffaa8c3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#af20a3ffc0e04e2d9d9af6fedaffaa8c3">setSimulationSpeed</a> (<a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> speed)</td></tr>
+<tr class="separator:af20a3ffc0e04e2d9d9af6fedaffaa8c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb536842e4eeac73d3efa8324a155355"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#acb536842e4eeac73d3efa8324a155355">setRateLimit</a> (<a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> rateLimit)</td></tr>
+<tr class="memdesc:acb536842e4eeac73d3efa8324a155355"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the permanent frame rate limit to use (if any) when none is supplied directly to the '<a class="el" href="classcg_timer.html#a19429b1378df38c0d9fd1838684c3846" title="Function which signals that frame has advanced Note : You can specify a number of frames per second t...">tick()</a>' method. Set to a value &lt;= 0 to disable.  <a href="#acb536842e4eeac73d3efa8324a155355"></a><br/></td></tr>
+<tr class="separator:acb536842e4eeac73d3efa8324a155355"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab82bfe81984d59a5c3be2bf7fe5ea9dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#ab82bfe81984d59a5c3be2bf7fe5ea9dc">incrementFrameCounter</a> ()</td></tr>
 <tr class="separator:ab82bfe81984d59a5c3be2bf7fe5ea9dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33915f6981bebd9c74ac643f70abe793"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#a33915f6981bebd9c74ac643f70abe793">setFrameCounter</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> counter)</td></tr>
+<tr class="separator:a33915f6981bebd9c74ac643f70abe793"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95c2954b6cce8011e69737364943f1a2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#a95c2954b6cce8011e69737364943f1a2">getFrameCounter</a> () const </td></tr>
 <tr class="separator:a95c2954b6cce8011e69737364943f1a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25926f5f73fa5380962da6c8b2662aaf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a1c4ee6fb2b2cee0c8ebc5ecf5c486bee">cgReal</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#a25926f5f73fa5380962da6c8b2662aaf">getTimeElapsed</a> () const </td></tr>
-<tr class="separator:a25926f5f73fa5380962da6c8b2662aaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0307a69d59a685802cf20d54e013bcfa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#a0307a69d59a685802cf20d54e013bcfa">getTimeElapsed</a> () const </td></tr>
+<tr class="separator:a0307a69d59a685802cf20d54e013bcfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a736e0189c9b6050fd4492499bdb0cf7a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a8c369e0396bc366ab94f56167659ed2b">cgInt64</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#a736e0189c9b6050fd4492499bdb0cf7a">getPerformanceCounterOrigin</a> () const </td></tr>
 <tr class="separator:a736e0189c9b6050fd4492499bdb0cf7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cbb6cace9479470c0c368b4584ef0a9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a8c369e0396bc366ab94f56167659ed2b">cgInt64</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#a2cbb6cace9479470c0c368b4584ef0a9">getPerfomanceCounterFrequency</a> () const </td></tr>
 <tr class="separator:a2cbb6cace9479470c0c368b4584ef0a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a190a54d2425187bd53329bcaf72848fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#a190a54d2425187bd53329bcaf72848fb">getTime</a> () const </td></tr>
 <tr class="separator:a190a54d2425187bd53329bcaf72848fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa60f88a61b608d99b13c1aef423ee91e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_timer.html#aa60f88a61b608d99b13c1aef423ee91e">getSimulationSpeed</a> () const </td></tr>
+<tr class="separator:aa60f88a61b608d99b13c1aef423ee91e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classcg_script_interop_1_1_disposable_script_object"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcg_script_interop_1_1_disposable_script_object')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcg_script_interop_1_1_disposable_script_object.html">cgScriptInterop::DisposableScriptObject</a></td></tr>
 <tr class="memitem:a815b9a991113bb99acea9e15af2920a2 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a815b9a991113bb99acea9e15af2920a2">DisposableScriptObject</a> ()</td></tr>
 <tr class="separator:a815b9a991113bb99acea9e15af2920a2 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -443,6 +447,29 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aa60f88a61b608d99b13c1aef423ee91e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> cgTimer::getSimulationSpeed </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="aad65a13b39cccb12d35c304f71b7d192"></a>
 <div class="memitem">
 <div class="memproto">
@@ -482,7 +509,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a25926f5f73fa5380962da6c8b2662aaf"></a>
+<a class="anchor" id="a0307a69d59a685802cf20d54e013bcfa"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -490,7 +517,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="cg_base_types_8h.html#a1c4ee6fb2b2cee0c8ebc5ecf5c486bee">cgReal</a> cgTimer::getTimeElapsed </td>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> cgTimer::getTimeElapsed </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -554,14 +581,38 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a0b36aa69c2ade2909191564716e9770d"></a>
+<a class="anchor" id="a33915f6981bebd9c74ac643f70abe793"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgTimer::setFrameCounter </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>counter</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="acb536842e4eeac73d3efa8324a155355"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgTimer::setRateLimit </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a>&#160;</td>
           <td class="paramname"><em>fRateLimit</em></td><td>)</td>
           <td></td>
         </tr>
@@ -572,7 +623,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab69a6ab3896fe2d088b13f1b69a94603"></a>
+<a class="anchor" id="af20a3ffc0e04e2d9d9af6fedaffaa8c3"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -582,7 +633,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void cgTimer::setSimulationSpeed </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a>&#160;</td>
           <td class="paramname"><em>speed</em></td><td>)</td>
           <td></td>
         </tr>
@@ -613,14 +664,14 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab898e63af13675c8ef8bfe7bfe23fb57"></a>
+<a class="anchor" id="aec4d5d3ebc57499e0088a8d35d84fa73"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgTimer::tick </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a>&#160;</td>
           <td class="paramname"><em>lockFPS</em></td><td>)</td>
           <td></td>
         </tr>
@@ -639,7 +690,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_timer.html">cgTimer</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:56 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:12 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

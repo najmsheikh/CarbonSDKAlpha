@@ -86,7 +86,8 @@ namespace cgSandboxRenderFlags
     {
         Wireframe           = 0x1,
         PostDepthClear      = 0x10,
-        ShowCollisionShapes = 0x100
+        ShowCollisionShapes = 0x100,
+        ShowBones           = 0x1000
     };
 
 }; // End Namespace : cgSandboxRenderFlags

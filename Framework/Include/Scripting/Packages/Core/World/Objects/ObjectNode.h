@@ -42,6 +42,7 @@ namespace ObjectNode
 
         // Properties
         BINDSUCCESS( engine->registerObjectMethod(typeName, "String getName( ) const", asMETHODPR(type,getName,() const,cgString), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "bool setName( const String &in )", asMETHODPR(type,setName,( const cgString&),bool), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "const String & getObjectClass( ) const", asMETHODPR(type,getObjectClass,() const,const cgString&), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "WorldObject @+ getReferencedObject( ) const", asMETHODPR(type,getReferencedObject,() const,cgWorldObject*), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "PropertyContainer @+ getCustomProperties( )", asMETHODPR(type,getCustomProperties,(), cgPropertyContainer&), asCALL_THISCALL) );
@@ -148,7 +149,10 @@ namespace ObjectNode
         BINDSUCCESS( engine->registerObjectMethod(typeName, "Vector3 getVelocity( ) const", asMETHODPR(type,getVelocity,( ) const, cgVector3), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void setVelocity( const Vector3 &in )", asMETHODPR(type,setVelocity,( const cgVector3& ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void setPhysicsModel( PhysicsModel )", asMETHODPR(type, setPhysicsModel, ( cgPhysicsModel::Base ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "void setPhysicsModel( PhysicsModel, DefaultPhysicsShape )", asMETHODPR(type, setPhysicsModel, ( cgPhysicsModel::Base, cgDefaultPhysicsShape::Base ), void ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "PhysicsModel getPhysicsModel( ) const", asMETHODPR(type, getPhysicsModel, ( ) const, cgPhysicsModel::Base ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "void setSimulationQuality( SimulationQuality )", asMETHODPR(type, setSimulationQuality, ( cgSimulationQuality::Base ), void ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "SimulationQuality getSimulationQuality( ) const", asMETHODPR(type, getSimulationQuality, ( ) const, cgSimulationQuality::Base ), asCALL_THISCALL) );
 
         // Navigation
         BINDSUCCESS( engine->registerObjectMethod(typeName, "bool enableNavigation( const NavigationAgentCreateParams &in )", asMETHODPR(type,enableNavigation,( const cgNavigationAgentCreateParams * ), bool), asCALL_THISCALL) );

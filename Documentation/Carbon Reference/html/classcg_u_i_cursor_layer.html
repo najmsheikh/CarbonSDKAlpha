@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -137,15 +137,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a35ff57b2738db531ff12718f2f28ea49"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#a35ff57b2738db531ff12718f2f28ea49">initialize</a> ()</td></tr>
 <tr class="memdesc:a35ff57b2738db531ff12718f2f28ea49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the cursor layer.  <a href="#a35ff57b2738db531ff12718f2f28ea49"></a><br/></td></tr>
 <tr class="separator:a35ff57b2738db531ff12718f2f28ea49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb16b420ad51f5c2ea85804ca001af06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#aeb16b420ad51f5c2ea85804ca001af06">selectCursor</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;name)</td></tr>
-<tr class="memdesc:aeb16b420ad51f5c2ea85804ca001af06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call this method to select the current cursor to use from the cursor definition.  <a href="#aeb16b420ad51f5c2ea85804ca001af06"></a><br/></td></tr>
-<tr class="separator:aeb16b420ad51f5c2ea85804ca001af06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a609db2cffcf9832ea88947c7c2236a0e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#a609db2cffcf9832ea88947c7c2236a0e">render</a> ()</td></tr>
-<tr class="memdesc:a609db2cffcf9832ea88947c7c2236a0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render the contents of this layer.  <a href="#a609db2cffcf9832ea88947c7c2236a0e"></a><br/></td></tr>
-<tr class="separator:a609db2cffcf9832ea88947c7c2236a0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f85e4dbebe402623be2808861eaad1c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#a6f85e4dbebe402623be2808861eaad1c">selectCursor</a> (const <a class="el" href="structcg_u_i_cursor_type.html">cgUICursorType</a> *type, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> frame)</td></tr>
+<tr class="memdesc:a6f85e4dbebe402623be2808861eaad1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call this method to select the current cursor to use from the cursor definition.  <a href="#a6f85e4dbebe402623be2808861eaad1c"></a><br/></td></tr>
+<tr class="separator:a6f85e4dbebe402623be2808861eaad1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab10ac78cfe97e6490be3139b3c9358a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#ab10ac78cfe97e6490be3139b3c9358a6">update</a> ()</td></tr>
+<tr class="memdesc:ab10ac78cfe97e6490be3139b3c9358a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the cursor billboard to be updated.  <a href="#ab10ac78cfe97e6490be3139b3c9358a6"></a><br/></td></tr>
+<tr class="separator:ab10ac78cfe97e6490be3139b3c9358a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80c62d8fbfb27e380c60d3b7ae13f102"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#a80c62d8fbfb27e380c60d3b7ae13f102">showCursor</a> (bool show)</td></tr>
+<tr class="memdesc:a80c62d8fbfb27e380c60d3b7ae13f102"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show / hide the emulated cursor.  <a href="#a80c62d8fbfb27e380c60d3b7ae13f102"></a><br/></td></tr>
+<tr class="separator:a80c62d8fbfb27e380c60d3b7ae13f102"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a409482f98d3aca454abc5619979a9fac"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#a409482f98d3aca454abc5619979a9fac">onMouseMove</a> (const <a class="el" href="structcg_point.html">cgPoint</a> &amp;position, const <a class="el" href="structcg_point_f.html">cgPointF</a> &amp;offset)</td></tr>
 <tr class="memdesc:a409482f98d3aca454abc5619979a9fac"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method is called whenever the mouse has moved.  <a href="#a409482f98d3aca454abc5619979a9fac"></a><br/></td></tr>
 <tr class="separator:a409482f98d3aca454abc5619979a9fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a609db2cffcf9832ea88947c7c2236a0e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#a609db2cffcf9832ea88947c7c2236a0e">render</a> ()</td></tr>
+<tr class="memdesc:a609db2cffcf9832ea88947c7c2236a0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render the contents of this layer.  <a href="#a609db2cffcf9832ea88947c7c2236a0e"></a><br/></td></tr>
+<tr class="separator:a609db2cffcf9832ea88947c7c2236a0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7da44e54d5dbff8cb320ff52db547c9c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#a7da44e54d5dbff8cb320ff52db547c9c">dispose</a> (bool disposeBase)</td></tr>
 <tr class="memdesc:a7da44e54d5dbff8cb320ff52db547c9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any memory, references or resources allocated by this object.  <a href="#a7da44e54d5dbff8cb320ff52db547c9c"></a><br/></td></tr>
 <tr class="separator:a7da44e54d5dbff8cb320ff52db547c9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -210,14 +216,12 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a57c5e5c51d5d0c3badc67c6f4893b0de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b3cfaafad39600c0fb16f22e779dc7b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_u_i_cursor_type.html">cgUICursorType</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#a7b3cfaafad39600c0fb16f22e779dc7b">mCurrentType</a></td></tr>
 <tr class="separator:a7b3cfaafad39600c0fb16f22e779dc7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53b91b909c28eca8024ffe15cf422b77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_string.html">cgString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#a53b91b909c28eca8024ffe15cf422b77">mNextCursor</a></td></tr>
-<tr class="separator:a53b91b909c28eca8024ffe15cf422b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77d18d91df7adbbde8f1fa661ef05708"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_string.html">cgString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#a77d18d91df7adbbde8f1fa661ef05708">mCurrentCursor</a></td></tr>
-<tr class="separator:a77d18d91df7adbbde8f1fa661ef05708"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5eedd39037f81d881e24eb9f38a87074"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a205b36290def5db7b358b851cfb45586">cgInt16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#a5eedd39037f81d881e24eb9f38a87074">mCurrentFrame</a></td></tr>
 <tr class="separator:a5eedd39037f81d881e24eb9f38a87074"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b5f55f0cf92cffc11f8f3dc93633553"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#a9b5f55f0cf92cffc11f8f3dc93633553">mAnimBeginTime</a></td></tr>
-<tr class="separator:a9b5f55f0cf92cffc11f8f3dc93633553"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a526dcddba670c23ae3abd44e8b43ea5b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#a526dcddba670c23ae3abd44e8b43ea5b">mCursorDirty</a></td></tr>
+<tr class="separator:a526dcddba670c23ae3abd44e8b43ea5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8d59f855a7dc683ddeae9bc62a79312"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_cursor_layer.html#ad8d59f855a7dc683ddeae9bc62a79312">mCursorVisible</a></td></tr>
+<tr class="separator:ad8d59f855a7dc683ddeae9bc62a79312"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classcg_u_i_layer"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_u_i_layer')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_u_i_layer.html">cgUILayer</a></td></tr>
 <tr class="memitem:afcc66020848113814a421f0d92364bb2 inherit pro_attribs_classcg_u_i_layer"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_u_i_manager.html">cgUIManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_layer.html#afcc66020848113814a421f0d92364bb2">mUIManager</a></td></tr>
 <tr class="separator:afcc66020848113814a421f0d92364bb2 inherit pro_attribs_classcg_u_i_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -389,16 +393,26 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aeb16b420ad51f5c2ea85804ca001af06"></a>
+<a class="anchor" id="a6f85e4dbebe402623be2808861eaad1c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgUICursorLayer::selectCursor </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
-          <td class="paramname"><em>strCursor</em></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="structcg_u_i_cursor_type.html">cgUICursorType</a> *&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>frame</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -407,47 +421,42 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a80c62d8fbfb27e380c60d3b7ae13f102"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgUICursorLayer::showCursor </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>show</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Show / hide the emulated cursor. </p>
+
+</div>
+</div>
+<a class="anchor" id="ab10ac78cfe97e6490be3139b3c9358a6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgUICursorLayer::update </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Allow the cursor billboard to be updated. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="a9b5f55f0cf92cffc11f8f3dc93633553"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgUICursorLayer::mAnimBeginTime</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a77d18d91df7adbbde8f1fa661ef05708"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classcg_string.html">cgString</a> cgUICursorLayer::mCurrentCursor</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="a5eedd39037f81d881e24eb9f38a87074"></a>
 <div class="memitem">
 <div class="memproto">
@@ -508,6 +517,26 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a526dcddba670c23ae3abd44e8b43ea5b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgUICursorLayer::mCursorDirty</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a57c5e5c51d5d0c3badc67c6f4893b0de"></a>
 <div class="memitem">
 <div class="memproto">
@@ -528,7 +557,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a53b91b909c28eca8024ffe15cf422b77"></a>
+<a class="anchor" id="ad8d59f855a7dc683ddeae9bc62a79312"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -536,7 +565,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classcg_string.html">cgString</a> cgUICursorLayer::mNextCursor</td>
+          <td class="memname">bool cgUICursorLayer::mCursorVisible</td>
         </tr>
       </table>
   </td>
@@ -558,7 +587,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_u_i_cursor_layer.html">cgUICursorLayer</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:57 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:12 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

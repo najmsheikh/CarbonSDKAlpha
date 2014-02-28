@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -110,6 +110,7 @@ $(document).ready(function(){initNavTree('cg_physics_types_8h.html','');});
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;<a class="el" href="cg_base_types_8h_source.html">cgBaseTypes.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="cg_transform_8h_source.html">Math/cgTransform.h</a>&gt;</code><br/>
 </div>
 <p><a href="cg_physics_types_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -123,6 +124,8 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespacecg_physics_model"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_physics_model.html">cgPhysicsModel</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespacecg_default_physics_shape"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_default_physics_shape.html">cgDefaultPhysicsShape</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecg_simulation_quality"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_simulation_quality.html">cgSimulationQuality</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -146,14 +149,31 @@ Enumerations</h2></td></tr>
 <br/>
  }</td></tr>
 <tr class="separator:afcd43a080fcdb8431c9b824310557921"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3103e0456d3ecc8ce95fcfb45113ac42"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_default_physics_shape.html#a3103e0456d3ecc8ce95fcfb45113ac42">cgDefaultPhysicsShape::Base</a> { <br/>
+&#160;&#160;<a class="el" href="namespacecg_default_physics_shape.html#a3103e0456d3ecc8ce95fcfb45113ac42afd1d5819a1238ab2251213d3e5af0485">cgDefaultPhysicsShape::Auto</a> = 0, 
+<a class="el" href="namespacecg_default_physics_shape.html#a3103e0456d3ecc8ce95fcfb45113ac42adbe60a34532ab4aeb8cc300786558994">cgDefaultPhysicsShape::Box</a>, 
+<a class="el" href="namespacecg_default_physics_shape.html#a3103e0456d3ecc8ce95fcfb45113ac42a5ab531a0094aec6bed898d327849669b">cgDefaultPhysicsShape::Sphere</a>, 
+<a class="el" href="namespacecg_default_physics_shape.html#a3103e0456d3ecc8ce95fcfb45113ac42ab504c504a735bae69a6db15391dbeaab">cgDefaultPhysicsShape::Cylinder</a>, 
+<br/>
+&#160;&#160;<a class="el" href="namespacecg_default_physics_shape.html#a3103e0456d3ecc8ce95fcfb45113ac42a6dc421c9f16df957af67d32118142a76">cgDefaultPhysicsShape::Cone</a>, 
+<a class="el" href="namespacecg_default_physics_shape.html#a3103e0456d3ecc8ce95fcfb45113ac42ab9df79afa5abcb6b1599a7e5b0482a85">cgDefaultPhysicsShape::Capsule</a>, 
+<a class="el" href="namespacecg_default_physics_shape.html#a3103e0456d3ecc8ce95fcfb45113ac42a968105bff4032686d9b68fa1ccb1cde4">cgDefaultPhysicsShape::ConvexHull</a>
+<br/>
+ }</td></tr>
+<tr class="separator:a3103e0456d3ecc8ce95fcfb45113ac42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a304eef65e940a0abafe9b5c2806f9559"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559">cgSimulationQuality::Base</a> { <a class="el" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559a9283c3455e0a27a89addc0dff97b1a9d">cgSimulationQuality::Default</a> = 0, 
 <a class="el" href="namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559a2faaaa55356b4e956cf278988e34b9c3">cgSimulationQuality::CCD</a> = 1
  }</td></tr>
 <tr class="separator:a304eef65e940a0abafe9b5c2806f9559"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d2c6092d1783bcca00fa80c16d3c181"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181">cgDefaultPhysicsMaterialGroup::Base</a> { <a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a198236497ac8a945b57974fef079f5cf">cgDefaultPhysicsMaterialGroup::Standard</a> = 0, 
+<tr class="memitem:a7d2c6092d1783bcca00fa80c16d3c181"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181">cgDefaultPhysicsMaterialGroup::Base</a> { <br/>
+&#160;&#160;<a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a198236497ac8a945b57974fef079f5cf">cgDefaultPhysicsMaterialGroup::Standard</a> = 0, 
 <a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a9ee0bffbb4c8d3bcd559e2dd89babaf4">cgDefaultPhysicsMaterialGroup::Character</a>, 
+<a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a9f50d3c6e7cd1aa97695279bbb195dfe">cgDefaultPhysicsMaterialGroup::PlayerCharacter</a>, 
 <a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a05066001366e4729494001eca4702cd1">cgDefaultPhysicsMaterialGroup::Ragdoll</a>, 
+<br/>
+&#160;&#160;<a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a52a0240189f7eaca83c0f588264bced9">cgDefaultPhysicsMaterialGroup::CastOnly</a>, 
 <a class="el" href="namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a9c646940bf3bb5e41c83f24b6de4bde8">cgDefaultPhysicsMaterialGroup::Count</a>
+<br/>
  }</td></tr>
 <tr class="separator:a7d2c6092d1783bcca00fa80c16d3c181"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -176,7 +196,7 @@ Enumerations</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_c18f26b57cc8458db5e695aa3cb280ca.html">Physics</a></li><li class="navelem"><a class="el" href="cg_physics_types_8h.html">cgPhysicsTypes.h</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:03 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:27:57 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

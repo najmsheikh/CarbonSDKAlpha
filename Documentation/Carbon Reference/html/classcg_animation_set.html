@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -182,14 +182,23 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a79c7e94c32ef0e31686845ce462bfa30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the minimum and maximum indices of the frames of animation contained within this animation set.  <a href="#a79c7e94c32ef0e31686845ce462bfa30"></a><br/></td></tr>
 <tr class="separator:a79c7e94c32ef0e31686845ce462bfa30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf509aee0f459f55bfb6720e622ed786"><td class="memItemLeft" align="right" valign="top">const TargetDataMap &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_set.html#acf509aee0f459f55bfb6720e622ed786">getTargetData</a> () const </td></tr>
-<tr class="memdesc:acf509aee0f459f55bfb6720e622ed786"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the animation target data contained in this set.  <a href="#acf509aee0f459f55bfb6720e622ed786"></a><br/></td></tr>
+<tr class="memdesc:acf509aee0f459f55bfb6720e622ed786"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the full dictionary containing animation data for all targets contained in this set.  <a href="#acf509aee0f459f55bfb6720e622ed786"></a><br/></td></tr>
 <tr class="separator:acf509aee0f459f55bfb6720e622ed786"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08ea58149ce89da9fe821a486f8a718d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_animation_set_1_1_target_data.html">TargetData</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_set.html#a08ea58149ce89da9fe821a486f8a718d">getTargetData</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;targetId) const </td></tr>
+<tr class="memdesc:a08ea58149ce89da9fe821a486f8a718d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the animation data for the single target registered with the specified identifier, or CG_NULL if it could not be found.  <a href="#a08ea58149ce89da9fe821a486f8a718d"></a><br/></td></tr>
+<tr class="separator:a08ea58149ce89da9fe821a486f8a718d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a023f342f019d60336f1f5a74887cc5ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_animation_set_1_1_target_data.html">TargetData</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_set.html#a023f342f019d60336f1f5a74887cc5ac">getTargetData</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;targetId)</td></tr>
+<tr class="memdesc:a023f342f019d60336f1f5a74887cc5ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the animation data for the single target registered with the specified identifier, or CG_NULL if it could not be found.  <a href="#a023f342f019d60336f1f5a74887cc5ac"></a><br/></td></tr>
+<tr class="separator:a023f342f019d60336f1f5a74887cc5ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8226b5d37d708e23062c2e501a789e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_animation_set_1_1_target_data.html">TargetData</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_set.html#ac8226b5d37d708e23062c2e501a789e4">getTargetData</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;targetId, bool createTargetData)</td></tr>
+<tr class="memdesc:ac8226b5d37d708e23062c2e501a789e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the animation data for the single target registered with the specified identifier. If no target could be found, this method will either return CG_NULL if 'createTargetData' is set to false, or will create a new target data entry if set to true.  <a href="#ac8226b5d37d708e23062c2e501a789e4"></a><br/></td></tr>
+<tr class="separator:ac8226b5d37d708e23062c2e501a789e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6363fdb69592e277f5bb6da14254471"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_set.html#af6363fdb69592e277f5bb6da14254471">getSRT</a> (<a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> framePosition, <a class="el" href="namespacecg_animation_playback_mode.html#ad05c8be8e2aff0c06edfcb75ebae06df">cgAnimationPlaybackMode::Base</a> mode, const <a class="el" href="classcg_string.html">cgString</a> &amp;targetId, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> firstFrame, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> lastFrame, <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;scale, <a class="el" href="classcg_quaternion.html">cgQuaternion</a> &amp;rotation, <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;translation)</td></tr>
 <tr class="memdesc:af6363fdb69592e277f5bb6da14254471"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the scale, rotation and translation values for the specified target at the specified position (in seconds).  <a href="#af6363fdb69592e277f5bb6da14254471"></a><br/></td></tr>
 <tr class="separator:af6363fdb69592e277f5bb6da14254471"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a615f92c1181fb765b91fedbd7e982835"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_set.html#a615f92c1181fb765b91fedbd7e982835">getSRT</a> (<a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> framePosition, <a class="el" href="namespacecg_animation_playback_mode.html#ad05c8be8e2aff0c06edfcb75ebae06df">cgAnimationPlaybackMode::Base</a> mode, const <a class="el" href="classcg_string.html">cgString</a> &amp;targetId, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> firstFrame, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> lastFrame, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;defaultScale, const <a class="el" href="classcg_quaternion.html">cgQuaternion</a> &amp;defaultRotation, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;defaultTranslation, <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;scale, <a class="el" href="classcg_quaternion.html">cgQuaternion</a> &amp;rotation, <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;translation)</td></tr>
-<tr class="memdesc:a615f92c1181fb765b91fedbd7e982835"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the scale, rotation and translation values for the specified target at the specified position (in seconds).  <a href="#a615f92c1181fb765b91fedbd7e982835"></a><br/></td></tr>
-<tr class="separator:a615f92c1181fb765b91fedbd7e982835"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa365578054ea1c68b8f7823a98d6e693"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_set.html#aa365578054ea1c68b8f7823a98d6e693">getSRT</a> (<a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> framePosition, <a class="el" href="namespacecg_animation_playback_mode.html#ad05c8be8e2aff0c06edfcb75ebae06df">cgAnimationPlaybackMode::Base</a> mode, const <a class="el" href="classcg_string.html">cgString</a> &amp;targetId, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> firstFrame, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> lastFrame, <a class="el" href="classcg_animation_target.html">cgAnimationTarget</a> *defaultsTarget, <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;scale, <a class="el" href="classcg_quaternion.html">cgQuaternion</a> &amp;rotation, <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;translation)</td></tr>
+<tr class="memdesc:aa365578054ea1c68b8f7823a98d6e693"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the scale, rotation and translation values for the specified target at the specified position (in seconds).  <a href="#aa365578054ea1c68b8f7823a98d6e693"></a><br/></td></tr>
+<tr class="separator:aa365578054ea1c68b8f7823a98d6e693"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb02ff5bea1d69926f2e9a154c387413"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_set.html#aeb02ff5bea1d69926f2e9a154c387413">addScaleKey</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> frame, const <a class="el" href="classcg_string.html">cgString</a> &amp;targetId, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;scale)</td></tr>
 <tr class="memdesc:aeb02ff5bea1d69926f2e9a154c387413"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a new scale keyframe to the animation set for the specified animation target.  <a href="#aeb02ff5bea1d69926f2e9a154c387413"></a><br/></td></tr>
 <tr class="separator:aeb02ff5bea1d69926f2e9a154c387413"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -208,6 +217,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af1c4fa917371faf31b93e3b6f9ee0e4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_set.html#af1c4fa917371faf31b93e3b6f9ee0e4d">computeFrameIndex</a> (<a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> position)</td></tr>
 <tr class="memdesc:af1c4fa917371faf31b93e3b6f9ee0e4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a position in seconds, convert that position to the closest frame index as it would be interpreted by the animation set during a call to the '<a class="el" href="classcg_animation_set.html#af6363fdb69592e277f5bb6da14254471" title="Retrieve the scale, rotation and translation values for the specified target at the specified positio...">getSRT()</a>' method.  <a href="#af1c4fa917371faf31b93e3b6f9ee0e4d"></a><br/></td></tr>
 <tr class="separator:af1c4fa917371faf31b93e3b6f9ee0e4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8be72deb2071d315466a76f43ac5fd8e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_set.html#a8be72deb2071d315466a76f43ac5fd8e">targetDataUpdated</a> (bool recomputeRange)</td></tr>
+<tr class="memdesc:a8be72deb2071d315466a76f43ac5fd8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call this method in order to trigger serialization and optionally recompute the animation set frame range when target data is added or adjusted manually.  <a href="#a8be72deb2071d315466a76f43ac5fd8e"></a><br/></td></tr>
+<tr class="separator:a8be72deb2071d315466a76f43ac5fd8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5520482901337aa1b1e3b60ed4a3eeb2"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_set.html#a5520482901337aa1b1e3b60ed4a3eeb2">loadResource</a> ()</td></tr>
 <tr class="memdesc:a5520482901337aa1b1e3b60ed4a3eeb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">If deferred loading is employed, load the underlying resources.  <a href="#a5520482901337aa1b1e3b60ed4a3eeb2"></a><br/></td></tr>
 <tr class="separator:a5520482901337aa1b1e3b60ed4a3eeb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -288,6 +300,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab570671b2bf5d7f8c3e2c9508b02eaa6 inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0e9c746739983ecfbbe25eb9c4efdb1 inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_resource_type.html#ab3ea99a2ba657fda52b52d2d23099ed9">cgResourceType::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#ae0e9c746739983ecfbbe25eb9c4efdb1">getResourceType</a> () const </td></tr>
 <tr class="separator:ae0e9c746739983ecfbbe25eb9c4efdb1 inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f078bb6adfd44214d893a31b6bfc68b inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_stream_type.html#a51fb2dd6b8e37d239ef6a4e5167f8956">cgStreamType::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#a1f078bb6adfd44214d893a31b6bfc68b">getStreamType</a> () const </td></tr>
+<tr class="separator:a1f078bb6adfd44214d893a31b6bfc68b inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01b0d6309f1cfe4f75648bc5c1f5e228 inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource_manager.html">cgResourceManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#a01b0d6309f1cfe4f75648bc5c1f5e228">getManager</a> () const </td></tr>
 <tr class="separator:a01b0d6309f1cfe4f75648bc5c1f5e228 inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a470d6c37c04beb8c53f75919541bfe2b inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#a470d6c37c04beb8c53f75919541bfe2b">canEvict</a> () const </td></tr>
@@ -1086,7 +1100,7 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a615f92c1181fb765b91fedbd7e982835"></a>
+<a class="anchor" id="aa365578054ea1c68b8f7823a98d6e693"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1123,20 +1137,8 @@ Static Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
-          <td class="paramname"><em>DefaultScale</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classcg_quaternion.html">cgQuaternion</a> &amp;&#160;</td>
-          <td class="paramname"><em>DefaultRotation</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
-          <td class="paramname"><em>DefaultTranslation</em>, </td>
+          <td class="paramtype"><a class="el" href="classcg_animation_target.html">cgAnimationTarget</a> *&#160;</td>
+          <td class="paramname"><em>pDefaultsTarget</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1181,7 +1183,71 @@ Static Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retrieve the animation target data contained in this set. </p>
+<p>Retrieve the full dictionary containing animation data for all targets contained in this set. </p>
+
+</div>
+</div>
+<a class="anchor" id="a08ea58149ce89da9fe821a486f8a718d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structcg_animation_set_1_1_target_data.html">cgAnimationSet::TargetData</a> * cgAnimationSet::getTargetData </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>targetId</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the animation data for the single target registered with the specified identifier, or CG_NULL if it could not be found. </p>
+
+</div>
+</div>
+<a class="anchor" id="a023f342f019d60336f1f5a74887cc5ac"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcg_animation_set_1_1_target_data.html">cgAnimationSet::TargetData</a> * cgAnimationSet::getTargetData </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>targetId</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the animation data for the single target registered with the specified identifier, or CG_NULL if it could not be found. </p>
+
+</div>
+</div>
+<a class="anchor" id="ac8226b5d37d708e23062c2e501a789e4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcg_animation_set_1_1_target_data.html">cgAnimationSet::TargetData</a> * cgAnimationSet::getTargetData </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>targetId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>createTargetData</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the animation data for the single target registered with the specified identifier. If no target could be found, this method will either return CG_NULL if 'createTargetData' is set to false, or will create a new target data entry if set to true. </p>
 
 </div>
 </div>
@@ -1386,6 +1452,24 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Disable serialization until a subsequent call to 'resumeSerialization'. This is a useful form of optimization if you plan to make several updates to the object. Optionally, the state of the object can be serialized at this point (defaults to false). </p>
+
+</div>
+</div>
+<a class="anchor" id="a8be72deb2071d315466a76f43ac5fd8e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgAnimationSet::targetDataUpdated </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>recomputeRange</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Call this method in order to trigger serialization and optionally recompute the animation set frame range when target data is added or adjusted manually. </p>
 
 </div>
 </div>
@@ -1845,7 +1929,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_animation_set.html">cgAnimationSet</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:11 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:27:59 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

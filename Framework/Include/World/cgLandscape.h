@@ -797,46 +797,11 @@ public:
 /// rendering the block.
 /// </summary>
 //-----------------------------------------------------------------------------
-class cgLandscapeTextureData
+class CGE_API cgLandscapeTextureData
 {
 public:
     //-------------------------------------------------------------------------
-    // Constructors & Destructors
-    //-------------------------------------------------------------------------
-     cgLandscapeTextureData( cgLandscape * landscape, cgTerrainBlock * parentBlock );
-    ~cgLandscapeTextureData( );
-
-    //-------------------------------------------------------------------------
-    // Public Methods
-    //-------------------------------------------------------------------------
-    bool                loadLayers          ( );
-    bool                getPaintRectangle   ( cgRectF bounds, cgInt32 & startX, cgInt32 & startY, cgInt32 & endX, cgInt32 & endY, cgVector2 & paintCenter, cgVector2 & paintOrigin, cgVector2 & paintDelta ) const;
-    bool                beginPaint          ( const cgMaterialHandle & type, const cgLandscapePaintParams & params );
-    void                endPaint            ( );
-    bool                paint               ( cgFloat x, cgFloat z );
-    bool                paintLine           ( cgFloat fromX, cgFloat fromZ, cgFloat toX, cgFloat toZ );
-    bool                setPixel            ( cgInt32 x, cgInt32 y );
-    void                updatePaintPreview  ( );
-    
-    bool                beginDraw           ( cgRenderDriver * driver );
-    bool                beginDrawPass       ( cgRenderDriver * driver );
-    bool                endDrawPass         ( cgRenderDriver * driver );
-
-    // Notifications
-    // ToDo: 9999 - With material
-    //void                layerTypeRemoved    ( cgLandscapeLayerType * type, cgInt32 typeId );
-    //void                layerTypeUpdated    ( cgLandscapeLayerType * type, cgLandscapeLayerType * newType, cgInt32 typeId );
-
-    // Properties
-    bool                isPainting          ( ) const;
-    bool                isEmpty             ( ) const;
-    const cgByteArray & getPaintData        ( ) const;
-    cgRectF             getBlendMapWorldArea( ) const;
-    cgRect              getBlendMapArea     ( ) const;
-
-protected:
-    //-------------------------------------------------------------------------
-    // Protected Structures
+    // Public Structures
     //-------------------------------------------------------------------------
     struct LayerReference
     {
@@ -867,6 +832,50 @@ protected:
 
     }; // End Struct LayerReference
 
+    //-------------------------------------------------------------------------
+    // Public Typedefs
+    //-------------------------------------------------------------------------
+    CGE_VECTOR_DECLARE( LayerReference, LayerReferenceArray )
+
+    //-------------------------------------------------------------------------
+    // Constructors & Destructors
+    //-------------------------------------------------------------------------
+     cgLandscapeTextureData( cgLandscape * landscape, cgTerrainBlock * parentBlock );
+    ~cgLandscapeTextureData( );
+
+    //-------------------------------------------------------------------------
+    // Public Methods
+    //-------------------------------------------------------------------------
+    bool                        loadLayers          ( );
+    bool                        getPaintRectangle   ( cgRectF bounds, cgInt32 & startX, cgInt32 & startY, cgInt32 & endX, cgInt32 & endY, cgVector2 & paintCenter, cgVector2 & paintOrigin, cgVector2 & paintDelta ) const;
+    bool                        beginPaint          ( const cgMaterialHandle & type, const cgLandscapePaintParams & params );
+    void                        endPaint            ( );
+    bool                        paint               ( cgFloat x, cgFloat z );
+    bool                        paintLine           ( cgFloat fromX, cgFloat fromZ, cgFloat toX, cgFloat toZ );
+    bool                        setPixel            ( cgInt32 x, cgInt32 y );
+    void                        updatePaintPreview  ( );
+    
+    bool                        beginDraw           ( cgRenderDriver * driver );
+    bool                        beginDrawPass       ( cgRenderDriver * driver );
+    bool                        endDrawPass         ( cgRenderDriver * driver );
+
+    // Notifications
+    // ToDo: 9999 - With material
+    //void                layerTypeRemoved    ( cgLandscapeLayerType * type, cgInt32 typeId );
+    //void                layerTypeUpdated    ( cgLandscapeLayerType * type, cgLandscapeLayerType * newType, cgInt32 typeId );
+
+    // Properties
+    bool                        isPainting          ( ) const;
+    bool                        isEmpty             ( ) const;
+    const cgByteArray         & getPaintData        ( ) const;
+    cgRectF                     getBlendMapWorldArea( ) const;
+    cgRect                      getBlendMapArea     ( ) const;
+    const LayerReferenceArray & getLayers           ( ) const;
+
+protected:
+    //-------------------------------------------------------------------------
+    // Protected Structures
+    //-------------------------------------------------------------------------
     struct BatchedMap
     {
         /// <summary>The underlying texture resource used to maintain the layer blend map data for rendering.</summary>
@@ -906,7 +915,6 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Typedefs
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE( LayerReference, LayerReferenceArray )
     CGE_VECTOR_DECLARE( BatchedMap, BatchedMapArray )
     CGE_VECTOR_DECLARE( RenderBatch, RenderBatchArray )
 

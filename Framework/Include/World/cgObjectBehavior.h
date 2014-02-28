@@ -101,7 +101,7 @@ public:
     virtual void                onUpdate                    ( cgFloat timeDelta );
     virtual void                onAttach                    ( cgObjectNode * node );
     virtual void                onDetach                    ( cgObjectNode * node );
-    virtual bool                processMessage              ( cgMessage * message ) { return false; }
+    virtual bool                processMessage              ( cgMessage * message );
     virtual bool                supportsInputChannels       ( ) const;
     virtual bool                initialize                  ( const cgXMLNode & initData, cgScene * scene ) { return true; }
     virtual bool                initialize                  ( cgResourceManager * resources, const cgString & scriptFile, const cgString & instanceId );
@@ -161,6 +161,7 @@ protected:
     // Protected Methods
     //-------------------------------------------------------------------------
     void                        setParentObject             ( cgObjectNode * parentNode );
+    bool                        bindToScript                ( );
 
     //-------------------------------------------------------------------------
     // Protected Variables

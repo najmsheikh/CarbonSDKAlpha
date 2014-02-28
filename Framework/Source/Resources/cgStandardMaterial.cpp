@@ -34,6 +34,7 @@
 #include <Rendering/cgRenderDriver.h>
 #include <Rendering/cgSampler.h>
 #include <System/cgExceptions.h>
+#include <System/cgMessageTypes.h>
 
 // Preview rendering
 #include <System/cgImage.h>
@@ -1353,6 +1354,56 @@ cgSurfaceShaderHandle & cgStandardMaterial::getActiveSurfaceShader( )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : processMessage () (Virtual)
+/// <summary>
+/// Process any messages sent to us from other objects, or other parts
+/// of the system via the reference messaging system (cgReference).
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgStandardMaterial::processMessage( cgMessage * pMessage )
+{
+    // What message is this?
+    switch ( pMessage->messageId )
+    {
+        case cgSystemMessages::Resources_ResourceUpdated:
+
+            // Has one of our samplers been updated?
+            for ( size_t i = 0; i < mSamplers.size(); ++i )
+            {
+                if ( mSamplers[i]->getReferenceId() == pMessage->fromId )
+                {
+                    // This message came from our sampler. Process it as necessary?
+                    if ( mSamplers[i]->getName() == _T("Specular") )
+                    {
+                        // Get the assigned texture to determine its readable channel count.
+		                mSpecularTextureChannels = 0;
+		                cgTextureHandle hTexture = mSamplers[i]->getTexture();
+		                if ( hTexture.isValid() )
+		                {
+			                cgTexture * pTexture = hTexture.getResourceSilent();
+                            cgBufferFormat::Base format = pTexture->getInfo().format;
+			                mSpecularTextureChannels = cgBufferFormatEnum::formatChannelCount( format );
+                            if ( format == cgBufferFormat::BC1 || format == cgBufferFormat::BC1_SRGB )
+                                mSpecularTextureChannels = 3; // DXT1/BC1 does not have enough precision to store gloss in alpha
+                		
+                        } // End if valid texture
+
+                    } // End if specular
+
+                } // End if match
+
+            } // Next sampler
+
+            // Processed message
+            return true;
+    
+    } // End message type switch
+    
+    // Message was not processed, pass to base.
+    return cgMaterial::processMessage( pMessage );
+}
+
+//-----------------------------------------------------------------------------
 //  Name : addSampler ()
 /// <summary>
 /// Create the specified sampler and add it to our internal list. Returns the
@@ -1529,6 +1580,9 @@ void cgStandardMaterial::onSamplerAdded( const cgString & strName, cgSampler * p
     } // End if Specular
     else if ( strName == _T("Light") )
         mLightmapsType = 1; // 1 = Standard, 2 = RNM
+
+    // Subscribe to recieve messages sent by the sampler.
+    cgReferenceManager::subscribeToReference( getReferenceId(), pSampler->getReferenceId() );
 }
 
 //-----------------------------------------------------------------------------
@@ -1550,11 +1604,11 @@ bool cgStandardMaterial::removeSampler( const cgString & strName )
     mSamplers.erase( std::find(mSamplers.begin(), mSamplers.end(), pSampler) );
     mNamedSamplers.erase( strName );
 
+    // Update cached members.
+    onSamplerRemoved( strName, pSampler );
+
     // Clean up the sampler.
     pSampler->removeReference( this, isInternalReference() );
-
-    // Update cached members.
-    onSamplerRemoved( strName );
 
     // Samplers are now dirty
     mDBDirtyFlags |= SamplersDirty;
@@ -1570,7 +1624,7 @@ bool cgStandardMaterial::removeSampler( const cgString & strName )
 /// Update cached member variables based on the removed sampler.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgStandardMaterial::onSamplerRemoved( const cgString & strName )
+void cgStandardMaterial::onSamplerRemoved( const cgString & strName, cgSampler * pSampler )
 {
     // If this is one of our required samplers (diffuse, normal, etc.), we need
     // to remove the cached pointer used to monitor its state.
@@ -1592,6 +1646,9 @@ void cgStandardMaterial::onSamplerRemoved( const cgString & strName )
         mSpecularTextureChannels = 0;
     else if ( strName == _T("Light") )
         mLightmapsType = 0;
+
+    // Unsubscribe from sampler message stream.
+    cgReferenceManager::unsubscribeFromReference( getReferenceId(), pSampler->getReferenceId() );
 }
 
 //-----------------------------------------------------------------------------

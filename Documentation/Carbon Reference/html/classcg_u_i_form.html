@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -226,6 +226,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a855ffa20da3e2acb310cade11b3bf8d4"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_form.html#a855ffa20da3e2acb310cade11b3bf8d4">queryReferenceType</a> (const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;type) const </td></tr>
 <tr class="memdesc:a855ffa20da3e2acb310cade11b3bf8d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows the application to determine if the inheritance hierarchy supports a particular interface.  <a href="#a855ffa20da3e2acb310cade11b3bf8d4"></a><br/></td></tr>
 <tr class="separator:a855ffa20da3e2acb310cade11b3bf8d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74beed6abb5125575bfa6f0365cb1b74"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_form.html#a74beed6abb5125575bfa6f0365cb1b74">processMessage</a> (<a class="el" href="classcg_message.html">cgMessage</a> *message)</td></tr>
+<tr class="memdesc:a74beed6abb5125575bfa6f0365cb1b74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process any messages sent to us from other objects, or other parts of the system via the reference messaging system (<a class="el" href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat...">cgReference</a>).  <a href="#a74beed6abb5125575bfa6f0365cb1b74"></a><br/></td></tr>
+<tr class="separator:a74beed6abb5125575bfa6f0365cb1b74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3183e8de19ed70a3478213eb6356fde8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_form.html#a3183e8de19ed70a3478213eb6356fde8">dispose</a> (bool disposeBase)</td></tr>
 <tr class="memdesc:a3183e8de19ed70a3478213eb6356fde8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any memory, references or resources allocated by this object.  <a href="#a3183e8de19ed70a3478213eb6356fde8"></a><br/></td></tr>
 <tr class="separator:a3183e8de19ed70a3478213eb6356fde8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -469,9 +472,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4089bc9fc24b2e0bcc96376abd6c041c inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a4089bc9fc24b2e0bcc96376abd6c041c">deleteReference</a> ()</td></tr>
 <tr class="memdesc:a4089bc9fc24b2e0bcc96376abd6c041c inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force the deletion of this reference target.  <a href="#a4089bc9fc24b2e0bcc96376abd6c041c"></a><br/></td></tr>
 <tr class="separator:a4089bc9fc24b2e0bcc96376abd6c041c inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c78842232c529fe509dedebb1cecf6b inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a2c78842232c529fe509dedebb1cecf6b">processMessage</a> (<a class="el" href="classcg_message.html">cgMessage</a> *message)</td></tr>
-<tr class="memdesc:a2c78842232c529fe509dedebb1cecf6b inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process any messages sent to us from other objects, or other parts of the system via the reference messaging system (<a class="el" href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat...">cgReference</a>).  <a href="#a2c78842232c529fe509dedebb1cecf6b"></a><br/></td></tr>
-<tr class="separator:a2c78842232c529fe509dedebb1cecf6b inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d0ce63a0c603addc66b2736cbdc5443 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a4d0ce63a0c603addc66b2736cbdc5443">onReferenceAdded</a> (<a class="el" href="classcg_reference.html">cgReference</a> *holder, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> holderReferences, bool reconnecting)</td></tr>
 <tr class="memdesc:a4d0ce63a0c603addc66b2736cbdc5443 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered whenever a new reference to this object is added by a holder. Derived objects may override this virtual if they need to be informed for any reason.  <a href="#a4d0ce63a0c603addc66b2736cbdc5443"></a><br/></td></tr>
 <tr class="separator:a4d0ce63a0c603addc66b2736cbdc5443 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1283,6 +1283,34 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a74beed6abb5125575bfa6f0365cb1b74"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgUIForm::processMessage </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_message.html">cgMessage</a> *&#160;</td>
+          <td class="paramname"><em>pMessage</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Process any messages sent to us from other objects, or other parts of the system via the reference messaging system (<a class="el" href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat...">cgReference</a>). </p>
+
+<p>Reimplemented from <a class="el" href="classcg_reference.html#a2c78842232c529fe509dedebb1cecf6b">cgReference</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a855ffa20da3e2acb310cade11b3bf8d4"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1682,7 +1710,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_u_i_form.html">cgUIForm</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:57 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:12 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

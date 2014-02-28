@@ -12,6 +12,8 @@ var classcg_ragdoll_controller =
     [ "initialize", "classcg_ragdoll_controller.html#a2f4a596e33dba9f260a578c80f772772", null ],
     [ "onPhysicsBodyTransformed", "classcg_ragdoll_controller.html#ac59312cc1847082dc1eb210e9097ed2f", null ],
     [ "restoreHierarchy", "classcg_ragdoll_controller.html#a16f43e179a2db0dad870d1d3aa30cee2", null ],
+    [ "setDefaultConeLimit", "classcg_ragdoll_controller.html#a8fd04e4440c97ac2b418c1f9aac6b767", null ],
     [ "mBoneLUT", "classcg_ragdoll_controller.html#aec9f5c16ee3ea27da68add246648229f", null ],
-    [ "mBones", "classcg_ragdoll_controller.html#a953c9f860b090487cf44c814d0b6ba13", null ]
+    [ "mBones", "classcg_ragdoll_controller.html#a953c9f860b090487cf44c814d0b6ba13", null ],
+    [ "mDefaultConeLimit", "classcg_ragdoll_controller.html#a8312710d28a2ecbe10e252f03b2bfe23", null ]
 ];

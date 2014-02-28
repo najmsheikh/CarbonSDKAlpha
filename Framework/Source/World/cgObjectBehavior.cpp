@@ -30,6 +30,7 @@
 #include <World/cgObjectNode.h>
 #include <Resources/cgResourceManager.h>
 #include <Resources/cgScript.h>
+#include <System/cgMessageTypes.h>
 
 //-----------------------------------------------------------------------------
 // Static member definitions.
@@ -80,7 +81,7 @@ void cgObjectBehavior::dispose( bool bDisposeBase )
     unregisterAsPhysicsListener();
     
     // Release any script objects we retain.
-    if ( mScriptObject != CG_NULL )
+    if ( mScriptObject )
         mScriptObject->release();
     mScriptObject = CG_NULL;
 
@@ -201,6 +202,71 @@ void cgObjectBehavior::unregisterAsInputListener( )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : processMessage () (Virtual)
+/// <summary>
+/// Process any messages sent to us from other objects, or other parts
+/// of the system via the reference messaging system (cgReference).
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgObjectBehavior::processMessage( cgMessage * message )
+{
+    if ( message && message->messageId == cgSystemMessages::Resources_ReloadScripts )
+    {
+        // Has our script been reloaded?
+        if ( mScript.isValid() && (!message->messageData || *(cgUInt32*)message->messageData == mScript.getReferenceId()) )
+        {
+            // If there were any physics step / input methods assigned, remove the
+            // behavior as a listener from the parent object's physics world.
+            if ( mParentObject && mScriptObject )
+            {
+                if ( mScriptMethods.hasPhysicsEvents )
+                    unregisterAsPhysicsListener();
+                if ( mScriptMethods.hasInputEvents )
+                    unregisterAsInputListener();
+
+            } // End if detaching
+
+            // Rebind to the script
+            bindToScript();
+
+            // Notify of attachment
+            if ( mParentObject )
+                onAttach( mParentObject );
+
+            // If there were any physics step / input methods assigned, add the
+            // behavior as a listener to the parent object's physics world.
+            if ( mParentObject && mScriptObject )
+            {
+                if ( mScriptMethods.hasPhysicsEvents )
+                    registerAsPhysicsListener();
+                if ( mScriptMethods.hasInputEvents )
+                    registerAsInputListener();
+
+            } // End if attaching
+
+        } // End if this is our script
+    
+    } // End if reload event
+    else if ( message && message->messageId == cgSystemMessages::System_SandboxModeChange )
+    {
+        // If we're switching to / from preview mode, attach and detach as appropriate.
+        if ( mParentObject )
+        {
+            const cgSandboxModeChangeEventArgs & args = *(cgSandboxModeChangeEventArgs*)(message->messageData);
+            if ( args.oldMode == cgSandboxMode::Enabled && args.newMode == cgSandboxMode::Preview )
+                onAttach( mParentObject );
+            else if ( args.oldMode == cgSandboxMode::Preview && args.newMode == cgSandboxMode::Enabled )
+                onDetach( mParentObject );
+        
+        } // End if has parent
+
+    } // End mode change
+
+    // Don't stop processing
+    return false;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : isScripted ()
 /// <summary>
 /// Returns true if the behavior is implemented through a script. Returns false
@@ -293,7 +359,7 @@ void cgObjectBehavior::setUserId( cgUInt32 identifier )
 void cgObjectBehavior::onDetach( cgObjectNode * pNode )
 {
     // Notify the script that we're detaching
-    if ( mScriptObject )
+    if ( mScriptObject && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         // ToDo: Cache onDetach script methods.
         try
@@ -323,7 +389,7 @@ void cgObjectBehavior::onDetach( cgObjectNode * pNode )
 void cgObjectBehavior::onAttach( cgObjectNode * pNode )
 {
     // Notify the script that we're attaching
-    if ( mScriptObject )
+    if ( mScriptObject && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         // ToDo: Cache onAttach script methods.
         try
@@ -412,19 +478,37 @@ bool cgObjectBehavior::initialize( cgResourceManager * pResources, const cgStrin
     // Attempt to load the behavior script.
     if ( !pResources->loadScript( &mScript, strScript, _T(""), strInstance, 0, cgDebugSource() ) )
     {
-        // Only bail at this point if we're in sandbox mode.
+        // Only bail at this point if we're not in sandbox mode.
         if ( cgGetSandboxMode() == cgSandboxMode::Disabled )
             return false;
     
     } // End if failed
 
-    // Create the scripted behavior object.
+    // Perform our binding
+    return bindToScript();
+}
+
+//-----------------------------------------------------------------------------
+//  Name : bindToScript() (Protected)
+/// <summary>
+/// Called internally to instantiate the relevant script object and to collect
+/// references to any provided behavior override methods.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgObjectBehavior::bindToScript()
+{
+    // Release any script objects we retain.
+    if ( mScriptObject )
+        mScriptObject->release();
+    mScriptObject = CG_NULL;
+
+    // Create the scripted behavior object if possible.
     cgScript * pScript = mScript.getResource(true);
-    if ( pScript != CG_NULL )
+    if ( pScript != CG_NULL && !pScript->isFailed() )
     {
         // Attempt to create the IScriptedObjectBehavior 
         // object whose name matches the name of the file.
-        cgString strObjectType = cgFileSystem::getFileName(strScript, true);
+        cgString strObjectType = cgFileSystem::getFileName(pScript->getInputStream().getName(), true);
         mScriptObject = pScript->createObjectInstance( strObjectType );
 
         // Collect handles to any supplied update methods.
@@ -465,7 +549,7 @@ bool cgObjectBehavior::initialize( cgResourceManager * pResources, const cgStrin
 void cgObjectBehavior::onMouseMove( const cgPoint & Position, const cgPointF & Offset )
 {
     // Notify the script (if any).
-    if ( mScriptObject && mScriptMethods.onMouseMove )
+    if ( mScriptObject && mScriptMethods.onMouseMove && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         try
         {
@@ -494,7 +578,7 @@ void cgObjectBehavior::onMouseMove( const cgPoint & Position, const cgPointF & O
 void cgObjectBehavior::onMouseButtonDown( cgInt32 nButtons, const cgPoint & Position )
 {
     // Notify the script (if any).
-    if ( mScriptObject && mScriptMethods.onMouseButtonDown )
+    if ( mScriptObject && mScriptMethods.onMouseButtonDown && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         try
         {
@@ -523,7 +607,7 @@ void cgObjectBehavior::onMouseButtonDown( cgInt32 nButtons, const cgPoint & Posi
 void cgObjectBehavior::onMouseButtonUp( cgInt32 nButtons, const cgPoint & Position )
 {
     // Notify the script (if any).
-    if ( mScriptObject && mScriptMethods.onMouseButtonUp )
+    if ( mScriptObject && mScriptMethods.onMouseButtonUp && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         try
         {
@@ -552,7 +636,7 @@ void cgObjectBehavior::onMouseButtonUp( cgInt32 nButtons, const cgPoint & Positi
 void cgObjectBehavior::onMouseWheelScroll( cgInt32 nDelta, const cgPoint & Position )
 {
     // Notify the script (if any).
-    if ( mScriptObject && mScriptMethods.onMouseWheelScroll )
+    if ( mScriptObject && mScriptMethods.onMouseWheelScroll && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         try
         {
@@ -581,7 +665,7 @@ void cgObjectBehavior::onMouseWheelScroll( cgInt32 nDelta, const cgPoint & Posit
 void cgObjectBehavior::onKeyDown( cgInt32 nKeyCode, cgUInt32 nModifiers )
 {
     // Notify the script (if any).
-    if ( mScriptObject && mScriptMethods.onKeyDown )
+    if ( mScriptObject && mScriptMethods.onKeyDown && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         try
         {
@@ -610,7 +694,7 @@ void cgObjectBehavior::onKeyDown( cgInt32 nKeyCode, cgUInt32 nModifiers )
 void cgObjectBehavior::onKeyUp( cgInt32 nKeyCode, cgUInt32 nModifiers )
 {
     // Notify the script (if any).
-    if ( mScriptObject && mScriptMethods.onKeyUp )
+    if ( mScriptObject && mScriptMethods.onKeyUp && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         try
         {
@@ -640,7 +724,7 @@ void cgObjectBehavior::onKeyUp( cgInt32 nKeyCode, cgUInt32 nModifiers )
 void cgObjectBehavior::onKeyPressed( cgInt32 nKeyCode, cgUInt32 nModifiers )
 {
     // Notify the script (if any).
-    if ( mScriptObject && mScriptMethods.onKeyPressed )
+    if ( mScriptObject && mScriptMethods.onKeyPressed && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         try
         {
@@ -670,7 +754,7 @@ void cgObjectBehavior::onKeyPressed( cgInt32 nKeyCode, cgUInt32 nModifiers )
 void cgObjectBehavior::onPrePhysicsStep( cgPhysicsWorld * sender, cgPhysicsWorldStepEventArgs * e )
 {
     // Notify the script (if any).
-    if ( mScriptObject && mScriptMethods.onPrePhysicsStep )
+    if ( mScriptObject && mScriptMethods.onPrePhysicsStep && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         try
         {
@@ -700,7 +784,7 @@ void cgObjectBehavior::onPrePhysicsStep( cgPhysicsWorld * sender, cgPhysicsWorld
 void cgObjectBehavior::onPostPhysicsStep( cgPhysicsWorld * sender, cgPhysicsWorldStepEventArgs * e )
 {
     // Notify the script (if any).
-    if ( mScriptObject && mScriptMethods.onPostPhysicsStep )
+    if ( mScriptObject && mScriptMethods.onPostPhysicsStep && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         try
         {
@@ -729,7 +813,7 @@ void cgObjectBehavior::onPostPhysicsStep( cgPhysicsWorld * sender, cgPhysicsWorl
 void cgObjectBehavior::onUpdate( cgFloat fElapsedTime )
 {
     // Notify the script (if any).
-    if ( mScriptObject && mScriptMethods.onUpdate )
+    if ( mScriptObject && mScriptMethods.onUpdate && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         try
         {
@@ -759,7 +843,7 @@ void cgObjectBehavior::onUpdate( cgFloat fElapsedTime )
 void cgObjectBehavior::hitByObject( cgObjectNode * pObject, const cgVector3 & HitPoint, const cgVector3 & SurfaceNormal )
 {
     // Notify the script (if any).
-    if ( mScriptObject != CG_NULL )
+    if ( mScriptObject && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         try
         {
@@ -790,7 +874,7 @@ void cgObjectBehavior::hitByObject( cgObjectNode * pObject, const cgVector3 & Hi
 void cgObjectBehavior::objectHit( cgObjectNode * pObject, const cgVector3 & HitPoint, const cgVector3 & SurfaceNormal )
 {
     // Notify the script (if any).
-    if ( mScriptObject != CG_NULL )
+    if ( mScriptObject && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         try
         {

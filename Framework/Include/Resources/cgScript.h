@@ -104,6 +104,7 @@ public:
     const cgString        & getThisType             ( ) const;
     bool                    defineMacro             ( const cgString & name, const cgString & value );
     bool                    isMacroDefined          ( const cgString & name ) const;
+    bool                    isFailed                ( ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgResource)

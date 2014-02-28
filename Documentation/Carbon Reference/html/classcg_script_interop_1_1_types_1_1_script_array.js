@@ -26,6 +26,7 @@ var classcg_script_interop_1_1_types_1_1_script_array =
     [ "releaseAllHandles", "classcg_script_interop_1_1_types_1_1_script_array.html#acab0705d0e4b0f2b82256c62638c6bc4", null ],
     [ "resize", "classcg_script_interop_1_1_types_1_1_script_array.html#ab9f4373cf2241d1089d90aca9f2384bd", null ],
     [ "setGCFlag", "classcg_script_interop_1_1_types_1_1_script_array.html#a362c7045553e88b1c88c28a803c9b5d7", null ],
+    [ "setValue", "classcg_script_interop_1_1_types_1_1_script_array.html#ac1eb0958f9596e2c6339e3d1b3b5a3c7", null ],
     [ "templateCallback", "classcg_script_interop_1_1_types_1_1_script_array.html#aaaac8dbb3869afc385d5655a49a0f902", null ],
     [ "mBuffer", "classcg_script_interop_1_1_types_1_1_script_array.html#a002f0d73afaf2f4fd8040ebe013934d8", null ],
     [ "mElementSize", "classcg_script_interop_1_1_types_1_1_script_array.html#a0372a74f6efa6b88f9a41ac51f30d1df", null ],

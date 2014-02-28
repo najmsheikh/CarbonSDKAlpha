@@ -1,6 +1,7 @@
 var structcg_material_terms =
 [
     [ "cgMaterialTerms", "structcg_material_terms.html#a365fd6fc74809d97bb081d525c796194", null ],
+    [ "alphaTestValue", "structcg_material_terms.html#acf329faec89a17383278a96705c1bcb5", null ],
     [ "ambient", "structcg_material_terms.html#aba18e974e077641404d19c075c856b26", null ],
     [ "diffuse", "structcg_material_terms.html#a6f0087720f35d83eba195b51e1e4187e", null ],
     [ "diffuseOpacityMapStrength", "structcg_material_terms.html#abd1a20ad3ed8284f383773c776027023", null ],

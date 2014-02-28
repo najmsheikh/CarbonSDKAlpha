@@ -8,6 +8,7 @@ var cg_scene_8h =
     [ "cgSceneElementEventArgs", "structcg_scene_element_event_args.html", "structcg_scene_element_event_args" ],
     [ "cgSelectionSetEventArgs", "structcg_selection_set_event_args.html", "structcg_selection_set_event_args" ],
     [ "cgSceneMaterialEventArgs", "structcg_scene_material_event_args.html", "structcg_scene_material_event_args" ],
+    [ "cgSceneLoadProgressEventArgs", "structcg_scene_load_progress_event_args.html", "structcg_scene_load_progress_event_args" ],
     [ "cgSceneCellKey", "structcg_scene_cell_key.html", "structcg_scene_cell_key" ],
     [ "cgSceneEventListener", "classcg_scene_event_listener.html", "classcg_scene_event_listener" ],
     [ "cgSceneDescriptor", "classcg_scene_descriptor.html", "classcg_scene_descriptor" ],

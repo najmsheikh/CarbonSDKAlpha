@@ -16,6 +16,7 @@ var classcg_texture =
     [ "cgTexture", "classcg_texture.html#ae92d615dc18a50ba8cf64bb8d12e0084", null ],
     [ "cgTexture", "classcg_texture.html#ac6ae5cd3c95508c0affe92d08a0524a8", null ],
     [ "~cgTexture", "classcg_texture.html#a638ff9b6168e85c45b32736010f2bea0", null ],
+    [ "clone", "classcg_texture.html#a2a067c2215268df54e1565885b04ba39", null ],
     [ "configureMedia", "classcg_texture.html#abab1cc34378817357dac5baef542b6a8", null ],
     [ "createInstance", "classcg_texture.html#aa356d420bfee2467a41d900e0d8e3a66", null ],
     [ "createInstance", "classcg_texture.html#a9f714494b106298974cf98b607a95683", null ],

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -128,9 +128,9 @@ Inheritance diagram for cgEulerAnglesTargetController:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5f164fa236b44c9524ab2961da41e98d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#a5f164fa236b44c9524ab2961da41e98d">cgEulerAnglesTargetController</a> ()</td></tr>
-<tr class="memdesc:a5f164fa236b44c9524ab2961da41e98d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classcg_euler_angles_target_controller.html" title="An implementation of the base &#39;cgAnimationTargetController&#39; class that allows the application to repr...">cgEulerAnglesTargetController</a> Class Constructor  <a href="#a5f164fa236b44c9524ab2961da41e98d"></a><br/></td></tr>
-<tr class="separator:a5f164fa236b44c9524ab2961da41e98d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a035bd8d505abd783c6a448db6dab6f12"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#a035bd8d505abd783c6a448db6dab6f12">cgEulerAnglesTargetController</a> (<a class="el" href="namespacecg_euler_angles_order.html#a8ae140b17f9651448be2c2b18a6c7623">cgEulerAnglesOrder::Base</a> order=<a class="el" href="namespacecg_euler_angles_order.html#a8ae140b17f9651448be2c2b18a6c7623a70ce460c7165c5ad358ff1caf6623a0d">cgEulerAnglesOrder::YXZ</a>)</td></tr>
+<tr class="memdesc:a035bd8d505abd783c6a448db6dab6f12"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classcg_euler_angles_target_controller.html" title="An implementation of the base &#39;cgAnimationTargetController&#39; class that allows the application to repr...">cgEulerAnglesTargetController</a> Class Constructor  <a href="#a035bd8d505abd783c6a448db6dab6f12"></a><br/></td></tr>
+<tr class="separator:a035bd8d505abd783c6a448db6dab6f12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f12d8068b1a01ec0a4512562220c4fb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#a7f12d8068b1a01ec0a4512562220c4fb">cgEulerAnglesTargetController</a> (const <a class="el" href="classcg_euler_angles_target_controller.html">cgEulerAnglesTargetController</a> &amp;init, const <a class="el" href="structcg_range.html">cgRange</a> &amp;frameRange)</td></tr>
 <tr class="memdesc:a7f12d8068b1a01ec0a4512562220c4fb"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classcg_euler_angles_target_controller.html" title="An implementation of the base &#39;cgAnimationTargetController&#39; class that allows the application to repr...">cgEulerAnglesTargetController</a> Class Constructor  <a href="#a7f12d8068b1a01ec0a4512562220c4fb"></a><br/></td></tr>
 <tr class="separator:a7f12d8068b1a01ec0a4512562220c4fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -153,9 +153,19 @@ Public Member Functions</h2></td></tr>
 <a class="el" href="classcg_float_curve_animation_channel.html">cgFloatCurveAnimationChannel</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#aafa1ec4c71aafd298efb88547da7f0db">getAnimationChannel</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> index) const </td></tr>
 <tr class="memdesc:aafa1ec4c71aafd298efb88547da7f0db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the data associated with a specific animation channel by index. Valid indices are 0=X, 1=Y, 2=Z  <a href="#aafa1ec4c71aafd298efb88547da7f0db"></a><br/></td></tr>
 <tr class="separator:aafa1ec4c71aafd298efb88547da7f0db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00b736a0a755c1520e7d9b6facee713a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#a00b736a0a755c1520e7d9b6facee713a">serialize</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> targetDataId, const <a class="el" href="classcg_string.html">cgString</a> &amp;controllerIdentifier, <a class="el" href="classcg_world.html">cgWorld</a> *world)</td></tr>
-<tr class="memdesc:a00b736a0a755c1520e7d9b6facee713a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert (or update) the database entries associated with this animation target controller and any associated child animation channels.  <a href="#a00b736a0a755c1520e7d9b6facee713a"></a><br/></td></tr>
-<tr class="separator:a00b736a0a755c1520e7d9b6facee713a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada30ddd54bfc257cb6685cecd68f488b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_float_curve_animation_channel.html">cgFloatCurveAnimationChannel</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#ada30ddd54bfc257cb6685cecd68f488b">getAnimationChannel</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> index)</td></tr>
+<tr class="memdesc:ada30ddd54bfc257cb6685cecd68f488b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the data associated with a specific animation channel by index. Valid indices are 0=X, 1=Y, 2=Z  <a href="#ada30ddd54bfc257cb6685cecd68f488b"></a><br/></td></tr>
+<tr class="separator:ada30ddd54bfc257cb6685cecd68f488b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2df0301d3664f0da3749eb6f04d402e4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#a2df0301d3664f0da3749eb6f04d402e4">isEmpty</a> (bool anyChannelEmpty=false) const </td></tr>
+<tr class="separator:a2df0301d3664f0da3749eb6f04d402e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac44d53003159b49b4fe9097f172a1a37"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_euler_angles_order.html#a8ae140b17f9651448be2c2b18a6c7623">cgEulerAnglesOrder::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#ac44d53003159b49b4fe9097f172a1a37">getRotationOrder</a> () const </td></tr>
+<tr class="separator:ac44d53003159b49b4fe9097f172a1a37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c8cfd4c175c10a15ddc4debd3c1169b"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#a0c8cfd4c175c10a15ddc4debd3c1169b">serialize</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> targetDataId, const <a class="el" href="classcg_string.html">cgString</a> &amp;controllerIdentifier, <a class="el" href="classcg_world.html">cgWorld</a> *world, void *customData, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> customDataSize)</td></tr>
+<tr class="memdesc:a0c8cfd4c175c10a15ddc4debd3c1169b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert (or update) the database entries associated with this animation target controller and any associated child animation channels.  <a href="#a0c8cfd4c175c10a15ddc4debd3c1169b"></a><br/></td></tr>
+<tr class="separator:a0c8cfd4c175c10a15ddc4debd3c1169b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89555006af403032e99375bc01d93180"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#a89555006af403032e99375bc01d93180">deserialize</a> (<a class="el" href="classcg_world_query.html">cgWorldQuery</a> &amp;controllerQuery, bool cloning, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;minFrameOut, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;maxFrameOut, void *&amp;customDataOut, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> &amp;customDataSizeOut)</td></tr>
+<tr class="memdesc:a89555006af403032e99375bc01d93180"><td class="mdescLeft">&#160;</td><td class="mdescRight">Import the data associated with this animation target controller based on the supplied query object.  <a href="#a89555006af403032e99375bc01d93180"></a><br/></td></tr>
+<tr class="separator:a89555006af403032e99375bc01d93180"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a583e1af67131a48f7a793813c8cb1fee"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#a583e1af67131a48f7a793813c8cb1fee">deserializeChannel</a> (<a class="el" href="classcg_world_query.html">cgWorldQuery</a> &amp;channelQuery, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> channelIndex, bool cloning, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;minFrameOut, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;maxFrameOut)</td></tr>
 <tr class="memdesc:a583e1af67131a48f7a793813c8cb1fee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Import the data for the specified animation channel (referenced by index matching the order from '<a class="el" href="classcg_euler_angles_target_controller.html#a6a121da47fa3d205aba84304e45ac097" title="Retrieve an array containing the string identifiers of the animation channels that this controller su...">getSupportedChannels()</a>') associated with this controller from the supplied query object.  <a href="#a583e1af67131a48f7a793813c8cb1fee"></a><br/></td></tr>
 <tr class="separator:a583e1af67131a48f7a793813c8cb1fee"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,9 +185,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a016e0e9b4f4b103239a6148fdb636e45 inherit pub_methods_classcg_animation_target_controller"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_target_controller.html#a016e0e9b4f4b103239a6148fdb636e45">~cgAnimationTargetController</a> ()</td></tr>
 <tr class="memdesc:a016e0e9b4f4b103239a6148fdb636e45 inherit pub_methods_classcg_animation_target_controller"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classcg_animation_target_controller.html" title="Base &#39;class&#39; for an individual controller for an animation target. A target controller commonly defin...">cgAnimationTargetController</a> Class Destructor  <a href="#a016e0e9b4f4b103239a6148fdb636e45"></a><br/></td></tr>
 <tr class="separator:a016e0e9b4f4b103239a6148fdb636e45 inherit pub_methods_classcg_animation_target_controller"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8361856a88746dd5d383dc42e9c8c954 inherit pub_methods_classcg_animation_target_controller"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_target_controller.html#a8361856a88746dd5d383dc42e9c8c954">deserialize</a> (<a class="el" href="classcg_world_query.html">cgWorldQuery</a> &amp;controllerQuery, bool cloning, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;minFrameOut, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;maxFrameOut)</td></tr>
-<tr class="memdesc:a8361856a88746dd5d383dc42e9c8c954 inherit pub_methods_classcg_animation_target_controller"><td class="mdescLeft">&#160;</td><td class="mdescRight">Import the data associated with this animation target controller based on the supplied query object.  <a href="#a8361856a88746dd5d383dc42e9c8c954"></a><br/></td></tr>
-<tr class="separator:a8361856a88746dd5d383dc42e9c8c954 inherit pub_methods_classcg_animation_target_controller"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classcg_script_interop_1_1_disposable_script_object"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcg_script_interop_1_1_disposable_script_object')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcg_script_interop_1_1_disposable_script_object.html">cgScriptInterop::DisposableScriptObject</a></td></tr>
 <tr class="memitem:a815b9a991113bb99acea9e15af2920a2 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a815b9a991113bb99acea9e15af2920a2">DisposableScriptObject</a> ()</td></tr>
 <tr class="separator:a815b9a991113bb99acea9e15af2920a2 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -196,6 +203,8 @@ Public Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a2d004eba9cf17ad55d4be6e3764327e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_float_curve_animation_channel.html">cgFloatCurveAnimationChannel</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#a2d004eba9cf17ad55d4be6e3764327e8">mCurves</a> [3]</td></tr>
 <tr class="separator:a2d004eba9cf17ad55d4be6e3764327e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d74747f1fd7b67c51fa6fe1bb137691"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_euler_angles_order.html#a8ae140b17f9651448be2c2b18a6c7623">cgEulerAnglesOrder::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_euler_angles_target_controller.html#a9d74747f1fd7b67c51fa6fe1bb137691">mRotationOrder</a></td></tr>
+<tr class="separator:a9d74747f1fd7b67c51fa6fe1bb137691"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classcg_animation_target_controller"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_animation_target_controller')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_animation_target_controller.html">cgAnimationTargetController</a></td></tr>
 <tr class="memitem:ae45da836813f2dea90de700e61e87c74 inherit pro_attribs_classcg_animation_target_controller"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_target_controller.html#ae45da836813f2dea90de700e61e87c74">mDatabaseId</a></td></tr>
 <tr class="separator:ae45da836813f2dea90de700e61e87c74 inherit pro_attribs_classcg_animation_target_controller"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -223,14 +232,15 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>An implementation of the base '<a class="el" href="classcg_animation_target_controller.html" title="Base &#39;class&#39; for an individual controller for an animation target. A target controller commonly defin...">cgAnimationTargetController</a>' class that allows the application to represent three separate euler angles (XYZ in degrees) as a series of curves for the purpose of animation. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a5f164fa236b44c9524ab2961da41e98d"></a>
+<a class="anchor" id="a035bd8d505abd783c6a448db6dab6f12"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">cgEulerAnglesTargetController::cgEulerAnglesTargetController </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespacecg_euler_angles_order.html#a8ae140b17f9651448be2c2b18a6c7623">cgEulerAnglesOrder::Base</a>&#160;</td>
+          <td class="paramname"><em>order</em> = <code><a class="el" href="namespacecg_euler_angles_order.html#a8ae140b17f9651448be2c2b18a6c7623a70ce460c7165c5ad358ff1caf6623a0d">cgEulerAnglesOrder::YXZ</a></code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -347,6 +357,68 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Insert a new key-frame into the controller's animation channels to produce a linear interpolation between the previous and new keys. </p>
+
+</div>
+</div>
+<a class="anchor" id="a89555006af403032e99375bc01d93180"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgEulerAnglesTargetController::deserialize </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_world_query.html">cgWorldQuery</a> &amp;&#160;</td>
+          <td class="paramname"><em>controllerQuery</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>cloning</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;&#160;</td>
+          <td class="paramname"><em>minFrameOut</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;&#160;</td>
+          <td class="paramname"><em>maxFrameOut</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&amp;&#160;</td>
+          <td class="paramname"><em>customDataOut</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> &amp;&#160;</td>
+          <td class="paramname"><em>customDataSizeOut</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Import the data associated with this animation target controller based on the supplied query object. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_animation_target_controller.html#af81b744e7741486a88955ef1453ba178">cgAnimationTargetController</a>.</p>
 
 </div>
 </div>
@@ -521,6 +593,24 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ada30ddd54bfc257cb6685cecd68f488b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_float_curve_animation_channel.html">cgFloatCurveAnimationChannel</a> &amp; cgEulerAnglesTargetController::getAnimationChannel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the data associated with a specific animation channel by index. Valid indices are 0=X, 1=Y, 2=Z </p>
+
+</div>
+</div>
 <a class="anchor" id="a4e64f674593f93af5bba5b461e985b5b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -543,6 +633,29 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classcg_animation_target_controller.html#a51977ec4b0004b698876245ace4b6fc9">cgAnimationTargetController</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac44d53003159b49b4fe9097f172a1a37"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacecg_euler_angles_order.html#a8ae140b17f9651448be2c2b18a6c7623">cgEulerAnglesOrder::Base</a> cgEulerAnglesTargetController::getRotationOrder </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -573,7 +686,31 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a00b736a0a755c1520e7d9b6facee713a"></a>
+<a class="anchor" id="a2df0301d3664f0da3749eb6f04d402e4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgEulerAnglesTargetController::isEmpty </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>anyChannelEmpty</em> = <code>false</code></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0c8cfd4c175c10a15ddc4debd3c1169b"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -596,7 +733,19 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classcg_world.html">cgWorld</a> *&#160;</td>
-          <td class="paramname"><em>world</em>&#160;</td>
+          <td class="paramname"><em>world</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>customData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>customDataSize</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -613,7 +762,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Insert (or update) the database entries associated with this animation target controller and any associated child animation channels. </p>
 
-<p>Reimplemented from <a class="el" href="classcg_animation_target_controller.html#a17621a5efc797282eab5b944e98b4239">cgAnimationTargetController</a>.</p>
+<p>Reimplemented from <a class="el" href="classcg_animation_target_controller.html#aff32f1fa5ef0e2a0996edaa61c05bd74">cgAnimationTargetController</a>.</p>
 
 </div>
 </div>
@@ -638,6 +787,26 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a9d74747f1fd7b67c51fa6fe1bb137691"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacecg_euler_angles_order.html#a8ae140b17f9651448be2c2b18a6c7623">cgEulerAnglesOrder::Base</a> cgEulerAnglesTargetController::mRotationOrder</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="cg_animation_types_8h_source.html">cgAnimationTypes.h</a></li>
 <li><a class="el" href="cg_animation_types_8cpp.html">cgAnimationTypes.cpp</a></li>
@@ -648,7 +817,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_euler_angles_target_controller.html">cgEulerAnglesTargetController</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:25 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:02 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

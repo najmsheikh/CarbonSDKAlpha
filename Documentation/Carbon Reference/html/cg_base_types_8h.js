@@ -42,11 +42,14 @@ var cg_base_types_8h =
     ] ],
     [ "Base", "cg_base_types_8h.html#a3cddff019459e19bbec2d48d5887ea46", [
       [ "Meters", "cg_base_types_8h.html#a3cddff019459e19bbec2d48d5887ea46ab8501d4b5cc977be1f5869500d929d29", null ],
+      [ "Decimeters", "cg_base_types_8h.html#a3cddff019459e19bbec2d48d5887ea46aa74e5229841d46eebbe7ba25995817cb", null ],
       [ "Centimeters", "cg_base_types_8h.html#a3cddff019459e19bbec2d48d5887ea46a711978111f89abf9adbce2099cb1090c", null ],
       [ "Millimeters", "cg_base_types_8h.html#a3cddff019459e19bbec2d48d5887ea46a1b753298335abf4669a0c9d15b07ccac", null ],
+      [ "Kilometers", "cg_base_types_8h.html#a3cddff019459e19bbec2d48d5887ea46a7d53a015b189e23e8d78a924152454f1", null ],
       [ "Inches", "cg_base_types_8h.html#a3cddff019459e19bbec2d48d5887ea46adab6be0c6bf535b51ebe57b060d35df6", null ],
       [ "Feet", "cg_base_types_8h.html#a3cddff019459e19bbec2d48d5887ea46a5306ac3b9e7f460d0abf12bd6218a5bb", null ],
-      [ "Yards", "cg_base_types_8h.html#a3cddff019459e19bbec2d48d5887ea46a4d676dac0adb1288145809037b902506", null ]
+      [ "Yards", "cg_base_types_8h.html#a3cddff019459e19bbec2d48d5887ea46a4d676dac0adb1288145809037b902506", null ],
+      [ "Miles", "cg_base_types_8h.html#a3cddff019459e19bbec2d48d5887ea46a4221e78c2d7da3d789684e0cefc838d7", null ]
     ] ],
     [ "convert", "cg_base_types_8h.html#a4ad166f513fccaa79b7f97c8e4ec8515", null ],
     [ "operator*", "cg_base_types_8h.html#a55cdaac4316da77e962f9170068bfb32", null ],

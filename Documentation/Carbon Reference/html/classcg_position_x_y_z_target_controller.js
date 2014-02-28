@@ -8,8 +8,10 @@ var classcg_position_x_y_z_target_controller =
     [ "dispose", "classcg_position_x_y_z_target_controller.html#a35a181f4924e70004a3c19ecea1dcd73", null ],
     [ "evaluate", "classcg_position_x_y_z_target_controller.html#a254711929f5a76c8bf77ff609b193734", null ],
     [ "getAnimationChannel", "classcg_position_x_y_z_target_controller.html#a1b78eb4d3ec0bf0499e089e44a26760d", null ],
+    [ "getAnimationChannel", "classcg_position_x_y_z_target_controller.html#ad5b77077de36004156d4b8d866d6d48c", null ],
     [ "getControllerType", "classcg_position_x_y_z_target_controller.html#a78e69ebf1304fe10cc826ce9c737d763", null ],
     [ "getSupportedChannels", "classcg_position_x_y_z_target_controller.html#a3d11c613a0a62174b5cfcf2e30a1b83f", null ],
-    [ "serialize", "classcg_position_x_y_z_target_controller.html#aa699f3cb6c8666f5a632412e0d31e323", null ],
+    [ "isEmpty", "classcg_position_x_y_z_target_controller.html#a12d9f9c8e1bdd4186967feba4f2bc197", null ],
+    [ "serialize", "classcg_position_x_y_z_target_controller.html#af3b10a8524163b96bf1c07154262d020", null ],
     [ "mCurves", "classcg_position_x_y_z_target_controller.html#a22aa5e7d449e45b912f97da6d301d104", null ]
 ];

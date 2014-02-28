@@ -11,6 +11,7 @@ var cg_math_utility_8h =
     [ "compareVectors", "cg_math_utility_8h.html#ad4b9c2d2486945f1ab40525d48c5f73b", null ],
     [ "distanceToLineSegment", "cg_math_utility_8h.html#a8b35d1ae36b47361735c927e24fc1557", null ],
     [ "distanceToPlane", "cg_math_utility_8h.html#aa38c2b961eb9961db2d719a5707f13d1", null ],
+    [ "dynamicEpsilonTest", "cg_math_utility_8h.html#ac4b85a99b0b8bbd1867b0bf674fcd584", null ],
     [ "integerCeil", "cg_math_utility_8h.html#afc6a8ae8fd1d89152d67573188a3428b", null ],
     [ "integerFloor", "cg_math_utility_8h.html#a618d799b7fe312e1bc9533d85bbd31e5", null ],
     [ "isEven", "cg_math_utility_8h.html#a7d3d6dcdb3d8f29d7ba6536c064e3076", null ],

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -179,11 +179,23 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab972a150a0fe2a2b5e4591d97517453a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#ab972a150a0fe2a2b5e4591d97517453a">setFullScreenMode</a> (bool fullScreen)</td></tr>
 <tr class="memdesc:ab972a150a0fe2a2b5e4591d97517453a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alter the styling of the window to match the requested full screen mode.  <a href="#ab972a150a0fe2a2b5e4591d97517453a"></a><br/></td></tr>
 <tr class="separator:ab972a150a0fe2a2b5e4591d97517453a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6400cf371af9e5c37c3938d45ee543de"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#a6400cf371af9e5c37c3938d45ee543de">setCursor</a> (<a class="el" href="classcg_cursor.html">cgCursor</a> *cursor)</td></tr>
+<tr class="memdesc:a6400cf371af9e5c37c3938d45ee543de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the cursor image to be displayed when the user's cursor falls within this application window.  <a href="#a6400cf371af9e5c37c3938d45ee543de"></a><br/></td></tr>
+<tr class="separator:a6400cf371af9e5c37c3938d45ee543de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d5f4c18b17105c77b41ea44741cd14a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#a7d5f4c18b17105c77b41ea44741cd14a">showCursor</a> (bool <a class="el" href="classcg_win_app_window.html#a0886496edad2bd571d6672a472a71ea1">show</a>)</td></tr>
+<tr class="memdesc:a7d5f4c18b17105c77b41ea44741cd14a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show or hide the platform cursor for this window. This is implemented as a counter whereby multiple calls to show the cursor are counted and thus will require the same number of matching calls to hide the cursor before it will be hidden.  <a href="#a7d5f4c18b17105c77b41ea44741cd14a"></a><br/></td></tr>
+<tr class="separator:a7d5f4c18b17105c77b41ea44741cd14a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3440229ff6fb0218a09ce07039122877"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#a3440229ff6fb0218a09ce07039122877">constrainCursor</a> (bool enable)</td></tr>
+<tr class="memdesc:a3440229ff6fb0218a09ce07039122877"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable / disable constraint that prevents cursor from leaving the client area of the window while it has focus. Only one window may constrain at a time.  <a href="#a3440229ff6fb0218a09ce07039122877"></a><br/></td></tr>
+<tr class="separator:a3440229ff6fb0218a09ce07039122877"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addd4a7b0c2454839edb3143fb653228d"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#addd4a7b0c2454839edb3143fb653228d">getReferenceType</a> () const </td></tr>
 <tr class="separator:addd4a7b0c2454839edb3143fb653228d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea7dc301e7e08dd4865acee351960f28"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#aea7dc301e7e08dd4865acee351960f28">queryReferenceType</a> (const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;type) const </td></tr>
 <tr class="memdesc:aea7dc301e7e08dd4865acee351960f28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows the application to determine if the inheritance hierarchy supports a particular interface.  <a href="#aea7dc301e7e08dd4865acee351960f28"></a><br/></td></tr>
 <tr class="separator:aea7dc301e7e08dd4865acee351960f28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc7adc7ff90511ad603d967a71428c4f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#adc7adc7ff90511ad603d967a71428c4f">dispose</a> (bool disposeBase)</td></tr>
+<tr class="memdesc:adc7adc7ff90511ad603d967a71428c4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any memory, references or resources allocated by this object.  <a href="#adc7adc7ff90511ad603d967a71428c4f"></a><br/></td></tr>
+<tr class="separator:adc7adc7ff90511ad603d967a71428c4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classcg_app_window"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcg_app_window')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcg_app_window.html">cgAppWindow</a></td></tr>
 <tr class="memitem:a7d7bcbb812de3bdf388b8a8a37a1f932 inherit pub_methods_classcg_app_window"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_window.html#a7d7bcbb812de3bdf388b8a8a37a1f932">cgAppWindow</a> ()</td></tr>
 <tr class="memdesc:a7d7bcbb812de3bdf388b8a8a37a1f932 inherit pub_methods_classcg_app_window"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classcg_app_window.html" title="Base window / form class that provides an interface between the engine and any platform specific wind...">cgAppWindow</a> Class Constructor  <a href="#a7d7bcbb812de3bdf388b8a8a37a1f932"></a><br/></td></tr>
@@ -206,6 +218,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a24fed0cbfe7535a241429cb4ebde4820 inherit pub_methods_classcg_app_window"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_window.html#a24fed0cbfe7535a241429cb4ebde4820">onClose</a> ()</td></tr>
 <tr class="memdesc:a24fed0cbfe7535a241429cb4ebde4820 inherit pub_methods_classcg_app_window"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered when the window is closed.  <a href="#a24fed0cbfe7535a241429cb4ebde4820"></a><br/></td></tr>
 <tr class="separator:a24fed0cbfe7535a241429cb4ebde4820 inherit pub_methods_classcg_app_window"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8785c5cf7987a994c48d3f1168fcd479 inherit pub_methods_classcg_app_window"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_window.html#a8785c5cf7987a994c48d3f1168fcd479">onUpdateCursor</a> ()</td></tr>
+<tr class="memdesc:a8785c5cf7987a994c48d3f1168fcd479 inherit pub_methods_classcg_app_window"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered when the cursor associated with the window is about to be updated.  <a href="#a8785c5cf7987a994c48d3f1168fcd479"></a><br/></td></tr>
+<tr class="separator:a8785c5cf7987a994c48d3f1168fcd479 inherit pub_methods_classcg_app_window"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classcg_reference"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcg_reference')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcg_reference.html">cgReference</a></td></tr>
 <tr class="memitem:aa8f452d66f4666a9b79f1c00d65c6fc6 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#aa8f452d66f4666a9b79f1c00d65c6fc6">cgReference</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> referenceId)</td></tr>
 <tr class="separator:aa8f452d66f4666a9b79f1c00d65c6fc6 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -234,9 +249,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6c6b039d22947453f9fecd578aa36986 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a6c6b039d22947453f9fecd578aa36986">onReferenceRemoved</a> (<a class="el" href="classcg_reference.html">cgReference</a> *holder, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> holderReferences, bool disconnecting)</td></tr>
 <tr class="memdesc:a6c6b039d22947453f9fecd578aa36986 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered whenever an existing reference to this object is removed by a holder. Derived objects may override this virtual if they need to be informed for any reason.  <a href="#a6c6b039d22947453f9fecd578aa36986"></a><br/></td></tr>
 <tr class="separator:a6c6b039d22947453f9fecd578aa36986 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af081655ab5cc38075fc2fd3d5d7cd879 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#af081655ab5cc38075fc2fd3d5d7cd879">dispose</a> (bool disposeBase)</td></tr>
-<tr class="memdesc:af081655ab5cc38075fc2fd3d5d7cd879 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any memory, references or resources allocated by this object.  <a href="#af081655ab5cc38075fc2fd3d5d7cd879"></a><br/></td></tr>
-<tr class="separator:af081655ab5cc38075fc2fd3d5d7cd879 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#abc11be6582c83be070816daf60d96781">isInternalReference</a> () const </td></tr>
 <tr class="memdesc:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this reference is either an internal or serialized reference.  <a href="#abc11be6582c83be070816daf60d96781"></a><br/></td></tr>
 <tr class="separator:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -295,8 +307,36 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a1610bf153d53e670760726a503e856b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac15b70bd6d699f0eda6598937a181cc2"><td class="memItemLeft" align="right" valign="top">WNDCLASS&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#ac15b70bd6d699f0eda6598937a181cc2">mWndClass</a></td></tr>
 <tr class="separator:ac15b70bd6d699f0eda6598937a181cc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ed914644bca6a8b192b27f2cc7f755b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_string.html">cgString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#a0ed914644bca6a8b192b27f2cc7f755b">mClassName</a></td></tr>
-<tr class="separator:a0ed914644bca6a8b192b27f2cc7f755b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02d854953052c2e1922ed6b6274025b4"><td class="memItemLeft" align="right" valign="top">ATOM&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#a02d854953052c2e1922ed6b6274025b4">mClassAtom</a></td></tr>
+<tr class="separator:a02d854953052c2e1922ed6b6274025b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78b9cda4289391c7f2026d3d237b5dc2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_win_app_window.html#a78b9cda4289391c7f2026d3d237b5dc2">mCursorConstrained</a></td></tr>
+<tr class="separator:a78b9cda4289391c7f2026d3d237b5dc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classcg_app_window"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_app_window')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_app_window.html">cgAppWindow</a></td></tr>
+<tr class="memitem:a230828fb51eeeeb664ef04a99cc51f43 inherit pro_attribs_classcg_app_window"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_cursor.html">cgCursor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_window.html#a230828fb51eeeeb664ef04a99cc51f43">mCursor</a></td></tr>
+<tr class="separator:a230828fb51eeeeb664ef04a99cc51f43 inherit pro_attribs_classcg_app_window"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1c57a44579d5e80bf74bf16de64a412 inherit pro_attribs_classcg_app_window"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_window.html#ad1c57a44579d5e80bf74bf16de64a412">mCursorVisCount</a></td></tr>
+<tr class="separator:ad1c57a44579d5e80bf74bf16de64a412 inherit pro_attribs_classcg_app_window"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classcg_reference"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_reference')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_reference.html">cgReference</a></td></tr>
+<tr class="memitem:a58ab53765ddfa978c2ef51a3a75bab63 inherit pro_attribs_classcg_reference"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a58ab53765ddfa978c2ef51a3a75bab63">mReferenceId</a></td></tr>
+<tr class="separator:a58ab53765ddfa978c2ef51a3a75bab63 inherit pro_attribs_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1b5793d4e823c110e1975aaa887487b inherit pro_attribs_classcg_reference"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#ad1b5793d4e823c110e1975aaa887487b">mLiveRefCount</a></td></tr>
+<tr class="separator:ad1b5793d4e823c110e1975aaa887487b inherit pro_attribs_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5c9bf12615727e2aa9af32d705bb94f inherit pro_attribs_classcg_reference"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#ad5c9bf12615727e2aa9af32d705bb94f">mSoftRefCount</a></td></tr>
+<tr class="separator:ad5c9bf12615727e2aa9af32d705bb94f inherit pro_attribs_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3681d5fc05cd6e32d724d397b41ef83 inherit pro_attribs_classcg_reference"><td class="memItemLeft" align="right" valign="top">ReferenceMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#ac3681d5fc05cd6e32d724d397b41ef83">mReferencedBy</a></td></tr>
+<tr class="separator:ac3681d5fc05cd6e32d724d397b41ef83 inherit pro_attribs_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e58f7028ccafe6dc1d62834f9b55863 inherit pro_attribs_classcg_reference"><td class="memItemLeft" align="right" valign="top">ReferenceMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a9e58f7028ccafe6dc1d62834f9b55863">mReferencesTo</a></td></tr>
+<tr class="separator:a9e58f7028ccafe6dc1d62834f9b55863 inherit pro_attribs_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1749eeb16fa3f3ce834125fbd22d2583 inherit pro_attribs_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a1749eeb16fa3f3ce834125fbd22d2583">mDisposed</a></td></tr>
+<tr class="separator:a1749eeb16fa3f3ce834125fbd22d2583 inherit pro_attribs_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b0a1354a2f4ced6aa34688f6f4761e9 inherit pro_attribs_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a0b0a1354a2f4ced6aa34688f6f4761e9">mDisposing</a></td></tr>
+<tr class="separator:a0b0a1354a2f4ced6aa34688f6f4761e9 inherit pro_attribs_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classcg_event_dispatcher"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_event_dispatcher')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_event_dispatcher.html">cgEventDispatcher</a></td></tr>
+<tr class="memitem:a60b73d596abf511416b0e36e5b107e1b inherit pro_attribs_classcg_event_dispatcher"><td class="memItemLeft" align="right" valign="top">EventListenerList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_event_dispatcher.html#a60b73d596abf511416b0e36e5b107e1b">mEventListeners</a></td></tr>
+<tr class="separator:a60b73d596abf511416b0e36e5b107e1b inherit pro_attribs_classcg_event_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classcg_script_interop_1_1_disposable_script_object"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_script_interop_1_1_disposable_script_object')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_script_interop_1_1_disposable_script_object.html">cgScriptInterop::DisposableScriptObject</a></td></tr>
+<tr class="memitem:a5da40dc03376bc8d5c50145690eb5f28 inherit pro_attribs_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a5da40dc03376bc8d5c50145690eb5f28">mScriptRefCount</a></td></tr>
+<tr class="separator:a5da40dc03376bc8d5c50145690eb5f28 inherit pro_attribs_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -400,6 +440,34 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a3440229ff6fb0218a09ce07039122877"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgWinAppWindow::constrainCursor </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enable / disable constraint that prevents cursor from leaving the client area of the window while it has focus. Only one window may constrain at a time. </p>
+
+<p>Implements <a class="el" href="classcg_app_window.html#a16bba143da043ca7316dc41b8b75f393">cgAppWindow</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a07c38bac419dfbd4f464e386aa58459b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -453,6 +521,35 @@ Additional Inherited Members</h2></td></tr>
 <p>Create the application window ready for display. </p>
 
 <p>Implements <a class="el" href="classcg_app_window.html#a7153450bfe35b42b4db96b5f47cf23b9">cgAppWindow</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="adc7adc7ff90511ad603d967a71428c4f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgWinAppWindow::dispose </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bDisposeBase</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Release any memory, references or resources allocated by this object. </p>
+<p>&lt;copydetails cref="cgScriptInterop::DisposableScriptObject::dispose()"&gt; </p>
+
+<p>Reimplemented from <a class="el" href="classcg_app_window.html#a8e2a99cc4eee7f5744afe04f22ac8cf7">cgAppWindow</a>.</p>
 
 </div>
 </div>
@@ -690,6 +787,34 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a6400cf371af9e5c37c3938d45ee543de"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgWinAppWindow::setCursor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_cursor.html">cgCursor</a> *&#160;</td>
+          <td class="paramname"><em>pCursor</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update the cursor image to be displayed when the user's cursor falls within this application window. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_app_window.html#a936f3866187ff6670b9cd3d3e910f1f0">cgAppWindow</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ab972a150a0fe2a2b5e4591d97517453a"></a>
 <div class="memitem">
 <div class="memproto">
@@ -801,6 +926,34 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a7d5f4c18b17105c77b41ea44741cd14a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgWinAppWindow::showCursor </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>show</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Show or hide the platform cursor for this window. This is implemented as a counter whereby multiple calls to show the cursor are counted and thus will require the same number of matching calls to hide the cursor before it will be hidden. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_app_window.html#adca58d7db253663e77c655ac04cdf667">cgAppWindow</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a9c3687d627192ccb765f8feb54040d64"></a>
 <div class="memitem">
 <div class="memproto">
@@ -850,7 +1003,7 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="a0ed914644bca6a8b192b27f2cc7f755b"></a>
+<a class="anchor" id="a02d854953052c2e1922ed6b6274025b4"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -858,7 +1011,27 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classcg_string.html">cgString</a> cgWinAppWindow::mClassName</td>
+          <td class="memname">ATOM cgWinAppWindow::mClassAtom</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a78b9cda4289391c7f2026d3d237b5dc2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgWinAppWindow::mCursorConstrained</td>
         </tr>
       </table>
   </td>
@@ -960,7 +1133,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_win_app_window.html">cgWinAppWindow</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:59 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:13 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

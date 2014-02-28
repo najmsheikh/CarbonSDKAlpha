@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -213,6 +213,9 @@ cgFilterExpression::IdentifierArray &amp;&#160;</td><td class="memItemRight" val
 <tr class="memitem:a6c6ce25b0fb23fc2b11ceb309469387d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a6c6ce25b0fb23fc2b11ceb309469387d">unloadObjectNode</a> (<a class="el" href="classcg_object_node.html">cgObjectNode</a> *node)</td></tr>
 <tr class="memdesc:a6c6ce25b0fb23fc2b11ceb309469387d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call in order to remove the specified node from the in-memory scene but /not/ from the scene database.  <a href="#a6c6ce25b0fb23fc2b11ceb309469387d"></a><br/></td></tr>
 <tr class="separator:a6c6ce25b0fb23fc2b11ceb309469387d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71fa0e8a5b59886e64b41b9422d72a7d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a71fa0e8a5b59886e64b41b9422d72a7d">unloadObjectNode</a> (<a class="el" href="classcg_object_node.html">cgObjectNode</a> *node, bool unloadChildren)</td></tr>
+<tr class="memdesc:a71fa0e8a5b59886e64b41b9422d72a7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call in order to remove the specified node from the in-memory scene but /not/ from the scene database.  <a href="#a71fa0e8a5b59886e64b41b9422d72a7d"></a><br/></td></tr>
+<tr class="separator:a71fa0e8a5b59886e64b41b9422d72a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a049b7080740f6fa8d64c2f039de070"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a2a049b7080740f6fa8d64c2f039de070">unloadObjectNodes</a> (cgObjectNodeMap &amp;nodes)</td></tr>
 <tr class="memdesc:a2a049b7080740f6fa8d64c2f039de070"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call in order to remove a whole list of nodes from the in-memory scene in one go, but /not/ from the scene database.  <a href="#a2a049b7080740f6fa8d64c2f039de070"></a><br/></td></tr>
 <tr class="separator:a2a049b7080740f6fa8d64c2f039de070"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -483,6 +486,9 @@ cgFilterExpression::IdentifierArray &amp;&#160;</td><td class="memItemRight" val
 <tr class="memitem:a66f5b138d8e030de31631cc6b04e9011"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a66f5b138d8e030de31631cc6b04e9011">resetSelectedPivot</a> ()</td></tr>
 <tr class="memdesc:a66f5b138d8e030de31631cc6b04e9011"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the pivot point of all selected nodes.  <a href="#a66f5b138d8e030de31631cc6b04e9011"></a><br/></td></tr>
 <tr class="separator:a66f5b138d8e030de31631cc6b04e9011"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b12555860991525aa4054836a2bd211"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a9b12555860991525aa4054836a2bd211">onSceneLoadProgress</a> (<a class="el" href="structcg_scene_load_progress_event_args.html">cgSceneLoadProgressEventArgs</a> *e)</td></tr>
+<tr class="memdesc:a9b12555860991525aa4054836a2bd211"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be overriden or called by derived class in order to trigger the event with matching name. All listeners will subsequently be notified.  <a href="#a9b12555860991525aa4054836a2bd211"></a><br/></td></tr>
+<tr class="separator:a9b12555860991525aa4054836a2bd211"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3188f9e3e340c396ce077626691b963f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a3188f9e3e340c396ce077626691b963f">onSceneDirtyChange</a> (<a class="el" href="structcg_scene_event_args.html">cgSceneEventArgs</a> *e)</td></tr>
 <tr class="memdesc:a3188f9e3e340c396ce077626691b963f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be overriden or called by derived class in order to trigger the event with matching name. All listeners will subsequently be notified.  <a href="#a3188f9e3e340c396ce077626691b963f"></a><br/></td></tr>
 <tr class="separator:a3188f9e3e340c396ce077626691b963f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -706,6 +712,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a4b6d0906085dfd4e2870cc0fa2612ce8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ced48c728b77ca9545e3f147f2f53b9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a7ced48c728b77ca9545e3f147f2f53b9">mDynamicsEnabled</a></td></tr>
 <tr class="separator:a7ced48c728b77ca9545e3f147f2f53b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ff1522f4f35246fa698f9aafb6e0506"><td class="memItemLeft" align="right" valign="top">VisibilitySetArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a5ff1522f4f35246fa698f9aafb6e0506">mOrphanVisSets</a></td></tr>
+<tr class="separator:a5ff1522f4f35246fa698f9aafb6e0506"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3024ef72cabb67af419222dd6ed2b67c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a3024ef72cabb67af419222dd6ed2b67c">mIsDirty</a></td></tr>
 <tr class="separator:a3024ef72cabb67af419222dd6ed2b67c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e726f24f3070348b2c2768ac568c65e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a3e726f24f3070348b2c2768ac568c65e">mSceneWritesEnabled</a></td></tr>
@@ -2962,6 +2970,32 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a9b12555860991525aa4054836a2bd211"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgScene::onSceneLoadProgress </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcg_scene_load_progress_event_args.html">cgSceneLoadProgressEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Can be overriden or called by derived class in order to trigger the event with matching name. All listeners will subsequently be notified. </p>
+
+</div>
+</div>
 <a class="anchor" id="a2b1ce0bc147edc3203766e1eb92f58b9"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3896,6 +3930,34 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a71fa0e8a5b59886e64b41b9422d72a7d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgScene::unloadObjectNode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_object_node.html">cgObjectNode</a> *&#160;</td>
+          <td class="paramname"><em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>unloadChildren</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Call in order to remove the specified node from the in-memory scene but /not/ from the scene database. </p>
+
+</div>
+</div>
 <a class="anchor" id="a2a049b7080740f6fa8d64c2f039de070"></a>
 <div class="memitem">
 <div class="memproto">
@@ -4428,6 +4490,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a5ff1522f4f35246fa698f9aafb6e0506"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">VisibilitySetArray cgScene::mOrphanVisSets</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a12b740bd5356fb48e14e083d7dfbac03"></a>
 <div class="memitem">
 <div class="memproto">
@@ -4778,7 +4860,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_scene.html">cgScene</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:46 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:09 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -152,41 +152,44 @@ $(document).ready(function(){initNavTree('_color_8h_source.html','');});
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            <span class="comment">// Cast operator overloads</span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectBehavior( <span class="stringliteral">&quot;ColorValue&quot;</span>, asBEHAVE_IMPLICIT_VALUE_CAST, <span class="stringliteral">&quot;uint f()&quot;</span>, asMETHODPR(<a class="code" href="structcg_color_value.html">cgColorValue</a>, <span class="keyword">operator</span> <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>, () <span class="keyword">const</span>, <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>), asCALL_THISCALL) );</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            <span class="comment">// Register properties</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectProperty( <span class="stringliteral">&quot;ColorValue&quot;</span>, <span class="stringliteral">&quot;float r&quot;</span>, offsetof(<a class="code" href="structcg_color_value.html">cgColorValue</a>,r) ) );</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectProperty( <span class="stringliteral">&quot;ColorValue&quot;</span>, <span class="stringliteral">&quot;float g&quot;</span>, offsetof(<a class="code" href="structcg_color_value.html">cgColorValue</a>,g) ) );</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectProperty( <span class="stringliteral">&quot;ColorValue&quot;</span>, <span class="stringliteral">&quot;float b&quot;</span>, offsetof(<a class="code" href="structcg_color_value.html">cgColorValue</a>,b) ) );</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectProperty( <span class="stringliteral">&quot;ColorValue&quot;</span>, <span class="stringliteral">&quot;float a&quot;</span>, offsetof(<a class="code" href="structcg_color_value.html">cgColorValue</a>,a) ) );</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        }</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="comment">//-----------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="comment">//  Name : constructColor ()</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment"></span>        <span class="comment">//-----------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> constructColor( <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> r, <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> g, <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> b, <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> a, <a class="code" href="structcg_color_value.html">cgColorValue</a> *thisPointer )</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            <span class="comment">// Use placement new to allocate which will in turn call the constructor</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <span class="keyword">new</span>(thisPointer) <a class="code" href="structcg_color_value.html">cgColorValue</a>( r, g, b, a );</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        }</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="comment">//-----------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">//  Name : constructColor ()</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment"></span>        <span class="comment">//-----------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> constructColor( <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> color, <a class="code" href="structcg_color_value.html">cgColorValue</a> *thisPointer )</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="comment">// Use placement new to allocate which will in turn call the constructor</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keyword">new</span>(thisPointer) <a class="code" href="structcg_color_value.html">cgColorValue</a>( color );</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        }</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    }; <span class="comment">// End Class : Package</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;} } } } <span class="comment">// End Namespace : cgScriptPackages::Core::Math::Color</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            <span class="comment">// Register methods</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectMethod( <span class="stringliteral">&quot;ColorValue&quot;</span>, <span class="stringliteral">&quot;String toString(const String &amp;in ) const&quot;</span>, asMETHODPR(<a class="code" href="structcg_color_value.html">cgColorValue</a>, <a class="code" href="namespacecg_unit_type.html#a82ecc421824df712a0005ffe680b622e">toString</a>, (<span class="keyword">const</span> <a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a>&amp;) <span class="keyword">const</span>, <a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a>), asCALL_THISCALL) );</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            <span class="comment">// Register properties</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectProperty( <span class="stringliteral">&quot;ColorValue&quot;</span>, <span class="stringliteral">&quot;float r&quot;</span>, offsetof(<a class="code" href="structcg_color_value.html">cgColorValue</a>,r) ) );</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectProperty( <span class="stringliteral">&quot;ColorValue&quot;</span>, <span class="stringliteral">&quot;float g&quot;</span>, offsetof(<a class="code" href="structcg_color_value.html">cgColorValue</a>,g) ) );</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectProperty( <span class="stringliteral">&quot;ColorValue&quot;</span>, <span class="stringliteral">&quot;float b&quot;</span>, offsetof(<a class="code" href="structcg_color_value.html">cgColorValue</a>,b) ) );</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectProperty( <span class="stringliteral">&quot;ColorValue&quot;</span>, <span class="stringliteral">&quot;float a&quot;</span>, offsetof(<a class="code" href="structcg_color_value.html">cgColorValue</a>,a) ) );</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        }</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="comment">//-----------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="comment">//  Name : constructColor ()</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment"></span>        <span class="comment">//-----------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> constructColor( <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> r, <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> g, <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> b, <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> a, <a class="code" href="structcg_color_value.html">cgColorValue</a> *thisPointer )</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        {</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <span class="comment">// Use placement new to allocate which will in turn call the constructor</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keyword">new</span>(thisPointer) <a class="code" href="structcg_color_value.html">cgColorValue</a>( r, g, b, a );</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        }</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="comment">//-----------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="comment">//  Name : constructColor ()</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment"></span>        <span class="comment">//-----------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> constructColor( <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> color, <a class="code" href="structcg_color_value.html">cgColorValue</a> *thisPointer )</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <span class="comment">// Use placement new to allocate which will in turn call the constructor</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            <span class="keyword">new</span>(thisPointer) <a class="code" href="structcg_color_value.html">cgColorValue</a>( color );</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        }</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    }; <span class="comment">// End Class : Package</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;} } } } <span class="comment">// End Namespace : cgScriptPackages::Core::Math::Color</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_036efea8fd6b39c1f1fd2dd7f1be4325.html">Scripting</a></li><li class="navelem"><a class="el" href="dir_5f20ce7c1333a975792d65b7ff262c26.html">Packages</a></li><li class="navelem"><a class="el" href="dir_962f94cc32c03ad95281b0f22b8add17.html">Core</a></li><li class="navelem"><a class="el" href="dir_f5fc133583ace1d1a32e583e7340ef9d.html">Math</a></li><li class="navelem"><a class="el" href="_color_8h.html">Color.h</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:47:57 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:27:53 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

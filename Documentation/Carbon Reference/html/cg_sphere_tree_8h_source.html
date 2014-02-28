@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -121,7 +121,7 @@ $(document).ready(function(){initNavTree('cg_sphere_tree_8h_source.html','');});
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">//       Portions Copyright (C) John W. Ratcliff, 2001                       //</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">//                                                                           //</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">//---------------------------------------------------------------------------//</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">//        Copyright 1997 - 2012 Game Institute. All Rights Reserved.         //</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">//      Copyright (c) 1997 - 2013 Game Institute. All Rights Reserved.       //</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">//---------------------------------------------------------------------------//</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#pragma once</span></div>
@@ -732,7 +732,7 @@ $(document).ready(function(){initNavTree('cg_sphere_tree_8h_source.html','');});
 <div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;</div>
 <div class="line"><a name="l00724"></a><span class="lineno">  724</span>&#160;<span class="preprocessor">        #ifdef _DEBUG</span></div>
 <div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160;<span class="preprocessor"></span>            <a class="code" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> distance = <a class="code" href="classcg_vector3.html#a087028f21fc2cdfc8b69f97f60c0080a">cgVector3::length</a>( this-&gt;<a class="code" href="classcg_bounding_sphere.html#a9bb327795271c2ade678eea4eec67c9b">position</a> - node-&gt;<a class="code" href="classcg_bounding_sphere.html#a9bb327795271c2ade678eea4eec67c9b">position</a> );</div>
-<div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160;            <a class="code" href="cg_a_p_i_8h.html#ab7940492bf4ec3b42abfeea0ce20bafc">cgAssert</a>( (distance + node-&gt;<a class="code" href="classcg_bounding_sphere.html#ada4eb5346a95ae5c8d2d8a2cb14e062d">radius</a>) &lt;= <a class="code" href="classcg_bounding_sphere.html#ada4eb5346a95ae5c8d2d8a2cb14e062d">radius</a> );</div>
+<div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160;            <span class="comment">//cgAssert( (distance + node-&gt;radius) &lt;= radius );</span></div>
 <div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160;<span class="preprocessor">        #endif</span></div>
 <div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;<span class="preprocessor"></span>    }</div>
 <div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;</div>
@@ -922,7 +922,7 @@ $(document).ready(function(){initNavTree('cg_sphere_tree_8h_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_cace410e69155a0a769d51256a788445.html">World</a></li><li class="navelem"><a class="el" href="cg_sphere_tree_8h.html">cgSphereTree.h</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:47:56 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:27:52 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

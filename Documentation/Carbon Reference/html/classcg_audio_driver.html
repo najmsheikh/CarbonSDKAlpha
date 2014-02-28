@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -180,9 +180,27 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4a8d49c5060a014667651410fbd0d493"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_audio_driver.html#a4a8d49c5060a014667651410fbd0d493">loadAmbientTrack</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;trackName, <a class="el" href="classcg_input_stream.html">cgInputStream</a> stream, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> initialVolume=1.0f, cgFloat requestedVolume=1.0f)</td></tr>
 <tr class="memdesc:a4a8d49c5060a014667651410fbd0d493"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load and play the specified file as the current ambient clip in the track specified.  <a href="#a4a8d49c5060a014667651410fbd0d493"></a><br/></td></tr>
 <tr class="separator:a4a8d49c5060a014667651410fbd0d493"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dc9f1aee9266503a045f6c4ed6c45dc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_audio_driver.html#a5dc9f1aee9266503a045f6c4ed6c45dc">loadAmbientTrack</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;trackName, <a class="el" href="classcg_input_stream.html">cgInputStream</a> stream, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> initialVolume, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> requestedVolume, bool loop)</td></tr>
+<tr class="memdesc:a5dc9f1aee9266503a045f6c4ed6c45dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load and play the specified file as the current ambient clip in the track specified.  <a href="#a5dc9f1aee9266503a045f6c4ed6c45dc"></a><br/></td></tr>
+<tr class="separator:a5dc9f1aee9266503a045f6c4ed6c45dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf60dbdc7e94576a17d5d854f5648f13"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_audio_driver.html#abf60dbdc7e94576a17d5d854f5648f13">stopAmbientTrack</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;trackname)</td></tr>
 <tr class="memdesc:abf60dbdc7e94576a17d5d854f5648f13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop the currently playing ambient track.  <a href="#abf60dbdc7e94576a17d5d854f5648f13"></a><br/></td></tr>
 <tr class="separator:abf60dbdc7e94576a17d5d854f5648f13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c31e40f46dd0252d6c7af3a84ff68ae"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_audio_driver.html#a0c31e40f46dd0252d6c7af3a84ff68ae">setAmbientTrackPitch</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;trackname, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> pitch)</td></tr>
+<tr class="memdesc:a0c31e40f46dd0252d6c7af3a84ff68ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the pitch of the specified ambient track.  <a href="#a0c31e40f46dd0252d6c7af3a84ff68ae"></a><br/></td></tr>
+<tr class="separator:a0c31e40f46dd0252d6c7af3a84ff68ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41990587361830885f2a8278411e58cb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_audio_driver.html#a41990587361830885f2a8278411e58cb">setAmbientTrackVolume</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;trackname, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> volume)</td></tr>
+<tr class="memdesc:a41990587361830885f2a8278411e58cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the volume of the specified ambient track.  <a href="#a41990587361830885f2a8278411e58cb"></a><br/></td></tr>
+<tr class="separator:a41990587361830885f2a8278411e58cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a128182a30f1b7b98a82d3f6c4fd47a48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_audio_driver.html#a128182a30f1b7b98a82d3f6c4fd47a48">stopAmbientTracks</a> ()</td></tr>
+<tr class="memdesc:a128182a30f1b7b98a82d3f6c4fd47a48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Completely stop all currently playing ambient tracks.  <a href="#a128182a30f1b7b98a82d3f6c4fd47a48"></a><br/></td></tr>
+<tr class="separator:a128182a30f1b7b98a82d3f6c4fd47a48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80c633d0148f06ec12a60c4244ace257"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_audio_driver.html#a80c633d0148f06ec12a60c4244ace257">pauseAmbientTracks</a> ()</td></tr>
+<tr class="memdesc:a80c633d0148f06ec12a60c4244ace257"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pause all currently playing ambient tracks.  <a href="#a80c633d0148f06ec12a60c4244ace257"></a><br/></td></tr>
+<tr class="separator:a80c633d0148f06ec12a60c4244ace257"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fa1d555d8ce3c7e7d8c494f2b55faa6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_audio_driver.html#a1fa1d555d8ce3c7e7d8c494f2b55faa6">resumeAmbientTracks</a> ()</td></tr>
+<tr class="memdesc:a1fa1d555d8ce3c7e7d8c494f2b55faa6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resume all previously paused ambient tracks.  <a href="#a1fa1d555d8ce3c7e7d8c494f2b55faa6"></a><br/></td></tr>
+<tr class="separator:a1fa1d555d8ce3c7e7d8c494f2b55faa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7afb818bc3eddbff524f643dc582f370"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_audio_driver.html#a7afb818bc3eddbff524f643dc582f370">isAmbientTrackPlaying</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;trackName)</td></tr>
 <tr class="memdesc:a7afb818bc3eddbff524f643dc582f370"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop the currently playing ambient track.  <a href="#a7afb818bc3eddbff524f643dc582f370"></a><br/></td></tr>
 <tr class="separator:a7afb818bc3eddbff524f643dc582f370"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -281,12 +299,12 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:afb5b40e3428ed5faa8a1e4a8488dadcb"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_audio_driver.html#afb5b40e3428ed5faa8a1e4a8488dadcb">destroySingleton</a> ()</td></tr>
 <tr class="memdesc:afb5b40e3428ed5faa8a1e4a8488dadcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clean up the singleton memory.  <a href="#afb5b40e3428ed5faa8a1e4a8488dadcb"></a><br/></td></tr>
 <tr class="separator:afb5b40e3428ed5faa8a1e4a8488dadcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af749c6389448a09bdc6b2ebadf99d972"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_audio_driver.html#af749c6389448a09bdc6b2ebadf99d972">PCM16StereoToMono</a> (<a class="el" href="cg_base_types_8h.html#a205b36290def5db7b358b851cfb45586">cgInt16</a> destSamples[], <a class="el" href="cg_base_types_8h.html#a205b36290def5db7b358b851cfb45586">cgInt16</a> srcSamples[], <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> sampleCount, <a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> gain=-3.3)</td></tr>
-<tr class="memdesc:af749c6389448a09bdc6b2ebadf99d972"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mix a set of stereo 16 bit PCM samples down to a mono buffer.  <a href="#af749c6389448a09bdc6b2ebadf99d972"></a><br/></td></tr>
-<tr class="separator:af749c6389448a09bdc6b2ebadf99d972"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a537c1648a14798b16379f9b6af244bb7"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_audio_driver.html#a537c1648a14798b16379f9b6af244bb7">PCM8StereoToMono</a> (<a class="el" href="cg_base_types_8h.html#af6d85a1588716007408d3602524cd28a">cgByte</a> destSamples[], <a class="el" href="cg_base_types_8h.html#af6d85a1588716007408d3602524cd28a">cgByte</a> srcSamples[], <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> sampleCount, <a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> gain=-3.3)</td></tr>
-<tr class="memdesc:a537c1648a14798b16379f9b6af244bb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mix a set of stereo 8 bit PCM samples down to a mono buffer.  <a href="#a537c1648a14798b16379f9b6af244bb7"></a><br/></td></tr>
-<tr class="separator:a537c1648a14798b16379f9b6af244bb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7799319ed57d791f5647cc6a5d7f4773"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_audio_driver.html#a7799319ed57d791f5647cc6a5d7f4773">PCM16StereoToMono</a> (<a class="el" href="cg_base_types_8h.html#a205b36290def5db7b358b851cfb45586">cgInt16</a> destSamples[], <a class="el" href="cg_base_types_8h.html#a205b36290def5db7b358b851cfb45586">cgInt16</a> srcSamples[], <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> sampleCount, <a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> gain=-6.0206f)</td></tr>
+<tr class="memdesc:a7799319ed57d791f5647cc6a5d7f4773"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mix a set of stereo 16 bit PCM samples down to a mono buffer.  <a href="#a7799319ed57d791f5647cc6a5d7f4773"></a><br/></td></tr>
+<tr class="separator:a7799319ed57d791f5647cc6a5d7f4773"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60f25d635613bcd54ef8023016778b75"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_audio_driver.html#a60f25d635613bcd54ef8023016778b75">PCM8StereoToMono</a> (<a class="el" href="cg_base_types_8h.html#af6d85a1588716007408d3602524cd28a">cgByte</a> destSamples[], <a class="el" href="cg_base_types_8h.html#af6d85a1588716007408d3602524cd28a">cgByte</a> srcSamples[], <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> sampleCount, <a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a> gain=-6.0206f)</td></tr>
+<tr class="memdesc:a60f25d635613bcd54ef8023016778b75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mix a set of stereo 8 bit PCM samples down to a mono buffer.  <a href="#a60f25d635613bcd54ef8023016778b75"></a><br/></td></tr>
+<tr class="separator:a60f25d635613bcd54ef8023016778b75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0288f7bbe7aa61919129628960ca2129"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_audio_codec.html">cgAudioCodec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_audio_driver.html#a0288f7bbe7aa61919129628960ca2129">createAudioCodec</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> index)</td></tr>
 <tr class="memdesc:a0288f7bbe7aa61919129628960ca2129"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an instance of one of the installed audio codecs.  <a href="#a0288f7bbe7aa61919129628960ca2129"></a><br/></td></tr>
 <tr class="separator:a0288f7bbe7aa61919129628960ca2129"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -813,6 +831,52 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a5dc9f1aee9266503a045f6c4ed6c45dc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgAudioDriver::loadAmbientTrack </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strTrackName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcg_input_stream.html">cgInputStream</a>&#160;</td>
+          <td class="paramname"><em>Stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>fInitialVolume</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>fRequestedVolume</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>loop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Load and play the specified file as the current ambient clip in the track specified. </p>
+
+</div>
+</div>
 <a class="anchor" id="a301fd6875e7cb9e882c42fd69e1ce713"></a>
 <div class="memitem">
 <div class="memproto">
@@ -864,7 +928,24 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="af749c6389448a09bdc6b2ebadf99d972"></a>
+<a class="anchor" id="a80c633d0148f06ec12a60c4244ace257"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgAudioDriver::pauseAmbientTracks </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Pause all currently playing ambient tracks. </p>
+
+</div>
+</div>
+<a class="anchor" id="a7799319ed57d791f5647cc6a5d7f4773"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -893,7 +974,7 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a>&#160;</td>
-          <td class="paramname"><em>fGain</em> = <code>-3.3</code>&#160;</td>
+          <td class="paramname"><em>fGain</em> = <code>-6.0206f</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -912,7 +993,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a537c1648a14798b16379f9b6af244bb7"></a>
+<a class="anchor" id="a60f25d635613bcd54ef8023016778b75"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -941,7 +1022,7 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a3418cf4d8a2ac5b0cec51ab141146eed">cgDouble</a>&#160;</td>
-          <td class="paramname"><em>fGain</em> = <code>-3.3</code>&#160;</td>
+          <td class="paramname"><em>fGain</em> = <code>-6.0206f</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1095,6 +1176,23 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a1fa1d555d8ce3c7e7d8c494f2b55faa6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgAudioDriver::resumeAmbientTracks </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Resume all previously paused ambient tracks. </p>
+
+</div>
+</div>
 <a class="anchor" id="a999d57fdaae07f6c156b3d8584112b25"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1199,6 +1297,62 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a0c31e40f46dd0252d6c7af3a84ff68ae"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgAudioDriver::setAmbientTrackPitch </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strTrackName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>fPitch</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the pitch of the specified ambient track. </p>
+
+</div>
+</div>
+<a class="anchor" id="a41990587361830885f2a8278411e58cb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgAudioDriver::setAmbientTrackVolume </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strTrackName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>fVolume</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the volume of the specified ambient track. </p>
+
+</div>
+</div>
 <a class="anchor" id="a4a11069deeb1b01b8614dd5b4e73e5f9"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1242,6 +1396,23 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Stop the currently playing ambient track. </p>
+
+</div>
+</div>
+<a class="anchor" id="a128182a30f1b7b98a82d3f6c4fd47a48"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgAudioDriver::stopAmbientTracks </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Completely stop all currently playing ambient tracks. </p>
 
 </div>
 </div>
@@ -1476,7 +1647,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_audio_driver.html">cgAudioDriver</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:13 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:00 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

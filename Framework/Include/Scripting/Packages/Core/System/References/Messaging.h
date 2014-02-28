@@ -35,6 +35,7 @@ namespace Messaging
             ///////////////////////////////////////////////////////////////////////
             // cgSystemMessageGroups (Constants)
             ///////////////////////////////////////////////////////////////////////
+            BINDSUCCESS( engine->registerGlobalProperty( "const UID MGID_System"         , (void*)&cgSystemMessageGroups::MGID_System ) );
             BINDSUCCESS( engine->registerGlobalProperty( "const UID MGID_RenderDriver"   , (void*)&cgSystemMessageGroups::MGID_RenderDriver ) );
             BINDSUCCESS( engine->registerGlobalProperty( "const UID MGID_ResourceManager", (void*)&cgSystemMessageGroups::MGID_ResourceManager ) );
             BINDSUCCESS( engine->registerGlobalProperty( "const UID MGID_MouseInput"     , (void*)&cgSystemMessageGroups::MGID_MouseInput ) );
@@ -118,6 +119,9 @@ namespace Messaging
 
             // Messages issued by cgWorldObject
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "WorldObject_PropertyChange", cgSystemMessages::WorldObject_PropertyChange ) );
+
+            // Messages issued by system
+            BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "System_SandboxModeChange", cgSystemMessages::System_SandboxModeChange ) );
 
             ///////////////////////////////////////////////////////////////////////
             // cgMessage (Struct)

@@ -602,6 +602,7 @@ protected:
     // Protected Typedefs
     //-------------------------------------------------------------------------
     CGE_VECTOR_DECLARE      (cgSceneController*, ControllerArray)
+    CGE_VECTOR_DECLARE      (cgVisibilitySet*, VisibilitySetArray)
     CGE_UNORDEREDMAP_DECLARE(cgUID, cgObjectNodeArray, ObjectNodeTypeMap)
     CGE_UNORDEREDMAP_DECLARE(cgString, cgObjectNode*, ObjectNodeNamedMap)
     CGE_UNORDEREDMAP_DECLARE(cgUID, cgSceneElementArray, SceneElementTypeMap)
@@ -667,6 +668,9 @@ protected:
     
     // Dynamics Related
     bool                    mDynamicsEnabled;           // Is dynamics processing (physics) enabled?
+
+    // Miscellaneous
+    VisibilitySetArray      mOrphanVisSets;             // A list of orphan visibility sets after scene has been disposed.
 
     // Sandbox: General
     bool                    mIsDirty;                   // Has the scene been modified since it was last serialized?

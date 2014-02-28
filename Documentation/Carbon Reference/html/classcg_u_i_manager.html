@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -103,6 +103,7 @@ $(document).ready(function(){initNavTree('classcg_u_i_manager.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classcg_u_i_manager-members.html">List of all members</a>  </div>
@@ -127,6 +128,11 @@ Inheritance diagram for cgUIManager:</div>
 </map>
  </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_u_i_manager_1_1_init_config.html">InitConfig</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ac94aa8131312b002328c36f91940a1cd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#ac94aa8131312b002328c36f91940a1cd">cgUIManager</a> ()</td></tr>
@@ -135,6 +141,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3c9e9e1ffb76f0e54985db374307afc4"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#a3c9e9e1ffb76f0e54985db374307afc4">~cgUIManager</a> ()</td></tr>
 <tr class="memdesc:a3c9e9e1ffb76f0e54985db374307afc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for this class.  <a href="#a3c9e9e1ffb76f0e54985db374307afc4"></a><br/></td></tr>
 <tr class="separator:a3c9e9e1ffb76f0e54985db374307afc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afeebb1a2ac60e1ed2d32cb7b3d314c97"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_config_result.html#a1a15b934741f7881e1754b0873a91bd9">cgConfigResult::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#afeebb1a2ac60e1ed2d32cb7b3d314c97">loadConfig</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;fileName)</td></tr>
+<tr class="memdesc:afeebb1a2ac60e1ed2d32cb7b3d314c97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the interface manager configuration from the file specified.  <a href="#afeebb1a2ac60e1ed2d32cb7b3d314c97"></a><br/></td></tr>
+<tr class="separator:afeebb1a2ac60e1ed2d32cb7b3d314c97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3a9d5198b40b6c0e04218b6ff88a128"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_config_result.html#a1a15b934741f7881e1754b0873a91bd9">cgConfigResult::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#aa3a9d5198b40b6c0e04218b6ff88a128">loadDefaultConfig</a> ()</td></tr>
+<tr class="memdesc:aa3a9d5198b40b6c0e04218b6ff88a128"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a default configuration for the interface manager.  <a href="#aa3a9d5198b40b6c0e04218b6ff88a128"></a><br/></td></tr>
+<tr class="separator:aa3a9d5198b40b6c0e04218b6ff88a128"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c95cece77de1b96712f6c055c6d7696"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#a0c95cece77de1b96712f6c055c6d7696">saveConfig</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;fileName)</td></tr>
+<tr class="memdesc:a0c95cece77de1b96712f6c055c6d7696"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save the interface manager configuration to the file specified. Note : When specifying the save filename, it's important to either use a full path ("C:\\{Path}\\Config.ini") or a path relative to the current directory INCLUDING the first period (".\\Config.ini"). If not, windows will place the ini in the windows directory rather than the application dir.  <a href="#a0c95cece77de1b96712f6c055c6d7696"></a><br/></td></tr>
+<tr class="separator:a0c95cece77de1b96712f6c055c6d7696"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7fd3f8ac69c9d469a58e7085234a4682"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#a7fd3f8ac69c9d469a58e7085234a4682">initialize</a> (<a class="el" href="classcg_resource_manager.html">cgResourceManager</a> *resourceManager)</td></tr>
 <tr class="memdesc:a7fd3f8ac69c9d469a58e7085234a4682"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the interface manager ready for processing.  <a href="#a7fd3f8ac69c9d469a58e7085234a4682"></a><br/></td></tr>
 <tr class="separator:a7fd3f8ac69c9d469a58e7085234a4682"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -264,12 +279,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9a222f549c776e0500970054b34aa01a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_u_i_form.html">cgUIForm</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#a9a222f549c776e0500970054b34aa01a">loadForm</a> (const <a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp;stream, const <a class="el" href="classcg_string.html">cgString</a> &amp;name)</td></tr>
 <tr class="memdesc:a9a222f549c776e0500970054b34aa01a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a form from a script ready for display.  <a href="#a9a222f549c776e0500970054b34aa01a"></a><br/></td></tr>
 <tr class="separator:a9a222f549c776e0500970054b34aa01a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3cc3a65c906893d3bd2beafa7b0359b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#ac3cc3a65c906893d3bd2beafa7b0359b">addImage</a> (<a class="el" href="classcg_input_stream.html">cgInputStream</a> imageFile, const <a class="el" href="classcg_string.html">cgString</a> &amp;referenceName)</td></tr>
-<tr class="memdesc:ac3cc3a65c906893d3bd2beafa7b0359b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a single image file to the interface system ready for rendering through the 'drawImage' method.  <a href="#ac3cc3a65c906893d3bd2beafa7b0359b"></a><br/></td></tr>
-<tr class="separator:ac3cc3a65c906893d3bd2beafa7b0359b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb62dc4b9fafe1216019d5b914cef891"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#adb62dc4b9fafe1216019d5b914cef891">addImageLibrary</a> (<a class="el" href="classcg_input_stream.html">cgInputStream</a> atlasFile, const <a class="el" href="classcg_string.html">cgString</a> &amp;referenceName)</td></tr>
-<tr class="memdesc:adb62dc4b9fafe1216019d5b914cef891"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a series of images, packed into a single image, based on the image atlas definition file specified.  <a href="#adb62dc4b9fafe1216019d5b914cef891"></a><br/></td></tr>
-<tr class="separator:adb62dc4b9fafe1216019d5b914cef891"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02a1468a2d88411ede520059bdd07f14"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_u_i_form.html">cgUIForm</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#a02a1468a2d88411ede520059bdd07f14">loadForm</a> (const <a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp;stream, const <a class="el" href="classcg_string.html">cgString</a> &amp;name, bool modal)</td></tr>
+<tr class="memdesc:a02a1468a2d88411ede520059bdd07f14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a form from a script ready for display.  <a href="#a02a1468a2d88411ede520059bdd07f14"></a><br/></td></tr>
+<tr class="separator:a02a1468a2d88411ede520059bdd07f14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63aef0158fd089bd47a3ebf637e0af54"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#a63aef0158fd089bd47a3ebf637e0af54">addImage</a> (const <a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp;imageFile, const <a class="el" href="classcg_string.html">cgString</a> &amp;referenceName)</td></tr>
+<tr class="memdesc:a63aef0158fd089bd47a3ebf637e0af54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a single image file to the interface system ready for rendering through the 'drawImage' method.  <a href="#a63aef0158fd089bd47a3ebf637e0af54"></a><br/></td></tr>
+<tr class="separator:a63aef0158fd089bd47a3ebf637e0af54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48c0ad2edc30ed889721d1bcc4db90ed"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#a48c0ad2edc30ed889721d1bcc4db90ed">addImageLibrary</a> (const <a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp;atlasFile, const <a class="el" href="classcg_string.html">cgString</a> &amp;referenceName)</td></tr>
+<tr class="memdesc:a48c0ad2edc30ed889721d1bcc4db90ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a series of images, packed into a single image, based on the image atlas definition file specified.  <a href="#a48c0ad2edc30ed889721d1bcc4db90ed"></a><br/></td></tr>
+<tr class="separator:a48c0ad2edc30ed889721d1bcc4db90ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89a6430659dfac5041743e5b6ef578c7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#a89a6430659dfac5041743e5b6ef578c7">removeImageLibrary</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;referenceName)</td></tr>
 <tr class="memdesc:a89a6430659dfac5041743e5b6ef578c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove an image library from memory.  <a href="#a89a6430659dfac5041743e5b6ef578c7"></a><br/></td></tr>
 <tr class="separator:a89a6430659dfac5041743e5b6ef578c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -330,6 +348,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8fa72f780602055578caba13e5559564"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#a8fa72f780602055578caba13e5559564">render</a> ()</td></tr>
 <tr class="memdesc:a8fa72f780602055578caba13e5559564"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw all currently active user interface components.  <a href="#a8fa72f780602055578caba13e5559564"></a><br/></td></tr>
 <tr class="separator:a8fa72f780602055578caba13e5559564"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa22f141c3cd4758ccac0ef68e4f1c9fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#aa22f141c3cd4758ccac0ef68e4f1c9fc">update</a> ()</td></tr>
+<tr class="memdesc:aa22f141c3cd4758ccac0ef68e4f1c9fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the manager to update any necessary forms, controls, widgets and layers.  <a href="#aa22f141c3cd4758ccac0ef68e4f1c9fc"></a><br/></td></tr>
+<tr class="separator:aa22f141c3cd4758ccac0ef68e4f1c9fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b98571d7376ce2bd023728b5c71d41d"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#a0b98571d7376ce2bd023728b5c71d41d">getReferenceType</a> () const </td></tr>
 <tr class="separator:a0b98571d7376ce2bd023728b5c71d41d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab505505a0c061b6e75585a6e3147bc99"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_manager.html#ab505505a0c061b6e75585a6e3147bc99">queryReferenceType</a> (const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;type) const </td></tr>
@@ -509,14 +530,14 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ac3cc3a65c906893d3bd2beafa7b0359b"></a>
+<a class="anchor" id="a63aef0158fd089bd47a3ebf637e0af54"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">bool cgUIManager::addImage </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classcg_input_stream.html">cgInputStream</a>&#160;</td>
+          <td class="paramtype">const <a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp;&#160;</td>
           <td class="paramname"><em>ImageFile</em>, </td>
         </tr>
         <tr>
@@ -537,14 +558,14 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="adb62dc4b9fafe1216019d5b914cef891"></a>
+<a class="anchor" id="a48c0ad2edc30ed889721d1bcc4db90ed"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">bool cgUIManager::addImageLibrary </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classcg_input_stream.html">cgInputStream</a>&#160;</td>
+          <td class="paramtype">const <a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp;&#160;</td>
           <td class="paramname"><em>AtlasFile</em>, </td>
         </tr>
         <tr>
@@ -1565,6 +1586,41 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="afeebb1a2ac60e1ed2d32cb7b3d314c97"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacecg_config_result.html#a1a15b934741f7881e1754b0873a91bd9">cgConfigResult::Base</a> cgUIManager::loadConfig </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strFileName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Load the interface manager configuration from the file specified. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa3a9d5198b40b6c0e04218b6ff88a128"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacecg_config_result.html#a1a15b934741f7881e1754b0873a91bd9">cgConfigResult::Base</a> cgUIManager::loadDefaultConfig </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Load a default configuration for the interface manager. </p>
+
+</div>
+</div>
 <a class="anchor" id="a9a222f549c776e0500970054b34aa01a"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1580,6 +1636,40 @@ Additional Inherited Members</h2></td></tr>
           <td></td>
           <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
           <td class="paramname"><em>strFormName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Load a form from a script ready for display. </p>
+
+</div>
+</div>
+<a class="anchor" id="a02a1468a2d88411ede520059bdd07f14"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_u_i_form.html">cgUIForm</a> * cgUIManager::loadForm </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp;&#160;</td>
+          <td class="paramname"><em>Stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strFormName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>modal</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2572,6 +2662,24 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a0c95cece77de1b96712f6c055c6d7696"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgUIManager::saveConfig </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strFileName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Save the interface manager configuration to the file specified. Note : When specifying the save filename, it's important to either use a full path ("C:\\{Path}\\Config.ini") or a path relative to the current directory INCLUDING the first period (".\\Config.ini"). If not, windows will place the ini in the windows directory rather than the application dir. </p>
+
+</div>
+</div>
 <a class="anchor" id="a45b4d52f69f9667db745f4d7deb893b3"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2715,6 +2823,23 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aa22f141c3cd4758ccac0ef68e4f1c9fc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgUIManager::update </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Allow the manager to update any necessary forms, controls, widgets and layers. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="cg_u_i_manager_8h_source.html">cgUIManager.h</a></li>
 <li><a class="el" href="cg_u_i_manager_8cpp.html">cgUIManager.cpp</a></li>
@@ -2725,7 +2850,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_u_i_manager.html">cgUIManager</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:58 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:12 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

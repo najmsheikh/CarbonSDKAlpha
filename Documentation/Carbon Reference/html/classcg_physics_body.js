@@ -28,6 +28,8 @@ var classcg_physics_body =
     [ "setAngularVelocity", "classcg_physics_body.html#a1cec26baad185b1af6a5ee323d3f6a60", null ],
     [ "setCustomGravity", "classcg_physics_body.html#a8d7581670d284aedf0eab265919302c4", null ],
     [ "setMass", "classcg_physics_body.html#a78b2097bbb996979031a7baa51d79832", null ],
+    [ "setMaterialGroupId", "classcg_physics_body.html#a27f7badbc9925380f62c2f88d08e156c", null ],
+    [ "setMaterialGroupId", "classcg_physics_body.html#a93e67c5a1f68443ca0d54d33cd4b72a5", null ],
     [ "setVelocity", "classcg_physics_body.html#a96a2d30ebe02f8c23e7ee956880f7829", null ],
     [ "mBody", "classcg_physics_body.html#a5360e2c6df5936a51bc73bfeb4a98419", null ],
     [ "mCustomGravity", "classcg_physics_body.html#a6572b72c45161a53f120d4b54ef7d99b", null ],

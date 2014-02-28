@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -311,6 +311,48 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2c259465286648dd322004ed77bf1b77"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a2c259465286648dd322004ed77bf1b77">getParticleTexture</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
 <tr class="memdesc:a2c259465286648dd322004ed77bf1b77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the name of the particle texture (or texture atlas) to map to the billboards representing this emitters particles.  <a href="#a2c259465286648dd322004ed77bf1b77"></a><br/></td></tr>
 <tr class="separator:a2c259465286648dd322004ed77bf1b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af715ed193894913338b9661791488106"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#af715ed193894913338b9661791488106">setColorCurves</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;r, const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;g, const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;b, const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;a)</td></tr>
+<tr class="memdesc:af715ed193894913338b9661791488106"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the bezier curves that describe the four components of the color to apply to each particle over its lifetime.  <a href="#af715ed193894913338b9661791488106"></a><br/></td></tr>
+<tr class="separator:af715ed193894913338b9661791488106"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade180eab46a1f8442e72f38fc56a5e0b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ade180eab46a1f8442e72f38fc56a5e0b">setScaleCurves</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;x, const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;y)</td></tr>
+<tr class="memdesc:ade180eab46a1f8442e72f38fc56a5e0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the bezier curves that describe the two components of the scale to apply to each particle over its lifetime.  <a href="#ade180eab46a1f8442e72f38fc56a5e0b"></a><br/></td></tr>
+<tr class="separator:ade180eab46a1f8442e72f38fc56a5e0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a197db92add4fe0fcf67360b8474d92f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a197db92add4fe0fcf67360b8474d92f4">setColorRCurve</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;curve)</td></tr>
+<tr class="memdesc:a197db92add4fe0fcf67360b8474d92f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the bezier curve that describes the red component of the color to apply to each particle over its lifetime.  <a href="#a197db92add4fe0fcf67360b8474d92f4"></a><br/></td></tr>
+<tr class="separator:a197db92add4fe0fcf67360b8474d92f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6337a0ce9e352405b1527390e7f44406"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a6337a0ce9e352405b1527390e7f44406">setColorGCurve</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;curve)</td></tr>
+<tr class="memdesc:a6337a0ce9e352405b1527390e7f44406"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the bezier curve that describes the green component of the color to apply to each particle over its lifetime.  <a href="#a6337a0ce9e352405b1527390e7f44406"></a><br/></td></tr>
+<tr class="separator:a6337a0ce9e352405b1527390e7f44406"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2dc7946afb24cfb0122bc4f9d0bc9941"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a2dc7946afb24cfb0122bc4f9d0bc9941">setColorBCurve</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;curve)</td></tr>
+<tr class="memdesc:a2dc7946afb24cfb0122bc4f9d0bc9941"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the bezier curve that describes the blue component of the color to apply to each particle over its lifetime.  <a href="#a2dc7946afb24cfb0122bc4f9d0bc9941"></a><br/></td></tr>
+<tr class="separator:a2dc7946afb24cfb0122bc4f9d0bc9941"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab487413d75c51ea6162cff4e78738d00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ab487413d75c51ea6162cff4e78738d00">setColorACurve</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;curve)</td></tr>
+<tr class="memdesc:ab487413d75c51ea6162cff4e78738d00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the bezier curve that describes the alpha component of the color to apply to each particle over its lifetime.  <a href="#ab487413d75c51ea6162cff4e78738d00"></a><br/></td></tr>
+<tr class="separator:ab487413d75c51ea6162cff4e78738d00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab29a927ab889f0c20b948bc0cfdc7f2a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ab29a927ab889f0c20b948bc0cfdc7f2a">setScaleXCurve</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;curve)</td></tr>
+<tr class="memdesc:ab29a927ab889f0c20b948bc0cfdc7f2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the bezier curve that describes the X component of the scale to apply to each particle over its lifetime.  <a href="#ab29a927ab889f0c20b948bc0cfdc7f2a"></a><br/></td></tr>
+<tr class="separator:ab29a927ab889f0c20b948bc0cfdc7f2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c17c5b26329a63ba0f46249aea8f1e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a6c17c5b26329a63ba0f46249aea8f1e7">setScaleYCurve</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex, const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;curve)</td></tr>
+<tr class="memdesc:a6c17c5b26329a63ba0f46249aea8f1e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the bezier curve that describes the Y component of the scale to apply to each particle over its lifetime.  <a href="#a6c17c5b26329a63ba0f46249aea8f1e7"></a><br/></td></tr>
+<tr class="separator:a6c17c5b26329a63ba0f46249aea8f1e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2201f287bcdfc9a0c6cafad8f3e5eb66"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a2201f287bcdfc9a0c6cafad8f3e5eb66">getColorRCurve</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a2201f287bcdfc9a0c6cafad8f3e5eb66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the bezier curve that describes the red component of the color to apply to each particle over its lifetime.  <a href="#a2201f287bcdfc9a0c6cafad8f3e5eb66"></a><br/></td></tr>
+<tr class="separator:a2201f287bcdfc9a0c6cafad8f3e5eb66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4ba631a4bbec3d256f65eb266fa0e4b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ab4ba631a4bbec3d256f65eb266fa0e4b">getColorGCurve</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:ab4ba631a4bbec3d256f65eb266fa0e4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the bezier curve that describes the green component of the color to apply to each particle over its lifetime.  <a href="#ab4ba631a4bbec3d256f65eb266fa0e4b"></a><br/></td></tr>
+<tr class="separator:ab4ba631a4bbec3d256f65eb266fa0e4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e8040077ee12dd4c401b03c9b5eced1"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a7e8040077ee12dd4c401b03c9b5eced1">getColorBCurve</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a7e8040077ee12dd4c401b03c9b5eced1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the bezier curve that describes the blue component of the color to apply to each particle over its lifetime.  <a href="#a7e8040077ee12dd4c401b03c9b5eced1"></a><br/></td></tr>
+<tr class="separator:a7e8040077ee12dd4c401b03c9b5eced1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7ddbc53fad05123232d19e2bf2f79cd"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ac7ddbc53fad05123232d19e2bf2f79cd">getColorACurve</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:ac7ddbc53fad05123232d19e2bf2f79cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the bezier curve that describes the alpha component of the color to apply to each particle over its lifetime.  <a href="#ac7ddbc53fad05123232d19e2bf2f79cd"></a><br/></td></tr>
+<tr class="separator:ac7ddbc53fad05123232d19e2bf2f79cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39f4133ec8a692b5796fbd06520adc08"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a39f4133ec8a692b5796fbd06520adc08">getScaleXCurve</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:a39f4133ec8a692b5796fbd06520adc08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the bezier curve that describes the X component of the scale to apply to each particle over its lifetime.  <a href="#a39f4133ec8a692b5796fbd06520adc08"></a><br/></td></tr>
+<tr class="separator:a39f4133ec8a692b5796fbd06520adc08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7f0306d5415ad1a85bb6197de1dd68a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#af7f0306d5415ad1a85bb6197de1dd68a">getScaleYCurve</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> layerIndex) const </td></tr>
+<tr class="memdesc:af7f0306d5415ad1a85bb6197de1dd68a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the bezier curve that describes the Y component of the scale to apply to each particle over its lifetime.  <a href="#af7f0306d5415ad1a85bb6197de1dd68a"></a><br/></td></tr>
+<tr class="separator:af7f0306d5415ad1a85bb6197de1dd68a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e49884a8a3fbc87270b2d34e7487e2d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a0e49884a8a3fbc87270b2d34e7487e2d">getLocalBoundingBox</a> ()</td></tr>
 <tr class="memdesc:a0e49884a8a3fbc87270b2d34e7487e2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the bounding box of this object.  <a href="#a0e49884a8a3fbc87270b2d34e7487e2d"></a><br/></td></tr>
 <tr class="separator:a0e49884a8a3fbc87270b2d34e7487e2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -595,6 +637,10 @@ Static Protected Attributes</h2></td></tr>
 <tr class="separator:ab4c54b6e6aa860fba897adf29ca2f1d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8ae404ea8cdfcc66c99c32454655570"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#ad8ae404ea8cdfcc66c99c32454655570">mUpdateParticleProperties</a></td></tr>
 <tr class="separator:ad8ae404ea8cdfcc66c99c32454655570"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1584b9e4695b46d3ae4f28fb31b4b675"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a1584b9e4695b46d3ae4f28fb31b4b675">mUpdateColorKeys</a></td></tr>
+<tr class="separator:a1584b9e4695b46d3ae4f28fb31b4b675"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42ef5e8a185cb7667aaf89a8c053d302"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a42ef5e8a185cb7667aaf89a8c053d302">mUpdateScaleKeys</a></td></tr>
+<tr class="separator:a42ef5e8a185cb7667aaf89a8c053d302"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e68b227234b4f3760429709617855d1"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a6e68b227234b4f3760429709617855d1">mLoadEmitter</a></td></tr>
 <tr class="separator:a6e68b227234b4f3760429709617855d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fbf8f810fa26b3baa7140f9ce2ddb5f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_particle_emitter_object.html#a4fbf8f810fa26b3baa7140f9ce2ddb5f">mLoadEmitterLayers</a></td></tr>
@@ -1025,6 +1071,78 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the rate at which the emitter will create and release particles each second. </p>
+
+</div>
+</div>
+<a class="anchor" id="ac7ddbc53fad05123232d19e2bf2f79cd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp; cgParticleEmitterObject::getColorACurve </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the bezier curve that describes the alpha component of the color to apply to each particle over its lifetime. </p>
+
+</div>
+</div>
+<a class="anchor" id="a7e8040077ee12dd4c401b03c9b5eced1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp; cgParticleEmitterObject::getColorBCurve </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the bezier curve that describes the blue component of the color to apply to each particle over its lifetime. </p>
+
+</div>
+</div>
+<a class="anchor" id="ab4ba631a4bbec3d256f65eb266fa0e4b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp; cgParticleEmitterObject::getColorGCurve </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the bezier curve that describes the green component of the color to apply to each particle over its lifetime. </p>
+
+</div>
+</div>
+<a class="anchor" id="a2201f287bcdfc9a0c6cafad8f3e5eb66"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp; cgParticleEmitterObject::getColorRCurve </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the bezier curve that describes the red component of the color to apply to each particle over its lifetime. </p>
 
 </div>
 </div>
@@ -1463,6 +1581,42 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented from <a class="el" href="classcg_world_object.html#a3be5c032f952300fcdbbb9008a7d1067">cgWorldObject</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a39f4133ec8a692b5796fbd06520adc08"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp; cgParticleEmitterObject::getScaleXCurve </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the bezier curve that describes the X component of the scale to apply to each particle over its lifetime. </p>
+
+</div>
+</div>
+<a class="anchor" id="af7f0306d5415ad1a85bb6197de1dd68a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp; cgParticleEmitterObject::getScaleYCurve </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the bezier curve that describes the Y component of the scale to apply to each particle over its lifetime. </p>
 
 </div>
 </div>
@@ -1948,6 +2102,164 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set the rate at which the emitter will create and release particles each second. </p>
+
+</div>
+</div>
+<a class="anchor" id="ab487413d75c51ea6162cff4e78738d00"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::setColorACurve </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td>
+          <td class="paramname"><em>curve</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the bezier curve that describes the alpha component of the color to apply to each particle over its lifetime. </p>
+
+</div>
+</div>
+<a class="anchor" id="a2dc7946afb24cfb0122bc4f9d0bc9941"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::setColorBCurve </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td>
+          <td class="paramname"><em>curve</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the bezier curve that describes the blue component of the color to apply to each particle over its lifetime. </p>
+
+</div>
+</div>
+<a class="anchor" id="af715ed193894913338b9661791488106"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::setColorCurves </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td>
+          <td class="paramname"><em>g</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td>
+          <td class="paramname"><em>a</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the bezier curves that describe the four components of the color to apply to each particle over its lifetime. </p>
+
+</div>
+</div>
+<a class="anchor" id="a6337a0ce9e352405b1527390e7f44406"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::setColorGCurve </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td>
+          <td class="paramname"><em>curve</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the bezier curve that describes the green component of the color to apply to each particle over its lifetime. </p>
+
+</div>
+</div>
+<a class="anchor" id="a197db92add4fe0fcf67360b8474d92f4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::setColorRCurve </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td>
+          <td class="paramname"><em>curve</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the bezier curve that describes the red component of the color to apply to each particle over its lifetime. </p>
 
 </div>
 </div>
@@ -2631,6 +2943,96 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ade180eab46a1f8442e72f38fc56a5e0b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::setScaleCurves </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the bezier curves that describe the two components of the scale to apply to each particle over its lifetime. </p>
+
+</div>
+</div>
+<a class="anchor" id="ab29a927ab889f0c20b948bc0cfdc7f2a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::setScaleXCurve </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td>
+          <td class="paramname"><em>curve</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the bezier curve that describes the X component of the scale to apply to each particle over its lifetime. </p>
+
+</div>
+</div>
+<a class="anchor" id="a6c17c5b26329a63ba0f46249aea8f1e7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgParticleEmitterObject::setScaleYCurve </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>layerIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td>
+          <td class="paramname"><em>curve</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the bezier curve that describes the Y component of the scale to apply to each particle over its lifetime. </p>
+
+</div>
+</div>
 <a class="anchor" id="a14d269e15a2a1c272f753785a678bb19"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2780,6 +3182,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a1584b9e4695b46d3ae4f28fb31b4b675"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_world_query.html">cgWorldQuery</a> cgParticleEmitterObject::mUpdateColorKeys</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="af5a4698bdef3bd1e53726eca989877e7"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2900,6 +3322,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a42ef5e8a185cb7667aaf89a8c053d302"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_world_query.html">cgWorldQuery</a> cgParticleEmitterObject::mUpdateScaleKeys</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="cg_particle_emitter_object_8h_source.html">cgParticleEmitterObject.h</a></li>
 <li><a class="el" href="cg_particle_emitter_object_8cpp.html">cgParticleEmitterObject.cpp</a></li>
@@ -2910,7 +3352,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_particle_emitter_object.html">cgParticleEmitterObject</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:40 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:07 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

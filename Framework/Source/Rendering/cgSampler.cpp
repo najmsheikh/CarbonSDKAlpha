@@ -33,6 +33,7 @@
 #include <Resources/cgRenderTarget.h>
 #include <Resources/cgTexture.h>
 #include <Resources/cgSurfaceShader.h>
+#include <System/cgMessageTypes.h>
 
 //-----------------------------------------------------------------------------
 // Static Member Definitions.
@@ -460,6 +461,11 @@ bool cgSampler::setTexture( const cgTextureHandle & hTexture, bool bNoSerialize 
 
     // Store the new texture handle
     mTexture = hTexture;
+
+    // Notify subscribers that the texture has changed.
+    cgMessage Msg;
+    Msg.messageId = cgSystemMessages::Resources_ResourceUpdated;
+    cgReferenceManager::sendMessageToSubscribers( getReferenceId(), &Msg );
 
     // Success!
     return true;

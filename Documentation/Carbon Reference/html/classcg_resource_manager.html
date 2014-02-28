@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -107,6 +107,9 @@ $(document).ready(function(){initNavTree('classcg_resource_manager.html','');});
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#pro-static-attribs">Static Protected Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="classcg_resource_manager-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -132,9 +135,19 @@ Inheritance diagram for cgResourceManager:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_resource_manager_1_1_blend_state_key.html">BlendStateKey</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_resource_manager_1_1_depth_stencil_state_key.html">DepthStencilStateKey</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_resource_manager_1_1_init_config.html">InitConfig</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_resource_manager_1_1_material_key.html">MaterialKey</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_resource_manager_1_1_rasterizer_state_key.html">RasterizerStateKey</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_resource_manager_1_1_sampler_state_key.html">SamplerStateKey</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_resource_manager_1_1_shader_key.html">ShaderKey</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
@@ -206,6 +219,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a883ff6ce95a477f7be7a133bc4f10848"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a883ff6ce95a477f7be7a133bc4f10848">cloneTexture</a> (<a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> *resourceOut, <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> sourceTexture, <a class="el" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24">cgBufferFormat::Base</a> newFormat=<a class="el" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24ac978de49988e1431f79fc4bcb3bcecb2">cgBufferFormat::Unknown</a>, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags=0, const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName=<a class="el" href="cg_string_8h.html#ae936e4c15227768f7da4e0951def89c8">_T</a>(&quot;&quot;), const <a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a> &amp;_debugSource=<a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a>(<a class="el" href="cg_string_8h.html#ae936e4c15227768f7da4e0951def89c8">_T</a>(&quot;&quot;), 0))</td></tr>
 <tr class="memdesc:a883ff6ce95a477f7be7a133bc4f10848"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clone an existing texture using the specified details.  <a href="#a883ff6ce95a477f7be7a133bc4f10848"></a><br/></td></tr>
 <tr class="separator:a883ff6ce95a477f7be7a133bc4f10848"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1585aed3a27453012f8374d9e242761"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ad1585aed3a27453012f8374d9e242761">cloneTexture</a> (<a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> *resourceOut, <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> sourceTexture, const <a class="el" href="structcg_rect.html">cgRect</a> &amp;sourceRectangle, <a class="el" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24">cgBufferFormat::Base</a> newFormat=<a class="el" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24ac978de49988e1431f79fc4bcb3bcecb2">cgBufferFormat::Unknown</a>, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags=0, const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName=<a class="el" href="cg_string_8h.html#ae936e4c15227768f7da4e0951def89c8">_T</a>(&quot;&quot;), const <a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a> &amp;_debugSource=<a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a>(<a class="el" href="cg_string_8h.html#ae936e4c15227768f7da4e0951def89c8">_T</a>(&quot;&quot;), 0))</td></tr>
+<tr class="memdesc:ad1585aed3a27453012f8374d9e242761"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clone an existing texture using the specified details.  <a href="#ad1585aed3a27453012f8374d9e242761"></a><br/></td></tr>
+<tr class="separator:ad1585aed3a27453012f8374d9e242761"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac11a62239046533befad6ec71ca57978"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ac11a62239046533befad6ec71ca57978">cloneTexture</a> (<a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> *resourceOut, <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> sourceTexture, <a class="el" href="structcg_rect.html">cgRect</a> sourceRectangle, <a class="el" href="structcg_size.html">cgSize</a> TextureSize, bool stretch, <a class="el" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24">cgBufferFormat::Base</a> newFormat=<a class="el" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24ac978de49988e1431f79fc4bcb3bcecb2">cgBufferFormat::Unknown</a>, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags=0, const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName=<a class="el" href="cg_string_8h.html#ae936e4c15227768f7da4e0951def89c8">_T</a>(&quot;&quot;), const <a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a> &amp;_debugSource=<a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a>(<a class="el" href="cg_string_8h.html#ae936e4c15227768f7da4e0951def89c8">_T</a>(&quot;&quot;), 0))</td></tr>
+<tr class="memdesc:ac11a62239046533befad6ec71ca57978"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clone an existing texture using the specified details.  <a href="#ac11a62239046533befad6ec71ca57978"></a><br/></td></tr>
+<tr class="separator:ac11a62239046533befad6ec71ca57978"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a384b68a5cdf60ff53a618d95fe2ffff7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a384b68a5cdf60ff53a618d95fe2ffff7">createVertexBuffer</a> (<a class="el" href="cg_resource_handles_8h.html#aeaa0d5538365b298bac0e6b08875c226">cgVertexBufferHandle</a> *resourceOut, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> length, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> usage, <a class="el" href="classcg_vertex_format.html">cgVertexFormat</a> *format, <a class="el" href="namespacecg_memory_pool.html#a5bcd88aad0c0fd64c7df879d2eb9567c">cgMemoryPool::Base</a> pool, const <a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a> &amp;_debugSource=<a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a>(<a class="el" href="cg_string_8h.html#ae936e4c15227768f7da4e0951def89c8">_T</a>(&quot;&quot;), 0))</td></tr>
 <tr class="memdesc:a384b68a5cdf60ff53a618d95fe2ffff7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pass through for the creation of a vertex buffer for management within the resource manager.  <a href="#a384b68a5cdf60ff53a618d95fe2ffff7"></a><br/></td></tr>
 <tr class="separator:a384b68a5cdf60ff53a618d95fe2ffff7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -325,6 +344,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae0b1da5c7fd81deaaf307926019081d3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ae0b1da5c7fd81deaaf307926019081d3">reloadScripts</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> delay=0.0f)</td></tr>
 <tr class="memdesc:ae0b1da5c7fd81deaaf307926019081d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reload all scripts (except surface shaders).  <a href="#ae0b1da5c7fd81deaaf307926019081d3"></a><br/></td></tr>
 <tr class="separator:ae0b1da5c7fd81deaaf307926019081d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa219cdadfa1550182d64e1a7aa85ec76"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#aa219cdadfa1550182d64e1a7aa85ec76">reloadScript</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName)</td></tr>
+<tr class="memdesc:aa219cdadfa1550182d64e1a7aa85ec76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reload a single script identified with the specified resource name.  <a href="#aa219cdadfa1550182d64e1a7aa85ec76"></a><br/></td></tr>
+<tr class="separator:aa219cdadfa1550182d64e1a7aa85ec76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbb6ad81d3c6a81e1f3857f5e271b767"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#adbb6ad81d3c6a81e1f3857f5e271b767">createSurfaceShader</a> (<a class="el" href="cg_resource_handles_8h.html#a45a1fc662dcf4668f78af170bdb251e8">cgSurfaceShaderHandle</a> *resourceOut, const <a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp;stream, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags=0, const <a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a> &amp;_debugSource=<a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a>(<a class="el" href="cg_string_8h.html#ae936e4c15227768f7da4e0951def89c8">_T</a>(&quot;&quot;), 0))</td></tr>
 <tr class="memdesc:adbb6ad81d3c6a81e1f3857f5e271b767"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified input stream, create a surface shader instance based on the surface shader /script/ in that stream. Surface shaders are always unique.  <a href="#adbb6ad81d3c6a81e1f3857f5e271b767"></a><br/></td></tr>
 <tr class="separator:adbb6ad81d3c6a81e1f3857f5e271b767"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -506,29 +528,106 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:a29effda7e6bac95c22d64f4455af2989"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the default destruction delay for all resources allocated.  <a href="#a29effda7e6bac95c22d64f4455af2989"></a><br/></td></tr>
 <tr class="separator:a29effda7e6bac95c22d64f4455af2989"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
-Friends</h2></td></tr>
-<tr class="memitem:a5f817da118d023a5bc919a4aafcd76c7"><td class="memItemLeft" align="right" valign="top">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a5f817da118d023a5bc919a4aafcd76c7">operator&lt;</a> (const <a class="el" href="structcg_resource_manager_1_1_material_key.html">MaterialKey</a> &amp;, const <a class="el" href="structcg_resource_manager_1_1_material_key.html">MaterialKey</a> &amp;)</td></tr>
-<tr class="memdesc:a5f817da118d023a5bc919a4aafcd76c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform less than comparison on the specified materials.  <a href="#a5f817da118d023a5bc919a4aafcd76c7"></a><br/></td></tr>
-<tr class="separator:a5f817da118d023a5bc919a4aafcd76c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0136a28ff0239d867c17cc473c4ee9d"><td class="memItemLeft" align="right" valign="top">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ab0136a28ff0239d867c17cc473c4ee9d">operator&lt;</a> (const ShaderKey &amp;, const ShaderKey &amp;)</td></tr>
-<tr class="memdesc:ab0136a28ff0239d867c17cc473c4ee9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform less than comparison on the specified shader identifiers.  <a href="#ab0136a28ff0239d867c17cc473c4ee9d"></a><br/></td></tr>
-<tr class="separator:ab0136a28ff0239d867c17cc473c4ee9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad29f5ed90ac4f211876a2559888a74ee"><td class="memItemLeft" align="right" valign="top">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ad29f5ed90ac4f211876a2559888a74ee">operator&lt;</a> (const SamplerStateKey &amp;, const SamplerStateKey &amp;)</td></tr>
-<tr class="memdesc:ad29f5ed90ac4f211876a2559888a74ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform less than comparison on the specified keys.  <a href="#ad29f5ed90ac4f211876a2559888a74ee"></a><br/></td></tr>
-<tr class="separator:ad29f5ed90ac4f211876a2559888a74ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2763b1495364f66db85900dc39648aa"><td class="memItemLeft" align="right" valign="top">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ae2763b1495364f66db85900dc39648aa">operator&lt;</a> (const DepthStencilStateKey &amp;, const DepthStencilStateKey &amp;)</td></tr>
-<tr class="memdesc:ae2763b1495364f66db85900dc39648aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform less than comparison on the specified keys.  <a href="#ae2763b1495364f66db85900dc39648aa"></a><br/></td></tr>
-<tr class="separator:ae2763b1495364f66db85900dc39648aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae107f4ed455f663dcfab0421ab1aff34"><td class="memItemLeft" align="right" valign="top">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ae107f4ed455f663dcfab0421ab1aff34">operator&lt;</a> (const RasterizerStateKey &amp;, const RasterizerStateKey &amp;)</td></tr>
-<tr class="memdesc:ae107f4ed455f663dcfab0421ab1aff34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform less than comparison on the specified keys.  <a href="#ae107f4ed455f663dcfab0421ab1aff34"></a><br/></td></tr>
-<tr class="separator:ae107f4ed455f663dcfab0421ab1aff34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af99358b188fcbb468edc0fa9fa6f3045"><td class="memItemLeft" align="right" valign="top">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#af99358b188fcbb468edc0fa9fa6f3045">operator&lt;</a> (const BlendStateKey &amp;, const BlendStateKey &amp;)</td></tr>
-<tr class="memdesc:af99358b188fcbb468edc0fa9fa6f3045"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform less than comparison on the specified keys.  <a href="#af99358b188fcbb468edc0fa9fa6f3045"></a><br/></td></tr>
-<tr class="separator:af99358b188fcbb468edc0fa9fa6f3045"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:afe11afbb6e5a71220b021484df0119ec"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#afe11afbb6e5a71220b021484df0119ec">postInit</a> ()</td></tr>
+<tr class="memdesc:afe11afbb6e5a71220b021484df0119ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the friend '<a class="el" href="classcg_render_driver.html#a75fc7656bc1ab1c16486bab92de61237" title="Complete the render driver initialization process ">cgRenderDriver::postInit</a>' function to allow the resource manager to fully initialize based on existing render driver features / resources.  <a href="#afe11afbb6e5a71220b021484df0119ec"></a><br/></td></tr>
+<tr class="separator:afe11afbb6e5a71220b021484df0119ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8578283c9a8496da2137d9e6e31e8359"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_string.html">cgString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a8578283c9a8496da2137d9e6e31e8359">listActiveResources</a> (ResourceItemList &amp;resourceList)</td></tr>
+<tr class="memdesc:a8578283c9a8496da2137d9e6e31e8359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Part of the debug process. Dumps out a list of all the specified <a class="el" href="classcg_resource.html" title="Designed as a base class for accessing underlying resource data such as textures, materials...">cgResource</a> items (irrespective of what they store).  <a href="#a8578283c9a8496da2137d9e6e31e8359"></a><br/></td></tr>
+<tr class="separator:a8578283c9a8496da2137d9e6e31e8359"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab93d811a270057ecdb20e0a038bdbc3b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ab93d811a270057ecdb20e0a038bdbc3b">notifyDeviceLost</a> (ResourceItemList &amp;resourceList)</td></tr>
+<tr class="memdesc:ab93d811a270057ecdb20e0a038bdbc3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify all resources in the specified list that the device was lost  <a href="#ab93d811a270057ecdb20e0a038bdbc3b"></a><br/></td></tr>
+<tr class="separator:ab93d811a270057ecdb20e0a038bdbc3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9d9a0f049c9fbcaf10df34f69fd86c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#aa9d9a0f049c9fbcaf10df34f69fd86c0">notifyDeviceRestored</a> (ResourceItemList &amp;resourceList)</td></tr>
+<tr class="memdesc:aa9d9a0f049c9fbcaf10df34f69fd86c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify all resources in the specified list that the device was restored  <a href="#aa9d9a0f049c9fbcaf10df34f69fd86c0"></a><br/></td></tr>
+<tr class="separator:aa9d9a0f049c9fbcaf10df34f69fd86c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf2a9f8062351065ae875bac6d03c988"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#adf2a9f8062351065ae875bac6d03c988">setRenderDriver</a> (<a class="el" href="classcg_render_driver.html">cgRenderDriver</a> *driver)</td></tr>
+<tr class="memdesc:adf2a9f8062351065ae875bac6d03c988"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set by the friend '<a class="el" href="classcg_render_driver.html#af43906664dbc12374d752d0317d21f35" title="Initialize the render driver using the window specified. Note : In this case, you will be responsible...">cgRenderDriver::initialize</a>' function, to pass back the render driver pointer through which the resource manager can access the driver's data / functionality.  <a href="#adf2a9f8062351065ae875bac6d03c988"></a><br/></td></tr>
+<tr class="separator:adf2a9f8062351065ae875bac6d03c988"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa136f5e78b7dce4c4b787122a47c0ee9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#aa136f5e78b7dce4c4b787122a47c0ee9">setAudioDriver</a> (<a class="el" href="classcg_audio_driver.html">cgAudioDriver</a> *driver)</td></tr>
+<tr class="memdesc:aa136f5e78b7dce4c4b787122a47c0ee9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set by the friend '<a class="el" href="classcg_render_driver.html#af43906664dbc12374d752d0317d21f35" title="Initialize the render driver using the window specified. Note : In this case, you will be responsible...">cgRenderDriver::initialize</a>' function, to pass back the render driver pointer through which the resource manager can access the drivers data / functionality.  <a href="#aa136f5e78b7dce4c4b787122a47c0ee9"></a><br/></td></tr>
+<tr class="separator:aa136f5e78b7dce4c4b787122a47c0ee9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81b88297e176386f0a9d95eccbbf8b0d"><td class="memTemplParams" colspan="2">template&lt;class _HandleType , class _ResourceType &gt; </td></tr>
+<tr class="memitem:a81b88297e176386f0a9d95eccbbf8b0d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a81b88297e176386f0a9d95eccbbf8b0d">processNewResource</a> (_HandleType *resourceOut, _ResourceType *newResource, ResourceItemList &amp;resourceList, const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName, <a class="el" href="namespacecg_stream_type.html#a51fb2dd6b8e37d239ef6a4e5167f8956">cgStreamType::Base</a> streamType, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, const <a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a> &amp;_debugSource)</td></tr>
+<tr class="memdesc:a81b88297e176386f0a9d95eccbbf8b0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Once it has been determined that a new resource must be allocated this function is called to perform all the common post allocation tasks on that new resource.  <a href="#a81b88297e176386f0a9d95eccbbf8b0d"></a><br/></td></tr>
+<tr class="separator:a81b88297e176386f0a9d95eccbbf8b0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73638ee65f1b95ba2d1190f1d12d78ee"><td class="memTemplParams" colspan="2">template&lt;class _HandleType , class _ResourceType &gt; </td></tr>
+<tr class="memitem:a73638ee65f1b95ba2d1190f1d12d78ee"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a73638ee65f1b95ba2d1190f1d12d78ee">processExistingResource</a> (_HandleType *resourceOut, _ResourceType *existingResource, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags)</td></tr>
+<tr class="memdesc:a73638ee65f1b95ba2d1190f1d12d78ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Once it has been determined that an existing resource can be selected this function is called to perform all the common post selection tasks on that existing resource.  <a href="#a73638ee65f1b95ba2d1190f1d12d78ee"></a><br/></td></tr>
+<tr class="separator:a73638ee65f1b95ba2d1190f1d12d78ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab6800d6a95497382deaaa75f9730f54"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#aab6800d6a95497382deaaa75f9730f54">findTexture</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName) const </td></tr>
+<tr class="memdesc:aab6800d6a95497382deaaa75f9730f54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified resource name, find the resource object for any matching texture found. Note : A value of CG_NULL is returned if the resource could not be found or an error occured.  <a href="#aab6800d6a95497382deaaa75f9730f54"></a><br/></td></tr>
+<tr class="separator:aab6800d6a95497382deaaa75f9730f54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac86cb9bb9a4318f7d3ce989879b4e56d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ac86cb9bb9a4318f7d3ce989879b4e56d">findMesh</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName) const </td></tr>
+<tr class="memdesc:ac86cb9bb9a4318f7d3ce989879b4e56d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified resource name, find the resource object for any matching mesh found. Note : A value of CG_NULL is returned if the resource could not be found or an error occured.  <a href="#ac86cb9bb9a4318f7d3ce989879b4e56d"></a><br/></td></tr>
+<tr class="separator:ac86cb9bb9a4318f7d3ce989879b4e56d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11a0dd8345cd157330b34ad24763ad1e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a11a0dd8345cd157330b34ad24763ad1e">findMesh</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> referenceId) const </td></tr>
+<tr class="memdesc:a11a0dd8345cd157330b34ad24763ad1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified reference identifier, find the resource object for any matching mesh found. Note : A value of CG_NULL is returned if the resource could not be found or an error occurred.  <a href="#a11a0dd8345cd157330b34ad24763ad1e"></a><br/></td></tr>
+<tr class="separator:a11a0dd8345cd157330b34ad24763ad1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0443c058f26c5e85a1eef0f4c4c3d833"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a0443c058f26c5e85a1eef0f4c4c3d833">findMaterial</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> referenceId) const </td></tr>
+<tr class="memdesc:a0443c058f26c5e85a1eef0f4c4c3d833"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified reference identifier, find the resource object for any matching material found. Note : A value of CG_NULL is returned if the resource could not be found or an error occurred.  <a href="#a0443c058f26c5e85a1eef0f4c4c3d833"></a><br/></td></tr>
+<tr class="separator:a0443c058f26c5e85a1eef0f4c4c3d833"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae004e9cbaecfde790e0a08426b5afcaf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ae004e9cbaecfde790e0a08426b5afcaf">findRenderTarget</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName) const </td></tr>
+<tr class="memdesc:ae004e9cbaecfde790e0a08426b5afcaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified resource name, find the resource object for any matching render target found. Note : A value of CG_NULL is returned if the resource could not be found or an error occured.  <a href="#ae004e9cbaecfde790e0a08426b5afcaf"></a><br/></td></tr>
+<tr class="separator:ae004e9cbaecfde790e0a08426b5afcaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f96bb3ba837eb4a063629773af49c64"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a3f96bb3ba837eb4a063629773af49c64">findDepthStencilTarget</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName) const </td></tr>
+<tr class="memdesc:a3f96bb3ba837eb4a063629773af49c64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified resource name, find the resource object for any matching depth stencil target found. Note : A value of CG_NULL is returned if the resource could not be found or an error occured.  <a href="#a3f96bb3ba837eb4a063629773af49c64"></a><br/></td></tr>
+<tr class="separator:a3f96bb3ba837eb4a063629773af49c64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d349d17675269ce2b34983962e01c7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a0d349d17675269ce2b34983962e01c7e">findAnimationSet</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName) const </td></tr>
+<tr class="memdesc:a0d349d17675269ce2b34983962e01c7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified resource name, find the resource object for any matching animation set found. Note : A value of CG_NULL is returned if the resource could not be found or an error occured.  <a href="#a0d349d17675269ce2b34983962e01c7e"></a><br/></td></tr>
+<tr class="separator:a0d349d17675269ce2b34983962e01c7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc0670cfe8c744db4160f081a13f0646"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#acc0670cfe8c744db4160f081a13f0646">findAnimationSet</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> referenceId) const </td></tr>
+<tr class="memdesc:acc0670cfe8c744db4160f081a13f0646"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified reference identifier, find the resource object for any matching animation set found. Note : A value of CG_NULL is returned if the resource could not be found or an error occurred.  <a href="#acc0670cfe8c744db4160f081a13f0646"></a><br/></td></tr>
+<tr class="separator:acc0670cfe8c744db4160f081a13f0646"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c0aeaa77233e072bf228b529c797f53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a1c0aeaa77233e072bf228b529c797f53">findAudioBuffer</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> creationFlags) const </td></tr>
+<tr class="memdesc:a1c0aeaa77233e072bf228b529c797f53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified resource name and creation flags, find the resource object for any matching audio buffer found. Note : A value of CG_NULL is returned if the resource could not be found or an error occured.  <a href="#a1c0aeaa77233e072bf228b529c797f53"></a><br/></td></tr>
+<tr class="separator:a1c0aeaa77233e072bf228b529c797f53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3170896a9c9a488d8174aa1c6482d4a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a3170896a9c9a488d8174aa1c6482d4a8">findScript</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName, bool shaderScript=false) const </td></tr>
+<tr class="memdesc:a3170896a9c9a488d8174aa1c6482d4a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Looks for a matching script in the list and returns object pointer  <a href="#a3170896a9c9a488d8174aa1c6482d4a8"></a><br/></td></tr>
+<tr class="separator:a3170896a9c9a488d8174aa1c6482d4a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1db962774f8d625b15c21194ae671103"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a1db962774f8d625b15c21194ae671103">findVertexShader</a> (const <a class="el" href="classcg_shader_identifier.html">cgShaderIdentifier</a> *cacheIdentifier)</td></tr>
+<tr class="memdesc:a1db962774f8d625b15c21194ae671103"><td class="mdescLeft">&#160;</td><td class="mdescRight">Looks for a matching vertex shader in the list and returns object pointer  <a href="#a1db962774f8d625b15c21194ae671103"></a><br/></td></tr>
+<tr class="separator:a1db962774f8d625b15c21194ae671103"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39cb15b7fbcffe046ed5db379b9f6974"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a39cb15b7fbcffe046ed5db379b9f6974">findPixelShader</a> (const <a class="el" href="classcg_shader_identifier.html">cgShaderIdentifier</a> *cacheIdentifier)</td></tr>
+<tr class="memdesc:a39cb15b7fbcffe046ed5db379b9f6974"><td class="mdescLeft">&#160;</td><td class="mdescRight">Looks for a matching pixel shader in the list and returns object pointer  <a href="#a39cb15b7fbcffe046ed5db379b9f6974"></a><br/></td></tr>
+<tr class="separator:a39cb15b7fbcffe046ed5db379b9f6974"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8d759a8e7570e16200b3528d42eb4dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#aa8d759a8e7570e16200b3528d42eb4dd">findSamplerState</a> (const <a class="el" href="structcg_sampler_state_desc.html">cgSamplerStateDesc</a> *description)</td></tr>
+<tr class="memdesc:aa8d759a8e7570e16200b3528d42eb4dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Looks for a matching sampler state in the list and returns object pointer  <a href="#aa8d759a8e7570e16200b3528d42eb4dd"></a><br/></td></tr>
+<tr class="separator:aa8d759a8e7570e16200b3528d42eb4dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bbb75dddf5528467910b783d417a76f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a1bbb75dddf5528467910b783d417a76f">findDepthStencilState</a> (const <a class="el" href="structcg_depth_stencil_state_desc.html">cgDepthStencilStateDesc</a> *description)</td></tr>
+<tr class="memdesc:a1bbb75dddf5528467910b783d417a76f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Looks for a matching depth stencil state in the list and returns object pointer  <a href="#a1bbb75dddf5528467910b783d417a76f"></a><br/></td></tr>
+<tr class="separator:a1bbb75dddf5528467910b783d417a76f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1037bba8f12c0e0f54d9f6d3b754acf4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a1037bba8f12c0e0f54d9f6d3b754acf4">findRasterizerState</a> (const <a class="el" href="structcg_rasterizer_state_desc.html">cgRasterizerStateDesc</a> *description)</td></tr>
+<tr class="memdesc:a1037bba8f12c0e0f54d9f6d3b754acf4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Looks for a matching sampler state in the list and returns object pointer  <a href="#a1037bba8f12c0e0f54d9f6d3b754acf4"></a><br/></td></tr>
+<tr class="separator:a1037bba8f12c0e0f54d9f6d3b754acf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad16ad86d7a34d510cb60dc217147f01a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ad16ad86d7a34d510cb60dc217147f01a">findBlendState</a> (const <a class="el" href="structcg_blend_state_desc.html">cgBlendStateDesc</a> *description)</td></tr>
+<tr class="memdesc:ad16ad86d7a34d510cb60dc217147f01a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Looks for a matching sampler state in the list and returns object pointer  <a href="#ad16ad86d7a34d510cb60dc217147f01a"></a><br/></td></tr>
+<tr class="separator:ad16ad86d7a34d510cb60dc217147f01a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16d96796fa33074ceee11dbc9a9c1e87"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a16d96796fa33074ceee11dbc9a9c1e87">removeResource</a> (<a class="el" href="classcg_resource.html">cgResource</a> *resource)</td></tr>
+<tr class="memdesc:a16d96796fa33074ceee11dbc9a9c1e87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by <a class="el" href="classcg_resource.html" title="Designed as a base class for accessing underlying resource data such as textures, materials...">cgResource</a> to actually remove a resource from the internal list.  <a href="#a16d96796fa33074ceee11dbc9a9c1e87"></a><br/></td></tr>
+<tr class="separator:a16d96796fa33074ceee11dbc9a9c1e87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ba80e18ef3de1ed6fc23ef0f55454b7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a7ba80e18ef3de1ed6fc23ef0f55454b7">releaseResourceList</a> (ResourceItemList &amp;resourceList, bool ownedOnly=true)</td></tr>
+<tr class="memdesc:a7ba80e18ef3de1ed6fc23ef0f55454b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release all of the resources in the specified list.  <a href="#a7ba80e18ef3de1ed6fc23ef0f55454b7"></a><br/></td></tr>
+<tr class="separator:a7ba80e18ef3de1ed6fc23ef0f55454b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae3c4fc427243af5545a717ca669e063"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#aae3c4fc427243af5545a717ca669e063">addGarbageResource</a> (<a class="el" href="classcg_resource.html">cgResource</a> *resource)</td></tr>
+<tr class="memdesc:aae3c4fc427243af5545a717ca669e063"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add this resource to the garbage list awaiting cleanup after the relevant amount of time has passed.  <a href="#aae3c4fc427243af5545a717ca669e063"></a><br/></td></tr>
+<tr class="separator:aae3c4fc427243af5545a717ca669e063"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab873764f300d02c8d63f1bfc9263f83a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ab873764f300d02c8d63f1bfc9263f83a">removeGarbageResource</a> (<a class="el" href="classcg_resource.html">cgResource</a> *resource)</td></tr>
+<tr class="memdesc:ab873764f300d02c8d63f1bfc9263f83a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove this resource from the garbage list. It has been referenced again while waiting for destruction.  <a href="#ab873764f300d02c8d63f1bfc9263f83a"></a><br/></td></tr>
+<tr class="separator:ab873764f300d02c8d63f1bfc9263f83a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a318c8718525d8c741cb1d264c90071b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a318c8718525d8c741cb1d264c90071b0">checkGarbage</a> (bool bEmpty=false)</td></tr>
+<tr class="memdesc:a318c8718525d8c741cb1d264c90071b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check the contents of the garbage list.  <a href="#a318c8718525d8c741cb1d264c90071b0"></a><br/></td></tr>
+<tr class="separator:a318c8718525d8c741cb1d264c90071b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b0b22ae44ef07272ecd1544f37cb5d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a9b0b22ae44ef07272ecd1544f37cb5d0">sendGarbageMessage</a> ()</td></tr>
+<tr class="memdesc:a9b0b22ae44ef07272ecd1544f37cb5d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends the garbage collection message to ourselves.  <a href="#a9b0b22ae44ef07272ecd1544f37cb5d0"></a><br/></td></tr>
+<tr class="separator:a9b0b22ae44ef07272ecd1544f37cb5d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38a2eb529f2c48345be56a37e7ed29b3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a38a2eb529f2c48345be56a37e7ed29b3">onResourceAdded</a> (<a class="el" href="structcg_resource_update_event_args.html">cgResourceUpdateEventArgs</a> *e)</td></tr>
+<tr class="memdesc:a38a2eb529f2c48345be56a37e7ed29b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be overriden or called by derived class when the a new resource has been added to the system for management in order to notify all listeners.  <a href="#a38a2eb529f2c48345be56a37e7ed29b3"></a><br/></td></tr>
+<tr class="separator:a38a2eb529f2c48345be56a37e7ed29b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38ab180112591512be033a9582c6abf7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a38ab180112591512be033a9582c6abf7">onResourceRemoved</a> (<a class="el" href="structcg_resource_update_event_args.html">cgResourceUpdateEventArgs</a> *e)</td></tr>
+<tr class="memdesc:a38ab180112591512be033a9582c6abf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be overriden or called by derived class when the a resource is about to be removed from the system for management in order to notify all listeners.  <a href="#a38ab180112591512be033a9582c6abf7"></a><br/></td></tr>
+<tr class="separator:a38ab180112591512be033a9582c6abf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classcg_reference"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classcg_reference')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classcg_reference.html">cgReference</a></td></tr>
 <tr class="memitem:a6cfceab8378d8ec28490f639d785193a inherit pro_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a6cfceab8378d8ec28490f639d785193a">addRefHold</a> (<a class="el" href="classcg_reference.html">cgReference</a> *reference, bool reconnecting)</td></tr>
 <tr class="memdesc:a6cfceab8378d8ec28490f639d785193a inherit pro_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add internal references of the specified object held by this reference holder. This is an internal method that is called only by the target of the reference in order to establish a bi-directional relationship.  <a href="#a6cfceab8378d8ec28490f639d785193a"></a><br/></td></tr>
@@ -536,6 +635,79 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a91fee3b24b54842b4d378a14cd8a5e1b inherit pro_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a91fee3b24b54842b4d378a14cd8a5e1b">removeRefHold</a> (<a class="el" href="classcg_reference.html">cgReference</a> *reference, bool disconnecting)</td></tr>
 <tr class="memdesc:a91fee3b24b54842b4d378a14cd8a5e1b inherit pro_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove internal references of the specified object held by this reference holder. This is an internal method that is called only by the target of the reference in order to finalize a bi-directional relationship.  <a href="#a91fee3b24b54842b4d378a14cd8a5e1b"></a><br/></td></tr>
 <tr class="separator:a91fee3b24b54842b4d378a14cd8a5e1b inherit pro_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:ab14974ce2d760ed9e7d9fc5d32ae4278"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_resource_manager_1_1_init_config.html">InitConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ab14974ce2d760ed9e7d9fc5d32ae4278">mConfig</a></td></tr>
+<tr class="separator:ab14974ce2d760ed9e7d9fc5d32ae4278"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd8687ed1807771da344c4b8a8eca102"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#abd8687ed1807771da344c4b8a8eca102">mDestructionEnabled</a></td></tr>
+<tr class="separator:abd8687ed1807771da344c4b8a8eca102"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75934a5954c37e2f8325266888b955fe"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a75934a5954c37e2f8325266888b955fe">mTextures</a></td></tr>
+<tr class="separator:a75934a5954c37e2f8325266888b955fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e9b6ade4a3841f941a4c7d917f26012"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a1e9b6ade4a3841f941a4c7d917f26012">mVertexBuffers</a></td></tr>
+<tr class="separator:a1e9b6ade4a3841f941a4c7d917f26012"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad152dc64c35ae312b9d3ae261451981a"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ad152dc64c35ae312b9d3ae261451981a">mIndexBuffers</a></td></tr>
+<tr class="separator:ad152dc64c35ae312b9d3ae261451981a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3273c3af4a38fdb0b6a0056ecbd6be62"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a3273c3af4a38fdb0b6a0056ecbd6be62">mConstantBuffers</a></td></tr>
+<tr class="separator:a3273c3af4a38fdb0b6a0056ecbd6be62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf6c9cde357b62f8c91c8352097ae8d0"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#adf6c9cde357b62f8c91c8352097ae8d0">mSurfaceShaders</a></td></tr>
+<tr class="separator:adf6c9cde357b62f8c91c8352097ae8d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1dab996169367f350be9e0c903375ec"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ab1dab996169367f350be9e0c903375ec">mVertexShaders</a></td></tr>
+<tr class="separator:ab1dab996169367f350be9e0c903375ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af447ea4dfeaf728e0b9904a9e011805a"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#af447ea4dfeaf728e0b9904a9e011805a">mPixelShaders</a></td></tr>
+<tr class="separator:af447ea4dfeaf728e0b9904a9e011805a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34ea106320073bc7cb9d9df0fbd2f169"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a34ea106320073bc7cb9d9df0fbd2f169">mMeshes</a></td></tr>
+<tr class="separator:a34ea106320073bc7cb9d9df0fbd2f169"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85198a7bf63d1acc65a077d8ab6703e5"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a85198a7bf63d1acc65a077d8ab6703e5">mRenderTargets</a></td></tr>
+<tr class="separator:a85198a7bf63d1acc65a077d8ab6703e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab453d3b6e7654400ed0910b0d5e20f9a"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ab453d3b6e7654400ed0910b0d5e20f9a">mDepthStencilTargets</a></td></tr>
+<tr class="separator:ab453d3b6e7654400ed0910b0d5e20f9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fa978b693a7ebe2718c5faefeaee3eb"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a6fa978b693a7ebe2718c5faefeaee3eb">mAnimationSets</a></td></tr>
+<tr class="separator:a6fa978b693a7ebe2718c5faefeaee3eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada07aa74435661523d694ca10a1c8f36"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ada07aa74435661523d694ca10a1c8f36">mAudioBuffers</a></td></tr>
+<tr class="separator:ada07aa74435661523d694ca10a1c8f36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5b9139ee6b2f9eef87f4746719eddcb"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#aa5b9139ee6b2f9eef87f4746719eddcb">mScripts</a></td></tr>
+<tr class="separator:aa5b9139ee6b2f9eef87f4746719eddcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d0e8339433500870a5cb7988e64013e"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a1d0e8339433500870a5cb7988e64013e">mSamplerStates</a></td></tr>
+<tr class="separator:a1d0e8339433500870a5cb7988e64013e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad58f730ed7a626471093bedd121a4b44"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ad58f730ed7a626471093bedd121a4b44">mDepthStencilStates</a></td></tr>
+<tr class="separator:ad58f730ed7a626471093bedd121a4b44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6975377e62a2cecd4ca2e1996ec41a42"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a6975377e62a2cecd4ca2e1996ec41a42">mRasterizerStates</a></td></tr>
+<tr class="separator:a6975377e62a2cecd4ca2e1996ec41a42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32b60b8edbb2c2755b8518a66a1da66b"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a32b60b8edbb2c2755b8518a66a1da66b">mBlendStates</a></td></tr>
+<tr class="separator:a32b60b8edbb2c2755b8518a66a1da66b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44a65280f473834b6a37b81a43ed435c"><td class="memItemLeft" align="right" valign="top">ResourceItemSet&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a44a65280f473834b6a37b81a43ed435c">mResourceGarbage</a></td></tr>
+<tr class="separator:a44a65280f473834b6a37b81a43ed435c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fb88258f80cb23ac1c2a5b47c714533"><td class="memItemLeft" align="right" valign="top">ShaderMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a5fb88258f80cb23ac1c2a5b47c714533">mVertexShaderLUT</a></td></tr>
+<tr class="separator:a5fb88258f80cb23ac1c2a5b47c714533"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac08f5743341207700a819ab11af9edf6"><td class="memItemLeft" align="right" valign="top">ShaderMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ac08f5743341207700a819ab11af9edf6">mPixelShaderLUT</a></td></tr>
+<tr class="separator:ac08f5743341207700a819ab11af9edf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4be44176179d1f149b9fa988f115f6b7"><td class="memItemLeft" align="right" valign="top">SamplerStateMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a4be44176179d1f149b9fa988f115f6b7">mSamplerStateLUT</a></td></tr>
+<tr class="separator:a4be44176179d1f149b9fa988f115f6b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37061c76d0eba63c7f5e8b8b7c373346"><td class="memItemLeft" align="right" valign="top">DepthStencilStateMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a37061c76d0eba63c7f5e8b8b7c373346">mDepthStencilStateLUT</a></td></tr>
+<tr class="separator:a37061c76d0eba63c7f5e8b8b7c373346"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66a739dec7e24abc8f12a6d8b9da8c65"><td class="memItemLeft" align="right" valign="top">RasterizerStateMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a66a739dec7e24abc8f12a6d8b9da8c65">mRasterizerStateLUT</a></td></tr>
+<tr class="separator:a66a739dec7e24abc8f12a6d8b9da8c65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bed1c4d52f1b4959daf389a88cd5936"><td class="memItemLeft" align="right" valign="top">BlendStateMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a7bed1c4d52f1b4959daf389a88cd5936">mBlendStateLUT</a></td></tr>
+<tr class="separator:a7bed1c4d52f1b4959daf389a88cd5936"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a829d0cc8f24d84bc1d66cd2e584d2fbf"><td class="memItemLeft" align="right" valign="top">NamedResourceMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a829d0cc8f24d84bc1d66cd2e584d2fbf">mRenderTargetLUT</a></td></tr>
+<tr class="separator:a829d0cc8f24d84bc1d66cd2e584d2fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8da358b2bb879a9df6a58b38428c0011"><td class="memItemLeft" align="right" valign="top">NamedResourceMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a8da358b2bb879a9df6a58b38428c0011">mTextureLUT</a></td></tr>
+<tr class="separator:a8da358b2bb879a9df6a58b38428c0011"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a024eaa0a091bb8cdea0570aa943cc0d6"><td class="memItemLeft" align="right" valign="top">ResourceItemList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a024eaa0a091bb8cdea0570aa943cc0d6">mMaterials</a></td></tr>
+<tr class="separator:a024eaa0a091bb8cdea0570aa943cc0d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a872087a1cb40528f0d7c4ec6c9853a89"><td class="memItemLeft" align="right" valign="top">NameUsageMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a872087a1cb40528f0d7c4ec6c9853a89">mMaterialNames</a></td></tr>
+<tr class="separator:a872087a1cb40528f0d7c4ec6c9853a89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4072e2d2bbb7a11e8e80f65391137a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_render_driver.html">cgRenderDriver</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#af4072e2d2bbb7a11e8e80f65391137a0">mRenderDriver</a></td></tr>
+<tr class="separator:af4072e2d2bbb7a11e8e80f65391137a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74c78bfa7ac5b28c636de99a4fe6b04e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_audio_driver.html">cgAudioDriver</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a74c78bfa7ac5b28c636de99a4fe6b04e">mAudioDriver</a></td></tr>
+<tr class="separator:a74c78bfa7ac5b28c636de99a4fe6b04e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24fbd2b8588523c6558d5cafc9c003e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_sampler.html">cgSampler</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a24fbd2b8588523c6558d5cafc9c003e4">mDefaultSamplers</a> [2]</td></tr>
+<tr class="separator:a24fbd2b8588523c6558d5cafc9c003e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeab316104b6c9b08a58b6482340ba7c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#a118acf0914cb9c76815e189ac6f8a0c0">cgScriptHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#aeab316104b6c9b08a58b6482340ba7c8">mDefaultShader</a></td></tr>
+<tr class="separator:aeab316104b6c9b08a58b6482340ba7c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb8422973edfd1c47c860e922d6fa603"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#adb8422973edfd1c47c860e922d6fa603">mDefaultMaterial</a></td></tr>
+<tr class="separator:adb8422973edfd1c47c860e922d6fa603"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classcg_reference"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_reference')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_reference.html">cgReference</a></td></tr>
 <tr class="memitem:a58ab53765ddfa978c2ef51a3a75bab63 inherit pro_attribs_classcg_reference"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a58ab53765ddfa978c2ef51a3a75bab63">mReferenceId</a></td></tr>
 <tr class="separator:a58ab53765ddfa978c2ef51a3a75bab63 inherit pro_attribs_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -551,6 +723,40 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a1749eeb16fa3f3ce834125fbd22d2583 inherit pro_attribs_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b0a1354a2f4ced6aa34688f6f4761e9 inherit pro_attribs_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a0b0a1354a2f4ced6aa34688f6f4761e9">mDisposing</a></td></tr>
 <tr class="separator:a0b0a1354a2f4ced6aa34688f6f4761e9 inherit pro_attribs_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classcg_event_dispatcher"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_event_dispatcher')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_event_dispatcher.html">cgEventDispatcher</a></td></tr>
+<tr class="memitem:a60b73d596abf511416b0e36e5b107e1b inherit pro_attribs_classcg_event_dispatcher"><td class="memItemLeft" align="right" valign="top">EventListenerList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_event_dispatcher.html#a60b73d596abf511416b0e36e5b107e1b">mEventListeners</a></td></tr>
+<tr class="separator:a60b73d596abf511416b0e36e5b107e1b inherit pro_attribs_classcg_event_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classcg_script_interop_1_1_disposable_script_object"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_script_interop_1_1_disposable_script_object')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_script_interop_1_1_disposable_script_object.html">cgScriptInterop::DisposableScriptObject</a></td></tr>
+<tr class="memitem:a5da40dc03376bc8d5c50145690eb5f28 inherit pro_attribs_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a5da40dc03376bc8d5c50145690eb5f28">mScriptRefCount</a></td></tr>
+<tr class="separator:a5da40dc03376bc8d5c50145690eb5f28 inherit pro_attribs_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
+Static Protected Attributes</h2></td></tr>
+<tr class="memitem:ac1d547a1cc2cc681cf87c4d310898cf7"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ac1d547a1cc2cc681cf87c4d310898cf7">mDefaultDestroyDelay</a> = 0.0f</td></tr>
+<tr class="separator:ac1d547a1cc2cc681cf87c4d310898cf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16aaa7fc7b94d69277e1ccb8307e90b3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_resource_manager.html">cgResourceManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a16aaa7fc7b94d69277e1ccb8307e90b3">mSingleton</a> = <a class="el" href="cg_base_types_8h.html#ae28f568db83e03f77e0d1f3d96b89449">CG_NULL</a></td></tr>
+<tr class="separator:a16aaa7fc7b94d69277e1ccb8307e90b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a5f817da118d023a5bc919a4aafcd76c7"><td class="memItemLeft" align="right" valign="top">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a5f817da118d023a5bc919a4aafcd76c7">operator&lt;</a> (const <a class="el" href="structcg_resource_manager_1_1_material_key.html">MaterialKey</a> &amp;, const <a class="el" href="structcg_resource_manager_1_1_material_key.html">MaterialKey</a> &amp;)</td></tr>
+<tr class="memdesc:a5f817da118d023a5bc919a4aafcd76c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform less than comparison on the specified materials.  <a href="#a5f817da118d023a5bc919a4aafcd76c7"></a><br/></td></tr>
+<tr class="separator:a5f817da118d023a5bc919a4aafcd76c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0136a28ff0239d867c17cc473c4ee9d"><td class="memItemLeft" align="right" valign="top">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ab0136a28ff0239d867c17cc473c4ee9d">operator&lt;</a> (const <a class="el" href="structcg_resource_manager_1_1_shader_key.html">ShaderKey</a> &amp;, const <a class="el" href="structcg_resource_manager_1_1_shader_key.html">ShaderKey</a> &amp;)</td></tr>
+<tr class="memdesc:ab0136a28ff0239d867c17cc473c4ee9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform less than comparison on the specified shader identifiers.  <a href="#ab0136a28ff0239d867c17cc473c4ee9d"></a><br/></td></tr>
+<tr class="separator:ab0136a28ff0239d867c17cc473c4ee9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad29f5ed90ac4f211876a2559888a74ee"><td class="memItemLeft" align="right" valign="top">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ad29f5ed90ac4f211876a2559888a74ee">operator&lt;</a> (const <a class="el" href="structcg_resource_manager_1_1_sampler_state_key.html">SamplerStateKey</a> &amp;, const <a class="el" href="structcg_resource_manager_1_1_sampler_state_key.html">SamplerStateKey</a> &amp;)</td></tr>
+<tr class="memdesc:ad29f5ed90ac4f211876a2559888a74ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform less than comparison on the specified keys.  <a href="#ad29f5ed90ac4f211876a2559888a74ee"></a><br/></td></tr>
+<tr class="separator:ad29f5ed90ac4f211876a2559888a74ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2763b1495364f66db85900dc39648aa"><td class="memItemLeft" align="right" valign="top">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ae2763b1495364f66db85900dc39648aa">operator&lt;</a> (const <a class="el" href="structcg_resource_manager_1_1_depth_stencil_state_key.html">DepthStencilStateKey</a> &amp;, const <a class="el" href="structcg_resource_manager_1_1_depth_stencil_state_key.html">DepthStencilStateKey</a> &amp;)</td></tr>
+<tr class="memdesc:ae2763b1495364f66db85900dc39648aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform less than comparison on the specified keys.  <a href="#ae2763b1495364f66db85900dc39648aa"></a><br/></td></tr>
+<tr class="separator:ae2763b1495364f66db85900dc39648aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae107f4ed455f663dcfab0421ab1aff34"><td class="memItemLeft" align="right" valign="top">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ae107f4ed455f663dcfab0421ab1aff34">operator&lt;</a> (const <a class="el" href="structcg_resource_manager_1_1_rasterizer_state_key.html">RasterizerStateKey</a> &amp;, const <a class="el" href="structcg_resource_manager_1_1_rasterizer_state_key.html">RasterizerStateKey</a> &amp;)</td></tr>
+<tr class="memdesc:ae107f4ed455f663dcfab0421ab1aff34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform less than comparison on the specified keys.  <a href="#ae107f4ed455f663dcfab0421ab1aff34"></a><br/></td></tr>
+<tr class="separator:ae107f4ed455f663dcfab0421ab1aff34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af99358b188fcbb468edc0fa9fa6f3045"><td class="memItemLeft" align="right" valign="top">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#af99358b188fcbb468edc0fa9fa6f3045">operator&lt;</a> (const <a class="el" href="structcg_resource_manager_1_1_blend_state_key.html">BlendStateKey</a> &amp;, const <a class="el" href="structcg_resource_manager_1_1_blend_state_key.html">BlendStateKey</a> &amp;)</td></tr>
+<tr class="memdesc:af99358b188fcbb468edc0fa9fa6f3045"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform less than comparison on the specified keys.  <a href="#af99358b188fcbb468edc0fa9fa6f3045"></a><br/></td></tr>
+<tr class="separator:af99358b188fcbb468edc0fa9fa6f3045"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class for the management of application resources. Note : <a class="el" href="classcg_resource_manager.html" title="Class for the management of application resources. Note : cgResourceManager is designed to be a singl...">cgResourceManager</a> is designed to be a singleton object, only one of which will exist throughout the application's lifetime. However it can be instantiated should the need arise (such as managing resources for multiple render devices). </p>
@@ -662,6 +868,32 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Simply add an animation set to the resource database. </p>
+
+</div>
+</div>
+<a class="anchor" id="aae3c4fc427243af5545a717ca669e063"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgResourceManager::addGarbageResource </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td>
+          <td class="paramname"><em>pResource</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Add this resource to the garbage list awaiting cleanup after the relevant amount of time has passed. </p>
 
 </div>
 </div>
@@ -812,6 +1044,32 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Builds a lookup table that can be used to determine matches against any existing material based on its data alone. </p>
+
+</div>
+</div>
+<a class="anchor" id="a318c8718525d8c741cb1d264c90071b0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgResourceManager::checkGarbage </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bEmpty</em> = <code>false</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check the contents of the garbage list. </p>
 
 </div>
 </div>
@@ -976,6 +1234,134 @@ Additional Inherited Members</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a>&#160;</td>
           <td class="paramname"><em>hSourceTexture</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24">cgBufferFormat::Base</a>&#160;</td>
+          <td class="paramname"><em>NewFormat</em> = <code><a class="el" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24ac978de49988e1431f79fc4bcb3bcecb2">cgBufferFormat::Unknown</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>nFlags</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strResourceName</em> = <code><a class="el" href="cg_string_8h.html#ae936e4c15227768f7da4e0951def89c8">_T</a>(&quot;&quot;)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a> &amp;&#160;</td>
+          <td class="paramname"><em>_debugSource</em> = <code><a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a>(<a class="el" href="cg_string_8h.html#ae936e4c15227768f7da4e0951def89c8">_T</a>(&quot;&quot;),0)</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Clone an existing texture using the specified details. </p>
+
+</div>
+</div>
+<a class="anchor" id="ad1585aed3a27453012f8374d9e242761"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgResourceManager::cloneTexture </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> *&#160;</td>
+          <td class="paramname"><em>hResOut</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a>&#160;</td>
+          <td class="paramname"><em>hSourceTexture</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_rect.html">cgRect</a> &amp;&#160;</td>
+          <td class="paramname"><em>rcSource</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24">cgBufferFormat::Base</a>&#160;</td>
+          <td class="paramname"><em>NewFormat</em> = <code><a class="el" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24ac978de49988e1431f79fc4bcb3bcecb2">cgBufferFormat::Unknown</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>nFlags</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strResourceName</em> = <code><a class="el" href="cg_string_8h.html#ae936e4c15227768f7da4e0951def89c8">_T</a>(&quot;&quot;)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a> &amp;&#160;</td>
+          <td class="paramname"><em>_debugSource</em> = <code><a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a>(<a class="el" href="cg_string_8h.html#ae936e4c15227768f7da4e0951def89c8">_T</a>(&quot;&quot;),0)</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Clone an existing texture using the specified details. </p>
+
+</div>
+</div>
+<a class="anchor" id="ac11a62239046533befad6ec71ca57978"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgResourceManager::cloneTexture </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> *&#160;</td>
+          <td class="paramname"><em>hResOut</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a>&#160;</td>
+          <td class="paramname"><em>hSourceTexture</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structcg_rect.html">cgRect</a>&#160;</td>
+          <td class="paramname"><em>rcSource</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structcg_size.html">cgSize</a>&#160;</td>
+          <td class="paramname"><em>TextureSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>stretch</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2215,6 +2601,442 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a0d349d17675269ce2b34983962e01c7e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findAnimationSet </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strResourceName</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Given the specified resource name, find the resource object for any matching animation set found. Note : A value of CG_NULL is returned if the resource could not be found or an error occured. </p>
+
+</div>
+</div>
+<a class="anchor" id="acc0670cfe8c744db4160f081a13f0646"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findAnimationSet </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>nReferenceId</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Given the specified reference identifier, find the resource object for any matching animation set found. Note : A value of CG_NULL is returned if the resource could not be found or an error occurred. </p>
+
+</div>
+</div>
+<a class="anchor" id="a1c0aeaa77233e072bf228b529c797f53"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findAudioBuffer </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strResourceName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>nCreationFlags</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Given the specified resource name and creation flags, find the resource object for any matching audio buffer found. Note : A value of CG_NULL is returned if the resource could not be found or an error occured. </p>
+
+</div>
+</div>
+<a class="anchor" id="ad16ad86d7a34d510cb60dc217147f01a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findBlendState </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structcg_blend_state_desc.html">cgBlendStateDesc</a> *&#160;</td>
+          <td class="paramname"><em>pDesc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Looks for a matching sampler state in the list and returns object pointer </p>
+
+</div>
+</div>
+<a class="anchor" id="a1bbb75dddf5528467910b783d417a76f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findDepthStencilState </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structcg_depth_stencil_state_desc.html">cgDepthStencilStateDesc</a> *&#160;</td>
+          <td class="paramname"><em>pDesc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Looks for a matching depth stencil state in the list and returns object pointer </p>
+
+</div>
+</div>
+<a class="anchor" id="a3f96bb3ba837eb4a063629773af49c64"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findDepthStencilTarget </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strResourceName</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Given the specified resource name, find the resource object for any matching depth stencil target found. Note : A value of CG_NULL is returned if the resource could not be found or an error occured. </p>
+
+</div>
+</div>
+<a class="anchor" id="a0443c058f26c5e85a1eef0f4c4c3d833"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findMaterial </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>nReferenceId</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Given the specified reference identifier, find the resource object for any matching material found. Note : A value of CG_NULL is returned if the resource could not be found or an error occurred. </p>
+
+</div>
+</div>
+<a class="anchor" id="ac86cb9bb9a4318f7d3ce989879b4e56d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findMesh </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strResourceName</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Given the specified resource name, find the resource object for any matching mesh found. Note : A value of CG_NULL is returned if the resource could not be found or an error occured. </p>
+
+</div>
+</div>
+<a class="anchor" id="a11a0dd8345cd157330b34ad24763ad1e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findMesh </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>nReferenceId</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Given the specified reference identifier, find the resource object for any matching mesh found. Note : A value of CG_NULL is returned if the resource could not be found or an error occurred. </p>
+
+</div>
+</div>
+<a class="anchor" id="a39cb15b7fbcffe046ed5db379b9f6974"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findPixelShader </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_shader_identifier.html">cgShaderIdentifier</a> *&#160;</td>
+          <td class="paramname"><em>pCacheIdentifier</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Looks for a matching pixel shader in the list and returns object pointer </p>
+
+</div>
+</div>
+<a class="anchor" id="a1037bba8f12c0e0f54d9f6d3b754acf4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findRasterizerState </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structcg_rasterizer_state_desc.html">cgRasterizerStateDesc</a> *&#160;</td>
+          <td class="paramname"><em>pDesc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Looks for a matching sampler state in the list and returns object pointer </p>
+
+</div>
+</div>
+<a class="anchor" id="ae004e9cbaecfde790e0a08426b5afcaf"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findRenderTarget </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strResourceName</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Given the specified resource name, find the resource object for any matching render target found. Note : A value of CG_NULL is returned if the resource could not be found or an error occured. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa8d759a8e7570e16200b3528d42eb4dd"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findSamplerState </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structcg_sampler_state_desc.html">cgSamplerStateDesc</a> *&#160;</td>
+          <td class="paramname"><em>pDesc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Looks for a matching sampler state in the list and returns object pointer </p>
+
+</div>
+</div>
+<a class="anchor" id="a3170896a9c9a488d8174aa1c6482d4a8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findScript </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strResourceName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bShaderScript</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Looks for a matching script in the list and returns object pointer </p>
+
+</div>
+</div>
+<a class="anchor" id="aab6800d6a95497382deaaa75f9730f54"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findTexture </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strResourceName</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Given the specified resource name, find the resource object for any matching texture found. Note : A value of CG_NULL is returned if the resource could not be found or an error occured. </p>
+
+</div>
+</div>
+<a class="anchor" id="a1db962774f8d625b15c21194ae671103"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource.html">cgResource</a> * cgResourceManager::findVertexShader </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_shader_identifier.html">cgShaderIdentifier</a> *&#160;</td>
+          <td class="paramname"><em>pCacheIdentifier</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Looks for a matching vertex shader in the list and returns object pointer </p>
+
+</div>
+</div>
 <a class="anchor" id="aa67374e55d33dfd29a42dddbaed8b8d1"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2755,6 +3577,32 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Determine if automatic resource destruction is enabled. When disabled, all resources that are due to be destroyed will be automatically added to the garbage queue instead where they will await destruction until enabled once again via this method. </p>
+
+</div>
+</div>
+<a class="anchor" id="a8578283c9a8496da2137d9e6e31e8359"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_string.html">cgString</a> cgResourceManager::listActiveResources </td>
+          <td>(</td>
+          <td class="paramtype">ResourceItemList &amp;&#160;</td>
+          <td class="paramname"><em>ResourceList</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Part of the debug process. Dumps out a list of all the specified <a class="el" href="classcg_resource.html" title="Designed as a base class for accessing underlying resource data such as textures, materials...">cgResource</a> items (irrespective of what they store). </p>
 
 </div>
 </div>
@@ -3680,6 +4528,179 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ab93d811a270057ecdb20e0a038bdbc3b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgResourceManager::notifyDeviceLost </td>
+          <td>(</td>
+          <td class="paramtype">ResourceItemList &amp;&#160;</td>
+          <td class="paramname"><em>ResourceList</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Notify all resources in the specified list that the device was lost </p>
+
+</div>
+</div>
+<a class="anchor" id="aa9d9a0f049c9fbcaf10df34f69fd86c0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgResourceManager::notifyDeviceRestored </td>
+          <td>(</td>
+          <td class="paramtype">ResourceItemList &amp;&#160;</td>
+          <td class="paramname"><em>ResourceList</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Notify all resources in the specified list that the device was restored </p>
+
+</div>
+</div>
+<a class="anchor" id="a38a2eb529f2c48345be56a37e7ed29b3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgResourceManager::onResourceAdded </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcg_resource_update_event_args.html">cgResourceUpdateEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Can be overriden or called by derived class when the a new resource has been added to the system for management in order to notify all listeners. </p>
+
+</div>
+</div>
+<a class="anchor" id="a38ab180112591512be033a9582c6abf7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgResourceManager::onResourceRemoved </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcg_resource_update_event_args.html">cgResourceUpdateEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Can be overriden or called by derived class when the a resource is about to be removed from the system for management in order to notify all listeners. </p>
+
+</div>
+</div>
+<a class="anchor" id="afe11afbb6e5a71220b021484df0119ec"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgResourceManager::postInit </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called by the friend '<a class="el" href="classcg_render_driver.html#a75fc7656bc1ab1c16486bab92de61237" title="Complete the render driver initialization process ">cgRenderDriver::postInit</a>' function to allow the resource manager to fully initialize based on existing render driver features / resources. </p>
+
+</div>
+</div>
+<a class="anchor" id="a73638ee65f1b95ba2d1190f1d12d78ee"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class _HandleType , class _ResourceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgResourceManager::processExistingResource </td>
+          <td>(</td>
+          <td class="paramtype">_HandleType *&#160;</td>
+          <td class="paramname"><em>hResOut</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">_ResourceType *&#160;</td>
+          <td class="paramname"><em>pExistingResource</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>nFlags</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Once it has been determined that an existing resource can be selected this function is called to perform all the common post selection tasks on that existing resource. </p>
+
+</div>
+</div>
 <a class="anchor" id="aab8bbec9ce56d699879aa38b07756775"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3705,6 +4726,74 @@ Additional Inherited Members</h2></td></tr>
 <p>Process any messages sent to us from other objects, or other parts of the system via the reference messaging system (<a class="el" href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat...">cgReference</a>). </p>
 
 <p>Reimplemented from <a class="el" href="classcg_reference.html#a2c78842232c529fe509dedebb1cecf6b">cgReference</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a81b88297e176386f0a9d95eccbbf8b0d"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class _HandleType , class _ResourceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgResourceManager::processNewResource </td>
+          <td>(</td>
+          <td class="paramtype">_HandleType *&#160;</td>
+          <td class="paramname"><em>hResOut</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">_ResourceType *&#160;</td>
+          <td class="paramname"><em>pNewResource</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ResourceItemList &amp;&#160;</td>
+          <td class="paramname"><em>ResourceList</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strResourceName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacecg_stream_type.html#a51fb2dd6b8e37d239ef6a4e5167f8956">cgStreamType::Base</a>&#160;</td>
+          <td class="paramname"><em>StreamType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>nFlags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a> &amp;&#160;</td>
+          <td class="paramname"><em>_debugSource</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Once it has been determined that a new resource must be allocated this function is called to perform all the common post allocation tasks on that new resource. </p>
 
 </div>
 </div>
@@ -3753,6 +4842,60 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a7ba80e18ef3de1ed6fc23ef0f55454b7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgResourceManager::releaseResourceList </td>
+          <td>(</td>
+          <td class="paramtype">ResourceItemList &amp;&#160;</td>
+          <td class="paramname"><em>ResourceList</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bOwnedOnly</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Release all of the resources in the specified list. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa219cdadfa1550182d64e1a7aa85ec76"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgResourceManager::reloadScript </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>resourceName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reload a single script identified with the specified resource name. </p>
+
+</div>
+</div>
 <a class="anchor" id="ae0b1da5c7fd81deaaf307926019081d3"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3789,6 +4932,58 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ab873764f300d02c8d63f1bfc9263f83a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgResourceManager::removeGarbageResource </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td>
+          <td class="paramname"><em>pResource</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Remove this resource from the garbage list. It has been referenced again while waiting for destruction. </p>
+
+</div>
+</div>
+<a class="anchor" id="a16d96796fa33074ceee11dbc9a9c1e87"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgResourceManager::removeResource </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_resource.html">cgResource</a> *&#160;</td>
+          <td class="paramname"><em>pResource</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called by <a class="el" href="classcg_resource.html" title="Designed as a base class for accessing underlying resource data such as textures, materials...">cgResource</a> to actually remove a resource from the internal list. </p>
+
+</div>
+</div>
 <a class="anchor" id="a8357b28b6ac489d06e06dd0a7a8393a6"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3804,6 +4999,57 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Save the configuration to the file specified. Note : When specifying the save filename, it's important to either use a full path ("C:\\{Path}\\Config.ini") or a path relative to the current directory INCLUDING the first period (".\\Config.ini"). If not, windows will place the ini in the windows directory rather than the application dir. </p>
+
+</div>
+</div>
+<a class="anchor" id="a9b0b22ae44ef07272ecd1544f37cb5d0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgResourceManager::sendGarbageMessage </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sends the garbage collection message to ourselves. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa136f5e78b7dce4c4b787122a47c0ee9"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgResourceManager::setAudioDriver </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_audio_driver.html">cgAudioDriver</a> *&#160;</td>
+          <td class="paramname"><em>pDriver</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set by the friend '<a class="el" href="classcg_render_driver.html#af43906664dbc12374d752d0317d21f35" title="Initialize the render driver using the window specified. Note : In this case, you will be responsible...">cgRenderDriver::initialize</a>' function, to pass back the render driver pointer through which the resource manager can access the drivers data / functionality. </p>
 
 </div>
 </div>
@@ -3830,6 +5076,32 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set the default destruction delay for all resources allocated after this call is made. This is an easy way to set the delay for a batch of resources without having to call 'cgResource::SetDestroyDelay' explicitly for each resource. </p>
+
+</div>
+</div>
+<a class="anchor" id="adf2a9f8062351065ae875bac6d03c988"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgResourceManager::setRenderDriver </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_render_driver.html">cgRenderDriver</a> *&#160;</td>
+          <td class="paramname"><em>pDriver</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set by the friend '<a class="el" href="classcg_render_driver.html#af43906664dbc12374d752d0317d21f35" title="Initialize the render driver using the window specified. Note : In this case, you will be responsible...">cgRenderDriver::initialize</a>' function, to pass back the render driver pointer through which the resource manager can access the driver's data / functionality. </p>
 
 </div>
 </div>
@@ -3934,13 +5206,13 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a> operator&lt; </td>
           <td>(</td>
-          <td class="paramtype">const ShaderKey &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structcg_resource_manager_1_1_shader_key.html">ShaderKey</a> &amp;&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const ShaderKey &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structcg_resource_manager_1_1_shader_key.html">ShaderKey</a> &amp;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -3970,13 +5242,13 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a> operator&lt; </td>
           <td>(</td>
-          <td class="paramtype">const SamplerStateKey &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structcg_resource_manager_1_1_sampler_state_key.html">SamplerStateKey</a> &amp;&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const SamplerStateKey &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structcg_resource_manager_1_1_sampler_state_key.html">SamplerStateKey</a> &amp;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -4006,13 +5278,13 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a> operator&lt; </td>
           <td>(</td>
-          <td class="paramtype">const DepthStencilStateKey &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structcg_resource_manager_1_1_depth_stencil_state_key.html">DepthStencilStateKey</a> &amp;&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const DepthStencilStateKey &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structcg_resource_manager_1_1_depth_stencil_state_key.html">DepthStencilStateKey</a> &amp;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -4042,13 +5314,13 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a> operator&lt; </td>
           <td>(</td>
-          <td class="paramtype">const RasterizerStateKey &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structcg_resource_manager_1_1_rasterizer_state_key.html">RasterizerStateKey</a> &amp;&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const RasterizerStateKey &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structcg_resource_manager_1_1_rasterizer_state_key.html">RasterizerStateKey</a> &amp;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -4078,13 +5350,13 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">bool <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a> operator&lt; </td>
           <td>(</td>
-          <td class="paramtype">const BlendStateKey &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structcg_resource_manager_1_1_blend_state_key.html">BlendStateKey</a> &amp;&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const BlendStateKey &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structcg_resource_manager_1_1_blend_state_key.html">BlendStateKey</a> &amp;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -4104,6 +5376,747 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a6fa978b693a7ebe2718c5faefeaee3eb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mAnimationSets</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ada07aa74435661523d694ca10a1c8f36"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mAudioBuffers</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a74c78bfa7ac5b28c636de99a4fe6b04e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_audio_driver.html">cgAudioDriver</a>* cgResourceManager::mAudioDriver</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a7bed1c4d52f1b4959daf389a88cd5936"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">BlendStateMap cgResourceManager::mBlendStateLUT</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a32b60b8edbb2c2755b8518a66a1da66b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mBlendStates</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ab14974ce2d760ed9e7d9fc5d32ae4278"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcg_resource_manager_1_1_init_config.html">InitConfig</a> cgResourceManager::mConfig</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a3273c3af4a38fdb0b6a0056ecbd6be62"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mConstantBuffers</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac1d547a1cc2cc681cf87c4d310898cf7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgResourceManager::mDefaultDestroyDelay = 0.0f</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="adb8422973edfd1c47c860e922d6fa603"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> cgResourceManager::mDefaultMaterial</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a24fbd2b8588523c6558d5cafc9c003e4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_sampler.html">cgSampler</a>* cgResourceManager::mDefaultSamplers[2]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aeab316104b6c9b08a58b6482340ba7c8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_resource_handles_8h.html#a118acf0914cb9c76815e189ac6f8a0c0">cgScriptHandle</a> cgResourceManager::mDefaultShader</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a37061c76d0eba63c7f5e8b8b7c373346"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DepthStencilStateMap cgResourceManager::mDepthStencilStateLUT</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad58f730ed7a626471093bedd121a4b44"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mDepthStencilStates</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ab453d3b6e7654400ed0910b0d5e20f9a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mDepthStencilTargets</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="abd8687ed1807771da344c4b8a8eca102"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgResourceManager::mDestructionEnabled</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad152dc64c35ae312b9d3ae261451981a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mIndexBuffers</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a872087a1cb40528f0d7c4ec6c9853a89"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">NameUsageMap cgResourceManager::mMaterialNames</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a024eaa0a091bb8cdea0570aa943cc0d6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mMaterials</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a34ea106320073bc7cb9d9df0fbd2f169"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mMeshes</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac08f5743341207700a819ab11af9edf6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ShaderMap cgResourceManager::mPixelShaderLUT</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af447ea4dfeaf728e0b9904a9e011805a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mPixelShaders</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a66a739dec7e24abc8f12a6d8b9da8c65"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">RasterizerStateMap cgResourceManager::mRasterizerStateLUT</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a6975377e62a2cecd4ca2e1996ec41a42"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mRasterizerStates</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af4072e2d2bbb7a11e8e80f65391137a0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_render_driver.html">cgRenderDriver</a>* cgResourceManager::mRenderDriver</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a829d0cc8f24d84bc1d66cd2e584d2fbf"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">NamedResourceMap cgResourceManager::mRenderTargetLUT</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a85198a7bf63d1acc65a077d8ab6703e5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mRenderTargets</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a44a65280f473834b6a37b81a43ed435c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemSet cgResourceManager::mResourceGarbage</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a4be44176179d1f149b9fa988f115f6b7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SamplerStateMap cgResourceManager::mSamplerStateLUT</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a1d0e8339433500870a5cb7988e64013e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mSamplerStates</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa5b9139ee6b2f9eef87f4746719eddcb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mScripts</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a16aaa7fc7b94d69277e1ccb8307e90b3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_resource_manager.html">cgResourceManager</a> * cgResourceManager::mSingleton = <a class="el" href="cg_base_types_8h.html#ae28f568db83e03f77e0d1f3d96b89449">CG_NULL</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="adf6c9cde357b62f8c91c8352097ae8d0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mSurfaceShaders</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a8da358b2bb879a9df6a58b38428c0011"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">NamedResourceMap cgResourceManager::mTextureLUT</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a75934a5954c37e2f8325266888b955fe"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mTextures</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a1e9b6ade4a3841f941a4c7d917f26012"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mVertexBuffers</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a5fb88258f80cb23ac1c2a5b47c714533"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ShaderMap cgResourceManager::mVertexShaderLUT</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ab1dab996169367f350be9e0c903375ec"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResourceItemList cgResourceManager::mVertexShaders</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="cg_resource_manager_8h_source.html">cgResourceManager.h</a></li>
 <li><a class="el" href="cg_resource_manager_8cpp.html">cgResourceManager.cpp</a></li>
@@ -4114,7 +6127,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_resource_manager.html">cgResourceManager</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:45 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:09 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

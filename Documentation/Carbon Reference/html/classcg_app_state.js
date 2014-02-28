@@ -45,7 +45,7 @@ var classcg_app_state =
     [ "registerEventAction", "classcg_app_state.html#ac2253043c6632db19f07d33125c11df8", null ],
     [ "render", "classcg_app_state.html#ab37875a2c25a656a35daa4755a16c08e", null ],
     [ "resume", "classcg_app_state.html#a8c16f57fd180c5b9c1732efec295c58b", null ],
-    [ "spawnChildState", "classcg_app_state.html#a087326fcace269fb20ca339a6c044dd5", null ],
+    [ "spawnChildState", "classcg_app_state.html#a60d2f39c5f72ff12eddc7c077a11b12f", null ],
     [ "suspend", "classcg_app_state.html#a9e9c017cd8067c164f6b9945005adc83", null ],
     [ "unregisterEventAction", "classcg_app_state.html#ace3f4f0c2954772eacb3e7f16d5b4aa8", null ],
     [ "update", "classcg_app_state.html#a5bcb22dde3f436168265de822db66a65", null ],

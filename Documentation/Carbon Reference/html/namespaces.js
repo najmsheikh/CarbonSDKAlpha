@@ -26,6 +26,7 @@ var namespaces =
     [ "cgControlCoordinateSpace", "namespacecg_control_coordinate_space.html", null ],
     [ "cgCullMode", "namespacecg_cull_mode.html", null ],
     [ "cgDefaultPhysicsMaterialGroup", "namespacecg_default_physics_material_group.html", null ],
+    [ "cgDefaultPhysicsShape", "namespacecg_default_physics_shape.html", null ],
     [ "cgDeferredUpdateFlags", "namespacecg_deferred_update_flags.html", null ],
     [ "cgDepthType", "namespacecg_depth_type.html", null ],
     [ "cgDiscontinuityTestMethod", "namespacecg_discontinuity_test_method.html", null ],

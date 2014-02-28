@@ -82,6 +82,7 @@ public:
     //-------------------------------------------------------------------------
     virtual const cgUID       & getReferenceType            ( ) const { return RTID_StandardMaterial; }
     virtual bool                queryReferenceType          ( const cgUID & type ) const;
+    virtual bool                processMessage              ( cgMessage * pMessage );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldResourceComponent)
@@ -204,7 +205,7 @@ protected:
     cgSurfaceShaderHandle     & getActiveSurfaceShader      ( );
     void                        prepareQueries              ( );
     void                        onSamplerAdded              ( const cgString & name, cgSampler * sampler );
-    void                        onSamplerRemoved            ( const cgString & name );
+    void                        onSamplerRemoved            ( const cgString & name, cgSampler * sampler );
 
     //-------------------------------------------------------------------------
     // Protected Static Methods

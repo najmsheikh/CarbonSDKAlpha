@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -147,9 +147,14 @@ Public Member Functions</h2></td></tr>
 <a class="el" href="classcg_quaternion_animation_channel.html">cgQuaternionAnimationChannel</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_quaternion_target_controller.html#a6addc3b455beccd38849c5807b62cba5">getAnimationChannel</a> () const </td></tr>
 <tr class="memdesc:a6addc3b455beccd38849c5807b62cba5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the quaternion keyframe data associated with this controller.  <a href="#a6addc3b455beccd38849c5807b62cba5"></a><br/></td></tr>
 <tr class="separator:a6addc3b455beccd38849c5807b62cba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5087168ac3e10278cac3493bdd561ab5"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_quaternion_target_controller.html#a5087168ac3e10278cac3493bdd561ab5">serialize</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> targetDataId, const <a class="el" href="classcg_string.html">cgString</a> &amp;controllerIdentifier, <a class="el" href="classcg_world.html">cgWorld</a> *world)</td></tr>
-<tr class="memdesc:a5087168ac3e10278cac3493bdd561ab5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert (or update) the database entries associated with this animation target controller and any associated child animation channels.  <a href="#a5087168ac3e10278cac3493bdd561ab5"></a><br/></td></tr>
-<tr class="separator:a5087168ac3e10278cac3493bdd561ab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72a2542ce4b7fc378fbeb676bef3feab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_quaternion_animation_channel.html">cgQuaternionAnimationChannel</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_quaternion_target_controller.html#a72a2542ce4b7fc378fbeb676bef3feab">getAnimationChannel</a> ()</td></tr>
+<tr class="memdesc:a72a2542ce4b7fc378fbeb676bef3feab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the quaternion keyframe data associated with this controller.  <a href="#a72a2542ce4b7fc378fbeb676bef3feab"></a><br/></td></tr>
+<tr class="separator:a72a2542ce4b7fc378fbeb676bef3feab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7db65420236bda9ea11c14289e1a9976"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_quaternion_target_controller.html#a7db65420236bda9ea11c14289e1a9976">isEmpty</a> (bool anyChannelEmpty=false) const </td></tr>
+<tr class="separator:a7db65420236bda9ea11c14289e1a9976"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76cc4707f4854b9fd341623817bb427b"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_quaternion_target_controller.html#a76cc4707f4854b9fd341623817bb427b">serialize</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> targetDataId, const <a class="el" href="classcg_string.html">cgString</a> &amp;controllerIdentifier, <a class="el" href="classcg_world.html">cgWorld</a> *world, void *customData, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> customDataSize)</td></tr>
+<tr class="memdesc:a76cc4707f4854b9fd341623817bb427b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert (or update) the database entries associated with this animation target controller and any associated child animation channels.  <a href="#a76cc4707f4854b9fd341623817bb427b"></a><br/></td></tr>
+<tr class="separator:a76cc4707f4854b9fd341623817bb427b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45f1dc35978b89e55fe61b29385d289d"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_quaternion_target_controller.html#a45f1dc35978b89e55fe61b29385d289d">deserializeChannel</a> (<a class="el" href="classcg_world_query.html">cgWorldQuery</a> &amp;channelQuery, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> channelIndex, bool cloning, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;minFrameOut, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;maxFrameOut)</td></tr>
 <tr class="memdesc:a45f1dc35978b89e55fe61b29385d289d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Import the data for the specified animation channel (referenced by index matching the order from '<a class="el" href="classcg_quaternion_target_controller.html#a624e5dd387c29c2c002b5690f531dbd3" title="Retrieve an array containing the string identifiers of the animation channels that this controller su...">getSupportedChannels()</a>') associated with this controller from the supplied query object.  <a href="#a45f1dc35978b89e55fe61b29385d289d"></a><br/></td></tr>
 <tr class="separator:a45f1dc35978b89e55fe61b29385d289d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,9 +174,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a016e0e9b4f4b103239a6148fdb636e45 inherit pub_methods_classcg_animation_target_controller"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_target_controller.html#a016e0e9b4f4b103239a6148fdb636e45">~cgAnimationTargetController</a> ()</td></tr>
 <tr class="memdesc:a016e0e9b4f4b103239a6148fdb636e45 inherit pub_methods_classcg_animation_target_controller"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classcg_animation_target_controller.html" title="Base &#39;class&#39; for an individual controller for an animation target. A target controller commonly defin...">cgAnimationTargetController</a> Class Destructor  <a href="#a016e0e9b4f4b103239a6148fdb636e45"></a><br/></td></tr>
 <tr class="separator:a016e0e9b4f4b103239a6148fdb636e45 inherit pub_methods_classcg_animation_target_controller"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8361856a88746dd5d383dc42e9c8c954 inherit pub_methods_classcg_animation_target_controller"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_target_controller.html#a8361856a88746dd5d383dc42e9c8c954">deserialize</a> (<a class="el" href="classcg_world_query.html">cgWorldQuery</a> &amp;controllerQuery, bool cloning, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;minFrameOut, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;maxFrameOut)</td></tr>
-<tr class="memdesc:a8361856a88746dd5d383dc42e9c8c954 inherit pub_methods_classcg_animation_target_controller"><td class="mdescLeft">&#160;</td><td class="mdescRight">Import the data associated with this animation target controller based on the supplied query object.  <a href="#a8361856a88746dd5d383dc42e9c8c954"></a><br/></td></tr>
-<tr class="separator:a8361856a88746dd5d383dc42e9c8c954 inherit pub_methods_classcg_animation_target_controller"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af81b744e7741486a88955ef1453ba178 inherit pub_methods_classcg_animation_target_controller"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_animation_target_controller.html#af81b744e7741486a88955ef1453ba178">deserialize</a> (<a class="el" href="classcg_world_query.html">cgWorldQuery</a> &amp;controllerQuery, bool cloning, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;minFrameOut, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;maxFrameOut, void *&amp;customDataOut, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> &amp;customDataSizeOut)</td></tr>
+<tr class="memdesc:af81b744e7741486a88955ef1453ba178 inherit pub_methods_classcg_animation_target_controller"><td class="mdescLeft">&#160;</td><td class="mdescRight">Import the data associated with this animation target controller based on the supplied query object.  <a href="#af81b744e7741486a88955ef1453ba178"></a><br/></td></tr>
+<tr class="separator:af81b744e7741486a88955ef1453ba178 inherit pub_methods_classcg_animation_target_controller"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classcg_script_interop_1_1_disposable_script_object"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcg_script_interop_1_1_disposable_script_object')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcg_script_interop_1_1_disposable_script_object.html">cgScriptInterop::DisposableScriptObject</a></td></tr>
 <tr class="memitem:a815b9a991113bb99acea9e15af2920a2 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a815b9a991113bb99acea9e15af2920a2">DisposableScriptObject</a> ()</td></tr>
 <tr class="separator:a815b9a991113bb99acea9e15af2920a2 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -452,6 +457,23 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a72a2542ce4b7fc378fbeb676bef3feab"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_quaternion_animation_channel.html">cgQuaternionAnimationChannel</a> &amp; cgQuaternionTargetController::getAnimationChannel </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the quaternion keyframe data associated with this controller. </p>
+
+</div>
+</div>
 <a class="anchor" id="ae32518ef3925adc613222df3db6dfd56"></a>
 <div class="memitem">
 <div class="memproto">
@@ -504,7 +526,31 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a5087168ac3e10278cac3493bdd561ab5"></a>
+<a class="anchor" id="a7db65420236bda9ea11c14289e1a9976"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgQuaternionTargetController::isEmpty </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>anyChannelEmpty</em> = <code>false</code></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a76cc4707f4854b9fd341623817bb427b"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -527,7 +573,19 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classcg_world.html">cgWorld</a> *&#160;</td>
-          <td class="paramname"><em>world</em>&#160;</td>
+          <td class="paramname"><em>world</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>customData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>customDataSize</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -544,7 +602,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Insert (or update) the database entries associated with this animation target controller and any associated child animation channels. </p>
 
-<p>Reimplemented from <a class="el" href="classcg_animation_target_controller.html#a17621a5efc797282eab5b944e98b4239">cgAnimationTargetController</a>.</p>
+<p>Reimplemented from <a class="el" href="classcg_animation_target_controller.html#aff32f1fa5ef0e2a0996edaa61c05bd74">cgAnimationTargetController</a>.</p>
 
 </div>
 </div>
@@ -579,7 +637,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_quaternion_target_controller.html">cgQuaternionTargetController</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:43 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:08 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

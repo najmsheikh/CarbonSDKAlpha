@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -141,8 +141,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_render_driver_1_1_export_vars.html">ExportVars</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_render_driver_1_1_init_config.html">InitConfig</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_render_driver_1_1_vertex_stream_data.html">VertexStreamData</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -166,6 +164,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0b68fa8450e8dc113545d5c690b98b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a477d6d55960741dc9fc03ce4f167cdf3"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a477d6d55960741dc9fc03ce4f167cdf3">saveConfig</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;fileName)=0</td></tr>
 <tr class="separator:a477d6d55960741dc9fc03ce4f167cdf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b3285460f261cae5c5e42a05237071f"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a6b3285460f261cae5c5e42a05237071f">updateAdapter</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> adapterIndex, const <a class="el" href="structcg_display_mode.html">cgDisplayMode</a> &amp;mode, bool windowed, bool verticalSync)=0</td></tr>
+<tr class="separator:a6b3285460f261cae5c5e42a05237071f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a798c00808b06a6c67819a34acdecf651"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a798c00808b06a6c67819a34acdecf651">updateDisplayMode</a> (const <a class="el" href="structcg_display_mode.html">cgDisplayMode</a> &amp;mode, bool windowed, bool verticalSync)=0</td></tr>
 <tr class="separator:a798c00808b06a6c67819a34acdecf651"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9d7b6ede9fba9a02aafb9c35babc5e0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#aa9d7b6ede9fba9a02aafb9c35babc5e0">windowResized</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> width, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> height)</td></tr>
@@ -270,9 +270,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5654206d3e3c5956fab340027983bc50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adabd990bf77820f0d2d8c32d277e1211"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#adabd990bf77820f0d2d8c32d277e1211">setVPLData</a> (const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;depth, const <a class="el" href="cg_resource_handles_8h.html#a3080798a66069f5d3d32fcc649a688f4">cgTextureHandle</a> &amp;normal)=0</td></tr>
 <tr class="separator:adabd990bf77820f0d2d8c32d277e1211"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb002a44d709644336cc7505aa11c1e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_render_driver_1_1_init_config.html">InitConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#aeb002a44d709644336cc7505aa11c1e8">getConfig</a> () const </td></tr>
-<tr class="memdesc:aeb002a44d709644336cc7505aa11c1e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the configuration options for the render driver.  <a href="#aeb002a44d709644336cc7505aa11c1e8"></a><br/></td></tr>
-<tr class="separator:aeb002a44d709644336cc7505aa11c1e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca183c324a810cf57c60072caffef9b9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_render_driver_config.html">cgRenderDriverConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#aca183c324a810cf57c60072caffef9b9">getConfig</a> () const </td></tr>
+<tr class="memdesc:aca183c324a810cf57c60072caffef9b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the configuration options for the render driver.  <a href="#aca183c324a810cf57c60072caffef9b9"></a><br/></td></tr>
+<tr class="separator:aca183c324a810cf57c60072caffef9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47a8c3c2255a1bca3fd81868be201d9b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource_manager.html">cgResourceManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a47a8c3c2255a1bca3fd81868be201d9b">getResourceManager</a> () const </td></tr>
 <tr class="memdesc:a47a8c3c2255a1bca3fd81868be201d9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the resource manager associated with this render driver.  <a href="#a47a8c3c2255a1bca3fd81868be201d9b"></a><br/></td></tr>
 <tr class="separator:a47a8c3c2255a1bca3fd81868be201d9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -305,6 +305,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a431db7f13f4d2f70f912e7b7cdeb82ad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_rendering_capabilities.html">cgRenderingCapabilities</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a431db7f13f4d2f70f912e7b7cdeb82ad">getCapabilities</a> () const </td></tr>
 <tr class="memdesc:a431db7f13f4d2f70f912e7b7cdeb82ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the capabilities descriptor for this render driver.  <a href="#a431db7f13f4d2f70f912e7b7cdeb82ad"></a><br/></td></tr>
 <tr class="separator:a431db7f13f4d2f70f912e7b7cdeb82ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc1ed77631f2165a870aace238422869"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#abc1ed77631f2165a870aace238422869">drawCircle</a> (const <a class="el" href="classcg_vector2.html">cgVector2</a> &amp;position, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> radius, const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;color, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> thickness, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> segments)</td></tr>
+<tr class="memdesc:abc1ed77631f2165a870aace238422869"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a simple circle to the screen with the specified thickness and color.  <a href="#abc1ed77631f2165a870aace238422869"></a><br/></td></tr>
+<tr class="separator:abc1ed77631f2165a870aace238422869"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7d66e03df08dc9e81865f03b83317f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#aa7d66e03df08dc9e81865f03b83317f5">drawCircle</a> (const <a class="el" href="classcg_vector2.html">cgVector2</a> &amp;position, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> radius, const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;color, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> thickness, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> segments, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> arcBeginDegrees, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> arcEndDegrees)</td></tr>
+<tr class="memdesc:aa7d66e03df08dc9e81865f03b83317f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a simple circle to the screen with the specified thickness and color.  <a href="#aa7d66e03df08dc9e81865f03b83317f5"></a><br/></td></tr>
+<tr class="separator:aa7d66e03df08dc9e81865f03b83317f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31db50c8c916478dfc16d8a0e78404b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a31db50c8c916478dfc16d8a0e78404b1">drawRectangle</a> (const <a class="el" href="structcg_rect.html">cgRect</a> &amp;bounds, const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;color, bool filled)</td></tr>
 <tr class="memdesc:a31db50c8c916478dfc16d8a0e78404b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a simple rectangle to the screen with the specified color.  <a href="#a31db50c8c916478dfc16d8a0e78404b1"></a><br/></td></tr>
 <tr class="separator:a31db50c8c916478dfc16d8a0e78404b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -875,8 +881,8 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a9867d0f9eea07a223a530532b9b68879"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_render_driver_1_1_init_config.html">InitConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a9867d0f9eea07a223a530532b9b68879">mConfig</a></td></tr>
-<tr class="separator:a9867d0f9eea07a223a530532b9b68879"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5887e22fd2285b5562e511de6dd2972d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_render_driver_config.html">cgRenderDriverConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a5887e22fd2285b5562e511de6dd2972d">mConfig</a></td></tr>
+<tr class="separator:a5887e22fd2285b5562e511de6dd2972d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcf27a1b968568fb3502d18ba459a698"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#adcf27a1b968568fb3502d18ba459a698">mConfigLoaded</a></td></tr>
 <tr class="separator:adcf27a1b968568fb3502d18ba459a698"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c37c045940a05f89823450da98fe8bc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a4c37c045940a05f89823450da98fe8bc">mInitialized</a></td></tr>
@@ -2229,6 +2235,110 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="abc1ed77631f2165a870aace238422869"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgRenderDriver::drawCircle </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_vector2.html">cgVector2</a> &amp;&#160;</td>
+          <td class="paramname"><em>position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>radius</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;&#160;</td>
+          <td class="paramname"><em>color</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>thickness</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>requestedSegments</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Draw a simple circle to the screen with the specified thickness and color. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa7d66e03df08dc9e81865f03b83317f5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgRenderDriver::drawCircle </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_vector2.html">cgVector2</a> &amp;&#160;</td>
+          <td class="paramname"><em>position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>radius</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;&#160;</td>
+          <td class="paramname"><em>color</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>thickness</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>requestedSegments</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>arcBeginDegrees</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>arcEndDegrees</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Draw a simple circle to the screen with the specified thickness and color. </p>
+
+</div>
+</div>
 <a class="anchor" id="acf5678af5216e007d2b92fe8968fa215"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3179,12 +3289,12 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aeb002a44d709644336cc7505aa11c1e8"></a>
+<a class="anchor" id="aca183c324a810cf57c60072caffef9b9"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structcg_render_driver_1_1_init_config.html">cgRenderDriver::InitConfig</a> cgRenderDriver::getConfig </td>
+          <td class="memname"><a class="el" href="structcg_render_driver_config.html">cgRenderDriverConfig</a> cgRenderDriver::getConfig </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -6179,6 +6289,52 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a6b3285460f261cae5c5e42a05237071f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool cgRenderDriver::updateAdapter </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
+          <td class="paramname"><em>adapterIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_display_mode.html">cgDisplayMode</a> &amp;&#160;</td>
+          <td class="paramname"><em>mode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>windowed</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>verticalSync</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a798c00808b06a6c67819a34acdecf651"></a>
 <div class="memitem">
 <div class="memproto">
@@ -6537,7 +6693,7 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a9867d0f9eea07a223a530532b9b68879"></a>
+<a class="anchor" id="a5887e22fd2285b5562e511de6dd2972d"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -6545,7 +6701,7 @@ Static Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structcg_render_driver_1_1_init_config.html">InitConfig</a> cgRenderDriver::mConfig</td>
+          <td class="memname"><a class="el" href="structcg_render_driver_config.html">cgRenderDriverConfig</a> cgRenderDriver::mConfig</td>
         </tr>
       </table>
   </td>
@@ -7827,7 +7983,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_render_driver.html">cgRenderDriver</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:44 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:08 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

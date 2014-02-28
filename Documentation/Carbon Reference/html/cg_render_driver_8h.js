@@ -1,7 +1,7 @@
 var cg_render_driver_8h =
 [
+    [ "cgRenderDriverConfig", "structcg_render_driver_config.html", "structcg_render_driver_config" ],
     [ "cgRenderDriver", "classcg_render_driver.html", "classcg_render_driver" ],
-    [ "InitConfig", "structcg_render_driver_1_1_init_config.html", "structcg_render_driver_1_1_init_config" ],
     [ "ClipPlaneData", "structcg_render_driver_1_1_clip_plane_data.html", "structcg_render_driver_1_1_clip_plane_data" ],
     [ "DepthStencilStateData", "structcg_render_driver_1_1_depth_stencil_state_data.html", "structcg_render_driver_1_1_depth_stencil_state_data" ],
     [ "VertexStreamData", "structcg_render_driver_1_1_vertex_stream_data.html", "structcg_render_driver_1_1_vertex_stream_data" ],

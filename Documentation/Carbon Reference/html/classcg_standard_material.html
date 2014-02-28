@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -243,12 +243,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae195a234ea1c23b7c2e5f02ca1e8106a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_material_terms.html">cgMaterialTerms</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#ae195a234ea1c23b7c2e5f02ca1e8106a">getMaterialTerms</a> () const </td></tr>
 <tr class="memdesc:ae195a234ea1c23b7c2e5f02ca1e8106a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the terms for this material. Such terms include lighting reflectance values, etc.  <a href="#ae195a234ea1c23b7c2e5f02ca1e8106a"></a><br/></td></tr>
 <tr class="separator:ae195a234ea1c23b7c2e5f02ca1e8106a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace519b1525de78d25ba28e3a8248af59"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_reflection_mode.html#af68bfaa6195f902578b0634e0efd1fb7">cgReflectionMode::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#ace519b1525de78d25ba28e3a8248af59">getReflectionMode</a> () const </td></tr>
-<tr class="memdesc:ace519b1525de78d25ba28e3a8248af59"><td class="mdescLeft">&#160;</td><td class="mdescRight">retrieve the manner in which surface reflections will be handled for geometry utilizing this material.  <a href="#ace519b1525de78d25ba28e3a8248af59"></a><br/></td></tr>
-<tr class="separator:ace519b1525de78d25ba28e3a8248af59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa992ff3ba35383d15aeca387fcecd889"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#aa992ff3ba35383d15aeca387fcecd889">isSpecularOpacityLinked</a> () const </td></tr>
 <tr class="memdesc:aa992ff3ba35383d15aeca387fcecd889"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the opacity and specular opacity terms are linked. When this is enabled, these two terms will always be set to match irrespective of which of the two was modified.  <a href="#aa992ff3ba35383d15aeca387fcecd889"></a><br/></td></tr>
 <tr class="separator:aa992ff3ba35383d15aeca387fcecd889"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace519b1525de78d25ba28e3a8248af59"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_reflection_mode.html#af68bfaa6195f902578b0634e0efd1fb7">cgReflectionMode::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#ace519b1525de78d25ba28e3a8248af59">getReflectionMode</a> () const </td></tr>
+<tr class="memdesc:ace519b1525de78d25ba28e3a8248af59"><td class="mdescLeft">&#160;</td><td class="mdescRight">retrieve the manner in which surface reflections will be handled for geometry utilizing this material.  <a href="#ace519b1525de78d25ba28e3a8248af59"></a><br/></td></tr>
+<tr class="separator:ace519b1525de78d25ba28e3a8248af59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b8d095184bfd58bf96181f452f7624c"><td class="memItemLeft" align="right" valign="top">const SamplerArray &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#a2b8d095184bfd58bf96181f452f7624c">getSamplers</a> () const </td></tr>
 <tr class="memdesc:a2b8d095184bfd58bf96181f452f7624c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a list of the samplers defined / utilized by this material.  <a href="#a2b8d095184bfd58bf96181f452f7624c"></a><br/></td></tr>
 <tr class="separator:a2b8d095184bfd58bf96181f452f7624c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -270,6 +270,22 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a192d1f77c8610051118fb6a6d16fb567"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#a192d1f77c8610051118fb6a6d16fb567">applySamplers</a> ()</td></tr>
 <tr class="memdesc:a192d1f77c8610051118fb6a6d16fb567"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply the necessary samplers to the device.  <a href="#a192d1f77c8610051118fb6a6d16fb567"></a><br/></td></tr>
 <tr class="separator:a192d1f77c8610051118fb6a6d16fb567"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ca56bf9ba8cf213d80907c7519a9a98"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#a9ca56bf9ba8cf213d80907c7519a9a98">getDiffuse</a> () const </td></tr>
+<tr class="separator:a9ca56bf9ba8cf213d80907c7519a9a98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6516f635d08878787396fb22a6ed9956"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#a6516f635d08878787396fb22a6ed9956">getAmbient</a> () const </td></tr>
+<tr class="separator:a6516f635d08878787396fb22a6ed9956"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cf8d72348ed7c3d59e93e1e88ff39ab"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#a9cf8d72348ed7c3d59e93e1e88ff39ab">getSpecular</a> () const </td></tr>
+<tr class="separator:a9cf8d72348ed7c3d59e93e1e88ff39ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d7fbaf40951efe180f8162057fae0d8"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_color_value.html">cgColorValue</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#a0d7fbaf40951efe180f8162057fae0d8">getEmissive</a> () const </td></tr>
+<tr class="separator:a0d7fbaf40951efe180f8162057fae0d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc66c55589745f60e2366b1b55cb3709"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#acc66c55589745f60e2366b1b55cb3709">getGloss</a> () const </td></tr>
+<tr class="separator:acc66c55589745f60e2366b1b55cb3709"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af876fb98904a7b5205579c4b993fa6c0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#af876fb98904a7b5205579c4b993fa6c0">getOpacity</a> () const </td></tr>
+<tr class="separator:af876fb98904a7b5205579c4b993fa6c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa47442e836a4be177b0fc82f796fe232"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#aa47442e836a4be177b0fc82f796fe232">getSpecularOpacity</a> () const </td></tr>
+<tr class="separator:aa47442e836a4be177b0fc82f796fe232"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af37baaa7b505c4a2a13502d739c6e9c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#af37baaa7b505c4a2a13502d739c6e9c2">getEmissiveHDRScale</a> () const </td></tr>
+<tr class="separator:af37baaa7b505c4a2a13502d739c6e9c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classcg_material"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcg_material')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcg_material.html">cgMaterial</a></td></tr>
 <tr class="memitem:af0458649677a5a79dd6683460b1db125 inherit pub_methods_classcg_material"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_material.html#af0458649677a5a79dd6683460b1db125">cgMaterial</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> referenceId, <a class="el" href="classcg_world.html">cgWorld</a> *world)</td></tr>
 <tr class="memdesc:af0458649677a5a79dd6683460b1db125 inherit pub_methods_classcg_material"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for this class.  <a href="#af0458649677a5a79dd6683460b1db125"></a><br/></td></tr>
@@ -378,6 +394,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab570671b2bf5d7f8c3e2c9508b02eaa6 inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0e9c746739983ecfbbe25eb9c4efdb1 inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_resource_type.html#ab3ea99a2ba657fda52b52d2d23099ed9">cgResourceType::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#ae0e9c746739983ecfbbe25eb9c4efdb1">getResourceType</a> () const </td></tr>
 <tr class="separator:ae0e9c746739983ecfbbe25eb9c4efdb1 inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f078bb6adfd44214d893a31b6bfc68b inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_stream_type.html#a51fb2dd6b8e37d239ef6a4e5167f8956">cgStreamType::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#a1f078bb6adfd44214d893a31b6bfc68b">getStreamType</a> () const </td></tr>
+<tr class="separator:a1f078bb6adfd44214d893a31b6bfc68b inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01b0d6309f1cfe4f75648bc5c1f5e228 inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource_manager.html">cgResourceManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#a01b0d6309f1cfe4f75648bc5c1f5e228">getManager</a> () const </td></tr>
 <tr class="separator:a01b0d6309f1cfe4f75648bc5c1f5e228 inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a470d6c37c04beb8c53f75919541bfe2b inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#a470d6c37c04beb8c53f75919541bfe2b">canEvict</a> () const </td></tr>
@@ -1098,6 +1116,29 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a6516f635d08878787396fb22a6ed9956"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structcg_color_value.html">cgColorValue</a>&amp; cgStandardMaterial::getAmbient </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a91d8b415afa95e81104d85c13b5e49ba"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1125,6 +1166,98 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a9ca56bf9ba8cf213d80907c7519a9a98"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structcg_color_value.html">cgColorValue</a>&amp; cgStandardMaterial::getDiffuse </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0d7fbaf40951efe180f8162057fae0d8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structcg_color_value.html">cgColorValue</a>&amp; cgStandardMaterial::getEmissive </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af37baaa7b505c4a2a13502d739c6e9c2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgStandardMaterial::getEmissiveHDRScale </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="acc66c55589745f60e2366b1b55cb3709"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgStandardMaterial::getGloss </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="ae195a234ea1c23b7c2e5f02ca1e8106a"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1139,6 +1272,29 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Retrieve the terms for this material. Such terms include lighting reflectance values, etc. </p>
+
+</div>
+</div>
+<a class="anchor" id="af876fb98904a7b5205579c4b993fa6c0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgStandardMaterial::getOpacity </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1216,6 +1372,52 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Retrieve a list of the samplers defined / utilized by this material. </p>
+
+</div>
+</div>
+<a class="anchor" id="a9cf8d72348ed7c3d59e93e1e88ff39ab"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structcg_color_value.html">cgColorValue</a>&amp; cgStandardMaterial::getSpecular </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa47442e836a4be177b0fc82f796fe232"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgStandardMaterial::getSpecularOpacity </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -2782,7 +2984,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_standard_material.html">cgStandardMaterial</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:53 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:11 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

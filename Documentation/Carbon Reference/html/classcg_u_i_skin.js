@@ -13,5 +13,5 @@ var classcg_u_i_skin =
     [ "getTextureName", "classcg_u_i_skin.html#abcdd4d83d6d6b315f54f5a9936b31741", null ],
     [ "loadDefinition", "classcg_u_i_skin.html#a59e6c42c94a00c38a3dea66184d48ec8", null ],
     [ "prepareControlFrames", "classcg_u_i_skin.html#a4748a03379f5002afefea580d4b3af04", null ],
-    [ "prepareCursorFrames", "classcg_u_i_skin.html#a45229e2896beda8522935bebdb092af8", null ]
+    [ "prepareCursorFrames", "classcg_u_i_skin.html#ad7c861661738f2a99fa71a8438322c5d", null ]
 ];

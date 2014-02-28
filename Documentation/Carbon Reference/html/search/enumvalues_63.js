@@ -15,7 +15,9 @@ var searchData=
   ['cansample',['CanSample',['../namespacecg_buffer_format_caps.html#ab4e9511e4a2905347cbef40034493753a4326985cd1fa51eda88bdbd0443c408f',1,'cgBufferFormatCaps']]],
   ['canwrite',['CanWrite',['../namespacecg_buffer_format_caps.html#ab4e9511e4a2905347cbef40034493753a5db3f12a6051a93e17d5d16a3eb79744',1,'cgBufferFormatCaps']]],
   ['capslock',['CapsLock',['../namespacecg_keys.html#a4febbfd6b5ecb1f73aaf2c2b711a21a6a9195fdac0187ab32bcb0b15825653d95',1,'cgKeys']]],
+  ['capsule',['Capsule',['../namespacecg_default_physics_shape.html#a3103e0456d3ecc8ce95fcfb45113ac42ab9df79afa5abcb6b1599a7e5b0482a85',1,'cgDefaultPhysicsShape']]],
   ['captureborder',['CaptureBorder',['../classcg_point_light_object.html#a82e2b3ce3f08455fbaea0c3c8bda37daa4375a5d703443bc7b892aae5ce5ebb69',1,'cgPointLightObject']]],
+  ['castonly',['CastOnly',['../namespacecg_default_physics_material_group.html#a7d2c6092d1783bcca00fa80c16d3c181a52a0240189f7eaca83c0f588264bced9',1,'cgDefaultPhysicsMaterialGroup']]],
   ['ccd',['CCD',['../namespacecg_simulation_quality.html#a304eef65e940a0abafe9b5c2806f9559a2faaaa55356b4e956cf278988e34b9c3',1,'cgSimulationQuality']]],
   ['center',['Center',['../namespacecg_image_scale_mode.html#a7fd84dbaac4b48e73b5cd30890bedf38afd229786bfb8eeb05dc1d35603bd92fe',1,'cgImageScaleMode::Center()'],['../namespacecg_horizontal_alignment.html#afc254d1a59e364ec3f53d1e4fb0b4c0aa384b235b362840187f81c847f0212358',1,'cgHorizontalAlignment::Center()'],['../namespacecg_alpha_weight_method.html#a8727c042708cd74d52033984f90de2e7a4e71c45a11f80288209da8ec1595cc66',1,'cgAlphaWeightMethod::Center()'],['../namespacecg_mesh_create_origin.html#af9b53bb0d22b5d2ac207d061290fc9f9aea462f4381ff234c8ca668438d168396',1,'cgMeshCreateOrigin::Center()']]],
   ['centimeters',['Centimeters',['../namespacecg_unit_type.html#a3cddff019459e19bbec2d48d5887ea46a711978111f89abf9adbce2099cb1090c',1,'cgUnitType']]],
@@ -63,6 +65,7 @@ var searchData=
   ['computespecular',['ComputeSpecular',['../classcg_render_driver.html#aa456d3556190d7df8003a53e6c7bcab3a5e8ece767b245b379b5f0abe792b5138',1,'cgRenderDriver::ComputeSpecular()'],['../namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8aaca2f3529017ef07f3a35eb2c2570dba',1,'cgSystemState::ComputeSpecular()']]],
   ['computestatistics',['ComputeStatistics',['../classcg_shadow_generator.html#aa1c8a6486bc6c7a89f5325540b23540ea9e5d9ddac4affb8fc9d26d4ac3aa4a75',1,'cgShadowGenerator']]],
   ['computetoksvig',['ComputeToksvig',['../classcg_render_driver.html#a277e73b233f4d3d8aec4a7e18b7432dbab66f3c24caad8218b103720a6c7c95e4',1,'cgRenderDriver::ComputeToksvig()'],['../namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a59c513878810930a81966dc15631ec60',1,'cgSystemState::ComputeToksvig()']]],
+  ['cone',['Cone',['../namespacecg_default_physics_shape.html#a3103e0456d3ecc8ce95fcfb45113ac42a6dc421c9f16df957af67d32118142a76',1,'cgDefaultPhysicsShape']]],
   ['constantbuffer',['ConstantBuffer',['../namespacecg_resource_type.html#ab3ea99a2ba657fda52b52d2d23099ed9a464e22f9c61671a98f5c3ebae9a3c024',1,'cgResourceType']]],
   ['construct',['Construct',['../namespacecg_scene_type.html#a344d305ea77fddca96f09c1e455d2979a4a5a9abb1c7f2b36b6af32198d275c4a',1,'cgSceneType']]],
   ['contacthardening',['ContactHardening',['../namespacecg_shadow_method.html#acf7076ff28e0dff7301a6561920d1456aae19cfda2d4af14b38f064ce3a83ea42',1,'cgShadowMethod']]],
@@ -70,6 +73,7 @@ var searchData=
   ['contrast',['Contrast',['../namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a394c7c26077283359b87184b8db692fa',1,'cgImageOperation']]],
   ['control',['Control',['../namespacecg_modifier_keys.html#a18bfdf51f9803e34ed946f4571544130a8654cd3ae39fbecf70d41645787b24e5',1,'cgModifierKeys']]],
   ['controlrelative',['ControlRelative',['../namespacecg_control_coordinate_space.html#aa71f03d2fecef890067c6bb81697af25a79fe785b9af5e9485f01694df167a5e2',1,'cgControlCoordinateSpace']]],
+  ['convexhull',['ConvexHull',['../namespacecg_default_physics_shape.html#a3103e0456d3ecc8ce95fcfb45113ac42a968105bff4032686d9b68fa1ccb1cde4',1,'cgDefaultPhysicsShape']]],
   ['copy',['Copy',['../namespacecg_clone_method.html#a9c3d9d845b3fb56c57f151799de5b4feac355e90e44321948c7332f8a4632b68f',1,'cgCloneMethod']]],
   ['copyalpha',['CopyAlpha',['../namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a1a25640657d1603c10c4818d4eb3d130',1,'cgImageOperation']]],
   ['copyrgb',['CopyRGB',['../namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98acf1e1663c60beb27e55a63f7372743fe',1,'cgImageOperation']]],
@@ -83,5 +87,6 @@ var searchData=
   ['currentorientation',['CurrentOrientation',['../classcg_collision_shape_element.html#a214e8c88caa87d62c7a89fc97c1822c6af49f40c1c819a8c0c12308d20fd31256',1,'cgCollisionShapeElement']]],
   ['cursor',['Cursor',['../namespacecg_mouse_handler_mode.html#adabc85fbafd4d8cf874156230eb0c099a809b01ec5b666888257ff1d4a2e22d05',1,'cgMouseHandlerMode']]],
   ['custom',['Custom',['../classcg_bezier_spline2.html#aabada3f0020df73222d70debd93dd6daa3c60e24c2c38dd632af1b969086eb128',1,'cgBezierSpline2']]],
-  ['customkeys',['CustomKeys',['../namespacecg_animation_channel_data_type.html#a4c09eb009b508894314ed707374d32bfad9e7a236c8dde6955456cd33b9f68a4d',1,'cgAnimationChannelDataType']]]
+  ['customkeys',['CustomKeys',['../namespacecg_animation_channel_data_type.html#a4c09eb009b508894314ed707374d32bfad9e7a236c8dde6955456cd33b9f68a4d',1,'cgAnimationChannelDataType']]],
+  ['cylinder',['Cylinder',['../namespacecg_default_physics_shape.html#a3103e0456d3ecc8ce95fcfb45113ac42ab504c504a735bae69a6db15391dbeaab',1,'cgDefaultPhysicsShape']]]
 ];

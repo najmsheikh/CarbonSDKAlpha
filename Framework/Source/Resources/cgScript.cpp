@@ -139,6 +139,17 @@ const cgScript::SourceFileArray & cgScript::getSourceInfo() const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : isFailed()
+/// <summary>
+/// Determine whether or not the script failed to compile.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgScript::isFailed( ) const
+{
+    return mFailedState;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : defineMacro()
 /// <summary>
 /// Define a macro word / macro to be used by the script pre-processor.
@@ -220,29 +231,58 @@ bool cgScript::loadResource( )
     // determine a relevant hashing key for any shaders generated through this script 
     // (if it is a surface shader).
     cgScriptPreprocessor Preprocessor( this );
-    if ( !Preprocessor.process( mInputStream, mDefinitions, mSourceFiles ) )
-        return false;
-
-	// Attempt to build the script
-    cgAppLog::write( cgAppLog::Debug, _T("Building script '%s'.\n"), getResourceName().c_str() );
-    if ( pModule->Build() < 0 )
+    mFailedState = true;
+    if ( Preprocessor.process( mInputStream, mDefinitions, mSourceFiles ) )
     {
-        cgAppLog::write( cgAppLog::Error, _T("An error occured while attempting to build script '%s'.\n"), getResourceName().c_str() );
-        mFailedState = true;
-        return false;
+	    // Attempt to build the script
+        cgAppLog::write( cgAppLog::Debug, _T("Building script '%s'.\n"), getResourceName().c_str() );
+        if ( pModule->Build() < 0 )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("An error occured while attempting to build script '%s'.\n"), getResourceName().c_str() );
+            
+            // If we're in sandbox mode (preview or full), we should treat a missing
+            // file or failed load as a success irrespective of the fact that we aren't 
+            // able to load it. This ensures that the script's information is not lost.
+            if ( cgGetSandboxMode() != cgSandboxMode::Disabled )
+            {
+                mResourceLoaded = true;
+                mResourceLost   = false;
+                return true;
+            
+            } // End if sandbox
+            
+            // Failed!
+            return false;
+        
+        } // End if failed to build
+
+        // Bind any imports.
+        pModule->BindAllImportedFunctions();
+
+        // Script is now loaded
+        mScriptEngine->mLoadedScripts.insert(this);
+        mResourceLoaded = true;
+        mResourceLost   = false;
+        mFailedState    = false;
+
+        // Success!
+        return true;
+
+    } // End if succeeded.
+
+    // If we're in sandbox mode (preview or full), we should treat a missing
+    // file or failed load as a success irrespective of the fact that we aren't 
+    // able to load it. This ensures that the script's information is not lost.
+    if ( cgGetSandboxMode() != cgSandboxMode::Disabled )
+    {
+        mResourceLoaded = true;
+        mResourceLost   = false;
+        return true;
     
-    } // End if failed to build
+    } // End if sandbox
 
-    // Bind any imports.
-    pModule->BindAllImportedFunctions();
-
-    // Script is now loaded
-    mScriptEngine->mLoadedScripts.insert(this);
-    mResourceLoaded = true;
-    mResourceLost   = false;
-
-    // Success!
-    return true;
+    // Failed!
+    return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -1664,4 +1704,3 @@ void * cgScriptObject::getAddressOfMember( const cgString & strMemberName )
     // Not found
     return CG_NULL;
 }
-    

@@ -25,7 +25,9 @@ var cg_world_types_8h =
     ] ],
     [ "Base", "cg_world_types_8h.html#aa7d91d49ec0d1b28a2557b23e15aa188", [
       [ "Wireframe", "cg_world_types_8h.html#aa7d91d49ec0d1b28a2557b23e15aa188a7dffd663a2808c75d7ea288063694079", null ],
-      [ "PostDepthClear", "cg_world_types_8h.html#aa7d91d49ec0d1b28a2557b23e15aa188a7501423b0bddfb6aa38554616449a030", null ]
+      [ "PostDepthClear", "cg_world_types_8h.html#aa7d91d49ec0d1b28a2557b23e15aa188a7501423b0bddfb6aa38554616449a030", null ],
+      [ "ShowCollisionShapes", "cg_world_types_8h.html#aa7d91d49ec0d1b28a2557b23e15aa188a0c003231654e1e0cf90fda42ef3f98c5", null ],
+      [ "ShowBones", "cg_world_types_8h.html#aa7d91d49ec0d1b28a2557b23e15aa188a9eed0fb2ed3965b25696651908b9106b", null ]
     ] ],
     [ "Base", "cg_world_types_8h.html#a0da2807d89bc281aaedc56c1edbdbd24", [
       [ "Never", "cg_world_types_8h.html#a0da2807d89bc281aaedc56c1edbdbd24ae2284e67ee6fee13e79f8ae95a98c317", null ],

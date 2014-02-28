@@ -43,6 +43,8 @@ var searchData=
   ['linearborder',['linearBorder',['../structcg_image_processor_1_1_samplers.html#a870ecc55a10a43b9eca2f0fdf78d2998',1,'cgImageProcessor::Samplers']]],
   ['listbox',['listBox',['../structcg_u_i_skin_1_1_control_config.html#acf36e8ae639068ee04ab4e48dd823a25',1,'cgUISkin::ControlConfig']]],
   ['localidentifier',['localIdentifier',['../structcg_world_object_type_desc.html#a745240d80d1d1a004a6843eaee4c085d',1,'cgWorldObjectTypeDesc::localIdentifier()'],['../structcg_object_sub_element_type_desc.html#ad6aecf49367079be56d30d8ae8ab3808',1,'cgObjectSubElementTypeDesc::localIdentifier()'],['../structcg_scene_element_type_desc.html#aef1cf7545f5c9078e60c6035dc2c74a7',1,'cgSceneElementTypeDesc::localIdentifier()']]],
+  ['locked',['locked',['../structcg_scene_1_1_update_bucket.html#a67542717103ae945412a5a3ff720d8a0',1,'cgScene::UpdateBucket']]],
   ['loop',['loop',['../structcg_u_i_cursor_type.html#a75322c2903f853d52c7ee1d4c3c06a1f',1,'cgUICursorType']]],
+  ['looping',['looping',['../structcg_audio_driver_1_1_ambient_item.html#a676e50afde95cee50980e17ba4c6b10b',1,'cgAudioDriver::AmbientItem::looping()'],['../structcg_texture_1_1_media_config.html#a36d99ae7bef9f6ba18d8424cd128c460',1,'cgTexture::MediaConfig::looping()']]],
   ['luminancetexturesize',['luminanceTextureSize',['../structcg_tone_map_processor_1_1__cb_luminance.html#a54307975fd700fc0e56eab94c7f8702b',1,'cgToneMapProcessor::_cbLuminance::luminanceTextureSize()'],['../structcg_tone_map_processor_1_1__cb_downsample.html#a3d86b792b8685e1f413c7c3c8173d7c8',1,'cgToneMapProcessor::_cbDownsample::luminanceTextureSize()']]]
 ];

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -128,75 +128,77 @@ $(document).ready(function(){initNavTree('_bone_8h_source.html','');});
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        Core::World::Objects::ObjectNode::registerNodeMethods&lt;type&gt;( engine, typeName );</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="comment">// Register methods.</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="comment">//BINDSUCCESS( engine-&gt;registerObjectMethod( typeName, &quot;void setSize( float )&quot;, asMETHODPR(type, setSize, ( cgFloat ), void), asCALL_THISCALL) );</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="comment">//BINDSUCCESS( engine-&gt;registerObjectMethod( typeName, &quot;float getSize( ) const&quot;, asMETHODPR(type, getSize, ( ) const, cgFloat), asCALL_THISCALL) );</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    } <span class="comment">// End Method registerNodeMethods&lt;&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectMethod( typeName, <span class="stringliteral">&quot;void setInitialCollisionState( bool )&quot;</span>, asMETHODPR(type, setInitialCollisionState, ( <span class="keywordtype">bool</span> ), <span class="keywordtype">void</span>), asCALL_THISCALL) );</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectMethod( typeName, <span class="stringliteral">&quot;bool getInitialCollisionState( ) const&quot;</span>, asMETHODPR(type, getInitialCollisionState, ( ) <span class="keyword">const</span>, <span class="keywordtype">bool</span>), asCALL_THISCALL) );</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectMethod( typeName, <span class="stringliteral">&quot;void enableCollision( bool )&quot;</span>, asMETHODPR(type, enableCollision, ( <span class="keywordtype">bool</span> ), <span class="keywordtype">void</span>), asCALL_THISCALL) );</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectMethod( typeName, <span class="stringliteral">&quot;bool isCollisionEnabled( ) const&quot;</span>, asMETHODPR(type, isCollisionEnabled, ( ) <span class="keyword">const</span>, <span class="keywordtype">bool</span>), asCALL_THISCALL) );</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="comment">// Name : registerObjectMethods ()</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="comment">// Desc : Register the base cgGroupObject&#39;s class methods. Can be called by</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="comment">//        derived classes to re-register the behaviors</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> type&gt;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">void</span> registerObjectMethods( <a class="code" href="classcg_script_engine.html" title="The scripting engine class is designed as a base class from which the engine or application can deriv...">cgScriptEngine</a> * engine, <span class="keyword">const</span> <a class="code" href="cg_string_8h.html#afeb654be2912996c94674c324ff1fa99">cgChar</a> * typeName )</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="comment">// Register base class object methods</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        Core::World::Objects::WorldObject::registerObjectMethods&lt;type&gt;( engine, typeName );</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="comment">// Register methods.</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="comment">//BINDSUCCESS( engine-&gt;registerObjectMethod( typeName, &quot;void setSize( float )&quot;, asMETHODPR(type, setSize, ( cgFloat ), void), asCALL_THISCALL) );</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="comment">//BINDSUCCESS( engine-&gt;registerObjectMethod( typeName, &quot;float getSize( ) const&quot;, asMETHODPR(type, getSize, ( ) const, cgFloat), asCALL_THISCALL) );</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    } <span class="comment">// End Method registerObjectMethods&lt;&gt;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    } <span class="comment">// End Method registerNodeMethods&lt;&gt;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="comment">// Name : registerObjectMethods ()</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="comment">// Desc : Register the base cgGroupObject&#39;s class methods. Can be called by</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="comment">//        derived classes to re-register the behaviors</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> type&gt;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">void</span> registerObjectMethods( <a class="code" href="classcg_script_engine.html" title="The scripting engine class is designed as a base class from which the engine or application can deriv...">cgScriptEngine</a> * engine, <span class="keyword">const</span> <a class="code" href="cg_string_8h.html#afeb654be2912996c94674c324ff1fa99">cgChar</a> * typeName )</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="comment">// Register base class object methods</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        Core::World::Objects::WorldObject::registerObjectMethods&lt;type&gt;( engine, typeName );</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="comment">// Register methods.</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectMethod( typeName, <span class="stringliteral">&quot;void setInitialCollisionState( bool )&quot;</span>, asMETHODPR(type, setInitialCollisionState, ( <span class="keywordtype">bool</span> ), <span class="keywordtype">void</span>), asCALL_THISCALL) );</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectMethod( typeName, <span class="stringliteral">&quot;bool getInitialCollisionState( ) const&quot;</span>, asMETHODPR(type, getInitialCollisionState, ( ) <span class="keyword">const</span>, <span class="keywordtype">bool</span>), asCALL_THISCALL) );</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="comment">// Package descriptor</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">class </span>Package : <span class="keyword">public</span> <a class="code" href="classcg_script_package.html" title="Contains definitions for binding application functionality with any available script engine...">cgScriptPackage</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    {</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <a class="code" href="cg_script_package_8h.html#a1d2373da902fae6faa48a91ec65bfcb7">BEGIN_SCRIPT_PACKAGE</a>( <span class="stringliteral">&quot;Core.World.Objects.Bone&quot;</span> )</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <a class="code" href="cg_script_package_8h.html#afce01821e140df6dc77b688fdcdc2647">END_SCRIPT_PACKAGE</a>( )</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="comment">// Type declarations</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordtype">void</span> declare( <a class="code" href="classcg_script_engine.html" title="The scripting engine class is designed as a base class from which the engine or application can deriv...">cgScriptEngine</a> * engine )</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectType( <span class="stringliteral">&quot;BoneObject&quot;</span>, 0, asOBJ_REF ) );</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectType( <span class="stringliteral">&quot;BoneNode&quot;</span>, 0, asOBJ_REF ) );</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        }</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="comment">// Member bindings</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="classcg_script_package.html#a81af11ecbff382e2dd678ecad75ba72c">bind</a>( <a class="code" href="classcg_script_engine.html" title="The scripting engine class is designed as a base class from which the engine or application can deriv...">cgScriptEngine</a> * engine )</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <span class="keyword">using namespace </span>cgScriptInterop::Utils;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            <span class="comment">// Register the reference/object handle support for the objects.</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            registerHandleBehaviors&lt;cgBoneObject&gt;( engine );</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            registerHandleBehaviors&lt;cgBoneNode&gt;( engine );</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            <span class="comment">// Type Identifiers</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"></span>            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#af2d5cc579214c94d8def39b0a9108509" title="Registers a global property accessible to all scripts. ">registerGlobalProperty</a>( <span class="stringliteral">&quot;const UID RTID_BoneObject&quot;</span>, (<span class="keywordtype">void</span>*)&amp;<a class="code" href="cg_bone_object_8h.html#ad6d1c85947f24c0ad94b0689c7024505">RTID_BoneObject</a> ) );</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#af2d5cc579214c94d8def39b0a9108509" title="Registers a global property accessible to all scripts. ">registerGlobalProperty</a>( <span class="stringliteral">&quot;const UID RTID_BoneNode&quot;</span>, (<span class="keywordtype">void</span>*)&amp;<a class="code" href="cg_bone_object_8h.html#ad46c03f85406b2bca525c5dcf4fae269">RTID_BoneNode</a> ) );</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <span class="comment">// cgBoneObject (Class)</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="comment">// Register object methods.</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            registerObjectMethods&lt;cgBoneObject&gt;( engine, <span class="stringliteral">&quot;BoneObject&quot;</span> );</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <span class="comment">// cgBoneNode (Class)</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="comment">// Register node methods.</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            registerNodeMethods&lt;cgBoneNode&gt;( engine, <span class="stringliteral">&quot;BoneNode&quot;</span> );            </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        }</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }; <span class="comment">// End Class : Package</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    } <span class="comment">// End Method registerObjectMethods&lt;&gt;</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="comment">// Package descriptor</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">class </span>Package : <span class="keyword">public</span> <a class="code" href="classcg_script_package.html" title="Contains definitions for binding application functionality with any available script engine...">cgScriptPackage</a></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="cg_script_package_8h.html#a1d2373da902fae6faa48a91ec65bfcb7">BEGIN_SCRIPT_PACKAGE</a>( <span class="stringliteral">&quot;Core.World.Objects.Bone&quot;</span> )</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <a class="code" href="cg_script_package_8h.html#afce01821e140df6dc77b688fdcdc2647">END_SCRIPT_PACKAGE</a>( )</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="comment">// Type declarations</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordtype">void</span> declare( <a class="code" href="classcg_script_engine.html" title="The scripting engine class is designed as a base class from which the engine or application can deriv...">cgScriptEngine</a> * engine )</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectType( <span class="stringliteral">&quot;BoneObject&quot;</span>, 0, asOBJ_REF ) );</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;registerObjectType( <span class="stringliteral">&quot;BoneNode&quot;</span>, 0, asOBJ_REF ) );</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="comment">// Member bindings</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="classcg_script_package.html#a81af11ecbff382e2dd678ecad75ba72c">bind</a>( <a class="code" href="classcg_script_engine.html" title="The scripting engine class is designed as a base class from which the engine or application can deriv...">cgScriptEngine</a> * engine )</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            <span class="keyword">using namespace </span>cgScriptInterop::Utils;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            <span class="comment">// Register the reference/object handle support for the objects.</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            registerHandleBehaviors&lt;cgBoneObject&gt;( engine );</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            registerHandleBehaviors&lt;cgBoneNode&gt;( engine );</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <span class="comment">// Type Identifiers</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment"></span>            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#af2d5cc579214c94d8def39b0a9108509" title="Registers a global property accessible to all scripts. ">registerGlobalProperty</a>( <span class="stringliteral">&quot;const UID RTID_BoneObject&quot;</span>, (<span class="keywordtype">void</span>*)&amp;<a class="code" href="cg_bone_object_8h.html#ad6d1c85947f24c0ad94b0689c7024505">RTID_BoneObject</a> ) );</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#af2d5cc579214c94d8def39b0a9108509" title="Registers a global property accessible to all scripts. ">registerGlobalProperty</a>( <span class="stringliteral">&quot;const UID RTID_BoneNode&quot;</span>, (<span class="keywordtype">void</span>*)&amp;<a class="code" href="cg_bone_object_8h.html#ad46c03f85406b2bca525c5dcf4fae269">RTID_BoneNode</a> ) );</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="comment">// cgBoneObject (Class)</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <span class="comment">// Register object methods.</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            registerObjectMethods&lt;cgBoneObject&gt;( engine, <span class="stringliteral">&quot;BoneObject&quot;</span> );</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="comment">// cgBoneNode (Class)</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            <span class="comment">// Register node methods.</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            registerNodeMethods&lt;cgBoneNode&gt;( engine, <span class="stringliteral">&quot;BoneNode&quot;</span> );            </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        }</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;} } } } } <span class="comment">// End Namespace : cgScriptPackages::Core::World::Objects::Bone</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    }; <span class="comment">// End Class : Package</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;} } } } } <span class="comment">// End Namespace : cgScriptPackages::Core::World::Objects::Bone</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_036efea8fd6b39c1f1fd2dd7f1be4325.html">Scripting</a></li><li class="navelem"><a class="el" href="dir_5f20ce7c1333a975792d65b7ff262c26.html">Packages</a></li><li class="navelem"><a class="el" href="dir_962f94cc32c03ad95281b0f22b8add17.html">Core</a></li><li class="navelem"><a class="el" href="dir_4efed41db9e0bc7e6f43a5e09e03be68.html">World</a></li><li class="navelem"><a class="el" href="dir_174a3acef6be263b76842d5259bacf48.html">Objects</a></li><li class="navelem"><a class="el" href="_bone_8h.html">Bone.h</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:47:20 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:27:50 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

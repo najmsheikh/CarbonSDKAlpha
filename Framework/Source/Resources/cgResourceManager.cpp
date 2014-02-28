@@ -1283,6 +1283,43 @@ bool cgResourceManager::reloadScripts( cgFloat fDelay /* = 0.0f */ )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : reloadScript ()
+/// <summary>
+/// Reload a single script identified with the specified resource name.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgResourceManager::reloadScript( const cgString & resourceName )
+{
+    // Find the script.
+    cgResource * scriptResource = findScript( resourceName, false );
+    if ( !scriptResource )
+        scriptResource = findScript( resourceName + _T("::.default") );
+    if ( scriptResource )
+    {
+        // Unload the script.
+        scriptResource->unloadResource();
+
+        // Reload the script
+        scriptResource->loadResource();
+            
+        // Send a message out to anyone interested to let
+        // them know that scripts have been reloaded.
+        cgMessage Msg;
+        cgUInt32 resourceId = scriptResource->getReferenceId();
+        Msg.messageId = cgSystemMessages::Resources_ReloadScripts;
+        Msg.messageData = &resourceId;
+        cgReferenceManager::sendMessageToGroup( getReferenceId(), cgSystemMessageGroups::MGID_ResourceManager, &Msg, 0 );
+
+        // Success!
+        return true;
+
+    } // End if found
+
+    // No script found
+    return false;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : findScript ()
 /// <summary>
 /// Looks for a matching script in the list and returns object pointer

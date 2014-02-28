@@ -10,6 +10,7 @@ var cg_rendering_types_8h =
     [ "cgMaterialTerms", "structcg_material_terms.html", "structcg_material_terms" ],
     [ "cgBlurOpDesc", "structcg_blur_op_desc.html", "structcg_blur_op_desc" ],
     [ "cgDisplayMode", "structcg_display_mode.html", "structcg_display_mode" ],
+    [ "cgAdapter", "structcg_adapter.html", "structcg_adapter" ],
     [ "_CGE_CGRENDERINGTYPES_H_", "cg_rendering_types_8h.html#a6155e921e6f0f1483be8dc6c4a792844", null ],
     [ "Base", "cg_rendering_types_8h.html#a84225a557a40180a18c28e78593c58f1", [
       [ "FastStencilFill", "cg_rendering_types_8h.html#a84225a557a40180a18c28e78593c58f1a2c0ca9594d87e8e782ae9d34f0633633", null ],

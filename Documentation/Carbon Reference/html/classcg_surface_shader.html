@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -173,6 +173,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a84bb03ad9568a576ca61f79b0308ecfe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_constant_buffer_linker.html">cgConstantBufferLinker</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_surface_shader.html#a84bb03ad9568a576ca61f79b0308ecfe">getConstantBufferLinker</a> () const </td></tr>
 <tr class="memdesc:a84bb03ad9568a576ca61f79b0308ecfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the common / shared constant linker that provides hardare register mappings and shader code declarations for the constant buffers declared within the script.  <a href="#a84bb03ad9568a576ca61f79b0308ecfe"></a><br/></td></tr>
 <tr class="separator:a84bb03ad9568a576ca61f79b0308ecfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a898b88f3678a80bf9d9c075fa406495a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_shader_identifier.html">cgShaderIdentifier</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_surface_shader.html#a898b88f3678a80bf9d9c075fa406495a">getShaderIdentifier</a> () const </td></tr>
+<tr class="memdesc:a898b88f3678a80bf9d9c075fa406495a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the unique shader identifier that was generated for this surface shader, based on the hash of the source file and all of its included dependencies. Returns NULL if the shader was not successfully created.  <a href="#a898b88f3678a80bf9d9c075fa406495a"></a><br/></td></tr>
+<tr class="separator:a898b88f3678a80bf9d9c075fa406495a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdcf087515d2b0f9c78d250466cdfea6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_surface_shader.html#afdcf087515d2b0f9c78d250466cdfea6">selectVertexShader</a> (const <a class="el" href="cg_resource_handles_8h.html#a4b89f7eb63eff95255f46d8b72ce35c1">cgVertexShaderHandle</a> &amp;shader)</td></tr>
 <tr class="memdesc:afdcf087515d2b0f9c78d250466cdfea6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select the vertex shader by handle.  <a href="#afdcf087515d2b0f9c78d250466cdfea6"></a><br/></td></tr>
 <tr class="separator:afdcf087515d2b0f9c78d250466cdfea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -461,6 +464,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab570671b2bf5d7f8c3e2c9508b02eaa6 inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0e9c746739983ecfbbe25eb9c4efdb1 inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_resource_type.html#ab3ea99a2ba657fda52b52d2d23099ed9">cgResourceType::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#ae0e9c746739983ecfbbe25eb9c4efdb1">getResourceType</a> () const </td></tr>
 <tr class="separator:ae0e9c746739983ecfbbe25eb9c4efdb1 inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f078bb6adfd44214d893a31b6bfc68b inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_stream_type.html#a51fb2dd6b8e37d239ef6a4e5167f8956">cgStreamType::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#a1f078bb6adfd44214d893a31b6bfc68b">getStreamType</a> () const </td></tr>
+<tr class="separator:a1f078bb6adfd44214d893a31b6bfc68b inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01b0d6309f1cfe4f75648bc5c1f5e228 inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource_manager.html">cgResourceManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#a01b0d6309f1cfe4f75648bc5c1f5e228">getManager</a> () const </td></tr>
 <tr class="separator:a01b0d6309f1cfe4f75648bc5c1f5e228 inherit pub_methods_classcg_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a470d6c37c04beb8c53f75919541bfe2b inherit pub_methods_classcg_resource"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource.html#a470d6c37c04beb8c53f75919541bfe2b">canEvict</a> () const </td></tr>
@@ -2219,6 +2224,23 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented from <a class="el" href="classcg_resource.html#ada6082a8d5e0c13b796d59749f1e0621">cgResource</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a898b88f3678a80bf9d9c075fa406495a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_shader_identifier.html">cgShaderIdentifier</a> * cgSurfaceShader::getShaderIdentifier </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the unique shader identifier that was generated for this surface shader, based on the hash of the source file and all of its included dependencies. Returns NULL if the shader was not successfully created. </p>
 
 </div>
 </div>
@@ -5648,7 +5670,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_surface_shader.html">cgSurfaceShader</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:53 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:11 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

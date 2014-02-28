@@ -10,6 +10,7 @@ var cg_u_i_types_8h =
     [ "Base", "cg_u_i_types_8h.html#a6ae3c390692254f8778ab5ebc0765be0", [
       [ "ClipRectangle", "cg_u_i_types_8h.html#a6ae3c390692254f8778ab5ebc0765be0afc15958aaf97f88c668b2ba457922d50", null ],
       [ "Multiline", "cg_u_i_types_8h.html#a6ae3c390692254f8778ab5ebc0765be0a2ea669b4a6e95c60afe59d43a0941b96", null ],
+      [ "NoWrap", "cg_u_i_types_8h.html#a6ae3c390692254f8778ab5ebc0765be0a54275cd7f498f0e3bb100a2fa1c39345", null ],
       [ "AlignCenter", "cg_u_i_types_8h.html#a6ae3c390692254f8778ab5ebc0765be0a62198b7ae418afc6092bf6e5162e8807", null ],
       [ "AlignRight", "cg_u_i_types_8h.html#a6ae3c390692254f8778ab5ebc0765be0ad887f15d1dc32e99bac02cad5308431c", null ],
       [ "VAlignCenter", "cg_u_i_types_8h.html#a6ae3c390692254f8778ab5ebc0765be0ab5a604bcf54a984962f16954bef4aafb", null ],
@@ -31,6 +32,7 @@ var cg_u_i_types_8h =
     ] ],
     [ "Base", "cg_u_i_types_8h.html#a228ffc83974ad6052465452c293fa4fb", [
       [ "UserLayer", "cg_u_i_types_8h.html#a228ffc83974ad6052465452c293fa4fba9309a8dd11ac4bcc82e4c65aa1857d1d", null ],
+      [ "TopMostLayer", "cg_u_i_types_8h.html#a228ffc83974ad6052465452c293fa4fba663f14b68f259cbb6404c17e80cce7bd", null ],
       [ "SystemLayer", "cg_u_i_types_8h.html#a228ffc83974ad6052465452c293fa4fba7b12b16e40d48d2423229b0b7fc5fb6b", null ]
     ] ],
     [ "Base", "cg_u_i_types_8h.html#a8814bb2fefce9a15e4a9e009aae677a6", [
@@ -45,7 +47,8 @@ var cg_u_i_types_8h =
       [ "Invalid", "cg_u_i_types_8h.html#a8814bb2fefce9a15e4a9e009aae677a6ae071f9945cf75da9e11dcbd793b61f4b", null ]
     ] ],
     [ "Base", "cg_u_i_types_8h.html#aa2b82fc18350441afe405908f998af40", [
-      [ "Overlapped", "cg_u_i_types_8h.html#aa2b82fc18350441afe405908f998af40ac4a355a4a45d271ce857494f4cdd420c", null ]
+      [ "Overlapped", "cg_u_i_types_8h.html#aa2b82fc18350441afe405908f998af40ac4a355a4a45d271ce857494f4cdd420c", null ],
+      [ "Invisible", "cg_u_i_types_8h.html#aa2b82fc18350441afe405908f998af40a56e398dd0f70231e4a238ca5ff83fcb5", null ]
     ] ],
     [ "Base", "cg_u_i_types_8h.html#afc254d1a59e364ec3f53d1e4fb0b4c0a", [
       [ "Left", "cg_u_i_types_8h.html#afc254d1a59e364ec3f53d1e4fb0b4c0aae9ad30da090f3f4f2fdfa5c3764bf198", null ],

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.10</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
    </div>
   </td>
  </tr>
@@ -145,9 +145,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4748a03379f5002afefea580d4b3af04"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_skin.html#a4748a03379f5002afefea580d4b3af04">prepareControlFrames</a> (<a class="el" href="classcg_u_i_control_layer.html">cgUIControlLayer</a> *layer, <a class="el" href="namespacecg_u_i_form_style.html#aa2b82fc18350441afe405908f998af40">cgUIFormStyle::Base</a> style)</td></tr>
 <tr class="memdesc:a4748a03379f5002afefea580d4b3af04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepare all of the billboard data based on the information contained in the skin definition for forms and controls etc.  <a href="#a4748a03379f5002afefea580d4b3af04"></a><br/></td></tr>
 <tr class="separator:a4748a03379f5002afefea580d4b3af04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45229e2896beda8522935bebdb092af8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_skin.html#a45229e2896beda8522935bebdb092af8">prepareCursorFrames</a> (<a class="el" href="classcg_billboard_buffer.html">cgBillboardBuffer</a> *buffer)</td></tr>
-<tr class="memdesc:a45229e2896beda8522935bebdb092af8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepare all of the billboard data based on the information contained in the skin definition for the cursor.  <a href="#a45229e2896beda8522935bebdb092af8"></a><br/></td></tr>
-<tr class="separator:a45229e2896beda8522935bebdb092af8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7c861661738f2a99fa71a8438322c5d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_skin.html#ad7c861661738f2a99fa71a8438322c5d">prepareCursorFrames</a> (<a class="el" href="classcg_billboard_buffer.html">cgBillboardBuffer</a> *buffer, <a class="el" href="classcg_render_driver.html">cgRenderDriver</a> *renderDriver)</td></tr>
+<tr class="memdesc:ad7c861661738f2a99fa71a8438322c5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepare all of the billboard data based on the information contained in the skin definition for the cursor.  <a href="#ad7c861661738f2a99fa71a8438322c5d"></a><br/></td></tr>
+<tr class="separator:ad7c861661738f2a99fa71a8438322c5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d7ef39fa04791d67a8a3559b2f89800"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_u_i_cursor_desc.html">cgUICursorDesc</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_skin.html#a9d7ef39fa04791d67a8a3559b2f89800">getCursorDefinition</a> () const </td></tr>
 <tr class="separator:a9d7ef39fa04791d67a8a3559b2f89800"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea3618a47b1c14464d92dace56bea890"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_u_i_form_style_desc.html">cgUIFormStyleDesc</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_u_i_skin.html#aea3618a47b1c14464d92dace56bea890">getFormStyleDefinition</a> (<a class="el" href="namespacecg_u_i_form_style.html#aa2b82fc18350441afe405908f998af40">cgUIFormStyle::Base</a> type) const </td></tr>
@@ -381,7 +381,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a45229e2896beda8522935bebdb092af8"></a>
+<a class="anchor" id="ad7c861661738f2a99fa71a8438322c5d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -389,8 +389,18 @@ Public Member Functions</h2></td></tr>
           <td class="memname">bool cgUISkin::prepareCursorFrames </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classcg_billboard_buffer.html">cgBillboardBuffer</a> *&#160;</td>
-          <td class="paramname"><em>pBuffer</em></td><td>)</td>
+          <td class="paramname"><em>pBuffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="classcg_render_driver.html">cgRenderDriver</a> *&#160;</td>
+          <td class="paramname"><em>pRenderDriver</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -409,7 +419,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_u_i_skin.html">cgUISkin</a></li>
-    <li class="footer">Generated on Fri Mar 22 2013 16:48:58 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Thu Feb 27 2014 01:28:13 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -3544,6 +3544,17 @@ bool cgMesh::createTorus( cgVertexFormat * pFormat, cgFloat fOuterRadius, cgFloa
 //-----------------------------------------------------------------------------
 bool cgMesh::createBox( cgVertexFormat * pFormat, cgFloat fWidth, cgFloat fHeight, cgFloat fDepth, cgUInt32 nWidthSegs, cgUInt32 nHeightSegs, cgUInt32 nDepthSegs, bool bInverted, cgMeshCreateOrigin::Base Origin, bool bHardwareCopy /* = true */, cgResourceManager * pManager /* = NULL */ )
 {
+    return createBox( pFormat, fWidth, fHeight, fDepth, nWidthSegs, nHeightSegs, nDepthSegs, 1.0f, 1.0f, bInverted, Origin, bHardwareCopy, pManager );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : createBox ()
+/// <summary>
+/// Create box geometry.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgMesh::createBox( cgVertexFormat * pFormat, cgFloat fWidth, cgFloat fHeight, cgFloat fDepth, cgUInt32 nWidthSegs, cgUInt32 nHeightSegs, cgUInt32 nDepthSegs, cgFloat fTexUScale, cgFloat fTexVScale, bool bInverted, cgMeshCreateOrigin::Base Origin, bool bHardwareCopy /* = true */, cgResourceManager * pManager /* = NULL */ )
+{
     cgUInt32  nXCount, nYCount, nCounter;
     cgVector3 vCurrentPos, vDeltaPosX, vDeltaPosY, vNormal;
     cgVector2 vCurrentTex, vDeltaTex;
@@ -3665,7 +3676,7 @@ bool cgMesh::createBox( cgVertexFormat * pFormat, cgFloat fWidth, cgFloat fHeigh
                 if ( nNormalOffset >= 0 )
                     *((cgVector3*)(pCurrentVertex + nNormalOffset))   = vNormal;
                 if ( nTexCoordOffset >= 0 )
-                    *((cgVector2*)(pCurrentVertex + nTexCoordOffset)) = vCurrentTex;
+                    *((cgVector2*)(pCurrentVertex + nTexCoordOffset)) = cgVector2(vCurrentTex.x * fTexUScale, vCurrentTex.y * fTexVScale );
 
                 // Set flags for this vertex (we want to generate tangents 
                 // and binormals if we need them).

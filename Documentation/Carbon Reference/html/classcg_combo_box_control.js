@@ -4,6 +4,7 @@ var classcg_combo_box_control =
     [ "cgComboBoxControl", "classcg_combo_box_control.html#a3c8c873b84f27078cf59fe3b94b1a63e", null ],
     [ "~cgComboBoxControl", "classcg_combo_box_control.html#a258ed4bfac20019fb0926dcda2ba20c1", null ],
     [ "addItem", "classcg_combo_box_control.html#a555937a5262568ff3e4425c3fa4c762a", null ],
+    [ "clear", "classcg_combo_box_control.html#aa04a98894bb886d6fa0018ac67de9d62", null ],
     [ "dispose", "classcg_combo_box_control.html#ad6db772f0362ece23477c5edf189c8d4", null ],
     [ "getReferenceType", "classcg_combo_box_control.html#a7652be440b981f3ea24be09c604fa75b", null ],
     [ "getSelectedIndex", "classcg_combo_box_control.html#a16f41b54494b434701308dbc7f2f690e", null ],

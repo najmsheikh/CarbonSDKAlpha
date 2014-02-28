@@ -17,6 +17,7 @@ var structcg_color_value =
     [ "operator/", "structcg_color_value.html#a25185ea0d5a6839977794158ac2e58b4", null ],
     [ "operator/=", "structcg_color_value.html#ab291e3d4c433a39a0d68e284074c4b48", null ],
     [ "operator==", "structcg_color_value.html#a3fceccc42bd52d66f9ed9498b26949b3", null ],
+    [ "toString", "structcg_color_value.html#a296f6ed8df102f65ef320b19b3acfa1e", null ],
     [ "operator*", "structcg_color_value.html#a18aa434b1ccc0fa43481113921ebb4a3", null ],
     [ "a", "structcg_color_value.html#a6e02b0f8520b2d3e5d65d58817df8a4b", null ],
     [ "b", "structcg_color_value.html#a8f9ee2909f3726fa5c25e748f561b0c9", null ],
