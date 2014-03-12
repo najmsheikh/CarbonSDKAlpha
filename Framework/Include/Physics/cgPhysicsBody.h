@@ -54,6 +54,13 @@ struct CGE_API cgPhysicsBodyTransformedEventArgs
     bool dynamicsUpdate;
 };
 
+struct CGE_API cgPhysicsBodyCollisionEventArgs
+{
+    cgPhysicsBodyCollisionEventArgs( const cgBodyCollision * _collision ) :
+        collision(_collision) {}
+    const cgBodyCollision * collision;
+};
+
 //-----------------------------------------------------------------------------
 // Main Class Declarations
 //-----------------------------------------------------------------------------
@@ -72,7 +79,10 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
-    virtual void    onPhysicsBodyTransformed    ( cgPhysicsBody * sender, cgPhysicsBodyTransformedEventArgs * e ) {};
+    virtual void    onPhysicsBodyTransformed        ( cgPhysicsBody * sender, cgPhysicsBodyTransformedEventArgs * e ) {};
+    virtual void    onPhysicsBodyCollisionBegin     ( cgPhysicsBody * sender, cgPhysicsBodyCollisionEventArgs * e ) {};
+    virtual void    onPhysicsBodyCollisionContinue  ( cgPhysicsBody * sender, cgPhysicsBodyCollisionEventArgs * e ) {};
+    virtual void    onPhysicsBodyCollisionEnd       ( cgPhysicsBody * sender, cgPhysicsBodyCollisionEventArgs * e ) {};
 };
 
 //-----------------------------------------------------------------------------
@@ -121,15 +131,20 @@ public:
     bool                        isContinuousCollisionEnabled( ) const;
     void                        setMaterialGroupId          ( cgDefaultPhysicsMaterialGroup::Base defaultMaterial );
     void                        setMaterialGroupId          ( cgInt32 group );
+    void                        setUserData                 ( void * data );
+    void                      * getUserData                 ( ) const;
     
     // Internal utilities
-    NewtonBody                * getInternalBody         ( ) const;
+    NewtonBody                * getInternalBody             ( ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
     // Event issuers.
-    virtual void                onPhysicsBodyTransformed( cgPhysicsBodyTransformedEventArgs * e );
+    virtual void                onPhysicsBodyTransformed        ( cgPhysicsBodyTransformedEventArgs * e );
+    virtual void                onPhysicsBodyCollisionBegin     ( cgPhysicsBodyCollisionEventArgs * e );
+    virtual void                onPhysicsBodyCollisionContinue  ( cgPhysicsBodyCollisionEventArgs * e );
+    virtual void                onPhysicsBodyCollisionEnd       ( cgPhysicsBodyCollisionEventArgs * e );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgPhysicsEntity)
@@ -162,6 +177,7 @@ protected:
     cgVector3       mTotalTorque;       // Total torque forces which have been accumulated in this body.
     cgVector3       mCustomGravity;     // Custom gravity force to apply to this body.
     bool            mUseCustomGravity;  // When enabled, the above custom gravity force will be used instead of the global force.
+    void          * mUserData;          // Customizable user data for the physics body.
     
 };
 

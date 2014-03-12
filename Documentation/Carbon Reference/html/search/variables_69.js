@@ -29,7 +29,7 @@ var searchData=
   ['internalset',['internalSet',['../classcg_selection_set.html#acdf079186794ce2f178bcee5c2e164ab',1,'cgSelectionSet']]],
   ['interpolatedcameramatrix',['interpolatedCameraMatrix',['../structcg_motion_blur_processor_1_1__cb_motion_blur.html#a4adba2aa89b13eeda1f6683297f14a5d',1,'cgMotionBlurProcessor::_cbMotionBlur']]],
   ['intersectnormal',['intersectNormal',['../structcg_collision_1_1_coll_intersect.html#a92879dec4049a58f240df69b02a98b0d',1,'cgCollision::CollIntersect']]],
-  ['intersectparam',['intersectParam',['../structcg_collision_contact.html#aa05367a2266615293d41a8e19a021208',1,'cgCollisionContact']]],
+  ['intersectparam',['intersectParam',['../structcg_ray_cast_contact.html#a9bb9ef756f41acab21a729075320a807',1,'cgRayCastContact']]],
   ['intersectpoint',['intersectPoint',['../structcg_collision_1_1_coll_intersect.html#a6bafbda7c97aad4bf2d265f84628d94c',1,'cgCollision::CollIntersect']]],
   ['interval',['interval',['../structcg_collision_1_1_coll_intersect.html#a41b0beb2392f03631e5761b0226d0f42',1,'cgCollision::CollIntersect']]],
   ['invalidleaf',['InvalidLeaf',['../classcg_b_s_p_tree.html#a8013cfdf719788c795c5590771a13d87',1,'cgBSPTree']]],

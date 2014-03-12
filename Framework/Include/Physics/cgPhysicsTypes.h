@@ -106,9 +106,9 @@ struct CGE_API cgRigidBodyCreateParams
 
 }; // End Struct : cgRigidBodyCreateParams
 
-struct CGE_API cgCollisionContact
+struct CGE_API cgRayCastContact
 {
-    CGE_VECTOR_DECLARE( cgCollisionContact, Array );
+    CGE_ARRAY_DECLARE( cgRayCastContact, Array );
 
     cgPhysicsBody * body;               // The intersected physics body.
     cgFloat         intersectParam;     // Intersection 't' value along the specified path.
@@ -116,9 +116,31 @@ struct CGE_API cgCollisionContact
     cgInt32         collisionId;        // Custom identifier associated returned by the shape in contact.
 
     // Provide defaults
-    cgCollisionContact() :
+    cgRayCastContact() :
         body(CG_NULL), intersectParam(FLT_MAX), contactNormal(0,0,0), collisionId(-1) {}
 
+}; // End Struct : cgRayCastContact
+
+struct CGE_API cgCollisionContact
+{
+    CGE_ARRAY_DECLARE( cgCollisionContact, Array );
+
+    cgVector3   point;
+    cgVector3   normal;
+    cgFloat     speed;
+
 }; // End Struct : cgCollisionContact
+
+struct CGE_API cgBodyCollision
+{
+    cgPhysicsBody             * thisBody;
+    cgPhysicsBody             * otherBody;
+    cgCollisionContact::Array   contacts;
+
+    // Provide defaults
+    cgBodyCollision() :
+        thisBody(CG_NULL), otherBody(CG_NULL) {}
+
+}; // End Struct : cgBodyCollision
 
 #endif // !_CGE_CGPHYSICSTYPES_H_

@@ -3039,7 +3039,7 @@ bool cgLandscape::renderPass( cgLandscapeRenderMethod::Base Pass, cgCameraNode *
 void cgLandscape::batchProceduralDraws( )
 {
     cgBoundingBox Bounds;
-    std::map< ProceduralBatchKey, std::vector<cgInt32> > ProceduralBatches;
+    std::map< ProceduralBatchKey, cgArray<cgInt32> > ProceduralBatches;
 
     // Clear previous information.
     mProceduralBatches.clear();
@@ -3111,7 +3111,7 @@ void cgLandscape::batchProceduralDraws( )
         mProceduralBatches.resize( ProceduralBatches.size() );
 
         // Construct procedural block batch rendering information
-        std::map< ProceduralBatchKey, std::vector<cgInt32> >::iterator itBatch = ProceduralBatches.begin();
+        std::map< ProceduralBatchKey, cgArray<cgInt32> >::iterator itBatch = ProceduralBatches.begin();
         for ( cgInt32 i = 0; itBatch != ProceduralBatches.end(); ++itBatch, ++i )
         {
             const ProceduralBatchKey & Key = itBatch->first;
@@ -5684,7 +5684,7 @@ bool cgTerrainBlock::buildVertexBuffer( const cgInt32Array & aMipLookUp )
 //-----------------------------------------------------------------------------
 bool cgTerrainBlock::updateVertexBuffer( const cgInt32Array & aMipLookUp )
 {
-    std::vector<cgTerrainVertex> Vertices(mActiveHeightMapBounds.width() * mActiveHeightMapBounds.height());
+    cgArray<cgTerrainVertex> Vertices(mActiveHeightMapBounds.width() * mActiveHeightMapBounds.height());
 
     // Optimization: Record height map size / scale.
     cgVector3 vecScale       = mParent->getTerrainScale();
@@ -8151,7 +8151,7 @@ void cgLandscapeTextureData::optimizeLayers()
 
     // Build a temporary array used to record whether or not a layer
     // has already been assigned or not.
-    std::vector<bool> aLayerAssigned( mLayers.size(), false );
+    cgArray<bool> aLayerAssigned( mLayers.size(), false );
 
     // Count the number of remaining layers of required types.
     nRemainingLayers     = 0;

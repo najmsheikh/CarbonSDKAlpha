@@ -123,12 +123,12 @@ namespace cgRandom
         //---------------------------------------------------------------------
         struct NoiseTables
         {
-            std::vector<cgInt>        p;
-            std::vector<cgVector3>    g3;
-            std::vector<cgVector2>    g2;
-            std::vector<cgFloat>      g1;
+            cgArray<cgInt>        p;
+            cgArray<cgVector3>    g3;
+            cgArray<cgVector2>    g2;
+            cgArray<cgFloat>      g1;
             /// <summary>Exponent array. Used to store weights for each necessary noise frequency.</summary>
-            std::vector<cgFloat>      exponents;
+            cgArray<cgFloat>      exponents;
         
         }; // End Struct NoiseTables
 

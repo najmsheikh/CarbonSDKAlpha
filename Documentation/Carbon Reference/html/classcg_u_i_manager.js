@@ -72,6 +72,7 @@ var classcg_u_i_manager =
     [ "removeImageLibrary", "classcg_u_i_manager.html#a89a6430659dfac5041743e5b6ef578c7", null ],
     [ "removeLayer", "classcg_u_i_manager.html#ad43ea13cad7c732633d3713034efe371", null ],
     [ "render", "classcg_u_i_manager.html#a8fa72f780602055578caba13e5559564", null ],
+    [ "reset", "classcg_u_i_manager.html#a04d63d99a9677c0d685a62d738b02e0b", null ],
     [ "saveConfig", "classcg_u_i_manager.html#a0c95cece77de1b96712f6c055c6d7696", null ],
     [ "selectCursor", "classcg_u_i_manager.html#a45b4d52f69f9667db745f4d7deb893b3", null ],
     [ "selectDefaultFont", "classcg_u_i_manager.html#a6e772022f345f7d93be07e8fec3eadd3", null ],

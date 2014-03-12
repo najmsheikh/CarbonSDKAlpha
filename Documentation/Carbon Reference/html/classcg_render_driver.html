@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -273,6 +273,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aca183c324a810cf57c60072caffef9b9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_render_driver_config.html">cgRenderDriverConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#aca183c324a810cf57c60072caffef9b9">getConfig</a> () const </td></tr>
 <tr class="memdesc:aca183c324a810cf57c60072caffef9b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the configuration options for the render driver.  <a href="#aca183c324a810cf57c60072caffef9b9"></a><br/></td></tr>
 <tr class="separator:aca183c324a810cf57c60072caffef9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71676e64f0fda2ef592202f1c20115f3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a71676e64f0fda2ef592202f1c20115f3">setScreenSizeOverride</a> (const <a class="el" href="structcg_size.html">cgSize</a> &amp;size)</td></tr>
+<tr class="memdesc:a71676e64f0fda2ef592202f1c20115f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A largely low level method than can be used to override the screen size that will be reported to the rest of the application via '<a class="el" href="classcg_render_driver.html#a8cf0ba90b7a7f128aab5bdb2df261acd">getScreenSize()</a>'. This is useful in cases where we only want to use a smaller portion of a much larger frame area without physically resizing it. Supply a size of &lt;0,0&gt; to disable this behavior.  <a href="#a71676e64f0fda2ef592202f1c20115f3"></a><br/></td></tr>
+<tr class="separator:a71676e64f0fda2ef592202f1c20115f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47a8c3c2255a1bca3fd81868be201d9b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource_manager.html">cgResourceManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a47a8c3c2255a1bca3fd81868be201d9b">getResourceManager</a> () const </td></tr>
 <tr class="memdesc:a47a8c3c2255a1bca3fd81868be201d9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the resource manager associated with this render driver.  <a href="#a47a8c3c2255a1bca3fd81868be201d9b"></a><br/></td></tr>
 <tr class="separator:a47a8c3c2255a1bca3fd81868be201d9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -887,6 +890,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:adcf27a1b968568fb3502d18ba459a698"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c37c045940a05f89823450da98fe8bc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a4c37c045940a05f89823450da98fe8bc">mInitialized</a></td></tr>
 <tr class="separator:a4c37c045940a05f89823450da98fe8bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00a9a54a7db964531e654585ab9e4468"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a00a9a54a7db964531e654585ab9e4468">mFrameBegun</a></td></tr>
+<tr class="separator:a00a9a54a7db964531e654585ab9e4468"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f9f2b02874da2bb8dac87591898aa7f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_resource_manager.html">cgResourceManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a0f9f2b02874da2bb8dac87591898aa7f">mResourceManager</a></td></tr>
 <tr class="separator:a0f9f2b02874da2bb8dac87591898aa7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d2483077fd05dd87def766e625a0705"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_hardware_type.html#a2dc7543578d05d5aa8d1a5aad7588424">cgHardwareType::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a8d2483077fd05dd87def766e625a0705">mHardwareType</a></td></tr>
@@ -905,6 +910,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:ac6c509f0e18278b7ab7b90dd1addd6f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64bf29eb1f74a2d5ddbf9805f5b24735"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_size.html">cgSize</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a64bf29eb1f74a2d5ddbf9805f5b24735">mTargetSize</a></td></tr>
 <tr class="separator:a64bf29eb1f74a2d5ddbf9805f5b24735"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee06b2ce43178373374275e5532e509b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_size.html">cgSize</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#aee06b2ce43178373374275e5532e509b">mScreenSizeOverride</a></td></tr>
+<tr class="separator:aee06b2ce43178373374275e5532e509b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62d21b4fd3967377e3e722fa2db350ec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#a62d21b4fd3967377e3e722fa2db350ec">mAdapterAspectRatio</a></td></tr>
 <tr class="separator:a62d21b4fd3967377e3e722fa2db350ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4d224a7bc33ed9bdbc1d13cf8ef3e75"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_render_driver.html#ae4d224a7bc33ed9bdbc1d13cf8ef3e75">mConstantsDirty</a></td></tr>
@@ -5813,6 +5820,24 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a71676e64f0fda2ef592202f1c20115f3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgRenderDriver::setScreenSizeOverride </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structcg_size.html">cgSize</a> &amp;&#160;</td>
+          <td class="paramname"><em>size</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A largely low level method than can be used to override the screen size that will be reported to the rest of the application via '<a class="el" href="classcg_render_driver.html#a8cf0ba90b7a7f128aab5bdb2df261acd">getScreenSize()</a>'. This is useful in cases where we only want to use a smaller portion of a much larger frame area without physically resizing it. Supply a size of &lt;0,0&gt; to disable this behavior. </p>
+
+</div>
+</div>
 <a class="anchor" id="a5b635024e6e2f3cfce5810a0e15d9bc6"></a>
 <div class="memitem">
 <div class="memproto">
@@ -7133,6 +7158,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a00a9a54a7db964531e654585ab9e4468"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgRenderDriver::mFrameBegun</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a8d2483077fd05dd87def766e625a0705"></a>
 <div class="memitem">
 <div class="memproto">
@@ -7593,6 +7638,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aee06b2ce43178373374275e5532e509b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcg_size.html">cgSize</a> cgRenderDriver::mScreenSizeOverride</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="aad67a562d527fbe8d5bcccf7395d17cc"></a>
 <div class="memitem">
 <div class="memproto">
@@ -7983,7 +8048,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_render_driver.html">cgRenderDriver</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:28:08 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:49 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

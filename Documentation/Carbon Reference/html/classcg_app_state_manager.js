@@ -18,6 +18,7 @@ var classcg_app_state_manager =
     [ "render", "classcg_app_state_manager.html#a156e4784cf75e01954bd7c056d35b888", null ],
     [ "setActiveState", "classcg_app_state_manager.html#a1366fc1312ec5c10acbc4e53236d849c", null ],
     [ "stop", "classcg_app_state_manager.html#a8450d0ac294cba50838ebc5ab494f3f3", null ],
+    [ "unregisterState", "classcg_app_state_manager.html#a553682d92fc535af48989aaf45c91270", null ],
     [ "update", "classcg_app_state_manager.html#a192f9e9f55f5a9a70993166419a76914", null ],
     [ "cgAppState", "classcg_app_state_manager.html#a66ae20222d50ff27380d9c74caf2ab4b", null ],
     [ "cgAppTransitionState", "classcg_app_state_manager.html#ae47877d4324daf3ef4983ea122ab74bb", null ]

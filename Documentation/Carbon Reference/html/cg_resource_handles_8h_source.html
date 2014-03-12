@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -566,7 +566,7 @@ $(document).ready(function(){initNavTree('cg_resource_handles_8h_source.html',''
 <div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;    <span class="comment">//  Name : operator&lt; () (ResourceHandleBase&lt;_RT&gt;&amp;)</span></div>
 <div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;<span class="comment"></span>    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00587"></a><span class="lineno"><a class="code" href="class_resource_handle.html#a83d8a649d18cb63441b13c28b720c4fa">  587</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="cg_mesh_8cpp.html#a817c17470b45ae491221f6e256d5929f" title="Perform less than comparison on the AdjacentEdgeKey structure. ">operator&lt;</a>( <span class="keyword">const</span> <a class="code" href="class_resource_handle.html" title="This class is similar to a smart pointer which manages a single reference to an individual resource a...">ResourceHandle</a> &amp; handle )<span class="keyword"> const</span></div>
+<div class="line"><a name="l00587"></a><span class="lineno"><a class="code" href="class_resource_handle.html#a83d8a649d18cb63441b13c28b720c4fa">  587</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="cg_physics_world_8cpp.html#a72415c6ba9874cdb79e1cc1635c56a3f" title="Perform less than comparison on the specified contact pairs. ">operator&lt;</a>( <span class="keyword">const</span> <a class="code" href="class_resource_handle.html" title="This class is similar to a smart pointer which manages a single reference to an individual resource a...">ResourceHandle</a> &amp; handle )<span class="keyword"> const</span></div>
 <div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;        <span class="keywordflow">return</span> ( mResource &lt; handle.mResource );</div>
 <div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;    }</div>
@@ -674,13 +674,13 @@ $(document).ready(function(){initNavTree('cg_resource_handles_8h_source.html',''
 <div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;<span class="comment">// Common Global Containers</span></div>
 <div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;<span class="comment">//-----------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;<a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( cgRenderTargetHandle, cgRenderTargetHandleArray )</div>
-<div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;<a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( cgAnimationSetHandle, cgAnimationSetHandleArray )</div>
-<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;<a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( cgSamplerStateHandle, cgSamplerStateHandleArray )</div>
-<div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;<a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( cgTextureHandle, cgTextureHandleArray )</div>
-<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;<a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( cgMeshHandle, cgMeshHandleArray )</div>
-<div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;<a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( cgMaterialHandle, cgMaterialHandleArray )</div>
-<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;<a class="code" href="cg_a_p_i_8h.html#a493924305802848651ccbfa91903ad5b" title="Simple set typedef. No export required.">CGE_SET_DECLARE</a>   ( cgMaterialHandle, cgMaterialHandleSet )</div>
+<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;<a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>( cgRenderTargetHandle, cgRenderTargetHandleArray )</div>
+<div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;<a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>( cgAnimationSetHandle, cgAnimationSetHandleArray )</div>
+<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;<a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>( cgSamplerStateHandle, cgSamplerStateHandleArray )</div>
+<div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;<a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>( cgTextureHandle, cgTextureHandleArray )</div>
+<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;<a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>( cgMeshHandle, cgMeshHandleArray )</div>
+<div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;<a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>( cgMaterialHandle, cgMaterialHandleArray )</div>
+<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;<a class="code" href="cg_a_p_i_8h.html#a493924305802848651ccbfa91903ad5b" title="Simple set typedef. No export required.">CGE_SET_DECLARE</a>  ( cgMaterialHandle, cgMaterialHandleSet )</div>
 <div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160;</div>
 <div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;<span class="preprocessor">#endif // !_CGE_CGRESOURCEHANDLES_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -689,7 +689,7 @@ $(document).ready(function(){initNavTree('cg_resource_handles_8h_source.html',''
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_818efbfd2f6cda0a268715d4985a1177.html">Resources</a></li><li class="navelem"><a class="el" href="cg_resource_handles_8h.html">cgResourceHandles.h</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:27:52 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:34 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

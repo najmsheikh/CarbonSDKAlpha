@@ -7,6 +7,7 @@ var classcg_mesh_object =
     [ "allocateNew", "classcg_mesh_object.html#ad89be9360810e46a3e02abcbf29c1386", null ],
     [ "applyObjectRescale", "classcg_mesh_object.html#a553d5d9fb7d6727d37b0080b8c782666", null ],
     [ "createBox", "classcg_mesh_object.html#a71b7d3e1bb04182f0827ad776503f25d", null ],
+    [ "createBox", "classcg_mesh_object.html#af80783055130ee5a1daca6884c5715d5", null ],
     [ "createCapsule", "classcg_mesh_object.html#add83995ea6ea23931b9ba13e5005b939", null ],
     [ "createCone", "classcg_mesh_object.html#ae103388684e51271827fa3fc8a96df68", null ],
     [ "createCylinder", "classcg_mesh_object.html#af9fde80b275a400bd607475d2597a0f5", null ],

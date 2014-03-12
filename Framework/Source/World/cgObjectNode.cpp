@@ -77,6 +77,7 @@ cgWorldQuery                    cgObjectNode::mNodeUpdateLevel;
 cgWorldQuery                    cgObjectNode::mNodeUpdateGroup;
 cgWorldQuery                    cgObjectNode::mNodeUpdatePhysicsProperties;
 cgWorldQuery                    cgObjectNode::mNodeUpdateUpdateRate;
+cgWorldQuery                    cgObjectNode::mNodeUpdateVisibility;
 cgWorldQuery                    cgObjectNode::mNodeUpdateTargetReference;
 cgWorldQuery                    cgObjectNode::mNodeClearCustomProperties;
 cgWorldQuery                    cgObjectNode::mNodeRemoveCustomProperty;
@@ -382,10 +383,10 @@ void cgObjectNode::unload( )
 void cgObjectNode::unload( bool unloadChildren )
 {
     // Is unloading delayed?
-    if ( mFlags & cgObjectNodeFlags::DelayUnload )
+    if ( mFlags & cgObjectNodeFlags::DelayUnload || (mParentScene && mParentScene->isUpdating()) )
     {
-        // It is delayed, so just required the fact that an unload is required.
-        mFlags |= cgObjectNodeFlags::UnloadPending;
+        // Mark for unloading.
+        nodeUpdated( cgDeferredUpdateFlags::Unload, 0 );
 
         // Unloading children?
         if ( unloadChildren )
@@ -418,9 +419,6 @@ void cgObjectNode::unload( bool unloadChildren )
 //-----------------------------------------------------------------------------
 void cgObjectNode::update( cgFloat timeDelta )
 {
-    // Make sure that unload operations are delayed.
-    mFlags |= cgObjectNodeFlags::DelayUnload;
-
     // Has any time elapsed? Passing a delta time of 0 
     // may cause problems.
     if ( timeDelta > 0 && (!mParentScene || mParentScene->isUpdatingEnabled()) )
@@ -435,13 +433,6 @@ void cgObjectNode::update( cgFloat timeDelta )
         } // Next Behavior
 
     } // End if elapsed
-
-    // Restore ability to unload.
-    mFlags &= ~cgObjectNodeFlags::DelayUnload;
-
-    // If an unload was requested during this process, trigger it now.
-    if ( mFlags & cgObjectNodeFlags::UnloadPending )
-        unload();
 }
 
 //-----------------------------------------------------------------------------
@@ -454,44 +445,6 @@ void cgObjectNode::update( cgFloat timeDelta )
 void cgObjectNode::computeLevelOfDetail( cgCameraNode * camera )
 {
     // Nothing in base class.
-}
-
-//-----------------------------------------------------------------------------
-//  Name : hitByObject()
-/// <summary>
-/// Triggered when another object in the world is determined to have
-/// "hit" (collided) with this one.
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgObjectNode::hitByObject( cgObjectNode * object, const cgVector3 & hitPoint, const cgVector3 & surfaceNormal )
-{
-    // We don't process anything by default, simply pass through to the behaviors
-    BehaviorArray::iterator itBehavior;
-    for ( itBehavior = mBehaviors.begin(); itBehavior != mBehaviors.end(); ++itBehavior )
-    {
-        if ( *itBehavior )
-            (*itBehavior)->hitByObject( object, hitPoint, surfaceNormal );
-    
-    } // Next Behavior
-}
-
-//-----------------------------------------------------------------------------
-//  Name : objectHit ()
-/// <summary>
-/// Triggered when this object is determined to have "hit" (collided)
-/// with another.
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgObjectNode::objectHit( cgObjectNode * object, const cgVector3 & hitPoint, const cgVector3 & surfaceNormal )
-{
-    // We don't process anything by default, simply pass through to the behaviors
-    BehaviorArray::iterator itBehavior;
-    for ( itBehavior = mBehaviors.begin(); itBehavior != mBehaviors.end(); ++itBehavior )
-    {
-        if ( *itBehavior )
-            (*itBehavior)->objectHit( object, hitPoint, surfaceNormal );
-    
-    } // Next Behavior
 }
 
 //-----------------------------------------------------------------------------
@@ -617,6 +570,38 @@ bool cgObjectNode::renderSubset( cgCameraNode * camera, cgVisibilitySet * visibi
 
     // Derived class should draw this object
     return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : addBehavior()
+/// <summary>
+/// Attach a scripted, or pre-registered behavior to this scene object.
+/// Note : Returns an integer index value to the current behavior so that it 
+///        the behavior can be accessed at a later time.
+/// Note : The index value for the behavior may change if other behaviors
+///        are removed at a later time.
+/// Note : The scene object will assume ownership of the allocated behavior
+///        and will release it once the object is destroyed.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInt32 cgObjectNode::addBehavior( const cgString & behavior )
+{
+    // Load the behavior script
+    cgObjectBehavior * newBehavior = new cgObjectBehavior( );
+    if ( !newBehavior->initialize( mParentScene->getResourceManager(), behavior, cgString::Empty ) )
+    {
+        newBehavior->scriptSafeDispose();
+        return -1;
+    
+    } // End if failed to initialize
+
+    // Pass through to standard method.
+    cgInt32 result = addBehavior( newBehavior );
+    if ( result < 0 )
+        newBehavior->scriptSafeDispose();
+
+    // Success?
+    return result;
 }
 
 //-----------------------------------------------------------------------------
@@ -3887,6 +3872,18 @@ bool cgObjectNode::isRenderable( ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : isVisible ()
+/// <summary>
+/// Determine if this node is currently visible, irrespective of whether or not
+/// it is a renderable object.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgObjectNode::isVisible( ) const
+{
+    return (mFlags & cgObjectNodeFlags::Visible);
+}
+
+//-----------------------------------------------------------------------------
 //  Name : showNode ()
 /// <summary>
 /// Allows the application to independently control the visibility status
@@ -3902,6 +3899,22 @@ void cgObjectNode::showNode( bool visible /* = true */, bool updateChildren /* =
     mFlags &= ~cgObjectNodeFlags::Visible;
     if ( visible )
         mFlags |= cgObjectNodeFlags::Visible;
+
+    // Serialize new visibility state if necessary
+    if ( shouldSerialize() && wasVisible != visible )
+    {
+        prepareQueries();
+        mNodeUpdateVisibility.bindParameter( 1, visible );
+        mNodeUpdateVisibility.bindParameter( 2, mReferenceId );
+        if ( !mNodeUpdateVisibility.step( true ) )
+        {
+            cgString error;
+            mNodeUpdateVisibility.getLastError( error );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update visibility state for object node '0x%x'. Error: %s\n"), mReferenceId, error.c_str() );
+        
+        } // End if failed
+
+    } // End if exists in DB
 
     // Pass on to children if requested.
     if ( updateChildren )
@@ -4717,6 +4730,13 @@ void cgObjectNode::prepareQueries()
         
         } // End if !prepared
 
+        if ( !mNodeUpdateVisibility.isPrepared() )
+        {
+            cgString statement = _T("UPDATE 'Nodes' SET Visible=?1 WHERE RefId=?2");
+            mNodeUpdateVisibility.prepare( world, statement, true );
+        
+        } // End if !prepared
+
         if ( !mNodeUpdateTargetReference.isPrepared() )
         {
             cgString statement = _T("UPDATE 'Nodes' SET TargetId=?1 WHERE RefId=?2");
@@ -5033,8 +5053,16 @@ void cgObjectNode::resolvePendingUpdates( cgUInt32 updateMask )
 
     // Now we can resolve ourselves.
     onResolvePendingUpdates( updates );
-    if ( !mPendingUpdates && mParentScene )
+    if ( !(mPendingUpdates &~ cgDeferredUpdateFlags::Unload) && mParentScene )
         mParentScene->resolvedNodeUpdates( this );
+
+    // Were we due to unload?
+    if ( mPendingUpdates & cgDeferredUpdateFlags::Unload )
+    {
+        mPendingUpdates &= ~cgDeferredUpdateFlags::Unload;
+        unload();
+    
+    } // End if unload pending
 }
 
 //-----------------------------------------------------------------------------
@@ -5702,6 +5730,60 @@ void cgObjectNode::onPhysicsBodyTransformed( cgPhysicsBody * sender, cgPhysicsBo
 }
 
 //-----------------------------------------------------------------------------
+// Name : onPhysicsBodyCollisionBegin ( )
+/// <summary>
+/// Triggered whenever the physics body first comes into contact with another
+/// body in the scene.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgObjectNode::onPhysicsBodyCollisionBegin( cgPhysicsBody * sender, cgPhysicsBodyCollisionEventArgs * e )
+{
+    // Filter out messages not intended for us.
+    if ( sender != mPhysicsBody )
+        return;
+
+    // Notify behaviors.
+    for ( size_t i = 0; i < mBehaviors.size(); ++i )
+        mBehaviors[i]->onCollisionBegin( &cgNodeCollision(this, (cgObjectNode*)e->collision->otherBody->getUserData(), *e->collision) );
+}
+
+//-----------------------------------------------------------------------------
+// Name : onPhysicsBodyCollisionContinue ( )
+/// <summary>
+/// Triggered whenever the physics body continues to be in contact with another
+/// body in the scene.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgObjectNode::onPhysicsBodyCollisionContinue( cgPhysicsBody * sender, cgPhysicsBodyCollisionEventArgs * e )
+{
+    // Filter out messages not intended for us.
+    if ( sender != mPhysicsBody )
+        return;
+
+    // Notify behaviors.
+    for ( size_t i = 0; i < mBehaviors.size(); ++i )
+        mBehaviors[i]->onCollisionContinue( &cgNodeCollision(this, (cgObjectNode*)e->collision->otherBody->getUserData(), *e->collision) );
+}
+
+//-----------------------------------------------------------------------------
+// Name : onPhysicsBodyCollisionEnd ( )
+/// <summary>
+/// Triggered whenever the physics body is no longer in contact with another
+/// body in the scene.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgObjectNode::onPhysicsBodyCollisionEnd( cgPhysicsBody * sender, cgPhysicsBodyCollisionEventArgs * e )
+{
+    // Filter out messages not intended for us.
+    if ( sender != mPhysicsBody )
+        return;
+
+    // Notify behaviors.
+    for ( size_t i = 0; i < mBehaviors.size(); ++i )
+        mBehaviors[i]->onCollisionEnd( &cgNodeCollision(this, (cgObjectNode*)e->collision->otherBody->getUserData(), *e->collision) );
+}
+
+//-----------------------------------------------------------------------------
 // Name : onNavigationAgentReposition ( )
 /// <summary>
 /// Triggered whenever the navigation agent designed represent this object
@@ -5769,7 +5851,7 @@ void cgObjectNode::buildPhysicsBody( )
 
         // Iterate through the shape sub elements and construct a list
         // of matching physics shape objects.
-        std::vector<cgPhysicsShape*> physicsShapes;
+        cgArray<cgPhysicsShape*> physicsShapes;
         for ( size_t i = 0; i < objectShapes.size(); ++i )
         {
             cgPhysicsShape * shape = ((cgCollisionShapeElement*)objectShapes[i])->generatePhysicsShape( mParentScene->getPhysicsWorld() );
@@ -5848,6 +5930,7 @@ void cgObjectNode::buildPhysicsBody( )
         // Take ownership of the new rigid body.
         mPhysicsBody = rigidBody;
         mPhysicsBody->addReference( this );
+        mPhysicsBody->setUserData( this );
 
         // Listen for events
         mPhysicsBody->registerEventListener( static_cast<cgPhysicsBodyEventListener*>(this) );

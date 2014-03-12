@@ -32,6 +32,7 @@ namespace AppStateManager
 
             // Register the object methods.
             BINDSUCCESS( engine->registerObjectMethod( "AppStateManager", "bool registerState( AppState@ )", asMETHODPR(cgAppStateManager, registerState, ( cgAppState* ), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "AppStateManager", "void unregisterState( const String &in )", asMETHODPR(cgAppStateManager, unregisterState, ( const cgString& ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AppStateManager", "AppState@+ getActiveState( )", asMETHODPR(cgAppStateManager, getActiveState, ( ), cgAppState* ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "AppStateManager", "bool setActiveState( const String &in )", asMETHODPR(cgAppStateManager, setActiveState, ( const cgString& ), bool ), asCALL_THISCALL) );
             // ToDo: bool            getStateDesc        ( const cgString & stateId, StateDesc * descriptionOut );

@@ -104,7 +104,7 @@ protected:
         cgUInt8     rows;
         cgUInt8     columns;
     };
-    CGE_VECTOR_DECLARE(TransferItem, TransferItemArray);
+    CGE_ARRAY_DECLARE(TransferItem, TransferItemArray);
 
     //-------------------------------------------------------------------------
     // Protected Methods

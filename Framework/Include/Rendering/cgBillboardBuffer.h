@@ -67,7 +67,7 @@ public:
         cgRectF     textureBounds;          // The floating point rectangle describing this frame in texture space
 
     }; // End Struct FrameDesc
-    CGE_VECTOR_DECLARE(FrameDesc, FrameArray)
+    CGE_ARRAY_DECLARE(FrameDesc, FrameArray)
 
     struct FrameGroup
     {
@@ -75,7 +75,7 @@ public:
         IndexMap    frameNames;             // Map containing the indices to frame groups by name
 
     }; // End Struct FrameGroup
-    CGE_VECTOR_DECLARE(FrameGroup, FrameGroupArray)
+    CGE_ARRAY_DECLARE(FrameGroup, FrameGroupArray)
 
     enum Flags
     {
@@ -132,7 +132,7 @@ private:
     // Private Typedefs, Structures and Enumerations
     //-------------------------------------------------------------------------
     // Container for storing the billboards added so far
-    CGE_VECTOR_DECLARE(cgBillboard*, BillboardArray)
+    CGE_ARRAY_DECLARE(cgBillboard*, BillboardArray)
 
     // Structure used to sort billboards based on depth.
     struct DepthSortInfo

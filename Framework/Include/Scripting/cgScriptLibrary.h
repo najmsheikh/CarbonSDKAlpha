@@ -65,7 +65,7 @@ public:
         bool     declareOnly;   // Is a declaration only, or full link required?
     
     }; // End Struct Dependency
-    CGE_VECTOR_DECLARE(Dependency, DependencyArray)
+    CGE_ARRAY_DECLARE(Dependency, DependencyArray)
 
     // Describes the result of a declaration or linking step.
     enum LinkResult

@@ -105,6 +105,7 @@ namespace ObjectNode
         // Visibility
         BINDSUCCESS( engine->registerObjectMethod(typeName, "void showNode( bool, bool )", asMETHODPR(type,showNode,( bool, bool ), void), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "bool isRenderable( ) const", asMETHODPR(type,isRenderable,() const,bool  ), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "bool isVisible( ) const", asMETHODPR(type,isVisible,() const,bool  ), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "bool isShadowCaster( ) const", asMETHODPR(type,isShadowCaster,() const,bool  ), asCALL_THISCALL) );
 
         // Update Process
@@ -162,11 +163,16 @@ namespace ObjectNode
         BINDSUCCESS( engine->registerObjectMethod(typeName, "NavigationAgentState getNavigationAgentState( ) const", asMETHODPR(type,getNavigationAgentState,( ) const, cgNavigationAgentState::Base), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "NavigationTargetState getNavigationTargetState( ) const", asMETHODPR(type,getNavigationTargetState,( ) const, cgNavigationTargetState::Base), asCALL_THISCALL) );
 
+        // Sandbox
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "uint getNodeColor( ) const", asMETHODPR(type,getNodeColor,( ) const, cgUInt32), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "bool setNodeColor( uint )", asMETHODPR(type,setNodeColor,( cgUInt32 ), bool), asCALL_THISCALL) );
+
         // Behaviors
         BINDSUCCESS( engine->registerObjectMethod(typeName, "int getBehaviorCount( ) const", asMETHODPR(type,getBehaviorCount,( ) const, cgInt32), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "ObjectBehavior@+ getBehavior( int )", asMETHODPR(type,getBehavior,( cgInt32 ), cgObjectBehavior*), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "IScriptedObjectBehavior@ getScriptedBehavior( int )", asFUNCTIONPR(getScriptedBehavior,( cgInt32, type* ), asIScriptObject*), asCALL_CDECL_OBJLAST ) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "int addBehavior( ObjectBehavior@ )", asMETHODPR(type,addBehavior,( cgObjectBehavior* ), cgInt32), asCALL_THISCALL) );
+        BINDSUCCESS( engine->registerObjectMethod(typeName, "int addBehavior( const String &in )", asMETHODPR(type,addBehavior,( const cgString& ), cgInt32), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "bool removeBehavior( ObjectBehavior@+, bool )", asMETHODPR(type,removeBehavior,( cgObjectBehavior*, bool ), bool), asCALL_THISCALL) );
         BINDSUCCESS( engine->registerObjectMethod(typeName, "bool removeBehavior( int, bool )", asMETHODPR(type,removeBehavior,( cgInt32, bool ), bool), asCALL_THISCALL) );
         

@@ -182,7 +182,7 @@ protected:
         bool                        initialEmission;    // Initial enabled state.
         bool                        applyGravity;       // Apply scene gravity?
     };
-    CGE_VECTOR_DECLARE( Layer, LayerArray );
+    CGE_ARRAY_DECLARE( Layer, LayerArray );
 
     //-------------------------------------------------------------------------
     // Protected Methods
@@ -619,7 +619,7 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE( cgParticleEmitter*, EmitterArray );
+    CGE_ARRAY_DECLARE( cgParticleEmitter*, EmitterArray );
     EmitterArray mEmitters;   // The array of underlying particle emitters / managers for this node (one per layer).
 };
 

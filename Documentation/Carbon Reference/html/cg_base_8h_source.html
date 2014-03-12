@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -257,17 +257,18 @@ $(document).ready(function(){initNavTree('cg_base_8h_source.html','');});
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="keywordtype">void</span>                <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>   <a class="code" href="cg_base_8cpp.html#aab50fa369b9ed69d03770db601321ed6" title="Allow the FPU to run in double precision mode until the next call to cgFPURestorePrecision(). ">cgFPUDoublePrecision</a> ( );</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="keywordtype">void</span>                <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>   <a class="code" href="cg_base_8cpp.html#a61ab6f5c289fefe889a8415a111d738a" title="Restore the FPU&#39;s previous precision prior to any call to cgFPUDoublePrecision(). ...">cgFPURestorePrecision</a>( );</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="keywordtype">bool</span>                <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>   <a class="code" href="cg_base_8cpp.html#a4e5cd17c2eaf3a51a7e2d0106de01d92" title="Set the current mode in which the engine is running. Valid sandbox modes accepted by this function ar...">cgSetSandboxMode</a>     ( <a class="code" href="namespacecg_sandbox_mode.html#a446a0d273ff8b4f240f1f0f0d18c3e69">cgSandboxMode::Base</a> mode );</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<a class="code" href="namespacecg_sandbox_mode.html#a446a0d273ff8b4f240f1f0f0d18c3e69">cgSandboxMode::Base</a> <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>   <a class="code" href="cg_base_8cpp.html#a81a2bbb493535659f996080cacf9b916" title="Determine if the engine is currently configured to run in either of two so-called &#39;sandbox&#39; modes (&#39;E...">cgGetSandboxMode</a>     ( );</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="keyword">const</span> <a class="code" href="struct_c_g_e_config.html">CGEConfig</a>     <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a> &amp; <a class="code" href="cg_base_8cpp.html#af37b8d7693aa13c1d9d0601aa44f71ef" title="Retrieve the configuration values that were specified when initializing the CGE library. ">cgGetEngineConfig</a>    ( );</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="preprocessor">#endif // !_CGE_CGBASE_H_</span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="keywordtype">bool</span>                <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>   <a class="code" href="cg_base_8cpp.html#a4e5cd17c2eaf3a51a7e2d0106de01d92" title="Set the current mode in which the engine is running. Valid sandbox modes accepted by this function ar...">cgSetSandboxMode</a>     ( <a class="code" href="namespacecg_sandbox_mode.html#a446a0d273ff8b4f240f1f0f0d18c3e69">cgSandboxMode::Base</a> mode, <span class="keywordtype">bool</span> sendMessage );</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<a class="code" href="namespacecg_sandbox_mode.html#a446a0d273ff8b4f240f1f0f0d18c3e69">cgSandboxMode::Base</a> <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>   <a class="code" href="cg_base_8cpp.html#a81a2bbb493535659f996080cacf9b916" title="Determine if the engine is currently configured to run in either of two so-called &#39;sandbox&#39; modes (&#39;E...">cgGetSandboxMode</a>     ( );</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="keyword">const</span> <a class="code" href="struct_c_g_e_config.html">CGEConfig</a>     <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a> &amp; <a class="code" href="cg_base_8cpp.html#af37b8d7693aa13c1d9d0601aa44f71ef" title="Retrieve the configuration values that were specified when initializing the CGE library. ">cgGetEngineConfig</a>    ( );</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="preprocessor">#endif // !_CGE_CGBASE_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="cg_base_8h.html">cgBase.h</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:27:50 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:33 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

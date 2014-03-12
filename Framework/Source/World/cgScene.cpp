@@ -132,6 +132,7 @@ cgScene::cgScene( cgWorld * world, const cgSceneDescriptor * description )  : cg
     mOnSceneRenderMethod        = CG_NULL;
     mSceneTree                  = CG_NULL;
     mStaticVisTree              = CG_NULL;
+    mIsUpdating                 = false;
 
     // Allocate the lighting manager on the heap
     mLightingManager            = new cgLightingManager( this );
@@ -284,6 +285,7 @@ void cgScene::dispose( bool disposeBase )
     mDynamicsEnabled            = true;
     mUpdatingEnabled            = true;
     mSceneWritesEnabled         = true;
+    mIsUpdating                 = false;
     mOnSceneRenderMethod        = CG_NULL;
 
     // Clear containers
@@ -1542,10 +1544,10 @@ void cgScene::unloadObjectNode( cgObjectNode * node, bool unloadChildren )
 
     } // End if unload children
 
-    // Allow the node to resolve any final pending updates in order
-    // to fully serialize its data into its final state, or to update
-    // its children, before removal.
-    node->resolvePendingUpdates( cgDeferredUpdateFlags::All );
+    // Allow the node to resolve any final pending updates (except
+    // unloading) in order to fully serialize its data into its final 
+    // state, or to update its children, before removal.
+    node->resolvePendingUpdates( cgDeferredUpdateFlags::All &~ cgDeferredUpdateFlags::Unload );
 
     // Remove from sandbox node list(s) if required.
     if ( cgGetSandboxMode() != cgSandboxMode::Disabled )
@@ -1647,11 +1649,11 @@ void cgScene::unloadObjectNodes( cgObjectNodeMap & nodes )
         if ( cgReferenceManager::isValidReference( itNode->second ) == false )
             continue;
 
-        // Allow the node to resolve any final pending updates in order
-        // to fully serialize its data into its final state, or to update
-        // its children, before removal.
-        cgObjectNode * node = itNode->second;
-        node->resolvePendingUpdates( cgDeferredUpdateFlags::All );
+        // Allow the node to resolve any final pending updates (except
+        // unloading) in order to fully serialize its data into its final 
+        // state, or to update its children, before removal.
+        cgObjectNode * node = itNode->second;    
+        node->resolvePendingUpdates( cgDeferredUpdateFlags::All &~ cgDeferredUpdateFlags::Unload );
         
         // Remove from sandbox node list(s) if required.
         if ( cgGetSandboxMode() != cgSandboxMode::Disabled )
@@ -2394,10 +2396,10 @@ void cgScene::getObjectNodesInBounds( const cgBoundingBox& bounds, cgObjectNodeA
 /// ray.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgScene::rayCastClosest( const cgVector3 & from, const cgVector3 & to, cgSceneCollisionContact & closestContact )
+bool cgScene::rayCastClosest( const cgVector3 & from, const cgVector3 & to, cgSceneRayCastContact & closestContact )
 {
     // Reset contact structure
-    closestContact = cgSceneCollisionContact();
+    closestContact = cgSceneRayCastContact();
 
     // Call into physics world to get contact.
     RayCastFilterData data;
@@ -2417,7 +2419,7 @@ bool cgScene::rayCastClosest( const cgVector3 & from, const cgVector3 & to, cgSc
 /// with the closest intersection first.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgScene::rayCastAll( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgSceneCollisionContact::Array & contacts )
+bool cgScene::rayCastAll( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgSceneRayCastContact::Array & contacts )
 {
     // ToDo: not currently impelmented.
     return false;
@@ -2464,7 +2466,7 @@ bool cgScene::rayCastPreFilter( cgPhysicsBody * body, cgPhysicsShape * shape, vo
 //-----------------------------------------------------------------------------
 cgFloat cgScene::rayCastClosestFilter( cgPhysicsBody * body, const cgVector3 & hitNormal, cgInt collisionId, void * userData, cgFloat intersectParam )
 {
-    cgSceneCollisionContact * contact = (cgSceneCollisionContact*)((RayCastFilterData*)userData)->userData;
+    cgSceneRayCastContact * contact = (cgSceneRayCastContact*)((RayCastFilterData*)userData)->userData;
     if ( intersectParam < contact->intersectParam )
     {
         contact->node           = ((RayCastFilterData*)userData)->node;
@@ -2723,6 +2725,9 @@ void cgScene::update( )
     cgProfiler * profiler = cgProfiler::getInstance();
     profiler->beginProcess( cgString::format( _T("Scene update [0x%x]"), getSceneId() ) );
 
+    // We're in the process of updating
+    mIsUpdating = true;
+
     // Allow any enabled scene controllers to update.
     for ( size_t i = 0; i < mSceneControllers.size(); ++i )
     {
@@ -2864,6 +2869,9 @@ void cgScene::update( )
     if ( mActiveCamera && audioDriver )
         audioDriver->set3DListenerTransform( mActiveCamera->getWorldTransform() );
 
+    // Updating is complete.
+    mIsUpdating = false;
+
     // Resolve any deferred node updates.
     resolvePendingUpdates();
 
@@ -2951,6 +2959,17 @@ void cgScene::enableUpdates( bool enabled )
 bool cgScene::isUpdatingEnabled( ) const
 {
     return mUpdatingEnabled;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isUpdating ()
+/// <summary>
+/// Is the scene currently within its main update process?
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgScene::isUpdating( ) const
+{
+    return mIsUpdating;
 }
 
 //-----------------------------------------------------------------------------
@@ -3613,6 +3632,22 @@ bool cgScene::cloneSelected( cgCloneMethod::Base method, cgObjectNodeMap & nodes
 
     } // Next Node
 
+    // Allow new nodes to initialize
+    cgArray<cgObjectNodeMap::iterator> deadNodes;
+    for ( cgObjectNodeMap::iterator itNode = nodes.begin(); itNode != nodes.end(); ++itNode )
+    {
+        if ( !itNode->second->onNodeInit( cgUInt32IndexMap() ) )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Unable to initialize newly cloned object node '0x%x' because it reported a failure during initialization. Refer to any previous errors for more information.\n"), itNode->first );
+            itNode->second->deleteReference();
+            deadNodes.push_back( itNode );
+        
+        } // End if failed
+    
+    } // Next node
+    for ( size_t i = 0; i < deadNodes.size(); ++i )
+        nodes.erase( deadNodes[i] );
+
     // Commit changes.
     mWorld->commitTransaction( _T("cloneSelected") );
 
@@ -3930,10 +3965,10 @@ bool cgScene::deleteObjectNode( cgObjectNode * node )
     if ( !node || !node->canDelete() )
         return false;
 
-    // Allow the node to resolve any final pending updates in order
-    // to fully serialize its data into its final state, or to update
-    // its children, before removal.
-    node->resolvePendingUpdates( cgDeferredUpdateFlags::All );
+    // Allow the node to resolve any final pending updates (except
+    // unloading) in order to fully serialize its data into its final 
+    // state, or to update its children, before removal.
+    node->resolvePendingUpdates( cgDeferredUpdateFlags::All &~ cgDeferredUpdateFlags::Unload );
 
     // Allow us to roll back this specific removal on failure.
     bool serialize = ((cgGetSandboxMode() == cgSandboxMode::Enabled) && !node->isInternalReference());
@@ -4094,10 +4129,10 @@ bool cgScene::deleteObjectNodes( cgObjectNodeMap & nodes )
         
         } // End if cannot delete
 
-        // Allow the node to resolve any final pending updates in order
-        // to fully serialize its data into its final state, or to update
-        // its children, before removal.
-        node->resolvePendingUpdates( cgDeferredUpdateFlags::All );
+        // Allow the node to resolve any final pending updates (except
+        // unloading) in order to fully serialize its data into its final 
+        // state, or to update its children, before removal.
+        node->resolvePendingUpdates( cgDeferredUpdateFlags::All &~ cgDeferredUpdateFlags::Unload );
 
         // Allow us to roll back this specific removal on failure.
         if ( (cgGetSandboxMode() == cgSandboxMode::Enabled) && !node->isInternalReference() )

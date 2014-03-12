@@ -543,7 +543,7 @@ struct CGE_API cgImageInfo
 struct cgSamplerDesc
 {
     // Public Typedefs
-    CGE_VECTOR_DECLARE( cgSamplerDesc, Array )
+    CGE_ARRAY_DECLARE( cgSamplerDesc, Array )
 
     // Public Variables
     cgString                parentNamespace;
@@ -567,7 +567,7 @@ struct cgSamplerBlockDesc
 struct cgConstantDesc
 {
     // Public Typedefs
-    CGE_VECTOR_DECLARE( cgConstantDesc, Array )
+    CGE_ARRAY_DECLARE( cgConstantDesc, Array )
 
     // Public Variables
     cgString                name;
@@ -597,7 +597,7 @@ struct cgConstantDesc
 struct cgConstantTypeDesc
 {
     // Public Typedefs
-    CGE_VECTOR_DECLARE( cgConstantTypeDesc, Array )
+    CGE_ARRAY_DECLARE( cgConstantTypeDesc, Array )
 
     // Public Variables
     cgString                parentNamespace;
@@ -614,7 +614,7 @@ struct cgConstantTypeDesc
 struct cgConstantBufferDesc : public cgConstantTypeDesc
 {
     // Public Typedefs
-    CGE_VECTOR_DECLARE( cgConstantBufferDesc, Array )
+    CGE_ARRAY_DECLARE( cgConstantBufferDesc, Array )
 
     // Public Variables
     cgUInt32                bufferRegister;
@@ -626,7 +626,7 @@ struct cgConstantBufferDesc : public cgConstantTypeDesc
 struct cgShaderCallParameterDesc
 {
     // Public Typedefs
-    CGE_VECTOR_DECLARE( cgShaderCallParameterDesc, Array )
+    CGE_ARRAY_DECLARE( cgShaderCallParameterDesc, Array )
 
     // Public Variables
     cgString    name;
@@ -638,7 +638,7 @@ struct cgShaderCallParameterDesc
 struct cgShaderCallFunctionDesc
 {
     // Public Typedefs
-    CGE_VECTOR_DECLARE( cgShaderCallFunctionDesc, Array )
+    CGE_ARRAY_DECLARE( cgShaderCallFunctionDesc, Array )
 
         // Public Variables
     cgString    parentNamespace;
@@ -659,7 +659,7 @@ struct cgShaderCallFunctionDesc
 struct CGE_API cgTexturePoolResourceDesc
 {
     // Typedefs
-    CGE_VECTOR_DECLARE( cgTexturePoolResourceDesc, Array )
+    CGE_ARRAY_DECLARE( cgTexturePoolResourceDesc, Array )
 
     // Members
     cgTexturePoolResourceType::Base type;           // The type of pool resource this is
@@ -726,7 +726,7 @@ public:
         /// <summary>Hash of the above source file.</summary>
         cgUInt32    hash[5];
     };
-    CGE_VECTOR_DECLARE( SourceFileInfo, SourceArray )
+    CGE_ARRAY_DECLARE( SourceFileInfo, SourceArray )
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors
@@ -818,6 +818,6 @@ public:
 // Common Global Containers
 //-----------------------------------------------------------------------------
 class cgTexturePoolResource;
-CGE_VECTOR_DECLARE( cgTexturePoolResource *, cgTexturePoolResourceArray )
+CGE_ARRAY_DECLARE( cgTexturePoolResource *, cgTexturePoolResourceArray )
 
 #endif // !_CGE_CGRESOURCETYPES_H_

@@ -35,6 +35,7 @@ namespace UIManager
             Core::System::References::Reference::registerReferenceMethods<cgUIManager>( engine, "UIManager" );
 
             // Register the object methods
+            BINDSUCCESS( engine->registerObjectMethod( "UIManager", "void reset()", asMETHODPR(cgUIManager, reset, (), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "bool begin()", asMETHODPR(cgUIManager, begin, (), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "ResourceManager@+ getResourceManager( )", asMETHODPR(cgUIManager,getResourceManager,(),cgResourceManager*), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "UIManager", "RenderDriver@+ getRenderDriver( )", asMETHODPR(cgUIManager,getRenderDriver,(),cgRenderDriver*), asCALL_THISCALL) );

@@ -695,12 +695,12 @@ typedef ResourceHandle<cgBlendState>                            cgBlendStateHand
 //-----------------------------------------------------------------------------
 // Common Global Containers
 //-----------------------------------------------------------------------------
-CGE_VECTOR_DECLARE( cgRenderTargetHandle, cgRenderTargetHandleArray )
-CGE_VECTOR_DECLARE( cgAnimationSetHandle, cgAnimationSetHandleArray )
-CGE_VECTOR_DECLARE( cgSamplerStateHandle, cgSamplerStateHandleArray )
-CGE_VECTOR_DECLARE( cgTextureHandle, cgTextureHandleArray )
-CGE_VECTOR_DECLARE( cgMeshHandle, cgMeshHandleArray )
-CGE_VECTOR_DECLARE( cgMaterialHandle, cgMaterialHandleArray )
-CGE_SET_DECLARE   ( cgMaterialHandle, cgMaterialHandleSet )
+CGE_ARRAY_DECLARE( cgRenderTargetHandle, cgRenderTargetHandleArray )
+CGE_ARRAY_DECLARE( cgAnimationSetHandle, cgAnimationSetHandleArray )
+CGE_ARRAY_DECLARE( cgSamplerStateHandle, cgSamplerStateHandleArray )
+CGE_ARRAY_DECLARE( cgTextureHandle, cgTextureHandleArray )
+CGE_ARRAY_DECLARE( cgMeshHandle, cgMeshHandleArray )
+CGE_ARRAY_DECLARE( cgMaterialHandle, cgMaterialHandleArray )
+CGE_SET_DECLARE  ( cgMaterialHandle, cgMaterialHandleSet )
 
 #endif // !_CGE_CGRESOURCEHANDLES_H_

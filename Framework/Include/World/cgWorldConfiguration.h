@@ -69,7 +69,7 @@ public:
         cgString    description;    // Description of this property (what it does, and how it is to be used).
         cgInt       bitOffset;      // Property value bit (0-63).
     };
-    CGE_VECTOR_DECLARE      (MaterialPropertyDesc, MaterialPropertyArray)
+    CGE_ARRAY_DECLARE(MaterialPropertyDesc, MaterialPropertyArray)
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors
@@ -113,8 +113,8 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Typedefs
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE      (RenderClassDesc, RenderClassArray)
-    CGE_VECTOR_DECLARE      (cgSceneDescriptor*, SceneDescriptorArray)
+    CGE_ARRAY_DECLARE       (RenderClassDesc, RenderClassArray)
+    CGE_ARRAY_DECLARE       (cgSceneDescriptor*, SceneDescriptorArray)
     CGE_UNORDEREDMAP_DECLARE(cgString, size_t, SceneDescriptorLUT)
     CGE_UNORDEREDMAP_DECLARE(cgUInt32, cgUID, ComponentTypeLUT )
     CGE_UNORDEREDMAP_DECLARE(cgString, cgUInt32, RenderClassLUT )

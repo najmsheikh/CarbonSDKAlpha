@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 #include <States/cgAppStateManager.h>
 #include <Resources/cgScript.h>
+#include <System/cgMessageTypes.h>
 
 //-----------------------------------------------------------------------------
 // Static member definitions.
@@ -160,6 +161,36 @@ bool cgAppStateManager::registerState( cgAppState * pGameState )
 
     // Initialize the state and return result
     return pGameState->initialize();
+}
+
+//-----------------------------------------------------------------------------
+//  Name : unregisterState ()
+/// <summary>
+/// Remove the state with the specified identifier. If this state is already
+/// begun, it will be ended and destroyed.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgAppStateManager::unregisterState( const cgString & strStateId )
+{
+    // Does this state exist?
+    StateMap::iterator itState = mRegisteredStates.find( strStateId );
+    if ( itState == mRegisteredStates.end() )
+        return;
+
+    // End the state if it is running.
+    cgAppState * pState = itState->second.state;
+    if ( pState )
+    {
+        if ( pState->isBegun() )
+            pState->end();
+
+        // Destroy the state
+        pState->scriptSafeDispose();
+    
+    } // End if found
+
+    // Remove from the state list.
+    mRegisteredStates.erase( itState );
 }
 
 //-----------------------------------------------------------------------------
@@ -556,6 +587,14 @@ cgAppState::cgAppState( const cgString & strStateId ) : cgReference( cgReference
     mBegun               = false;
     mScriptObject        = CG_NULL;
     mResourceManager     = CG_NULL;
+
+    // Listen out for messages from important groups.
+    cgReferenceManager::subscribeToGroup( getReferenceId(), cgSystemMessageGroups::MGID_ResourceManager );
+
+    // Create the serialization bridge needed to reconstruct
+    // references to our internal script object if it ever were
+    // to be replaced.
+    mScriptObjectBridge = new cgScriptInterop::Utils::ObjectSerializerBridge();
 }
 
 //-----------------------------------------------------------------------------
@@ -578,6 +617,14 @@ cgAppState::cgAppState( const cgString & stateId, const cgInputStream & scriptSt
     mScriptObject        = CG_NULL;
     mScriptStream        = scriptStream;
     mResourceManager     = resourceManager;
+
+    // Listen out for messages from important groups.
+    cgReferenceManager::subscribeToGroup( getReferenceId(), cgSystemMessageGroups::MGID_ResourceManager );
+
+    // Create the serialization bridge needed to reconstruct
+    // references to our internal script object if it ever were
+    // to be replaced.
+    mScriptObjectBridge = new cgScriptInterop::Utils::ObjectSerializerBridge();
 }
 
 //-----------------------------------------------------------------------------
@@ -590,6 +637,9 @@ cgAppState::~cgAppState()
 {
     // Clean up
     dispose( false );
+
+    // We're done with our reference to the serializer bridge.
+    mScriptObjectBridge->release();
 }
 
 //-----------------------------------------------------------------------------
@@ -605,9 +655,22 @@ void cgAppState::dispose( bool bDisposeBase )
     if ( mBegun == true )
         end();
 
+    // Inform serializers that our script object has been destroyed.
+    mScriptObjectBridge->setData( CG_NULL );
+
+    // Clear out serializer data.
+    mScriptObjectSerializer.clear();
+    
     // Release any script objects we retain.
-    if ( mScriptObject != CG_NULL )
+    if ( mScriptObject )
+    {
+        cgScriptInterop::Utils::ObjectSerializerBridge * bridge = (cgScriptInterop::Utils::ObjectSerializerBridge*)mScriptObject->getUserData( cgScriptInterop::SERIALIZE_OBJECT_BRIDGE );
+        if ( bridge )
+            bridge->release();
+        mScriptObject->setUserData( cgScriptInterop::SERIALIZE_OBJECT_BRIDGE, CG_NULL );
         mScriptObject->release();
+    
+    } // End if script object exists
     mScriptObject = CG_NULL;
 
     // Release resources
@@ -822,53 +885,108 @@ bool cgAppState::initialize()
         if ( !mResourceManager->loadScript( &mScript, mScriptStream, cgString::Empty, cgString::Empty, 0, cgDebugSource() ) )
             return false;
 
-        // Create the scripted state object.
-        cgScript * script = mScript.getResource(true);
-        if ( script )
+        // Perform binding
+        if ( !bindToScript( CG_NULL ) )
+            return false;
+
+        // Attempt to call the 'initialize' method (optional).
+        if ( mScriptObject && mScriptMethods.initialize )
         {
-            // Attempt to create the IScriptedAppState
+            try
+            {
+                cgScriptArgument::Array scriptArgs;
+                scriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("AppState@+"), this ) );
+                mScriptObject->executeMethod( mScriptMethods.initialize, scriptArgs );
+    
+            } // End try to execute
+
+            catch ( cgScriptInterop::Exceptions::ExecuteException & e )
+            {
+                cgAppLog::write( cgAppLog::Error, _T("Failed to execute initialize() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+                return false;
+
+            } // End catch exception
+        
+        } // End if defines method
+
+    } // End if load script
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : bindToScript() (Protected)
+/// <summary>
+/// Called internally to instantiate the relevant script object and to collect
+/// references to any provided state override methods.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgAppState::bindToScript( cgScriptInterop::Utils::ObjectSerializer * serializedObject )
+{
+    // Let any serializers know that the script object is being released.
+    mScriptObjectBridge->setData( CG_NULL );
+
+    // Release any script objects we retain.
+    if ( mScriptObject )
+    {
+        cgScriptInterop::Utils::ObjectSerializerBridge * bridge = (cgScriptInterop::Utils::ObjectSerializerBridge*)mScriptObject->getUserData( cgScriptInterop::SERIALIZE_OBJECT_BRIDGE );
+        if ( bridge )
+            bridge->release();
+        mScriptObject->setUserData( cgScriptInterop::SERIALIZE_OBJECT_BRIDGE, CG_NULL );
+        mScriptObject->release();
+    
+    } // End if script object exists
+    mScriptObject = CG_NULL;
+
+    // Create the scripted state object if possible.
+    cgScript * script = mScript.getResource(true);
+    if ( script && !script->isFailed() )
+    {
+        if ( !serializedObject || serializedObject->isEmpty() )
+        {
+            // Attempt to create the IScriptedAppState 
             // object whose name matches the name of the file.
             cgString objectType = cgFileSystem::getFileName(mScriptStream.getName(), true);
             mScriptObject = script->createObjectInstance( objectType );
 
-            // Collect handles to any supplied methods.
+        } // End if new
+        else
+        {
+            // Attempt to deserialize.
+            cgUInt32 result;
+            mScriptObject = serializedObject->deserialize( script, result );
+
+            // If it was successful, clear out serialized data.
             if ( mScriptObject )
-            {
-                mScriptMethods.initialize = mScriptObject->getMethodHandle( _T("bool initialize( AppState@+ )") );
-                mScriptMethods.begin      = mScriptObject->getMethodHandle( _T("bool begin()") );
-                mScriptMethods.end        = mScriptObject->getMethodHandle( _T("void end()") );
-                mScriptMethods.update     = mScriptObject->getMethodHandle( _T("void update()") );
-                mScriptMethods.render     = mScriptObject->getMethodHandle( _T("void render()") );
-                mScriptMethods.suspend    = mScriptObject->getMethodHandle( _T("void suspend()") );
-                mScriptMethods.resume     = mScriptObject->getMethodHandle( _T("void resume()") );
-                mScriptMethods.raiseEvent = mScriptObject->getMethodHandle( _T("bool raiseEvent( const String& )") );
-                mScriptMethods.processMessage = mScriptObject->getMethodHandle( _T("bool processMessage( Message& )") );
+                serializedObject->clear();
+        
+        } // End if deserialize
 
-                // Attempt to call the 'initialize' method (optional).
-                if ( mScriptMethods.initialize )
-                {
-                    try
-                    {
-                        cgScriptArgument::Array scriptArgs;
-                        scriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("AppState@+"), this ) );
-                        mScriptObject->executeMethod( mScriptMethods.initialize, scriptArgs );
+        // Collect handles to any supplied methods.
+        if ( mScriptObject )
+        {
+            mScriptMethods.initialize = mScriptObject->getMethodHandle( _T("bool initialize( AppState@+ )") );
+            mScriptMethods.begin      = mScriptObject->getMethodHandle( _T("bool begin()") );
+            mScriptMethods.end        = mScriptObject->getMethodHandle( _T("void end()") );
+            mScriptMethods.update     = mScriptObject->getMethodHandle( _T("void update()") );
+            mScriptMethods.render     = mScriptObject->getMethodHandle( _T("void render()") );
+            mScriptMethods.suspend    = mScriptObject->getMethodHandle( _T("void suspend()") );
+            mScriptMethods.resume     = mScriptObject->getMethodHandle( _T("void resume()") );
+            mScriptMethods.raiseEvent = mScriptObject->getMethodHandle( _T("bool raiseEvent( const String& )") );
+            mScriptMethods.processMessage = mScriptObject->getMethodHandle( _T("bool processMessage( Message& )") );
+
+            // Make that a new connection can be made to this object by anyone
+            // deserializing a reference to this new script object at a later time.
+            mScriptObjectBridge->addRef();
+            mScriptObject->setUserData( cgScriptInterop::SERIALIZE_OBJECT_BRIDGE, mScriptObjectBridge );
             
-                    } // End try to execute
+        } // End if valid object
 
-                    catch ( cgScriptInterop::Exceptions::ExecuteException & e )
-                    {
-                        cgAppLog::write( cgAppLog::Error, _T("Failed to execute initialize() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
-                        return false;
+        // Inform serializers of the new object reference 
+        mScriptObjectBridge->setData( mScriptObject );
 
-                    } // End catch exception
-                
-                } // End if defines method
-                
-            } // End if valid object
-
-        } // End if valid.
-
-    } // End if load script
+    } // End if valid.
 
     // Success!
     return true;
@@ -1100,26 +1218,58 @@ void cgAppState::resume( )
 //-----------------------------------------------------------------------------
 bool cgAppState::processMessage( cgMessage * message )
 {
-    // Notify the script (if any).
     bool bResult = false;
-    if ( mScriptObject && mScriptMethods.processMessage )
-    {
-        try
-        {
-            cgScriptArgument::Array ScriptArgs(1);
-            static const cgString argType = _T("Message&");
-            ScriptArgs[0] = cgScriptArgument( cgScriptArgumentType::Address, argType, message );
-            bResult = *(bool*)mScriptObject->executeMethod( mScriptMethods.processMessage, ScriptArgs );
-        
-        } // End try to execute
-        catch ( cgScriptInterop::Exceptions::ExecuteException & e )
-        {
-            cgAppLog::write( cgAppLog::Error, _T("Failed to execute processMessage() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
-            return false;
-        
-        } // End catch exception
 
-    } // End if valid
+    // Has our script been reloaded?
+    if ( mScript.isValid() && (!message->messageData || *(cgUInt32*)message->messageData == mScript.getReferenceId()) )
+    {
+        // Can hot reload from prior data (i.e. last rebuild failed?)
+        if ( !mScriptObjectSerializer.isEmpty() )
+        {
+            bindToScript( &mScriptObjectSerializer );
+
+        } // End if serialized data
+        else if ( mScriptObject )
+        {
+            // Attempt to serialize data before we reload.
+            if ( mScriptObjectSerializer.serialize( mScriptObject ) )
+                bindToScript( &mScriptObjectSerializer );
+        
+        } // End if existing object
+        else
+        {
+            bindToScript( CG_NULL );
+
+            // If the state is already begun, trigger it.
+            if ( mBegun )
+                begin();
+        
+        } // End if not existing
+
+    } // End if this is our script reload event
+    else
+    {
+        // Notify the script (if any).
+        if ( mScriptObject && mScriptMethods.processMessage )
+        {
+            try
+            {
+                cgScriptArgument::Array ScriptArgs(1);
+                static const cgString argType = _T("Message&");
+                ScriptArgs[0] = cgScriptArgument( cgScriptArgumentType::Address, argType, message );
+                bResult = *(bool*)mScriptObject->executeMethod( mScriptMethods.processMessage, ScriptArgs );
+            
+            } // End try to execute
+            catch ( cgScriptInterop::Exceptions::ExecuteException & e )
+            {
+                cgAppLog::write( cgAppLog::Error, _T("Failed to execute processMessage() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+                return false;
+            
+            } // End catch exception
+
+        } // End if valid
+
+    } // End if other messages
 
     // Processed the message?
     return bResult;

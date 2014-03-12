@@ -146,7 +146,7 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-	CGE_VECTOR_DECLARE( cgResampleChain *, ChainArray )
+	CGE_ARRAY_DECLARE( cgResampleChain *, ChainArray )
 	
 	ChainArray mResampleChains;
 };

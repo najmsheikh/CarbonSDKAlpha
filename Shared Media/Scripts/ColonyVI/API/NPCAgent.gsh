@@ -658,7 +658,7 @@ shared class NPCAgent : Agent
 
         // Test 6 points in a grid for visibility, from center of the character's
         // height, to its top.
-        CollisionContact contact;
+        RayCastContact contact;
         PhysicsWorld @ world = actor.getScene().getPhysicsWorld();
         float destHeight = agent.getHeight();
         float visibilityScore = 0.0f;

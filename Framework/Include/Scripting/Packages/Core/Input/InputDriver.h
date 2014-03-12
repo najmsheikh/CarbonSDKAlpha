@@ -50,6 +50,7 @@ namespace InputDriver
             // Register the object methods
             BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "InputDriverConfig getConfig() const", asMETHODPR(cgInputDriver, getConfig, () const, cgInputDriver::InitConfig), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "void poll()", asMETHODPR(cgInputDriver, poll, (), void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "void resetInputStates( )", asMETHODPR(cgInputDriver, resetInputStates, ( ), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "bool wasKeyPressed( int ) const", asMETHODPR(cgInputDriver, wasKeyPressed, ( cgInt32 ) const, bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "bool isKeyPressed( int ) const", asMETHODPR(cgInputDriver, isKeyPressed, ( cgInt32 ) const, bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "InputDriver", "bool isKeyPressed( int, bool ) const", asMETHODPR(cgInputDriver, isKeyPressed, ( cgInt32, bool ) const, bool), asCALL_THISCALL) );

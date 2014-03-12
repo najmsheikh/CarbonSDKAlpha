@@ -117,7 +117,7 @@ bool cgNavigationMesh::build( const cgNavigationMeshCreateParams & params, cgUIn
 
     // Compute the overall bounding box of all meshes to be considered.
     cgBoundingBox geomBounds;
-    std::vector<cgBoundingBox> meshBounds( meshCount );
+    cgArray<cgBoundingBox> meshBounds( meshCount );
     for ( cgUInt32 i = 0; i < meshCount; ++i )
     {
         if ( !meshData[i].isValid() )
@@ -182,8 +182,8 @@ bool cgNavigationMesh::build( const cgNavigationMeshCreateParams & params, cgUIn
             // off the edge of the tile.
             cgBoundingBox expandedTileBounds = tileBounds;
             expandedTileBounds.inflate( (ceilf(mParams.agentRadius / mParams.cellSize) + 3) * mParams.cellSize );
-            std::vector<cgMeshHandle> intersectedMeshes;
-            std::vector<cgTransform> intersectedTransforms;
+            cgArray<cgMeshHandle> intersectedMeshes;
+            cgArray<cgTransform> intersectedTransforms;
             for ( cgUInt32 i = 0; i < meshCount; ++i )
             {
                 if ( expandedTileBounds.intersect( meshBounds[i] ) )

@@ -29,6 +29,7 @@
 //-----------------------------------------------------------------------------
 #include <World/Objects/cgDummyObject.h>
 #include <World/Objects/cgCameraObject.h>
+#include <World/Objects/cgGroupObject.h>
 #include <World/cgScene.h>
 #include <Rendering/cgRenderDriver.h>
 #include <Math/cgCollision.h>
@@ -254,9 +255,21 @@ bool cgDummyObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const 
 //-----------------------------------------------------------------------------
 void cgDummyObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
 {
+    // Only show them if it belongs to an open group (or no group at all)
+    if ( pIssuer->getOwnerGroup() && !pIssuer->getOwnerGroup()->isOpen()  )
+    {
+        cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
+        return;
+    
+    } // End if Hidden
+
     // No post-clear operation.
     if ( flags & cgSandboxRenderFlags::PostDepthClear )
+    {
+        cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
         return;
+    
+    } // End if !PostDepthClear
 
     // Draw the bounding box (use "sealed" edges - i.e. no gaps).
     cgBoundingBox Bounds = pIssuer->getLocalBoundingBox();

@@ -53,6 +53,11 @@ cgObjectBehavior::cgObjectBehavior( )
     mScriptObject     = CG_NULL;
     mLoadOrder        = 0;
     mUserId           = 0;
+
+    // Create the serialization bridge needed to reconstruct
+    // references to our internal script object if it ever were
+    // to be replaced.
+    mScriptObjectBridge = new cgScriptInterop::Utils::ObjectSerializerBridge();
 }
 
 //-----------------------------------------------------------------------------
@@ -65,6 +70,9 @@ cgObjectBehavior::~cgObjectBehavior()
 {
     // Release resources.
     dispose( false );
+
+    // We're done with our reference to the serializer bridge.
+    mScriptObjectBridge->release();
 }
 
 //-----------------------------------------------------------------------------
@@ -79,10 +87,23 @@ void cgObjectBehavior::dispose( bool bDisposeBase )
     // Forcibly unregister as input / physics listener.
     unregisterAsInputListener();
     unregisterAsPhysicsListener();
+
+    // Inform serializers that our script object has been destroyed.
+    mScriptObjectBridge->setData( CG_NULL );
+
+    // Clear out serializer data.
+    mScriptObjectSerializer.clear();
     
     // Release any script objects we retain.
     if ( mScriptObject )
+    {
+        cgScriptInterop::Utils::ObjectSerializerBridge * bridge = (cgScriptInterop::Utils::ObjectSerializerBridge*)mScriptObject->getUserData( cgScriptInterop::SERIALIZE_OBJECT_BRIDGE );
+        if ( bridge )
+            bridge->release();
+        mScriptObject->setUserData( cgScriptInterop::SERIALIZE_OBJECT_BRIDGE, CG_NULL );
         mScriptObject->release();
+    
+    } // End if script object exists
     mScriptObject = CG_NULL;
 
     // Release resources
@@ -226,12 +247,28 @@ bool cgObjectBehavior::processMessage( cgMessage * message )
 
             } // End if detaching
 
-            // Rebind to the script
-            bindToScript();
+            // Can hot reload from prior data (i.e. last rebuild failed?)
+            if ( !mScriptObjectSerializer.isEmpty() )
+            {
+                bindToScript( &mScriptObjectSerializer );
 
-            // Notify of attachment
-            if ( mParentObject )
-                onAttach( mParentObject );
+            } // End if serialized data
+            else if ( mScriptObject )
+            {
+                // Attempt to serialize data before we reload.
+                if ( mScriptObjectSerializer.serialize( mScriptObject ) )
+                    bindToScript( &mScriptObjectSerializer );
+            
+            } // End if existing object
+            else
+            {
+                bindToScript( CG_NULL );
+
+                // Notify of attachment
+                if ( mParentObject )
+                    onAttach( mParentObject );
+            
+            } // End if not existing
 
             // If there were any physics step / input methods assigned, add the
             // behavior as a listener to the parent object's physics world.
@@ -485,7 +522,7 @@ bool cgObjectBehavior::initialize( cgResourceManager * pResources, const cgStrin
     } // End if failed
 
     // Perform our binding
-    return bindToScript();
+    return bindToScript( CG_NULL );
 }
 
 //-----------------------------------------------------------------------------
@@ -495,21 +532,46 @@ bool cgObjectBehavior::initialize( cgResourceManager * pResources, const cgStrin
 /// references to any provided behavior override methods.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgObjectBehavior::bindToScript()
+bool cgObjectBehavior::bindToScript( cgScriptInterop::Utils::ObjectSerializer * serializedObject )
 {
+    // Let any serializers know that the script object is being released.
+    mScriptObjectBridge->setData( CG_NULL );
+
     // Release any script objects we retain.
     if ( mScriptObject )
+    {
+        cgScriptInterop::Utils::ObjectSerializerBridge * bridge = (cgScriptInterop::Utils::ObjectSerializerBridge*)mScriptObject->getUserData( cgScriptInterop::SERIALIZE_OBJECT_BRIDGE );
+        if ( bridge )
+            bridge->release();
+        mScriptObject->setUserData( cgScriptInterop::SERIALIZE_OBJECT_BRIDGE, CG_NULL );
         mScriptObject->release();
+    
+    } // End if script object exists
     mScriptObject = CG_NULL;
 
     // Create the scripted behavior object if possible.
     cgScript * pScript = mScript.getResource(true);
     if ( pScript != CG_NULL && !pScript->isFailed() )
     {
-        // Attempt to create the IScriptedObjectBehavior 
-        // object whose name matches the name of the file.
-        cgString strObjectType = cgFileSystem::getFileName(pScript->getInputStream().getName(), true);
-        mScriptObject = pScript->createObjectInstance( strObjectType );
+        if ( !serializedObject || serializedObject->isEmpty() )
+        {
+            // Attempt to create the IScriptedObjectBehavior 
+            // object whose name matches the name of the file.
+            cgString strObjectType = cgFileSystem::getFileName(pScript->getInputStream().getName(), true);
+            mScriptObject = pScript->createObjectInstance( strObjectType );
+
+        } // End if new
+        else
+        {
+            // Attempt to deserialize.
+            cgUInt32 result;
+            mScriptObject = serializedObject->deserialize( pScript, result );
+
+            // If it was successful, clear out serialized data.
+            if ( mScriptObject )
+                serializedObject->clear();
+        
+        } // End if deserialize
 
         // Collect handles to any supplied update methods.
         if ( mScriptObject )
@@ -524,6 +586,9 @@ bool cgObjectBehavior::bindToScript()
             mScriptMethods.onKeyDown           = mScriptObject->getMethodHandle( _T("void onKeyDown(int, uint)") );
             mScriptMethods.onKeyUp             = mScriptObject->getMethodHandle( _T("void onKeyUp(int, uint)") );
             mScriptMethods.onKeyPressed        = mScriptObject->getMethodHandle( _T("void onKeyPressed(int, uint)") );
+            mScriptMethods.onCollisionBegin    = mScriptObject->getMethodHandle( _T("void onCollisionBegin(const NodeCollision&)") );
+            mScriptMethods.onCollisionContinue = mScriptObject->getMethodHandle( _T("void onCollisionContinue(const NodeCollision&)") );
+            mScriptMethods.onCollisionEnd      = mScriptObject->getMethodHandle( _T("void onCollisionEnd(const NodeCollision&)") );
 
             // Record which events are available.
             mScriptMethods.hasPhysicsEvents    = mScriptMethods.onPrePhysicsStep || mScriptMethods.onPostPhysicsStep;
@@ -531,8 +596,16 @@ bool cgObjectBehavior::bindToScript()
                                                   mScriptMethods.onMouseButtonUp || mScriptMethods.onMouseWheelScroll ||
                                                   mScriptMethods.onKeyDown || mScriptMethods.onKeyUp ||
                                                   mScriptMethods.onKeyPressed;
+
+            // Make that a new connection can be made to this object by anyone
+            // deserializing a reference to this new script object at a later time.
+            mScriptObjectBridge->addRef();
+            mScriptObject->setUserData( cgScriptInterop::SERIALIZE_OBJECT_BRIDGE, mScriptObjectBridge );
         
         } // End if valid object
+
+        // Inform serializers of the new object reference 
+        mScriptObjectBridge->setData( mScriptObject );
 
     } // End if valid.
 
@@ -834,29 +907,28 @@ void cgObjectBehavior::onUpdate( cgFloat fElapsedTime )
 }
 
 //-----------------------------------------------------------------------------
-//  Name : hitByObject()
+//  Name : onCollisionBegin()
 /// <summary>
-/// Triggered when another object in the world is determined to have
-/// "hit" (collided) with this behavior's parent object.
+/// Triggered when another object in the world is determined to have first made
+/// contact with this behavior's parent object.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgObjectBehavior::hitByObject( cgObjectNode * pObject, const cgVector3 & HitPoint, const cgVector3 & SurfaceNormal )
+void cgObjectBehavior::onCollisionBegin( const cgNodeCollision * collision )
 {
     // Notify the script (if any).
-    if ( mScriptObject && cgGetSandboxMode() != cgSandboxMode::Enabled )
+    if ( mScriptObject && mScriptMethods.onCollisionBegin && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         try
         {
             cgScriptArgument::Array ScriptArgs;
-            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("SceneObject@+"), pObject ) );
-            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Address, _T("const Vector3 &"), (void*)&HitPoint ) );
-            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Address, _T("const Vector3 &"), (void*)&SurfaceNormal ) );
-            mScriptObject->executeMethodVoid( _T("onHitByObject"), ScriptArgs, true );
-        
+            static const cgString strArgType = _T("const NodeCollision &");
+            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Address, strArgType, collision ) );
+            mScriptObject->executeMethod( mScriptMethods.onCollisionBegin, ScriptArgs );
+
         } // End try to execute
         catch ( cgScriptInterop::Exceptions::ExecuteException & e )
         {
-            cgAppLog::write( cgAppLog::Error, _T("Failed to execute onHitByObject() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to execute onCollisionBegin() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
             return;
         
         } // End catch exception
@@ -865,29 +937,58 @@ void cgObjectBehavior::hitByObject( cgObjectNode * pObject, const cgVector3 & Hi
 }
 
 //-----------------------------------------------------------------------------
-//  Name : objectHit ()
+//  Name : onCollisionContinue()
 /// <summary>
-/// Triggered when this behavior's parent object is determined to have
-/// "hit" (collided) with another.
+/// Triggered when another object in the world continues to be in contact with
+/// this behavior's parent object.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgObjectBehavior::objectHit( cgObjectNode * pObject, const cgVector3 & HitPoint, const cgVector3 & SurfaceNormal )
+void cgObjectBehavior::onCollisionContinue( const cgNodeCollision * collision )
 {
     // Notify the script (if any).
-    if ( mScriptObject && cgGetSandboxMode() != cgSandboxMode::Enabled )
+    if ( mScriptObject && mScriptMethods.onCollisionContinue && cgGetSandboxMode() != cgSandboxMode::Enabled )
     {
         try
         {
             cgScriptArgument::Array ScriptArgs;
-            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Object, _T("SceneObject@+"), pObject ) );
-            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Address, _T("const Vector3 &"), (void*)&HitPoint ) );
-            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Address, _T("const Vector3 &"), (void*)&SurfaceNormal ) );
-            mScriptObject->executeMethodVoid( _T("onObjectHit"), ScriptArgs, true );
-        
+            static const cgString strArgType = _T("const NodeCollision &");
+            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Address, strArgType, collision ) );
+            mScriptObject->executeMethod( mScriptMethods.onCollisionContinue, ScriptArgs );
+
         } // End try to execute
         catch ( cgScriptInterop::Exceptions::ExecuteException & e )
         {
-            cgAppLog::write( cgAppLog::Error, _T("Failed to execute onObjectHit() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to execute onCollisionContinue() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
+            return;
+        
+        } // End catch exception
+
+    } // End if valid
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onCollisionEnd()
+/// <summary>
+/// Triggered when another object in the world is no longer in contact with
+/// this behavior's parent object.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgObjectBehavior::onCollisionEnd( const cgNodeCollision * collision )
+{
+    // Notify the script (if any).
+    if ( mScriptObject && mScriptMethods.onCollisionEnd && cgGetSandboxMode() != cgSandboxMode::Enabled )
+    {
+        try
+        {
+            cgScriptArgument::Array ScriptArgs;
+            static const cgString strArgType = _T("const NodeCollision &");
+            ScriptArgs.push_back( cgScriptArgument( cgScriptArgumentType::Address, strArgType, collision ) );
+            mScriptObject->executeMethod( mScriptMethods.onCollisionEnd, ScriptArgs );
+
+        } // End try to execute
+        catch ( cgScriptInterop::Exceptions::ExecuteException & e )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to execute onCollisionEnd() method in '%s'. The engine reported the following error: %s.\n"), e.getExceptionSource().c_str(), e.description.c_str() );
             return;
         
         } // End catch exception

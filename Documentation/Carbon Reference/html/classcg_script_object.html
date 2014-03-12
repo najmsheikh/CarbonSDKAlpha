@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -173,6 +173,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a26c771c76fc93bf84a9921e894b17afd"><td class="memItemLeft" align="right" valign="top">asIScriptObject *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_object.html#a26c771c76fc93bf84a9921e894b17afd">getInternalObject</a> ()</td></tr>
 <tr class="memdesc:a26c771c76fc93bf84a9921e894b17afd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the internal angelscript object being wrapped.  <a href="#a26c771c76fc93bf84a9921e894b17afd"></a><br/></td></tr>
 <tr class="separator:a26c771c76fc93bf84a9921e894b17afd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae90d12f8574c702b77b12acfc14b76a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_object.html#ae90d12f8574c702b77b12acfc14b76a6">setUserData</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> id, void *value)</td></tr>
+<tr class="memdesc:ae90d12f8574c702b77b12acfc14b76a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set custom data to the script object. Several different pieces of user data can be specified by supplying a unique user data id.  <a href="#ae90d12f8574c702b77b12acfc14b76a6"></a><br/></td></tr>
+<tr class="separator:ae90d12f8574c702b77b12acfc14b76a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bc08b132209f24e55769cbfdc2ec34a"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_object.html#a5bc08b132209f24e55769cbfdc2ec34a">getUserData</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> id)</td></tr>
+<tr class="memdesc:a5bc08b132209f24e55769cbfdc2ec34a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retreive the script object custom data value associated with the unique user data id supplied .  <a href="#a5bc08b132209f24e55769cbfdc2ec34a"></a><br/></td></tr>
+<tr class="separator:a5bc08b132209f24e55769cbfdc2ec34a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -776,6 +782,24 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a5bc08b132209f24e55769cbfdc2ec34a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void * cgScriptObject::getUserData </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retreive the script object custom data value associated with the unique user data id supplied . </p>
+
+</div>
+</div>
 <a class="anchor" id="a670c601ea53fbd7f894e38e77f722ff1"></a>
 <div class="memitem">
 <div class="memproto">
@@ -826,6 +850,34 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Performs the setting up of arguments, and actual execution of the script method. Note : May throw a '<a class="el" href="classcg_script_interop_1_1_exceptions_1_1_execute_exception.html">cgScriptInterop::Exceptions::ExecuteException</a>' struct. </p>
+
+</div>
+</div>
+<a class="anchor" id="ae90d12f8574c702b77b12acfc14b76a6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgScriptObject::setUserData </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set custom data to the script object. Several different pieces of user data can be specified by supplying a unique user data id. </p>
 
 </div>
 </div>
@@ -940,7 +992,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_script_object.html">cgScriptObject</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:28:10 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:50 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

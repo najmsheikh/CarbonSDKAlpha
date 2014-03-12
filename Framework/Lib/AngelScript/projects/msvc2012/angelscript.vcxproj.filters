@@ -239,6 +239,12 @@
     <ClInclude Include="..\..\source\as_atomic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\source\as_memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\as_namespace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\source\as_callfunc_x64_msvc_asm.asm">
@@ -249,10 +255,10 @@
     <None Include="..\..\source\as_callfunc_arm_gcc.S">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="..\..\source\as_callfunc_arm_msvc.asm">
+    <None Include="..\..\source\as_callfunc_arm_xcode.S">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="..\..\source\as_callfunc_arm_xcode.S">
+    <None Include="..\..\source\as_callfunc_arm_msvc.asm">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

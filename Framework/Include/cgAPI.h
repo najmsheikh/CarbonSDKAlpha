@@ -32,6 +32,7 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <System/Containers/cgArray.h>
 
 //-----------------------------------------------------------------------------
 // STL Export
@@ -376,6 +377,11 @@ private:
     Data * _data;
 
 }; // End Class cgAutoPtr
+
+/// <summary>Simple array typedef. No export required.</summary>
+#define CGE_ARRAY_DECLARE( _value, _typedefName ) \
+    typedef cgArray<_value> _typedefName;
+    //typedef cgAutoPtr<cgArray<_value>,_value> _typedefName##Ptr;
 
 /// <summary>Simple vector typedef. No export required.</summary>
 #define CGE_VECTOR_DECLARE( _value, _typedefName ) \

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -115,6 +115,7 @@ $(document).ready(function(){initNavTree('cg_a_p_i_8h.html','');});
 <code>#include &lt;set&gt;</code><br/>
 <code>#include &lt;unordered_map&gt;</code><br/>
 <code>#include &lt;unordered_set&gt;</code><br/>
+<code>#include &lt;<a class="el" href="cg_array_8h_source.html">System/Containers/cgArray.h</a>&gt;</code><br/>
 </div>
 <p><a href="cg_a_p_i_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -152,6 +153,9 @@ Macros</h2></td></tr>
 <tr class="separator:a993a441af1b7f60ce10360444fa79a2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc4b6ecea2a16bc0e88f1cbb07ed2383"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cg_a_p_i_8h.html#afc4b6ecea2a16bc0e88f1cbb07ed2383">cgDecomposeVersion</a>(packedVersion, version, subversion, revision)</td></tr>
 <tr class="separator:afc4b6ecea2a16bc0e88f1cbb07ed2383"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ab94e67afc0cefe64f358fbde413ecc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc">CGE_ARRAY_DECLARE</a>(_value, _typedefName)&#160;&#160;&#160;typedef <a class="el" href="classcg_array.html">cgArray</a>&lt;_value&gt; _typedefName;</td></tr>
+<tr class="memdesc:a2ab94e67afc0cefe64f358fbde413ecc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple array typedef. No export required. <a href="#a2ab94e67afc0cefe64f358fbde413ecc"></a><br/></td></tr>
+<tr class="separator:a2ab94e67afc0cefe64f358fbde413ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaff6d762ac73963b47ec1fa52ff55297"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297">CGE_VECTOR_DECLARE</a>(_value, _typedefName)&#160;&#160;&#160;typedef std::vector&lt;_value&gt; _typedefName;</td></tr>
 <tr class="memdesc:aaff6d762ac73963b47ec1fa52ff55297"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple vector typedef. No export required. <a href="#aaff6d762ac73963b47ec1fa52ff55297"></a><br/></td></tr>
 <tr class="separator:aaff6d762ac73963b47ec1fa52ff55297"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -386,6 +390,34 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a2ab94e67afc0cefe64f358fbde413ecc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CGE_ARRAY_DECLARE</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">_value, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">_typedefName&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;typedef <a class="el" href="classcg_array.html">cgArray</a>&lt;_value&gt; _typedefName;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Simple array typedef. No export required.</p>
 
 </div>
 </div>
@@ -1002,7 +1034,7 @@ Macros</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="cg_a_p_i_8h.html">cgAPI.h</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:27:55 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:36 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

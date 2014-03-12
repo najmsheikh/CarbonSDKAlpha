@@ -2156,7 +2156,7 @@ bool cgDX9RenderDriver::clear( cgUInt32 nRectCount, cgRect * pRectangles, cgUInt
 //-----------------------------------------------------------------------------
 bool cgDX9RenderDriver::beginFrame( bool bClearTarget, cgUInt32 nTargetColor )
 {
-    static bool bSpewError = true;
+    static bool bSpewError = true, bSpewError2 = true;
 
     // Validate requirements
     cgAssert( isInitialized() == true );
@@ -2171,7 +2171,7 @@ bool cgDX9RenderDriver::beginFrame( bool bClearTarget, cgUInt32 nTargetColor )
         if ( hRet == D3DERR_DEVICENOTRESET )
         {
             // Log that the device is now to be reset.
-            if ( bSpewError == true )
+            if ( bSpewError )
                 cgAppLog::write( cgAppLog::Info, _T("Resetting render device after it was found to be in a lost state.\n") );
             bSpewError = false;
 
@@ -2181,7 +2181,9 @@ bool cgDX9RenderDriver::beginFrame( bool bClearTarget, cgUInt32 nTargetColor )
             // Reset the display
             if ( FAILED( hRet = mD3DInitialize->resetDisplay( mD3DDevice, mD3DSettings, CG_NULL, CG_NULL, false ) ) )
             {
-                cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("Failed to reset display device. Waiting to try again. The error reported was: (0x%x) %s - %s\n"), hRet, DXGetErrorString( hRet ), DXGetErrorDescription( hRet ) );
+                if ( bSpewError2 )
+                    cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("Failed to reset display device. Waiting to try again. The error reported was: (0x%x) %s - %s\n"), hRet, DXGetErrorString( hRet ), DXGetErrorDescription( hRet ) );
+                bSpewError2 = false;
                 return false;
             
             } // End if failed
@@ -2192,7 +2194,8 @@ bool cgDX9RenderDriver::beginFrame( bool bClearTarget, cgUInt32 nTargetColor )
 
                 // Device is no longer in a lost state
                 mLostDevice = false;
-                bSpewError    = true;
+                bSpewError  = true;
+                bSpewError2 = true;
             
             } // End if success
 
@@ -3559,7 +3562,8 @@ bool cgDX9RenderDriver::setVPLData( const cgTextureHandle & hDepth, const cgText
 cgSize cgDX9RenderDriver::getScreenSize( ) const
 {
     const cgDX9Settings::Settings * pSettings = mD3DSettings.getSettings();
-    return cgSize( pSettings->displayMode.Width, pSettings->displayMode.Height );
+    return cgSize( (mScreenSizeOverride.width > 0 ) ? mScreenSizeOverride.width : pSettings->displayMode.Width, 
+                   (mScreenSizeOverride.height > 0) ? mScreenSizeOverride.height : pSettings->displayMode.Height );
 }
 
 //-----------------------------------------------------------------------------

@@ -108,6 +108,7 @@ var searchData=
   ['resources_5freloadshaders',['Resources_ReloadShaders',['../namespacecg_system_messages.html#a685c9ac19b219d56cda93c8ac9a72ac7ab9080d9f581694431ad0aa30e1c3234c',1,'cgSystemMessages']]],
   ['resources_5fresourceadded',['Resources_ResourceAdded',['../namespacecg_system_messages.html#a685c9ac19b219d56cda93c8ac9a72ac7a835b2a14f2820245dd33c8f842d9aaa2',1,'cgSystemMessages']]],
   ['resources_5fresourceremoved',['Resources_ResourceRemoved',['../namespacecg_system_messages.html#a685c9ac19b219d56cda93c8ac9a72ac7a9a1a034b10e43646e86b735f5e4aa96b',1,'cgSystemMessages']]],
+  ['resources_5fresourceupdated',['Resources_ResourceUpdated',['../namespacecg_system_messages.html#a685c9ac19b219d56cda93c8ac9a72ac7aa2141563af55d2f8db77cf7c31623e38',1,'cgSystemMessages']]],
   ['return',['Return',['../namespacecg_keys.html#a4febbfd6b5ecb1f73aaf2c2b711a21a6a08936dba378096a6ee9c95943d71d313',1,'cgKeys']]],
   ['revsubtract',['RevSubtract',['../namespacecg_blend_operation.html#a9da37b7b3eacbd1d74ec7ffbc5fff775aa3e236335455824ca27873ec7880a467',1,'cgBlendOperation']]],
   ['rgbatorgbl',['RGBAtoRGBL',['../namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98af3605205bdb9c2f699bcbc26919fcfd0',1,'cgImageOperation']]],

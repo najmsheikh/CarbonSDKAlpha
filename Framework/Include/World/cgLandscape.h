@@ -171,9 +171,9 @@ public:
     struct ProceduralDrawBatch
     {
         /// <summary>The list of layers being referenced.</summary>
-        std::vector<cgInt>              layers;
+        cgArray<cgInt>              layers;
         /// <summary>The list of blocks to draw.</summary>
-        std::vector<cgTerrainBlock*>    blocks;
+        cgArray<cgTerrainBlock*>    blocks;
 
     }; // End Struct ProceduralDrawBatch
 
@@ -193,9 +193,9 @@ public:
     //-------------------------------------------------------------------------
     // Typedefs
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE( ProceduralLayerRef, ProceduralLayerArray )
-    CGE_VECTOR_DECLARE( cgTerrainBlock*, TerrainBlockArray )
-    CGE_VECTOR_DECLARE( cgTerrainLOD*, TerrainLODArray )
+    CGE_ARRAY_DECLARE( ProceduralLayerRef, ProceduralLayerArray )
+    CGE_ARRAY_DECLARE( cgTerrainBlock*, TerrainBlockArray )
+    CGE_ARRAY_DECLARE( cgTerrainLOD*, TerrainLODArray )
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors
@@ -352,8 +352,8 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Typedefs
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE( ProceduralDrawBatch, ProceduralDrawBatchArray )
-    CGE_VECTOR_DECLARE( CullDescriptor, CullDescriptorArray )
+    CGE_ARRAY_DECLARE( ProceduralDrawBatch, ProceduralDrawBatchArray )
+    CGE_ARRAY_DECLARE( CullDescriptor, CullDescriptorArray )
     
     //-------------------------------------------------------------------------
     // Protected Methods
@@ -544,7 +544,7 @@ public:
         }; // End Struct LODLevel
 
         /// <summary>Information for connecting the block to a neighbor at this or any lower LOD.</summary>
-        std::vector<LODLevel> levels;
+        cgArray<LODLevel> levels;
     
     }; // End Struct BlockSkirt
 
@@ -835,7 +835,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Typedefs
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE( LayerReference, LayerReferenceArray )
+    CGE_ARRAY_DECLARE( LayerReference, LayerReferenceArray )
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors
@@ -915,8 +915,8 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Typedefs
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE( BatchedMap, BatchedMapArray )
-    CGE_VECTOR_DECLARE( RenderBatch, RenderBatchArray )
+    CGE_ARRAY_DECLARE( BatchedMap, BatchedMapArray )
+    CGE_ARRAY_DECLARE( RenderBatch, RenderBatchArray )
 
     //-------------------------------------------------------------------------
     // Protected Methods

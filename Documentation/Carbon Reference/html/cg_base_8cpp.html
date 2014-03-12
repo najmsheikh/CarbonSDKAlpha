@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -200,8 +200,11 @@ Functions</h2></td></tr>
 <tr class="memdesc:a81a2bbb493535659f996080cacf9b916"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the engine is currently configured to run in either of two so-called 'sandbox' modes ('Enabled' for full editing and serialization, or 'Preview' for in-editor execution) or the standard runtime mode ('Disabled').  <a href="#a81a2bbb493535659f996080cacf9b916"></a><br/></td></tr>
 <tr class="separator:a81a2bbb493535659f996080cacf9b916"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e5cd17c2eaf3a51a7e2d0106de01d92"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cg_base_8cpp.html#a4e5cd17c2eaf3a51a7e2d0106de01d92">cgSetSandboxMode</a> (<a class="el" href="namespacecg_sandbox_mode.html#a446a0d273ff8b4f240f1f0f0d18c3e69">cgSandboxMode::Base</a> mode)</td></tr>
-<tr class="memdesc:a4e5cd17c2eaf3a51a7e2d0106de01d92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current mode in which the engine is running. Valid sandbox modes accepted by this function are 'Enabled' or 'Preview'. You may not switch the sandbox mode from or to 'Disabled' in any case.  <a href="#a4e5cd17c2eaf3a51a7e2d0106de01d92"></a><br/></td></tr>
+<tr class="memdesc:a4e5cd17c2eaf3a51a7e2d0106de01d92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current mode in which the engine is running. Valid sandbox modes accepted by this function are 'Enabled' or 'Preview'. You may not switch the sandbox mode from or to 'Disabled' in any case. By default, a message will be posted to subscribers of the <a class="el" href="namespacecg_system_message_groups.html#a4078041d6bae8e032097160517039ec3">cgSystemMessageGroups::MGID_System</a> messaging group regarding this change.  <a href="#a4e5cd17c2eaf3a51a7e2d0106de01d92"></a><br/></td></tr>
 <tr class="separator:a4e5cd17c2eaf3a51a7e2d0106de01d92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15a8c274b0e501f5c8ab1fe09a99fc44"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cg_base_8cpp.html#a15a8c274b0e501f5c8ab1fe09a99fc44">cgSetSandboxMode</a> (<a class="el" href="namespacecg_sandbox_mode.html#a446a0d273ff8b4f240f1f0f0d18c3e69">cgSandboxMode::Base</a> mode, bool sendMessage)</td></tr>
+<tr class="memdesc:a15a8c274b0e501f5c8ab1fe09a99fc44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current mode in which the engine is running. Valid sandbox modes accepted by this function are 'Enabled' or 'Preview'. You may not switch the sandbox mode from or to 'Disabled' in any case. By default, a message will be posted to subscribers of the <a class="el" href="namespacecg_system_message_groups.html#a4078041d6bae8e032097160517039ec3">cgSystemMessageGroups::MGID_System</a> messaging group regarding this change, but this can be controlled via the 'sendMessage' parameter.  <a href="#a15a8c274b0e501f5c8ab1fe09a99fc44"></a><br/></td></tr>
+<tr class="separator:a15a8c274b0e501f5c8ab1fe09a99fc44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a class="anchor" id="ac7bef5d85e3dcd73eef56ad39ffc84a9"></a>
@@ -401,7 +404,35 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set the current mode in which the engine is running. Valid sandbox modes accepted by this function are 'Enabled' or 'Preview'. You may not switch the sandbox mode from or to 'Disabled' in any case. </p>
+<p>Set the current mode in which the engine is running. Valid sandbox modes accepted by this function are 'Enabled' or 'Preview'. You may not switch the sandbox mode from or to 'Disabled' in any case. By default, a message will be posted to subscribers of the <a class="el" href="namespacecg_system_message_groups.html#a4078041d6bae8e032097160517039ec3">cgSystemMessageGroups::MGID_System</a> messaging group regarding this change. </p>
+
+</div>
+</div>
+<a class="anchor" id="a15a8c274b0e501f5c8ab1fe09a99fc44"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgSetSandboxMode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacecg_sandbox_mode.html#a446a0d273ff8b4f240f1f0f0d18c3e69">cgSandboxMode::Base</a>&#160;</td>
+          <td class="paramname"><em>mode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>sendMessage</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the current mode in which the engine is running. Valid sandbox modes accepted by this function are 'Enabled' or 'Preview'. You may not switch the sandbox mode from or to 'Disabled' in any case. By default, a message will be posted to subscribers of the <a class="el" href="namespacecg_system_message_groups.html#a4078041d6bae8e032097160517039ec3">cgSystemMessageGroups::MGID_System</a> messaging group regarding this change, but this can be controlled via the 'sendMessage' parameter. </p>
 
 </div>
 </div>
@@ -468,7 +499,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_65cb1e81656fd908372bbce03574f466.html">Source</a></li><li class="navelem"><a class="el" href="cg_base_8cpp.html">cgBase.cpp</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:27:55 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:36 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

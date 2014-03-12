@@ -68,7 +68,7 @@ public:
         SplinePoint( const cgVector2 & _controlPointIn, const cgVector2 & _point, const cgVector2 & _controlPointOut ) :
             controlPointIn( _controlPointIn ), point( _point ), controlPointOut( _controlPointOut ) {}
     };
-    CGE_VECTOR_DECLARE(SplinePoint, SplinePointArray)
+    CGE_ARRAY_DECLARE(SplinePoint, SplinePointArray)
 
     //-------------------------------------------------------------------------
 	// Constructors & Destructors
@@ -150,7 +150,7 @@ public:
         SplinePoint( const cgVector3 & _controlPointIn, const cgVector3 & _point, const cgVector3 & _controlPointOut ) :
             controlPointIn( _controlPointIn ), point( _point ), controlPointOut( _controlPointOut ) {}
     };
-    CGE_VECTOR_DECLARE(SplinePoint, SplinePointArray)
+    CGE_ARRAY_DECLARE(SplinePoint, SplinePointArray)
 
     //-------------------------------------------------------------------------
 	// Constructors & Destructors

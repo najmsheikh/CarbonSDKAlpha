@@ -334,39 +334,41 @@ void cgFileSystem::findPackages( const cgString & strSearchPath, const cgString 
 //-----------------------------------------------------------------------------
 cgString cgFileSystem::resolveFileLocation( const cgString & strFile )
 {
-    cgString::size_type   nSeparator;
-    ProtocolMap::iterator itProtocol;
-    cgString              strLocation, strProtocol;
-
     // Case insensitive test please
-    strLocation = cgString::toLower( strFile );
+    cgString strLocation = cgString::toLower( strFile );
 
     // Includes a path protocol at the start?
-    nSeparator = strLocation.find( _T("://") );
+    cgString::size_type nSeparator = strLocation.find( _T("://") );
     if ( nSeparator != cgString::npos )
     {
         // Extract the protocol
-        strProtocol = strLocation.substr( 0, nSeparator );
+        cgString strProtocol = strLocation.substr( 0, nSeparator );
         strLocation = strFile.substr( nSeparator + 3 );
 
         // Matching path protocol in our list?
-        itProtocol = mProtocols.find( strProtocol );
+        ProtocolMap::iterator itProtocol = mProtocols.find( strProtocol );
         if ( itProtocol == mProtocols.end() )
             return strFile;
 
-        // Found matching path protocol
-        return itProtocol->second + strLocation;
+        // Found matching path protocol. Canonicalize.
+        cgTChar result[MAX_PATH];
+        GetFullPathName( (itProtocol->second + strLocation).c_str(), MAX_PATH, result, CG_NULL );
+        return result;
 
     } // End if includes protocol
     else if ( strLocation.length() > 2 && strLocation[1] == _T(':') )
     {
         // This is an absolute drive path (i.e. c:\Test.jpg).
-        return strFile;
+        cgTChar result[MAX_PATH];
+        GetFullPathName( strFile.c_str(), MAX_PATH, result, CG_NULL );
+        return result;
     
     } // End if absolute path
 
     // No protocol, just return with root path pre-pended
-    return mRootDirectory + strFile;    
+    cgTChar result[MAX_PATH];
+    GetFullPathName( (mRootDirectory + strFile).c_str(), MAX_PATH, result, CG_NULL );
+    return result;
 }
 
 //-----------------------------------------------------------------------------

@@ -1752,6 +1752,7 @@ void cgMeshNode::buildPhysicsBody( )
         // Take ownership of the new rigid body.
         mPhysicsBody = pRigidBody;
         mPhysicsBody->addReference( this );
+        mPhysicsBody->setUserData( this );
 
         // Listen for events
         mPhysicsBody->registerEventListener( (cgPhysicsBodyEventListener*)this );

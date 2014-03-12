@@ -70,6 +70,7 @@ cgRenderDriver::cgRenderDriver() : cgReference( cgReferenceManager::generateInte
     // Initialize variables to sensible defaults
     mConfigLoaded           = false;
     mInitialized            = false;
+    mFrameBegun             = false;
     mResourceManager        = CG_NULL;
     mCaps                   = CG_NULL;
     mHardwareType           = cgHardwareType::Generic;
@@ -81,6 +82,7 @@ cgRenderDriver::cgRenderDriver() : cgReference( cgReferenceManager::generateInte
     mSuppressResizeEvent    = false;
     mStateFilteringEnabled  = true;
     mTargetSize             = cgSize( 0, 0 );
+    mScreenSizeOverride     = cgSize( 0, 0 );
     mAdapterAspectRatio     = 0;
     mSystemExports          = CG_NULL;
     mCurrentMaterial        = CG_NULL;
@@ -637,6 +639,34 @@ bool cgRenderDriver::isWindowActive( ) const
 bool cgRenderDriver::isInitialized( ) const
 {
     return mInitialized;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setScreenSizeOverride () (Virtual)
+/// <summary>
+/// A largely low level method than can be used to override the screen size 
+/// that will be reported to the rest of the application via 'getScreenSize()'.
+/// This is useful in cases where we only want to use a smaller portion of a
+/// much larger frame area without physically resizing it. Supply a size of
+/// <0,0> to disable this behavior.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgRenderDriver::setScreenSizeOverride( const cgSize & size )
+{
+    mScreenSizeOverride = size;
+
+    // Trigger render views to believe that a device reset has occurred.
+    cgMessage msg;
+    msg.messageData = (void*)this;
+    NamedRenderViewMap::iterator itView;
+    for ( itView = mRenderViews.begin(); itView != mRenderViews.end(); ++itView )
+    {
+        msg.messageId = cgSystemMessages::RenderDriver_DeviceLost;
+        cgReferenceManager::sendMessageTo( getReferenceId(), itView->second->getReferenceId(), &msg );
+        msg.messageId = cgSystemMessages::RenderDriver_DeviceRestored;
+        cgReferenceManager::sendMessageTo( getReferenceId(), itView->second->getReferenceId(), &msg );
+    
+    } // Next view
 }
 
 //-----------------------------------------------------------------------------
@@ -4608,6 +4638,9 @@ bool cgRenderDriver::beginFrame( bool bClearTarget, cgUInt32 nTargetColor )
     if ( !cameraUpdated() )
         return false;
 
+    // Frame is now begun.
+    mFrameBegun = true;
+
     // Success!
     return true;
 }
@@ -5044,6 +5077,9 @@ void cgRenderDriver::endFrame( cgAppWindow * pWndOverride, bool bPresent )
         } // End if not empty
     
     } // Next Texture
+
+    // Completed frame rendering.
+    mFrameBegun = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -5570,7 +5606,7 @@ bool cgRenderView::createBuffers( )
         Desc.width      = ViewSize.width;
         Desc.height     = ViewSize.height;
         Desc.mipLevels  = 1;
-        Desc.format = Formats.getBestFourChannelFormat( cgBufferType::RenderTarget, false, true, false );
+        Desc.format     = Formats.getBestFourChannelFormat( cgBufferType::RenderTarget, false, true, false );
         cgString strName = cgString::format( _T("Core::RenderView(0x%x)::FrameBuffer"), getReferenceId() );
         if ( !pResources->createRenderTarget( &mViewBuffer, Desc, cgResourceFlags::ForceNew, strName, cgDebugSource() ) )
         {

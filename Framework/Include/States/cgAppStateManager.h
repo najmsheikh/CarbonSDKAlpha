@@ -98,6 +98,7 @@ public:
     // Public Methods
     //-------------------------------------------------------------------------
     bool            registerState       ( cgAppState * state );
+    void            unregisterState     ( const cgString & strStateId );
     cgAppState    * getActiveState      ( );
     bool            setActiveState      ( const cgString & stateId );
     bool            getStateDesc        ( const cgString & stateId, StateDesc * descriptionOut );
@@ -263,6 +264,7 @@ private:
     void                    processEvent            ( const cgString & eventName );
 
 protected:
+    
     //-------------------------------------------------------------------------
     // Protected Structures, Enumerations & Typedefs
     //-------------------------------------------------------------------------
@@ -289,6 +291,11 @@ protected:
     CGE_MAP_DECLARE(cgString, EventActionDesc, EventActionMap)
 
     //-------------------------------------------------------------------------
+    // Protected Methods
+    //-------------------------------------------------------------------------
+    bool                        bindToScript                ( cgScriptInterop::Utils::ObjectSerializer * serializedObject );
+
+    //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
     cgAppStateManager     * mStateManager;          // Manager for this game state object
@@ -307,6 +314,10 @@ protected:
     cgScriptHandle          mScript;                // Base state script.
     cgScriptObject        * mScriptObject;          // Reference to the scripted state object (owned exclusively by the script).
     MethodHandles           mScriptMethods;         // Cached handles to the script callback methods.
+
+    // Hot-Reloading
+    cgScriptInterop::Utils::ObjectSerializerBridge * mScriptObjectBridge;
+    cgScriptInterop::Utils::ObjectSerializer         mScriptObjectSerializer;
 };
 
 //-----------------------------------------------------------------------------

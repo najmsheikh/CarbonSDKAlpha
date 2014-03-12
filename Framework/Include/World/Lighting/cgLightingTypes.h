@@ -97,7 +97,7 @@ namespace cgShadowGeneratorFillResult
 /// <summary>Describes a specific region of an indirect lighting grid.</summary>
 struct cgIndirectLightingGridSlice
 {
-    CGE_VECTOR_DECLARE( cgIndirectLightingGridSlice, Array )
+    CGE_ARRAY_DECLARE( cgIndirectLightingGridSlice, Array )
 
     // Public members
     cgInt32 gridIndex;
@@ -336,7 +336,7 @@ struct CGE_API cgShadowSettings
 
 struct cgShadowSettingsLOD
 {
-    CGE_VECTOR_DECLARE( cgShadowSettingsLOD, Array )
+    CGE_ARRAY_DECLARE( cgShadowSettingsLOD, Array )
 
     // Public Members
     cgInt32  level;
@@ -347,7 +347,7 @@ struct cgShadowSettingsLOD
 // ToDo: 6767 -- Do we even need this? Seems like this is just a 'sampler'.
 struct CGE_API cgShadowGeneratorInput
 {
-    CGE_VECTOR_DECLARE( cgShadowGeneratorInput, Array )
+    CGE_ARRAY_DECLARE( cgShadowGeneratorInput, Array )
 
     // Public Members
     cgInt32              samplerIndex;
@@ -366,7 +366,7 @@ struct CGE_API cgShadowGeneratorInput
 
 struct CGE_API cgShadowGeneratorOperation
 {
-    CGE_VECTOR_DECLARE( cgShadowGeneratorOperation, Array )
+    CGE_ARRAY_DECLARE( cgShadowGeneratorOperation, Array )
 
     // Public Members
     cgUInt32						operationTypeId;

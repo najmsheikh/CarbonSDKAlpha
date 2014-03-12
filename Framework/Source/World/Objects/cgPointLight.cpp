@@ -2894,11 +2894,17 @@ bool cgPointLightNode::postCreate( )
 	cgVector3 Y( 0, 1, 0 );
 	cgVector3 Z( 0, 0, 1 );
 
+    // Always force at least a small range to prevent invalid
+    // light shape matrix from being produced.
+    cgFloat fRange = getOuterRange(), fRangeAdjust = getRangeAdjust();
+    if ( fRange < CGE_EPSILON_1MM )
+        fRange = CGE_EPSILON_1MM;
+
     // Initialize shadow frustums ready for rendering
     const cgVector3 & vecPos = getPosition( false );
-    cgFloat fRange = getOuterRange(), fRangeAdjust = getRangeAdjust();
     for ( cgInt i = 0; i < 6; ++i )
     {
+        // Allocate frustums
         if ( !mFrustums[i]->initialize() )
             return false;
 

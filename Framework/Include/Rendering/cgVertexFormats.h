@@ -103,7 +103,7 @@ private:
     struct CGE_API FormatDatabase
     {
         // Members
-        CGE_VECTOR_DECLARE(cgVertexFormat*, FormatArray)
+        CGE_ARRAY_DECLARE(cgVertexFormat*, FormatArray)
         FormatArray formats;
 
         // Constructor / Destructor

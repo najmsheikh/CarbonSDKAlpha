@@ -62,7 +62,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Typedefs, Structures & Enumerators
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE(cgSampler*, SamplerArray)
+    CGE_ARRAY_DECLARE(cgSampler*, SamplerArray)
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors

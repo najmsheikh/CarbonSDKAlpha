@@ -361,7 +361,7 @@ public:
     //-------------------------------------------------------------------------
     // Protected Typedefs
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE( cgVisibilitySet*, VisibilitySetArray )
+    CGE_ARRAY_DECLARE( cgVisibilitySet*, VisibilitySetArray )
 
     //-------------------------------------------------------------------------
     // Public Enumerations

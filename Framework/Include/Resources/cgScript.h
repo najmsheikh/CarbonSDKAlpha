@@ -71,7 +71,7 @@ public:
         cgString    name;
         cgUInt32    hash[5];        
     };
-    CGE_VECTOR_DECLARE( SourceFileInfo, SourceFileArray )
+    CGE_ARRAY_DECLARE( SourceFileInfo, SourceFileArray )
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors
@@ -98,7 +98,9 @@ public:
     cgScriptObject        * executeFunctionObject   ( const cgString & objectType, const cgString & functionName, const cgScriptCompatibleStruct & argumentStruct, bool optional = false, bool * successOut = CG_NULL );
     cgScriptObject        * executeFunctionObject   ( const cgString & objectType, const cgString & functionName, const cgScriptArgument::Array & arguments, bool optional = false, bool * successOut = CG_NULL );
     cgScriptObject        * createObjectInstance    ( const cgString & objectType );
+    cgScriptObject        * createObjectInstance    ( const cgString & objectType, bool uninitialized );
     cgScriptObject        * createObjectInstance    ( const cgString & objectType, const cgScriptArgument::Array & arguments );
+    cgScriptObject        * createObjectInstance    ( const cgString & objectType, bool uninitialized, const cgScriptArgument::Array & arguments );
     bool                    setThisObject           ( void * value );
     const SourceFileArray & getSourceInfo           ( ) const;
     const cgString        & getThisType             ( ) const;
@@ -183,6 +185,8 @@ public:
     cgScriptFunctionHandle  getMethodHandle     ( const cgString & declaration );
     void                  * getAddressOfMember  ( const cgString & memberName );
     asIScriptObject       * getInternalObject   ( );
+    void                    setUserData         ( cgUInt32 id, void * value );
+    void                  * getUserData         ( cgUInt32 id );
     
 protected:
     //-------------------------------------------------------------------------

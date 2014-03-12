@@ -266,7 +266,7 @@ public:
     bool                        loadScript                  ( cgScriptHandle * resourceOut, const cgInputStream & stream, const cgString & thisType, cgUInt32 flags = 0, const cgDebugSourceInfo & _debugSource = cgDebugSourceInfo(_T(""),0) );
     bool                        loadScript                  ( cgScriptHandle * resourceOut, const cgInputStream & stream, const cgString & thisType, const cgString & instanceId, cgUInt32 flags = 0, const cgDebugSourceInfo & _debugSource = cgDebugSourceInfo(_T(""),0) );
     bool                        reloadScripts               ( cgFloat delay = 0.0f );
-    bool                        reloadScript                ( const cgString & resourceName );
+    bool                        reloadScript                ( const cgString & resourceName, bool reloadDependants );
 
     // Surface Shaders
     bool                        createSurfaceShader         ( cgSurfaceShaderHandle * resourceOut, const cgInputStream & stream, cgUInt32 flags = 0, const cgDebugSourceInfo & _debugSource = cgDebugSourceInfo(_T(""),0) );
@@ -404,10 +404,13 @@ protected:
     //-------------------------------------------------------------------------
     bool                    postInit                    ( );
     cgString                listActiveResources         ( ResourceItemList & resourceList );
-    void                    notifyDeviceLost            ( ResourceItemList & resourceList );
-    void                    notifyDeviceRestored        ( ResourceItemList & resourceList );
+    template <class _ResourceListType>
+    void                    notifyDeviceLost            ( _ResourceListType & resourceList );
+    template <class _ResourceListType>
+    void                    notifyDeviceRestored        ( _ResourceListType & resourceList );
     bool                    setRenderDriver             ( cgRenderDriver * driver );
     bool                    setAudioDriver              ( cgAudioDriver * driver );
+    void                    unloadScript                ( cgScript * script, bool reloadDependants, ResourceItemList & scripts );
 
     template <class _HandleType, class _ResourceType>
     bool                    processNewResource          ( _HandleType * resourceOut, _ResourceType * newResource, ResourceItemList & resourceList, const cgString & resourceName, cgStreamType::Base streamType, cgUInt32 flags, const cgDebugSourceInfo & _debugSource );

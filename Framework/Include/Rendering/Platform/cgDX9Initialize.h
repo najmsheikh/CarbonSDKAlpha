@@ -57,14 +57,14 @@ enum VERTEXPROCESSING_TYPE
 //-----------------------------------------------------------------------------
 // STL Vector Typedefs for Easy Access
 //-----------------------------------------------------------------------------
-typedef std::vector<D3DMULTISAMPLE_TYPE>     DX9VectorMSType;
-typedef std::vector<D3DFORMAT>               DX9VectorFormat;
-typedef std::vector<cgUInt32>                DX9VectorUInt32;
-typedef std::vector<VERTEXPROCESSING_TYPE>   DX9VectorVPType;
-typedef std::vector<D3DDISPLAYMODE>          DX9VectorDisplayMode;
-typedef std::vector<cgDX9EnumDeviceOptions*> DX9VectorDeviceOptions;
-typedef std::vector<cgDX9EnumDevice*>        DX9VectorDevice;
-typedef std::vector<cgDX9EnumAdapter*>       DX9VectorAdapter;
+typedef cgArray<D3DMULTISAMPLE_TYPE>     DX9VectorMSType;
+typedef cgArray<D3DFORMAT>               DX9VectorFormat;
+typedef cgArray<cgUInt32>                DX9VectorUInt32;
+typedef cgArray<VERTEXPROCESSING_TYPE>   DX9VectorVPType;
+typedef cgArray<D3DDISPLAYMODE>          DX9VectorDisplayMode;
+typedef cgArray<cgDX9EnumDeviceOptions*> DX9VectorDeviceOptions;
+typedef cgArray<cgDX9EnumDevice*>        DX9VectorDevice;
+typedef cgArray<cgDX9EnumAdapter*>       DX9VectorAdapter;
 
 //-----------------------------------------------------------------------------
 // Main Class Declarations

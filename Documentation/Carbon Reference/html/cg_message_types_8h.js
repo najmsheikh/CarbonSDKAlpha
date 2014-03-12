@@ -9,6 +9,7 @@ var cg_message_types_8h =
     [ "Resources_ReloadScripts", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7a2bf8e2c066b6119a264b72a6cfe7f974", null ],
     [ "Resources_ResourceAdded", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7a835b2a14f2820245dd33c8f842d9aaa2", null ],
     [ "Resources_ResourceRemoved", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7a9a1a034b10e43646e86b735f5e4aa96b", null ],
+    [ "Resources_ResourceUpdated", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7aa2141563af55d2f8db77cf7c31623e38", null ],
     [ "InputDriver_MouseMoved", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7a89609dcc69dd81c2682d69360305ba04", null ],
     [ "InputDriver_MouseButtonDown", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7a6202ea065679601f2855c63a6d07bd60", null ],
     [ "InputDriver_MouseButtonUp", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7aa7c04546ea9da9a1f22990a5e4ec63f0", null ],

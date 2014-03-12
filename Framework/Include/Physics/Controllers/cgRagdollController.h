@@ -100,7 +100,7 @@ protected:
         bool            collidable;
         cgTransform     originalTransform;
     };
-    CGE_VECTOR_DECLARE( Bone, BoneArray )
+    CGE_ARRAY_DECLARE( Bone, BoneArray )
     CGE_MAP_DECLARE( cgRigidBody*, size_t, BoneLUT );
 
     //-------------------------------------------------------------------------

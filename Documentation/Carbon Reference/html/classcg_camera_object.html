@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -218,6 +218,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3ecc460835f409c96a5af1ae92d3c824"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_camera_object.html#a3ecc460835f409c96a5af1ae92d3c824">getForegroundBlur</a> (<a class="el" href="structcg_blur_op_desc.html">cgBlurOpDesc</a> &amp;highBlur, <a class="el" href="structcg_blur_op_desc.html">cgBlurOpDesc</a> &amp;lowBlur) const </td></tr>
 <tr class="memdesc:a3ecc460835f409c96a5af1ae92d3c824"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the level of blur that is applied to the two foreground levels.  <a href="#a3ecc460835f409c96a5af1ae92d3c824"></a><br/></td></tr>
 <tr class="separator:a3ecc460835f409c96a5af1ae92d3c824"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bb841cc7ff21ac034b28249682b89e7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_camera_object.html#a3bb841cc7ff21ac034b28249682b89e7">sandboxRender</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, <a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, const <a class="el" href="classcg_plane.html">cgPlane</a> &amp;gridPlane, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer)</td></tr>
+<tr class="memdesc:a3bb841cc7ff21ac034b28249682b89e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the object to render its 'sandbox' representation &ndash; that is the representation to be displayed within an editing environment.  <a href="#a3bb841cc7ff21ac034b28249682b89e7"></a><br/></td></tr>
+<tr class="separator:a3bb841cc7ff21ac034b28249682b89e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a017df591dc484b4866553ee084b9c040"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_camera_object.html#a017df591dc484b4866553ee084b9c040">pick</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer, const <a class="el" href="structcg_size.html">cgSize</a> &amp;viewportSize, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, bool wireframe, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> wireTolerance, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;distanceOut)</td></tr>
+<tr class="memdesc:a017df591dc484b4866553ee084b9c040"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified object space ray, determine if this object is intersected and also compute the object space intersection distance.  <a href="#a017df591dc484b4866553ee084b9c040"></a><br/></td></tr>
+<tr class="separator:a017df591dc484b4866553ee084b9c040"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a813d2687bb081ec17422626b42e5befe"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_camera_object.html#a813d2687bb081ec17422626b42e5befe">getLocalBoundingBox</a> ()</td></tr>
+<tr class="memdesc:a813d2687bb081ec17422626b42e5befe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the bounding box of this object.  <a href="#a813d2687bb081ec17422626b42e5befe"></a><br/></td></tr>
+<tr class="separator:a813d2687bb081ec17422626b42e5befe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad624ca88609cb42474c853cb62f52a60"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_camera_object.html#ad624ca88609cb42474c853cb62f52a60">applyObjectRescale</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> scale)</td></tr>
 <tr class="memdesc:ad624ca88609cb42474c853cb62f52a60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply a scale to all <em>local</em> data internal to this object. For instance, in the case of a light source its range parameters will be scaled. For a mesh, the vertex data will be scaled, etc.  <a href="#ad624ca88609cb42474c853cb62f52a60"></a><br/></td></tr>
 <tr class="separator:ad624ca88609cb42474c853cb62f52a60"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -226,6 +235,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae0c82d5c7d7360cf83ca907b21427075"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_camera_object.html#ae0c82d5c7d7360cf83ca907b21427075">queryReferenceType</a> (const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;type) const </td></tr>
 <tr class="memdesc:ae0c82d5c7d7360cf83ca907b21427075"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows the application to determine if the inheritance hierarchy supports a particular interface.  <a href="#ae0c82d5c7d7360cf83ca907b21427075"></a><br/></td></tr>
 <tr class="separator:ae0c82d5c7d7360cf83ca907b21427075"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af549af1e6fdf9e504e50427f6598be01"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_camera_object.html#af549af1e6fdf9e504e50427f6598be01">onComponentCreated</a> (<a class="el" href="structcg_component_created_event_args.html">cgComponentCreatedEventArgs</a> *e)</td></tr>
+<tr class="memdesc:af549af1e6fdf9e504e50427f6598be01"><td class="mdescLeft">&#160;</td><td class="mdescRight">When the component is first created, it needs to be inserted fully into the world database. This virtual method allows the component to do so.  <a href="#af549af1e6fdf9e504e50427f6598be01"></a><br/></td></tr>
+<tr class="separator:af549af1e6fdf9e504e50427f6598be01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b100547d9b31b8af6f6d794874ef546"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_camera_object.html#a0b100547d9b31b8af6f6d794874ef546">onComponentLoading</a> (<a class="el" href="structcg_component_loading_event_args.html">cgComponentLoadingEventArgs</a> *e)</td></tr>
+<tr class="memdesc:a0b100547d9b31b8af6f6d794874ef546"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual method called when the component is being reloaded from an existing database entry rather than created for the first time.  <a href="#a0b100547d9b31b8af6f6d794874ef546"></a><br/></td></tr>
+<tr class="separator:a0b100547d9b31b8af6f6d794874ef546"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af25ac9a35c6b424bc6707b740356f48a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classcg_string.html">cgString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_camera_object.html#af25ac9a35c6b424bc6707b740356f48a">getDatabaseTable</a> () const </td></tr>
 <tr class="memdesc:af25ac9a35c6b424bc6707b740356f48a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the name of the primary type database table for this type.  <a href="#af25ac9a35c6b424bc6707b740356f48a"></a><br/></td></tr>
 <tr class="separator:af25ac9a35c6b424bc6707b740356f48a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -266,9 +281,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab7ff42f73e68829ec7ce6fbbed72c88f inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#ab7ff42f73e68829ec7ce6fbbed72c88f">isShadowCaster</a> () const </td></tr>
 <tr class="memdesc:ab7ff42f73e68829ec7ce6fbbed72c88f inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is the object capable of casting shadows? (i.e. a camera may not be)  <a href="#ab7ff42f73e68829ec7ce6fbbed72c88f"></a><br/></td></tr>
 <tr class="separator:ab7ff42f73e68829ec7ce6fbbed72c88f inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27fbf7a2927f3c6810f7bb260c43d724 inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#a27fbf7a2927f3c6810f7bb260c43d724">getLocalBoundingBox</a> ()</td></tr>
-<tr class="memdesc:a27fbf7a2927f3c6810f7bb260c43d724 inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the axis aligned bounding box for this node (encompassing its referenced object) as it exists in the object's local space.  <a href="#a27fbf7a2927f3c6810f7bb260c43d724"></a><br/></td></tr>
-<tr class="separator:a27fbf7a2927f3c6810f7bb260c43d724 inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c7225a42faece2dde2882d6df2e9dda inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#a2c7225a42faece2dde2882d6df2e9dda">getSubElementCategories</a> (cgObjectSubElementCategory::Map &amp;categories) const </td></tr>
 <tr class="memdesc:a2c7225a42faece2dde2882d6df2e9dda inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerate the list of sub-element categories and types that can be accessed by the sandbox environment / application. Returns true if sub-elements are supported.  <a href="#a2c7225a42faece2dde2882d6df2e9dda"></a><br/></td></tr>
 <tr class="separator:a2c7225a42faece2dde2882d6df2e9dda inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -291,24 +303,12 @@ cgObjectSubElementArray &amp;&#160;</td><td class="memItemRight" valign="bottom"
 <tr class="memitem:a9ba96efe8f795216a0c00a1b9607ee3d inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#a9ba96efe8f795216a0c00a1b9607ee3d">deleteSubElements</a> (const cgObjectSubElementArray &amp;elements)</td></tr>
 <tr class="memdesc:a9ba96efe8f795216a0c00a1b9607ee3d inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the specified sub-elements from this object. Note: No validation is performed to determine whether or not the 'delete' operation is even allowed for this class of sub-element. It is the caller's responsibility to determine this based on the information returned via the <a class="el" href="classcg_world_object.html#a2c7225a42faece2dde2882d6df2e9dda" title="Enumerate the list of sub-element categories and types that can be accessed by the sandbox environmen...">getSubElementCategories()</a> method.  <a href="#a9ba96efe8f795216a0c00a1b9607ee3d"></a><br/></td></tr>
 <tr class="separator:a9ba96efe8f795216a0c00a1b9607ee3d inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f6e48bd7a0b2fc66baa8b46d756eca6 inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#a8f6e48bd7a0b2fc66baa8b46d756eca6">sandboxRender</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, <a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, const <a class="el" href="classcg_plane.html">cgPlane</a> &amp;gridPlane, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer)</td></tr>
-<tr class="memdesc:a8f6e48bd7a0b2fc66baa8b46d756eca6 inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the object to render its 'sandbox' representation &ndash; that is the representation to be displayed within an editing environment.  <a href="#a8f6e48bd7a0b2fc66baa8b46d756eca6"></a><br/></td></tr>
-<tr class="separator:a8f6e48bd7a0b2fc66baa8b46d756eca6 inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88c8edbf8681b84aea3045b65e168402 inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#a88c8edbf8681b84aea3045b65e168402">render</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer)</td></tr>
 <tr class="memdesc:a88c8edbf8681b84aea3045b65e168402 inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base render method is responsible for managing the render queue, checking visibility states etc.  <a href="#a88c8edbf8681b84aea3045b65e168402"></a><br/></td></tr>
 <tr class="separator:a88c8edbf8681b84aea3045b65e168402 inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a994bdcdbc306c388a79036aee0aadf6e inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#a994bdcdbc306c388a79036aee0aadf6e">renderSubset</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer, const <a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> &amp;material)</td></tr>
 <tr class="memdesc:a994bdcdbc306c388a79036aee0aadf6e inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render the object one material at a time (material batching).  <a href="#a994bdcdbc306c388a79036aee0aadf6e"></a><br/></td></tr>
 <tr class="separator:a994bdcdbc306c388a79036aee0aadf6e inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b5f4cf514f6e22a6f6b62a8912fb73a inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#a5b5f4cf514f6e22a6f6b62a8912fb73a">pick</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer, const <a class="el" href="structcg_size.html">cgSize</a> &amp;viewportSize, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, bool wireframe, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> wireTolerance, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;distanceOut)</td></tr>
-<tr class="memdesc:a5b5f4cf514f6e22a6f6b62a8912fb73a inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified object space ray, determine if this object is intersected and also compute the object space intersection distance.  <a href="#a5b5f4cf514f6e22a6f6b62a8912fb73a"></a><br/></td></tr>
-<tr class="separator:a5b5f4cf514f6e22a6f6b62a8912fb73a inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab968ef227a2bbef6c822a2bd6dec4a91 inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#ab968ef227a2bbef6c822a2bd6dec4a91">onComponentCreated</a> (<a class="el" href="structcg_component_created_event_args.html">cgComponentCreatedEventArgs</a> *e)</td></tr>
-<tr class="memdesc:ab968ef227a2bbef6c822a2bd6dec4a91 inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">When the component is first created, it needs to be inserted fully into the world database. This virtual method allows the component to do so.  <a href="#ab968ef227a2bbef6c822a2bd6dec4a91"></a><br/></td></tr>
-<tr class="separator:ab968ef227a2bbef6c822a2bd6dec4a91 inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa26898281b2b604a2f8f6028c9aed860 inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#aa26898281b2b604a2f8f6028c9aed860">onComponentLoading</a> (<a class="el" href="structcg_component_loading_event_args.html">cgComponentLoadingEventArgs</a> *e)</td></tr>
-<tr class="memdesc:aa26898281b2b604a2f8f6028c9aed860 inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual method called when the component is being reloaded from an existing database entry rather than created for the first time.  <a href="#aa26898281b2b604a2f8f6028c9aed860"></a><br/></td></tr>
-<tr class="separator:aa26898281b2b604a2f8f6028c9aed860 inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a420e1da9794f894c87b809795542a0d7 inherit pub_methods_classcg_world_object"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_object.html#a420e1da9794f894c87b809795542a0d7">onComponentDeleted</a> ()</td></tr>
 <tr class="memdesc:a420e1da9794f894c87b809795542a0d7 inherit pub_methods_classcg_world_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">When the component is removed from the world, all of its rows needs to be removed from the world database. This virtual method allows it to do so.  <a href="#a420e1da9794f894c87b809795542a0d7"></a><br/></td></tr>
 <tr class="separator:a420e1da9794f894c87b809795542a0d7 inherit pub_methods_classcg_world_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -875,6 +875,33 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a813d2687bb081ec17422626b42e5befe"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> cgCameraObject::getLocalBoundingBox </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieve the bounding box of this object. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_world_object.html#a27fbf7a2927f3c6810f7bb260c43d724">cgWorldObject</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a77fabc5e67ff60df7931d0b80f3460d9"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1008,6 +1035,136 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="af549af1e6fdf9e504e50427f6598be01"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgCameraObject::onComponentCreated </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcg_component_created_event_args.html">cgComponentCreatedEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>When the component is first created, it needs to be inserted fully into the world database. This virtual method allows the component to do so. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_world_object.html#ab968ef227a2bbef6c822a2bd6dec4a91">cgWorldObject</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0b100547d9b31b8af6f6d794874ef546"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgCameraObject::onComponentLoading </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcg_component_loading_event_args.html">cgComponentLoadingEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Virtual method called when the component is being reloaded from an existing database entry rather than created for the first time. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_world_object.html#aa26898281b2b604a2f8f6028c9aed860">cgWorldObject</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a017df591dc484b4866553ee084b9c040"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgCameraObject::pick </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_camera_node.html">cgCameraNode</a> *&#160;</td>
+          <td class="paramname"><em>pCamera</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcg_object_node.html">cgObjectNode</a> *&#160;</td>
+          <td class="paramname"><em>pIssuer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_size.html">cgSize</a> &amp;&#160;</td>
+          <td class="paramname"><em>ViewportSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
+          <td class="paramname"><em>vOrigin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
+          <td class="paramname"><em>vDir</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bWireframe</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>fWireTolerance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;&#160;</td>
+          <td class="paramname"><em>fDistance</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Given the specified object space ray, determine if this object is intersected and also compute the object space intersection distance. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_world_object.html#a5b5f4cf514f6e22a6f6b62a8912fb73a">cgWorldObject</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ae0c82d5c7d7360cf83ca907b21427075"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1033,6 +1190,62 @@ Additional Inherited Members</h2></td></tr>
 <p>Allows the application to determine if the inheritance hierarchy supports a particular interface. </p>
 
 <p>Reimplemented from <a class="el" href="classcg_world_object.html#a6d6a4636dbf11a092a49a4c71b06cad5">cgWorldObject</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3bb841cc7ff21ac034b28249682b89e7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgCameraObject::sandboxRender </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>flags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcg_camera_node.html">cgCameraNode</a> *&#160;</td>
+          <td class="paramname"><em>pCamera</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *&#160;</td>
+          <td class="paramname"><em>pVisData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcg_plane.html">cgPlane</a> &amp;&#160;</td>
+          <td class="paramname"><em>GridPlane</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcg_object_node.html">cgObjectNode</a> *&#160;</td>
+          <td class="paramname"><em>pIssuer</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allow the object to render its 'sandbox' representation &ndash; that is the representation to be displayed within an editing environment. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_world_object.html#a8f6e48bd7a0b2fc66baa8b46d756eca6">cgWorldObject</a>.</p>
 
 </div>
 </div>
@@ -1428,7 +1641,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_camera_object.html">cgCameraObject</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:28:01 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:42 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

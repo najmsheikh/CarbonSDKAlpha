@@ -157,7 +157,7 @@ protected:
         cgVector3       normal;     // Contact normal.
         cgVector3       impulse;    // Impulse to apply to the body based on the impact.
     };
-    CGE_VECTOR_DECLARE( ContactData, ContactDataArray )
+    CGE_ARRAY_DECLARE( ContactData, ContactDataArray )
 
     //-------------------------------------------------------------------------
     // Protected Methods

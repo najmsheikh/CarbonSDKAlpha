@@ -75,7 +75,7 @@ cgShadowGenerator::cgShadowGenerator( cgLightNode * pParentLight, cgUInt32 nFrus
     mVerticalPointSampler    = CG_NULL;
 	mHorizontalLinearSampler = CG_NULL;
     mHorizontalPointSampler  = CG_NULL;
-    mLastVisibilityFrame     = -1;
+    mLastVisibilityFrame     = (cgUInt32)-1;
 
 	mMethodHW                = 0;
 	mResolution              = 0;
@@ -185,7 +185,7 @@ void cgShadowGenerator::dispose( bool bDisposeBase )
     mVerticalPointSampler     = CG_NULL;
     mHorizontalLinearSampler  = CG_NULL;
     mHorizontalPointSampler   = CG_NULL;
-    mLastVisibilityFrame      = -1;
+    mLastVisibilityFrame      = (cgUInt32)-1;
     mResolution               = 0;
     mMethodHW                 = 0;
     mSettings                 = cgShadowSettings();
@@ -920,9 +920,11 @@ bool cgShadowGenerator::computeVisibilitySet( cgCameraNode * pSceneCamera, bool 
 
     // If the light source moved or was updated, we can immediately
     // consider this frustum to be dirty.
-    if ( !mLastVisibilityFrame || mParent->isNodeDirtySince( mLastVisibilityFrame ) )
+    if ( mLastVisibilityFrame == ((cgUInt32)-1) || mParent->isNodeDirtySince( mLastVisibilityFrame ) )
         mRegenerate = true;
-    
+
+    mRegenerate = true;
+
     // If the light source is employing an orthographic parallel split
     // rendering approach, we need to compute a new projection matrix.
     if ( bParallelSplit )
@@ -981,7 +983,7 @@ bool cgShadowGenerator::computeVisibilitySet( cgCameraNode * pSceneCamera, bool 
 
         // If the set was actually modified (objects added or removed)
         // then force regenerate.
-        if ( pFrustumVis->isSetModifiedSince( mLastVisibilityFrame ) )
+        if ( !mRegenerate && pFrustumVis->isSetModifiedSince( mLastVisibilityFrame ) )
             mRegenerate = true;
 
         // ToDo: Potentially need to filter objects that can't cast a shadow
@@ -2584,7 +2586,7 @@ bool cgReflectanceGenerator::downsampleRSM( const cgShadowGeneratorOperation & O
 	/*// If we don't have access to a resample chain, ask for one
 	if ( mResampleChainIndex < 0 )
 	{
-		std::vector< cgBufferFormat::Base > Formats;
+		cgArray< cgBufferFormat::Base > Formats;
 		Formats.push_back( mDescriptions[ 1 ].bufferDesc.format );
 		Formats.push_back( mDescriptions[ 2 ].bufferDesc.format );
 		Formats.push_back( mDescriptions[ 3 ].bufferDesc.format );
@@ -2751,7 +2753,7 @@ bool cgReflectanceGenerator::computeVisibilitySet( cgCameraNode * pSceneCamera, 
 
     // If the light source moved or was updated, we can immediately
     // consider this frustum to be dirty.
-    if ( !mLastVisibilityFrame || mParent->isNodeDirtySince( mLastVisibilityFrame ) )
+    if ( mLastVisibilityFrame == ((cgUInt32)-1) || mParent->isNodeDirtySince( mLastVisibilityFrame ) )
     {
         mRegenerate = true;
     

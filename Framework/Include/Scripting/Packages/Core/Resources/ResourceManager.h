@@ -136,7 +136,7 @@ namespace ResourceManager
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool loadScript( ScriptHandle &inout, const String &in, const String &in, uint, const DebugSource &in )", asFUNCTIONPR(loadScript,(cgScriptHandle*,const cgString&, const cgString&, cgUInt32,const cgDebugSourceInfo&,cgResourceManager*), bool), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool loadScript( ScriptHandle &inout, const String &in, const String &in, const String &in, uint, const DebugSource &in )", asFUNCTIONPR(loadScript,(cgScriptHandle*,const cgString&, const cgString&, const cgString&, cgUInt32,const cgDebugSourceInfo&,cgResourceManager*), bool), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool reloadScripts( float )", asMETHODPR(cgResourceManager,reloadScripts,(cgFloat), bool), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool reloadScript( const String &in )", asMETHODPR(cgResourceManager,reloadScript,(const cgString&), bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "ResourceManager", "bool reloadScript( const String &in, bool )", asMETHODPR(cgResourceManager,reloadScript,(const cgString&, bool), bool), asCALL_THISCALL) );
 
 
             ///////////////////////////////////////////////////////////////////////

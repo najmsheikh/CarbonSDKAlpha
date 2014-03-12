@@ -33,5 +33,6 @@ var cg_base_8h =
     [ "cgFPURestorePrecision", "cg_base_8h.html#ab51e30d50e9f69f5ef9656db893645a8", null ],
     [ "cgGetEngineConfig", "cg_base_8h.html#a8a8f5bb9c966a2df2262c4ad0d8855ac", null ],
     [ "cgGetSandboxMode", "cg_base_8h.html#a10bd2e0ab5f1ed2cd1540dd95b7f5379", null ],
-    [ "cgSetSandboxMode", "cg_base_8h.html#aa9e7211899f89f1952be595591a25d93", null ]
+    [ "cgSetSandboxMode", "cg_base_8h.html#aa9e7211899f89f1952be595591a25d93", null ],
+    [ "cgSetSandboxMode", "cg_base_8h.html#ada423d738cd74e2375f0e0babdc8e221", null ]
 ];

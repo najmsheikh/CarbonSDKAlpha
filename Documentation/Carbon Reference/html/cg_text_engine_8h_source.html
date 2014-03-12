@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -181,7 +181,7 @@ $(document).ready(function(){initNavTree('cg_text_engine_8h_source.html','');});
 <div class="line"><a name="l00079"></a><span class="lineno"><a class="code" href="structcg_font_set_1_1_char_desc.html#a164fdfb00c351a07df103cafa0bf3130">   79</a></span>&#160;        <a class="code" href="cg_base_types_8h.html#a205b36290def5db7b358b851cfb45586">cgInt16</a>             <a class="code" href="structcg_font_set_1_1_char_desc.html#a164fdfb00c351a07df103cafa0bf3130">frameIndex</a>;             <span class="comment">// The index into the billboard buffer&#39;s frame array for this character</span></div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    </div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    }; <span class="comment">// End Struct CharDesc</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>(<a class="code" href="structcg_font_set_1_1_char_desc.html">CharDesc</a>*, CharacterArray)</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>(<a class="code" href="structcg_font_set_1_1_char_desc.html">CharDesc</a>*, CharacterArray)</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// Font data may spill over onto multiple pages. This structure contains the page definition.</span></div>
 <div class="line"><a name="l00085"></a><span class="lineno"><a class="code" href="structcg_font_set_1_1_font_set_page.html">   85</a></span>&#160;    struct <a class="code" href="structcg_font_set_1_1_font_set_page.html">FontSetPage</a></div>
@@ -198,7 +198,7 @@ $(document).ready(function(){initNavTree('cg_text_engine_8h_source.html','');});
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        } <span class="comment">// End Constructor</span></div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    }; <span class="comment">// End Struct FontSetPage</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>(FontSetPage*, PageArray)</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>(FontSetPage*, PageArray)</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="comment">// Protected Methods</span></div>
@@ -255,7 +255,7 @@ $(document).ready(function(){initNavTree('cg_text_engine_8h_source.html','');});
 <div class="line"><a name="l00157"></a><span class="lineno"><a class="code" href="structcg_text_metrics_1_1_text_char.html#a1fd184ab8a690450ec942d40eacc8265">  157</a></span>&#160;        <a class="code" href="structcg_rect.html">cgRect</a>   <a class="code" href="structcg_text_metrics_1_1_text_char.html#a1fd184ab8a690450ec942d40eacc8265">displayBounds</a>;</div>
 <div class="line"><a name="l00158"></a><span class="lineno"><a class="code" href="structcg_text_metrics_1_1_text_char.html#a674a0a0b51ee3d71447d73a511c1cafe">  158</a></span>&#160;        <a class="code" href="structcg_rect.html">cgRect</a>   <a class="code" href="structcg_text_metrics_1_1_text_char.html#a674a0a0b51ee3d71447d73a511c1cafe">bounds</a>;</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    };</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>(<a class="code" href="structcg_text_metrics_1_1_text_char.html">TextChar</a>, TextCharArray)</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>(<a class="code" href="structcg_text_metrics_1_1_text_char.html">TextChar</a>, TextCharArray)</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="comment">// Structure containing prepared data for each line of text to render</span></div>
 <div class="line"><a name="l00163"></a><span class="lineno"><a class="code" href="structcg_text_metrics_1_1_text_line.html">  163</a></span>&#160;    struct <a class="code" href="structcg_text_metrics_1_1_text_line.html">TextLine</a></div>
@@ -316,7 +316,7 @@ $(document).ready(function(){initNavTree('cg_text_engine_8h_source.html','');});
 <div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;        <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> firstCharacter;</div>
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        <a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> lastCharacter;</div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    };</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>(LineRange, LineRangeArray)</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>(LineRange, LineRangeArray)</div>
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;</div>
 <div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="comment">// Private Variables</span></div>
@@ -401,7 +401,7 @@ $(document).ready(function(){initNavTree('cg_text_engine_8h_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_ffcb1a4721a645d0b89dc3720494ffda.html">Interface</a></li><li class="navelem"><a class="el" href="cg_text_engine_8h.html">cgTextEngine.h</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:27:53 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:34 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

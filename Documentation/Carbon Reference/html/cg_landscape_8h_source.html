@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -252,8 +252,8 @@ $(document).ready(function(){initNavTree('cg_landscape_8h_source.html','');});
 <div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;</div>
 <div class="line"><a name="l00171"></a><span class="lineno"><a class="code" href="structcg_landscape_1_1_procedural_draw_batch.html">  171</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structcg_landscape_1_1_procedural_draw_batch.html">ProceduralDrawBatch</a></div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    {</div>
-<div class="line"><a name="l00174"></a><span class="lineno"><a class="code" href="structcg_landscape_1_1_procedural_draw_batch.html#aa10e29f2d4c04f593233f592bf34c97f">  174</a></span>&#160;        std::vector&lt;cgInt&gt;              <a class="code" href="structcg_landscape_1_1_procedural_draw_batch.html#aa10e29f2d4c04f593233f592bf34c97f" title="The list of layers being referenced.">layers</a>;</div>
-<div class="line"><a name="l00176"></a><span class="lineno"><a class="code" href="structcg_landscape_1_1_procedural_draw_batch.html#a4ebf971df3146c1b6513303678ac67f5">  176</a></span>&#160;        std::vector&lt;cgTerrainBlock*&gt;    <a class="code" href="structcg_landscape_1_1_procedural_draw_batch.html#a4ebf971df3146c1b6513303678ac67f5" title="The list of blocks to draw.">blocks</a>;</div>
+<div class="line"><a name="l00174"></a><span class="lineno"><a class="code" href="structcg_landscape_1_1_procedural_draw_batch.html#a327b15604cf5f5f591a14c3e8506ef3d">  174</a></span>&#160;        <a class="code" href="classcg_array.html">cgArray&lt;cgInt&gt;</a>              <a class="code" href="structcg_landscape_1_1_procedural_draw_batch.html#a327b15604cf5f5f591a14c3e8506ef3d" title="The list of layers being referenced.">layers</a>;</div>
+<div class="line"><a name="l00176"></a><span class="lineno"><a class="code" href="structcg_landscape_1_1_procedural_draw_batch.html#aea2f270cff8fb4bf96fe9abde226195c">  176</a></span>&#160;        <a class="code" href="classcg_array.html">cgArray&lt;cgTerrainBlock*&gt;</a>    <a class="code" href="structcg_landscape_1_1_procedural_draw_batch.html#aea2f270cff8fb4bf96fe9abde226195c" title="The list of blocks to draw.">blocks</a>;</div>
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;</div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    }; <span class="comment">// End Struct ProceduralDrawBatch</span></div>
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;</div>
@@ -269,9 +269,9 @@ $(document).ready(function(){initNavTree('cg_landscape_8h_source.html','');});
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="comment">// Typedefs</span></div>
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( <a class="code" href="structcg_landscape_1_1_procedural_layer_ref.html">ProceduralLayerRef</a>, ProceduralLayerArray )</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( <a class="code" href="classcg_terrain_block.html" title="A portion of the overall terrain. Manages vertex buffer creation, various levels of detail features...">cgTerrainBlock</a>*, TerrainBlockArray )</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( <a class="code" href="classcg_terrain_l_o_d.html" title="Level of detail information for rendering a terrain block. ">cgTerrainLOD</a>*, TerrainLODArray )</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>( <a class="code" href="structcg_landscape_1_1_procedural_layer_ref.html">ProceduralLayerRef</a>, ProceduralLayerArray )</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>( <a class="code" href="classcg_terrain_block.html" title="A portion of the overall terrain. Manages vertex buffer creation, various levels of detail features...">cgTerrainBlock</a>*, TerrainBlockArray )</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>( <a class="code" href="classcg_terrain_l_o_d.html" title="Level of detail information for rendering a terrain block. ">cgTerrainLOD</a>*, TerrainLODArray )</div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;</div>
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <span class="comment">// Constructors &amp; Destructors</span></div>
@@ -428,8 +428,8 @@ $(document).ready(function(){initNavTree('cg_landscape_8h_source.html','');});
 <div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;    <span class="comment">// Protected Typedefs</span></div>
 <div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( <a class="code" href="structcg_landscape_1_1_procedural_draw_batch.html">ProceduralDrawBatch</a>, ProceduralDrawBatchArray )</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( <a class="code" href="structcg_landscape_1_1_cull_descriptor.html">CullDescriptor</a>, CullDescriptorArray )</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>( <a class="code" href="structcg_landscape_1_1_procedural_draw_batch.html">ProceduralDrawBatch</a>, ProceduralDrawBatchArray )</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>( <a class="code" href="structcg_landscape_1_1_cull_descriptor.html">CullDescriptor</a>, CullDescriptorArray )</div>
 <div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;    </div>
 <div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    <span class="comment">// Protected Methods</span></div>
@@ -558,7 +558,7 @@ $(document).ready(function(){initNavTree('cg_landscape_8h_source.html','');});
 <div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;        </div>
 <div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;        }; <span class="comment">// End Struct LODLevel</span></div>
 <div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;</div>
-<div class="line"><a name="l00547"></a><span class="lineno"><a class="code" href="structcg_terrain_l_o_d_1_1_block_skirt.html#afa6d148f8153cda9f541473763e17ad9">  547</a></span>&#160;        std::vector&lt;LODLevel&gt; <a class="code" href="structcg_terrain_l_o_d_1_1_block_skirt.html#afa6d148f8153cda9f541473763e17ad9" title="Information for connecting the block to a neighbor at this or any lower LOD.">levels</a>;</div>
+<div class="line"><a name="l00547"></a><span class="lineno"><a class="code" href="structcg_terrain_l_o_d_1_1_block_skirt.html#a64842fb7cd99979440dee027ff5287ca">  547</a></span>&#160;        <a class="code" href="classcg_array.html">cgArray&lt;LODLevel&gt;</a> <a class="code" href="structcg_terrain_l_o_d_1_1_block_skirt.html#a64842fb7cd99979440dee027ff5287ca" title="Information for connecting the block to a neighbor at this or any lower LOD.">levels</a>;</div>
 <div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;    </div>
 <div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;    }; <span class="comment">// End Struct BlockSkirt</span></div>
 <div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;</div>
@@ -786,7 +786,7 @@ $(document).ready(function(){initNavTree('cg_landscape_8h_source.html','');});
 <div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;    <span class="comment">// Public Typedefs</span></div>
 <div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( <a class="code" href="structcg_landscape_texture_data_1_1_layer_reference.html">LayerReference</a>, LayerReferenceArray )</div>
+<div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>( <a class="code" href="structcg_landscape_texture_data_1_1_layer_reference.html">LayerReference</a>, LayerReferenceArray )</div>
 <div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;</div>
 <div class="line"><a name="l00840"></a><span class="lineno">  840</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160;    <span class="comment">// Constructors &amp; Destructors</span></div>
@@ -858,8 +858,8 @@ $(document).ready(function(){initNavTree('cg_landscape_8h_source.html','');});
 <div class="line"><a name="l00915"></a><span class="lineno">  915</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00916"></a><span class="lineno">  916</span>&#160;    <span class="comment">// Protected Typedefs</span></div>
 <div class="line"><a name="l00917"></a><span class="lineno">  917</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00918"></a><span class="lineno">  918</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( <a class="code" href="structcg_landscape_texture_data_1_1_batched_map.html">BatchedMap</a>, BatchedMapArray )</div>
-<div class="line"><a name="l00919"></a><span class="lineno">  919</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( <a class="code" href="structcg_landscape_texture_data_1_1_render_batch.html">RenderBatch</a>, RenderBatchArray )</div>
+<div class="line"><a name="l00918"></a><span class="lineno">  918</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>( <a class="code" href="structcg_landscape_texture_data_1_1_batched_map.html">BatchedMap</a>, BatchedMapArray )</div>
+<div class="line"><a name="l00919"></a><span class="lineno">  919</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>( <a class="code" href="structcg_landscape_texture_data_1_1_render_batch.html">RenderBatch</a>, RenderBatchArray )</div>
 <div class="line"><a name="l00920"></a><span class="lineno">  920</span>&#160;</div>
 <div class="line"><a name="l00921"></a><span class="lineno">  921</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00922"></a><span class="lineno">  922</span>&#160;    <span class="comment">// Protected Methods</span></div>
@@ -904,7 +904,7 @@ $(document).ready(function(){initNavTree('cg_landscape_8h_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_cace410e69155a0a769d51256a788445.html">World</a></li><li class="navelem"><a class="el" href="cg_landscape_8h.html">cgLandscape.h</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:27:51 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:34 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

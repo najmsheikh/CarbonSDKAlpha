@@ -47,6 +47,8 @@ namespace Scene
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "void update( )", asMETHODPR(cgScene,update,(),void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "void render( )", asMETHODPR(cgScene,render,(),void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "void unload( )", asMETHODPR(cgScene,unload,(),void), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Scene", "bool isUpdating( ) const", asMETHODPR(cgScene,isUpdating,() const,bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Scene", "bool isUpdatingEnabled( ) const", asMETHODPR(cgScene,isUpdatingEnabled,() const,bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "void addRootNode( ObjectNode@+ )", asMETHODPR(cgScene,addRootNode,( cgObjectNode* ),void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "void removeRootNode( ObjectNode@+ )", asMETHODPR(cgScene,removeRootNode,( cgObjectNode* ),void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "void setObjectUpdateRate( ObjectNode@+, UpdateRate )", asMETHODPR(cgScene,setObjectUpdateRate,( cgObjectNode*, cgUpdateRate::Base ),void), asCALL_THISCALL) );
@@ -72,8 +74,8 @@ namespace Scene
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "ObjectNode@+ getObjectNodeById( uint ) const", asMETHODPR(cgScene,getObjectNodeById,( cgUInt32 ) const, cgObjectNode* ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "void getObjectNodesInBounds( const Vector3 &in, float, array<ObjectNode@>@+ ) const", asFUNCTIONPR(getObjectNodesInBounds,( const cgVector3 &, cgFloat, ScriptArray*, cgScene* ), void), asCALL_CDECL_OBJLAST) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "void getObjectNodesInBounds( const BoundingBox &in, array<ObjectNode@>@+ ) const", asFUNCTIONPR(getObjectNodesInBounds,( const cgBoundingBox &, ScriptArray*, cgScene* ), void), asCALL_CDECL_OBJLAST) );
-            BINDSUCCESS( engine->registerObjectMethod( "Scene", "bool rayCastClosest( const Vector3 &in, const Vector3 &in, SceneCollisionContact &inout )", asMETHODPR(cgScene, rayCastClosest, ( const cgVector3&, const cgVector3&, cgSceneCollisionContact& ), bool), asCALL_THISCALL) );
-            // ToDo: bool                rayCast             ( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgSceneCollisionContact::Array & contacts );
+            BINDSUCCESS( engine->registerObjectMethod( "Scene", "bool rayCastClosest( const Vector3 &in, const Vector3 &in, SceneRayCastContact &inout )", asMETHODPR(cgScene, rayCastClosest, ( const cgVector3&, const cgVector3&, cgSceneRayCastContact& ), bool), asCALL_THISCALL) );
+            // ToDo: bool                rayCast             ( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgSceneRayCastContact::Array & contacts );
         }
 
         //---------------------------------------------------------------------

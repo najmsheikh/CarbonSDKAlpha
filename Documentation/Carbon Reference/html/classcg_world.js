@@ -50,7 +50,7 @@ var classcg_world =
     [ "onSceneLoaded", "classcg_world.html#a8dab7128d77f9b6ba7e5aa4827362b3e", null ],
     [ "onSceneLoadFailed", "classcg_world.html#aed0b1f61d9c2fe88e8b1664b49147822", null ],
     [ "onSceneLoading", "classcg_world.html#a441f85ecf1e2e696a723d5e62ea0728c", null ],
-    [ "onSceneUnloading", "classcg_world.html#a05b211511dfb725de929e1d9284badb4", null ],
+    [ "onSceneUnloading", "classcg_world.html#aa6c6aa53bb32c7033355dff6e3e32405", null ],
     [ "onWorldDisposing", "classcg_world.html#a5ad7ca5952169d7dd29a988c20c62e6c", null ],
     [ "open", "classcg_world.html#a7417af7545c8f4a8233d76d2df5770ba", null ],
     [ "postConnect", "classcg_world.html#aac427cd07ef81ebf52c40fb393595ee4", null ],

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -106,6 +106,7 @@ $(document).ready(function(){initNavTree('classcg_app_state.html','');});
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classcg_app_state-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -322,6 +323,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a36cc028af4f3b6480abfb1830dddc36d inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a36cc028af4f3b6480abfb1830dddc36d">scriptSafeDispose</a> ()</td></tr>
 <tr class="separator:a36cc028af4f3b6480abfb1830dddc36d inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a6d55dccc0b13e5ab1eba08c94dc58c09"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a6d55dccc0b13e5ab1eba08c94dc58c09">bindToScript</a> (<a class="el" href="classcg_script_interop_1_1_utils_1_1_object_serializer.html">cgScriptInterop::Utils::ObjectSerializer</a> *serializedObject)</td></tr>
+<tr class="memdesc:a6d55dccc0b13e5ab1eba08c94dc58c09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called internally to instantiate the relevant script object and to collect references to any provided state override methods.  <a href="#a6d55dccc0b13e5ab1eba08c94dc58c09"></a><br/></td></tr>
+<tr class="separator:a6d55dccc0b13e5ab1eba08c94dc58c09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classcg_reference"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classcg_reference')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classcg_reference.html">cgReference</a></td></tr>
+<tr class="memitem:a6cfceab8378d8ec28490f639d785193a inherit pro_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a6cfceab8378d8ec28490f639d785193a">addRefHold</a> (<a class="el" href="classcg_reference.html">cgReference</a> *reference, bool reconnecting)</td></tr>
+<tr class="memdesc:a6cfceab8378d8ec28490f639d785193a inherit pro_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add internal references of the specified object held by this reference holder. This is an internal method that is called only by the target of the reference in order to establish a bi-directional relationship.  <a href="#a6cfceab8378d8ec28490f639d785193a"></a><br/></td></tr>
+<tr class="separator:a6cfceab8378d8ec28490f639d785193a inherit pro_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91fee3b24b54842b4d378a14cd8a5e1b inherit pro_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a91fee3b24b54842b4d378a14cd8a5e1b">removeRefHold</a> (<a class="el" href="classcg_reference.html">cgReference</a> *reference, bool disconnecting)</td></tr>
+<tr class="memdesc:a91fee3b24b54842b4d378a14cd8a5e1b inherit pro_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove internal references of the specified object held by this reference holder. This is an internal method that is called only by the target of the reference in order to finalize a bi-directional relationship.  <a href="#a91fee3b24b54842b4d378a14cd8a5e1b"></a><br/></td></tr>
+<tr class="separator:a91fee3b24b54842b4d378a14cd8a5e1b inherit pro_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a91d46b27aaa189600c5c0eee573f361c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_app_state_manager.html">cgAppStateManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a91d46b27aaa189600c5c0eee573f361c">mStateManager</a></td></tr>
@@ -352,6 +366,10 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a6db82804a5237cf47dd71750d97a8db1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94b0faaa656bbbcb37192be8e8445e7f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_app_state_1_1_method_handles.html">MethodHandles</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a94b0faaa656bbbcb37192be8e8445e7f">mScriptMethods</a></td></tr>
 <tr class="separator:a94b0faaa656bbbcb37192be8e8445e7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8abe52344704148bdadbd67b0357193d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_script_interop_1_1_utils_1_1_object_serializer_bridge.html">cgScriptInterop::Utils::ObjectSerializerBridge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a8abe52344704148bdadbd67b0357193d">mScriptObjectBridge</a></td></tr>
+<tr class="separator:a8abe52344704148bdadbd67b0357193d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a934c5c2fcc4e5d331bc585bbfee23a7f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_script_interop_1_1_utils_1_1_object_serializer.html">cgScriptInterop::Utils::ObjectSerializer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state.html#a934c5c2fcc4e5d331bc585bbfee23a7f">mScriptObjectSerializer</a></td></tr>
+<tr class="separator:a934c5c2fcc4e5d331bc585bbfee23a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classcg_reference"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_reference')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_reference.html">cgReference</a></td></tr>
 <tr class="memitem:a58ab53765ddfa978c2ef51a3a75bab63 inherit pro_attribs_classcg_reference"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a58ab53765ddfa978c2ef51a3a75bab63">mReferenceId</a></td></tr>
 <tr class="separator:a58ab53765ddfa978c2ef51a3a75bab63 inherit pro_attribs_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -373,16 +391,6 @@ Protected Attributes</h2></td></tr>
 <tr class="inherit_header pro_attribs_classcg_script_interop_1_1_disposable_script_object"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_script_interop_1_1_disposable_script_object')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_script_interop_1_1_disposable_script_object.html">cgScriptInterop::DisposableScriptObject</a></td></tr>
 <tr class="memitem:a5da40dc03376bc8d5c50145690eb5f28 inherit pro_attribs_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a5da40dc03376bc8d5c50145690eb5f28">mScriptRefCount</a></td></tr>
 <tr class="separator:a5da40dc03376bc8d5c50145690eb5f28 inherit pro_attribs_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pro_methods_classcg_reference"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classcg_reference')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classcg_reference.html">cgReference</a></td></tr>
-<tr class="memitem:a6cfceab8378d8ec28490f639d785193a inherit pro_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a6cfceab8378d8ec28490f639d785193a">addRefHold</a> (<a class="el" href="classcg_reference.html">cgReference</a> *reference, bool reconnecting)</td></tr>
-<tr class="memdesc:a6cfceab8378d8ec28490f639d785193a inherit pro_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add internal references of the specified object held by this reference holder. This is an internal method that is called only by the target of the reference in order to establish a bi-directional relationship.  <a href="#a6cfceab8378d8ec28490f639d785193a"></a><br/></td></tr>
-<tr class="separator:a6cfceab8378d8ec28490f639d785193a inherit pro_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91fee3b24b54842b4d378a14cd8a5e1b inherit pro_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a91fee3b24b54842b4d378a14cd8a5e1b">removeRefHold</a> (<a class="el" href="classcg_reference.html">cgReference</a> *reference, bool disconnecting)</td></tr>
-<tr class="memdesc:a91fee3b24b54842b4d378a14cd8a5e1b inherit pro_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove internal references of the specified object held by this reference holder. This is an internal method that is called only by the target of the reference in order to finalize a bi-directional relationship.  <a href="#a91fee3b24b54842b4d378a14cd8a5e1b"></a><br/></td></tr>
-<tr class="separator:a91fee3b24b54842b4d378a14cd8a5e1b inherit pro_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Designed as the base class from which an application state is derived. An application state is an encapsulated mode that the app can be in, i.e. menu, exterior gameplay, interior game play, credits scroller etc. Supports the concept of events which can be raised in order to trigger state transitions, as well as supplying additional support for multiple levels of states being active at any one time. </p>
@@ -540,6 +548,32 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>This signifies that the state has actually been selected and activated by the state management system. This will generally be the point at which any specific resources relevant for the execution of this state will be built/loaded. </p>
+
+</div>
+</div>
+<a class="anchor" id="a6d55dccc0b13e5ab1eba08c94dc58c09"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgAppState::bindToScript </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_script_interop_1_1_utils_1_1_object_serializer.html">cgScriptInterop::Utils::ObjectSerializer</a> *&#160;</td>
+          <td class="paramname"><em>serializedObject</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called internally to instantiate the relevant script object and to collect references to any provided state override methods. </p>
 
 </div>
 </div>
@@ -1408,6 +1442,46 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a8abe52344704148bdadbd67b0357193d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_script_interop_1_1_utils_1_1_object_serializer_bridge.html">cgScriptInterop::Utils::ObjectSerializerBridge</a>* cgAppState::mScriptObjectBridge</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a934c5c2fcc4e5d331bc585bbfee23a7f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_script_interop_1_1_utils_1_1_object_serializer.html">cgScriptInterop::Utils::ObjectSerializer</a> cgAppState::mScriptObjectSerializer</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="ac9166708ba48f9ce15450afea0b04b5c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1498,7 +1572,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_app_state.html">cgAppState</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:28:00 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:41 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

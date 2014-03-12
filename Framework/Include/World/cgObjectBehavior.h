@@ -40,6 +40,7 @@ class cgScene;
 class cgXMLNode;
 class cgScriptObject;
 class cgVector3;
+struct cgNodeCollision;
 
 //-----------------------------------------------------------------------------
 // Main Class Declarations
@@ -105,8 +106,9 @@ public:
     virtual bool                supportsInputChannels       ( ) const;
     virtual bool                initialize                  ( const cgXMLNode & initData, cgScene * scene ) { return true; }
     virtual bool                initialize                  ( cgResourceManager * resources, const cgString & scriptFile, const cgString & instanceId );
-    virtual void                hitByObject                 ( cgObjectNode * node, const cgVector3 & hitPoint, const cgVector3 & surfaceNormal );
-    virtual void                objectHit                   ( cgObjectNode * node, const cgVector3 & hitPoint, const cgVector3 & surfaceNormal );
+    virtual void                onCollisionBegin            ( const cgNodeCollision * collision );
+    virtual void                onCollisionContinue         ( const cgNodeCollision * collision );
+    virtual void                onCollisionEnd              ( const cgNodeCollision * collision );
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgPhysicsWorldEventListener)
@@ -147,6 +149,9 @@ protected:
         cgScriptFunctionHandle  onKeyDown;
         cgScriptFunctionHandle  onKeyUp;
         cgScriptFunctionHandle  onKeyPressed;
+        cgScriptFunctionHandle  onCollisionBegin;
+        cgScriptFunctionHandle  onCollisionContinue;
+        cgScriptFunctionHandle  onCollisionEnd;
         bool                    hasInputEvents;
         bool                    hasPhysicsEvents;
 
@@ -154,14 +159,15 @@ protected:
         MethodHandles() :
             onPrePhysicsStep(CG_NULL), onPostPhysicsStep(CG_NULL), onUpdate(CG_NULL), onMouseMove(CG_NULL),
             onMouseButtonDown(CG_NULL), onMouseButtonUp(CG_NULL), onMouseWheelScroll(CG_NULL), onKeyDown(CG_NULL),
-            onKeyUp(CG_NULL), onKeyPressed(CG_NULL), hasInputEvents(false), hasPhysicsEvents(false) {}
+            onKeyUp(CG_NULL), onKeyPressed(CG_NULL), onCollisionBegin(CG_NULL), onCollisionContinue(CG_NULL),
+            onCollisionEnd(CG_NULL), hasInputEvents(false), hasPhysicsEvents(false) {}
     };
 
     //-------------------------------------------------------------------------
     // Protected Methods
     //-------------------------------------------------------------------------
     void                        setParentObject             ( cgObjectNode * parentNode );
-    bool                        bindToScript                ( );
+    bool                        bindToScript                ( cgScriptInterop::Utils::ObjectSerializer * serializedObject );
 
     //-------------------------------------------------------------------------
     // Protected Variables
@@ -172,6 +178,10 @@ protected:
     MethodHandles   mScriptMethods; // Cached handles to the script callback methods.
     cgInt32         mLoadOrder;     // The order in which this behavior is loaded / executed when attached to its parent.
     cgUInt32        mUserId;        // User specified identifier for this behavior.
+
+    // Hot-Reloading
+    cgScriptInterop::Utils::ObjectSerializerBridge * mScriptObjectBridge;
+    cgScriptInterop::Utils::ObjectSerializer         mScriptObjectSerializer;
 
 private:
     //-------------------------------------------------------------------------

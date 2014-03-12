@@ -218,7 +218,7 @@ struct cgUICursorType
 {
     // Typedefs
     CGE_MAP_DECLARE(cgString, cgUICursorType, Map) // ToDo: unordered_map?
-    CGE_VECTOR_DECLARE( cgCursor*, PlatformCursorArray )
+    CGE_ARRAY_DECLARE( cgCursor*, PlatformCursorArray )
 
     // Variables
     cgString                name;       // Name associated with this cursor type.

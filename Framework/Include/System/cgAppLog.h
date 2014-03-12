@@ -80,7 +80,7 @@ private:
     //-------------------------------------------------------------------------
     // Private Typedefs
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE(cgLogOutput*, LogOutputArray)
+    CGE_ARRAY_DECLARE(cgLogOutput*, LogOutputArray)
 
     //-------------------------------------------------------------------------
     // Private Variables

@@ -825,7 +825,19 @@ asIScriptContext * cgScript::scriptExecute( cgScriptFunctionHandle pFunctionHand
 //-----------------------------------------------------------------------------
 cgScriptObject * cgScript::createObjectInstance( const cgString & strObjectType )
 {
-    return createObjectInstance( strObjectType, cgScriptArgument::Array() );
+    return createObjectInstance( strObjectType, false, cgScriptArgument::Array() );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : createObjectInstance ()
+/// <summary>
+/// Create an instance of the specific script or application registered class
+/// or data type.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgScriptObject * cgScript::createObjectInstance( const cgString & strObjectType, bool uninitialized )
+{
+    return createObjectInstance( strObjectType, uninitialized, cgScriptArgument::Array() );
 }
 
 //-----------------------------------------------------------------------------
@@ -836,6 +848,18 @@ cgScriptObject * cgScript::createObjectInstance( const cgString & strObjectType 
 /// </summary>
 //-----------------------------------------------------------------------------
 cgScriptObject * cgScript::createObjectInstance( const cgString & strObjectType, const cgScriptArgument::Array & aArgs )
+{
+    return createObjectInstance( strObjectType, false, aArgs );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : createObjectInstance ()
+/// <summary>
+/// Create an instance of the specific script or application registered class
+/// or data type.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgScriptObject * cgScript::createObjectInstance( const cgString & strObjectType, bool uninitialized, const cgScriptArgument::Array & aArgs )
 {
     STRING_CONVERT;
     
@@ -868,90 +892,107 @@ cgScriptObject * cgScript::createObjectInstance( const cgString & strObjectType,
     
     } // End if no type
 
-    // Build declarator
-    cgString strFactoryDecl = strObjectType + _T(" @") + strObjectType + _T("(");
-    cgScriptArgument::Array::const_iterator itArguments;
-    for ( itArguments = aArgs.begin(); itArguments != aArgs.end(); ++itArguments )
+    // Create a new object of the required type.
+    cgScriptObject * pNewObject = CG_NULL;
+    if ( !uninitialized )
     {
-        const cgScriptArgument & Argument = *itArguments;
-
-        // Append type to declarator
-        if ( itArguments != aArgs.begin() ) strFactoryDecl += _T(",");
-        strFactoryDecl += Argument.declaration;
-
-    } // Next Argument
-
-    // Finish building declarator
-    strFactoryDecl += _T(")");
-
-    // Get the factory function id from the declarator
-    asIScriptFunction * pFactory = pType->GetFactoryByDecl(stringConvertT2CA(strFactoryDecl.c_str()));
-
-    // Prepare the context to call the factory function
-    asIScriptContext * pContext = pInternalEngine->CreateContext();
-    pContext->Prepare( pFactory );
-
-    // Build all arguments that are required
-    int nArgIndex = 0;
-    for ( itArguments = aArgs.begin(); itArguments != aArgs.end(); ++itArguments )
-    {
-        const cgScriptArgument & Argument = *itArguments;
-
-        // Set to internal engine
-        switch ( Argument.type )
+        // Build declarator
+        cgString strFactoryDecl = strObjectType + _T(" @") + strObjectType + _T("(");
+        cgScriptArgument::Array::const_iterator itArguments;
+        for ( itArguments = aArgs.begin(); itArguments != aArgs.end(); ++itArguments )
         {
-            case cgScriptArgumentType::Object:
-                pContext->SetArgObject( nArgIndex++, (void*)Argument.data );
-                break;
+            const cgScriptArgument & Argument = *itArguments;
 
-            case cgScriptArgumentType::Array:            
-            case cgScriptArgumentType::Address:
-                pContext->SetArgAddress( nArgIndex++, (void*)Argument.data );
-                break;
+            // Append type to declarator
+            if ( itArguments != aArgs.begin() ) strFactoryDecl += _T(",");
+            strFactoryDecl += Argument.declaration;
 
-            case cgScriptArgumentType::Byte:
-            case cgScriptArgumentType::Bool:
-                pContext->SetArgByte( nArgIndex++, *(asBYTE*)Argument.data );
-                break;
+        } // Next Argument
 
-            case cgScriptArgumentType::Word:
-                pContext->SetArgWord( nArgIndex++, *(asWORD*)Argument.data );
-                break;
-            
-            case cgScriptArgumentType::DWord:
-                pContext->SetArgDWord( nArgIndex++, *(asDWORD*)Argument.data );
-                break;
+        // Finish building declarator
+        strFactoryDecl += _T(")");
 
-            case cgScriptArgumentType::Float:
-                pContext->SetArgFloat( nArgIndex++, *(cgFloat*)Argument.data );
-                break;
+        // Get the factory function id from the declarator
+        asIScriptFunction * pFactory = pType->GetFactoryByDecl(stringConvertT2CA(strFactoryDecl.c_str()));
 
-            case cgScriptArgumentType::Double:
-                pContext->SetArgDouble( nArgIndex++, *(cgDouble*)Argument.data );
-                break;
+        // Prepare the context to call the factory function
+        asIScriptContext * pContext = pInternalEngine->CreateContext();
+        pContext->Prepare( pFactory );
 
-            case cgScriptArgumentType::QWord:
-                pContext->SetArgQWord( nArgIndex++, *(asQWORD*)Argument.data );
-                break;
+        // Build all arguments that are required
+        int nArgIndex = 0;
+        for ( itArguments = aArgs.begin(); itArguments != aArgs.end(); ++itArguments )
+        {
+            const cgScriptArgument & Argument = *itArguments;
 
-        } // End switch argument type
+            // Set to internal engine
+            switch ( Argument.type )
+            {
+                case cgScriptArgumentType::Object:
+                    pContext->SetArgObject( nArgIndex++, (void*)Argument.data );
+                    break;
 
-    } // Next Argument
+                case cgScriptArgumentType::Array:            
+                case cgScriptArgumentType::Address:
+                    pContext->SetArgAddress( nArgIndex++, (void*)Argument.data );
+                    break;
 
-    // Execute the call
-    if ( pContext->Execute() != asSUCCESS )
-    {
+                case cgScriptArgumentType::Byte:
+                case cgScriptArgumentType::Bool:
+                    pContext->SetArgByte( nArgIndex++, *(asBYTE*)Argument.data );
+                    break;
+
+                case cgScriptArgumentType::Word:
+                    pContext->SetArgWord( nArgIndex++, *(asWORD*)Argument.data );
+                    break;
+                
+                case cgScriptArgumentType::DWord:
+                    pContext->SetArgDWord( nArgIndex++, *(asDWORD*)Argument.data );
+                    break;
+
+                case cgScriptArgumentType::Float:
+                    pContext->SetArgFloat( nArgIndex++, *(cgFloat*)Argument.data );
+                    break;
+
+                case cgScriptArgumentType::Double:
+                    pContext->SetArgDouble( nArgIndex++, *(cgDouble*)Argument.data );
+                    break;
+
+                case cgScriptArgumentType::QWord:
+                    pContext->SetArgQWord( nArgIndex++, *(asQWORD*)Argument.data );
+                    break;
+
+            } // End switch argument type
+
+        } // Next Argument
+
+        // Execute the call
+        if ( pContext->Execute() != asSUCCESS )
+        {
+            pContext->Release();
+            cgAppLog::write( cgAppLog::Warning | cgAppLog::Debug, _T("Unable to execute factory function for object of type '%s' via script resource '%s'. An error occurred.\n"), strObjectType.c_str(), getResourceName().c_str() );
+            return false;
+        
+        } // End if failed
+
+        // Create a wrapper around the object that was created.
+        pNewObject = new cgScriptObject( this, *(asIScriptObject**)pContext->GetAddressOfReturnValue() );
+
+        // Clean up
         pContext->Release();
-        cgAppLog::write( cgAppLog::Warning | cgAppLog::Debug, _T("Unable to execute factory function for object of type '%s' via script resource '%s'. An error occurred.\n"), strObjectType.c_str(), getResourceName().c_str() );
-        return false;
     
-    } // End if failed
+    } // End if initialized
+    else
+    {
+        // Create uninitialized object.
+        void * pObject = pInternalEngine->CreateUninitializedScriptObject( pType );
 
-    // Create a wrapper around the object that was created.
-    cgScriptObject * pNewObject = new cgScriptObject( this, *(asIScriptObject**)pContext->GetAddressOfReturnValue() );
+        // Create a wrapper around the object that was created.
+        pNewObject = new cgScriptObject( this, (asIScriptObject*)pObject );
+
+    } // End if uninitialized
     
-    // Clean up and return
-    pContext->Release();
+    // Return new object.
     return pNewObject;
 }
 
@@ -1599,7 +1640,8 @@ asIScriptContext * cgScriptObject::scriptExecute( cgScriptFunctionHandle pMethod
         else
         {
             STRING_CONVERT;
-            throw ExecuteException( pInternalContext->GetExceptionString(), stringConvertA2CT(pFunction->GetScriptSectionName()), pInternalContext->GetExceptionLineNumber() );
+            const cgChar * sectionName = pFunction->GetScriptSectionName();
+            throw ExecuteException( pInternalContext->GetExceptionString(), (sectionName) ? stringConvertA2CT(sectionName) : _T("[System]"), pInternalContext->GetExceptionLineNumber() );
         
         } // End if has function
     
@@ -1702,5 +1744,32 @@ void * cgScriptObject::getAddressOfMember( const cgString & strMemberName )
     } // Next Property
 
     // Not found
+    return CG_NULL;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setUserData ()
+/// <summary>
+/// Set custom data to the script object. Several different pieces of user
+/// data can be specified by supplying a unique user data id.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScriptObject::setUserData( cgUInt32 id, void * value )
+{
+    if ( mObject )
+        mObject->SetUserData( value, id );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getUserData ()
+/// <summary>
+/// Retreive the script object custom data value associated with the unique 
+/// user data id supplied .
+/// </summary>
+//-----------------------------------------------------------------------------
+void * cgScriptObject::getUserData( cgUInt32 id )
+{
+    if ( mObject )
+        return mObject->GetUserData( id );
     return CG_NULL;
 }

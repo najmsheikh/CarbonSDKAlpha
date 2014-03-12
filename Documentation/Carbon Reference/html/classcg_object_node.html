@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -393,6 +393,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3f523d9f0a5aa042d614f75d57fc16a7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#a3f523d9f0a5aa042d614f75d57fc16a7">addBehavior</a> (<a class="el" href="classcg_object_behavior.html">cgObjectBehavior</a> *behavior)</td></tr>
 <tr class="memdesc:a3f523d9f0a5aa042d614f75d57fc16a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach a behavior to this scene object. Note : Returns an integer index value to the current behavior so that it the behavior can be accessed at a later time. Note : The index value for the behavior may change if other behaviors are removed at a later time. Note : The scene object will assume ownership of the allocated behavior and will release it once the object is destroyed.  <a href="#a3f523d9f0a5aa042d614f75d57fc16a7"></a><br/></td></tr>
 <tr class="separator:a3f523d9f0a5aa042d614f75d57fc16a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f679c1566704e5abda5bcb2ca7bb435"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#a5f679c1566704e5abda5bcb2ca7bb435">addBehavior</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;behavior)</td></tr>
+<tr class="memdesc:a5f679c1566704e5abda5bcb2ca7bb435"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach a scripted, or pre-registered behavior to this scene object. Note : Returns an integer index value to the current behavior so that it the behavior can be accessed at a later time. Note : The index value for the behavior may change if other behaviors are removed at a later time. Note : The scene object will assume ownership of the allocated behavior and will release it once the object is destroyed.  <a href="#a5f679c1566704e5abda5bcb2ca7bb435"></a><br/></td></tr>
+<tr class="separator:a5f679c1566704e5abda5bcb2ca7bb435"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c7766f437d8bfd6ededdee9f8bd57b0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#a4c7766f437d8bfd6ededdee9f8bd57b0">removeBehavior</a> (<a class="el" href="classcg_object_behavior.html">cgObjectBehavior</a> *behavior, bool destroy=true)</td></tr>
 <tr class="memdesc:a4c7766f437d8bfd6ededdee9f8bd57b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a behavior from this scene object and optionally destroy it. Note : This method will return false if the specified behavior was not found in the attached behavior list. In this case, the specified behavior will NOT be destroyed if requested.  <a href="#a4c7766f437d8bfd6ededdee9f8bd57b0"></a><br/></td></tr>
 <tr class="separator:a4c7766f437d8bfd6ededdee9f8bd57b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -556,6 +559,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae715ae1c4dcf04ed4e8ca02e26f9f158"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#ae715ae1c4dcf04ed4e8ca02e26f9f158">isRenderable</a> () const </td></tr>
 <tr class="memdesc:ae715ae1c4dcf04ed4e8ca02e26f9f158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this node is currently visible / renderable or not.  <a href="#ae715ae1c4dcf04ed4e8ca02e26f9f158"></a><br/></td></tr>
 <tr class="separator:ae715ae1c4dcf04ed4e8ca02e26f9f158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0473d45c8bbdf22fea26faa2fadd2b8"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#af0473d45c8bbdf22fea26faa2fadd2b8">isVisible</a> () const </td></tr>
+<tr class="memdesc:af0473d45c8bbdf22fea26faa2fadd2b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this node is currently visible, irrespective of whether or not it is a renderable object.  <a href="#af0473d45c8bbdf22fea26faa2fadd2b8"></a><br/></td></tr>
+<tr class="separator:af0473d45c8bbdf22fea26faa2fadd2b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace065afc905e549cb4a65dcfc69ebc6c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#ace065afc905e549cb4a65dcfc69ebc6c">isShadowCaster</a> () const </td></tr>
 <tr class="memdesc:ace065afc905e549cb4a65dcfc69ebc6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is the node capable of casting shadows? (i.e. a camera may not be)  <a href="#ace065afc905e549cb4a65dcfc69ebc6c"></a><br/></td></tr>
 <tr class="separator:ace065afc905e549cb4a65dcfc69ebc6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -602,12 +608,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afb57c88a1aa22d9d341f814f01a36474"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#afb57c88a1aa22d9d341f814f01a36474">supportsInputChannels</a> () const </td></tr>
 <tr class="memdesc:afb57c88a1aa22d9d341f814f01a36474"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this object or any of its attached behaviors or physics controllers support the reading of input channel states.  <a href="#afb57c88a1aa22d9d341f814f01a36474"></a><br/></td></tr>
 <tr class="separator:afb57c88a1aa22d9d341f814f01a36474"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3c9108f98e81cd2afa4e6643d55f74a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#ac3c9108f98e81cd2afa4e6643d55f74a">hitByObject</a> (<a class="el" href="classcg_object_node.html">cgObjectNode</a> *node, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;hitPoint, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;surfaceNormal)</td></tr>
-<tr class="memdesc:ac3c9108f98e81cd2afa4e6643d55f74a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered when another object in the world is determined to have "hit" (collided) with this one.  <a href="#ac3c9108f98e81cd2afa4e6643d55f74a"></a><br/></td></tr>
-<tr class="separator:ac3c9108f98e81cd2afa4e6643d55f74a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a838d9a195f4c4d781c4878734dc3acb5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#a838d9a195f4c4d781c4878734dc3acb5">objectHit</a> (<a class="el" href="classcg_object_node.html">cgObjectNode</a> *node, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;hitPoint, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;surfaceNormal)</td></tr>
-<tr class="memdesc:a838d9a195f4c4d781c4878734dc3acb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered when this object is determined to have "hit" (collided) with another.  <a href="#a838d9a195f4c4d781c4878734dc3acb5"></a><br/></td></tr>
-<tr class="separator:a838d9a195f4c4d781c4878734dc3acb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0dca489500596c3cc7e713faa2bb242d"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#a0dca489500596c3cc7e713faa2bb242d">render</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData)</td></tr>
 <tr class="memdesc:a0dca489500596c3cc7e713faa2bb242d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base render method is responsible for managing the render queue, checking visibility states etc.  <a href="#a0dca489500596c3cc7e713faa2bb242d"></a><br/></td></tr>
 <tr class="separator:a0dca489500596c3cc7e713faa2bb242d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -695,6 +695,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a780bb6facb32ec1a43228b7417b87776"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#a780bb6facb32ec1a43228b7417b87776">onPhysicsBodyTransformed</a> (<a class="el" href="classcg_physics_body.html">cgPhysicsBody</a> *sender, <a class="el" href="structcg_physics_body_transformed_event_args.html">cgPhysicsBodyTransformedEventArgs</a> *e)</td></tr>
 <tr class="memdesc:a780bb6facb32ec1a43228b7417b87776"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered whenever the physics body designed represent this object during scene dynamics processing is transformed as a result of its simulation.  <a href="#a780bb6facb32ec1a43228b7417b87776"></a><br/></td></tr>
 <tr class="separator:a780bb6facb32ec1a43228b7417b87776"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ea3f0b5d01fa74494dbd3c14e4f4b46"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#a1ea3f0b5d01fa74494dbd3c14e4f4b46">onPhysicsBodyCollisionBegin</a> (<a class="el" href="classcg_physics_body.html">cgPhysicsBody</a> *sender, <a class="el" href="structcg_physics_body_collision_event_args.html">cgPhysicsBodyCollisionEventArgs</a> *e)</td></tr>
+<tr class="memdesc:a1ea3f0b5d01fa74494dbd3c14e4f4b46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered whenever the physics body first comes into contact with another body in the scene.  <a href="#a1ea3f0b5d01fa74494dbd3c14e4f4b46"></a><br/></td></tr>
+<tr class="separator:a1ea3f0b5d01fa74494dbd3c14e4f4b46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d9798d89b98ceaed6de825fef408546"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#a6d9798d89b98ceaed6de825fef408546">onPhysicsBodyCollisionContinue</a> (<a class="el" href="classcg_physics_body.html">cgPhysicsBody</a> *sender, <a class="el" href="structcg_physics_body_collision_event_args.html">cgPhysicsBodyCollisionEventArgs</a> *e)</td></tr>
+<tr class="memdesc:a6d9798d89b98ceaed6de825fef408546"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered whenever the physics body continues to be in contact with another body in the scene.  <a href="#a6d9798d89b98ceaed6de825fef408546"></a><br/></td></tr>
+<tr class="separator:a6d9798d89b98ceaed6de825fef408546"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adef126397377aed9a7a3d4e3eb6bdfef"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#adef126397377aed9a7a3d4e3eb6bdfef">onPhysicsBodyCollisionEnd</a> (<a class="el" href="classcg_physics_body.html">cgPhysicsBody</a> *sender, <a class="el" href="structcg_physics_body_collision_event_args.html">cgPhysicsBodyCollisionEventArgs</a> *e)</td></tr>
+<tr class="memdesc:adef126397377aed9a7a3d4e3eb6bdfef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered whenever the physics body is no longer in contact with another body in the scene.  <a href="#adef126397377aed9a7a3d4e3eb6bdfef"></a><br/></td></tr>
+<tr class="separator:adef126397377aed9a7a3d4e3eb6bdfef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bb22b6f1bdd3ddda39cb1da39a55c92"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#a2bb22b6f1bdd3ddda39cb1da39a55c92">onNavigationAgentReposition</a> (<a class="el" href="classcg_navigation_agent.html">cgNavigationAgent</a> *sender, <a class="el" href="structcg_navigation_agent_reposition_event_args.html">cgNavigationAgentRepositionEventArgs</a> *e)</td></tr>
 <tr class="memdesc:a2bb22b6f1bdd3ddda39cb1da39a55c92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggered whenever the navigation agent designed represent this object during scene navigation is repositioned as a result of its update process.  <a href="#a2bb22b6f1bdd3ddda39cb1da39a55c92"></a><br/></td></tr>
 <tr class="separator:a2bb22b6f1bdd3ddda39cb1da39a55c92"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -847,6 +856,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a116d83f7bc09960b4506ccfa1ddbe350"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#a116d83f7bc09960b4506ccfa1ddbe350">serializeUpdateRate</a> ()</td></tr>
 <tr class="memdesc:a116d83f7bc09960b4506ccfa1ddbe350"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update this node's database entry with the currently specified update rate. Since the update rate adjustment is performed by the parent scene directly, this is called by the scene to notify the node that a change occurred.  <a href="#a116d83f7bc09960b4506ccfa1ddbe350"></a><br/></td></tr>
 <tr class="separator:a116d83f7bc09960b4506ccfa1ddbe350"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94d7d629c4d9c59c179562f56738efde"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#a94d7d629c4d9c59c179562f56738efde">serializeFlags</a> ()</td></tr>
+<tr class="separator:a94d7d629c4d9c59c179562f56738efde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7af278ba7f2b406a32c8b561da6c3577"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#a7af278ba7f2b406a32c8b561da6c3577">buildPhysicsBody</a> ()</td></tr>
 <tr class="memdesc:a7af278ba7f2b406a32c8b561da6c3577"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the internal physics body designed to represent this node.  <a href="#a7af278ba7f2b406a32c8b561da6c3577"></a><br/></td></tr>
 <tr class="separator:a7af278ba7f2b406a32c8b561da6c3577"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -993,6 +1004,9 @@ Static Protected Attributes</h2></td></tr>
 <tr class="memitem:a141bb7e55a1c659773641b3d3751453e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#a141bb7e55a1c659773641b3d3751453e">mNodeUpdatePhysicsProperties</a></td></tr>
 <tr class="memdesc:a141bb7e55a1c659773641b3d3751453e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Node update physics properties. <a href="#a141bb7e55a1c659773641b3d3751453e"></a><br/></td></tr>
 <tr class="separator:a141bb7e55a1c659773641b3d3751453e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a7827cfd74817c1c391f218ea169082"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#a6a7827cfd74817c1c391f218ea169082">mNodeUpdateVisibility</a></td></tr>
+<tr class="memdesc:a6a7827cfd74817c1c391f218ea169082"><td class="mdescLeft">&#160;</td><td class="mdescRight">Node visibility. <a href="#a6a7827cfd74817c1c391f218ea169082"></a><br/></td></tr>
+<tr class="separator:a6a7827cfd74817c1c391f218ea169082"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8639c717b1970b8e41242ad50fa0b160"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_object_node.html#a8639c717b1970b8e41242ad50fa0b160">mNodeUpdateUpdateRate</a></td></tr>
 <tr class="memdesc:a8639c717b1970b8e41242ad50fa0b160"><td class="mdescLeft">&#160;</td><td class="mdescRight">Node update processing interval (update rate). <a href="#a8639c717b1970b8e41242ad50fa0b160"></a><br/></td></tr>
 <tr class="separator:a8639c717b1970b8e41242ad50fa0b160"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1145,6 +1159,24 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Attach a behavior to this scene object. Note : Returns an integer index value to the current behavior so that it the behavior can be accessed at a later time. Note : The index value for the behavior may change if other behaviors are removed at a later time. Note : The scene object will assume ownership of the allocated behavior and will release it once the object is destroyed. </p>
+
+</div>
+</div>
+<a class="anchor" id="a5f679c1566704e5abda5bcb2ca7bb435"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> cgObjectNode::addBehavior </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>behavior</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Attach a scripted, or pre-registered behavior to this scene object. Note : Returns an integer index value to the current behavior so that it the behavior can be accessed at a later time. Note : The index value for the behavior may change if other behaviors are removed at a later time. Note : The scene object will assume ownership of the allocated behavior and will release it once the object is destroyed. </p>
 
 </div>
 </div>
@@ -1487,7 +1519,7 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Determine if scaling of this node's transform is allowed.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_light_node.html#ac785c43702ed6621bc329e7bf2060f2a">cgLightNode</a>, <a class="el" href="classcg_point_light_node.html#a5936647134bf6f287acb2823a65bf69f">cgPointLightNode</a>, <a class="el" href="classcg_camera_node.html#a2d63f5e014fef2a21ae6a0c2a336adf6">cgCameraNode</a>, <a class="el" href="classcg_sound_emitter_node.html#a9f10f688ad2f52338902c77999aea089">cgSoundEmitterNode</a>, <a class="el" href="classcg_target_node.html#afda0701fe879dce2cd2112f7379be182">cgTargetNode</a>, <a class="el" href="classcg_navigation_waypoint_node.html#a96f3122ad8e432ca99a2ef28b91e1dbf">cgNavigationWaypointNode</a>, and <a class="el" href="classcg_joint_node.html#aa99e30901fdde9a9c62c81751d790dbf">cgJointNode</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_light_node.html#ac785c43702ed6621bc329e7bf2060f2a">cgLightNode</a>, <a class="el" href="classcg_camera_node.html#a2d63f5e014fef2a21ae6a0c2a336adf6">cgCameraNode</a>, <a class="el" href="classcg_point_light_node.html#a5936647134bf6f287acb2823a65bf69f">cgPointLightNode</a>, <a class="el" href="classcg_sound_emitter_node.html#a9f10f688ad2f52338902c77999aea089">cgSoundEmitterNode</a>, <a class="el" href="classcg_target_node.html#afda0701fe879dce2cd2112f7379be182">cgTargetNode</a>, <a class="el" href="classcg_navigation_waypoint_node.html#a96f3122ad8e432ca99a2ef28b91e1dbf">cgNavigationWaypointNode</a>, and <a class="el" href="classcg_joint_node.html#aa99e30901fdde9a9c62c81751d790dbf">cgJointNode</a>.</p>
 
 </div>
 </div>
@@ -1742,7 +1774,7 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcg_animation_target.html#a5e46067ef2173c9a7c4ea5c64c53011a">cgAnimationTarget</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_particle_emitter_node.html#a2cd2b71e8e4ba437d96f6e2d8977c98b">cgParticleEmitterNode</a>, <a class="el" href="classcg_light_node.html#aef9692af04cd2631ab20c7fe483a11c6">cgLightNode</a>, <a class="el" href="classcg_projector_light_node.html#ad346777977a4faa7f40a401a8e916ef5">cgProjectorLightNode</a>, <a class="el" href="classcg_point_light_node.html#a86a3e22fc73df7de8c28025e9cd192e1">cgPointLightNode</a>, <a class="el" href="classcg_camera_node.html#a886db436713fb1ea43d07f006dc64541">cgCameraNode</a>, <a class="el" href="classcg_spot_light_node.html#a56edc3b36fb31cfaf18688ac8fc487d8">cgSpotLightNode</a>, <a class="el" href="classcg_directional_light_node.html#aec1bdfead63bdc85ea77875c97469666">cgDirectionalLightNode</a>, <a class="el" href="classcg_actor_node.html#adaf0b99dd2fc14331889450567ccf730">cgActorNode</a>, <a class="el" href="classcg_hemisphere_light_node.html#a4102dfc2c80bcd8c5ea4af579938699e">cgHemisphereLightNode</a>, <a class="el" href="classcg_hinge_joint_node.html#add5efc99f559efea3e7afef67eb6fb81">cgHingeJointNode</a>, <a class="el" href="classcg_sound_emitter_node.html#af7e2c867a413ed426510c15157a13cf7">cgSoundEmitterNode</a>, <a class="el" href="classcg_target_node.html#a5fa43e1065130fe359734458aea41eb4">cgTargetNode</a>, <a class="el" href="classcg_skin_node.html#addd4fddcd4310f26725b42244867335b">cgSkinNode</a>, <a class="el" href="classcg_navigation_waypoint_node.html#ab04cdd3f54150ad81d1a5278d99c8e11">cgNavigationWaypointNode</a>, <a class="el" href="classcg_fixed_axis_joint_node.html#a8bdfb63140533083cfe1dc33cf0adc6d">cgFixedAxisJointNode</a>, <a class="el" href="classcg_spatial_tree_node.html#a3b99fa112a1aa6a64a9bbe2ef5a13864">cgSpatialTreeNode</a>, and <a class="el" href="classcg_navigation_patrol_point_node.html#acde5659a7d0c0979e546d1aa3ccf2ddc">cgNavigationPatrolPointNode</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_particle_emitter_node.html#a2cd2b71e8e4ba437d96f6e2d8977c98b">cgParticleEmitterNode</a>, <a class="el" href="classcg_light_node.html#aef9692af04cd2631ab20c7fe483a11c6">cgLightNode</a>, <a class="el" href="classcg_camera_node.html#a886db436713fb1ea43d07f006dc64541">cgCameraNode</a>, <a class="el" href="classcg_projector_light_node.html#ad346777977a4faa7f40a401a8e916ef5">cgProjectorLightNode</a>, <a class="el" href="classcg_point_light_node.html#a86a3e22fc73df7de8c28025e9cd192e1">cgPointLightNode</a>, <a class="el" href="classcg_spot_light_node.html#a56edc3b36fb31cfaf18688ac8fc487d8">cgSpotLightNode</a>, <a class="el" href="classcg_directional_light_node.html#aec1bdfead63bdc85ea77875c97469666">cgDirectionalLightNode</a>, <a class="el" href="classcg_actor_node.html#adaf0b99dd2fc14331889450567ccf730">cgActorNode</a>, <a class="el" href="classcg_hemisphere_light_node.html#a4102dfc2c80bcd8c5ea4af579938699e">cgHemisphereLightNode</a>, <a class="el" href="classcg_hinge_joint_node.html#add5efc99f559efea3e7afef67eb6fb81">cgHingeJointNode</a>, <a class="el" href="classcg_sound_emitter_node.html#af7e2c867a413ed426510c15157a13cf7">cgSoundEmitterNode</a>, <a class="el" href="classcg_target_node.html#a5fa43e1065130fe359734458aea41eb4">cgTargetNode</a>, <a class="el" href="classcg_skin_node.html#addd4fddcd4310f26725b42244867335b">cgSkinNode</a>, <a class="el" href="classcg_navigation_waypoint_node.html#ab04cdd3f54150ad81d1a5278d99c8e11">cgNavigationWaypointNode</a>, <a class="el" href="classcg_fixed_axis_joint_node.html#a8bdfb63140533083cfe1dc33cf0adc6d">cgFixedAxisJointNode</a>, <a class="el" href="classcg_spatial_tree_node.html#a3b99fa112a1aa6a64a9bbe2ef5a13864">cgSpatialTreeNode</a>, and <a class="el" href="classcg_navigation_patrol_point_node.html#acde5659a7d0c0979e546d1aa3ccf2ddc">cgNavigationPatrolPointNode</a>.</p>
 
 </div>
 </div>
@@ -2734,7 +2766,7 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcg_animation_target.html#a53db58a13e912c656415286f4a2448c0">cgAnimationTarget</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_particle_emitter_node.html#a6d6a1f64a01cc0f0f51585fdab1ea832">cgParticleEmitterNode</a>, <a class="el" href="classcg_light_node.html#a55e5bd642f4c4b5862aefc4ce9f164f1">cgLightNode</a>, <a class="el" href="classcg_sound_emitter_node.html#a85fa542550360036d3dc280f8c9354d6">cgSoundEmitterNode</a>, <a class="el" href="classcg_mesh_node.html#acc418ca5db066d167ba2ce8647ad155f">cgMeshNode</a>, <a class="el" href="classcg_projector_light_node.html#a54b48305ffa2c9c524910326d5e114e1">cgProjectorLightNode</a>, <a class="el" href="classcg_actor_node.html#a9ac5aa91e9c26237e303a67a3c82c1a9">cgActorNode</a>, <a class="el" href="classcg_billboard_node.html#ab6bf8b07e1ef85972aabfc44593d5006">cgBillboardNode</a>, <a class="el" href="classcg_point_light_node.html#aa360be6a4f32ba99f7a031b46958ca71">cgPointLightNode</a>, <a class="el" href="classcg_camera_node.html#a46583af9eb36cc1ee2ac16b920d6fc62">cgCameraNode</a>, <a class="el" href="classcg_spot_light_node.html#af19062ddf0a2dde78ecdab1343732a4f">cgSpotLightNode</a>, <a class="el" href="classcg_directional_light_node.html#accd3ed3c139ceb28210956050113aebd">cgDirectionalLightNode</a>, <a class="el" href="classcg_hemisphere_light_node.html#a4489f3dfcc5b093ad3a8a168fae83ada">cgHemisphereLightNode</a>, <a class="el" href="classcg_bone_node.html#a7ef01a26b694397c74ae7d3f1d114914">cgBoneNode</a>, <a class="el" href="classcg_kinematic_controller_joint_node.html#ac14ccf81e37fee15f7d665e50225be2d">cgKinematicControllerJointNode</a>, <a class="el" href="classcg_group_node.html#a4209492925c129ee9a51aafcdcf601c8">cgGroupNode</a>, <a class="el" href="classcg_spline_node.html#a6f1b06f32b7f71cf68599a8ac9d54ea9">cgSplineNode</a>, <a class="el" href="classcg_target_node.html#a934835f063adbcd5c6f23060f599e140">cgTargetNode</a>, <a class="el" href="classcg_skin_node.html#a5fc2d6db18139412d6e6fe346d300654">cgSkinNode</a>, <a class="el" href="classcg_hinge_joint_node.html#a1bebfa7b3a60fdd93f5e09209c3587c1">cgHingeJointNode</a>, <a class="el" href="classcg_dummy_node.html#af1159dee1f8303c65653c55948b47eaf">cgDummyNode</a>, <a class="el" href="classcg_navigation_waypoint_node.html#ada19bad048ceb36f9c58ba506ae7ebca">cgNavigationWaypointNode</a>, <a class="el" href="classcg_fixed_axis_joint_node.html#acc9bd753d94683d0f3814f416c377bf1">cgFixedAxisJointNode</a>, <a class="el" href="classcg_joint_node.html#a82314ea503882ad5f9e4333b867a06de">cgJointNode</a>, <a class="el" href="classcg_spatial_tree_node.html#ad41e8e429a0e482dcc3ba1eb5b563bf8">cgSpatialTreeNode</a>, and <a class="el" href="classcg_navigation_patrol_point_node.html#aebf83ebdd8bbc679c6129c261d80106a">cgNavigationPatrolPointNode</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_particle_emitter_node.html#a6d6a1f64a01cc0f0f51585fdab1ea832">cgParticleEmitterNode</a>, <a class="el" href="classcg_light_node.html#a55e5bd642f4c4b5862aefc4ce9f164f1">cgLightNode</a>, <a class="el" href="classcg_sound_emitter_node.html#a85fa542550360036d3dc280f8c9354d6">cgSoundEmitterNode</a>, <a class="el" href="classcg_mesh_node.html#acc418ca5db066d167ba2ce8647ad155f">cgMeshNode</a>, <a class="el" href="classcg_projector_light_node.html#a54b48305ffa2c9c524910326d5e114e1">cgProjectorLightNode</a>, <a class="el" href="classcg_actor_node.html#a9ac5aa91e9c26237e303a67a3c82c1a9">cgActorNode</a>, <a class="el" href="classcg_camera_node.html#a46583af9eb36cc1ee2ac16b920d6fc62">cgCameraNode</a>, <a class="el" href="classcg_billboard_node.html#ab6bf8b07e1ef85972aabfc44593d5006">cgBillboardNode</a>, <a class="el" href="classcg_point_light_node.html#aa360be6a4f32ba99f7a031b46958ca71">cgPointLightNode</a>, <a class="el" href="classcg_spot_light_node.html#af19062ddf0a2dde78ecdab1343732a4f">cgSpotLightNode</a>, <a class="el" href="classcg_directional_light_node.html#accd3ed3c139ceb28210956050113aebd">cgDirectionalLightNode</a>, <a class="el" href="classcg_hemisphere_light_node.html#a4489f3dfcc5b093ad3a8a168fae83ada">cgHemisphereLightNode</a>, <a class="el" href="classcg_bone_node.html#a7ef01a26b694397c74ae7d3f1d114914">cgBoneNode</a>, <a class="el" href="classcg_kinematic_controller_joint_node.html#ac14ccf81e37fee15f7d665e50225be2d">cgKinematicControllerJointNode</a>, <a class="el" href="classcg_group_node.html#a4209492925c129ee9a51aafcdcf601c8">cgGroupNode</a>, <a class="el" href="classcg_spline_node.html#a6f1b06f32b7f71cf68599a8ac9d54ea9">cgSplineNode</a>, <a class="el" href="classcg_target_node.html#a934835f063adbcd5c6f23060f599e140">cgTargetNode</a>, <a class="el" href="classcg_skin_node.html#a5fc2d6db18139412d6e6fe346d300654">cgSkinNode</a>, <a class="el" href="classcg_hinge_joint_node.html#a1bebfa7b3a60fdd93f5e09209c3587c1">cgHingeJointNode</a>, <a class="el" href="classcg_dummy_node.html#af1159dee1f8303c65653c55948b47eaf">cgDummyNode</a>, <a class="el" href="classcg_navigation_waypoint_node.html#ada19bad048ceb36f9c58ba506ae7ebca">cgNavigationWaypointNode</a>, <a class="el" href="classcg_fixed_axis_joint_node.html#acc9bd753d94683d0f3814f416c377bf1">cgFixedAxisJointNode</a>, <a class="el" href="classcg_joint_node.html#a82314ea503882ad5f9e4333b867a06de">cgJointNode</a>, <a class="el" href="classcg_spatial_tree_node.html#ad41e8e429a0e482dcc3ba1eb5b563bf8">cgSpatialTreeNode</a>, and <a class="el" href="classcg_navigation_patrol_point_node.html#aebf83ebdd8bbc679c6129c261d80106a">cgNavigationPatrolPointNode</a>.</p>
 
 </div>
 </div>
@@ -3205,48 +3237,6 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ac3c9108f98e81cd2afa4e6643d55f74a"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void cgObjectNode::hitByObject </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classcg_object_node.html">cgObjectNode</a> *&#160;</td>
-          <td class="paramname"><em>object</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
-          <td class="paramname"><em>hitPoint</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
-          <td class="paramname"><em>surfaceNormal</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Triggered when another object in the world is determined to have "hit" (collided) with this one. </p>
-
-</div>
-</div>
 <a class="anchor" id="a35d9de6a80a5dc64c866b389b6701206"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3422,6 +3412,31 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Is the node capable of casting shadows? (i.e. a camera may not be) </p>
+
+</div>
+</div>
+<a class="anchor" id="af0473d45c8bbdf22fea26faa2fadd2b8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgObjectNode::isVisible </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determine if this node is currently visible, irrespective of whether or not it is a renderable object. </p>
 
 </div>
 </div>
@@ -3733,48 +3748,6 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a838d9a195f4c4d781c4878734dc3acb5"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void cgObjectNode::objectHit </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classcg_object_node.html">cgObjectNode</a> *&#160;</td>
-          <td class="paramname"><em>object</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
-          <td class="paramname"><em>hitPoint</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td>
-          <td class="paramname"><em>surfaceNormal</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Triggered when this object is determined to have "hit" (collided) with another. </p>
-
-</div>
-</div>
 <a class="anchor" id="a2e929b245771032b9d86f03ed7a91050"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3829,7 +3802,7 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcg_world_component_event_listener.html#a77f6dbf8ff1f250d970bcf7329ccaa51">cgWorldComponentEventListener</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_particle_emitter_node.html#a37da6596bbe5c1d3d1953334bf0a846f">cgParticleEmitterNode</a>, <a class="el" href="classcg_projector_light_node.html#aea95d6414202133ddc0e97df52697238">cgProjectorLightNode</a>, <a class="el" href="classcg_mesh_node.html#a7f6ab1b2039da38cc0e5d74c7afd4033">cgMeshNode</a>, <a class="el" href="classcg_point_light_node.html#a15132e63b57533b45c6ced02fdaa31d6">cgPointLightNode</a>, <a class="el" href="classcg_camera_node.html#a57dd835f31151cc70995ecc118f01f4d">cgCameraNode</a>, <a class="el" href="classcg_spot_light_node.html#a98fbf26df81bf93a740b72058f6dc8bc">cgSpotLightNode</a>, <a class="el" href="classcg_actor_node.html#ad4f984cb1eed0a3ad11bcd54110c035d">cgActorNode</a>, <a class="el" href="classcg_directional_light_node.html#ae79e78d9ae68fbe63d0fd4dfa8ee27d2">cgDirectionalLightNode</a>, <a class="el" href="classcg_hemisphere_light_node.html#a067f91488df3bb829cf52110cc62a13b">cgHemisphereLightNode</a>, <a class="el" href="classcg_hinge_joint_node.html#a2b0bc144c18609438316281c36168ed8">cgHingeJointNode</a>, <a class="el" href="classcg_sound_emitter_node.html#a7741a15f6986363f3321528b6353ec74">cgSoundEmitterNode</a>, <a class="el" href="classcg_billboard_node.html#a393c19348ed823465f3d284e19cdadbd">cgBillboardNode</a>, <a class="el" href="classcg_bone_node.html#a890ca89db0046348242a3c288ad30ff8">cgBoneNode</a>, <a class="el" href="classcg_group_node.html#aa0e32099b51e75afad254a23afe3a704">cgGroupNode</a>, and <a class="el" href="classcg_spatial_tree_node.html#a3c1ee539161eea04635c685942e20857">cgSpatialTreeNode</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_particle_emitter_node.html#a37da6596bbe5c1d3d1953334bf0a846f">cgParticleEmitterNode</a>, <a class="el" href="classcg_camera_node.html#a57dd835f31151cc70995ecc118f01f4d">cgCameraNode</a>, <a class="el" href="classcg_mesh_node.html#a7f6ab1b2039da38cc0e5d74c7afd4033">cgMeshNode</a>, <a class="el" href="classcg_projector_light_node.html#aea95d6414202133ddc0e97df52697238">cgProjectorLightNode</a>, <a class="el" href="classcg_point_light_node.html#a15132e63b57533b45c6ced02fdaa31d6">cgPointLightNode</a>, <a class="el" href="classcg_spot_light_node.html#a98fbf26df81bf93a740b72058f6dc8bc">cgSpotLightNode</a>, <a class="el" href="classcg_actor_node.html#ad4f984cb1eed0a3ad11bcd54110c035d">cgActorNode</a>, <a class="el" href="classcg_directional_light_node.html#ae79e78d9ae68fbe63d0fd4dfa8ee27d2">cgDirectionalLightNode</a>, <a class="el" href="classcg_hemisphere_light_node.html#a067f91488df3bb829cf52110cc62a13b">cgHemisphereLightNode</a>, <a class="el" href="classcg_hinge_joint_node.html#a2b0bc144c18609438316281c36168ed8">cgHingeJointNode</a>, <a class="el" href="classcg_sound_emitter_node.html#a7741a15f6986363f3321528b6353ec74">cgSoundEmitterNode</a>, <a class="el" href="classcg_billboard_node.html#a393c19348ed823465f3d284e19cdadbd">cgBillboardNode</a>, <a class="el" href="classcg_bone_node.html#a890ca89db0046348242a3c288ad30ff8">cgBoneNode</a>, <a class="el" href="classcg_group_node.html#aa0e32099b51e75afad254a23afe3a704">cgGroupNode</a>, and <a class="el" href="classcg_spatial_tree_node.html#a3c1ee539161eea04635c685942e20857">cgSpatialTreeNode</a>.</p>
 
 </div>
 </div>
@@ -4061,6 +4034,120 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>If this node is attached to a parent node, this event will be triggered whenever the parent's node level is modified. </p>
+
+</div>
+</div>
+<a class="anchor" id="a1ea3f0b5d01fa74494dbd3c14e4f4b46"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgObjectNode::onPhysicsBodyCollisionBegin </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_physics_body.html">cgPhysicsBody</a> *&#160;</td>
+          <td class="paramname"><em>sender</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structcg_physics_body_collision_event_args.html">cgPhysicsBodyCollisionEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Triggered whenever the physics body first comes into contact with another body in the scene. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_physics_body_event_listener.html#ad3d28ce72084a7e2b139c5499a1dda84">cgPhysicsBodyEventListener</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6d9798d89b98ceaed6de825fef408546"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgObjectNode::onPhysicsBodyCollisionContinue </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_physics_body.html">cgPhysicsBody</a> *&#160;</td>
+          <td class="paramname"><em>sender</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structcg_physics_body_collision_event_args.html">cgPhysicsBodyCollisionEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Triggered whenever the physics body continues to be in contact with another body in the scene. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_physics_body_event_listener.html#a87975325f3cae9587289cef183a2f6c2">cgPhysicsBodyEventListener</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="adef126397377aed9a7a3d4e3eb6bdfef"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgObjectNode::onPhysicsBodyCollisionEnd </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_physics_body.html">cgPhysicsBody</a> *&#160;</td>
+          <td class="paramname"><em>sender</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structcg_physics_body_collision_event_args.html">cgPhysicsBodyCollisionEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Triggered whenever the physics body is no longer in contact with another body in the scene. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_physics_body_event_listener.html#a0be5a221f91563bd6ac4dae9d9fb0b8d">cgPhysicsBodyEventListener</a>.</p>
 
 </div>
 </div>
@@ -4303,7 +4390,7 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcg_animation_target.html#a310ab8b5c74240bbba619d92f07c97a4">cgAnimationTarget</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_particle_emitter_node.html#a814af680e8ce645fcfed840c88234679">cgParticleEmitterNode</a>, <a class="el" href="classcg_light_node.html#a736f5bbd4a316fc50871677830d06d62">cgLightNode</a>, <a class="el" href="classcg_sound_emitter_node.html#a45d641d3c48cff739861a8886776f012">cgSoundEmitterNode</a>, <a class="el" href="classcg_mesh_node.html#ae9589e56abb2665eed1b60628fa11aa6">cgMeshNode</a>, <a class="el" href="classcg_projector_light_node.html#a8ddc5db1d26cc659930c98ea9f82a123">cgProjectorLightNode</a>, <a class="el" href="classcg_actor_node.html#a574647805d8acba6511c03fdd75e4182">cgActorNode</a>, <a class="el" href="classcg_billboard_node.html#a93aeabae5b8e1fbdcfd2d0d2fd54ad75">cgBillboardNode</a>, <a class="el" href="classcg_point_light_node.html#a1c815efabc5ca9f2e20d5e7b6d38773e">cgPointLightNode</a>, <a class="el" href="classcg_camera_node.html#a36fcce948a0243a00015498a3845f101">cgCameraNode</a>, <a class="el" href="classcg_spot_light_node.html#ad5e6e1efc36e6d044dcae04bdd8e8ca6">cgSpotLightNode</a>, <a class="el" href="classcg_directional_light_node.html#a01d40fd2b2a7c50e787e4967cf5f6fa5">cgDirectionalLightNode</a>, <a class="el" href="classcg_hemisphere_light_node.html#a81c650e44c2975509584bdab6d3855b4">cgHemisphereLightNode</a>, <a class="el" href="classcg_bone_node.html#a044ca3b9a8c729131928d44c4af670d6">cgBoneNode</a>, <a class="el" href="classcg_kinematic_controller_joint_node.html#ae417494cc1d796ccb208ba857746ca76">cgKinematicControllerJointNode</a>, <a class="el" href="classcg_group_node.html#aa24d3df9c949f2ff330fd4c6a006a739">cgGroupNode</a>, <a class="el" href="classcg_spline_node.html#a2ac54e8595878a3bde3cc2972d8f9aeb">cgSplineNode</a>, <a class="el" href="classcg_target_node.html#a6d580fd2a3fdf3734c21779919698ea4">cgTargetNode</a>, <a class="el" href="classcg_skin_node.html#a51d9c30f4d2d8bb900c651fb0e1d090c">cgSkinNode</a>, <a class="el" href="classcg_hinge_joint_node.html#aef145f75a066ac652f7a8727fd6ac203">cgHingeJointNode</a>, <a class="el" href="classcg_dummy_node.html#a9e067453f3b97deb7c12f9cb3f3e7130">cgDummyNode</a>, <a class="el" href="classcg_navigation_waypoint_node.html#ac20f3b86ab6f2fd48aaee17242700e2a">cgNavigationWaypointNode</a>, <a class="el" href="classcg_fixed_axis_joint_node.html#ae228c3bdda419a9b6ded2c1e1091a870">cgFixedAxisJointNode</a>, <a class="el" href="classcg_joint_node.html#a5ef5022a3710169ac76f06d32007f259">cgJointNode</a>, <a class="el" href="classcg_spatial_tree_node.html#a38dc19856a3ed5d631b0ae587b87941f">cgSpatialTreeNode</a>, and <a class="el" href="classcg_navigation_patrol_point_node.html#a1db547b3ce88e807913bddb5fb46699b">cgNavigationPatrolPointNode</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_particle_emitter_node.html#a814af680e8ce645fcfed840c88234679">cgParticleEmitterNode</a>, <a class="el" href="classcg_light_node.html#a736f5bbd4a316fc50871677830d06d62">cgLightNode</a>, <a class="el" href="classcg_sound_emitter_node.html#a45d641d3c48cff739861a8886776f012">cgSoundEmitterNode</a>, <a class="el" href="classcg_mesh_node.html#ae9589e56abb2665eed1b60628fa11aa6">cgMeshNode</a>, <a class="el" href="classcg_projector_light_node.html#a8ddc5db1d26cc659930c98ea9f82a123">cgProjectorLightNode</a>, <a class="el" href="classcg_actor_node.html#a574647805d8acba6511c03fdd75e4182">cgActorNode</a>, <a class="el" href="classcg_camera_node.html#a36fcce948a0243a00015498a3845f101">cgCameraNode</a>, <a class="el" href="classcg_billboard_node.html#a93aeabae5b8e1fbdcfd2d0d2fd54ad75">cgBillboardNode</a>, <a class="el" href="classcg_point_light_node.html#a1c815efabc5ca9f2e20d5e7b6d38773e">cgPointLightNode</a>, <a class="el" href="classcg_spot_light_node.html#ad5e6e1efc36e6d044dcae04bdd8e8ca6">cgSpotLightNode</a>, <a class="el" href="classcg_directional_light_node.html#a01d40fd2b2a7c50e787e4967cf5f6fa5">cgDirectionalLightNode</a>, <a class="el" href="classcg_hemisphere_light_node.html#a81c650e44c2975509584bdab6d3855b4">cgHemisphereLightNode</a>, <a class="el" href="classcg_bone_node.html#a044ca3b9a8c729131928d44c4af670d6">cgBoneNode</a>, <a class="el" href="classcg_kinematic_controller_joint_node.html#ae417494cc1d796ccb208ba857746ca76">cgKinematicControllerJointNode</a>, <a class="el" href="classcg_group_node.html#aa24d3df9c949f2ff330fd4c6a006a739">cgGroupNode</a>, <a class="el" href="classcg_spline_node.html#a2ac54e8595878a3bde3cc2972d8f9aeb">cgSplineNode</a>, <a class="el" href="classcg_target_node.html#a6d580fd2a3fdf3734c21779919698ea4">cgTargetNode</a>, <a class="el" href="classcg_skin_node.html#a51d9c30f4d2d8bb900c651fb0e1d090c">cgSkinNode</a>, <a class="el" href="classcg_hinge_joint_node.html#aef145f75a066ac652f7a8727fd6ac203">cgHingeJointNode</a>, <a class="el" href="classcg_dummy_node.html#a9e067453f3b97deb7c12f9cb3f3e7130">cgDummyNode</a>, <a class="el" href="classcg_navigation_waypoint_node.html#ac20f3b86ab6f2fd48aaee17242700e2a">cgNavigationWaypointNode</a>, <a class="el" href="classcg_fixed_axis_joint_node.html#ae228c3bdda419a9b6ded2c1e1091a870">cgFixedAxisJointNode</a>, <a class="el" href="classcg_joint_node.html#a5ef5022a3710169ac76f06d32007f259">cgJointNode</a>, <a class="el" href="classcg_spatial_tree_node.html#a38dc19856a3ed5d631b0ae587b87941f">cgSpatialTreeNode</a>, and <a class="el" href="classcg_navigation_patrol_point_node.html#a1db547b3ce88e807913bddb5fb46699b">cgNavigationPatrolPointNode</a>.</p>
 
 </div>
 </div>
@@ -5186,6 +5273,29 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a94d7d629c4d9c59c179562f56738efde"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgObjectNode::serializeFlags </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a116d83f7bc09960b4506ccfa1ddbe350"></a>
 <div class="memitem">
 <div class="memproto">
@@ -5339,7 +5449,7 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Update our internal cell matrix with that specified here. Optionally, you can disable the recomputation of the local (parent relative) transformation matrix (defaults to true). This is generally only used internally in order to reduce introducing accumulated errors into the transformation matrix but can be supplied if you know that this does not need to be performed. </p>
 
-<p>Reimplemented in <a class="el" href="classcg_light_node.html#a281c01c6b3b2ca432df7a9a017e592fa">cgLightNode</a>, <a class="el" href="classcg_mesh_node.html#a3edee80b33c1e3212da2ba10f7f9bc25">cgMeshNode</a>, <a class="el" href="classcg_projector_light_node.html#ad8bb1e9d6bc5c6d19cd95551a0f71b07">cgProjectorLightNode</a>, <a class="el" href="classcg_point_light_node.html#ae55da11f8696d42020bed252cfa5a4f2">cgPointLightNode</a>, <a class="el" href="classcg_camera_node.html#a78a6541683d91ecd053cb823b65bfc78">cgCameraNode</a>, <a class="el" href="classcg_spot_light_node.html#a9ca16a316635d7eb588951516bbd9304">cgSpotLightNode</a>, <a class="el" href="classcg_hemisphere_light_node.html#abd30e67a5e66450840ea8cee5bb2cb81">cgHemisphereLightNode</a>, <a class="el" href="classcg_billboard_node.html#aa31a96079dedb6f29deba69af7e7c442">cgBillboardNode</a>, <a class="el" href="classcg_hinge_joint_node.html#ac8ecd82999d18f3458476f487d92c4b9">cgHingeJointNode</a>, <a class="el" href="classcg_sound_emitter_node.html#ad949ef66e03177e10c277220c539e07b">cgSoundEmitterNode</a>, <a class="el" href="classcg_target_node.html#abe2dc4fa2d3743792b60e61f4696f7de">cgTargetNode</a>, and <a class="el" href="classcg_fixed_axis_joint_node.html#a1a199433a220a44bbce98e803ca6c94e">cgFixedAxisJointNode</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_light_node.html#a281c01c6b3b2ca432df7a9a017e592fa">cgLightNode</a>, <a class="el" href="classcg_mesh_node.html#a3edee80b33c1e3212da2ba10f7f9bc25">cgMeshNode</a>, <a class="el" href="classcg_camera_node.html#a78a6541683d91ecd053cb823b65bfc78">cgCameraNode</a>, <a class="el" href="classcg_projector_light_node.html#ad8bb1e9d6bc5c6d19cd95551a0f71b07">cgProjectorLightNode</a>, <a class="el" href="classcg_point_light_node.html#ae55da11f8696d42020bed252cfa5a4f2">cgPointLightNode</a>, <a class="el" href="classcg_spot_light_node.html#a9ca16a316635d7eb588951516bbd9304">cgSpotLightNode</a>, <a class="el" href="classcg_hemisphere_light_node.html#abd30e67a5e66450840ea8cee5bb2cb81">cgHemisphereLightNode</a>, <a class="el" href="classcg_billboard_node.html#aa31a96079dedb6f29deba69af7e7c442">cgBillboardNode</a>, <a class="el" href="classcg_hinge_joint_node.html#ac8ecd82999d18f3458476f487d92c4b9">cgHingeJointNode</a>, <a class="el" href="classcg_sound_emitter_node.html#ad949ef66e03177e10c277220c539e07b">cgSoundEmitterNode</a>, <a class="el" href="classcg_target_node.html#abe2dc4fa2d3743792b60e61f4696f7de">cgTargetNode</a>, and <a class="el" href="classcg_fixed_axis_joint_node.html#a1a199433a220a44bbce98e803ca6c94e">cgFixedAxisJointNode</a>.</p>
 
 </div>
 </div>
@@ -7150,6 +7260,28 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a6a7827cfd74817c1c391f218ea169082"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_world_query.html">cgWorldQuery</a> cgObjectNode::mNodeUpdateVisibility</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Node visibility.</p>
+
+</div>
+</div>
 <a class="anchor" id="a73ba95e575939893e545d9c377a35301"></a>
 <div class="memitem">
 <div class="memproto">
@@ -7600,7 +7732,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_object_node.html">cgObjectNode</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:28:06 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:47 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

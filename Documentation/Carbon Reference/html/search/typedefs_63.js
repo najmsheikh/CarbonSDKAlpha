@@ -40,7 +40,8 @@ var searchData=
   ['cgvertexshaderhandle',['cgVertexShaderHandle',['../cg_resource_handles_8h.html#a4b89f7eb63eff95255f46d8b72ce35c1',1,'cgResourceHandles.h']]],
   ['cgwchar',['cgWChar',['../cg_string_8h.html#aa8790ba76892a60c20982daf8d1db872',1,'cgString.h']]],
   ['codecvtfacet',['CodeCvtFacet',['../cg_string_8h.html#a694bc7c8b70ae4a9303cdc16d4ee590c',1,'cgString.h']]],
-  ['const_5fpointer',['const_pointer',['../classcg_pool_allocator.html#a3e130391e89569426e04f2ba76966af5',1,'cgPoolAllocator']]],
-  ['const_5freference',['const_reference',['../classcg_pool_allocator.html#abb37c9a9fa603f33e425cbca69f6409b',1,'cgPoolAllocator']]],
+  ['const_5fiterator',['const_iterator',['../classcg_array.html#a57f6907ef90f978f113d218653ba6421',1,'cgArray']]],
+  ['const_5fpointer',['const_pointer',['../classcg_pool_allocator.html#a3e130391e89569426e04f2ba76966af5',1,'cgPoolAllocator::const_pointer()'],['../classcg_array.html#a6173b107a5e0f27c5dee4686263798a9',1,'cgArray::const_pointer()']]],
+  ['const_5freference',['const_reference',['../classcg_pool_allocator.html#abb37c9a9fa603f33e425cbca69f6409b',1,'cgPoolAllocator::const_reference()'],['../classcg_array.html#a81c986e405e6854e52e1d875e52c335f',1,'cgArray::const_reference()']]],
   ['controllerallocfunc',['ControllerAllocFunc',['../classcg_physics_controller.html#aa160bb5b4f4a489f7dab64d2f47117dd',1,'cgPhysicsController']]]
 ];

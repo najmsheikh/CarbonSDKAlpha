@@ -1540,7 +1540,7 @@ bool cgTexturePool::reassignResources( const cgTexturePoolResourceDesc::Array & 
 	}
 
 	// Keep track of previous channel assignments
-	std::vector< cgUInt32 > previousChannels;
+	cgArray< cgUInt32 > previousChannels;
 
 	// Do an initial pass to ensure everything will work out. Also, unassign
 	// the resource during this process. We'll get it back if 

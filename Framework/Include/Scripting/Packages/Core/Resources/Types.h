@@ -491,8 +491,8 @@ namespace Types
             BINDSUCCESS( engine->registerObjectProperty( "ConstantDesc", "PropertyContainer parameters", offsetof(cgConstantDesc,parameters) ) );
 
             // Requires array type for the above single constant descriptor.
-            BINDSUCCESS( engine->registerObjectType( "ConstantDesc[]", sizeof(std::vector<cgConstantDesc>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            STDVectorHelper<cgConstantDesc>::registerMethods( engine, "ConstantDesc[]", "ConstantDesc" );
+            ArrayBindHelper<cgConstantDesc>::registerType( engine, "ConstantDesc[]", "ConstantDesc" );
+            ArrayBindHelper<cgConstantDesc>::registerMethods( engine, "ConstantDesc[]", "ConstantDesc" );
 
             ///////////////////////////////////////////////////////////////////////
             // cgConstantBufferDesc (Struct)

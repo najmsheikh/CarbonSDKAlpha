@@ -177,8 +177,8 @@ bool cgNavigationMeshElement::buildMesh( )
 
     // Get a list of all static meshes currently defined 
     // in the scene.
-    std::vector<cgMeshHandle> meshes;
-    std::vector<cgTransform>  transforms;
+    cgArray<cgMeshHandle> meshes;
+    cgArray<cgTransform>  transforms;
     cgObjectNodeMap::const_iterator itNode;
     const cgObjectNodeMap & nodes = mParentScene->getObjectNodes();
     for ( itNode = nodes.begin(); itNode != nodes.end(); ++itNode )

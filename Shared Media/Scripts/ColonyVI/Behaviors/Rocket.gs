@@ -114,7 +114,7 @@ shared class Rocket : IScriptedObjectBehavior
             Vector3 newPos = oldPos + velocity * elapsedTime;
 
             // Cast a ray between old and new position and determine if there is anything to hit.
-            SceneCollisionContact contact;
+            SceneRayCastContact contact;
             Scene @ scene = mNode.getScene();
             bool hit = scene.rayCastClosest( oldPos, newPos, contact ) ||
                        scene.rayCastClosest( oldPos + mNode.getYAxis() * 0.1f + mNode.getXAxis() * 0.1f, newPos + mNode.getYAxis() * 0.1f + mNode.getXAxis() * 0.1f, contact ) ||

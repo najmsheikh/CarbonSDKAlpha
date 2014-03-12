@@ -745,7 +745,7 @@ cgBSPTree::PVSPortalPoints * cgBSPTree::clipPVSPortalPoints( PVSPortalPoints * p
 
         case cgPlaneQuery::Spanning:
         {
-            static std::vector<cgPlaneQuery::Class> pointLocation;
+            static cgArray<cgPlaneQuery::Class> pointLocation;
             if ( pointLocation.size() < points->vertexCount )
             {
                 pointLocation.clear();
@@ -2096,7 +2096,7 @@ cgBSPTree::Winding * cgBSPTree::selectBestSplitter( Winding * windingList, cgUIn
 //-----------------------------------------------------------------------------
 void cgBSPTree::splitWinding( Winding * winding, const cgPlane & plane, Winding * frontSplit, Winding * backSplit )
 {
-    static std::vector<cgPlaneQuery::Class> pointLocation;
+    static cgArray<cgPlaneQuery::Class> pointLocation;
     if ( pointLocation.size() < winding->vertexCount )
     {
         pointLocation.clear();

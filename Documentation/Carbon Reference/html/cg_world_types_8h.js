@@ -5,7 +5,8 @@ var cg_world_types_8h =
     [ "cgWorldObjectTypeDesc", "structcg_world_object_type_desc.html", "structcg_world_object_type_desc" ],
     [ "cgObjectSubElementTypeDesc", "structcg_object_sub_element_type_desc.html", "structcg_object_sub_element_type_desc" ],
     [ "cgSceneElementTypeDesc", "structcg_scene_element_type_desc.html", "structcg_scene_element_type_desc" ],
-    [ "cgSceneCollisionContact", "structcg_scene_collision_contact.html", "structcg_scene_collision_contact" ],
+    [ "cgSceneRayCastContact", "structcg_scene_ray_cast_contact.html", "structcg_scene_ray_cast_contact" ],
+    [ "cgNodeCollision", "structcg_node_collision.html", "structcg_node_collision" ],
     [ "_CGE_CGWORLDTYPES_H_", "cg_world_types_8h.html#a03ecc33873c281c83dc745e65a9f56da", null ],
     [ "Base", "cg_world_types_8h.html#aacddd7c62cdb30987592f70d05b3b247", [
       [ "MustRender", "cg_world_types_8h.html#aacddd7c62cdb30987592f70d05b3b247a17352d61a064da6118668e51354aaebe", null ],
@@ -106,13 +107,13 @@ var cg_world_types_8h =
       [ "BoundingBox", "cg_world_types_8h.html#a81978683cf2b0cfa0713cbbb85d46861ae9b0d698d9ac080c6a5a63143c6ec35d", null ],
       [ "OwnershipStatus", "cg_world_types_8h.html#a81978683cf2b0cfa0713cbbb85d46861a23ce3e42b0081e082fb22516c4ff08b8", null ],
       [ "Transforms", "cg_world_types_8h.html#a81978683cf2b0cfa0713cbbb85d46861ae10c09dec0ef1dbdbd14d1c7dd1184c2", null ],
+      [ "Unload", "cg_world_types_8h.html#a81978683cf2b0cfa0713cbbb85d46861a637a82e2bb06edbf79e6f5a5bf2d0141", null ],
       [ "All", "cg_world_types_8h.html#a81978683cf2b0cfa0713cbbb85d46861a03cedf263b0c3b8c5c0f059c99349ab0", null ]
     ] ],
     [ "Base", "cg_world_types_8h.html#a3e8f1fd058e5a576d4b3bf4be9fb3228", [
       [ "Visible", "cg_world_types_8h.html#a3e8f1fd058e5a576d4b3bf4be9fb3228acbb3f751cf242619a1d79742f4a10247", null ],
       [ "Selected", "cg_world_types_8h.html#a3e8f1fd058e5a576d4b3bf4be9fb3228a71e96320ea8c0464603a0ecc1d55736c", null ],
-      [ "DelayUnload", "cg_world_types_8h.html#a3e8f1fd058e5a576d4b3bf4be9fb3228a23c762cba013116573990168cda6c5ca", null ],
-      [ "UnloadPending", "cg_world_types_8h.html#a3e8f1fd058e5a576d4b3bf4be9fb3228a95ec08d3dd54bd9649563589ea680773", null ]
+      [ "DelayUnload", "cg_world_types_8h.html#a3e8f1fd058e5a576d4b3bf4be9fb3228a23c762cba013116573990168cda6c5ca", null ]
     ] ],
     [ "OSECID_AnimationSets", "cg_world_types_8h.html#a5cc80e4416cf3a5a28c3121f2bebc3de", null ],
     [ "OSECID_CollisionShapes", "cg_world_types_8h.html#a23bcc182741c6178f572d7d29dc4cdc2", null ]

@@ -309,10 +309,10 @@ private:
     //-------------------------------------------------------------------------
     // Private Typedefs, Structures & Enumerations
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE(cgXMLNode, NodeArray)
-    CGE_VECTOR_DECLARE(cgXMLAttribute, AttributeArray)
-    CGE_MAP_DECLARE   (cgString, size_t, AttributeMap)
-    CGE_MAP_DECLARE   (cgString, size_t, NodeMap)
+    CGE_ARRAY_DECLARE(cgXMLNode, NodeArray)
+    CGE_ARRAY_DECLARE(cgXMLAttribute, AttributeArray)
+    CGE_MAP_DECLARE  (cgString, size_t, AttributeMap)
+    CGE_MAP_DECLARE  (cgString, size_t, NodeMap)
 
     // We try to avoid maintaining text data internally in an
     // attempt to save memory. Instead, information about its
@@ -325,7 +325,7 @@ private:
         bool        cached;
     
     }; // End Struct : TextReference
-    CGE_VECTOR_DECLARE(TextReference, TextArray)
+    CGE_ARRAY_DECLARE(TextReference, TextArray)
     
     // Internal, reference counted shared node data structure
     struct CGE_API NodeData

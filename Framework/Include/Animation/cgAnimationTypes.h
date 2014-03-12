@@ -199,7 +199,7 @@ public:
         cgInt32    frame;       // Time in frame / ticks for this keyframe
         cgFloat    value[4];    // The quaternion key data.
     };
-    CGE_VECTOR_DECLARE(QuaternionKeyFrame, QuaternionKeyArray)
+    CGE_ARRAY_DECLARE(QuaternionKeyFrame, QuaternionKeyArray)
 
     //-------------------------------------------------------------------------
 	// Constructors & Destructors

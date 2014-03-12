@@ -141,7 +141,7 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Typedefs
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE( cgObjectNodeSet, LeafObjectSet )
+    CGE_ARRAY_DECLARE( cgObjectNodeSet, LeafObjectSet )
 
     //-------------------------------------------------------------------------
     // Protected Variables

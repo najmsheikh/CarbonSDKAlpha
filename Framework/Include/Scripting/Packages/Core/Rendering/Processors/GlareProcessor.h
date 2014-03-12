@@ -50,11 +50,11 @@ namespace GlareProcessor
 			BINDSUCCESS( engine->registerObjectProperty( "GlareStepDesc", "float blendRate",   offsetof(cgGlareProcessor::GlareStepDesc,cacheBlendRate) ) );
 
             // Requires array type for several methods in the image processing interface.
-            BINDSUCCESS( engine->registerObjectType( "GlareStepDesc[]", sizeof(std::vector<cgGlareProcessor::GlareStepDesc>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            STDVectorHelper<cgGlareProcessor::GlareStepDesc>::registerMethods( engine, "GlareStepDesc[]", "GlareStepDesc" );
+            ArrayBindHelper<cgGlareProcessor::GlareStepDesc>::registerType( engine, "GlareStepDesc[]", "GlareStepDesc" );
+            ArrayBindHelper<cgGlareProcessor::GlareStepDesc>::registerMethods( engine, "GlareStepDesc[]", "GlareStepDesc" );
 
-			BINDSUCCESS( engine->registerObjectType( "ILRElement[]", sizeof(std::vector<cgGlareProcessor::ILRElement>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-			STDVectorHelper<cgGlareProcessor::ILRElement>::registerMethods( engine, "ILRElement[]", "ILRElement" );
+			ArrayBindHelper<cgGlareProcessor::ILRElement>::registerType( engine, "ILRElement[]", "ILRElement" );
+			ArrayBindHelper<cgGlareProcessor::ILRElement>::registerMethods( engine, "ILRElement[]", "ILRElement" );
 
             ///////////////////////////////////////////////////////////////////////
             // cgGlareProcessor (Class)

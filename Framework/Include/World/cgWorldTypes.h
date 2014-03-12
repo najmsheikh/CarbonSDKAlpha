@@ -249,6 +249,7 @@ namespace cgDeferredUpdateFlags
         BoundingBox              = 0x1,         // World space bounding box needs to be re-computed
         OwnershipStatus          = 0x2,         // Node needs to be inserted into the relevant spatial tree / cell grid
         Transforms               = 0x4,         // World space transforms must be recomputed.
+        Unload                   = 0x8,         // Object node unload is pending.
         All                      = 0x7FFFFFFF
     };
 
@@ -260,8 +261,7 @@ namespace cgObjectNodeFlags
     {
         Visible         = 0x1,                  // Manual visibility status flag (use cgObjectNode::isRenderable() to query)
         Selected        = 0x2,                  // Is the node currently selected?
-        DelayUnload     = 0x4,                  // Delay any unload until it is safe to do so (internal).
-        UnloadPending   = 0x8                   // An unload operation is pending (internal).
+        DelayUnload     = 0x4                   // Delay any unload until it is safe to do so (internal).
     };
 };
 
@@ -282,7 +282,7 @@ struct cgObjectSubElementDesc
     //-------------------------------------------------------------------------
     // Public Typedefs, Structures and Enumerations
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE      (cgObjectSubElementDesc, Array)
+    CGE_ARRAY_DECLARE       (cgObjectSubElementDesc, Array)
     CGE_UNORDEREDMAP_DECLARE(cgUID, cgObjectSubElementDesc, Map)
 
     //-------------------------------------------------------------------------
@@ -300,7 +300,7 @@ struct cgObjectSubElementCategory
     //-------------------------------------------------------------------------
     // Public Typedefs, Structures and Enumerations
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE      (cgObjectSubElementCategory, Array)
+    CGE_ARRAY_DECLARE       (cgObjectSubElementCategory, Array)
     CGE_UNORDEREDMAP_DECLARE(cgUID, cgObjectSubElementCategory, Map)
 
     //-------------------------------------------------------------------------
@@ -411,16 +411,29 @@ struct cgSceneElementTypeDesc
 
 }; // End Struct cgSceneElementTypeDesc
 
-struct CGE_API cgSceneCollisionContact : public cgCollisionContact
+struct CGE_API cgSceneRayCastContact : public cgRayCastContact
 {
-    CGE_VECTOR_DECLARE( cgSceneCollisionContact, Array );
+    CGE_ARRAY_DECLARE( cgSceneRayCastContact, Array );
 
     cgObjectNode  * node;               // The intersected node.
     
     // Provide defaults
-    cgSceneCollisionContact() :
-        node(CG_NULL), cgCollisionContact() {}
+    cgSceneRayCastContact() :
+        node(CG_NULL), cgRayCastContact() {}
 
-}; // End Struct : cgSceneCollisionContact
+}; // End Struct : cgSceneRayCastContact
+
+struct CGE_API cgNodeCollision : public cgBodyCollision
+{
+    cgNodeCollision() :
+        thisNode(CG_NULL), otherNode(CG_NULL) {}
+    cgNodeCollision( cgObjectNode * _thisNode, cgObjectNode * _otherNode, const cgBodyCollision & _data ) :
+        thisNode(_thisNode), otherNode(_otherNode), cgBodyCollision(_data) {}
+    
+    // Members
+    cgObjectNode          * thisNode;
+    cgObjectNode          * otherNode;
+
+}; // End Struct : cgNodeCollision
 
 #endif // !_CGE_CGWORLDTYPES_H_

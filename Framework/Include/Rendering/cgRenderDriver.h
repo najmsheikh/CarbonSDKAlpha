@@ -212,6 +212,7 @@ public:
     // Public Methods
     //-------------------------------------------------------------------------
     cgRenderDriverConfig            getConfig               ( ) const;
+    void                            setScreenSizeOverride   ( const cgSize & size );
     
     // Object query functions
     cgResourceManager             * getResourceManager      ( ) const;
@@ -608,6 +609,7 @@ protected:
     cgRenderDriverConfig        mConfig;                                // Render driver configuration settings
     bool                        mConfigLoaded;                          // Has the configuration been loaded yet?
     bool                        mInitialized;                           // Has the driver been initialized?
+    bool                        mFrameBegun;                            // Is the application within a beginFrame()/endFrame() pair?
     cgResourceManager         * mResourceManager;                       // The manager that is in charge of resources tied to this device / render driver
     cgHardwareType::Base        mHardwareType;                          // The type of hardware currently in use.
     cgRenderingCapabilities   * mCaps;                                  // Capabilities enumerator for this render driver.
@@ -618,12 +620,12 @@ protected:
     bool                        mLostDevice;                            // Is the render device currently lost ?
     bool                        mActive;                                // Is the window active ?
     cgSize                      mTargetSize;                            // The exact size of the currently applied render target (even if this is the frame buffer).
+    cgSize                      mScreenSizeOverride;                    // Current 'override' for screen size in case we want the frame buffer to be larger than the display.
 	cgFloat                     mAdapterAspectRatio;                    // The aspect ratio of the adapter prior to enumeration (useful for widescreen displays)
     cgUInt32                    mConstantsDirty;                        // Records the current 'dirty' state of a maximum of 32 constant buffers currently assigned to this driver.
     cgUInt32                    mPrimitivesDrawn;                       // Number of triangles rendered in the current frame.
     bool                        mStateFilteringEnabled;                 // Duplicate device states and resources should be filtered out.
     bool                        mSuppressResizeEvent;                   // Prevent window resize events from being processed when this is true.
-
 
     // System integration
     cgScriptHandle              mSystemExportScript;                    // Primary render driver script through which system variables are exported to the surface shaders.

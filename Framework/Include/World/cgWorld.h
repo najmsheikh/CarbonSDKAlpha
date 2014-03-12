@@ -58,24 +58,36 @@ const cgUID RTID_World = {0x7DC2CBE0, 0x4F07, 0x42C8, {0xA0, 0x8, 0xF9, 0x81, 0x
 //-----------------------------------------------------------------------------
 struct CGE_API cgWorldEventArgs
 {
-    cgWorldEventArgs( cgWorld * _world ) { world = _world; }
+    cgWorldEventArgs( cgWorld * _world ) :
+        world(_world) {}
     cgWorld * world;
 
 }; // End Struct cgWorldEventArgs
 
 struct CGE_API cgSceneUpdateEventArgs
 {
-    cgSceneUpdateEventArgs( cgUInt32 _sceneId ) { sceneId = _sceneId; }
+    cgSceneUpdateEventArgs( cgUInt32 _sceneId ) :
+        sceneId(_sceneId) {}
     cgUInt32 sceneId;
 
 }; // End Struct cgSceneUpdateEventArgs
 
 struct CGE_API cgSceneLoadEventArgs
 {
-    cgSceneLoadEventArgs( cgScene * _scene ) { scene = _scene; }
+    cgSceneLoadEventArgs( cgScene * _scene ) :
+        scene(_scene) {}
     cgScene * scene;
 
 }; // End Struct cgSceneLoadEventArgs
+
+struct CGE_API cgSceneUnloadEventArgs
+{
+    cgSceneUnloadEventArgs( cgScene * _scene ) : 
+        scene(_scene), cancel(false) {}
+    cgScene * scene;
+    bool      cancel;
+
+}; // End Struct cgSceneUnloadEventArgs
 
 struct CGE_API cgWorldAssetUpdateEventArgs : public cgWorldEventArgs
 {
@@ -110,7 +122,7 @@ public:
     virtual void    onSceneLoading      ( cgSceneLoadEventArgs * e ) {};
     virtual void    onSceneLoadFailed   ( cgSceneLoadEventArgs * e ) {};
     virtual void    onSceneLoaded       ( cgSceneLoadEventArgs * e ) {};
-    virtual void    onSceneUnloading    ( cgSceneLoadEventArgs * e ) {};
+    virtual void    onSceneUnloading    ( cgSceneUnloadEventArgs * e ) {};
 
     virtual void    onAssetAdded        ( cgWorldAssetUpdateEventArgs * e ) {};
     virtual void    onAssetRemoved      ( cgWorldAssetUpdateEventArgs * e ) {};
@@ -214,7 +226,7 @@ protected:
     // Protected Structures, Typedefs and Enumerations
     //-------------------------------------------------------------------------
     CGE_UNORDEREDMAP_DECLARE(cgUInt32, cgScene*, SceneMap)
-    CGE_VECTOR_DECLARE      (cgScene*, SceneArray)
+    CGE_ARRAY_DECLARE       (cgScene*, SceneArray)
     CGE_UNORDEREDSET_DECLARE(cgUID, ComponentTypeTableSet)
 
     //-------------------------------------------------------------------------
@@ -235,7 +247,7 @@ protected:
     virtual void                onSceneLoading              ( cgSceneLoadEventArgs * e );
     virtual void                onSceneLoadFailed           ( cgSceneLoadEventArgs * e );
     virtual void                onSceneLoaded               ( cgSceneLoadEventArgs * e );
-    virtual void                onSceneUnloading            ( cgSceneLoadEventArgs * e );
+    virtual void                onSceneUnloading            ( cgSceneUnloadEventArgs * e );
 
     virtual void                onAssetAdded                ( cgWorldAssetUpdateEventArgs * e );
     virtual void                onAssetRemoved              ( cgWorldAssetUpdateEventArgs * e );

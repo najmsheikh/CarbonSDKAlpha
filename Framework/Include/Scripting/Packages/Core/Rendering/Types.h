@@ -557,8 +557,8 @@ namespace Types
             BINDSUCCESS( engine->registerObjectProperty( typeName, "double refreshRate", offsetof(cgDisplayMode,refreshRate) ) );
 
             // Requires array type for several methods in the render driver interface.
-            BINDSUCCESS( engine->registerObjectType( "DisplayMode[]", sizeof(std::vector<cgDisplayMode>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            STDVectorHelper<cgDisplayMode>::registerMethods( engine, "DisplayMode[]", "DisplayMode" );
+            ArrayBindHelper<cgDisplayMode>::registerType( engine, "DisplayMode[]", "DisplayMode" );
+            ArrayBindHelper<cgDisplayMode>::registerMethods( engine, "DisplayMode[]", "DisplayMode" );
 
             ///////////////////////////////////////////////////////////////////////
             // cgAdapter (Struct)
@@ -582,8 +582,8 @@ namespace Types
             BINDSUCCESS( engine->registerObjectProperty( typeName, "DisplayMode[] modes", offsetof(cgAdapter,modes) ) );
 
             // Requires array type for several methods in the render driver interface.
-            BINDSUCCESS( engine->registerObjectType( "Adapter[]", sizeof(std::vector<cgAdapter>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            STDVectorHelper<cgAdapter>::registerMethods( engine, "Adapter[]", "Adapter" );
+            ArrayBindHelper<cgAdapter>::registerType( engine, "Adapter[]", "Adapter" );
+            ArrayBindHelper<cgAdapter>::registerMethods( engine, "Adapter[]", "Adapter" );
 
             ///////////////////////////////////////////////////////////////////////
             // cgSamplerStateDesc (Struct)
@@ -771,8 +771,8 @@ namespace Types
             BINDSUCCESS( engine->registerObjectProperty( typeName, "AlphaWeightMethod outputAlpha", offsetof(cgBlurOpDesc,outputAlpha) ) );
 
             // Requires array type for several methods in the image processing interface.
-            BINDSUCCESS( engine->registerObjectType( "BlurOpDesc[]", sizeof(std::vector<cgBlurOpDesc>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            STDVectorHelper<cgBlurOpDesc>::registerMethods( engine, "BlurOpDesc[]", "BlurOpDesc" );
+            ArrayBindHelper<cgBlurOpDesc>::registerType( engine, "BlurOpDesc[]", "BlurOpDesc" );
+            ArrayBindHelper<cgBlurOpDesc>::registerMethods( engine, "BlurOpDesc[]", "BlurOpDesc" );
 
         }
 

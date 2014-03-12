@@ -199,10 +199,10 @@ void NoiseGenerator::initialize()
     cgInt i, j, k;
 
     // Grab references to tables just to make things a little more readable.
-    std::vector<cgInt>     & p  = mTables.p;
-    std::vector<cgVector3> & g3 = mTables.g3;
-    std::vector<cgVector2> & g2 = mTables.g2;
-    std::vector<cgFloat>   & g1 = mTables.g1;
+    cgArray<cgInt>     & p  = mTables.p;
+    cgArray<cgVector3> & g3 = mTables.g3;
+    cgArray<cgVector2> & g2 = mTables.g2;
+    cgArray<cgFloat>   & g1 = mTables.g1;
 
     // Clear original tables.
     p.clear();
@@ -356,8 +356,8 @@ cgFloat NoiseGenerator::generateNoise3( const cgVector3 & vec ) const
 	rz1 = rz0 - 1.0f;
 
     // Reference tables for easy access.
-    const std::vector<cgInt> & p = mTables.p;
-    const std::vector<cgVector3> & g3 = mTables.g3;
+    const cgArray<cgInt> & p = mTables.p;
+    const cgArray<cgVector3> & g3 = mTables.g3;
     
     // Generate
 	i = p[ bx0 ];
@@ -420,8 +420,8 @@ float NoiseGenerator::generateNoise2( const cgVector2 & vec ) const
 	ry1 = ry0 - 1.0f;
 	
     // Reference tables for easy access.
-    const std::vector<cgInt> & p = mTables.p;
-    const std::vector<cgVector2> & g2 = mTables.g2;
+    const cgArray<cgInt> & p = mTables.p;
+    const cgArray<cgVector2> & g2 = mTables.g2;
     
     // Generate
 	i = p[ bx0 ];

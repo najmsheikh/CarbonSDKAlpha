@@ -103,21 +103,21 @@ void RegisterObjectTypeGCBehaviours(asCScriptEngine *engine)
 	engine->objectTypeBehaviours.flags = asOBJ_REF | asOBJ_GC;
 	engine->objectTypeBehaviours.name = "_builtin_objecttype_";
 #ifndef AS_MAX_PORTABILITY
-	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_ADDREF, "void f()", asMETHOD(asCObjectType,AddRef), asCALL_THISCALL); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_RELEASE, "void f()", asMETHOD(asCObjectType,Release), asCALL_THISCALL); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_GETREFCOUNT, "int f()", asMETHOD(asCObjectType,GetRefCount), asCALL_THISCALL); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_SETGCFLAG, "void f()", asMETHOD(asCObjectType,SetGCFlag), asCALL_THISCALL); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_GETGCFLAG, "bool f()", asMETHOD(asCObjectType,GetGCFlag), asCALL_THISCALL); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_ENUMREFS, "void f(int&in)", asMETHOD(asCObjectType,EnumReferences), asCALL_THISCALL); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_RELEASEREFS, "void f(int&in)", asMETHOD(asCObjectType,ReleaseAllHandles), asCALL_THISCALL); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_ADDREF, "void f()", asMETHOD(asCObjectType,AddRef), asCALL_THISCALL, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_RELEASE, "void f()", asMETHOD(asCObjectType,Release), asCALL_THISCALL, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_GETREFCOUNT, "int f()", asMETHOD(asCObjectType,GetRefCount), asCALL_THISCALL, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_SETGCFLAG, "void f()", asMETHOD(asCObjectType,SetGCFlag), asCALL_THISCALL, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_GETGCFLAG, "bool f()", asMETHOD(asCObjectType,GetGCFlag), asCALL_THISCALL, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_ENUMREFS, "void f(int&in)", asMETHOD(asCObjectType,EnumReferences), asCALL_THISCALL, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_RELEASEREFS, "void f(int&in)", asMETHOD(asCObjectType,ReleaseAllHandles), asCALL_THISCALL, 0); asASSERT( r >= 0 );
 #else
-	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_ADDREF, "void f()", asFUNCTION(ObjectType_AddRef_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_RELEASE, "void f()", asFUNCTION(ObjectType_Release_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_GETREFCOUNT, "int f()", asFUNCTION(ObjectType_GetRefCount_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_SETGCFLAG, "void f()", asFUNCTION(ObjectType_SetGCFlag_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_GETGCFLAG, "bool f()", asFUNCTION(ObjectType_GetGCFlag_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_ENUMREFS, "void f(int&in)", asFUNCTION(ObjectType_EnumReferences_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_RELEASEREFS, "void f(int&in)", asFUNCTION(ObjectType_ReleaseAllHandles_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_ADDREF, "void f()", asFUNCTION(ObjectType_AddRef_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_RELEASE, "void f()", asFUNCTION(ObjectType_Release_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_GETREFCOUNT, "int f()", asFUNCTION(ObjectType_GetRefCount_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_SETGCFLAG, "void f()", asFUNCTION(ObjectType_SetGCFlag_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_GETGCFLAG, "bool f()", asFUNCTION(ObjectType_GetGCFlag_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_ENUMREFS, "void f(int&in)", asFUNCTION(ObjectType_EnumReferences_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->objectTypeBehaviours, asBEHAVE_RELEASEREFS, "void f(int&in)", asFUNCTION(ObjectType_ReleaseAllHandles_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
 #endif
 }
 
@@ -179,6 +179,12 @@ void asCObjectType::Orphan(asCModule *mod)
 	}
 
 	Release();
+}
+
+// interface
+asIScriptModule *asCObjectType::GetModule() const
+{
+	return module;
 }
 
 void *asCObjectType::SetUserData(void *data, asPWORD type)
@@ -248,6 +254,10 @@ void asCObjectType::SetGCFlag()
 
 asCObjectType::~asCObjectType()
 {
+	// Skip this for list patterns as they do not increase the references
+	if( flags & asOBJ_LIST_PATTERN )
+		return;
+
 	// Release the object types held by the templateSubTypes
 	for( asUINT subtypeIndex = 0; subtypeIndex < templateSubTypes.GetLength(); subtypeIndex++ )
 	{
@@ -258,18 +268,16 @@ asCObjectType::~asCObjectType()
 	if( derivedFrom )
 		derivedFrom->Release();
 
-	asUINT n;
-
 	ReleaseAllProperties();
 
 	ReleaseAllFunctions();
 
+	asUINT n;
 	for( n = 0; n < enumValues.GetLength(); n++ )
 	{
 		if( enumValues[n] )
 			asDELETE(enumValues[n],asSEnumValue);
 	}
-
 	enumValues.SetLength(0);
 
 	// Clean the user data
@@ -430,18 +438,6 @@ asUINT asCObjectType::GetFactoryCount() const
 	return (asUINT)beh.factories.GetLength();
 }
 
-#ifdef AS_DEPRECATED
-// Deprecated since 2.24.0 - 2012-05-25
-// interface
-int asCObjectType::GetFactoryIdByIndex(asUINT index) const
-{
-	if( index >= beh.factories.GetLength() )
-		return asINVALID_ARG;
-
-	return beh.factories[index];
-}
-#endif
-
 // interface
 asIScriptFunction *asCObjectType::GetFactoryByIndex(asUINT index) const
 {
@@ -450,19 +446,6 @@ asIScriptFunction *asCObjectType::GetFactoryByIndex(asUINT index) const
 
 	return engine->GetFunctionById(beh.factories[index]);
 }
-
-#ifdef AS_DEPRECATED
-// Deprecated since 2.24.0 - 2012-05-25
-// interface
-int asCObjectType::GetFactoryIdByDecl(const char *decl) const
-{
-	if( beh.factories.GetLength() == 0 )
-		return asNO_FUNCTION;
-
-	// Let the engine parse the string and find the appropriate factory function
-	return engine->GetFactoryIdByDecl(this, decl);
-}
-#endif
 
 // interface
 asIScriptFunction *asCObjectType::GetFactoryByDecl(const char *decl) const
@@ -480,25 +463,6 @@ asUINT asCObjectType::GetMethodCount() const
 	return (asUINT)methods.GetLength();
 }
 
-#ifdef AS_DEPRECATED
-// Deprecated since 2.24.0 - 2012-05-25
-// interface
-int asCObjectType::GetMethodIdByIndex(asUINT index, bool getVirtual) const
-{
-	if( index >= methods.GetLength() )
-		return asINVALID_ARG;
-
-	if( !getVirtual )
-	{
-		asCScriptFunction *func = engine->scriptFunctions[methods[index]];
-		if( func && func->funcType == asFUNC_VIRTUAL )
-			return virtualFunctionTable[func->vfTableIdx]->id;
-	}
-
-	return methods[index];
-}
-#endif
-
 // interface
 asIScriptFunction *asCObjectType::GetMethodByIndex(asUINT index, bool getVirtual) const
 {
@@ -514,36 +478,6 @@ asIScriptFunction *asCObjectType::GetMethodByIndex(asUINT index, bool getVirtual
 
 	return func;
 }
-
-#ifdef AS_DEPRECATED
-// Deprecated since 2.24.0 - 2012-05-25
-// interface
-int asCObjectType::GetMethodIdByName(const char *name, bool getVirtual) const
-{
-	int id = -1;
-	for( size_t n = 0; n < methods.GetLength(); n++ )
-	{
-		if( engine->scriptFunctions[methods[n]]->name == name )
-		{
-			if( id == -1 )
-				id = methods[n];
-			else
-				return asMULTIPLE_FUNCTIONS;
-		}
-	}
-
-	if( id == -1 ) return asNO_FUNCTION;
-
-	if( !getVirtual )
-	{
-		asCScriptFunction *func = engine->scriptFunctions[id];
-		if( func && func->funcType == asFUNC_VIRTUAL )
-			return virtualFunctionTable[func->vfTableIdx]->id;
-	}
-
-	return id;
-}
-#endif
 
 // interface
 asIScriptFunction *asCObjectType::GetMethodByName(const char *name, bool getVirtual) const
@@ -571,33 +505,6 @@ asIScriptFunction *asCObjectType::GetMethodByName(const char *name, bool getVirt
 
 	return func;
 }
-
-#ifdef AS_DEPRECATED
-// Deprecated since 2.24.0 - 2012-05-25
-// interface
-int asCObjectType::GetMethodIdByDecl(const char *decl, bool getVirtual) const
-{
-	if( methods.GetLength() == 0 )
-		return asNO_FUNCTION;
-
-	// Get the module from one of the methods, but it will only be
-	// used to allow the parsing of types not already known by the object.
-	// It is possible for object types to be orphaned, e.g. by discarding 
-	// the module that created it. In this case it is still possible to 
-	// find the methods, but any type not known by the object will result in
-	// an invalid declaration.
-	asCModule *mod = engine->scriptFunctions[methods[0]]->module;
-	int id = engine->GetMethodIdByDecl(this, decl, mod);
-	if( !getVirtual && id >= 0 )
-	{
-		asCScriptFunction *func = engine->scriptFunctions[id];
-		if( func && func->funcType == asFUNC_VIRTUAL )
-			return virtualFunctionTable[func->vfTableIdx]->id;
-	}
-
-	return id;
-}
-#endif
 
 // interface
 asIScriptFunction *asCObjectType::GetMethodByDecl(const char *decl, bool getVirtual) const
@@ -655,7 +562,7 @@ int asCObjectType::GetProperty(asUINT index, const char **name, int *typeId, boo
 }
 
 // interface
-const char *asCObjectType::GetPropertyDeclaration(asUINT index) const
+const char *asCObjectType::GetPropertyDeclaration(asUINT index, bool includeNamespace) const
 {
 	if( index >= properties.GetLength() )
 		return 0;
@@ -665,7 +572,7 @@ const char *asCObjectType::GetPropertyDeclaration(asUINT index) const
 		*tempString = "private ";
 	else
 		*tempString = "";
-	*tempString += properties[index]->type.Format();
+	*tempString += properties[index]->type.Format(includeNamespace);
 	*tempString += " ";
 	*tempString += properties[index]->name;
 
@@ -692,6 +599,7 @@ asUINT asCObjectType::GetBehaviourCount() const
 	if( beh.gcReleaseAllReferences ) count++; 
 	if( beh.templateCallback )       count++;
 	if( beh.listFactory )            count++;
+	if( beh.getWeakRefFlag )         count++;
 
 	// For reference types, the factories are also stored in the constructor
 	// list, so it is sufficient to enumerate only those
@@ -762,8 +670,21 @@ asIScriptFunction *asCObjectType::GetBehaviourByIndex(asUINT index, asEBehaviour
 
 	if( beh.listFactory && count++ == index )
 	{
-		if( outBehaviour ) *outBehaviour = asBEHAVE_LIST_FACTORY;
+		if( outBehaviour ) 
+		{
+			if( flags & asOBJ_VALUE )
+				*outBehaviour = asBEHAVE_LIST_CONSTRUCT;
+			else
+				*outBehaviour = asBEHAVE_LIST_FACTORY;
+		}
+
 		return engine->scriptFunctions[beh.listFactory];
+	}
+
+	if( beh.getWeakRefFlag && count++ == index )
+	{
+		if( outBehaviour ) *outBehaviour = asBEHAVE_GET_WEAKREF_FLAG;
+		return engine->scriptFunctions[beh.getWeakRefFlag];
 	}
 
 	// For reference types, the factories are also stored in the constructor
@@ -825,9 +746,18 @@ asCObjectProperty *asCObjectType::AddPropertyToClass(const asCString &name, cons
 	int propSize;
 	if( dt.IsObject() )
 	{
-		propSize = dt.GetSizeOnStackDWords()*4;
-		if( !dt.IsObjectHandle() )
-			prop->type.MakeReference(true);
+		// Non-POD value types can't be allocated inline,
+		// because there is a risk that the script might
+		// try to access the content without knowing that
+		// it hasn't been initialized yet.
+		if( dt.GetObjectType()->flags & asOBJ_POD )
+			propSize = dt.GetSizeInMemoryBytes();
+		else
+		{
+			propSize = dt.GetSizeOnStackDWords()*4;
+			if( !dt.IsObjectHandle() )
+				prop->type.MakeReference(true);
+		}
 	}
 	else
 		propSize = dt.GetSizeInMemoryBytes();
@@ -972,6 +902,10 @@ void asCObjectType::ReleaseAllFunctions()
 	if( beh.gcSetFlag )
 		engine->scriptFunctions[beh.gcSetFlag]->Release();
 	beh.gcSetFlag = 0;
+
+	if ( beh.getWeakRefFlag )
+		engine->scriptFunctions[beh.getWeakRefFlag]->Release();
+	beh.getWeakRefFlag = 0;
 }
 
 // internal
@@ -1040,6 +974,12 @@ void asCObjectType::EnumReferences(asIScriptEngine *)
 	for( asUINT t = 0; t < templateSubTypes.GetLength(); t++ )
 		if( templateSubTypes[t].GetObjectType() )
 			engine->GCEnumCallback(templateSubTypes[t].GetObjectType());
+
+	if( beh.getWeakRefFlag )
+		engine->GCEnumCallback(engine->scriptFunctions[beh.getWeakRefFlag]);
+
+	if( derivedFrom )
+		engine->GCEnumCallback(derivedFrom);
 }
 
 END_AS_NAMESPACE

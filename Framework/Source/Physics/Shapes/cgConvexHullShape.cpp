@@ -87,7 +87,7 @@ cgConvexHullShape::cgConvexHullShape( cgPhysicsWorld * world, void * vertexData,
     if ( factor != 1.0f )
     {
         // Build a new point cloud in the scale of our physics system
-        std::vector<cgVector3> points( vertexCount );
+        cgArray<cgVector3> points( vertexCount );
         cgByte    * input  = (cgByte*)vertexData;
         cgVector3 * output = &points[0];
         for ( size_t i = 0; i < vertexCount; ++i, input += stride, ++output )
@@ -118,7 +118,7 @@ cgConvexHullShape::cgConvexHullShape( cgPhysicsWorld * world, void * vertexData,
     if ( factor != 1.0f )
     {
         // Build a new point cloud in the scale of our physics system.
-        std::vector<cgVector3> points( vertexCount );
+        cgArray<cgVector3> points( vertexCount );
         cgByte    * input  = (cgByte*)vertexData;
         cgVector3 * output = &points[0];
         for ( size_t i = 0; i < vertexCount; ++i, input += stride, ++output )
@@ -149,7 +149,7 @@ cgConvexHullShape::cgConvexHullShape( cgPhysicsWorld * world, void * vertexData,
     if ( factor != 1.0f )
     {
         // Build a new point cloud in the scale of our physics system.
-        std::vector<cgVector3> points( vertexCount );
+        cgArray<cgVector3> points( vertexCount );
         cgByte    * input  = (cgByte*)vertexData;
         cgVector3 * output = &points[0];
         for ( size_t i = 0; i < vertexCount; ++i, input += stride, ++output )
@@ -180,7 +180,7 @@ cgConvexHullShape::cgConvexHullShape( cgPhysicsWorld * world, void * vertexData,
     if ( factor != 1.0f )
     {
         // Build a new point cloud in the scale of our physics system.
-        std::vector<cgVector3> points( vertexCount );
+        cgArray<cgVector3> points( vertexCount );
         cgByte    * input  = (cgByte*)vertexData;
         cgVector3 * output = &points[0];
         for ( size_t i = 0; i < vertexCount; ++i, input += stride, ++output )

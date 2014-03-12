@@ -10,6 +10,7 @@ var cg_base_8cpp =
     [ "cgGetEngineConfig", "cg_base_8cpp.html#af37b8d7693aa13c1d9d0601aa44f71ef", null ],
     [ "cgGetSandboxMode", "cg_base_8cpp.html#a81a2bbb493535659f996080cacf9b916", null ],
     [ "cgSetSandboxMode", "cg_base_8cpp.html#a4e5cd17c2eaf3a51a7e2d0106de01d92", null ],
+    [ "cgSetSandboxMode", "cg_base_8cpp.html#a15a8c274b0e501f5c8ab1fe09a99fc44", null ],
     [ "cgToDoHandler", "cg_base_8cpp.html#a8e95f2ebf19656ddf844aa86ae9a73a7", null ],
     [ "NewHandler", "cg_base_8cpp.html#ab8dbe626a89708302b8071a3156af518", null ]
 ];

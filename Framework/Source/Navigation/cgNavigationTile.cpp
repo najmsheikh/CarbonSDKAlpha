@@ -117,8 +117,8 @@ bool cgNavigationTile::buildTile( const cgNavigationMeshCreateParams & params, c
     } // Next mesh
 
     // Allocate space for vertices / triangles.
-    std::vector<cgVector3> vertices( totalVertices );
-    std::vector<cgInt> indices( totalTriangles * 3 );
+    cgArray<cgVector3> vertices( totalVertices );
+    cgArray<cgInt> indices( totalTriangles * 3 );
 
     // Extract the data.
     totalVertices = totalTriangles = 0;
@@ -549,7 +549,7 @@ void cgNavigationTile::buildDebugMeshes( cgResourceManager * resources )
     const cgFloat cellSize = mPolyMesh->cs;
     const cgFloat cellHeight = mPolyMesh->ch;
     const cgVector3 origin = mPolyMesh->bmin;
-    std::vector<cgVector3> vertices( mPolyMesh->nverts );
+    cgArray<cgVector3> vertices( mPolyMesh->nverts );
     for ( cgInt i = 0; i < mPolyMesh->nverts; ++i )
     {
         const cgUInt16 * v = &mPolyMesh->verts[i*3];
@@ -560,7 +560,7 @@ void cgNavigationTile::buildDebugMeshes( cgResourceManager * resources )
     } // Next vertex
 
     // Extract index data.
-    std::vector<cgUInt32> indices;
+    cgArray<cgUInt32> indices;
     const cgInt maxVertsPerPoly = mPolyMesh->nvp;
     indices.reserve( mPolyMesh->npolys * ((maxVertsPerPoly - 2) * 3) );
     for ( cgInt i = 0; i < mPolyMesh->npolys; ++i )

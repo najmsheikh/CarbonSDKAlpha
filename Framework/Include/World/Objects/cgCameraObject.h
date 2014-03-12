@@ -107,6 +107,9 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldObject)
     //-------------------------------------------------------------------------
+    virtual void                sandboxRender           ( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer );
+    virtual bool                pick                    ( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut );
+    virtual cgBoundingBox       getLocalBoundingBox     ( );
     virtual void                applyObjectRescale      ( cgFloat scale );
 
     //-------------------------------------------------------------------------
@@ -118,6 +121,8 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldComponent)
     //-------------------------------------------------------------------------
+    virtual bool                onComponentCreated      ( cgComponentCreatedEventArgs * e );
+    virtual bool                onComponentLoading      ( cgComponentLoadingEventArgs * e );
     virtual cgString            getDatabaseTable        ( ) const;
     
     //-------------------------------------------------------------------------
@@ -126,6 +131,12 @@ public:
     virtual void                dispose                 ( bool disposeBase );
 
 private:
+    //-------------------------------------------------------------------------
+    // Protected Methods
+    //-------------------------------------------------------------------------
+    void                        prepareQueries          ( );
+    bool                        insertComponentData     ( );
+
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
@@ -142,6 +153,14 @@ private:
     cgBlurOpDesc            mForegroundHighBlur;    /// Settings to use when processing the high resolution blur pass for the elements within the foreground extents.
     cgBlurOpDesc            mForegroundLowBlur;     /// Settings to use when processing the low resolution blur pass for the elements within the background extents.
     bool                    mDepthOfFieldEnabled;   /// Render control script should process depth of field for this camera.
+
+    //-------------------------------------------------------------------------
+    // Protected Static Variables
+    //-------------------------------------------------------------------------
+    // Cached database queries.
+    static cgWorldQuery     mInsertCamera;
+    static cgWorldQuery     mUpdateProjection;
+    static cgWorldQuery     mLoadCamera;
 
 };
 

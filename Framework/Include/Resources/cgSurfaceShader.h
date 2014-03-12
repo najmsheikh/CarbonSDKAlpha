@@ -72,8 +72,8 @@ public:
     //-------------------------------------------------------------------------
     // Public Typedefs, Structures & Enumerations
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE( cgConstantTypeDesc, ConstTypeArray )
-    CGE_VECTOR_DECLARE( cgConstantBufferDesc, ConstBufferArray )
+    CGE_ARRAY_DECLARE( cgConstantTypeDesc, ConstTypeArray )
+    CGE_ARRAY_DECLARE( cgConstantBufferDesc, ConstBufferArray )
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors

@@ -55,27 +55,29 @@ namespace Core {
         // Type declarations
         void declare( cgScriptEngine * engine )
         {
+            using namespace cgScriptInterop::Utils;
+
             // Object Types
             BINDSUCCESS( engine->registerObjectType( "NullHandle", 0, asOBJ_REF ) );
             
             // Enumerations
             BINDSUCCESS( engine->registerEnum( "ConfigResult" ) );
 
-            // Register standard std::vector array types for *all* angelscript
+            // Register standard templated array types for *all* angelscript
             // supported primitive data types. This is necessary for the surface
             // shader permutation selection logic in which arrays will be expanded.
             // No valid primitive array types should ever use the default array template.
-            BINDSUCCESS( engine->registerObjectType( "bool[]"  , sizeof(std::vector<bool>)    , asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            BINDSUCCESS( engine->registerObjectType( "uint8[]" , sizeof(std::vector<cgByte>)  , asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            BINDSUCCESS( engine->registerObjectType( "int8[]"  , sizeof(std::vector<cgInt8>)  , asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            BINDSUCCESS( engine->registerObjectType( "uint16[]", sizeof(std::vector<cgUInt16>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            BINDSUCCESS( engine->registerObjectType( "int16[]" , sizeof(std::vector<cgInt16>) , asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            BINDSUCCESS( engine->registerObjectType( "uint[]"  , sizeof(std::vector<cgUInt32>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            BINDSUCCESS( engine->registerObjectType( "int[]"   , sizeof(std::vector<cgInt32>) , asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            BINDSUCCESS( engine->registerObjectType( "uint64[]", sizeof(std::vector<cgUInt64>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            BINDSUCCESS( engine->registerObjectType( "int64[]" , sizeof(std::vector<cgInt64>) , asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            BINDSUCCESS( engine->registerObjectType( "float[]" , sizeof(std::vector<cgFloat>) , asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            BINDSUCCESS( engine->registerObjectType( "double[]", sizeof(std::vector<cgDouble>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
+            ArrayBindHelper<bool, true>::registerType( engine, "bool[]", "bool" );
+            ArrayBindHelper<cgByte>::registerType( engine, "uint8[]", "uint8" );
+            ArrayBindHelper<cgInt8>::registerType( engine, "int8[]", "int8" );
+            ArrayBindHelper<cgUInt16>::registerType( engine, "uint16[]", "uint16" );
+            ArrayBindHelper<cgInt16>::registerType( engine, "int16[]", "int16" );
+            ArrayBindHelper<cgUInt32>::registerType( engine, "uint[]", "uint" );
+            ArrayBindHelper<cgInt32>::registerType( engine, "int[]", "int" );
+            ArrayBindHelper<cgUInt64>::registerType( engine, "uint64[]", "uint64" );
+            ArrayBindHelper<cgInt64>::registerType( engine, "int64[]", "int64" );
+            ArrayBindHelper<cgFloat>::registerType( engine, "float[]", "float" );
+            ArrayBindHelper<cgDouble>::registerType( engine, "double[]", "double" ); 
         }
 
         // Member bindings
@@ -95,21 +97,21 @@ namespace Core {
             BINDSUCCESS( engine->registerEnumValue( "ConfigResult", "Mismatch", cgConfigResult::Mismatch ) );
             BINDSUCCESS( engine->registerEnumValue( "ConfigResult", "Error"   , cgConfigResult::Error ) );
             
-            // Register standard std::vector array types for *all* angelscript
+            // Register standard templated array types for *all* angelscript
             // supported primitive data types. This is necessary for the surface
             // shader permutation selection logic in which arrays will be expanded.
             // No valid primitive array types should ever use the default array template.
-            STDVectorHelper<bool, true>::registerMethods( engine, "bool[]", "bool" );
-            STDVectorHelper<cgByte>::registerMethods( engine, "uint8[]", "uint8" );
-            STDVectorHelper<cgInt8>::registerMethods( engine, "int8[]", "int8" );
-            STDVectorHelper<cgUInt16>::registerMethods( engine, "uint16[]", "uint16" );
-            STDVectorHelper<cgInt16>::registerMethods( engine, "int16[]", "int16" );
-            STDVectorHelper<cgUInt32>::registerMethods( engine, "uint[]", "uint" );
-            STDVectorHelper<cgInt32>::registerMethods( engine, "int[]", "int" );
-            STDVectorHelper<cgUInt64>::registerMethods( engine, "uint64[]", "uint64" );
-            STDVectorHelper<cgInt64>::registerMethods( engine, "int64[]", "int64" );
-            STDVectorHelper<cgFloat>::registerMethods( engine, "float[]", "float" );
-            STDVectorHelper<cgDouble>::registerMethods( engine, "double[]", "double" );  
+            ArrayBindHelper<bool>::registerMethods( engine, "bool[]", "bool" );
+            ArrayBindHelper<cgByte>::registerMethods( engine, "uint8[]", "uint8" );
+            ArrayBindHelper<cgInt8>::registerMethods( engine, "int8[]", "int8" );
+            ArrayBindHelper<cgUInt16>::registerMethods( engine, "uint16[]", "uint16" );
+            ArrayBindHelper<cgInt16>::registerMethods( engine, "int16[]", "int16" );
+            ArrayBindHelper<cgUInt32>::registerMethods( engine, "uint[]", "uint" );
+            ArrayBindHelper<cgInt32>::registerMethods( engine, "int[]", "int" );
+            ArrayBindHelper<cgUInt64>::registerMethods( engine, "uint64[]", "uint64" );
+            ArrayBindHelper<cgInt64>::registerMethods( engine, "int64[]", "int64" );
+            ArrayBindHelper<cgFloat>::registerMethods( engine, "float[]", "float" );
+            ArrayBindHelper<cgDouble>::registerMethods( engine, "double[]", "double" );  
         }
 
     }; // End Class : Package

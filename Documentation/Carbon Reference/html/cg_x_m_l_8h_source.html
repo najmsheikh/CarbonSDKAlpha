@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -405,10 +405,10 @@ $(document).ready(function(){initNavTree('cg_x_m_l_8h_source.html','');});
 <div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    <span class="comment">// Private Typedefs, Structures &amp; Enumerations</span></div>
 <div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>(<a class="code" href="classcg_x_m_l_node.html" title="Individual node in the XML hierarchy. ">cgXMLNode</a>, NodeArray)</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>(<a class="code" href="classcg_x_m_l_attribute.html" title="An attribute value item associated with a given node. ">cgXMLAttribute</a>, AttributeArray)</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a039577f149faea30818835c30af20fe5" title="Simple map typedef. No export required.">CGE_MAP_DECLARE</a>   (<a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a>, <span class="keywordtype">size_t</span>, AttributeMap)</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a039577f149faea30818835c30af20fe5" title="Simple map typedef. No export required.">CGE_MAP_DECLARE</a>   (cgString, <span class="keywordtype">size_t</span>, NodeMap)</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>(<a class="code" href="classcg_x_m_l_node.html" title="Individual node in the XML hierarchy. ">cgXMLNode</a>, NodeArray)</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>(<a class="code" href="classcg_x_m_l_attribute.html" title="An attribute value item associated with a given node. ">cgXMLAttribute</a>, AttributeArray)</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a039577f149faea30818835c30af20fe5" title="Simple map typedef. No export required.">CGE_MAP_DECLARE</a>  (<a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a>, <span class="keywordtype">size_t</span>, AttributeMap)</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a039577f149faea30818835c30af20fe5" title="Simple map typedef. No export required.">CGE_MAP_DECLARE</a>  (cgString, <span class="keywordtype">size_t</span>, NodeMap)</div>
 <div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;</div>
 <div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    <span class="comment">// We try to avoid maintaining text data internally in an</span></div>
 <div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    <span class="comment">// attempt to save memory. Instead, information about its</span></div>
@@ -421,7 +421,7 @@ $(document).ready(function(){initNavTree('cg_x_m_l_8h_source.html','');});
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        <span class="keywordtype">bool</span>        cached;</div>
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    </div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    }; <span class="comment">// End Struct : TextReference</span></div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>(TextReference, TextArray)</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>(TextReference, TextArray)</div>
 <div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    </div>
 <div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    <span class="comment">// Internal, reference counted shared node data structure</span></div>
 <div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    struct <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a> NodeData</div>
@@ -483,7 +483,7 @@ $(document).ready(function(){initNavTree('cg_x_m_l_8h_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_c33361510b5d8458f9ad99ec7c35be6a.html">System</a></li><li class="navelem"><a class="el" href="cg_x_m_l_8h.html">cgXML.h</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:27:53 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:35 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

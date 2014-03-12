@@ -132,8 +132,8 @@ void cgAnimationController::updateTargets( const TargetMap & Targets )
         cgVector3 scale, translation;
         cgQuaternion rotation;
     };
-    std::vector<AnimationData> TrackTransforms( mTracks.size() );
-    std::vector<cgFloat> TrackWeights( mTracks.size(), 0.0f );
+    cgArray<AnimationData> TrackTransforms( mTracks.size() );
+    cgArray<cgFloat> TrackWeights( mTracks.size(), 0.0f );
 
     // Iterate through each applied animation target
     for ( cgStringSet::iterator itTargetId = mValidTargetIds.begin(); itTargetId != mValidTargetIds.end(); ++itTargetId )

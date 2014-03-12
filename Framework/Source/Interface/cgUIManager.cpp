@@ -127,6 +127,7 @@ void cgUIManager::dispose( bool bDisposeBase )
         delete itSkin->second;
 
     // Iterate through and release all loaded image libraries
+    //
     ImageLibraryMap::iterator itLibrary;
     for ( itLibrary = mImageLibraries.begin(); itLibrary != mImageLibraries.end(); ++itLibrary )
         delete itLibrary->second;
@@ -320,6 +321,53 @@ bool cgUIManager::initialize( cgResourceManager * pResourceManager )
 
     // Success!
     return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : reset ()
+/// <summary>
+/// Use this method to remove all loaded layers / forms and return the UI
+/// back to its initial state.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgUIManager::reset( )
+{
+    // Iterate through and release all layers EXCEPT the cursor layer.
+    LayerList::iterator itLayer;
+    for ( itLayer = mLayers.begin(); itLayer != mLayers.end(); )
+    {
+        if ( *itLayer != mCursorLayer )
+        {
+            (*itLayer)->scriptSafeDispose();
+            itLayer = mLayers.erase( itLayer );
+        }
+        else
+            ++itLayer;
+    
+    } // Next layer
+
+    // Iterate through and release all loaded image libraries,
+    // EXCEPT the skin's glyph library.
+    ImageLibraryMap::iterator itLibrary;
+    for ( itLibrary = mImageLibraries.begin(); itLibrary != mImageLibraries.end();  )
+    {
+        if ( itLibrary->first != _T("_SystemGlyphs") )
+        {
+            delete itLibrary->second;
+            itLibrary = mImageLibraries.erase( itLibrary );
+        
+        } // End if !_SystemGlyphs
+        else
+            ++itLibrary;
+
+    } // Next library
+
+    // Clear appropriate lists
+    mForms.clear();
+    mGarbageForms.clear();
+
+    // Clear variables
+    mFocusControl = CG_NULL;
 }
 
 //-----------------------------------------------------------------------------

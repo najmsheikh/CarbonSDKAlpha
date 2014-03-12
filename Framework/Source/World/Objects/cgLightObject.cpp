@@ -3488,9 +3488,8 @@ bool cgLightNode::isShadowSource( ) const
 {
     // We return our own local 'mComputeShadows' value which is
     // set during LOD computations (computeLevelOfDetail())
-    return mComputeShadows;
+    return (mComputeShadows && isRenderable());
 }
-
 
 //-----------------------------------------------------------------------------
 //  Name : isIndirectSource () 
@@ -3638,6 +3637,10 @@ cgInt32 cgLightNode::beginLighting( cgTexturePool * pPool, bool bApplyShadows, b
     cgToDo( "Queue", "COMMENTED OUT ILLUMINATION SET TEST" );
     // If we are not ready to begin, or there is nothing in the illumination set, fail.
     if ( /*( !bDeferred && m_pIlluminationSet->IsEmpty() ) ||*/ mCurrentLightingPass > -2 )
+        return -1;
+
+    // If we are not current renderable, we can also fail.
+    if ( !isRenderable() )
         return -1;
 
     // Allow light source object to set itself up.

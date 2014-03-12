@@ -63,7 +63,7 @@ public:
         GlareStepDesc( cgInt32 _levelIndex, cgFloat _levelIntensity, cgInt32 _blurPassCount, cgInt32 _blurPixelRadius, cgFloat _blurDistanceFactor, cgFloat _cacheBlendAmount, cgFloat _cacheBlendRate ) :
             levelIndex( _levelIndex ), intensity( _levelIntensity ), blurOp( _blurPassCount, _blurPixelRadius, _blurDistanceFactor ), cacheBlendAmount(_cacheBlendAmount), cacheBlendRate(_cacheBlendRate) {}
     };
-    CGE_VECTOR_DECLARE( GlareStepDesc, GlareStepArray )
+    CGE_ARRAY_DECLARE( GlareStepDesc, GlareStepArray )
 
 	struct ILRElement
 	{
@@ -74,7 +74,7 @@ public:
 		ILRElement(){}
 		ILRElement( cgFloat delta, cgFloat alpha, bool highDetail ) : flareDelta(delta), flareAlpha(alpha), flareHighDetail(highDetail){}
 	};
-	CGE_VECTOR_DECLARE( ILRElement, ILRElementArray )
+	CGE_ARRAY_DECLARE( ILRElement, ILRElementArray )
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors

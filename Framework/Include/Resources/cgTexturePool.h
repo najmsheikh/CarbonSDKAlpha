@@ -66,7 +66,7 @@ public:
 		ChannelAssignment() : 
 		currOwner(CG_NULL), dataTypeId(0xFFFFFFFF),lastFillFrame(-1),lastFiller(CG_NULL){}
 	};
-	CGE_VECTOR_DECLARE( ChannelAssignment, ChannelAssignmentArray )
+	CGE_ARRAY_DECLARE( ChannelAssignment, ChannelAssignmentArray )
 
 	//-------------------------------------------------------------------------
     // Constructors & Destructors
@@ -191,11 +191,11 @@ private:
     //-------------------------------------------------------------------------
     // Private Typedefs, Structures & Enumerations
     //-------------------------------------------------------------------------
-    CGE_MAP_DECLARE     (cgBufferFormat::Base, cgTexturePoolResourceArray, PoolResourceTable)
-	CGE_VECTOR_DECLARE  (PoolResourceTable, PoolResources)
-    CGE_MAP_DECLARE     (cgBufferFormat::Base, cgResampleChain *, ResampleChainTable)
-	CGE_VECTOR_DECLARE  (cgResampleChainMRT *, MRTResampleChainArray)
-	CGE_VECTOR_DECLARE  (cgTexturePoolDepthFormatDesc, DepthFormatArray)
+    CGE_MAP_DECLARE  (cgBufferFormat::Base, cgTexturePoolResourceArray, PoolResourceTable)
+	CGE_ARRAY_DECLARE(PoolResourceTable, PoolResources)
+    CGE_MAP_DECLARE  (cgBufferFormat::Base, cgResampleChain *, ResampleChainTable)
+	CGE_ARRAY_DECLARE(cgResampleChainMRT *, MRTResampleChainArray)
+	CGE_ARRAY_DECLARE(cgTexturePoolDepthFormatDesc, DepthFormatArray)
 
     //-------------------------------------------------------------------------
     // Private Functions

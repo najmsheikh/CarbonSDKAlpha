@@ -11,6 +11,7 @@ var cg_a_p_i_8h =
     [ "cgAssertEx", "cg_a_p_i_8h.html#a201e4376477297b3db8fe044d4f42312", null ],
     [ "cgDecomposeVersion", "cg_a_p_i_8h.html#afc4b6ecea2a16bc0e88f1cbb07ed2383", null ],
     [ "CGE_API", "cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741", null ],
+    [ "CGE_ARRAY_DECLARE", "cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc", null ],
     [ "CGE_DEQUE_ALLOC_DECLARE", "cg_a_p_i_8h.html#ad5a93d9a6379fcdfa5a4a9de1f1c2713", null ],
     [ "CGE_DEQUE_DECLARE", "cg_a_p_i_8h.html#a2116c40856bc241d908154c4064cf1f3", null ],
     [ "CGE_LIST_ALLOC_DECLARE", "cg_a_p_i_8h.html#acf547855ba0b6331a0743ffb89cbd73b", null ],

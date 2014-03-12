@@ -21,7 +21,9 @@ namespace Types
         {
             // Value Types / Structures
             BINDSUCCESS( engine->registerObjectType( "RigidBodyCreateParams", sizeof(cgRigidBodyCreateParams), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CDA ) );
+            BINDSUCCESS( engine->registerObjectType( "RayCastContact"       , sizeof(cgRayCastContact), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
             BINDSUCCESS( engine->registerObjectType( "CollisionContact"     , sizeof(cgCollisionContact), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
+            BINDSUCCESS( engine->registerObjectType( "BodyCollision"        , sizeof(cgBodyCollision), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
 
             // Enumerations
             BINDSUCCESS( engine->registerEnum( "DefaultPhysicsShape" ) );
@@ -99,6 +101,20 @@ namespace Types
             BINDSUCCESS( engine->registerObjectProperty( typeName, "Vector3 shapeOffset"       , offsetof(cgRigidBodyCreateParams,shapeOffset) ) );
 
             ///////////////////////////////////////////////////////////////////////
+            // cgRayCastContact (Struct)
+            ///////////////////////////////////////////////////////////////////////
+            typeName = "RayCastContact";
+
+            // Register the default constructor, destructor and assignment operators.
+            registerDefaultCDA<cgRayCastContact>( engine, typeName );
+
+            // Register properties
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "PhysicsBody @ body"   , offsetof(cgRayCastContact,body) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "float intersectParam" , offsetof(cgRayCastContact,intersectParam) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "Vector3 contactNormal", offsetof(cgRayCastContact,contactNormal) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "int collisionId"      , offsetof(cgRayCastContact,collisionId) ) );
+
+            ///////////////////////////////////////////////////////////////////////
             // cgCollisionContact (Struct)
             ///////////////////////////////////////////////////////////////////////
             typeName = "CollisionContact";
@@ -107,10 +123,26 @@ namespace Types
             registerDefaultCDA<cgCollisionContact>( engine, typeName );
 
             // Register properties
-            BINDSUCCESS( engine->registerObjectProperty( typeName, "PhysicsBody @ body"   , offsetof(cgCollisionContact,body) ) );
-            BINDSUCCESS( engine->registerObjectProperty( typeName, "float intersectParam" , offsetof(cgCollisionContact,intersectParam) ) );
-            BINDSUCCESS( engine->registerObjectProperty( typeName, "Vector3 contactNormal", offsetof(cgCollisionContact,contactNormal) ) );
-            BINDSUCCESS( engine->registerObjectProperty( typeName, "int collisionId"      , offsetof(cgCollisionContact,collisionId) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "Vector3 point" , offsetof(cgCollisionContact,point) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "Vector3 normal", offsetof(cgCollisionContact,normal) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "float speed"   , offsetof(cgCollisionContact,speed) ) );
+
+            // Requires array type for several methods in the framework
+            ArrayBindHelper<cgCollisionContact>::registerType( engine, "CollisionContact[]", "CollisionContact" );
+            ArrayBindHelper<cgCollisionContact>::registerMethods( engine, "CollisionContact[]", "CollisionContact" );
+
+            ///////////////////////////////////////////////////////////////////////
+            // cgBodyCollision (Struct)
+            ///////////////////////////////////////////////////////////////////////
+            typeName = "BodyCollision";
+
+            // Register the default constructor, destructor and assignment operators.
+            registerDefaultCDA<cgBodyCollision>( engine, typeName );
+
+            // Register properties
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "PhysicsBody @ thisBody" , offsetof(cgBodyCollision,thisBody) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "PhysicsBody @ otherBody" , offsetof(cgBodyCollision,otherBody) ) );
+            BINDSUCCESS( engine->registerObjectProperty( typeName, "CollisionContact[] contacts", offsetof(cgBodyCollision,contacts) ) );
         }
 
     }; // End Class : Package

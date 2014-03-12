@@ -74,6 +74,11 @@ cgPhysicsWorld::~cgPhysicsWorld()
 //-----------------------------------------------------------------------------
 void cgPhysicsWorld::dispose( bool bDisposeBase )
 {
+    // Destroy all outstanding collision data.
+    for ( CollisionPairMap::iterator itPair = mCollisionPairs.begin(); itPair != mCollisionPairs.end(); ++itPair )
+        delete itPair->second;
+    mCollisionPairs.end();
+
     // Release all registered entities.
     mEntities.clear();
 
@@ -167,6 +172,11 @@ bool cgPhysicsWorld::initialize( const cgBoundingBox & WorldSize )
     NewtonMaterialSetDefaultCollidable( mWorld, mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::CastOnly ],
                                         mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::CastOnly ], 0 );
 
+    // Register collision callback for standard -> standard intersections
+    NewtonMaterialSetCollisionCallback( mWorld, mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Standard ],
+                                        mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Standard ], this,
+                                        CG_NULL, contactCallback );
+
     // Success!
     return true;
 }
@@ -192,6 +202,103 @@ cgInt32 cgPhysicsWorld::createMaterialGroup( )
 void cgPhysicsWorld::enableMaterialCollision( cgInt32 group1, cgInt32 group2, bool collidable )
 {
     NewtonMaterialSetDefaultCollidable( mWorld, group1, group2, collidable ? 1 : 0 );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : contactCallback() (Static, Callback)
+/// <summary>
+/// Triggered when contact is made between two bodies.
+/// </summary>
+//----------------------------------------------------------------------------
+void cgPhysicsWorld::contactCallback( const NewtonJoint* contactJoint, cgFloat timestep, cgInt threadIndex )
+{
+    bool existingCollision = false;
+    CollisionData * data = CG_NULL;
+    NewtonBody * newtonBody0 = NewtonJointGetBody0( contactJoint );
+    NewtonBody * newtonBody1 = NewtonJointGetBody1( contactJoint );
+
+    // Get first contact (we need this to get the user data)
+    void * newtonContact = NewtonContactJointGetFirstContact( contactJoint );
+    NewtonMaterial * contactMaterial = NewtonContactGetMaterial(newtonContact);
+    cgPhysicsWorld * thisPointer = (cgPhysicsWorld*)NewtonMaterialGetMaterialPairUserData( contactMaterial );
+
+    // Does a contact pair already exist for these two bodies?
+    CollisionPairMap::iterator itCollision = thisPointer->mCollisionPairs.find( ContactPair(newtonBody0, newtonBody1) );
+    if ( itCollision == thisPointer->mCollisionPairs.end() )
+        itCollision = thisPointer->mCollisionPairs.find( ContactPair(newtonBody1, newtonBody0) );
+    if ( itCollision == thisPointer->mCollisionPairs.end() )
+    {
+        // These two bodies were not previously in contact, create a new collision
+        // record for them.
+        data = new CollisionData();
+        data->processed = false;
+        data->collision0.thisBody = (cgPhysicsBody*)NewtonBodyGetUserData( newtonBody0 );
+        data->collision1.thisBody = (cgPhysicsBody*)NewtonBodyGetUserData( newtonBody1 );
+        data->collision0.otherBody = (cgPhysicsBody*)NewtonBodyGetUserData( newtonBody1 );
+        data->collision1.otherBody = (cgPhysicsBody*)NewtonBodyGetUserData( newtonBody0 );
+        thisPointer->mCollisionPairs[ContactPair(newtonBody0,newtonBody1)] = data;
+    
+    } // End if no prior contact
+    else
+    {
+        // These two bodies were in contact previously.
+        existingCollision = true;
+        data = itCollision->second;
+
+        // Swap the body order if necessary to maintain consistency.
+        if ( data->collision0.thisBody->getInternalBody() != newtonBody0 )
+        {
+            NewtonBody * tempBody = newtonBody0;
+            newtonBody0 = newtonBody1;
+            newtonBody1 = tempBody;
+        
+        } // End if swap
+        
+    } // End if prior contact
+
+    // Resize contact arrays
+    cgInt contactCount = NewtonContactJointGetContactCount(contactJoint);
+    data->collision0.contacts.resize(contactCount);
+    data->collision1.contacts.resize(contactCount);
+
+    // Add contact data.
+    while ( newtonContact )
+    {
+        // Make room for a new contact
+        data->collision0.contacts.push_back( cgCollisionContact() );
+        cgCollisionContact & contact = data->collision0.contacts.back();
+
+        // Get contact data.
+        contactMaterial = NewtonContactGetMaterial(newtonContact);
+        NewtonMaterialGetContactPositionAndNormal( contactMaterial, newtonBody0, contact.point, contact.normal );
+        contact.speed = NewtonMaterialGetContactNormalSpeed( contactMaterial );
+        
+        // Move on to next contact
+        newtonContact = NewtonContactJointGetNextContact( contactJoint, newtonContact );
+    
+    } // Next contact
+
+    // Copy into second bodies contact data.
+    data->collision1.contacts = data->collision0.contacts;
+    for ( size_t i = 0, contactCount = data->collision0.contacts.size(); i < contactCount; ++i )
+        data->collision1.contacts[i].normal = -data->collision1.contacts[i].normal;
+
+    // Contact processed already in this iteration
+    data->processed = true;
+
+    // Trigger the appropriate contact method.
+    if ( existingCollision )
+    {
+        data->collision0.thisBody->onPhysicsBodyCollisionContinue( &cgPhysicsBodyCollisionEventArgs(&data->collision0) );
+        data->collision1.thisBody->onPhysicsBodyCollisionContinue( &cgPhysicsBodyCollisionEventArgs(&data->collision1) );
+
+    } // End if existing contact
+    else
+    {
+        data->collision0.thisBody->onPhysicsBodyCollisionBegin( &cgPhysicsBodyCollisionEventArgs(&data->collision0) );
+        data->collision1.thisBody->onPhysicsBodyCollisionBegin( &cgPhysicsBodyCollisionEventArgs(&data->collision1) );
+    
+    } // End if new contact
 }
 
 //-----------------------------------------------------------------------------
@@ -235,6 +342,59 @@ void cgPhysicsWorld::update( cgFloat fTimeElapsed )
 
         // Simulate newton.
         NewtonUpdate( mWorld, (cgFloat)fRate );
+
+        // Find all dead / existing contacts and notify / remove.
+        cgArray<CollisionPairMap::iterator> deadCollisions;
+        deadCollisions.reserve( mCollisionPairs.size() );
+        CollisionPairMap::iterator itPair;
+        for ( itPair = mCollisionPairs.begin(); itPair != mCollisionPairs.end(); ++itPair )
+        {
+            // Has this collision already been processed?
+            CollisionData * data = itPair->second;
+            if ( data->processed )
+            {
+                data->processed = false;
+                continue;
+            
+            } // End if processed
+
+            // Is there still some contact between these bodies?
+            bool alive = false;
+            NewtonJoint * contactJoint = NewtonBodyGetFirstContactJoint( itPair->first.body0 );
+            while ( contactJoint )
+            {
+                if ( NewtonJointGetBody0( contactJoint ) == itPair->first.body1 ||
+                     NewtonJointGetBody1( contactJoint ) == itPair->first.body1 )
+                {
+                    alive = true;
+                    break;
+                
+                } // End if still contacting
+                contactJoint = NewtonBodyGetNextContactJoint( itPair->first.body0, contactJoint );
+            
+            } // Next contact joint
+
+            // If it has not been processed, we need to determine if 
+            if ( !alive )
+                deadCollisions.push_back( itPair );
+            else
+            {
+                // Notify that collision continues.
+                data->collision0.thisBody->onPhysicsBodyCollisionContinue( &cgPhysicsBodyCollisionEventArgs(&data->collision0) );
+                data->collision1.thisBody->onPhysicsBodyCollisionContinue( &cgPhysicsBodyCollisionEventArgs(&data->collision1) );
+            
+            } // End if !alive
+        
+        } // Next collision pair
+        for ( size_t j = 0; j < deadCollisions.size(); ++j )
+        {
+            CollisionData * data = deadCollisions[j]->second;
+            data->collision0.thisBody->onPhysicsBodyCollisionEnd( &cgPhysicsBodyCollisionEventArgs(&data->collision0) );
+            data->collision1.thisBody->onPhysicsBodyCollisionEnd( &cgPhysicsBodyCollisionEventArgs(&data->collision1) );
+            delete data;
+            mCollisionPairs.erase( deadCollisions[j] );
+
+        } // Next dead collision
 
         // Trigger 'onPhysicsStep' of all listeners.
         Listeners = mEventListeners;
@@ -369,6 +529,30 @@ void cgPhysicsWorld::removeEntity( cgPhysicsEntity * pEntity )
 {
     // Remove from our internal list of registered entities.
     mEntities.erase( pEntity );
+
+    // If it's in our collision list, remove it.
+    cgArray<CollisionPairMap::iterator> deadCollisions;
+    CollisionPairMap::iterator itPair;
+    for ( itPair = mCollisionPairs.begin(); itPair != mCollisionPairs.end(); ++itPair )
+    {
+        if ( pEntity == (cgPhysicsEntity*)itPair->second->collision0.thisBody ||
+             pEntity == (cgPhysicsEntity*)itPair->second->collision0.otherBody )
+            deadCollisions.push_back( itPair );
+    
+    } // Next pair
+
+    // Notify those who *aren't* yet removed.
+    for ( size_t j = 0; j < deadCollisions.size(); ++j )
+    {
+        CollisionData * data = deadCollisions[j]->second;
+        if ( pEntity == (cgPhysicsEntity*)data->collision0.thisBody )
+            data->collision1.thisBody->onPhysicsBodyCollisionEnd( &cgPhysicsBodyCollisionEventArgs(&data->collision1) );
+        else if ( pEntity == (cgPhysicsEntity*)data->collision1.thisBody )
+            data->collision0.thisBody->onPhysicsBodyCollisionEnd( &cgPhysicsBodyCollisionEventArgs(&data->collision0) );
+        delete data;
+        mCollisionPairs.erase( deadCollisions[j] );
+
+    } // Next dead collision
 }
 
 //-----------------------------------------------------------------------------
@@ -447,10 +631,10 @@ void cgPhysicsWorld::removeShapeFromCache( cgPhysicsShape * pShape )
 /// Find the closest intersected physics body along the specified ray.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgPhysicsWorld::rayCastClosest( const cgVector3 & from, const cgVector3 & to, cgCollisionContact & closestContact )
+bool cgPhysicsWorld::rayCastClosest( const cgVector3 & from, const cgVector3 & to, cgRayCastContact & closestContact )
 {
     // Reset contact structure.
-    closestContact = cgCollisionContact();
+    closestContact = cgRayCastContact();
 
     // Run the query.
     NewtonWorldRayCast( mWorld, from, to, rayCastClosestFilter, &closestContact, CG_NULL );
@@ -467,7 +651,7 @@ bool cgPhysicsWorld::rayCastClosest( const cgVector3 & from, const cgVector3 & t
 /// intersection first.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgPhysicsWorld::rayCastAll( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgCollisionContact::Array & contacts )
+bool cgPhysicsWorld::rayCastAll( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgRayCastContact::Array & contacts )
 {
     // Reset contact list.
     contacts.clear();
@@ -509,14 +693,14 @@ void cgPhysicsWorld::rayCast( const cgVector3 & from, const cgVector3 & to, RayC
 cgFloat cgPhysicsWorld::rayCastAllFilter( const NewtonBody* const body, const cgFloat * const hitNormal, cgInt collisionId, void* const userData, cgFloat intersectParam )
 {
     // Build contact.
-    cgCollisionContact contact;
+    cgRayCastContact contact;
     contact.intersectParam = intersectParam;
     contact.body           = (cgPhysicsBody*)NewtonBodyGetUserData( body );
     contact.contactNormal  = hitNormal;
     contact.collisionId    = (cgInt32)collisionId;
     
     // Add to list.
-    cgCollisionContact::Array * contacts = (cgCollisionContact::Array*)userData;
+    cgRayCastContact::Array * contacts = (cgRayCastContact::Array*)userData;
     contacts->push_back( contact );
     
     // Find all
@@ -531,7 +715,7 @@ cgFloat cgPhysicsWorld::rayCastAllFilter( const NewtonBody* const body, const cg
 //-----------------------------------------------------------------------------
 cgFloat cgPhysicsWorld::rayCastClosestFilter( const NewtonBody* const body, const cgFloat * const hitNormal, cgInt collisionId, void* const userData, cgFloat intersectParam )
 {
-    cgCollisionContact * contact = (cgCollisionContact*)userData;
+    cgRayCastContact * contact = (cgRayCastContact*)userData;
     if ( intersectParam < contact->intersectParam )
     {
         contact->intersectParam = intersectParam;
@@ -594,4 +778,19 @@ cgUInt cgPhysicsWorld::rayCastPreFilter( const NewtonBody* const body, const New
 cgInt32 cgPhysicsWorld::getDefaultMaterialGroupId( cgDefaultPhysicsMaterialGroup::Base group ) const
 {
     return mDefaultMaterialIds[ (size_t)group ];
+}
+
+//-----------------------------------------------------------------------------
+//  Name : operator < () (ContactPair&, ContactPair&)
+/// <summary>
+/// Perform less than comparison on the specified contact pairs.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool operator < (const cgPhysicsWorld::ContactPair & key1, const cgPhysicsWorld::ContactPair & key2 )
+{
+    if ( key1.body0 != key2.body0 )
+        return (key1.body0 < key2.body0);
+    if ( key1.body1 != key2.body1 )
+        return (key1.body1 < key2.body1);
+    return false;
 }

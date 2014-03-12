@@ -100,7 +100,7 @@ protected:
     //-------------------------------------------------------------------------
     struct FaceData
     {
-        CGE_VECTOR_DECLARE( FaceData, Array )
+        CGE_ARRAY_DECLARE( FaceData, Array )
         cgBoundingBox   bounds;
     };
 
@@ -135,9 +135,9 @@ protected:
         }
     };
     CGE_UNORDEREDSET_DECLARE( cgUInt32, FaceIntersectionSet );
-    CGE_VECTOR_DECLARE( cgInt, AttributeArray )
-    CGE_VECTOR_DECLARE( cgInt, IndexArray )
-    CGE_VECTOR_DECLARE( cgVector3, VertexArray )
+    CGE_ARRAY_DECLARE( cgInt, AttributeArray )
+    CGE_ARRAY_DECLARE( cgInt, IndexArray )
+    CGE_ARRAY_DECLARE( cgVector3, VertexArray )
 
     //-------------------------------------------------------------------------
     // Protected Methods

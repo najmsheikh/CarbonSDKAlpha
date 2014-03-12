@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -206,12 +206,27 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a93e67c5a1f68443ca0d54d33cd4b72a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_body.html#a93e67c5a1f68443ca0d54d33cd4b72a5">setMaterialGroupId</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> group)</td></tr>
 <tr class="memdesc:a93e67c5a1f68443ca0d54d33cd4b72a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign this physics body to the custom material group with the specified id  <a href="#a93e67c5a1f68443ca0d54d33cd4b72a5"></a><br/></td></tr>
 <tr class="separator:a93e67c5a1f68443ca0d54d33cd4b72a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9244c5341247c95dd396afbfcc69e755"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_body.html#a9244c5341247c95dd396afbfcc69e755">setUserData</a> (void *data)</td></tr>
+<tr class="memdesc:a9244c5341247c95dd396afbfcc69e755"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign customer user data to this body. The custom data value can be retrieved later with a call to '<a class="el" href="classcg_physics_body.html#a973dd3c5ce570afff62d0d169fecd72b" title="Retrieve the custom user data value that was assigned via &#39;setUserData()&#39;. ">getUserData()</a>'.  <a href="#a9244c5341247c95dd396afbfcc69e755"></a><br/></td></tr>
+<tr class="separator:a9244c5341247c95dd396afbfcc69e755"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a973dd3c5ce570afff62d0d169fecd72b"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_body.html#a973dd3c5ce570afff62d0d169fecd72b">getUserData</a> () const </td></tr>
+<tr class="memdesc:a973dd3c5ce570afff62d0d169fecd72b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the custom user data value that was assigned via '<a class="el" href="classcg_physics_body.html#a9244c5341247c95dd396afbfcc69e755" title="Assign customer user data to this body. The custom data value can be retrieved later with a call to &#39;...">setUserData()</a>'.  <a href="#a973dd3c5ce570afff62d0d169fecd72b"></a><br/></td></tr>
+<tr class="separator:a973dd3c5ce570afff62d0d169fecd72b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad052a5581ee87f1e794d780fbed0ed21"><td class="memItemLeft" align="right" valign="top">NewtonBody *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_body.html#ad052a5581ee87f1e794d780fbed0ed21">getInternalBody</a> () const </td></tr>
 <tr class="memdesc:ad052a5581ee87f1e794d780fbed0ed21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the internal body object specific to Newton. This is not technically part of the public interface and should not be called by the application directly.  <a href="#ad052a5581ee87f1e794d780fbed0ed21"></a><br/></td></tr>
 <tr class="separator:ad052a5581ee87f1e794d780fbed0ed21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f8cdac84faff92a2e2a1f3bf0cb5a1c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_body.html#a7f8cdac84faff92a2e2a1f3bf0cb5a1c">onPhysicsBodyTransformed</a> (<a class="el" href="structcg_physics_body_transformed_event_args.html">cgPhysicsBodyTransformedEventArgs</a> *e)</td></tr>
 <tr class="memdesc:a7f8cdac84faff92a2e2a1f3bf0cb5a1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">When the body is transformed, derived objects can call this method in order to notify any listeners of this fact.  <a href="#a7f8cdac84faff92a2e2a1f3bf0cb5a1c"></a><br/></td></tr>
 <tr class="separator:a7f8cdac84faff92a2e2a1f3bf0cb5a1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32810c0dbd79f6342a493e50376f31dc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_body.html#a32810c0dbd79f6342a493e50376f31dc">onPhysicsBodyCollisionBegin</a> (<a class="el" href="structcg_physics_body_collision_event_args.html">cgPhysicsBodyCollisionEventArgs</a> *e)</td></tr>
+<tr class="memdesc:a32810c0dbd79f6342a493e50376f31dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">When a new collision with another body occurs, derived objects can call this method in order to notify any listeners of this fact.  <a href="#a32810c0dbd79f6342a493e50376f31dc"></a><br/></td></tr>
+<tr class="separator:a32810c0dbd79f6342a493e50376f31dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacb14f2bd25739d9a2dfc712d3098144"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_body.html#aacb14f2bd25739d9a2dfc712d3098144">onPhysicsBodyCollisionContinue</a> (<a class="el" href="structcg_physics_body_collision_event_args.html">cgPhysicsBodyCollisionEventArgs</a> *e)</td></tr>
+<tr class="memdesc:aacb14f2bd25739d9a2dfc712d3098144"><td class="mdescLeft">&#160;</td><td class="mdescRight">When an existing collision with another body continues, derived objects can call this method in order to notify any listeners of this fact.  <a href="#aacb14f2bd25739d9a2dfc712d3098144"></a><br/></td></tr>
+<tr class="separator:aacb14f2bd25739d9a2dfc712d3098144"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef0e9c02b68e276f03a0db11557184c4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_body.html#aef0e9c02b68e276f03a0db11557184c4">onPhysicsBodyCollisionEnd</a> (<a class="el" href="structcg_physics_body_collision_event_args.html">cgPhysicsBodyCollisionEventArgs</a> *e)</td></tr>
+<tr class="memdesc:aef0e9c02b68e276f03a0db11557184c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">When an existing collision with another body ends, derived objects can call this method in order to notify any listeners of this fact.  <a href="#aef0e9c02b68e276f03a0db11557184c4"></a><br/></td></tr>
+<tr class="separator:aef0e9c02b68e276f03a0db11557184c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3de9ccb4539be6391d5af18698de4f6f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_body.html#a3de9ccb4539be6391d5af18698de4f6f">clearForces</a> ()</td></tr>
 <tr class="memdesc:a3de9ccb4539be6391d5af18698de4f6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear out any accumulated forces that have been processed.  <a href="#a3de9ccb4539be6391d5af18698de4f6f"></a><br/></td></tr>
 <tr class="separator:a3de9ccb4539be6391d5af18698de4f6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -325,6 +340,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a6572b72c45161a53f120d4b54ef7d99b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6eda96901a5390303fac8c922952850"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_body.html#aa6eda96901a5390303fac8c922952850">mUseCustomGravity</a></td></tr>
 <tr class="separator:aa6eda96901a5390303fac8c922952850"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7d0c232e6e1caea91db7b0cc70d6ca3"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_body.html#ae7d0c232e6e1caea91db7b0cc70d6ca3">mUserData</a></td></tr>
+<tr class="separator:ae7d0c232e6e1caea91db7b0cc70d6ca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classcg_physics_entity"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_physics_entity')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_physics_entity.html">cgPhysicsEntity</a></td></tr>
 <tr class="memitem:ad6e657743f036a71b1d27613800f2ef0 inherit pro_attribs_classcg_physics_entity"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_physics_world.html">cgPhysicsWorld</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_physics_entity.html#ad6e657743f036a71b1d27613800f2ef0">mWorld</a></td></tr>
 <tr class="separator:ad6e657743f036a71b1d27613800f2ef0 inherit pro_attribs_classcg_physics_entity"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -777,6 +794,23 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a973dd3c5ce570afff62d0d169fecd72b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void * cgPhysicsBody::getUserData </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the custom user data value that was assigned via '<a class="el" href="classcg_physics_body.html#a9244c5341247c95dd396afbfcc69e755" title="Assign customer user data to this body. The custom data value can be retrieved later with a call to &#39;...">setUserData()</a>'. </p>
+
+</div>
+</div>
 <a class="anchor" id="a6b0030cef0cbc2bceb7629908c0a7fd0"></a>
 <div class="memitem">
 <div class="memproto">
@@ -842,6 +876,84 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Retrieve the state of the custom gravity force enabled state. </p>
+
+</div>
+</div>
+<a class="anchor" id="a32810c0dbd79f6342a493e50376f31dc"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgPhysicsBody::onPhysicsBodyCollisionBegin </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcg_physics_body_collision_event_args.html">cgPhysicsBodyCollisionEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>When a new collision with another body occurs, derived objects can call this method in order to notify any listeners of this fact. </p>
+
+</div>
+</div>
+<a class="anchor" id="aacb14f2bd25739d9a2dfc712d3098144"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgPhysicsBody::onPhysicsBodyCollisionContinue </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcg_physics_body_collision_event_args.html">cgPhysicsBodyCollisionEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>When an existing collision with another body continues, derived objects can call this method in order to notify any listeners of this fact. </p>
+
+</div>
+</div>
+<a class="anchor" id="aef0e9c02b68e276f03a0db11557184c4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgPhysicsBody::onPhysicsBodyCollisionEnd </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcg_physics_body_collision_event_args.html">cgPhysicsBodyCollisionEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>When an existing collision with another body ends, derived objects can call this method in order to notify any listeners of this fact. </p>
 
 </div>
 </div>
@@ -988,6 +1100,24 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Assign this physics body to the custom material group with the specified id </p>
+
+</div>
+</div>
+<a class="anchor" id="a9244c5341247c95dd396afbfcc69e755"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgPhysicsBody::setUserData </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Assign customer user data to this body. The custom data value can be retrieved later with a call to '<a class="el" href="classcg_physics_body.html#a973dd3c5ce570afff62d0d169fecd72b" title="Retrieve the custom user data value that was assigned via &#39;setUserData()&#39;. ">getUserData()</a>'. </p>
 
 </div>
 </div>
@@ -1150,6 +1280,26 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ae7d0c232e6e1caea91db7b0cc70d6ca3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* cgPhysicsBody::mUserData</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="cg_physics_body_8h_source.html">cgPhysicsBody.h</a></li>
 <li><a class="el" href="cg_physics_body_8cpp.html">cgPhysicsBody.cpp</a></li>
@@ -1160,7 +1310,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_physics_body.html">cgPhysicsBody</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:28:07 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:48 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

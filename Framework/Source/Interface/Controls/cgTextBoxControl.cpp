@@ -203,10 +203,10 @@ void cgTextBoxControl::setTextColor( const cgColorValue & Color )
 //-----------------------------------------------------------------------------
 void cgTextBoxControl::renderSecondary( )
 {
-    cgUInt32            nFlags = cgTextFlags::ClipRectangle;
-    cgRect              rcDraw, rcText;
-    std::vector<cgRect> Rectangles;
-    cgUInt32            i;
+    cgUInt32        nFlags = cgTextFlags::ClipRectangle;
+    cgRect          rcDraw, rcText;
+    cgArray<cgRect> Rectangles;
+    cgUInt32        i;
 
     // Bail if control is not visible
     if ( !isVisible() )
@@ -650,7 +650,7 @@ bool cgTextBoxControl::onKeyPressed( cgInt32 nKeyCode, cgUInt32 nModifiers )
             // Move up one line by resolving the caret's
             // current position, and moving up by a single
             // line's height.
-            std::vector<cgRect> Rectangles = mTextMetrics.computeTextRectangles( mMetricCaretChar, mMetricCaretChar );
+            cgRectArray Rectangles = mTextMetrics.computeTextRectangles( mMetricCaretChar, mMetricCaretChar );
             if ( Rectangles.size() > 0 )
             {
                 cgRect  rcTextArea = getTextArea( cgControlCoordinateSpace::ScreenRelative );
@@ -672,7 +672,7 @@ bool cgTextBoxControl::onKeyPressed( cgInt32 nKeyCode, cgUInt32 nModifiers )
             // Move down one line by resolving the caret's
             // current position, and moving down by a single
             // line's height.
-            std::vector<cgRect> Rectangles = mTextMetrics.computeTextRectangles( mMetricCaretChar, mMetricCaretChar );
+            cgRectArray Rectangles = mTextMetrics.computeTextRectangles( mMetricCaretChar, mMetricCaretChar );
             if ( Rectangles.size() > 0 )
             {
                 cgRect  rcTextArea = getTextArea( cgControlCoordinateSpace::ScreenRelative );
@@ -692,7 +692,7 @@ bool cgTextBoxControl::onKeyPressed( cgInt32 nKeyCode, cgUInt32 nModifiers )
             scrollToCaret();
 
             // Cache the caret's current location
-            std::vector<cgRect> Rectangles = mTextMetrics.computeTextRectangles( mMetricCaretChar, mMetricCaretChar );
+            cgRectArray Rectangles = mTextMetrics.computeTextRectangles( mMetricCaretChar, mMetricCaretChar );
             cgRect  rcTextArea = getTextArea( cgControlCoordinateSpace::ScreenRelative );
             cgPoint Position   = cgPoint( Rectangles[0].right + rcTextArea.left, Rectangles[0].bottom + rcTextArea.top );
             
@@ -712,7 +712,7 @@ bool cgTextBoxControl::onKeyPressed( cgInt32 nKeyCode, cgUInt32 nModifiers )
             scrollToCaret();
 
             // Cache the caret's current location
-            std::vector<cgRect> Rectangles = mTextMetrics.computeTextRectangles( mMetricCaretChar, mMetricCaretChar );
+            cgRectArray Rectangles = mTextMetrics.computeTextRectangles( mMetricCaretChar, mMetricCaretChar );
             cgRect  rcTextArea = getTextArea( cgControlCoordinateSpace::ScreenRelative );
             cgPoint Position   = cgPoint( Rectangles[0].right + rcTextArea.left, Rectangles[0].bottom + rcTextArea.top );
             
@@ -932,9 +932,9 @@ void cgTextBoxControl::resetCaret( cgInt32 nCharacter, bool bAdjustSelection /* 
 //-----------------------------------------------------------------------------
 void cgTextBoxControl::scrollToCaret()
 {
-    cgRect              rcText;
-    std::vector<cgRect> Rectangles;
-    cgInt32             nCaretLine;
+    cgRect      rcText;
+    cgRectArray Rectangles;
+    cgInt32     nCaretLine;
 
     // Caret not visible.
     if ( mCaretCharacter < 0 )
@@ -969,7 +969,7 @@ void cgTextBoxControl::scrollToCaret()
             mVerticalScrollBar->setValue( (cgFloat)(mVerticalScrollAmount + mTextMetrics.getLineHeight()) );
 
         // Now ensure the caret itself is visible
-        std::vector<cgRect> Rectangles = mTextMetrics.computeTextRectangles( mMetricCaretChar, mMetricCaretChar );
+        cgRectArray Rectangles = mTextMetrics.computeTextRectangles( mMetricCaretChar, mMetricCaretChar );
         if ( Rectangles.size() == 0 ) return;
         rcCaret = Rectangles[0];*/
     

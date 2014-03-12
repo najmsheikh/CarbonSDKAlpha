@@ -7,7 +7,7 @@ var classcg_particle_emitter_object =
     [ "allocateClone", "classcg_particle_emitter_object.html#afcc0b3651ffeece502733bfec217a7eb", null ],
     [ "allocateNew", "classcg_particle_emitter_object.html#a1dfab132ba95345c24e38be21a3a7c92", null ],
     [ "applyObjectRescale", "classcg_particle_emitter_object.html#a555bce92cd5385f0fc4166304bb1bd68", null ],
-    [ "CGE_VECTOR_DECLARE", "classcg_particle_emitter_object.html#a6aee52da430a746d96a416b5b449b6ee", null ],
+    [ "CGE_ARRAY_DECLARE", "classcg_particle_emitter_object.html#a3068e8b21f7e93f5f30d1574aaca3075", null ],
     [ "dispose", "classcg_particle_emitter_object.html#ac589daa8029da461c648b489d7b193e0", null ],
     [ "enableGravity", "classcg_particle_emitter_object.html#a40dddff1059ccfea4baad172e0de333f", null ],
     [ "enableRandomizedRotation", "classcg_particle_emitter_object.html#a42c1544572462c5f60235ce7f554b41b", null ],

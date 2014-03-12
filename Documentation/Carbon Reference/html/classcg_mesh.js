@@ -19,6 +19,7 @@ var classcg_mesh =
     [ "bindSkin", "classcg_mesh.html#a18a75ced2bf39e61e385ad8aa2acd993", null ],
     [ "buildOptimizedIndexBuffer", "classcg_mesh.html#a424ede96f152fbf26682e2dcbe25dd1d", null ],
     [ "createBox", "classcg_mesh.html#a4f4a6cbcb9d4c71f73917119e01dc03d", null ],
+    [ "createBox", "classcg_mesh.html#af044d1576b565ffe96ab39af47d9c078", null ],
     [ "createCapsule", "classcg_mesh.html#a6deaf0adbe6b32ea3f7ec9c1177c4550", null ],
     [ "createCone", "classcg_mesh.html#a021b809270692263213bf209be494817", null ],
     [ "createCylinder", "classcg_mesh.html#a0f47d9d6222dca7dee99c21a25ca426f", null ],

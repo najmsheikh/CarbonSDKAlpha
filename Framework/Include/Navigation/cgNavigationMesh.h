@@ -76,7 +76,7 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Typedefs
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE( cgNavigationTile*, TileArray )
+    CGE_ARRAY_DECLARE( cgNavigationTile*, TileArray )
 
     //-------------------------------------------------------------------------
     // Protected Variables

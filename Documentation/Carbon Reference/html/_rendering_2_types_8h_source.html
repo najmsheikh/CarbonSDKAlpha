@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -613,8 +613,8 @@ $(document).ready(function(){initNavTree('_rendering_2_types_8h_source.html','')
 <div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#a4627da11dd003a21dfbacf7f91e10928" title="Registers a property for the object type. ">registerObjectProperty</a>( typeName, <span class="stringliteral">&quot;double refreshRate&quot;</span>, offsetof(<a class="code" href="structcg_display_mode.html">cgDisplayMode</a>,refreshRate) ) );</div>
 <div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;</div>
 <div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;            <span class="comment">// Requires array type for several methods in the render driver interface.</span></div>
-<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#ad04564fb7683419db45363e4514eb1ec" title="Registers a new object type. ">registerObjectType</a>( <span class="stringliteral">&quot;DisplayMode[]&quot;</span>, <span class="keyword">sizeof</span>(std::vector&lt;cgDisplayMode&gt;), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );</div>
-<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;            <a class="code" href="classcg_script_interop_1_1_utils_1_1_s_t_d_vector_helper.html">STDVectorHelper&lt;cgDisplayMode&gt;::registerMethods</a>( engine, <span class="stringliteral">&quot;DisplayMode[]&quot;</span>, <span class="stringliteral">&quot;DisplayMode&quot;</span> );</div>
+<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160;            <a class="code" href="classcg_script_interop_1_1_utils_1_1_array_bind_helper.html">ArrayBindHelper&lt;cgDisplayMode&gt;::registerType</a>( engine, <span class="stringliteral">&quot;DisplayMode[]&quot;</span>, <span class="stringliteral">&quot;DisplayMode&quot;</span> );</div>
+<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;            <a class="code" href="classcg_script_interop_1_1_utils_1_1_array_bind_helper.html">ArrayBindHelper&lt;cgDisplayMode&gt;::registerMethods</a>( engine, <span class="stringliteral">&quot;DisplayMode[]&quot;</span>, <span class="stringliteral">&quot;DisplayMode&quot;</span> );</div>
 <div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;</div>
 <div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;            <span class="comment">// cgAdapter (Struct)</span></div>
 <div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;<span class="comment"></span>            </div>
@@ -636,8 +636,8 @@ $(document).ready(function(){initNavTree('_rendering_2_types_8h_source.html','')
 <div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#a4627da11dd003a21dfbacf7f91e10928" title="Registers a property for the object type. ">registerObjectProperty</a>( typeName, <span class="stringliteral">&quot;DisplayMode[] modes&quot;</span>, offsetof(<a class="code" href="structcg_adapter.html">cgAdapter</a>,modes) ) );</div>
 <div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;</div>
 <div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;            <span class="comment">// Requires array type for several methods in the render driver interface.</span></div>
-<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#ad04564fb7683419db45363e4514eb1ec" title="Registers a new object type. ">registerObjectType</a>( <span class="stringliteral">&quot;Adapter[]&quot;</span>, <span class="keyword">sizeof</span>(std::vector&lt;cgAdapter&gt;), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );</div>
-<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;            <a class="code" href="classcg_script_interop_1_1_utils_1_1_s_t_d_vector_helper.html">STDVectorHelper&lt;cgAdapter&gt;::registerMethods</a>( engine, <span class="stringliteral">&quot;Adapter[]&quot;</span>, <span class="stringliteral">&quot;Adapter&quot;</span> );</div>
+<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;            <a class="code" href="classcg_script_interop_1_1_utils_1_1_array_bind_helper.html">ArrayBindHelper&lt;cgAdapter&gt;::registerType</a>( engine, <span class="stringliteral">&quot;Adapter[]&quot;</span>, <span class="stringliteral">&quot;Adapter&quot;</span> );</div>
+<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;            <a class="code" href="classcg_script_interop_1_1_utils_1_1_array_bind_helper.html">ArrayBindHelper&lt;cgAdapter&gt;::registerMethods</a>( engine, <span class="stringliteral">&quot;Adapter[]&quot;</span>, <span class="stringliteral">&quot;Adapter&quot;</span> );</div>
 <div class="line"><a name="l00587"></a><span class="lineno">  587</span>&#160;</div>
 <div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;            <span class="comment">// cgSamplerStateDesc (Struct)</span></div>
 <div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160;<span class="comment"></span></div>
@@ -809,8 +809,8 @@ $(document).ready(function(){initNavTree('_rendering_2_types_8h_source.html','')
 <div class="line"><a name="l00771"></a><span class="lineno">  771</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#a4627da11dd003a21dfbacf7f91e10928" title="Registers a property for the object type. ">registerObjectProperty</a>( typeName, <span class="stringliteral">&quot;AlphaWeightMethod outputAlpha&quot;</span>, offsetof(<a class="code" href="structcg_blur_op_desc.html">cgBlurOpDesc</a>,outputAlpha) ) );</div>
 <div class="line"><a name="l00772"></a><span class="lineno">  772</span>&#160;</div>
 <div class="line"><a name="l00773"></a><span class="lineno">  773</span>&#160;            <span class="comment">// Requires array type for several methods in the image processing interface.</span></div>
-<div class="line"><a name="l00774"></a><span class="lineno">  774</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#ad04564fb7683419db45363e4514eb1ec" title="Registers a new object type. ">registerObjectType</a>( <span class="stringliteral">&quot;BlurOpDesc[]&quot;</span>, <span class="keyword">sizeof</span>(std::vector&lt;cgBlurOpDesc&gt;), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );</div>
-<div class="line"><a name="l00775"></a><span class="lineno">  775</span>&#160;            <a class="code" href="classcg_script_interop_1_1_utils_1_1_s_t_d_vector_helper.html">STDVectorHelper&lt;cgBlurOpDesc&gt;::registerMethods</a>( engine, <span class="stringliteral">&quot;BlurOpDesc[]&quot;</span>, <span class="stringliteral">&quot;BlurOpDesc&quot;</span> );</div>
+<div class="line"><a name="l00774"></a><span class="lineno">  774</span>&#160;            <a class="code" href="classcg_script_interop_1_1_utils_1_1_array_bind_helper.html">ArrayBindHelper&lt;cgBlurOpDesc&gt;::registerType</a>( engine, <span class="stringliteral">&quot;BlurOpDesc[]&quot;</span>, <span class="stringliteral">&quot;BlurOpDesc&quot;</span> );</div>
+<div class="line"><a name="l00775"></a><span class="lineno">  775</span>&#160;            <a class="code" href="classcg_script_interop_1_1_utils_1_1_array_bind_helper.html">ArrayBindHelper&lt;cgBlurOpDesc&gt;::registerMethods</a>( engine, <span class="stringliteral">&quot;BlurOpDesc[]&quot;</span>, <span class="stringliteral">&quot;BlurOpDesc&quot;</span> );</div>
 <div class="line"><a name="l00776"></a><span class="lineno">  776</span>&#160;</div>
 <div class="line"><a name="l00777"></a><span class="lineno">  777</span>&#160;        }</div>
 <div class="line"><a name="l00778"></a><span class="lineno">  778</span>&#160;</div>
@@ -823,7 +823,7 @@ $(document).ready(function(){initNavTree('_rendering_2_types_8h_source.html','')
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_036efea8fd6b39c1f1fd2dd7f1be4325.html">Scripting</a></li><li class="navelem"><a class="el" href="dir_5f20ce7c1333a975792d65b7ff262c26.html">Packages</a></li><li class="navelem"><a class="el" href="dir_962f94cc32c03ad95281b0f22b8add17.html">Core</a></li><li class="navelem"><a class="el" href="dir_0dbb71f1a5f5713a44964460f7e30ad4.html">Rendering</a></li><li class="navelem"><a class="el" href="_rendering_2_types_8h.html">Types.h</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:27:54 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:36 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

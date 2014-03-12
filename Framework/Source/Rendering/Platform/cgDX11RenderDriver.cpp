@@ -4274,7 +4274,8 @@ bool cgDX11RenderDriver::setVPLData( const cgTextureHandle & hDepth, const cgTex
 cgSize cgDX11RenderDriver::getScreenSize( ) const
 {
     const cgDX11Settings::Settings * pSettings = mD3DSettings.getSettings();
-    return cgSize( pSettings->displayMode.Width, pSettings->displayMode.Height );
+    return cgSize( (mScreenSizeOverride.width > 0 ) ? mScreenSizeOverride.width : pSettings->displayMode.Width, 
+                   (mScreenSizeOverride.height > 0) ? mScreenSizeOverride.height : pSettings->displayMode.Height );
 }
 
 //-----------------------------------------------------------------------------

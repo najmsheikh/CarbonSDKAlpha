@@ -111,7 +111,7 @@ protected:
         cgAnimationSetHandle    set;    // The animation set currently applied to this track.
     
     }; // End struct Track
-    CGE_VECTOR_DECLARE      (Track, TrackArray)
+    CGE_ARRAY_DECLARE(Track, TrackArray)
 
     //-------------------------------------------------------------------------
 	// Protected Methods

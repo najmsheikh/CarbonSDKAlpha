@@ -203,6 +203,7 @@ bool cgScriptPreprocessor::loadScriptSection( asIScriptModule * pModule, cgInput
     size_t           nCodeLength;
     std::string      strScript;
     std::ifstream    ScriptFile;
+    cgString         strSourceName;
 
     cgToDo( "Effect Overhaul", "If file is not found, it steps into the memory / mapped file case!" );
 
@@ -210,6 +211,7 @@ bool cgScriptPreprocessor::loadScriptSection( asIScriptModule * pModule, cgInput
     if ( Stream.getType() == cgStreamType::File )
     {
         // Attempt to open the specified script file (we'll use binary to maintain the exact file layout)
+        strSourceName = Stream.getSourceFile();
         ScriptFile.open( stringConvertT2CA( Stream.getSourceFile().c_str() ), std::ios_base::binary | std::ios::ate );
         if ( !ScriptFile.good() )
         {
@@ -247,6 +249,7 @@ bool cgScriptPreprocessor::loadScriptSection( asIScriptModule * pModule, cgInput
     else
     {
         // Get the buffer
+        strSourceName = Stream.getName();
         cgByte * pBuffer = Stream.getBuffer( nCodeLength );
         if ( pBuffer == CG_NULL )
         {
@@ -284,7 +287,7 @@ bool cgScriptPreprocessor::loadScriptSection( asIScriptModule * pModule, cgInput
     {
         aSourceFiles.resize( aSourceFiles.size() + 1 );
         cgScript::SourceFileInfo & Info = aSourceFiles.back();
-        Info.name = Stream.getName();
+        Info.name = strSourceName;
         memcpy( Info.hash, Hash, 20 );
     
     } // End if insert new

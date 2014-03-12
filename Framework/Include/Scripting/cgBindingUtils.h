@@ -306,64 +306,94 @@ namespace cgScriptInterop
         }
 
         //-----------------------------------------------------------------------------
-        // Name : STDVectorHelperBase (Template Class)
+        // Name : ArrayBindHelperBase (Template Class)
         // Desc : Base class providing registration helper functionality for
-        //        std::vector<> types.
+        //        cgArray<> types.
         //-----------------------------------------------------------------------------
         template< class _elemType >
-        class STDVectorHelperBase
+        class ArrayBindHelperBase
         {
         public:
             //-------------------------------------------------------------------------
             // Public Static Template Methods
             //-------------------------------------------------------------------------
             //-------------------------------------------------------------------------
-            //  Name : construct() (Static)
-            /// <summary>
-            /// This is a wrapper for the std::vector type constructor.
-            /// </summary>
+            // Name : registerType() (Static)
+            // Desc : Register an engine type that provides support for a specialized
+            //        array with the necessary type / behavior.
             //-------------------------------------------------------------------------
-            static void construct( std::vector<_elemType> * thisPointer )
+            static void registerType( cgScriptEngine * engine, const cgChar * typeName, const cgChar * subTypeName )
             {
-                // Use placement new to allocate which will in turn call the constructor
-                new(thisPointer) std::vector<_elemType>();
+                BINDSUCCESS( engine->registerObjectType( typeName, sizeof(cgArray<_elemType>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
             }
 
             //-------------------------------------------------------------------------
             //  Name : construct() (Static)
             /// <summary>
-            /// This is a wrapper for the std::vector type constructor.
+            /// This is a wrapper for the cgArray type constructor.
             /// </summary>
             //-------------------------------------------------------------------------
-            static void construct( const std::vector<_elemType> & srcVec, std::vector<_elemType> * thisPointer )
+            static void construct( cgArray<_elemType> * thisPointer )
             {
                 // Use placement new to allocate which will in turn call the constructor
-                new(thisPointer) std::vector<_elemType>(srcVec);
+                new(thisPointer) cgArray<_elemType>();
             }
 
             //-------------------------------------------------------------------------
             //  Name : construct() (Static)
             /// <summary>
-            /// This is a wrapper for the std::vector type constructor.
+            /// This is a wrapper for the cgArray type constructor.
             /// </summary>
             //-------------------------------------------------------------------------
-            static void construct( cgUInt32 elements, std::vector<_elemType> * thisPointer )
+            static void construct( const cgArray<_elemType> & srcVec, cgArray<_elemType> * thisPointer )
             {
                 // Use placement new to allocate which will in turn call the constructor
-                new(thisPointer) std::vector<_elemType>(elements);
+                new(thisPointer) cgArray<_elemType>(srcVec);
+            }
+
+            //-------------------------------------------------------------------------
+            //  Name : construct() (Static)
+            /// <summary>
+            /// This is a wrapper for the cgArray type constructor.
+            /// </summary>
+            //-------------------------------------------------------------------------
+            static void construct( cgUInt32 elements, cgArray<_elemType> * thisPointer )
+            {
+                // Use placement new to allocate which will in turn call the constructor
+                new(thisPointer) cgArray<_elemType>(elements);
             }
 
             //-------------------------------------------------------------------------
             //  Name : destruct() (Static)
             /// <summary>
-            /// A wrapper for the std::vector type destructor. This will be triggered
+            /// A wrapper for the cgArray type destructor. This will be triggered
             /// whenever it goes out of scope inside the script.
             /// </summary>
             //-------------------------------------------------------------------------
-            static void destruct( std::vector<_elemType> * thisPointer )
+            static void destruct( cgArray<_elemType> * thisPointer )
             {
-                using namespace std;
-                thisPointer->~vector();
+                thisPointer->~cgArray();
+            }
+
+            //-------------------------------------------------------------------------
+            //  Name : listConstruct() (Static)
+            /// <summary>
+            /// A wrapper for the cgArray type constructor that supports
+            /// initialization lists.
+            /// </summary>
+            //-------------------------------------------------------------------------
+            static void listConstruct( void * initList, cgArray<_elemType> * thisPointer )
+            {
+                asUINT elements = *(asUINT*)initList;
+                _elemType * data = (_elemType*)(((cgByte*)initList) + sizeof(asUINT));
+
+                // Allocate the vector
+                cgArray<_elemType> * internalArray = thisPointer;
+                new(internalArray) cgArray<_elemType>(elements);
+
+                // Copy data.
+                for ( asUINT i = 0; i < elements; ++i )
+                    (*internalArray)[i] = data[i];
             }
 
             //-------------------------------------------------------------------------
@@ -372,7 +402,7 @@ namespace cgScriptInterop
             /// Duplicate one vector of this type into another.
             /// </summary>
             //-------------------------------------------------------------------------
-            static std::vector<_elemType>& assign( const std::vector<_elemType> & srcVec, std::vector<_elemType> * thisPointer )
+            static cgArray<_elemType>& assign( const cgArray<_elemType> & srcVec, cgArray<_elemType> * thisPointer )
             {
                 *thisPointer = srcVec;
                 return *thisPointer;
@@ -384,7 +414,7 @@ namespace cgScriptInterop
             /// Retrieve the size of the vector.
             /// </summary>
             //-------------------------------------------------------------------------
-            static cgUInt32 size( std::vector<_elemType> * thisPointer )
+            static cgUInt32 size( cgArray<_elemType> * thisPointer )
             {
                 return (cgUInt32)thisPointer->size();
             }
@@ -395,22 +425,91 @@ namespace cgScriptInterop
             /// Adjust the size of the vector.
             /// </summary>
             //-------------------------------------------------------------------------
-            static void resize( cgUInt32 elements, std::vector<_elemType> * thisPointer )
+            static void resize( cgUInt32 elements, cgArray<_elemType> * thisPointer )
             {
                 thisPointer->resize( elements );
+            }
+
+            //-------------------------------------------------------------------------
+            //  Name : reserve() (Static)
+            /// <summary>
+            /// Adjust the internal capacity of the vector.
+            /// </summary>
+            //-------------------------------------------------------------------------
+            static void reserve( cgUInt32 elements, cgArray<_elemType> * thisPointer )
+            {
+                thisPointer->reserve( elements );
+            }
+
+            //-------------------------------------------------------------------------
+            //  Name : insertAt() (Static)
+            /// <summary>
+            /// Insert the specified value at the indicated location.
+            /// </summary>
+            //-------------------------------------------------------------------------
+            static void insertAt( cgUInt32 index, _elemType * value, cgArray<_elemType> * thisPointer )
+            {
+                thisPointer->insert( ( index >= thisPointer->size() ) ? thisPointer->end() : thisPointer->begin() + index, *value );
+            }
+
+            //-------------------------------------------------------------------------
+            //  Name : insertLast() (Static)
+            /// <summary>
+            /// Insert the specified value at the end of the array.
+            /// </summary>
+            //-------------------------------------------------------------------------
+            static void insertLast( _elemType * value, cgArray<_elemType> * thisPointer )
+            {
+                thisPointer->push_back( *value );
+            }
+
+            //-------------------------------------------------------------------------
+            //  Name : removeAt() (Static)
+            /// <summary>
+            /// Remove the specified element from the array.
+            /// </summary>
+            //-------------------------------------------------------------------------
+            static void removeAt( cgUInt32 index, cgArray<_elemType> * thisPointer )
+            {
+                if ( !thisPointer->empty() )
+                    thisPointer->erase( ( index >= thisPointer->size() ) ? thisPointer->end() : thisPointer->begin() + index );
+            }
+
+            //-------------------------------------------------------------------------
+            //  Name : removeLast() (Static)
+            /// <summary>
+            /// Remove the final element in the array.
+            /// </summary>
+            //-------------------------------------------------------------------------
+            static void removeLast( cgArray<_elemType> * thisPointer )
+            {
+                thisPointer->pop_back();
+            }
+
+            //-------------------------------------------------------------------------
+            //  Name : isEmpty() (Static)
+            /// <summary>
+            /// Determine if the specified array is empty.
+            /// </summary>
+            //-------------------------------------------------------------------------
+            static bool isEmpty( cgArray<_elemType> * thisPointer )
+            {
+                return thisPointer->empty();
             }
         };
 
         //-----------------------------------------------------------------------------
-        // Name : STDVectorHelperBase (Template Class)
-        // Desc : Class providing registration helper functionality for std::vector<> 
+        // Name : ArrayBindHelper (Template Class)
+        // Desc : Class providing registration helper functionality for cgArray<> 
         //        types. The '_nonReferencable' parameter (defaults to false) should
         //        be set to true if element accessor methods cannot be returned by
-        //        reference. An example of this is the std::vector<bool> type. A
-        //        specialization exists for this case (see following class).
+        //        reference. An example of this might be a specialized container 
+        //        implementation similar to the standard std::vector<bool> type that
+        //        uses a bitfield to compact storage. A specialization exists for this 
+        //        case (see following class).
         //-----------------------------------------------------------------------------
         template< class _elemType, bool _nonReferenceable = false >
-        class STDVectorHelper : public STDVectorHelperBase<_elemType>
+        class ArrayBindHelper : public ArrayBindHelperBase<_elemType>
         {
         public:
             //-------------------------------------------------------------------------
@@ -419,7 +518,7 @@ namespace cgScriptInterop
             //-------------------------------------------------------------------------
             // Name : registerMethods() (Static)
             // Desc : Register the methods necessary to provide a specialized
-            //        std::vector type.
+            //        cgArray type.
             //-------------------------------------------------------------------------
             static void registerMethods( cgScriptEngine * engine, const cgChar * typeName, const cgChar * subTypeName )
             {
@@ -427,30 +526,51 @@ namespace cgScriptInterop
                 std::string sSubType = subTypeName;
 
                 // Register the object behaviors
-                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_CONSTRUCT, "void f()", asFUNCTIONPR(construct,(std::vector<_elemType>*), void),  asCALL_CDECL_OBJLAST ) );
-                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_DESTRUCT, "void f()", asFUNCTIONPR(destruct,(std::vector<_elemType>*), void), asCALL_CDECL_OBJLAST ) );
-                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_CONSTRUCT, ("void f(const "+sName+" &in)").c_str(), asFUNCTIONPR(construct,(const std::vector<_elemType>&,std::vector<_elemType>*),void), asCALL_CDECL_OBJLAST ) );
-                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_CONSTRUCT, "void f(uint)", asFUNCTIONPR(construct,(cgUInt32,std::vector<_elemType>*),void), asCALL_CDECL_OBJLAST ) );
+                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_CONSTRUCT, "void f()", asFUNCTIONPR(construct,(cgArray<_elemType>*), void),  asCALL_CDECL_OBJLAST ) );
+                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_DESTRUCT, "void f()", asFUNCTIONPR(destruct,(cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST ) );
+                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_CONSTRUCT, ("void f(const "+sName+" &in)").c_str(), asFUNCTIONPR(construct,(const cgArray<_elemType>&,cgArray<_elemType>*),void), asCALL_CDECL_OBJLAST ) );
+                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_CONSTRUCT, "void f(uint)", asFUNCTIONPR(construct,(cgUInt32,cgArray<_elemType>*),void), asCALL_CDECL_OBJLAST ) );
+                
+                // Register the constructor that will be used for initialization lists
+                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_LIST_CONSTRUCT, ("void f(int&in) {repeat " + sSubType + "}").c_str(), asFUNCTIONPR(listConstruct, (void*, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
 
                 // Register the object operators
-                BINDSUCCESS( engine->registerObjectMethod( typeName, (sSubType + " &opIndex(uint)").c_str(), asFUNCTIONPR(index,(cgUInt32,std::vector<_elemType>*), _elemType*), asCALL_CDECL_OBJLAST) );
-                BINDSUCCESS( engine->registerObjectMethod( typeName, ("const " + sSubType + " &opIndex(uint) const").c_str(), asFUNCTIONPR(index,(cgUInt32,std::vector<_elemType>*), _elemType*), asCALL_CDECL_OBJLAST) );
-                BINDSUCCESS( engine->registerObjectMethod( typeName, (sName + " &opAssign(const " + sName + " &in)").c_str(), asFUNCTIONPR(assign,(const std::vector<_elemType>&,std::vector<_elemType>*), std::vector<_elemType>&), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, (sSubType + " &opIndex(uint)").c_str(), asFUNCTIONPR(index,(cgUInt32,cgArray<_elemType>*), _elemType*), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, ("const " + sSubType + " &opIndex(uint) const").c_str(), asFUNCTIONPR(index,(cgUInt32,cgArray<_elemType>*), _elemType*), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, (sName + " &opAssign(const " + sName + " &in)").c_str(), asFUNCTIONPR(assign,(const cgArray<_elemType>&,cgArray<_elemType>*), cgArray<_elemType>&), asCALL_CDECL_OBJLAST) );
 
                 // Other methods
-                BINDSUCCESS( engine->registerObjectMethod( typeName, "uint length() const", asFUNCTIONPR(size,(std::vector<_elemType>*), cgUInt32), asCALL_CDECL_OBJLAST) );
-                BINDSUCCESS( engine->registerObjectMethod( typeName, "void resize(uint)", asFUNCTIONPR(resize,(cgUInt32, std::vector<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, ("void insertAt(uint, const " + sSubType + "&in)").c_str(), asFUNCTIONPR(insertAt,(cgUInt32, _elemType*, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, ("void insertLast(const " + sSubType + "&in)").c_str(), asFUNCTIONPR(insertLast,(_elemType*, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "void removeAt(uint)", asFUNCTIONPR(removeAt,(cgUInt32, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "void removeLast()", asFUNCTIONPR(removeLast,(cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "uint length() const", asFUNCTIONPR(size,(cgArray<_elemType>*), cgUInt32), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "void reserve(uint)", asFUNCTIONPR(reserve,(cgUInt32, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "void resize(uint)", asFUNCTIONPR(resize,(cgUInt32, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "bool isEmpty() const", asFUNCTIONPR(isEmpty,(cgArray<_elemType>*), bool), asCALL_CDECL_OBJLAST) );
+
+                // Virtual Properties
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "uint get_length() const", asFUNCTIONPR(size,(cgArray<_elemType>*), cgUInt32), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "void set_length(uint)", asFUNCTIONPR(resize,(cgUInt32, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+
+                // Register STL compatible method name aliases.
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "uint size() const", asFUNCTIONPR(size,(cgArray<_elemType>*), cgUInt32), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "bool empty() const", asFUNCTIONPR(isEmpty,(cgArray<_elemType>*), bool), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, ("void push_back(const " + sSubType + "&in)").c_str(), asFUNCTIONPR(insertLast,(_elemType*, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "void pop_back()", asFUNCTIONPR(removeLast,(cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, ("void insert(uint, const " + sSubType + "&in)").c_str(), asFUNCTIONPR(insertAt,(cgUInt32, _elemType*, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "void erase(uint)", asFUNCTIONPR(removeAt,(cgUInt32, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
             
             } // End Method registerMethods<>
 
             //-------------------------------------------------------------------------
             //  Name : index() (Static)
             /// <summary>
-            /// A wrapper around the std::vector indexing operator that provides the
+            /// A wrapper around the cgArray indexing operator that provides the
             /// bounds checking required by AS specification.
             /// </summary>
             //-------------------------------------------------------------------------
-            static _elemType* index( cgUInt32 element, std::vector<_elemType> * thisPointer )
+            static _elemType* index( cgUInt32 element, cgArray<_elemType> * thisPointer )
             {
                 if ( element < 0 || element >= thisPointer->size())
                 {
@@ -464,13 +584,13 @@ namespace cgScriptInterop
         };
 
         //-----------------------------------------------------------------------------
-        // Name : STDVectorHelperBase (Template Class)
-        // Desc : Class providing registration helper functionality for std::vector<> 
+        // Name : ArrayBindHelper (Template Class)
+        // Desc : Class providing registration helper functionality for cgArray<> 
         //        types. Specialization for cases where '_nonReferencable' template 
         //        parameter was set to 'true'.
         //-----------------------------------------------------------------------------
         template< class _elemType >
-        class STDVectorHelper<_elemType,true> : public STDVectorHelperBase<_elemType>
+        class ArrayBindHelper<_elemType,true> : public ArrayBindHelperBase<_elemType>
         {
         public:
             //-------------------------------------------------------------------------
@@ -479,7 +599,7 @@ namespace cgScriptInterop
             //-------------------------------------------------------------------------
             // Name : registerMethods() (Static)
             // Desc : Register the methods necessary to provide a specialized
-            //        std::vector type.
+            //        cgArray type.
             //-------------------------------------------------------------------------
             static void registerMethods( cgScriptEngine * engine, const cgChar * typeName, const cgChar * subTypeName )
             {
@@ -487,33 +607,54 @@ namespace cgScriptInterop
                 std::string sSubType = subTypeName;
 
                 // Register the object behaviors
-                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_CONSTRUCT, "void f()", asFUNCTIONPR(construct,(std::vector<_elemType>*), void),  asCALL_CDECL_OBJLAST ) );
-                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_DESTRUCT, "void f()", asFUNCTIONPR(destruct,(std::vector<_elemType>*), void), asCALL_CDECL_OBJLAST ) );
-                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_CONSTRUCT, ("void f(const "+sName+" &in)").c_str(), asFUNCTIONPR(construct,(const std::vector<_elemType>&,std::vector<_elemType>*),void), asCALL_CDECL_OBJLAST ) );
-                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_CONSTRUCT, "void f(uint)", asFUNCTIONPR(construct,(cgUInt32,std::vector<_elemType>*),void), asCALL_CDECL_OBJLAST ) );
+                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_CONSTRUCT, "void f()", asFUNCTIONPR(construct,(cgArray<_elemType>*), void),  asCALL_CDECL_OBJLAST ) );
+                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_DESTRUCT, "void f()", asFUNCTIONPR(destruct,(cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST ) );
+                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_CONSTRUCT, ("void f(const "+sName+" &in)").c_str(), asFUNCTIONPR(construct,(const cgArray<_elemType>&,cgArray<_elemType>*),void), asCALL_CDECL_OBJLAST ) );
+                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_CONSTRUCT, "void f(uint)", asFUNCTIONPR(construct,(cgUInt32,cgArray<_elemType>*),void), asCALL_CDECL_OBJLAST ) );
+
+                // Register the constructor that will be used for initialization lists
+                BINDSUCCESS( engine->registerObjectBehavior( typeName, asBEHAVE_LIST_CONSTRUCT, ("void f(int&in) {repeat " + sSubType + "}").c_str(), asFUNCTIONPR(listConstruct, (void*, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
 
                 // In this specialization, the vector does not allow references to be taken
                 // and thus uses by-value returns instead of a reference.
-                BINDSUCCESS( engine->registerObjectMethod( typeName, (sSubType + " opIndex(uint)").c_str(), asFUNCTIONPR(index,(cgUInt32,std::vector<_elemType>*), _elemType), asCALL_CDECL_OBJLAST) );
-                BINDSUCCESS( engine->registerObjectMethod( typeName, (sName + " opAssign(const " + sName + " &in)").c_str(), asFUNCTIONPR(assign,(const std::vector<_elemType>&,std::vector<_elemType>*), std::vector<_elemType>&), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, (sSubType + " opIndex(uint)").c_str(), asFUNCTIONPR(index,(cgUInt32,cgArray<_elemType>*), _elemType), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, (sName + " opAssign(const " + sName + " &in)").c_str(), asFUNCTIONPR(assign,(const cgArray<_elemType>&,cgArray<_elemType>*), cgArray<_elemType>&), asCALL_CDECL_OBJLAST) );
 
                 // Other methods
-                BINDSUCCESS( engine->registerObjectMethod( typeName, "uint length() const", asFUNCTIONPR(size,(std::vector<_elemType>*), cgUInt32), asCALL_CDECL_OBJLAST) );
-                BINDSUCCESS( engine->registerObjectMethod( typeName, "void resize(uint)", asFUNCTIONPR(resize,(cgUInt32, std::vector<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, ("void insertAt(uint, const " + sSubType + "&in)").c_str(), asFUNCTIONPR(insertAt,(cgUInt32, _elemType*, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, ("void insertLast(const " + sSubType + "&in)").c_str(), asFUNCTIONPR(insertLast,(_elemType*, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "void removeAt(uint)", asFUNCTIONPR(removeAt,(cgUInt32, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "void removeLast()", asFUNCTIONPR(removeLast,(cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "uint length() const", asFUNCTIONPR(size,(cgArray<_elemType>*), cgUInt32), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "void reserve(uint)", asFUNCTIONPR(reserve,(cgUInt32, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "void resize(uint)", asFUNCTIONPR(resize,(cgUInt32, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "bool isEmpty() const", asFUNCTIONPR(isEmpty,(cgArray<_elemType>*), bool), asCALL_CDECL_OBJLAST) );
+
+                // Virtual Properties
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "uint get_length() const", asFUNCTIONPR(size,(cgArray<_elemType>*), cgUInt32), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "void set_length(uint)", asFUNCTIONPR(resize,(cgUInt32, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+
+                // Register STL compatible method name aliases.
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "uint size() const", asFUNCTIONPR(size,(cgArray<_elemType>*), cgUInt32), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "bool empty() const", asFUNCTIONPR(isEmpty,(cgArray<_elemType>*), bool), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, ("void push_back(const " + sSubType + "&in)").c_str(), asFUNCTIONPR(insertLast,(_elemType*, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "void pop_back()", asFUNCTIONPR(removeLast,(cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, ("void insert(uint, const " + sSubType + "&in)").c_str(), asFUNCTIONPR(insertAt,(cgUInt32, _elemType*, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
+                BINDSUCCESS( engine->registerObjectMethod( typeName, "void erase(uint)", asFUNCTIONPR(removeAt,(cgUInt32, cgArray<_elemType>*), void), asCALL_CDECL_OBJLAST) );
             
             } // End Method registerMethods<>
 
             //-------------------------------------------------------------------------
             //  Name : index() (Static)
             /// <summary>
-            /// A wrapper around the std::vector indexing operator that provides the
+            /// A wrapper around the cgArray indexing operator that provides the
             /// bounds checking required by AS specification. Unlike the regular 
             /// 'index' function, this specialization returns a /copy/ of the 
             /// underlying element in cases where that value is non-referencable 
-            /// (i.e. std::vector<bool>)
+            /// (i.e. std::vector<bool> like containers)
             /// </summary>
             //-------------------------------------------------------------------------
-            static _elemType index( cgUInt32 element, std::vector<_elemType> * thisPointer )
+            static _elemType index( cgUInt32 element, cgArray<_elemType> * thisPointer )
             {
                 if ( element < 0 || element >= thisPointer->size())
                 {

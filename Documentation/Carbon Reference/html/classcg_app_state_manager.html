@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -150,6 +150,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adcef62d5e842895ceeca22a71b32d6c3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state_manager.html#adcef62d5e842895ceeca22a71b32d6c3">registerState</a> (<a class="el" href="classcg_app_state.html">cgAppState</a> *state)</td></tr>
 <tr class="memdesc:adcef62d5e842895ceeca22a71b32d6c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a given type of state with the state management system.  <a href="#adcef62d5e842895ceeca22a71b32d6c3"></a><br/></td></tr>
 <tr class="separator:adcef62d5e842895ceeca22a71b32d6c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a553682d92fc535af48989aaf45c91270"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state_manager.html#a553682d92fc535af48989aaf45c91270">unregisterState</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;strStateId)</td></tr>
+<tr class="memdesc:a553682d92fc535af48989aaf45c91270"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the state with the specified identifier. If this state is already begun, it will be ended and destroyed.  <a href="#a553682d92fc535af48989aaf45c91270"></a><br/></td></tr>
+<tr class="separator:a553682d92fc535af48989aaf45c91270"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3433f3e8aa8ab8090e44d23b47fc02e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_app_state.html">cgAppState</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_app_state_manager.html#af3433f3e8aa8ab8090e44d23b47fc02e">getActiveState</a> ()</td></tr>
 <tr class="memdesc:af3433f3e8aa8ab8090e44d23b47fc02e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the currently active state (if any). Note : Other states may still be resident and transitioning out / in if this is a transition state and can be accessed through the member function exposed by the <a class="el" href="classcg_app_transition_state.html" title="A specific type of state designed to allow for a more comprehensive transition process between two ap...">cgAppTransitionState</a> class.  <a href="#af3433f3e8aa8ab8090e44d23b47fc02e"></a><br/></td></tr>
 <tr class="separator:af3433f3e8aa8ab8090e44d23b47fc02e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -510,6 +513,24 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a553682d92fc535af48989aaf45c91270"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgAppStateManager::unregisterState </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strStateId</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Remove the state with the specified identifier. If this state is already begun, it will be ended and destroyed. </p>
+
+</div>
+</div>
 <a class="anchor" id="a192f9e9f55f5a9a70993166419a76914"></a>
 <div class="memitem">
 <div class="memproto">
@@ -537,7 +558,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_app_state_manager.html">cgAppStateManager</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:28:00 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:41 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

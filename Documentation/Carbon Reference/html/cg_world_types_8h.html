@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -127,7 +127,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_scene_element_type_desc.html">cgSceneElementTypeDesc</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_scene_collision_contact.html">cgSceneCollisionContact</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_scene_ray_cast_contact.html">cgSceneRayCastContact</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_node_collision.html">cgNodeCollision</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -278,16 +280,19 @@ Enumerations</h2></td></tr>
 <a class="el" href="namespacecg_transform_source.html#aa39c63df0b3694bc72e0f5197d24b743acd487d355b91cd3e40bc12a7ce6e5023">cgTransformSource::TransformResolve</a> = 3
  }</td></tr>
 <tr class="separator:aa39c63df0b3694bc72e0f5197d24b743"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81978683cf2b0cfa0713cbbb85d46861"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_deferred_update_flags.html#a81978683cf2b0cfa0713cbbb85d46861">cgDeferredUpdateFlags::Base</a> { <a class="el" href="namespacecg_deferred_update_flags.html#a81978683cf2b0cfa0713cbbb85d46861ae9b0d698d9ac080c6a5a63143c6ec35d">cgDeferredUpdateFlags::BoundingBox</a> = 0x1, 
+<tr class="memitem:a81978683cf2b0cfa0713cbbb85d46861"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_deferred_update_flags.html#a81978683cf2b0cfa0713cbbb85d46861">cgDeferredUpdateFlags::Base</a> { <br/>
+&#160;&#160;<a class="el" href="namespacecg_deferred_update_flags.html#a81978683cf2b0cfa0713cbbb85d46861ae9b0d698d9ac080c6a5a63143c6ec35d">cgDeferredUpdateFlags::BoundingBox</a> = 0x1, 
 <a class="el" href="namespacecg_deferred_update_flags.html#a81978683cf2b0cfa0713cbbb85d46861a23ce3e42b0081e082fb22516c4ff08b8">cgDeferredUpdateFlags::OwnershipStatus</a> = 0x2, 
 <a class="el" href="namespacecg_deferred_update_flags.html#a81978683cf2b0cfa0713cbbb85d46861ae10c09dec0ef1dbdbd14d1c7dd1184c2">cgDeferredUpdateFlags::Transforms</a> = 0x4, 
-<a class="el" href="namespacecg_deferred_update_flags.html#a81978683cf2b0cfa0713cbbb85d46861a03cedf263b0c3b8c5c0f059c99349ab0">cgDeferredUpdateFlags::All</a> = 0x7FFFFFFF
+<a class="el" href="namespacecg_deferred_update_flags.html#a81978683cf2b0cfa0713cbbb85d46861a637a82e2bb06edbf79e6f5a5bf2d0141">cgDeferredUpdateFlags::Unload</a> = 0x8, 
+<br/>
+&#160;&#160;<a class="el" href="namespacecg_deferred_update_flags.html#a81978683cf2b0cfa0713cbbb85d46861a03cedf263b0c3b8c5c0f059c99349ab0">cgDeferredUpdateFlags::All</a> = 0x7FFFFFFF
+<br/>
  }</td></tr>
 <tr class="separator:a81978683cf2b0cfa0713cbbb85d46861"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e8f1fd058e5a576d4b3bf4be9fb3228"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_object_node_flags.html#a3e8f1fd058e5a576d4b3bf4be9fb3228">cgObjectNodeFlags::Base</a> { <a class="el" href="namespacecg_object_node_flags.html#a3e8f1fd058e5a576d4b3bf4be9fb3228acbb3f751cf242619a1d79742f4a10247">cgObjectNodeFlags::Visible</a> = 0x1, 
 <a class="el" href="namespacecg_object_node_flags.html#a3e8f1fd058e5a576d4b3bf4be9fb3228a71e96320ea8c0464603a0ecc1d55736c">cgObjectNodeFlags::Selected</a> = 0x2, 
-<a class="el" href="namespacecg_object_node_flags.html#a3e8f1fd058e5a576d4b3bf4be9fb3228a23c762cba013116573990168cda6c5ca">cgObjectNodeFlags::DelayUnload</a> = 0x4, 
-<a class="el" href="namespacecg_object_node_flags.html#a3e8f1fd058e5a576d4b3bf4be9fb3228a95ec08d3dd54bd9649563589ea680773">cgObjectNodeFlags::UnloadPending</a> = 0x8
+<a class="el" href="namespacecg_object_node_flags.html#a3e8f1fd058e5a576d4b3bf4be9fb3228a23c762cba013116573990168cda6c5ca">cgObjectNodeFlags::DelayUnload</a> = 0x4
  }</td></tr>
 <tr class="separator:a3e8f1fd058e5a576d4b3bf4be9fb3228"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -342,7 +347,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_cace410e69155a0a769d51256a788445.html">World</a></li><li class="navelem"><a class="el" href="cg_world_types_8h.html">cgWorldTypes.h</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:27:58 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:40 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

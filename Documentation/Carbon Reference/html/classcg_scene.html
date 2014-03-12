@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -183,6 +183,9 @@ cgFilterExpression::IdentifierArray &amp;&#160;</td><td class="memItemRight" val
 <tr class="memitem:a9760ffe743dfd688ed75a85bd5fe5fa4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a9760ffe743dfd688ed75a85bd5fe5fa4">isUpdatingEnabled</a> () const </td></tr>
 <tr class="memdesc:a9760ffe743dfd688ed75a85bd5fe5fa4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the state which determines whether scene objects will automatically receive calls to their 'update' method during scene update processing.  <a href="#a9760ffe743dfd688ed75a85bd5fe5fa4"></a><br/></td></tr>
 <tr class="separator:a9760ffe743dfd688ed75a85bd5fe5fa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5a7f0d42d0e657229141cb6a2f62e9a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#ad5a7f0d42d0e657229141cb6a2f62e9a">isUpdating</a> () const </td></tr>
+<tr class="memdesc:ad5a7f0d42d0e657229141cb6a2f62e9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is the scene currently within its main update process?  <a href="#ad5a7f0d42d0e657229141cb6a2f62e9a"></a><br/></td></tr>
+<tr class="separator:ad5a7f0d42d0e657229141cb6a2f62e9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87e8738cf21d7fa8b3c0a3c3d6d9d0f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a87e8738cf21d7fa8b3c0a3c3d6d9d0f5">update</a> ()</td></tr>
 <tr class="memdesc:a87e8738cf21d7fa8b3c0a3c3d6d9d0f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows the scene to perform its update pass prior to rendering.  <a href="#a87e8738cf21d7fa8b3c0a3c3d6d9d0f5"></a><br/></td></tr>
 <tr class="separator:a87e8738cf21d7fa8b3c0a3c3d6d9d0f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -279,12 +282,12 @@ cgFilterExpression::IdentifierArray &amp;&#160;</td><td class="memItemRight" val
 <tr class="memitem:ab3a0873d5c3079496058c4e73da995a1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_landscape.html">cgLandscape</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#ab3a0873d5c3079496058c4e73da995a1">importLandscape</a> (const <a class="el" href="structcg_landscape_import_params.html">cgLandscapeImportParams</a> &amp;params)</td></tr>
 <tr class="memdesc:ab3a0873d5c3079496058c4e73da995a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a new scene landscape based on the import parameters specified.  <a href="#ab3a0873d5c3079496058c4e73da995a1"></a><br/></td></tr>
 <tr class="separator:ab3a0873d5c3079496058c4e73da995a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07decba34a3cd54461007c7c155ddd51"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a07decba34a3cd54461007c7c155ddd51">rayCastClosest</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;from, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;to, <a class="el" href="structcg_scene_collision_contact.html">cgSceneCollisionContact</a> &amp;closestContact)</td></tr>
-<tr class="memdesc:a07decba34a3cd54461007c7c155ddd51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the closest intersected collidable scene objects along the specified ray.  <a href="#a07decba34a3cd54461007c7c155ddd51"></a><br/></td></tr>
-<tr class="separator:a07decba34a3cd54461007c7c155ddd51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b4196466295430c823a97d64a71059f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a3b4196466295430c823a97d64a71059f">rayCastAll</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;from, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;to, bool sortContacts, cgSceneCollisionContact::Array &amp;contacts)</td></tr>
-<tr class="memdesc:a3b4196466295430c823a97d64a71059f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collect a list of all intersected collidable scene objects along the specified ray. The list of contacts can optionally be sorted by distance with the closest intersection first.  <a href="#a3b4196466295430c823a97d64a71059f"></a><br/></td></tr>
-<tr class="separator:a3b4196466295430c823a97d64a71059f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25a2d1f3b2631b55a500afac1c8c8786"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a25a2d1f3b2631b55a500afac1c8c8786">rayCastClosest</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;from, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;to, <a class="el" href="structcg_scene_ray_cast_contact.html">cgSceneRayCastContact</a> &amp;closestContact)</td></tr>
+<tr class="memdesc:a25a2d1f3b2631b55a500afac1c8c8786"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the closest intersected collidable scene objects along the specified ray.  <a href="#a25a2d1f3b2631b55a500afac1c8c8786"></a><br/></td></tr>
+<tr class="separator:a25a2d1f3b2631b55a500afac1c8c8786"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a202dbb83e8ff3cecfd704e6dba72e320"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a202dbb83e8ff3cecfd704e6dba72e320">rayCastAll</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;from, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;to, bool sortContacts, cgSceneRayCastContact::Array &amp;contacts)</td></tr>
+<tr class="memdesc:a202dbb83e8ff3cecfd704e6dba72e320"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collect a list of all intersected collidable scene objects along the specified ray. The list of contacts can optionally be sorted by distance with the closest intersection first.  <a href="#a202dbb83e8ff3cecfd704e6dba72e320"></a><br/></td></tr>
+<tr class="separator:a202dbb83e8ff3cecfd704e6dba72e320"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9127b59ef958523c24060da0fafcad16"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a9127b59ef958523c24060da0fafcad16">getCellSize</a> () const </td></tr>
 <tr class="memdesc:a9127b59ef958523c24060da0fafcad16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the specified size of each individual cell used for scene management.  <a href="#a9127b59ef958523c24060da0fafcad16"></a><br/></td></tr>
 <tr class="separator:a9127b59ef958523c24060da0fafcad16"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -696,6 +699,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a7431b61dd65515bdc3ed905b0ee1f45c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1806f2ddf76f4cfc0609207ef618f101"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a1806f2ddf76f4cfc0609207ef618f101">mUpdatingEnabled</a></td></tr>
 <tr class="separator:a1806f2ddf76f4cfc0609207ef618f101"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7296b19f0fe364380473a9c38bf31f32"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a7296b19f0fe364380473a9c38bf31f32">mIsUpdating</a></td></tr>
+<tr class="separator:a7296b19f0fe364380473a9c38bf31f32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add3ba268c26c0e416910aa42d555ed2c"><td class="memItemLeft" align="right" valign="top">ControllerArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#add3ba268c26c0e416910aa42d555ed2c">mSceneControllers</a></td></tr>
 <tr class="separator:add3ba268c26c0e416910aa42d555ed2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34e525f99cde6525aed7869556e21c97"><td class="memItemLeft" align="right" valign="top">cgScriptArgument::Array&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a34e525f99cde6525aed7869556e21c97">mOnSceneRenderArgs</a></td></tr>
@@ -2381,6 +2386,23 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ad5a7f0d42d0e657229141cb6a2f62e9a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgScene::isUpdating </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Is the scene currently within its main update process? </p>
+
+</div>
+</div>
 <a class="anchor" id="a9760ffe743dfd688ed75a85bd5fe5fa4"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3308,7 +3330,7 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a3b4196466295430c823a97d64a71059f"></a>
+<a class="anchor" id="a202dbb83e8ff3cecfd704e6dba72e320"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -3333,7 +3355,7 @@ Static Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">cgSceneCollisionContact::Array &amp;&#160;</td>
+          <td class="paramtype">cgSceneRayCastContact::Array &amp;&#160;</td>
           <td class="paramname"><em>contacts</em>&#160;</td>
         </tr>
         <tr>
@@ -3348,7 +3370,7 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a07decba34a3cd54461007c7c155ddd51"></a>
+<a class="anchor" id="a25a2d1f3b2631b55a500afac1c8c8786"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -3367,7 +3389,7 @@ Static Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structcg_scene_collision_contact.html">cgSceneCollisionContact</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structcg_scene_ray_cast_contact.html">cgSceneRayCastContact</a> &amp;&#160;</td>
           <td class="paramname"><em>closestContact</em>&#160;</td>
         </tr>
         <tr>
@@ -4290,6 +4312,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a7296b19f0fe364380473a9c38bf31f32"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgScene::mIsUpdating</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a0148efe752a0922e10ddd3f3d3b55920"></a>
 <div class="memitem">
 <div class="memproto">
@@ -4860,7 +4902,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_scene.html">cgScene</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:28:09 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:50 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

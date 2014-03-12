@@ -52,7 +52,7 @@ public:
         cgString name;
         cgUInt64 value;
     };
-    CGE_VECTOR_DECLARE( Identifier, IdentifierArray );
+    CGE_ARRAY_DECLARE( Identifier, IdentifierArray );
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors for This Class
@@ -147,7 +147,7 @@ protected:
         FilterToken( FilterTokenType _type, size_t _offset, const cgString & _valueName ) :
             type( _type ), offset( _offset ), valueName( _valueName ), valueData( 0 ) {}
     };
-    CGE_VECTOR_DECLARE( FilterToken, FilterTokenArray )
+    CGE_ARRAY_DECLARE( FilterToken, FilterTokenArray )
 
     struct FilterInstruction
     {
@@ -163,7 +163,7 @@ protected:
         FilterInstruction( FilterOpCodes _opCode, cgUInt64 _bits ) :
             opCode( _opCode ), bits( _bits ), jumpCount(0) {}
     };
-    CGE_VECTOR_DECLARE( FilterInstruction, FilterInstructionArray )
+    CGE_ARRAY_DECLARE( FilterInstruction, FilterInstructionArray )
 
     //-------------------------------------------------------------------------
 	// Protected Methods

@@ -1285,38 +1285,148 @@ bool cgResourceManager::reloadScripts( cgFloat fDelay /* = 0.0f */ )
 //-----------------------------------------------------------------------------
 //  Name : reloadScript ()
 /// <summary>
-/// Reload a single script identified with the specified resource name.
+/// Reload a single script identified with the specified resource name, and
+/// optionally those that are dependant on it.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgResourceManager::reloadScript( const cgString & resourceName )
+bool cgResourceManager::reloadScript( const cgString & resourceName, bool reloadDependants )
 {
+    ResourceItemList reloadScripts;
+
     // Find the script.
     cgResource * scriptResource = findScript( resourceName, false );
     if ( !scriptResource )
         scriptResource = findScript( resourceName + _T("::.default") );
     if ( scriptResource )
     {
-        // Unload the script.
-        scriptResource->unloadResource();
+        // First unload this script (and optional dependants)
+        unloadScript( (cgScript*)scriptResource, reloadDependants, reloadScripts );
+    
+    } // End if found
+    else if ( reloadDependants )
+    {
+        // No active script was found, but dependants may still reference it.
+        // Iterate through all scripts and find those that rely on this script.
+        ResourceItemList::iterator itItem;
+        for ( itItem = mScripts.begin(); itItem != mScripts.end(); ++itItem )
+        {
+            cgScript * dependant = (cgScript*)(*itItem);
+            if ( !dependant )
+                continue;
 
+            // Does this script reference the script being reloaded?
+            const cgScript::SourceFileArray & sourceFiles = dependant->getSourceInfo();
+            for ( size_t i = 0; i < sourceFiles.size(); ++i )
+            {
+                if ( resourceName.compare( sourceFiles[i].name, true ) == 0 )
+                {
+                    // Unload it and any dependants.
+                    unloadScript( dependant, reloadDependants, reloadScripts );
+
+                } // End if match
+
+            } // Next source file
+
+        } // Next script
+
+    } // End if not found
+
+    // Now we need to reload the scripts that were unloaded.
+    ResourceItemList::iterator itItem;
+    for ( itItem = reloadScripts.begin(); itItem != reloadScripts.end(); ++itItem )
+    {
         // Reload the script
-        scriptResource->loadResource();
-            
+        (*itItem)->loadResource();
+
+    } // Next script
+
+    // And finally, send messages to anyone interested that the necessary scripts have been reloaded.
+    for ( itItem = reloadScripts.begin(); itItem != reloadScripts.end(); ++itItem )
+    {
         // Send a message out to anyone interested to let
         // them know that scripts have been reloaded.
         cgMessage Msg;
-        cgUInt32 resourceId = scriptResource->getReferenceId();
+        cgUInt32 resourceId = (*itItem)->getReferenceId();
         Msg.messageId = cgSystemMessages::Resources_ReloadScripts;
         Msg.messageData = &resourceId;
         cgReferenceManager::sendMessageToGroup( getReferenceId(), cgSystemMessageGroups::MGID_ResourceManager, &Msg, 0 );
 
-        // Success!
-        return true;
+    } // Next script
 
-    } // End if found
+    // Done
+    return true;
+}
 
-    // No script found
-    return false;
+//-----------------------------------------------------------------------------
+//  Name : unloadScript ()
+/// <summary>
+/// Unload the specified script object (and optionally those that depend on it)
+/// as well as collecting together a list of scripts that need to be reloaded.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgResourceManager::unloadScript( cgScript * script, bool reloadDependants, ResourceItemList & scripts )
+{
+    // Script should only exist in the list once
+    if ( std::find( scripts.begin(), scripts.end(), (cgResource*)script ) != scripts.end() )
+        return;
+
+    // First unload any scripts that we reference in case they contain
+    // shared classes.
+    if ( reloadDependants )
+    {
+        const cgScript::SourceFileArray & sourceFiles = script->getSourceInfo();
+        for ( size_t i = 1; i < sourceFiles.size(); ++i )
+        {
+            // Find the script.
+            cgResource * scriptResource = findScript( sourceFiles[i].name, false );
+            if ( !scriptResource )
+                scriptResource = findScript( sourceFiles[i].name + _T("::.default") );
+            if ( scriptResource )
+                unloadScript( (cgScript*)scriptResource, true, scripts );
+        
+        } // Next source file
+    
+    } // End if reload dependants
+
+    // Check again to make sure one of the dependants didn't add this script.
+    if ( std::find( scripts.begin(), scripts.end(), (cgResource*)script ) != scripts.end() )
+        return;
+
+    // Unload the script.
+    script->unloadResource();
+
+    // Record this for later reload.
+    scripts.push_back( script );
+
+    // Reload dependant scripts?
+    if ( reloadDependants )
+    {
+        cgString scriptSource = script->getInputStream().getSourceFile();
+
+        // Iterate through all scripts and find those that rely on this script.
+        ResourceItemList::iterator itItem;
+        for ( itItem = mScripts.begin(); itItem != mScripts.end(); ++itItem )
+        {
+            cgScript * dependant = (cgScript*)(*itItem);
+            if ( !dependant )
+                continue;
+
+            // Does this script reference the script being reloaded?
+            const cgScript::SourceFileArray & sourceFiles = dependant->getSourceInfo();
+            for ( size_t i = 0; i < sourceFiles.size(); ++i )
+            {
+                if ( scriptSource.compare( sourceFiles[i].name, true ) == 0 )
+                {
+                    // Unload it and any dependants.
+                    unloadScript( dependant, reloadDependants, scripts );
+
+                } // End if match
+
+            } // Next source file
+
+        } // Next script
+    
+    } // End if reload dependants
 }
 
 //-----------------------------------------------------------------------------
@@ -3804,7 +3914,7 @@ bool cgResourceManager::processMessage( cgMessage * pMessage )
             notifyDeviceLost( mDepthStencilStates );
             notifyDeviceLost( mRasterizerStates );
             notifyDeviceLost( mBlendStates );
-            
+
             // Processed message
             return true;
 
@@ -3876,16 +3986,17 @@ bool cgResourceManager::processMessage( cgMessage * pMessage )
 /// Notify all resources in the specified list that the device was lost
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgResourceManager::notifyDeviceLost( ResourceItemList & ResourceList )
+template <class _ResourceListType>
+void cgResourceManager::notifyDeviceLost( _ResourceListType & ResourceList )
 {
-    ResourceItemList::iterator itItem;
-
-    // Loop through list
+    // Loop through container
+    _ResourceListType::iterator itItem;
     for ( itItem = ResourceList.begin(); itItem != ResourceList.end(); ++itItem )
     {
         // Retrieve resource
         cgResource * pResource = *itItem;
-        if ( pResource != CG_NULL ) pResource->deviceLost();
+        if ( pResource )
+            pResource->deviceLost();
     
     } // Next resource
 }
@@ -3896,16 +4007,17 @@ void cgResourceManager::notifyDeviceLost( ResourceItemList & ResourceList )
 /// Notify all resources in the specified list that the device was restored
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgResourceManager::notifyDeviceRestored( ResourceItemList & ResourceList )
+template <class _ResourceListType>
+void cgResourceManager::notifyDeviceRestored( _ResourceListType & ResourceList )
 {
-    ResourceItemList::iterator itItem;
-
-    // Loop through list
+    // Loop through container
+    _ResourceListType::iterator itItem;
     for ( itItem = ResourceList.begin(); itItem != ResourceList.end(); ++itItem )
     {
         // Retrieve resource
         cgResource * pResource = *itItem;
-        if ( pResource != CG_NULL ) pResource->deviceRestored();
+        if ( pResource )
+            pResource->deviceRestored();
 
     } // Next resource
 }

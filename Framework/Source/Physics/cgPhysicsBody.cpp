@@ -48,6 +48,7 @@ cgPhysicsBody::cgPhysicsBody( cgPhysicsWorld * pWorld, cgPhysicsShape * pShape )
 {
     // Initialize variables to sensible defaults
     mBody             = CG_NULL;
+    mUserData         = CG_NULL;
     mShape            = pShape;
     mInertia          = cgVector3( 0, 0, 0 );
     mTotalForce       = cgVector3( 0, 0, 0 );
@@ -106,8 +107,9 @@ void cgPhysicsBody::dispose( bool bDisposeBase )
         NewtonDestroyBody( mWorld->getInternalWorld(), mBody );
     
     // Clear variables
-    mShape = CG_NULL;
-    mBody  = CG_NULL;
+    mShape    = CG_NULL;
+    mBody     = CG_NULL;
+    mUserData = CG_NULL;
 
     // Call base class implementation if required.
     if ( bDisposeBase == true )
@@ -131,6 +133,29 @@ bool cgPhysicsBody::queryReferenceType( const cgUID & type ) const
 
     // Supported by base?
     return cgPhysicsEntity::queryReferenceType( type );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : setUserData ()
+/// <summary>
+/// Assign customer user data to this body. The custom data value can be 
+/// retrieved later with a call to 'getUserData()'.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgPhysicsBody::setUserData( void * data )
+{
+    mUserData = data;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getUserData ()
+/// <summary>
+/// Retrieve the custom user data value that was assigned via 'setUserData()'.
+/// </summary>
+//-----------------------------------------------------------------------------
+void * cgPhysicsBody::getUserData( ) const
+{
+    return mUserData;
 }
 
 //-----------------------------------------------------------------------------
@@ -499,4 +524,55 @@ void cgPhysicsBody::onPhysicsBodyTransformed( cgPhysicsBodyTransformedEventArgs 
     EventListenerList Listeners = mEventListeners;
     for ( itListener = Listeners.begin(); itListener != Listeners.end(); ++itListener )
         (static_cast<cgPhysicsBodyEventListener*>(*itListener))->onPhysicsBodyTransformed( this, e );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onPhysicsBodyCollisionBegin() (Virtual)
+/// <summary>
+/// When a new collision with another body occurs, derived objects can call 
+/// this method in order to notify any listeners of this fact.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgPhysicsBody::onPhysicsBodyCollisionBegin( cgPhysicsBodyCollisionEventArgs * e )
+{
+    // Trigger 'onPhysicsBodyCollisionBegin' of all listeners (duplicate list in case
+    // it is altered in response to event).
+    EventListenerList::iterator itListener;
+    EventListenerList Listeners = mEventListeners;
+    for ( itListener = Listeners.begin(); itListener != Listeners.end(); ++itListener )
+        (static_cast<cgPhysicsBodyEventListener*>(*itListener))->onPhysicsBodyCollisionBegin( this, e );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onPhysicsBodyCollisionContinue() (Virtual)
+/// <summary>
+/// When an existing collision with another body continues, derived objects can
+/// call this method in order to notify any listeners of this fact.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgPhysicsBody::onPhysicsBodyCollisionContinue( cgPhysicsBodyCollisionEventArgs * e )
+{
+    // Trigger 'onPhysicsBodyCollisionContinue' of all listeners (duplicate list in case
+    // it is altered in response to event).
+    EventListenerList::iterator itListener;
+    EventListenerList Listeners = mEventListeners;
+    for ( itListener = Listeners.begin(); itListener != Listeners.end(); ++itListener )
+        (static_cast<cgPhysicsBodyEventListener*>(*itListener))->onPhysicsBodyCollisionContinue( this, e );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onPhysicsBodyCollisionEnd() (Virtual)
+/// <summary>
+/// When an existing collision with another body ends, derived objects can
+/// call this method in order to notify any listeners of this fact.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgPhysicsBody::onPhysicsBodyCollisionEnd( cgPhysicsBodyCollisionEventArgs * e )
+{
+    // Trigger 'onPhysicsBodyCollisionEnd' of all listeners (duplicate list in case
+    // it is altered in response to event).
+    EventListenerList::iterator itListener;
+    EventListenerList Listeners = mEventListeners;
+    for ( itListener = Listeners.begin(); itListener != Listeners.end(); ++itListener )
+        (static_cast<cgPhysicsBodyEventListener*>(*itListener))->onPhysicsBodyCollisionEnd( this, e );
 }

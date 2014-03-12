@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -169,7 +169,7 @@ $(document).ready(function(){initNavTree('cg_world_configuration_8h_source.html'
 <div class="line"><a name="l00069"></a><span class="lineno"><a class="code" href="structcg_world_configuration_1_1_material_property_desc.html#af38b5773663b5e51254899d87a0190b3">   69</a></span>&#160;        <a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a>    <a class="code" href="structcg_world_configuration_1_1_material_property_desc.html#af38b5773663b5e51254899d87a0190b3">description</a>;    <span class="comment">// Description of this property (what it does, and how it is to be used).</span></div>
 <div class="line"><a name="l00070"></a><span class="lineno"><a class="code" href="structcg_world_configuration_1_1_material_property_desc.html#a4121c765308d7d5be34cd9c907a06b2f">   70</a></span>&#160;        <a class="code" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a>       <a class="code" href="structcg_world_configuration_1_1_material_property_desc.html#a4121c765308d7d5be34cd9c907a06b2f">bitOffset</a>;      <span class="comment">// Property value bit (0-63).</span></div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    };</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>      (<a class="code" href="structcg_world_configuration_1_1_material_property_desc.html">MaterialPropertyDesc</a>, MaterialPropertyArray)</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>(<a class="code" href="structcg_world_configuration_1_1_material_property_desc.html">MaterialPropertyDesc</a>, MaterialPropertyArray)</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">// Constructors &amp; Destructors</span></div>
@@ -213,8 +213,8 @@ $(document).ready(function(){initNavTree('cg_world_configuration_8h_source.html'
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="comment">// Protected Typedefs</span></div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>      (<a class="code" href="structcg_world_configuration_1_1_render_class_desc.html">RenderClassDesc</a>, RenderClassArray)</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>      (<a class="code" href="classcg_scene_descriptor.html" title="Contains all of the information that describes how a scene is constructed, and maintains this informa...">cgSceneDescriptor</a>*, SceneDescriptorArray)</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>       (<a class="code" href="structcg_world_configuration_1_1_render_class_desc.html">RenderClassDesc</a>, RenderClassArray)</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>       (<a class="code" href="classcg_scene_descriptor.html" title="Contains all of the information that describes how a scene is constructed, and maintains this informa...">cgSceneDescriptor</a>*, SceneDescriptorArray)</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#ac1d949c4a34d8e7a3b2b196eeb7df809" title="Simple unordered_map typedef. No export required.">CGE_UNORDEREDMAP_DECLARE</a>(<a class="code" href="classcg_string.html" title="String class implementation, based on providing the ease of use of the speed and power of basic_strin...">cgString</a>, <span class="keywordtype">size_t</span>, SceneDescriptorLUT)</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#ac1d949c4a34d8e7a3b2b196eeb7df809" title="Simple unordered_map typedef. No export required.">CGE_UNORDEREDMAP_DECLARE</a>(<a class="code" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>, <a class="code" href="classcg_u_i_d.html" title="Globally unique identifier ">cgUID</a>, ComponentTypeLUT )</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#ac1d949c4a34d8e7a3b2b196eeb7df809" title="Simple unordered_map typedef. No export required.">CGE_UNORDEREDMAP_DECLARE</a>(cgString, cgUInt32, RenderClassLUT )</div>
@@ -291,7 +291,7 @@ $(document).ready(function(){initNavTree('cg_world_configuration_8h_source.html'
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_cace410e69155a0a769d51256a788445.html">World</a></li><li class="navelem"><a class="el" href="cg_world_configuration_8h.html">cgWorldConfiguration.h</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:27:53 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:35 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

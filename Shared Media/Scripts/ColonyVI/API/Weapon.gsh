@@ -912,7 +912,7 @@ shared class Weapon : IScriptedObjectBehavior
             projectileTransform.rotateLocal( randomFloat(-CGEToRadian(mProjectileSpread*0.5f), CGEToRadian(mProjectileSpread*0.5f)), 0, 0 );
 
             // Ask the scene to retrieve the closest intersected object node.
-            SceneCollisionContact contact;
+            SceneRayCastContact contact;
             ObjectNode @ pickedNode = null;
             Vector3 intersection, rayOrigin = mAimFrom, rayDir = projectileTransform.normalizedZAxis();
             bool result = scene.rayCastClosest( rayOrigin, rayDir * 10000.0f, contact );

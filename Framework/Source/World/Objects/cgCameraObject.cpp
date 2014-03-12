@@ -30,11 +30,21 @@
 #include <World/Objects/cgLightObject.h>
 #include <World/cgScene.h>
 #include <Rendering/cgRenderDriver.h>
+#include <Rendering/cgVertexFormats.h>
+#include <Resources/cgSurfaceShader.h>
 #include <System/cgMessageTypes.h>
+#include <Math/cgCollision.h>
 
 #define INTERLACING_OFF  -1
 #define TOP_FIELD         0
 #define BOTTOM_FIELD      1
+
+//-----------------------------------------------------------------------------
+// Static Member Definitions
+//-----------------------------------------------------------------------------
+cgWorldQuery cgCameraObject::mInsertCamera;
+cgWorldQuery cgCameraObject::mUpdateProjection;
+cgWorldQuery cgCameraObject::mLoadCamera;
 
 ///////////////////////////////////////////////////////////////////////////////
 // cgCameraObject Member Definitions
@@ -167,6 +177,183 @@ cgString cgCameraObject::getDatabaseTable( ) const
 }
 
 //-----------------------------------------------------------------------------
+// Name : onComponentCreated() (Virtual)
+/// <summary>
+/// When the component is first created, it needs to be inserted fully into the
+/// world database. This virtual method allows the component to do so.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgCameraObject::onComponentCreated( cgComponentCreatedEventArgs * e )
+{
+    // Insert the new object.
+    if ( !insertComponentData() )
+        return false;
+
+    // Call base class implementation last.
+    return cgWorldObject::onComponentCreated( e );
+}
+
+//-----------------------------------------------------------------------------
+// Name : insertComponentData()
+/// <summary>
+/// Insert new records into the world database to represent this object.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgCameraObject::insertComponentData( )
+{
+    if ( shouldSerialize() )
+    {
+        // Open a new transaction to allow us to roll-back on failure.
+        mWorld->beginTransaction( _T("CameraObject::insertComponentData") );
+
+        // Update database.
+        prepareQueries();
+        mInsertCamera.bindParameter( 1, mReferenceId );
+        mInsertCamera.bindParameter( 2, (cgUInt32)mProjectionMode );
+        mInsertCamera.bindParameter( 3, mFOV );
+        mInsertCamera.bindParameter( 4, mNearClip );
+        mInsertCamera.bindParameter( 5, mFarClip );
+        mInsertCamera.bindParameter( 6, mZoomFactor );
+        mInsertCamera.bindParameter( 7, mDepthOfFieldEnabled );
+        mInsertCamera.bindParameter( 8, mForegroundExtents.min );
+        mInsertCamera.bindParameter( 9, mForegroundExtents.max );
+        mInsertCamera.bindParameter( 10, mForegroundHighBlur.passCount );
+        mInsertCamera.bindParameter( 11, mForegroundHighBlur.pixelRadiusH );
+        mInsertCamera.bindParameter( 12, mForegroundHighBlur.distanceFactorH );
+        mInsertCamera.bindParameter( 13, mForegroundLowBlur.passCount );
+        mInsertCamera.bindParameter( 14, mForegroundLowBlur.pixelRadiusH );
+        mInsertCamera.bindParameter( 15, mForegroundLowBlur.distanceFactorH );
+        mInsertCamera.bindParameter( 16, mBackgroundExtents.min );
+        mInsertCamera.bindParameter( 17, mBackgroundExtents.max );
+        mInsertCamera.bindParameter( 18, mBackgroundHighBlur.passCount );
+        mInsertCamera.bindParameter( 19, mBackgroundHighBlur.pixelRadiusH );
+        mInsertCamera.bindParameter( 20, mBackgroundHighBlur.distanceFactorH );
+        mInsertCamera.bindParameter( 21, mBackgroundLowBlur.passCount );
+        mInsertCamera.bindParameter( 22, mBackgroundLowBlur.pixelRadiusH );
+        mInsertCamera.bindParameter( 23, mBackgroundLowBlur.distanceFactorH );
+        mInsertCamera.bindParameter( 24, mSoftRefCount );
+
+        // Execute
+        if ( !mInsertCamera.step( true ) )
+        {
+            cgString strError;
+            mInsertCamera.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to insert data for camera object '0x%x' into database. Error: %s\n"), mReferenceId, strError.c_str() );
+            mWorld->rollbackTransaction( _T("CameraObject::insertComponentData") );
+            return false;
+        
+        } // End if failed
+
+        // Commit changes
+        mWorld->commitTransaction( _T("CameraObject::insertComponentData") );
+
+    } // End if !internal
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onComponentLoading() (Virtual)
+/// <summary>
+/// Virtual method called when the component is being reloaded from an existing
+/// database entry rather than created for the first time.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgCameraObject::onComponentLoading( cgComponentLoadingEventArgs * e )
+{
+    // Load the camera data.
+    prepareQueries();
+    mLoadCamera.bindParameter( 1, e->sourceRefId );
+    if ( !mLoadCamera.step( ) || !mLoadCamera.nextRow() )
+    {
+        // Log any error.
+        cgString strError;
+        if ( mLoadCamera.getLastError( strError ) == false )
+            cgAppLog::write( cgAppLog::Error, _T("Failed to retrieve data for camera object '0x%x'. World database has potentially become corrupt.\n"), mReferenceId );
+        else
+            cgAppLog::write( cgAppLog::Error, _T("Failed to retrieve data for camera object '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+
+        // Release any pending read operation.
+        mLoadCamera.reset();
+        return false;
+    
+    } // End if failed
+    
+    // Allow component class to access the data we just retrieved.
+    e->componentData = &mLoadCamera;
+
+    // Update our local members
+    cgFloat distanceFactor;
+    cgUInt32 mode, passes, pixelRadius;
+    mLoadCamera.getColumn( _T("ProjectionMode"), mode );
+    mLoadCamera.getColumn( _T("NearClip"), mNearClip );
+    mLoadCamera.getColumn( _T("FarClip"), mFarClip );
+    mLoadCamera.getColumn( _T("ZoomFactor"), mZoomFactor );
+    mLoadCamera.getColumn( _T("DoFEnabled"), mDepthOfFieldEnabled );
+    mLoadCamera.getColumn( _T("DoFFGMin"), mForegroundExtents.min );
+    mLoadCamera.getColumn( _T("DoFFGMax"), mForegroundExtents.max );
+    mLoadCamera.getColumn( _T("DoFFGPassesHigh"), passes );
+    mLoadCamera.getColumn( _T("DoFFGPixelRadiusHigh"), pixelRadius );
+    mLoadCamera.getColumn( _T("DoFFGDistanceFactorHigh"), distanceFactor );
+    mForegroundHighBlur = cgBlurOpDesc( passes, pixelRadius, distanceFactor );
+    mLoadCamera.getColumn( _T("DoFFGPassesLow"), passes );
+    mLoadCamera.getColumn( _T("DoFFGPixelRadiusLow"), pixelRadius );
+    mLoadCamera.getColumn( _T("DoFFGDistanceFactorLow"), distanceFactor );
+    mForegroundLowBlur = cgBlurOpDesc( passes, pixelRadius, distanceFactor );
+    mLoadCamera.getColumn( _T("DoFBGMin"), mBackgroundExtents.min );
+    mLoadCamera.getColumn( _T("DoFBGMax"), mBackgroundExtents.max );
+    mLoadCamera.getColumn( _T("DoFBGPassesHigh"), passes );
+    mLoadCamera.getColumn( _T("DoFBGPixelRadiusHigh"), pixelRadius );
+    mLoadCamera.getColumn( _T("DoFBGDistanceFactorHigh"), distanceFactor );
+    mBackgroundHighBlur = cgBlurOpDesc( passes, pixelRadius, distanceFactor );
+    mLoadCamera.getColumn( _T("DoFBGPassesLow"), passes );
+    mLoadCamera.getColumn( _T("DoFBGPixelRadiusLow"), pixelRadius );
+    mLoadCamera.getColumn( _T("DoFBGDistanceFactorLow"), distanceFactor );
+    mBackgroundLowBlur = cgBlurOpDesc( passes, pixelRadius, distanceFactor );
+    mProjectionMode = (cgProjectionMode::Base)mode;
+
+    // Call base class implementation to read remaining data.
+    if ( !cgWorldObject::onComponentLoading( e ) )
+        return false;
+
+    // If our reference identifier doesn't match the source identifier, we were cloned.
+    // As a result, make sure that we are serialized to the database accordingly.
+    if ( mReferenceId != e->sourceRefId )
+    {
+        if ( !insertComponentData() )
+            return false;
+
+    } // End if cloned
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+// Name : prepareQueries ( ) (Protected)
+/// <summary>
+/// Prepare any cached world queries as necessary.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCameraObject::prepareQueries()
+{
+    // Prepare the SQL statements as necessary.
+    if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
+    {
+        if ( mInsertCamera.isPrepared() == false )
+            mInsertCamera.prepare( mWorld, _T("INSERT INTO 'Objects::Camera' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24)"), true );
+        if ( mUpdateProjection.isPrepared() == false )
+            mUpdateProjection.prepare( mWorld, _T("UPDATE 'Objects::Camera' SET ProjectionMode=?1, FOV=?2, NearClip=?3, FarClip=?4, ZoomFactor=?5 WHERE RefId=?6"), true );
+    
+    } // End if sandbox
+
+    // Read queries
+    if ( mLoadCamera.isPrepared() == false )
+        mLoadCamera.prepare( mWorld, _T("SELECT * FROM 'Objects::Camera' WHERE RefId=?1"), true );
+}
+
+//-----------------------------------------------------------------------------
 // Name : getZoomFactor( )
 /// <summary>
 /// Get the zoom factor (scale) currently applied to any orthographic view.
@@ -196,6 +383,29 @@ void cgCameraObject::setZoomFactor( cgFloat fZoom )
     if ( fZoom == mZoomFactor )
         return;
 
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateProjection.bindParameter( 1, (cgUInt32)mProjectionMode );
+        mUpdateProjection.bindParameter( 2, mFOV );
+        mUpdateProjection.bindParameter( 3, mNearClip );
+        mUpdateProjection.bindParameter( 4, mFarClip );
+        mUpdateProjection.bindParameter( 5, fZoom );
+        mUpdateProjection.bindParameter( 6, mReferenceId );
+        
+        // Execute
+        if ( mUpdateProjection.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateProjection.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update projection properties for camera object '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
     // Update
     cgFloat fOldValue = mZoomFactor;
     mZoomFactor = fZoom;
@@ -216,6 +426,29 @@ void cgCameraObject::setFOV( cgFloat fFOVY )
     // Skip if no-op
     if ( mFOV == fFOVY )
         return;
+
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateProjection.bindParameter( 1, (cgUInt32)mProjectionMode );
+        mUpdateProjection.bindParameter( 2, fFOVY );
+        mUpdateProjection.bindParameter( 3, mNearClip );
+        mUpdateProjection.bindParameter( 4, mFarClip );
+        mUpdateProjection.bindParameter( 5, mZoomFactor );
+        mUpdateProjection.bindParameter( 6, mReferenceId );
+        
+        // Execute
+        if ( mUpdateProjection.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateProjection.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update projection properties for camera object '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
 
     // Update projection matrix and view frustum
     mFOV = fFOVY;
@@ -253,6 +486,29 @@ void cgCameraObject::setProjectionMode( cgProjectionMode::Base Mode )
     if ( Mode == mProjectionMode )
         return;
 
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateProjection.bindParameter( 1, (cgUInt32)Mode );
+        mUpdateProjection.bindParameter( 2, mFOV );
+        mUpdateProjection.bindParameter( 3, mNearClip );
+        mUpdateProjection.bindParameter( 4, mFarClip );
+        mUpdateProjection.bindParameter( 5, mZoomFactor );
+        mUpdateProjection.bindParameter( 6, mReferenceId );
+        
+        // Execute
+        if ( mUpdateProjection.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateProjection.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update projection properties for camera object '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
     // Alter the projection mode.
     mProjectionMode = Mode;
 
@@ -273,12 +529,39 @@ void cgCameraObject::setNearClip( cgFloat fDistance )
     if ( fDistance == mNearClip )
         return;
 
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateProjection.bindParameter( 1, (cgUInt32)mProjectionMode );
+        mUpdateProjection.bindParameter( 2, mFOV );
+        mUpdateProjection.bindParameter( 3, fDistance );
+        mUpdateProjection.bindParameter( 4, mFarClip );
+        mUpdateProjection.bindParameter( 5, mZoomFactor );
+        mUpdateProjection.bindParameter( 6, mReferenceId );
+        
+        // Execute
+        if ( mUpdateProjection.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateProjection.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update projection properties for camera object '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
     // Store value
     mNearClip = fDistance;
 
     // Notify listeners that property was altered
     static const cgString strContext = _T("NearClip");
     onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
+
+    // Make sure near clip is less than the far clip
+    if ( mNearClip > mFarClip )
+        setFarClip( mNearClip );
 }
 
 //-----------------------------------------------------------------------------
@@ -293,12 +576,39 @@ void cgCameraObject::setFarClip( cgFloat fDistance )
     if ( fDistance == mFarClip )
         return;
 
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateProjection.bindParameter( 1, (cgUInt32)mProjectionMode );
+        mUpdateProjection.bindParameter( 2, mFOV );
+        mUpdateProjection.bindParameter( 3, mNearClip );
+        mUpdateProjection.bindParameter( 4, fDistance );
+        mUpdateProjection.bindParameter( 5, mZoomFactor );
+        mUpdateProjection.bindParameter( 6, mReferenceId );
+        
+        // Execute
+        if ( mUpdateProjection.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateProjection.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update projection properties for camera object '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
+
     // Store value
     mFarClip = fDistance;
 
     // Notify listeners that property was altered
     static const cgString strContext = _T("FarClip");
     onComponentModified( &cgComponentModifiedEventArgs( strContext ) );
+
+    // Make sure near clip is less than the far clip
+    if ( mNearClip > mFarClip )
+        setNearClip( mFarClip );
 }
 
 //-----------------------------------------------------------------------------
@@ -360,6 +670,498 @@ cgProjectionMode::Base cgCameraObject::getProjectionMode( ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getLocalBoundingBox ()
+/// <summary>
+/// Retrieve the bounding box of this object.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgBoundingBox cgCameraObject::getLocalBoundingBox( )
+{
+    cgFloat fNearSize = tanf(CGEToRadian(mFOV*0.5f)) * mNearClip;
+    cgFloat fFarSize  = tanf(CGEToRadian(mFOV*0.5f)) * mFarClip;
+    return cgBoundingBox( -fFarSize, -fFarSize, mNearClip, fFarSize, fFarSize, mFarClip ); 
+}
+
+//-----------------------------------------------------------------------------
+//  Name : pick ( ) (Virtual)
+/// <summary>
+/// Given the specified object space ray, determine if this object is 
+/// intersected and also compute the object space intersection distance. 
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgCameraObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance )
+{
+    // Only valid in sandbox mode.
+    if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
+        return false;
+
+    // Retrieve useful values
+    cgFloat fZoomFactor  = pCamera->estimateZoomFactor( ViewportSize, pIssuer->getPosition(), 2.5f );
+    fZoomFactor *= 0.5f;
+    cgFloat fSize = fZoomFactor * 17.5f;
+    
+    // Targets are picked as if they were solid boxes.
+    cgBoundingBox Bounds( -fSize, -fSize * 1.5f, -88.0f * fZoomFactor, fSize, fSize * 1.5f, 0.0f );
+    Bounds.inflate( pCamera->estimatePickTolerance( ViewportSize, fWireTolerance, Bounds.getCenter(), pIssuer->getWorldTransform(false) ) );
+    return Bounds.intersect( vOrigin, vDir, fDistance, false );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : sandboxRender ( ) (Virtual)
+/// <summary>
+/// Allow the object to render its 'sandbox' representation -- that is the
+/// representation to be displayed within an editing environment.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgCameraObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisibilitySet * pVisData, const cgPlane & GridPlane, cgObjectNode * pIssuer )
+{
+    // No post-clear operation.
+    if ( flags & cgSandboxRenderFlags::PostDepthClear )
+        return;
+
+    // ToDo: Camera should not show additional frustra
+    // if they are selected only as part of a selected closed group.
+    
+    // Get access to required systems.
+    cgRenderDriver  * pDriver = cgRenderDriver::getInstance();
+    cgSurfaceShader * pShader = pDriver->getSandboxSurfaceShader().getResource(true);
+
+    // Set the object's transformation matrix to the device (light
+    // representation will be constructed in object space)
+    cgTransform InverseObjectTransform;
+    const cgTransform & ObjectTransform = pIssuer->getWorldTransform( false );
+    cgTransform::inverse( InverseObjectTransform, ObjectTransform );
+    pDriver->setWorldTransform( ObjectTransform );
+
+    // Retrieve useful values
+    const cgViewport & Viewport = pDriver->getViewport();
+    bool       bOrtho      = (pCamera->getProjectionMode() == cgProjectionMode::Orthographic);
+    bool       bSelected   = pIssuer->isSelected();
+    cgFloat    fZoomFactor = pCamera->estimateZoomFactor( Viewport.size, pIssuer->getPosition( false ), 2.5f );
+    cgUInt32   nColor      = (bSelected) ? 0xFFFFFFFF : 0xFF4BA1DB;
+
+    // Set the color of each of the points first of all. This saves
+    // us from having to set them during object construction.
+    cgShadedVertex Points[32];
+    for ( cgInt i = 0; i < 24; ++i )
+        Points[i].color = nColor;
+    for ( cgInt i = 24; i < 32; ++i )
+        Points[i].color = 0xFF99CCE5;
+
+    // Begin rendering
+    bool bWireframe = (flags & cgSandboxRenderFlags::Wireframe);
+    pDriver->setVertexFormat( cgVertexFormat::formatFromDeclarator( cgShadedVertex::Declarator ) );
+    pShader->setBool( _T("wireViewport"), bWireframe );
+    pDriver->setWorldTransform( ObjectTransform );
+    if ( pShader->beginTechnique( _T("drawWireframeNode") ) )
+    {
+        if ( pShader->executeTechniquePass() != cgTechniqueResult::Abort )
+        {
+            cgUInt32 Indices[168], nCount = 0;
+            bool bCull;
+            cgPlane Plane;
+
+            // Now we'll render the base of the arrow, the "stalk" and the back plate.
+            // So that we can construct in object space, transform camera culling details
+            // into object space too.
+            fZoomFactor *= 0.5f;
+            cgVector3 vCameraLook, vCameraPos;
+            InverseObjectTransform.transformNormal( vCameraLook, pCamera->getZAxis(false) );
+            InverseObjectTransform.transformCoord( vCameraPos, pCamera->getPosition(false) );
+            cgVector3::normalize( vCameraLook, vCameraLook );
+
+            // Compute vertices for the camera lens coweling
+            cgFloat fSize = fZoomFactor * 8.5f;
+            Points[0].position = cgVector3( -fSize,  fSize, fZoomFactor * -8.0f );
+            Points[1].position = cgVector3( -fSize, -fSize, fZoomFactor * -8.0f );
+            Points[2].position = cgVector3(  fSize, -fSize, fZoomFactor * -8.0f );
+            Points[3].position = cgVector3(  fSize,  fSize, fZoomFactor * -8.0f );
+            fSize = fZoomFactor * 17.5f;
+            Points[4].position = cgVector3( -fSize,  fSize, fZoomFactor * 0.0f );
+            Points[5].position = cgVector3( -fSize, -fSize, fZoomFactor * 0.0f );
+            Points[6].position = cgVector3(  fSize, -fSize, fZoomFactor * 0.0f );
+            Points[7].position = cgVector3(  fSize,  fSize, fZoomFactor * 0.0f );
+            
+            // Cowel +X Face
+            cgPlane::fromPoints( Plane, Points[2].position, Points[3].position, Points[7].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 2; Indices[nCount++] = 3;
+                Indices[nCount++] = 3; Indices[nCount++] = 7;
+                Indices[nCount++] = 7; Indices[nCount++] = 6;
+                Indices[nCount++] = 6; Indices[nCount++] = 2;
+
+            } // End if !cull
+
+            // Cowel -X Face
+            cgPlane::fromPoints( Plane, Points[1].position, Points[5].position, Points[4].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 1; Indices[nCount++] = 5;
+                Indices[nCount++] = 5; Indices[nCount++] = 4;
+                Indices[nCount++] = 4; Indices[nCount++] = 0;
+                Indices[nCount++] = 0; Indices[nCount++] = 1;
+
+            } // End if !cull
+
+            // Cowel +Y Face
+            cgPlane::fromPoints( Plane, Points[0].position, Points[4].position, Points[7].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 0; Indices[nCount++] = 4;
+                Indices[nCount++] = 4; Indices[nCount++] = 7;
+                Indices[nCount++] = 7; Indices[nCount++] = 3;
+                Indices[nCount++] = 3; Indices[nCount++] = 0;
+
+            } // End if !cull
+
+            // Cowel -Y Face
+            cgPlane::fromPoints( Plane, Points[2].position, Points[6].position, Points[5].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 2; Indices[nCount++] = 6;
+                Indices[nCount++] = 6; Indices[nCount++] = 5;
+                Indices[nCount++] = 5; Indices[nCount++] = 1;
+                Indices[nCount++] = 1; Indices[nCount++] = 2;
+
+            } // End if !cull
+
+            // Cowel +Z Face
+            cgPlane::fromPoints( Plane, Points[5].position, Points[6].position, Points[7].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 5; Indices[nCount++] = 6;
+                Indices[nCount++] = 6; Indices[nCount++] = 7;
+                Indices[nCount++] = 7; Indices[nCount++] = 4;
+                Indices[nCount++] = 4; Indices[nCount++] = 5;
+
+            } // End if !cull
+
+            // Cowel -Z Face
+            cgPlane::fromPoints( Plane, Points[1].position, Points[0].position, Points[3].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 1; Indices[nCount++] = 0;
+                Indices[nCount++] = 0; Indices[nCount++] = 3;
+                Indices[nCount++] = 3; Indices[nCount++] = 2;
+                Indices[nCount++] = 2; Indices[nCount++] = 1;
+
+            } // End if !cull
+
+            // Compute vertices for the lens coweling
+            fSize = fZoomFactor * 5.5f;
+            Points[8].position = cgVector3( -fSize,  fSize, fZoomFactor * -18.0f );
+            Points[9].position = cgVector3( -fSize, -fSize, fZoomFactor * -18.0f );
+            Points[10].position = cgVector3(  fSize, -fSize, fZoomFactor * -18.0f );
+            Points[11].position = cgVector3(  fSize,  fSize, fZoomFactor * -18.0f );
+            Points[12].position = cgVector3( -fSize,  fSize, fZoomFactor * -8.0f );
+            Points[13].position = cgVector3( -fSize, -fSize, fZoomFactor * -8.0f );
+            Points[14].position = cgVector3(  fSize, -fSize, fZoomFactor * -8.0f );
+            Points[15].position = cgVector3(  fSize,  fSize, fZoomFactor * -8.0f );
+            
+            // Lens +X Face
+            cgPlane::fromPoints( Plane, Points[10].position, Points[11].position, Points[15].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 10; Indices[nCount++] = 11;
+                Indices[nCount++] = 11; Indices[nCount++] = 15;
+                Indices[nCount++] = 15; Indices[nCount++] = 14;
+                Indices[nCount++] = 14; Indices[nCount++] = 10;
+
+            } // End if !cull
+
+            // Lens -X Face
+            cgPlane::fromPoints( Plane, Points[9].position, Points[13].position, Points[12].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 9; Indices[nCount++] = 13;
+                Indices[nCount++] = 13; Indices[nCount++] = 12;
+                Indices[nCount++] = 12; Indices[nCount++] = 8;
+                Indices[nCount++] = 8; Indices[nCount++] = 9;
+
+            } // End if !cull
+
+            // Lens +Y Face
+            cgPlane::fromPoints( Plane, Points[8].position, Points[12].position, Points[15].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 8; Indices[nCount++] = 12;
+                Indices[nCount++] = 12; Indices[nCount++] = 15;
+                Indices[nCount++] = 15; Indices[nCount++] = 11;
+                Indices[nCount++] = 11; Indices[nCount++] = 8;
+
+            } // End if !cull
+
+            // Lens -Y Face
+            cgPlane::fromPoints( Plane, Points[10].position, Points[14].position, Points[13].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 10; Indices[nCount++] = 14;
+                Indices[nCount++] = 14; Indices[nCount++] = 13;
+                Indices[nCount++] = 13; Indices[nCount++] = 9;
+                Indices[nCount++] = 9; Indices[nCount++] = 10;
+
+            } // End if !cull
+
+            // Lens +Z Face
+            cgPlane::fromPoints( Plane, Points[13].position, Points[14].position, Points[15].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 13; Indices[nCount++] = 14;
+                Indices[nCount++] = 14; Indices[nCount++] = 15;
+                Indices[nCount++] = 15; Indices[nCount++] = 12;
+                Indices[nCount++] = 12; Indices[nCount++] = 13;
+
+            } // End if !cull
+
+            // Lens -Z Face
+            cgPlane::fromPoints( Plane, Points[9].position, Points[8].position, Points[11].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 9; Indices[nCount++] = 8;
+                Indices[nCount++] = 8; Indices[nCount++] = 11;
+                Indices[nCount++] = 11; Indices[nCount++] = 10;
+                Indices[nCount++] = 10; Indices[nCount++] = 9;
+
+            } // End if !cull
+
+            // Compute vertices for the main body
+            fSize = fZoomFactor * 17.5f;
+            Points[16].position = cgVector3( -fSize,  fSize * 1.f - fSize * 0.5f, fZoomFactor * -88.0f );
+            Points[17].position = cgVector3( -fSize, -fSize * 1.f - fSize * 0.5f, fZoomFactor * -88.0f );
+            Points[18].position = cgVector3(  fSize, -fSize * 1.f - fSize * 0.5f, fZoomFactor * -88.0f );
+            Points[19].position = cgVector3(  fSize,  fSize * 1.f - fSize * 0.5f, fZoomFactor * -88.0f );
+            Points[20].position = cgVector3( -fSize,  fSize * 1.5f, fZoomFactor * -18.0f );
+            Points[21].position = cgVector3( -fSize, -fSize * 1.5f, fZoomFactor * -18.0f );
+            Points[22].position = cgVector3(  fSize, -fSize * 1.5f, fZoomFactor * -18.0f );
+            Points[23].position = cgVector3(  fSize,  fSize * 1.5f, fZoomFactor * -18.0f );
+            
+            // Body +X Face
+            cgPlane::fromPoints( Plane, Points[18].position, Points[19].position, Points[23].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 18; Indices[nCount++] = 19;
+                Indices[nCount++] = 19; Indices[nCount++] = 23;
+                Indices[nCount++] = 23; Indices[nCount++] = 22;
+                Indices[nCount++] = 22; Indices[nCount++] = 18;
+
+            } // End if !cull
+
+            // Body -X Face
+            cgPlane::fromPoints( Plane, Points[17].position, Points[21].position, Points[20].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 17; Indices[nCount++] = 21;
+                Indices[nCount++] = 21; Indices[nCount++] = 20;
+                Indices[nCount++] = 20; Indices[nCount++] = 16;
+                Indices[nCount++] = 16; Indices[nCount++] = 17;
+
+            } // End if !cull
+
+            // Body +Y Face
+            cgPlane::fromPoints( Plane, Points[16].position, Points[20].position, Points[23].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 16; Indices[nCount++] = 20;
+                Indices[nCount++] = 20; Indices[nCount++] = 23;
+                Indices[nCount++] = 23; Indices[nCount++] = 19;
+                Indices[nCount++] = 19; Indices[nCount++] = 16;
+
+            } // End if !cull
+
+            // Body -Y Face
+            cgPlane::fromPoints( Plane, Points[18].position, Points[22].position, Points[21].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 18; Indices[nCount++] = 22;
+                Indices[nCount++] = 22; Indices[nCount++] = 21;
+                Indices[nCount++] = 21; Indices[nCount++] = 17;
+                Indices[nCount++] = 17; Indices[nCount++] = 18;
+
+            } // End if !cull
+
+            // Body +Z Face
+            cgPlane::fromPoints( Plane, Points[21].position, Points[22].position, Points[23].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 21; Indices[nCount++] = 22;
+                Indices[nCount++] = 22; Indices[nCount++] = 23;
+                Indices[nCount++] = 23; Indices[nCount++] = 20;
+                Indices[nCount++] = 20; Indices[nCount++] = 21;
+
+            } // End if !cull
+
+            // Body -Z Face
+            cgPlane::fromPoints( Plane, Points[17].position, Points[16].position, Points[19].position );
+            if ( bOrtho )
+                bCull = (cgVector3::dot( (cgVector3&)Plane, vCameraLook ) >= 0.0f );
+            else
+                bCull = (cgCollision::pointClassifyPlane( vCameraPos, (cgVector3&)Plane, Plane.d ) != cgPlaneQuery::Front);
+            
+            // Build indices
+            if ( bCull == false )
+            {
+                Indices[nCount++] = 17; Indices[nCount++] = 16;
+                Indices[nCount++] = 16; Indices[nCount++] = 19;
+                Indices[nCount++] = 19; Indices[nCount++] = 18;
+                Indices[nCount++] = 18; Indices[nCount++] = 17;
+
+            } // End if !cull
+
+
+            // Draw the frustum if the camera is selected.
+            if ( pIssuer->isSelected() )
+            {
+                fSize = tanf(CGEToRadian(mFOV*0.5f)) * mNearClip;
+                cgSizeF NearSize( fSize*2, fSize*2 );
+                Points[24].position = cgVector3( NearSize.width * -0.5f, NearSize.height * -0.5f, mNearClip );
+                Points[25].position = cgVector3( NearSize.width * -0.5f, NearSize.height *  0.5f, mNearClip );
+                Points[26].position = cgVector3( NearSize.width *  0.5f, NearSize.height *  0.5f, mNearClip );
+                Points[27].position = cgVector3( NearSize.width *  0.5f, NearSize.height * -0.5f, mNearClip );
+                
+                Indices[nCount++] = 24; Indices[nCount++] = 25;
+                Indices[nCount++] = 25; Indices[nCount++] = 26;
+                Indices[nCount++] = 26; Indices[nCount++] = 27;
+                Indices[nCount++] = 27; Indices[nCount++] = 24;
+
+                fSize = tanf(CGEToRadian(mFOV * 0.5f)) * mFarClip;
+                cgSizeF FarSize( fSize*2, fSize*2 );
+                Points[28].position = cgVector3( FarSize.width * -0.5f, FarSize.height * -0.5f, mFarClip );
+                Points[29].position = cgVector3( FarSize.width * -0.5f, FarSize.height *  0.5f, mFarClip );
+                Points[30].position = cgVector3( FarSize.width *  0.5f, FarSize.height *  0.5f, mFarClip );
+                Points[31].position = cgVector3( FarSize.width *  0.5f, FarSize.height * -0.5f, mFarClip );
+                
+                Indices[nCount++] = 28; Indices[nCount++] = 29;
+                Indices[nCount++] = 29; Indices[nCount++] = 30;
+                Indices[nCount++] = 30; Indices[nCount++] = 31;
+                Indices[nCount++] = 31; Indices[nCount++] = 28;
+
+                // Draw lines between near and far plates
+                Indices[nCount++] = 24; Indices[nCount++] = 28;
+                Indices[nCount++] = 25; Indices[nCount++] = 29;
+                Indices[nCount++] = 26; Indices[nCount++] = 30;
+                Indices[nCount++] = 27; Indices[nCount++] = 31;
+
+            } // End if selected
+
+            // Draw all geometry
+            if ( nCount )
+                pDriver->drawIndexedPrimitiveUP( cgPrimitiveType::LineList, 0, 32, nCount / 2, Indices, cgBufferFormat::Index32, Points );
+        
+        } // End if begun pass
+
+        // We have finished rendering
+        pShader->endTechnique();
+    
+    } // End if begun technique
+
+    // Call base class implementation last.
+    cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );
+}
+
+//-----------------------------------------------------------------------------
 //  Name : applyObjectRescale ()
 /// <summary>
 /// Apply a scale to all *local* data internal to this object. For instance,
@@ -373,7 +1175,28 @@ void cgCameraObject::applyObjectRescale( cgFloat fScale )
     mNearClip *= fScale;
     mFarClip  *= fScale;
 
-    // ToDo: Update world database
+    // Update world database
+    if ( shouldSerialize() )
+    {
+        prepareQueries();
+        mUpdateProjection.bindParameter( 1, (cgUInt32)mProjectionMode );
+        mUpdateProjection.bindParameter( 2, mFOV );
+        mUpdateProjection.bindParameter( 3, mNearClip );
+        mUpdateProjection.bindParameter( 4, mFarClip );
+        mUpdateProjection.bindParameter( 5, mZoomFactor );
+        mUpdateProjection.bindParameter( 6, mReferenceId );
+        
+        // Execute
+        if ( mUpdateProjection.step( true ) == false )
+        {
+            cgString strError;
+            mUpdateProjection.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to update projection properties for camera object '0x%x'. Error: %s\n"), mReferenceId, strError.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if serialize
 
     // Call base class implementation.
     cgWorldObject::applyObjectRescale( fScale );

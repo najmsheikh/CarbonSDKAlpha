@@ -40,6 +40,7 @@ var searchData=
   ['apoint',['aPoint',['../structcg_image_processor_1_1_samplers.html#afa57fdf516f82121bde0a8af623f7343',1,'cgImageProcessor::Samplers']]],
   ['applygravity',['applyGravity',['../structcg_particle_emitter_object_1_1_layer.html#ad337e9e9563618a894a0583ae265f70e',1,'cgParticleEmitterObject::Layer']]],
   ['argument',['argument',['../structcg_component_modified_event_args.html#a3dd16cc3178769001692c5a2ff86ea04',1,'cgComponentModifiedEventArgs']]],
+  ['array_5fcache',['ARRAY_CACHE',['../namespacecg_script_interop.html#ae036bf240925daf83553ac7336c5281e',1,'cgScriptInterop']]],
   ['arraydimensions',['arrayDimensions',['../structcg_constant_desc.html#a6ef659c6e612bae1861a5143f65db038',1,'cgConstantDesc']]],
   ['attenuation',['attenuation',['../structcg_light_node_1_1__cb_light.html#a19de455427ac9c19b849ca0d9563fa00',1,'cgLightNode::_cbLight']]],
   ['attenuationbuffermask',['attenuationBufferMask',['../structcg_lighting_manager_1_1__cb_lighting_system.html#aad2d2008711512170eeb9c64f23eb3df',1,'cgLightingManager::_cbLightingSystem']]],

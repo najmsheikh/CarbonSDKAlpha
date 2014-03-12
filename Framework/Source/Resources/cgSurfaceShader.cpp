@@ -907,14 +907,14 @@ cgVertexShaderHandle cgSurfaceShader::getVertexShader( const cgString & strName,
             case cgScriptArgumentType::Array:
             {
                 // Iterate through and copy data as required. We acknowledge and accept
-                // the fact that the std::vector<> casts we do here may not match the
-                // original types; but in each case except the bool we do not allow for
-                // specializations anyway and thus the class should still function.
+                // the fact that the cgArray<> casts we do here may not match the
+                // original types; but in each case we do not allow for specializations 
+                // anyway and thus the class should still function.
                 switch ( aArgs[i].subType )
                 {
                     case cgScriptArgumentType::Bool:
                     {
-                        const std::vector<bool> & aValues = *((std::vector<bool>*)aArgs[i].data);
+                        const cgArray<bool> & aValues = *((cgArray<bool>*)aArgs[i].data);
 
                         // Resize the parameter data (permutation key) array to account for the
                         // number of elements in the array (1 less than the actual array size
@@ -932,7 +932,7 @@ cgVertexShaderHandle cgSurfaceShader::getVertexShader( const cgString & strName,
                     } // End case Bool
                     case cgScriptArgumentType::Byte:
                     {
-                        const std::vector<cgByte> & aValues = *((std::vector<cgUInt8>*)aArgs[i].data);
+                        const cgArray<cgByte> & aValues = *((cgArray<cgUInt8>*)aArgs[i].data);
 
                         // Resize the parameter data (permutation key) array for the expanded data
                         size_t nArraySize = aValues.size();
@@ -947,7 +947,7 @@ cgVertexShaderHandle cgSurfaceShader::getVertexShader( const cgString & strName,
                     } // End case Byte
                     case cgScriptArgumentType::Word:
                     {
-                        const std::vector<cgUInt16> & aValues = *((std::vector<cgUInt16>*)aArgs[i].data);
+                        const cgArray<cgUInt16> & aValues = *((cgArray<cgUInt16>*)aArgs[i].data);
 
                         // Resize the parameter data (permutation key) array for the expanded data
                         size_t nArraySize = aValues.size();
@@ -962,7 +962,7 @@ cgVertexShaderHandle cgSurfaceShader::getVertexShader( const cgString & strName,
                     } // End case Word
                     case cgScriptArgumentType::QWord:
                     {
-                        const std::vector<cgUInt64> & aValues = *((std::vector<cgUInt64>*)aArgs[i].data);
+                        const cgArray<cgUInt64> & aValues = *((cgArray<cgUInt64>*)aArgs[i].data);
                         
                         // Resize the parameter data (permutation key) array for the expanded data
                         size_t nArraySize = aValues.size();
@@ -977,7 +977,7 @@ cgVertexShaderHandle cgSurfaceShader::getVertexShader( const cgString & strName,
                     } // End case QWord
                     default:
                     {
-                        const std::vector<cgUInt32> & aValues = *((std::vector<cgUInt32>*)aArgs[i].data);
+                        const cgArray<cgUInt32> & aValues = *((cgArray<cgUInt32>*)aArgs[i].data);
                         
                         // Resize the parameter data (permutation key) array for the expanded data
                         size_t nArraySize = aValues.size();
@@ -1886,14 +1886,14 @@ cgPixelShaderHandle cgSurfaceShader::getPixelShader( const cgString & strName, c
             case cgScriptArgumentType::Array:
             {
                 // Iterate through and copy data as required. We acknowledge and accept
-                // the fact that the std::vector<> casts we do here may not match the
-                // original types; but in each case except the bool we do not allow for
-                // specializations anyway and thus the class should still function.
+                // the fact that the cgArray<> casts we do here may not match the original 
+                // types; but in each case we do not allow for specializations anyway and 
+                // thus the class should still function.
                 switch ( aArgs[i].subType )
                 {
                     case cgScriptArgumentType::Bool:
                     {
-                        const std::vector<bool> & aValues = *((std::vector<bool>*)aArgs[i].data);
+                        const cgArray<bool> & aValues = *((cgArray<bool>*)aArgs[i].data);
 
                         // Resize the parameter data (permutation key) array to account for the
                         // number of elements in the array (1 less than the actual array size
@@ -1911,7 +1911,7 @@ cgPixelShaderHandle cgSurfaceShader::getPixelShader( const cgString & strName, c
                     } // End case Bool
                     case cgScriptArgumentType::Byte:
                     {
-                        const std::vector<cgByte> & aValues = *((std::vector<cgUInt8>*)aArgs[i].data);
+                        const cgArray<cgByte> & aValues = *((cgArray<cgUInt8>*)aArgs[i].data);
 
                         // Resize the parameter data (permutation key) array for the expanded data
                         size_t nArraySize = aValues.size();
@@ -1926,7 +1926,7 @@ cgPixelShaderHandle cgSurfaceShader::getPixelShader( const cgString & strName, c
                     } // End case Byte
                     case cgScriptArgumentType::Word:
                     {
-                        const std::vector<cgUInt16> & aValues = *((std::vector<cgUInt16>*)aArgs[i].data);
+                        const cgArray<cgUInt16> & aValues = *((cgArray<cgUInt16>*)aArgs[i].data);
 
                         // Resize the parameter data (permutation key) array for the expanded data
                         size_t nArraySize = aValues.size();
@@ -1941,7 +1941,7 @@ cgPixelShaderHandle cgSurfaceShader::getPixelShader( const cgString & strName, c
                     } // End case Word
                     case cgScriptArgumentType::QWord:
                     {
-                        const std::vector<cgUInt64> & aValues = *((std::vector<cgUInt64>*)aArgs[i].data);
+                        const cgArray<cgUInt64> & aValues = *((cgArray<cgUInt64>*)aArgs[i].data);
                         
                         // Resize the parameter data (permutation key) array for the expanded data
                         size_t nArraySize = aValues.size();
@@ -1956,7 +1956,7 @@ cgPixelShaderHandle cgSurfaceShader::getPixelShader( const cgString & strName, c
                     } // End case QWord
                     default:
                     {
-                        const std::vector<cgUInt32> & aValues = *((std::vector<cgUInt32>*)aArgs[i].data);
+                        const cgArray<cgUInt32> & aValues = *((cgArray<cgUInt32>*)aArgs[i].data);
                         
                         // Resize the parameter data (permutation key) array for the expanded data
                         size_t nArraySize = aValues.size();

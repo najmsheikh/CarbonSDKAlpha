@@ -32,6 +32,10 @@
 //-----------------------------------------------------------------------------
 class asIObjectType;
 class asIScriptEngine;
+class asIScriptContext;
+class asIScriptFunction;
+class asIScriptObject;
+class cgScript;
 
 //-----------------------------------------------------------------------------
 // Global Typedefs, Structures and Enumerations
@@ -74,7 +78,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Typedefs, Structures and Enumerations
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE(cgScriptArgument, Array)
+    CGE_ARRAY_DECLARE(cgScriptArgument, Array)
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors
@@ -165,6 +169,11 @@ struct CGE_API cgScriptCompatibleStruct
 //-----------------------------------------------------------------------------
 namespace cgScriptInterop
 {
+    // We just define a number here that we assume nobody else is using for
+    // object type user data.
+    const cgUInt32 ARRAY_CACHE = 2000;
+    const cgUInt32 SERIALIZE_OBJECT_BRIDGE = 3000;
+
     namespace Exceptions
     {
         //-----------------------------------------------------------------------------
@@ -194,16 +203,6 @@ namespace cgScriptInterop
 
     }; // End Namespace : cgScriptInterop::Exceptions
 
-    namespace Utils
-    {
-        //---------------------------------------------------------------------
-        // Global Functions
-        //---------------------------------------------------------------------
-        // Retrieve the string representation of an angelscript error code.
-        cgString CGE_API getResultName( cgInt resultCode );
-    
-    }; // End Namespace : cgScriptInterop::Utils
-
     namespace Types
     {
         //-----------------------------------------------------------------------------
@@ -218,6 +217,9 @@ namespace cgScriptInterop
             // Constructors & Destructors
             //-------------------------------------------------------------------------
                      ScriptArray( cgUInt32 length, asIObjectType * objectType);
+                     ScriptArray( asIObjectType * objectType, void * initBuffer);
+                     ScriptArray( cgUInt32 length, void * defaultValue, asIObjectType * objectType);
+                     ScriptArray( const ScriptArray & other );
             virtual ~ScriptArray();
 
             //-------------------------------------------------------------------------
@@ -228,28 +230,47 @@ namespace cgScriptInterop
 
             // Type information
             asIObjectType * getArrayObjectType  ( ) const;
-            int             getArrayTypeId      ( ) const;
-            int             getElementTypeId    ( ) const;
+            cgInt           getArrayTypeId      ( ) const;
+            cgInt           getElementTypeId    ( ) const;
 
             // Array methods
+            void            setSizeUninitialized( cgUInt32 elements );
+            void            reserve             ( cgUInt32 elements );
             void            resize              ( cgUInt32 elements );
-            cgUInt32        getSize             ( );
+            cgUInt32        getSize             ( ) const;
+            bool            isEmpty             ( ) const;
+            const void    * at                  ( cgUInt32 index ) const;
             void          * at                  ( cgUInt32 index );
             void            setValue            ( cgUInt32 index, void * value );
+            void            insertAt            ( cgUInt32 index, void * value );
+            void            insertLast          ( void * value );
+            void            removeAt            ( cgUInt32 index );
+            void            removeLast          ( );
+            void            reverse             ( );
+            cgInt32         findByRef           ( void * ref ) const;
+            cgInt32         findByRef           ( cgUInt32 startAt, void * ref ) const;
+            cgInt32         find                ( void * value ) const;
+            cgInt32         find                ( cgUInt32 startAt, void * value ) const;
+            void            sortAsc             ( );
+            void            sortAsc             ( cgUInt32 startAt, cgUInt32 count );
+            void            sortDesc            ( );
+            void            sortDesc            ( cgUInt32 startAt, cgUInt32 count );
 
             //-------------------------------------------------------------------------
             // Public Static Methods
             //-------------------------------------------------------------------------
             static ScriptArray    * factory         ( asIObjectType * objectType );
             static ScriptArray    * factory         ( asIObjectType * objectType, cgUInt32 length );
-            static ScriptArray    * listFactory     ( asIObjectType * objectType, cgUInt32 length );
+            static ScriptArray    * factory         ( asIObjectType * objectType, cgUInt32 length, void * defaultValue );
+            static ScriptArray    * listFactory     ( asIObjectType * objectType, void * initList );
             static void             bind            ( asIScriptEngine * engine );
             static bool             templateCallback(asIObjectType *ot, bool &dontGarbageCollect);
 
             //-------------------------------------------------------------------------
             // Public Operators
             //-------------------------------------------------------------------------
-            ScriptArray & operator= ( const ScriptArray& );
+            ScriptArray   & operator= ( const ScriptArray& );
+            bool            operator==( const ScriptArray &other ) const;
 
         protected:
             //-------------------------------------------------------------------------
@@ -257,18 +278,37 @@ namespace cgScriptInterop
             //-------------------------------------------------------------------------
             struct ArrayBuffer
             {
+                cgUInt32 maxElements;
                 cgUInt32 elementCount;
                 cgByte   data[1];
+            };
+
+            struct ArrayCache
+            {
+	            asIScriptFunction *cmpFunc;
+	            asIScriptFunction *eqFunc;
+	            cgInt cmpFuncReturnCode; // To allow better error message in case of multiple matches
+                cgInt eqFuncReturnCode;
             };
 
             //-------------------------------------------------------------------------
             // Protected Methods
             //-------------------------------------------------------------------------
-            void            createBuffer        (ArrayBuffer **bufferVariable, cgUInt32 elements );
+            void            cacheDetails        ( );
+            void            resize              ( cgInt delta, cgUInt operateAt );
+            bool            checkMaxSize        ( cgUInt32 elementCount );
+            void            createBuffer        (ArrayBuffer **bufferVariable, cgUInt32 elements, bool initialized = true );
             void            deleteBuffer        (ArrayBuffer *buffer);
-            void            copyBuffer          (ArrayBuffer *destination, ArrayBuffer *source);
-            void            construct           (ArrayBuffer *buffer, cgUInt32 start, cgUInt32 end );
+            void            construct           (ArrayBuffer *buffer, cgUInt32 start, cgUInt32 end, bool initialized = true );
             void            destruct            (ArrayBuffer *buffer, cgUInt32 start, cgUInt32 end );
+            void            copy                ( void * dst, void * src );
+            void            copyBuffer          ( ArrayBuffer * dst, ArrayBuffer * src );
+            void          * getArrayItemPointer ( cgInt index );
+            void          * getDataPointer      ( void * buffer );
+            void            sort                ( cgUInt32 startAt, cgUInt32 count, bool ascending );
+            bool            less                ( const void *a, const void *b, bool ascending, asIScriptContext *context, ArrayCache *cache );
+            bool            equals              ( const void *a, const void *b, asIScriptContext *context, ArrayCache *cache ) const;
+            
             bool            getGCFlag           ( );
             void            setGCFlag           ( );
             cgInt           getRefCount         ( );
@@ -280,14 +320,137 @@ namespace cgScriptInterop
             //-------------------------------------------------------------------------
             cgInt           mRefCount;
             cgInt           mSubTypeId;
+            asIObjectType * mSubType;
             asIObjectType * mObjectType;
             ArrayBuffer   * mBuffer;
-            bool            mIsArrayOfHandles;
             cgInt32         mElementSize;
             bool            mGCFlag;
         };
 
     }; // End Namespace : cgScriptInterop::Types
+
+    namespace Utils
+    {
+        //-------------------------------------------------------------------------
+        // Public Enumerations
+        //-------------------------------------------------------------------------
+        namespace DeserializeResult
+        {
+            enum Flags
+            {
+                Success                 = 0,
+                Failed                  = 0x1,
+                UninitializedMembers    = 0x2,
+                MissingMembers          = 0x4
+            };
+        
+        } // End Namespace : DeserializeResult
+
+        //---------------------------------------------------------------------
+        // Global Functions
+        //---------------------------------------------------------------------
+        // Retrieve the string representation of an angelscript error code.
+        cgString CGE_API getResultName( cgInt resultCode );
+
+        //-----------------------------------------------------------------------------
+        // Name : ObjectSerializerBridge (Class)
+        // Desc : Reference counted class that allows for communication between a
+        //        object owner, and the serializer in cases where a reference to
+        //        a newly constructed object may be required.
+        //-----------------------------------------------------------------------------
+        class CGE_API ObjectSerializerBridge
+        {
+        public:
+            //-------------------------------------------------------------------------
+            // Constructors & Destructors
+            //-------------------------------------------------------------------------
+            ObjectSerializerBridge( );
+            
+            //-------------------------------------------------------------------------
+            // Public Methods
+            //-------------------------------------------------------------------------
+            void    setData         ( void * object );
+            void  * getData         ( );
+            void    addRef          ( );
+            void    release         ( );
+
+        private:
+            //-------------------------------------------------------------------------
+            // Private Members
+            //-------------------------------------------------------------------------
+            cgInt   mRefCount;
+            void  * mData;
+        };
+
+        //-----------------------------------------------------------------------------
+        // Name : ObjectSerializer (Class)
+        // Desc : Utility class for serializing the state of a script object and all
+        //        of its child members.
+        //-----------------------------------------------------------------------------
+        class CGE_API ObjectSerializer
+        {
+        public:
+            //-------------------------------------------------------------------------
+            // Constructors & Destructors
+            //-------------------------------------------------------------------------
+             ObjectSerializer();
+            ~ObjectSerializer();
+
+            //-------------------------------------------------------------------------
+            // Public Methods
+            //-------------------------------------------------------------------------
+            bool            serialize   ( cgScriptObject * object );
+            cgScriptObject* deserialize ( cgScript * script, cgUInt32 & result );
+            void            clear       ( );
+            bool            isEmpty     ( ) const;
+
+        private:
+            //-------------------------------------------------------------------------
+            // Private Structures
+            //-------------------------------------------------------------------------
+            struct SerializedValue
+            {
+                CGE_MAP_DECLARE( std::string, SerializedValue, Map );
+                CGE_ARRAY_DECLARE( SerializedValue, Array );
+
+                std::string     name;
+                std::string     typeName;
+                cgInt           typeId;
+                cgInt           subTypeId;
+                asIObjectType * type;
+                bool            isReference;
+                bool            isPrivate;
+                bool            isArray;
+                void          * reference;
+                void          * value;
+                size_t          valueSize;
+                bool            hasBridge;
+                bool            wasInitialized;
+                Map             members;
+                Array           elements;
+            };
+
+            //-------------------------------------------------------------------------
+            // Private Methods
+            //-------------------------------------------------------------------------
+            void            clear           ( SerializedValue::Map & values );
+            bool            serializeValue  ( SerializedValue::Map & values, asIScriptObject * object, cgInt typeId, asIObjectType * type );
+            bool            serializeValue  ( SerializedValue::Array & values, cgScriptInterop::Types::ScriptArray * scriptArray, cgInt typeId, asIObjectType * type );
+            bool            serializeValue  ( SerializedValue & value, void * object );
+            cgUInt32        deserializeValue( SerializedValue::Map & values, asIScriptObject * object, cgInt typeId, asIObjectType * type, cgScript * script );
+            cgUInt32        deserializeValue( SerializedValue::Array & values, cgScriptInterop::Types::ScriptArray * scriptArray, cgInt typeId, asIObjectType * type, cgScript * script );
+            cgUInt32        deserializeValue( SerializedValue & value, cgInt destTypeId, asIObjectType * destType, void * destObject, cgScript * script );
+
+            //-------------------------------------------------------------------------
+            // Private Members
+            //-------------------------------------------------------------------------
+            std::string             mTypeName;
+            SerializedValue::Map    mMembers;
+            asIScriptEngine       * mEngine;
+            cgUInt32IndexMap        mArraySubTypeMap;
+        };
+    
+    }; // End Namespace : cgScriptInterop::Utils
 
     //---------------------------------------------------------------------------------
     //  Name : DisposableScriptObject (Class)

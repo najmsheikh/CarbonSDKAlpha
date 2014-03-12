@@ -532,7 +532,7 @@ void cgMeshShape::onCollide( NewtonUserMeshCollisionCollideDesc * const collideD
     // First the index array. This is never explicitly populated and will always 
     // contain a simple incrementing sequence of numbers designed to directly and 
     // linearly map to the vertex array as discreet triangles.
-    static std::vector<cgInt> indicesOut;
+    static cgArray<cgInt> indicesOut;
     const size_t maxIndexCount = maxFaceCount * 3;
     size_t bufferSize = max( maxIndexCount, 1 );
     if ( bufferSize > indicesOut.size() )
@@ -545,7 +545,7 @@ void cgMeshShape::onCollide( NewtonUserMeshCollisionCollideDesc * const collideD
     } // End if inflate
 
     // Next, make sure the vertex array is large enough.
-    static std::vector<cgVector3> verticesOut;
+    static cgArray<cgVector3> verticesOut;
     const size_t maxVertexCount = maxFaceCount * 3;
     bufferSize = max( maxVertexCount, 1 );
     if ( bufferSize > verticesOut.size() )
@@ -553,8 +553,8 @@ void cgMeshShape::onCollide( NewtonUserMeshCollisionCollideDesc * const collideD
 
     // Next the user attributes buffer which will contain the triangle
     // identifiers useful in collision callbacks.
-    static std::vector<cgInt> attributesOut;
-    static std::vector<cgUInt32> faceMap;
+    static cgArray<cgInt> attributesOut;
+    static cgArray<cgUInt32> faceMap;
     bufferSize = max( maxFaceCount, 1 );
     if ( bufferSize > attributesOut.size() )
     {
@@ -566,7 +566,7 @@ void cgMeshShape::onCollide( NewtonUserMeshCollisionCollideDesc * const collideD
 
     // Finally, the face index count buffer. This is never explicitly populated
     // and will always contain a default value of '3' in every element.
-    static std::vector<cgInt> faceIndexCountOut;
+    static cgArray<cgInt> faceIndexCountOut;
     bufferSize = max( maxFaceCount, 1 );
     if ( bufferSize > faceIndexCountOut.size() )
         faceIndexCountOut.resize( bufferSize, 3 );

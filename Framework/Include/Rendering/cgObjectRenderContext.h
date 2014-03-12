@@ -83,10 +83,10 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Typedefs
     //-------------------------------------------------------------------------
-    CGE_MAP_DECLARE     ( cgMaterialHandle, cgUInt32, MaterialBatchLUT )
-    CGE_MAP_DECLARE     ( cgLightNode*, MaterialBatchLUT, LightBatchMap )
-    CGE_VECTOR_DECLARE  ( cgObjectNodeArray, RenderBatchArray )
-    CGE_VECTOR_DECLARE  ( cgLightNode*, LightArray );
+    CGE_MAP_DECLARE  ( cgMaterialHandle, cgUInt32, MaterialBatchLUT )
+    CGE_MAP_DECLARE  ( cgLightNode*, MaterialBatchLUT, LightBatchMap )
+    CGE_ARRAY_DECLARE( cgObjectNodeArray, RenderBatchArray )
+    CGE_ARRAY_DECLARE( cgLightNode*, LightArray );
 
     //-------------------------------------------------------------------------
     // Protected Methods

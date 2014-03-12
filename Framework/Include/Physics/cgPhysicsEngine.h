@@ -108,7 +108,7 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Typedefs
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE(cgPhysicsWorld*, WorldArray )
+    CGE_ARRAY_DECLARE(cgPhysicsWorld*, WorldArray )
 
     //-------------------------------------------------------------------------
     // Protected Variables

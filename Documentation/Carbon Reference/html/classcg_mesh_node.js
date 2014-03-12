@@ -8,6 +8,7 @@ var classcg_mesh_node =
     [ "buildPhysicsBody", "classcg_mesh_node.html#a6e559d40c5c846e1612577b17db941ed", null ],
     [ "computeWorldSize", "classcg_mesh_node.html#a43d31a675c3c6b12a6c9d33edf00796d", null ],
     [ "createBox", "classcg_mesh_node.html#a78b239ede28298928221760e208d70a6", null ],
+    [ "createBox", "classcg_mesh_node.html#a5f7089df131c8df97a35e1c038748c27", null ],
     [ "createCapsule", "classcg_mesh_node.html#a487d9843a51e236d474326dc0b056482", null ],
     [ "createCone", "classcg_mesh_node.html#a1b2f3135fc701e0e03cdf9558f1077fd", null ],
     [ "createCylinder", "classcg_mesh_node.html#a20d670b731958f908b5857b7263044e5", null ],

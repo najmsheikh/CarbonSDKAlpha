@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -169,7 +169,7 @@ $(document).ready(function(){initNavTree('cg_texture_pool_8h_source.html','');})
 <div class="line"><a name="l00066"></a><span class="lineno"><a class="code" href="structcg_texture_pool_resource_1_1_channel_assignment.html#a2a000477bdfef183bcb8eead08ba9e18">   66</a></span>&#160;        <a class="code" href="structcg_texture_pool_resource_1_1_channel_assignment.html">ChannelAssignment</a>() : </div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        currOwner(<a class="code" href="cg_base_types_8h.html#ae28f568db83e03f77e0d1f3d96b89449">CG_NULL</a>), dataTypeId(0xFFFFFFFF),lastFillFrame(-1),lastFiller(<a class="code" href="cg_base_types_8h.html#ae28f568db83e03f77e0d1f3d96b89449">CG_NULL</a>){}</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    };</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>( ChannelAssignment, ChannelAssignmentArray )</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>( ChannelAssignment, ChannelAssignmentArray )</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="comment">// Constructors &amp; Destructors</span></div>
@@ -290,11 +290,11 @@ $(document).ready(function(){initNavTree('cg_texture_pool_8h_source.html','');})
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <span class="comment">// Private Typedefs, Structures &amp; Enumerations</span></div>
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a039577f149faea30818835c30af20fe5" title="Simple map typedef. No export required.">CGE_MAP_DECLARE</a>     (<a class="code" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24">cgBufferFormat::Base</a>, cgTexturePoolResourceArray, PoolResourceTable)</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>  (PoolResourceTable, PoolResources)</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a039577f149faea30818835c30af20fe5" title="Simple map typedef. No export required.">CGE_MAP_DECLARE</a>     (cgBufferFormat::<a class="code" href="namespacecg_animation_target_controller_type.html#a8a83988dfb5a843bf03e592d24f37617">Base</a>, <a class="code" href="classcg_resample_chain.html" title="Helper class used to maintain a chain of render targets for the purposes of resampling or other opera...">cgResampleChain</a> *, ResampleChainTable)</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>  (<a class="code" href="classcg_resample_chain_m_r_t.html" title="Helper class used to maintain a chain of (multiple) render targets for the purposes of resampling or ...">cgResampleChainMRT</a> *, MRTResampleChainArray)</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#aaff6d762ac73963b47ec1fa52ff55297" title="Simple vector typedef. No export required.">CGE_VECTOR_DECLARE</a>  (<a class="code" href="structcg_texture_pool_depth_format_desc.html" title="A description structure for managing depth-stencil formats within the pool. ">cgTexturePoolDepthFormatDesc</a>, DepthFormatArray)</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a039577f149faea30818835c30af20fe5" title="Simple map typedef. No export required.">CGE_MAP_DECLARE</a>  (<a class="code" href="namespacecg_buffer_format.html#ac886f946447360e10545652e478eca24">cgBufferFormat::Base</a>, cgTexturePoolResourceArray, PoolResourceTable)</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>(PoolResourceTable, PoolResources)</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a039577f149faea30818835c30af20fe5" title="Simple map typedef. No export required.">CGE_MAP_DECLARE</a>  (cgBufferFormat::<a class="code" href="namespacecg_animation_target_controller_type.html#a8a83988dfb5a843bf03e592d24f37617">Base</a>, <a class="code" href="classcg_resample_chain.html" title="Helper class used to maintain a chain of render targets for the purposes of resampling or other opera...">cgResampleChain</a> *, ResampleChainTable)</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>(<a class="code" href="classcg_resample_chain_m_r_t.html" title="Helper class used to maintain a chain of (multiple) render targets for the purposes of resampling or ...">cgResampleChainMRT</a> *, MRTResampleChainArray)</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <a class="code" href="cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc" title="Simple array typedef. No export required.">CGE_ARRAY_DECLARE</a>(<a class="code" href="structcg_texture_pool_depth_format_desc.html" title="A description structure for managing depth-stencil formats within the pool. ">cgTexturePoolDepthFormatDesc</a>, DepthFormatArray)</div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;</div>
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <span class="comment">// Private Functions</span></div>
@@ -324,7 +324,7 @@ $(document).ready(function(){initNavTree('cg_texture_pool_8h_source.html','');})
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_818efbfd2f6cda0a268715d4985a1177.html">Resources</a></li><li class="navelem"><a class="el" href="cg_texture_pool_8h.html">cgTexturePool.h</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:27:53 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:34 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

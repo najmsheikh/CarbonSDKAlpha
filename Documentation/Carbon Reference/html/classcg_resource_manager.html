@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -344,9 +344,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae0b1da5c7fd81deaaf307926019081d3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ae0b1da5c7fd81deaaf307926019081d3">reloadScripts</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> delay=0.0f)</td></tr>
 <tr class="memdesc:ae0b1da5c7fd81deaaf307926019081d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reload all scripts (except surface shaders).  <a href="#ae0b1da5c7fd81deaaf307926019081d3"></a><br/></td></tr>
 <tr class="separator:ae0b1da5c7fd81deaaf307926019081d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa219cdadfa1550182d64e1a7aa85ec76"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#aa219cdadfa1550182d64e1a7aa85ec76">reloadScript</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName)</td></tr>
-<tr class="memdesc:aa219cdadfa1550182d64e1a7aa85ec76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reload a single script identified with the specified resource name.  <a href="#aa219cdadfa1550182d64e1a7aa85ec76"></a><br/></td></tr>
-<tr class="separator:aa219cdadfa1550182d64e1a7aa85ec76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb8ea3ed5f57faf28c7e86b15daf49a7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#acb8ea3ed5f57faf28c7e86b15daf49a7">reloadScript</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName, bool reloadDependants)</td></tr>
+<tr class="memdesc:acb8ea3ed5f57faf28c7e86b15daf49a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reload a single script identified with the specified resource name, and optionally those that are dependant on it.  <a href="#acb8ea3ed5f57faf28c7e86b15daf49a7"></a><br/></td></tr>
+<tr class="separator:acb8ea3ed5f57faf28c7e86b15daf49a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbb6ad81d3c6a81e1f3857f5e271b767"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#adbb6ad81d3c6a81e1f3857f5e271b767">createSurfaceShader</a> (<a class="el" href="cg_resource_handles_8h.html#a45a1fc662dcf4668f78af170bdb251e8">cgSurfaceShaderHandle</a> *resourceOut, const <a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp;stream, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags=0, const <a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a> &amp;_debugSource=<a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a>(<a class="el" href="cg_string_8h.html#ae936e4c15227768f7da4e0951def89c8">_T</a>(&quot;&quot;), 0))</td></tr>
 <tr class="memdesc:adbb6ad81d3c6a81e1f3857f5e271b767"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified input stream, create a surface shader instance based on the surface shader /script/ in that stream. Surface shaders are always unique.  <a href="#adbb6ad81d3c6a81e1f3857f5e271b767"></a><br/></td></tr>
 <tr class="separator:adbb6ad81d3c6a81e1f3857f5e271b767"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -536,18 +536,23 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a8578283c9a8496da2137d9e6e31e8359"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_string.html">cgString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a8578283c9a8496da2137d9e6e31e8359">listActiveResources</a> (ResourceItemList &amp;resourceList)</td></tr>
 <tr class="memdesc:a8578283c9a8496da2137d9e6e31e8359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Part of the debug process. Dumps out a list of all the specified <a class="el" href="classcg_resource.html" title="Designed as a base class for accessing underlying resource data such as textures, materials...">cgResource</a> items (irrespective of what they store).  <a href="#a8578283c9a8496da2137d9e6e31e8359"></a><br/></td></tr>
 <tr class="separator:a8578283c9a8496da2137d9e6e31e8359"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab93d811a270057ecdb20e0a038bdbc3b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#ab93d811a270057ecdb20e0a038bdbc3b">notifyDeviceLost</a> (ResourceItemList &amp;resourceList)</td></tr>
-<tr class="memdesc:ab93d811a270057ecdb20e0a038bdbc3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify all resources in the specified list that the device was lost  <a href="#ab93d811a270057ecdb20e0a038bdbc3b"></a><br/></td></tr>
-<tr class="separator:ab93d811a270057ecdb20e0a038bdbc3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9d9a0f049c9fbcaf10df34f69fd86c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#aa9d9a0f049c9fbcaf10df34f69fd86c0">notifyDeviceRestored</a> (ResourceItemList &amp;resourceList)</td></tr>
-<tr class="memdesc:aa9d9a0f049c9fbcaf10df34f69fd86c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify all resources in the specified list that the device was restored  <a href="#aa9d9a0f049c9fbcaf10df34f69fd86c0"></a><br/></td></tr>
-<tr class="separator:aa9d9a0f049c9fbcaf10df34f69fd86c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3472bea938754962f8c0345de1532876"><td class="memTemplParams" colspan="2">template&lt;class _ResourceListType &gt; </td></tr>
+<tr class="memitem:a3472bea938754962f8c0345de1532876"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a3472bea938754962f8c0345de1532876">notifyDeviceLost</a> (_ResourceListType &amp;resourceList)</td></tr>
+<tr class="memdesc:a3472bea938754962f8c0345de1532876"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify all resources in the specified list that the device was lost  <a href="#a3472bea938754962f8c0345de1532876"></a><br/></td></tr>
+<tr class="separator:a3472bea938754962f8c0345de1532876"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ae62302f2a684ecf909bfbb9c808fa5"><td class="memTemplParams" colspan="2">template&lt;class _ResourceListType &gt; </td></tr>
+<tr class="memitem:a5ae62302f2a684ecf909bfbb9c808fa5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a5ae62302f2a684ecf909bfbb9c808fa5">notifyDeviceRestored</a> (_ResourceListType &amp;resourceList)</td></tr>
+<tr class="memdesc:a5ae62302f2a684ecf909bfbb9c808fa5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify all resources in the specified list that the device was restored  <a href="#a5ae62302f2a684ecf909bfbb9c808fa5"></a><br/></td></tr>
+<tr class="separator:a5ae62302f2a684ecf909bfbb9c808fa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf2a9f8062351065ae875bac6d03c988"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#adf2a9f8062351065ae875bac6d03c988">setRenderDriver</a> (<a class="el" href="classcg_render_driver.html">cgRenderDriver</a> *driver)</td></tr>
 <tr class="memdesc:adf2a9f8062351065ae875bac6d03c988"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set by the friend '<a class="el" href="classcg_render_driver.html#af43906664dbc12374d752d0317d21f35" title="Initialize the render driver using the window specified. Note : In this case, you will be responsible...">cgRenderDriver::initialize</a>' function, to pass back the render driver pointer through which the resource manager can access the driver's data / functionality.  <a href="#adf2a9f8062351065ae875bac6d03c988"></a><br/></td></tr>
 <tr class="separator:adf2a9f8062351065ae875bac6d03c988"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa136f5e78b7dce4c4b787122a47c0ee9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#aa136f5e78b7dce4c4b787122a47c0ee9">setAudioDriver</a> (<a class="el" href="classcg_audio_driver.html">cgAudioDriver</a> *driver)</td></tr>
 <tr class="memdesc:aa136f5e78b7dce4c4b787122a47c0ee9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set by the friend '<a class="el" href="classcg_render_driver.html#af43906664dbc12374d752d0317d21f35" title="Initialize the render driver using the window specified. Note : In this case, you will be responsible...">cgRenderDriver::initialize</a>' function, to pass back the render driver pointer through which the resource manager can access the drivers data / functionality.  <a href="#aa136f5e78b7dce4c4b787122a47c0ee9"></a><br/></td></tr>
 <tr class="separator:aa136f5e78b7dce4c4b787122a47c0ee9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b069120a1265bf4a1f10d4d17f7528a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a2b069120a1265bf4a1f10d4d17f7528a">unloadScript</a> (<a class="el" href="classcg_script.html">cgScript</a> *script, bool reloadDependants, ResourceItemList &amp;scripts)</td></tr>
+<tr class="memdesc:a2b069120a1265bf4a1f10d4d17f7528a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unload the specified script object (and optionally those that depend on it) as well as collecting together a list of scripts that need to be reloaded.  <a href="#a2b069120a1265bf4a1f10d4d17f7528a"></a><br/></td></tr>
+<tr class="separator:a2b069120a1265bf4a1f10d4d17f7528a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81b88297e176386f0a9d95eccbbf8b0d"><td class="memTemplParams" colspan="2">template&lt;class _HandleType , class _ResourceType &gt; </td></tr>
 <tr class="memitem:a81b88297e176386f0a9d95eccbbf8b0d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcg_resource_manager.html#a81b88297e176386f0a9d95eccbbf8b0d">processNewResource</a> (_HandleType *resourceOut, _ResourceType *newResource, ResourceItemList &amp;resourceList, const <a class="el" href="classcg_string.html">cgString</a> &amp;resourceName, <a class="el" href="namespacecg_stream_type.html#a51fb2dd6b8e37d239ef6a4e5167f8956">cgStreamType::Base</a> streamType, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, const <a class="el" href="structcg_debug_source_info.html">cgDebugSourceInfo</a> &amp;_debugSource)</td></tr>
 <tr class="memdesc:a81b88297e176386f0a9d95eccbbf8b0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Once it has been determined that a new resource must be allocated this function is called to perform all the common post allocation tasks on that new resource.  <a href="#a81b88297e176386f0a9d95eccbbf8b0d"></a><br/></td></tr>
@@ -4528,9 +4533,11 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab93d811a270057ecdb20e0a038bdbc3b"></a>
+<a class="anchor" id="a3472bea938754962f8c0345de1532876"></a>
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class _ResourceListType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -4538,7 +4545,7 @@ Friends</h2></td></tr>
         <tr>
           <td class="memname">void cgResourceManager::notifyDeviceLost </td>
           <td>(</td>
-          <td class="paramtype">ResourceItemList &amp;&#160;</td>
+          <td class="paramtype">_ResourceListType &amp;&#160;</td>
           <td class="paramname"><em>ResourceList</em></td><td>)</td>
           <td></td>
         </tr>
@@ -4554,9 +4561,11 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aa9d9a0f049c9fbcaf10df34f69fd86c0"></a>
+<a class="anchor" id="a5ae62302f2a684ecf909bfbb9c808fa5"></a>
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class _ResourceListType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -4564,7 +4573,7 @@ Friends</h2></td></tr>
         <tr>
           <td class="memname">void cgResourceManager::notifyDeviceRestored </td>
           <td>(</td>
-          <td class="paramtype">ResourceItemList &amp;&#160;</td>
+          <td class="paramtype">_ResourceListType &amp;&#160;</td>
           <td class="paramname"><em>ResourceList</em></td><td>)</td>
           <td></td>
         </tr>
@@ -4878,7 +4887,7 @@ template&lt;class _HandleType , class _ResourceType &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="aa219cdadfa1550182d64e1a7aa85ec76"></a>
+<a class="anchor" id="acb8ea3ed5f57faf28c7e86b15daf49a7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -4886,13 +4895,23 @@ template&lt;class _HandleType , class _ResourceType &gt; </div>
           <td class="memname">bool cgResourceManager::reloadScript </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
-          <td class="paramname"><em>resourceName</em></td><td>)</td>
+          <td class="paramname"><em>resourceName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>reloadDependants</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Reload a single script identified with the specified resource name. </p>
+<p>Reload a single script identified with the specified resource name, and optionally those that are dependant on it. </p>
 
 </div>
 </div>
@@ -5102,6 +5121,48 @@ template&lt;class _HandleType , class _ResourceType &gt; </div>
 </div><div class="memdoc">
 
 <p>Set by the friend '<a class="el" href="classcg_render_driver.html#af43906664dbc12374d752d0317d21f35" title="Initialize the render driver using the window specified. Note : In this case, you will be responsible...">cgRenderDriver::initialize</a>' function, to pass back the render driver pointer through which the resource manager can access the driver's data / functionality. </p>
+
+</div>
+</div>
+<a class="anchor" id="a2b069120a1265bf4a1f10d4d17f7528a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgResourceManager::unloadScript </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_script.html">cgScript</a> *&#160;</td>
+          <td class="paramname"><em>script</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>reloadDependants</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ResourceItemList &amp;&#160;</td>
+          <td class="paramname"><em>scripts</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Unload the specified script object (and optionally those that depend on it) as well as collecting together a list of scripts that need to be reloaded. </p>
 
 </div>
 </div>
@@ -6127,7 +6188,7 @@ template&lt;class _HandleType , class _ResourceType &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_resource_manager.html">cgResourceManager</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:28:09 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:49 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

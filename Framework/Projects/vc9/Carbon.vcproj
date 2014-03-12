@@ -1695,6 +1695,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\Lib\AngelScript\source\as_namespace.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\Lib\AngelScript\source\as_objecttype.h"
 							>
 						</File>
@@ -7275,6 +7279,14 @@
 					</File>
 					<File
 						RelativePath="..\..\Include\System\Platform\cgWinThreading.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Containers"
+					>
+					<File
+						RelativePath="..\..\Include\System\Containers\cgArray.h"
 						>
 					</File>
 				</Filter>

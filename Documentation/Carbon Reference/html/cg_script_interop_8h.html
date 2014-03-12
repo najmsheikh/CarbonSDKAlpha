@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -106,7 +106,8 @@ $(document).ready(function(){initNavTree('cg_script_interop_8h.html','');});
 <a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">cgScriptInterop.h File Reference</div>  </div>
 </div><!--header-->
@@ -129,6 +130,12 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_script_interop_1_1_types_1_1_script_array_1_1_array_buffer.html">cgScriptInterop::Types::ScriptArray::ArrayBuffer</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcg_script_interop_1_1_types_1_1_script_array_1_1_array_cache.html">cgScriptInterop::Types::ScriptArray::ArrayCache</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_utils_1_1_object_serializer_bridge.html">cgScriptInterop::Utils::ObjectSerializerBridge</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_utils_1_1_object_serializer.html">cgScriptInterop::Utils::ObjectSerializer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html">cgScriptInterop::DisposableScriptObject</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class from which objects should be derived if they need to be passed to a script by reference as an object handle.  <a href="classcg_script_interop_1_1_disposable_script_object.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,9 +149,11 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecg_script_interop_1_1_exceptions"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_script_interop_1_1_exceptions.html">cgScriptInterop::Exceptions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespacecg_script_interop_1_1_types"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_script_interop_1_1_types.html">cgScriptInterop::Types</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecg_script_interop_1_1_utils"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_script_interop_1_1_utils.html">cgScriptInterop::Utils</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacecg_script_interop_1_1_types"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_script_interop_1_1_types.html">cgScriptInterop::Types</a></td></tr>
+<tr class="memitem:namespacecg_script_interop_1_1_utils_1_1_deserialize_result"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_script_interop_1_1_utils_1_1_deserialize_result.html">cgScriptInterop::Utils::DeserializeResult</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
@@ -182,12 +191,25 @@ Enumerations</h2></td></tr>
 <br/>
  }</td></tr>
 <tr class="separator:a5650d75b4dfb5bdcafcbab0cc6aacd0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e03b03189927571893095b35bdb9b03"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_script_interop_1_1_utils_1_1_deserialize_result.html#a3e03b03189927571893095b35bdb9b03">cgScriptInterop::Utils::DeserializeResult::Flags</a> { <a class="el" href="namespacecg_script_interop_1_1_utils_1_1_deserialize_result.html#a3e03b03189927571893095b35bdb9b03aa6e45d07849ef4a1c958974c6c729c21">cgScriptInterop::Utils::DeserializeResult::Success</a> = 0, 
+<a class="el" href="namespacecg_script_interop_1_1_utils_1_1_deserialize_result.html#a3e03b03189927571893095b35bdb9b03afdf53b91207a31f35a4ad25e1dbbad7a">cgScriptInterop::Utils::DeserializeResult::Failed</a> = 0x1, 
+<a class="el" href="namespacecg_script_interop_1_1_utils_1_1_deserialize_result.html#a3e03b03189927571893095b35bdb9b03a178777622e8fa566c7c4b5da2990afb9">cgScriptInterop::Utils::DeserializeResult::UninitializedMembers</a> = 0x2, 
+<a class="el" href="namespacecg_script_interop_1_1_utils_1_1_deserialize_result.html#a3e03b03189927571893095b35bdb9b03aedfa31129b10531257607a1e7b63a29d">cgScriptInterop::Utils::DeserializeResult::MissingMembers</a> = 0x4
+ }</td></tr>
+<tr class="separator:a3e03b03189927571893095b35bdb9b03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a0a4f5f608ecba6341bae30b296c6d6cd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_string.html">cgString</a> <a class="el" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_script_interop_1_1_utils.html#a0a4f5f608ecba6341bae30b296c6d6cd">cgScriptInterop::Utils::getResultName</a> (<a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a> resultCode)</td></tr>
 <tr class="memdesc:a0a4f5f608ecba6341bae30b296c6d6cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the string name representation of the result code.  <a href="#a0a4f5f608ecba6341bae30b296c6d6cd"></a><br/></td></tr>
 <tr class="separator:a0a4f5f608ecba6341bae30b296c6d6cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ae036bf240925daf83553ac7336c5281e"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_script_interop.html#ae036bf240925daf83553ac7336c5281e">cgScriptInterop::ARRAY_CACHE</a> = 2000</td></tr>
+<tr class="separator:ae036bf240925daf83553ac7336c5281e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae259256e0f5f25814269646d5c1bde18"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecg_script_interop.html#ae259256e0f5f25814269646d5c1bde18">cgScriptInterop::SERIALIZE_OBJECT_BRIDGE</a> = 3000</td></tr>
+<tr class="separator:ae259256e0f5f25814269646d5c1bde18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a class="anchor" id="a241062997a93d2c58f67f10a7e83c826"></a>
@@ -358,7 +380,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_036efea8fd6b39c1f1fd2dd7f1be4325.html">Scripting</a></li><li class="navelem"><a class="el" href="cg_script_interop_8h.html">cgScriptInterop.h</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:27:57 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:39 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

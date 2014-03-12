@@ -59,12 +59,12 @@ public:
     //-------------------------------------------------------------------------
     // Public Typedefs, Structures & Enumerations
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE( cgConstantTypeDesc, ConstTypeArray )
-    CGE_VECTOR_DECLARE( cgConstantBufferDesc, ConstBufferArray )
-    CGE_VECTOR_DECLARE( cgSamplerBlockDesc, SamplerBlockArray )
-    CGE_VECTOR_DECLARE( cgShaderCallFunctionDesc, ShaderCallFuncArray )
-    CGE_MAP_DECLARE   ( cgString, cgInt32, HandleMap )
-    CGE_MAP_DECLARE   ( cgString, cgInt32Array, HandleArrayMap )
+    CGE_ARRAY_DECLARE( cgConstantTypeDesc, ConstTypeArray )
+    CGE_ARRAY_DECLARE( cgConstantBufferDesc, ConstBufferArray )
+    CGE_ARRAY_DECLARE( cgSamplerBlockDesc, SamplerBlockArray )
+    CGE_ARRAY_DECLARE( cgShaderCallFunctionDesc, ShaderCallFuncArray )
+    CGE_MAP_DECLARE  ( cgString, cgInt32, HandleMap )
+    CGE_MAP_DECLARE  ( cgString, cgInt32Array, HandleArrayMap )
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors

@@ -584,7 +584,7 @@ bool cgWorld::postConnect( bool newWorld )
                 cgUInt32 table;
                 cgString name;
             };
-            std::vector<ColumnData> pathColumns;
+            cgArray<ColumnData> pathColumns;
             for ( size_t i = 0; i < tables.size(); ++i )
             {
                 // Retrieve a list of all path columns.
@@ -991,6 +991,7 @@ bool cgWorld::save( const cgString & fileName )
         try
         {
             cgWorldQuery query; // Make sure query goes out of scope before database is closed.
+            cgWorldQuery transaction;
 
             // Bind DUMMY asset trigger functions.
             #if defined(UNICODE) || defined(_UNICODE)
@@ -1041,7 +1042,7 @@ bool cgWorld::save( const cgString & fileName )
                 cgUInt32 table;
                 cgString name;
             };
-            std::vector<ColumnData> pathColumns;
+            cgArray<ColumnData> pathColumns;
             for ( size_t i = 0; i < tables.size(); ++i )
             {
                 // Retrieve a list of all path columns.
@@ -1077,6 +1078,10 @@ bool cgWorld::save( const cgString & fileName )
                 } // Next Column
 
             } // Next table
+
+            // Begin the update transaction
+            transaction.prepare( databaseOut, _T("BEGIN") );
+            transaction.step();
 
             // Process all path columns to ensure they contain relative paths.
             for ( size_t i = 0; i < pathColumns.size(); ++i )
@@ -1129,6 +1134,10 @@ bool cgWorld::save( const cgString & fileName )
                 } // Next Column
 
             } // Next path column
+
+            // Commit the update transaction
+            transaction.prepare( databaseOut, _T("COMMIT") );
+            transaction.step();
 
             // Run a final vacuum on the exported database before saving.
             //query.prepare( databaseOut, _T("VACUUM") );
@@ -1877,13 +1886,16 @@ cgSceneElement * cgWorld::loadSceneElement( const cgUID & typeIdentifier, cgUInt
 cgScene * cgWorld::loadScene( cgUInt32 sceneId )
 {
     // Is this scene already loaded?
-    if ( getLoadedSceneById( sceneId ) )
+    cgScene * existingScene = CG_NULL;
+    if ( existingScene = getLoadedSceneById( sceneId ) )
     {
-        cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("Specified scene (Id:0x%x) has already been loaded. You are not permitted to load a scene multiple times.\n"), sceneId );
-        return CG_NULL;
-
-    } // End if scene is not already active
-
+        // Even though the scene existed, we still want to trigger notices.
+        onSceneLoading( &cgSceneLoadEventArgs( existingScene ) );
+        onSceneLoaded( &cgSceneLoadEventArgs( existingScene ) );
+        return existingScene;
+    
+    } // End if existing
+    
     // Retrieve the scene descriptor
     const cgSceneDescriptor * description = getSceneDescriptorById( sceneId );
     if ( !description )
@@ -1941,7 +1953,10 @@ void cgWorld::unloadScene( cgUInt32 sceneId )
     if ( !scene ) return;
 
     // Notify anyone interested that the scene is being unloaded.
-    onSceneUnloading( &cgSceneLoadEventArgs( scene ) );
+    cgSceneUnloadEventArgs e( scene );
+    onSceneUnloading( &e );
+    if ( e.cancel )
+        return;
 
     // Remove from the loaded scene list
     SceneArray::iterator itScene = std::find( mActiveScenes.begin(), mActiveScenes.end(), scene );
@@ -1968,7 +1983,10 @@ void cgWorld::unloadScene( cgScene * scene )
         return;
 
     // Notify anyone interested that the scene is being unloaded.
-    onSceneUnloading( &cgSceneLoadEventArgs( scene ) );
+    cgSceneUnloadEventArgs e( scene );
+    onSceneUnloading( &e );
+    if ( e.cancel )
+        return;
 
     // Remove from the loaded scene list
     SceneArray::iterator itScene = std::find( mActiveScenes.begin(), mActiveScenes.end(), scene );
@@ -2499,7 +2517,7 @@ void cgWorld::onSceneLoaded( cgSceneLoadEventArgs * e )
 /// unloaded in order to notify all listeners.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgWorld::onSceneUnloading( cgSceneLoadEventArgs * e )
+void cgWorld::onSceneUnloading( cgSceneUnloadEventArgs * e )
 {
     // Trigger 'onSceneUnloading' of all listeners (duplicate list in case
     // it is altered in response to event).

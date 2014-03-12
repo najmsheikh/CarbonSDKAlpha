@@ -5,6 +5,9 @@ var cg_script_interop_8h =
     [ "ExecuteException", "classcg_script_interop_1_1_exceptions_1_1_execute_exception.html", "classcg_script_interop_1_1_exceptions_1_1_execute_exception" ],
     [ "ScriptArray", "classcg_script_interop_1_1_types_1_1_script_array.html", "classcg_script_interop_1_1_types_1_1_script_array" ],
     [ "ArrayBuffer", "structcg_script_interop_1_1_types_1_1_script_array_1_1_array_buffer.html", "structcg_script_interop_1_1_types_1_1_script_array_1_1_array_buffer" ],
+    [ "ArrayCache", "structcg_script_interop_1_1_types_1_1_script_array_1_1_array_cache.html", "structcg_script_interop_1_1_types_1_1_script_array_1_1_array_cache" ],
+    [ "ObjectSerializerBridge", "classcg_script_interop_1_1_utils_1_1_object_serializer_bridge.html", "classcg_script_interop_1_1_utils_1_1_object_serializer_bridge" ],
+    [ "ObjectSerializer", "classcg_script_interop_1_1_utils_1_1_object_serializer.html", "classcg_script_interop_1_1_utils_1_1_object_serializer" ],
     [ "DisposableScriptObject", "classcg_script_interop_1_1_disposable_script_object.html", "classcg_script_interop_1_1_disposable_script_object" ],
     [ "_CGE_CGSCRIPTINTEROP_H_", "cg_script_interop_8h.html#a241062997a93d2c58f67f10a7e83c826", null ],
     [ "DECLARE_DERIVED2_SCRIPTOBJECT", "cg_script_interop_8h.html#a5961e56e403bf2ed1ccf6c07c78c027d", null ],
@@ -24,5 +27,13 @@ var cg_script_interop_8h =
       [ "Float", "cg_script_interop_8h.html#a5650d75b4dfb5bdcafcbab0cc6aacd0fa859c7391f275ce110cbfea8faff2d61e", null ],
       [ "Double", "cg_script_interop_8h.html#a5650d75b4dfb5bdcafcbab0cc6aacd0fabb7a240237a06a5941dc24a0492a8cf8", null ]
     ] ],
-    [ "getResultName", "cg_script_interop_8h.html#a0a4f5f608ecba6341bae30b296c6d6cd", null ]
+    [ "Flags", "cg_script_interop_8h.html#a3e03b03189927571893095b35bdb9b03", [
+      [ "Success", "cg_script_interop_8h.html#a3e03b03189927571893095b35bdb9b03aa6e45d07849ef4a1c958974c6c729c21", null ],
+      [ "Failed", "cg_script_interop_8h.html#a3e03b03189927571893095b35bdb9b03afdf53b91207a31f35a4ad25e1dbbad7a", null ],
+      [ "UninitializedMembers", "cg_script_interop_8h.html#a3e03b03189927571893095b35bdb9b03a178777622e8fa566c7c4b5da2990afb9", null ],
+      [ "MissingMembers", "cg_script_interop_8h.html#a3e03b03189927571893095b35bdb9b03aedfa31129b10531257607a1e7b63a29d", null ]
+    ] ],
+    [ "getResultName", "cg_script_interop_8h.html#a0a4f5f608ecba6341bae30b296c6d6cd", null ],
+    [ "ARRAY_CACHE", "cg_script_interop_8h.html#ae036bf240925daf83553ac7336c5281e", null ],
+    [ "SERIALIZE_OBJECT_BRIDGE", "cg_script_interop_8h.html#ae259256e0f5f25814269646d5c1bde18", null ]
 ];

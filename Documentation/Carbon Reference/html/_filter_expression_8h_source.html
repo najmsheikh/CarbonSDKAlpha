@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -144,8 +144,8 @@ $(document).ready(function(){initNavTree('_filter_expression_8h_source.html','')
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#a4627da11dd003a21dfbacf7f91e10928" title="Registers a property for the object type. ">registerObjectProperty</a>( <span class="stringliteral">&quot;FilterExpressionIdentifier&quot;</span>, <span class="stringliteral">&quot;uint64 value&quot;</span>, offsetof(<a class="code" href="structcg_filter_expression_1_1_identifier.html">cgFilterExpression::Identifier</a>,value) ) );</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            </div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            <span class="comment">// Requires array type for the value array methods.</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <a class="code" href="cg_binding_utils_8h.html#af919f365e56d185c5abd0ab4023f05e5">BINDSUCCESS</a>( engine-&gt;<a class="code" href="classcg_script_engine.html#ad04564fb7683419db45363e4514eb1ec" title="Registers a new object type. ">registerObjectType</a>( <span class="stringliteral">&quot;FilterExpressionIdentifier[]&quot;</span>, <span class="keyword">sizeof</span>(std::vector&lt;cgFilterExpression::Identifier&gt;), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            <a class="code" href="classcg_script_interop_1_1_utils_1_1_s_t_d_vector_helper.html">STDVectorHelper&lt;cgFilterExpression::Identifier&gt;::registerMethods</a>( engine, <span class="stringliteral">&quot;FilterExpressionIdentifier[]&quot;</span>, <span class="stringliteral">&quot;FilterExpressionIdentifier&quot;</span> );</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <a class="code" href="classcg_script_interop_1_1_utils_1_1_array_bind_helper.html">ArrayBindHelper&lt;cgFilterExpression::Identifier&gt;::registerType</a>( engine, <span class="stringliteral">&quot;FilterExpressionIdentifier[]&quot;</span>, <span class="stringliteral">&quot;FilterExpressionIdentifier&quot;</span> );</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            <a class="code" href="classcg_script_interop_1_1_utils_1_1_array_bind_helper.html">ArrayBindHelper&lt;cgFilterExpression::Identifier&gt;::registerMethods</a>( engine, <span class="stringliteral">&quot;FilterExpressionIdentifier[]&quot;</span>, <span class="stringliteral">&quot;FilterExpressionIdentifier&quot;</span> );</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            <span class="comment">// cgFilterExpression (Class)</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment"></span>            </div>
@@ -197,7 +197,7 @@ $(document).ready(function(){initNavTree('_filter_expression_8h_source.html','')
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_036efea8fd6b39c1f1fd2dd7f1be4325.html">Scripting</a></li><li class="navelem"><a class="el" href="dir_5f20ce7c1333a975792d65b7ff262c26.html">Packages</a></li><li class="navelem"><a class="el" href="dir_962f94cc32c03ad95281b0f22b8add17.html">Core</a></li><li class="navelem"><a class="el" href="dir_1bf280a58d7e914b967e5e173f7d3bd6.html">System</a></li><li class="navelem"><a class="el" href="dir_bf1e7e4c614db7436b52441bb7ff84b7.html">Utilities</a></li><li class="navelem"><a class="el" href="_filter_expression_8h.html">FilterExpression.h</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:27:53 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:35 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

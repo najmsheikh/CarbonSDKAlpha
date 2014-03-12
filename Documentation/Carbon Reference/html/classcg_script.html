@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -192,9 +192,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:affbbf1796d9b4365be3e4f027d7e7c98"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_script_object.html">cgScriptObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script.html#affbbf1796d9b4365be3e4f027d7e7c98">createObjectInstance</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;objectType)</td></tr>
 <tr class="memdesc:affbbf1796d9b4365be3e4f027d7e7c98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an instance of the specific script or application registered class or data type.  <a href="#affbbf1796d9b4365be3e4f027d7e7c98"></a><br/></td></tr>
 <tr class="separator:affbbf1796d9b4365be3e4f027d7e7c98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7e01fe561aef18590787542348ce432"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_script_object.html">cgScriptObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script.html#ab7e01fe561aef18590787542348ce432">createObjectInstance</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;objectType, bool uninitialized)</td></tr>
+<tr class="memdesc:ab7e01fe561aef18590787542348ce432"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an instance of the specific script or application registered class or data type.  <a href="#ab7e01fe561aef18590787542348ce432"></a><br/></td></tr>
+<tr class="separator:ab7e01fe561aef18590787542348ce432"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0204c36f05d6dbf351448c4626383f38"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_script_object.html">cgScriptObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script.html#a0204c36f05d6dbf351448c4626383f38">createObjectInstance</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;objectType, const cgScriptArgument::Array &amp;arguments)</td></tr>
 <tr class="memdesc:a0204c36f05d6dbf351448c4626383f38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an instance of the specific script or application registered class or data type.  <a href="#a0204c36f05d6dbf351448c4626383f38"></a><br/></td></tr>
 <tr class="separator:a0204c36f05d6dbf351448c4626383f38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2592b66ac2b8fc54058bfbc0d85111be"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_script_object.html">cgScriptObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script.html#a2592b66ac2b8fc54058bfbc0d85111be">createObjectInstance</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;objectType, bool uninitialized, const cgScriptArgument::Array &amp;arguments)</td></tr>
+<tr class="memdesc:a2592b66ac2b8fc54058bfbc0d85111be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an instance of the specific script or application registered class or data type.  <a href="#a2592b66ac2b8fc54058bfbc0d85111be"></a><br/></td></tr>
+<tr class="separator:a2592b66ac2b8fc54058bfbc0d85111be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a01ebbd850ca82a635bbd5d678c473f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script.html#a9a01ebbd850ca82a635bbd5d678c473f">setThisObject</a> (void *value)</td></tr>
 <tr class="memdesc:a9a01ebbd850ca82a635bbd5d678c473f"><td class="mdescLeft">&#160;</td><td class="mdescRight">If requested, scripts can have access to a "this" global of the specified type. This method can be called to set the 'this' global handle variable.  <a href="#a9a01ebbd850ca82a635bbd5d678c473f"></a><br/></td></tr>
 <tr class="separator:a9a01ebbd850ca82a635bbd5d678c473f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -517,6 +523,34 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ab7e01fe561aef18590787542348ce432"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_script_object.html">cgScriptObject</a> * cgScript::createObjectInstance </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strObjectType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>uninitialized</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create an instance of the specific script or application registered class or data type. </p>
+
+</div>
+</div>
 <a class="anchor" id="a0204c36f05d6dbf351448c4626383f38"></a>
 <div class="memitem">
 <div class="memproto">
@@ -526,6 +560,40 @@ Protected Attributes</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
           <td class="paramname"><em>strObjectType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const cgScriptArgument::Array &amp;&#160;</td>
+          <td class="paramname"><em>aArgs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create an instance of the specific script or application registered class or data type. </p>
+
+</div>
+</div>
+<a class="anchor" id="a2592b66ac2b8fc54058bfbc0d85111be"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_script_object.html">cgScriptObject</a> * cgScript::createObjectInstance </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
+          <td class="paramname"><em>strObjectType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>uninitialized</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1567,7 +1635,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_script.html">cgScript</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:28:10 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:50 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

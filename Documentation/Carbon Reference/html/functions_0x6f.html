@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -152,7 +152,7 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 : <a class="el" href="classcg_object_behavior.html#a5ce909542c51eeb26d76698ba53d8349">cgObjectBehavior</a>
 </li>
 <li>cgObjectNode()
-: <a class="el" href="classcg_object_node.html#a5c2357543d05d34ce466820f2e69bde5">cgObjectNode</a>
+: <a class="el" href="classcg_object_node.html#addc7132ef3868ca89bb87bf482043e5d">cgObjectNode</a>
 </li>
 <li>cgObjectNodeEventArgs()
 : <a class="el" href="structcg_object_node_event_args.html#afa739919289be146547b2d743b5da447">cgObjectNodeEventArgs</a>
@@ -193,20 +193,22 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 <li>ObjectAllocNewFunc
 : <a class="el" href="structcg_world_object_type_desc.html#a1b3103e308d2292f14a6c1c167128632">cgWorldObjectTypeDesc</a>
 </li>
-<li>objectHit()
-: <a class="el" href="classcg_object_node.html#a838d9a195f4c4d781c4878734dc3acb5">cgObjectNode</a>
-, <a class="el" href="classcg_object_behavior.html#a7b79b2f465be21464bf38241143794e2">cgObjectBehavior</a>
-</li>
 <li>objectNodeLUT
 : <a class="el" href="structcg_visibility_set_1_1_material_batch.html#abb8c0b5e98fb8d50714326fbd23a92b6">cgVisibilitySet::MaterialBatch</a>
 , <a class="el" href="structcg_visibility_set_1_1_render_class.html#a860a4a12e35561963c1bc418c8939d99">cgVisibilitySet::RenderClass</a>
 </li>
 <li>objectNodes
-: <a class="el" href="structcg_visibility_set_1_1_render_class.html#a329aaea42847ad2e04eb432a47b72557">cgVisibilitySet::RenderClass</a>
-, <a class="el" href="structcg_visibility_set_1_1_material_batch.html#a26f197e27a2c1556f8e0d14371f97169">cgVisibilitySet::MaterialBatch</a>
+: <a class="el" href="structcg_visibility_set_1_1_material_batch.html#a26f197e27a2c1556f8e0d14371f97169">cgVisibilitySet::MaterialBatch</a>
+, <a class="el" href="structcg_visibility_set_1_1_render_class.html#a329aaea42847ad2e04eb432a47b72557">cgVisibilitySet::RenderClass</a>
 </li>
 <li>objectRenderClass
 : <a class="el" href="structcg_render_driver_1_1_export_vars.html#ac9982bf485a806e3fba45750b0154849">cgRenderDriver::ExportVars</a>
+</li>
+<li>ObjectSerializer()
+: <a class="el" href="classcg_script_interop_1_1_utils_1_1_object_serializer.html#a79b6a17d72713cf37956e6692f1dcf2e">cgScriptInterop::Utils::ObjectSerializer</a>
+</li>
+<li>ObjectSerializerBridge()
+: <a class="el" href="classcg_script_interop_1_1_utils_1_1_object_serializer_bridge.html#aa35348adbac56479a6c0c762cfa66fc0">cgScriptInterop::Utils::ObjectSerializerBridge</a>
 </li>
 <li>ObscuranceAO
 : <a class="el" href="classcg_s_s_a_o_processor.html#add3bf4f289df3fde28a3d83b3a986198a731dd637330b8cbf7d73b36dce0ede21">cgSSAOProcessor</a>
@@ -278,14 +280,31 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 <li>onCollide()
 : <a class="el" href="classcg_mesh_shape.html#ac75bd9f136b64277f224363cd473993c">cgMeshShape</a>
 </li>
+<li>onCollisionBegin
+: <a class="el" href="structcg_object_behavior_1_1_method_handles.html#a6cb601514cefa9f165d52acdda3a74e8">cgObjectBehavior::MethodHandles</a>
+, <a class="el" href="classcg_object_behavior.html#aed20e71b3ece11af0c54af3055f6ee4a">cgObjectBehavior</a>
+</li>
+<li>onCollisionContinue
+: <a class="el" href="structcg_object_behavior_1_1_method_handles.html#ad7d7d3caf672e825f7deeb95877db70e">cgObjectBehavior::MethodHandles</a>
+, <a class="el" href="classcg_object_behavior.html#a84f46d69b6f2cc4966f8888cd2f24211">cgObjectBehavior</a>
+</li>
+<li>onCollisionEnd
+: <a class="el" href="structcg_object_behavior_1_1_method_handles.html#a5a652f56bfe9d943e120ea4bc019a26e">cgObjectBehavior::MethodHandles</a>
+, <a class="el" href="classcg_object_behavior.html#a82feb290c5d15411d5a8e303b3641c0e">cgObjectBehavior</a>
+</li>
 <li>onComponentCreated()
-: <a class="el" href="classcg_world_resource_component.html#a03ea6ed76ec80e821945544915b4e9df">cgWorldResourceComponent</a>
+: <a class="el" href="classcg_sampler.html#a390f8200b9b9f3d8d05c45c5d4eb79ba">cgSampler</a>
+, <a class="el" href="classcg_world_component_event_listener.html#aec1fbddd4171bf02ed298610d1012677">cgWorldComponentEventListener</a>
+, <a class="el" href="classcg_world_component.html#a80045743452428bd1f85517b420efba0">cgWorldComponent</a>
+, <a class="el" href="classcg_world_object.html#ab968ef227a2bbef6c822a2bd6dec4a91">cgWorldObject</a>
+, <a class="el" href="classcg_world_resource_component.html#a03ea6ed76ec80e821945544915b4e9df">cgWorldResourceComponent</a>
 , <a class="el" href="classcg_b_s_p_vis_tree_element.html#a0f7e4a9aa6a59016e3b1b0cc2bc8d9d5">cgBSPVisTreeElement</a>
 , <a class="el" href="classcg_navigation_mesh_element.html#ac008bab42b98a3ff32a5b3b0d74556d0">cgNavigationMeshElement</a>
 , <a class="el" href="classcg_sky_element.html#a691eef08cec4b74825ebef20529b4977">cgSkyElement</a>
 , <a class="el" href="classcg_actor_object.html#a370045ceeb403fa93db0de9b92de2f72">cgActorObject</a>
 , <a class="el" href="classcg_billboard_object.html#a74521744be5c37ee651036c6b11ea8d5">cgBillboardObject</a>
 , <a class="el" href="classcg_bone_object.html#a19b34b4862deb2c9edfd48994ff11796">cgBoneObject</a>
+, <a class="el" href="classcg_camera_object.html#af549af1e6fdf9e504e50427f6598be01">cgCameraObject</a>
 , <a class="el" href="classcg_directional_light_object.html#a5554f1cd0a621108adf589770be5a54b">cgDirectionalLightObject</a>
 , <a class="el" href="classcg_dummy_object.html#ab31f4610af621500d8b32dd3bd539f28">cgDummyObject</a>
 , <a class="el" href="classcg_fixed_axis_joint_object.html#a6a5034bea63a70e2a96678b34bebe941">cgFixedAxisJointObject</a>
@@ -315,10 +334,6 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 , <a class="el" href="classcg_cylinder_collision_shape_element.html#a29819d3df03dc64199cc3f6685ad20a8">cgCylinderCollisionShapeElement</a>
 , <a class="el" href="classcg_hull_collision_shape_element.html#af7dec20aabd8bd8ac81a6bd735705320">cgHullCollisionShapeElement</a>
 , <a class="el" href="classcg_sphere_collision_shape_element.html#aed6affcb027003e71f892f8580813d49">cgSphereCollisionShapeElement</a>
-, <a class="el" href="classcg_sampler.html#a390f8200b9b9f3d8d05c45c5d4eb79ba">cgSampler</a>
-, <a class="el" href="classcg_world_component_event_listener.html#aec1fbddd4171bf02ed298610d1012677">cgWorldComponentEventListener</a>
-, <a class="el" href="classcg_world_component.html#a80045743452428bd1f85517b420efba0">cgWorldComponent</a>
-, <a class="el" href="classcg_world_object.html#ab968ef227a2bbef6c822a2bd6dec4a91">cgWorldObject</a>
 </li>
 <li>onComponentDeleted()
 : <a class="el" href="classcg_landscape_layer_material.html#af69df3ab47c92308c12a45930a311f67">cgLandscapeLayerMaterial</a>
@@ -337,7 +352,15 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 , <a class="el" href="classcg_animation_set_element.html#ab4530d8f83444e1ee302d8d95d45704e">cgAnimationSetElement</a>
 </li>
 <li>onComponentLoading()
-: <a class="el" href="classcg_group_object.html#aebdbce2b77ee4f65df601bb26214c104">cgGroupObject</a>
+: <a class="el" href="classcg_sky_element.html#add0e2602cba84433a419b8bb9f8db60c">cgSkyElement</a>
+, <a class="el" href="classcg_actor_object.html#ad9e653e9a7c8afb50caa5651beb3be05">cgActorObject</a>
+, <a class="el" href="classcg_billboard_object.html#af587e5db8f6a9376b9d375e793204cfa">cgBillboardObject</a>
+, <a class="el" href="classcg_bone_object.html#a2c0ee04a51ee78d0fb55355347381acd">cgBoneObject</a>
+, <a class="el" href="classcg_camera_object.html#a0b100547d9b31b8af6f6d794874ef546">cgCameraObject</a>
+, <a class="el" href="classcg_directional_light_object.html#a3a0b57fbfecf3f012cf94280f0dfc53e">cgDirectionalLightObject</a>
+, <a class="el" href="classcg_dummy_object.html#acada66f0db8ef4b4641bfcc4e63017b4">cgDummyObject</a>
+, <a class="el" href="classcg_fixed_axis_joint_object.html#aed82563decec9dbaefd508df8f882672">cgFixedAxisJointObject</a>
+, <a class="el" href="classcg_group_object.html#aebdbce2b77ee4f65df601bb26214c104">cgGroupObject</a>
 , <a class="el" href="classcg_hemisphere_light_object.html#a53ceb6469caa7b0075d7e716435bbaba">cgHemisphereLightObject</a>
 , <a class="el" href="classcg_hinge_joint_object.html#a8f9c33714596376e11eec4026ac4370b">cgHingeJointObject</a>
 , <a class="el" href="classcg_joint_object.html#aea37a20388a74c167ff3404771b37d81">cgJointObject</a>
@@ -370,13 +393,6 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 , <a class="el" href="classcg_world_resource_component.html#aad6a98ce2cc1af065e92aeca6749f69f">cgWorldResourceComponent</a>
 , <a class="el" href="classcg_b_s_p_vis_tree_element.html#a9a3ade995d09e063a938cb5f556b62b1">cgBSPVisTreeElement</a>
 , <a class="el" href="classcg_navigation_mesh_element.html#a78b67652868e5f1f56d0f534bf9b0e87">cgNavigationMeshElement</a>
-, <a class="el" href="classcg_sky_element.html#add0e2602cba84433a419b8bb9f8db60c">cgSkyElement</a>
-, <a class="el" href="classcg_actor_object.html#ad9e653e9a7c8afb50caa5651beb3be05">cgActorObject</a>
-, <a class="el" href="classcg_billboard_object.html#af587e5db8f6a9376b9d375e793204cfa">cgBillboardObject</a>
-, <a class="el" href="classcg_bone_object.html#a2c0ee04a51ee78d0fb55355347381acd">cgBoneObject</a>
-, <a class="el" href="classcg_directional_light_object.html#a3a0b57fbfecf3f012cf94280f0dfc53e">cgDirectionalLightObject</a>
-, <a class="el" href="classcg_dummy_object.html#acada66f0db8ef4b4641bfcc4e63017b4">cgDummyObject</a>
-, <a class="el" href="classcg_fixed_axis_joint_object.html#aed82563decec9dbaefd508df8f882672">cgFixedAxisJointObject</a>
 </li>
 <li>onComponentModified()
 : <a class="el" href="classcg_object_node.html#aef9ac9ef2316bc9f32dfb2c93443ee3f">cgObjectNode</a>
@@ -514,8 +530,13 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 : <a class="el" href="classcg_scene_event_listener.html#a284ff1b81706140953bb17470c8e501e">cgSceneEventListener</a>
 , <a class="el" href="classcg_scene.html#a8218f757afe601cb9c0c70ef24933df3">cgScene</a>
 </li>
-<li>onMouseButtonDown
-: <a class="el" href="structcg_object_behavior_1_1_method_handles.html#af47503867e1f3135c79f34b68ab68e74">cgObjectBehavior::MethodHandles</a>
+<li>onMouseButtonDown()
+: <a class="el" href="classcg_check_box_control.html#a7fedb2d1624ed25c8b5a1681fd19dc6c">cgCheckBoxControl</a>
+, <a class="el" href="classcg_list_box_control.html#a6915dc390810ccd64532808f668ea682">cgListBoxControl</a>
+, <a class="el" href="classcg_scroll_bar_control.html#aa4ac21c7e4adedcdf5f19c03fe94e33b">cgScrollBarControl</a>
+, <a class="el" href="classcg_text_box_control.html#a945590ea6dc797c52ae9fafbb1e0adfc">cgTextBoxControl</a>
+, <a class="el" href="classcg_object_behavior.html#a5faef85baff9961be36e2887c6d92bd4">cgObjectBehavior</a>
+, <a class="el" href="structcg_object_behavior_1_1_method_handles.html#af47503867e1f3135c79f34b68ab68e74">cgObjectBehavior::MethodHandles</a>
 , <a class="el" href="classcg_input_listener.html#ad4cd52bc0bb9c40c26771355c1a1a1be">cgInputListener</a>
 , <a class="el" href="classcg_u_i_control.html#aa386212096c4e6ee8ccf79ab67cf0df3">cgUIControl</a>
 , <a class="el" href="classcg_u_i_form.html#ace9ab6b37bfd2a3fc9b0eebc9f187d29">cgUIForm</a>
@@ -523,14 +544,12 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 , <a class="el" href="classcg_u_i_control_layer.html#acd532b0902191013494c715639a23979">cgUIControlLayer</a>
 , <a class="el" href="classcg_u_i_modal_form_layer.html#a6c5b5af6a091baef30b76d4a92dbdc64">cgUIModalFormLayer</a>
 , <a class="el" href="classcg_button_control.html#aaed01b16dd0212ed42bfeb7ce7803505">cgButtonControl</a>
-, <a class="el" href="classcg_check_box_control.html#a7fedb2d1624ed25c8b5a1681fd19dc6c">cgCheckBoxControl</a>
-, <a class="el" href="classcg_list_box_control.html#a6915dc390810ccd64532808f668ea682">cgListBoxControl</a>
-, <a class="el" href="classcg_scroll_bar_control.html#aa4ac21c7e4adedcdf5f19c03fe94e33b">cgScrollBarControl</a>
-, <a class="el" href="classcg_text_box_control.html#a945590ea6dc797c52ae9fafbb1e0adfc">cgTextBoxControl</a>
-, <a class="el" href="classcg_object_behavior.html#a5faef85baff9961be36e2887c6d92bd4">cgObjectBehavior</a>
 </li>
-<li>onMouseButtonUp()
-: <a class="el" href="classcg_u_i_form.html#a652744541838ed652e550d1e5df20679">cgUIForm</a>
+<li>onMouseButtonUp
+: <a class="el" href="structcg_object_behavior_1_1_method_handles.html#a0a69a4020cca140429a8ea635c1dbce9">cgObjectBehavior::MethodHandles</a>
+, <a class="el" href="classcg_input_listener.html#ac23e98366eb894170a2548a04ed0fa5a">cgInputListener</a>
+, <a class="el" href="classcg_u_i_control.html#a0d9ebd9838bc869b393ef4d2d174a879">cgUIControl</a>
+, <a class="el" href="classcg_u_i_form.html#a652744541838ed652e550d1e5df20679">cgUIForm</a>
 , <a class="el" href="classcg_u_i_layer.html#a20ff084b3bafca8f07d9bad77f9c233a">cgUILayer</a>
 , <a class="el" href="classcg_u_i_control_layer.html#a76041d815f985c958bca986f15bb2140">cgUIControlLayer</a>
 , <a class="el" href="classcg_u_i_modal_form_layer.html#a19683f0fea655cbcbe121e402266b665">cgUIModalFormLayer</a>
@@ -539,9 +558,6 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 , <a class="el" href="classcg_list_box_control.html#aeaad8b69d8e9e77c8ef201b7b5d1bb8d">cgListBoxControl</a>
 , <a class="el" href="classcg_text_box_control.html#af36d3d827761524b0656400aaebfb377">cgTextBoxControl</a>
 , <a class="el" href="classcg_object_behavior.html#aca33a2a30eeb40e990d8b584e8580a74">cgObjectBehavior</a>
-, <a class="el" href="structcg_object_behavior_1_1_method_handles.html#a0a69a4020cca140429a8ea635c1dbce9">cgObjectBehavior::MethodHandles</a>
-, <a class="el" href="classcg_input_listener.html#ac23e98366eb894170a2548a04ed0fa5a">cgInputListener</a>
-, <a class="el" href="classcg_u_i_control.html#a0d9ebd9838bc869b393ef4d2d174a879">cgUIControl</a>
 </li>
 <li>onMouseMove
 : <a class="el" href="structcg_object_behavior_1_1_method_handles.html#a4b018c88f4fe6385259011c40f5df6e0">cgObjectBehavior::MethodHandles</a>
@@ -649,6 +665,21 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 <li>onParentLevelChanged()
 : <a class="el" href="classcg_object_node.html#ab1b4c748e4d9fac91241a13c4d3e07ba">cgObjectNode</a>
 </li>
+<li>onPhysicsBodyCollisionBegin()
+: <a class="el" href="classcg_physics_body_event_listener.html#ad3d28ce72084a7e2b139c5499a1dda84">cgPhysicsBodyEventListener</a>
+, <a class="el" href="classcg_physics_body.html#a32810c0dbd79f6342a493e50376f31dc">cgPhysicsBody</a>
+, <a class="el" href="classcg_object_node.html#a1ea3f0b5d01fa74494dbd3c14e4f4b46">cgObjectNode</a>
+</li>
+<li>onPhysicsBodyCollisionContinue()
+: <a class="el" href="classcg_physics_body_event_listener.html#a87975325f3cae9587289cef183a2f6c2">cgPhysicsBodyEventListener</a>
+, <a class="el" href="classcg_physics_body.html#aacb14f2bd25739d9a2dfc712d3098144">cgPhysicsBody</a>
+, <a class="el" href="classcg_object_node.html#a6d9798d89b98ceaed6de825fef408546">cgObjectNode</a>
+</li>
+<li>onPhysicsBodyCollisionEnd()
+: <a class="el" href="classcg_physics_body_event_listener.html#a0be5a221f91563bd6ac4dae9d9fb0b8d">cgPhysicsBodyEventListener</a>
+, <a class="el" href="classcg_physics_body.html#aef0e9c02b68e276f03a0db11557184c4">cgPhysicsBody</a>
+, <a class="el" href="classcg_object_node.html#adef126397377aed9a7a3d4e3eb6bdfef">cgObjectNode</a>
+</li>
 <li>onPhysicsBodyTransformed()
 : <a class="el" href="classcg_physics_body_event_listener.html#a5ae258f9dc30be5c136b4ee9713b677c">cgPhysicsBodyEventListener</a>
 , <a class="el" href="classcg_physics_body.html#a7f8cdac84faff92a2e2a1f3bf0cb5a1c">cgPhysicsBody</a>
@@ -709,7 +740,7 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 : <a class="el" href="classcg_standard_material.html#a8d3f62f7e9209da4ec69feacbc2abd21">cgStandardMaterial</a>
 </li>
 <li>onSamplerRemoved()
-: <a class="el" href="classcg_standard_material.html#a750453bd988224387d6ee409b86b7cb8">cgStandardMaterial</a>
+: <a class="el" href="classcg_standard_material.html#ae8a2e86e58f1f1dfd3b9d152af14452a">cgStandardMaterial</a>
 </li>
 <li>onSceneAdded()
 : <a class="el" href="classcg_world_event_listener.html#aef8cd7d87c9d81f56c85ea0a7b4b395c">cgWorldEventListener</a>
@@ -720,16 +751,16 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 , <a class="el" href="classcg_scene.html#a3188f9e3e340c396ce077626691b963f">cgScene</a>
 </li>
 <li>onSceneElementAdded()
-: <a class="el" href="classcg_scene_event_listener.html#a85e4c2284aa1f3d6340f2ae014d834f4">cgSceneEventListener</a>
-, <a class="el" href="classcg_scene.html#a9f58be73de6fd333b4af3c457f6db5c1">cgScene</a>
+: <a class="el" href="classcg_scene.html#a9f58be73de6fd333b4af3c457f6db5c1">cgScene</a>
+, <a class="el" href="classcg_scene_event_listener.html#a85e4c2284aa1f3d6340f2ae014d834f4">cgSceneEventListener</a>
 </li>
 <li>onSceneElementDeleted()
 : <a class="el" href="classcg_scene_event_listener.html#abe36a02c51bce49b63e0d6714f736d5b">cgSceneEventListener</a>
 , <a class="el" href="classcg_scene.html#a90603475755912b322ad430182d61400">cgScene</a>
 </li>
 <li>onSceneLoaded()
-: <a class="el" href="classcg_world_event_listener.html#ac4df533de04c5f29e00e3ab0ff9969e6">cgWorldEventListener</a>
-, <a class="el" href="classcg_world.html#a8dab7128d77f9b6ba7e5aa4827362b3e">cgWorld</a>
+: <a class="el" href="classcg_world.html#a8dab7128d77f9b6ba7e5aa4827362b3e">cgWorld</a>
+, <a class="el" href="classcg_world_event_listener.html#ac4df533de04c5f29e00e3ab0ff9969e6">cgWorldEventListener</a>
 </li>
 <li>onSceneLoadFailed()
 : <a class="el" href="classcg_world_event_listener.html#abe6b86574ce70284f1509987ae5df530">cgWorldEventListener</a>
@@ -744,8 +775,8 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 , <a class="el" href="classcg_scene.html#a9b12555860991525aa4054836a2bd211">cgScene</a>
 </li>
 <li>onSceneUnloading()
-: <a class="el" href="classcg_world_event_listener.html#a81fdbd0ec9b9966ad2766fc042d1f743">cgWorldEventListener</a>
-, <a class="el" href="classcg_world.html#a05b211511dfb725de929e1d9284badb4">cgWorld</a>
+: <a class="el" href="classcg_world.html#aa6c6aa53bb32c7033355dff6e3e32405">cgWorld</a>
+, <a class="el" href="classcg_world_event_listener.html#a78ed091e6ad1af79be4775755b782efc">cgWorldEventListener</a>
 </li>
 <li>onScreenLayoutChange()
 : <a class="el" href="classcg_u_i_control.html#aae03ebb2be90420ce9d41d94e3637825">cgUIControl</a>
@@ -753,16 +784,16 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 , <a class="el" href="classcg_u_i_control_layer.html#a6e0872f371c168451ad769b264e00c9a">cgUIControlLayer</a>
 </li>
 <li>onSelectedIndexChange()
-: <a class="el" href="classcg_list_box_control.html#a2ac9fd66af5961b608d2b4313996bc72">cgListBoxControl</a>
-, <a class="el" href="classcg_combo_box_control.html#a1a5007194bb58c04ee56c4fff66ab1c6">cgComboBoxControl</a>
+: <a class="el" href="classcg_combo_box_control.html#a1a5007194bb58c04ee56c4fff66ab1c6">cgComboBoxControl</a>
+, <a class="el" href="classcg_list_box_control.html#a2ac9fd66af5961b608d2b4313996bc72">cgListBoxControl</a>
 </li>
 <li>onSelectionCleared()
 : <a class="el" href="classcg_scene_event_listener.html#a071a8300e500774caf568ed7f5a10eea">cgSceneEventListener</a>
 , <a class="el" href="classcg_scene.html#a2b1ce0bc147edc3203766e1eb92f58b9">cgScene</a>
 </li>
 <li>onSelectionSetAdded()
-: <a class="el" href="classcg_scene.html#ae5ca8ade5ff06b2ea5dcc0738931b888">cgScene</a>
-, <a class="el" href="classcg_scene_event_listener.html#a2810114a4c59a3a541419a1349ad051e">cgSceneEventListener</a>
+: <a class="el" href="classcg_scene_event_listener.html#a2810114a4c59a3a541419a1349ad051e">cgSceneEventListener</a>
+, <a class="el" href="classcg_scene.html#ae5ca8ade5ff06b2ea5dcc0738931b888">cgScene</a>
 </li>
 <li>onSelectionSetRemoved()
 : <a class="el" href="classcg_scene_event_listener.html#aa178c77e67d828918e9c57b9e3c82bfc">cgSceneEventListener</a>
@@ -773,14 +804,14 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 , <a class="el" href="classcg_scene.html#ad625a12f19f0c5f296d47f36d714c835">cgScene</a>
 </li>
 <li>onSize()
-: <a class="el" href="classcg_check_box_control.html#a2ea2c836f5e505363adaf3ce0596d5d5">cgCheckBoxControl</a>
-, <a class="el" href="classcg_scroll_bar_control.html#a821329d2bd7e95f0d30481fc9864bc01">cgScrollBarControl</a>
+: <a class="el" href="classcg_list_box_control.html#a7021906da204762ba80aa16d8c2d8b90">cgListBoxControl</a>
+, <a class="el" href="classcg_button_control.html#a9ebdd71f14dde267b9c9654cc2021186">cgButtonControl</a>
 , <a class="el" href="classcg_u_i_control.html#a3f10184495c7114fc1875f3df0b0f280">cgUIControl</a>
 , <a class="el" href="classcg_u_i_form.html#ad803eb03f6d83dffe244f9cd0d8171b8">cgUIForm</a>
-, <a class="el" href="classcg_button_control.html#a9ebdd71f14dde267b9c9654cc2021186">cgButtonControl</a>
+, <a class="el" href="classcg_check_box_control.html#a2ea2c836f5e505363adaf3ce0596d5d5">cgCheckBoxControl</a>
 , <a class="el" href="classcg_combo_box_control.html#a88c1c151910721a397d1b3cfd502687e">cgComboBoxControl</a>
 , <a class="el" href="classcg_label_control.html#a5d3f1aade938b8ba1f910f5d6ca2ab73">cgLabelControl</a>
-, <a class="el" href="classcg_list_box_control.html#a7021906da204762ba80aa16d8c2d8b90">cgListBoxControl</a>
+, <a class="el" href="classcg_scroll_bar_control.html#a821329d2bd7e95f0d30481fc9864bc01">cgScrollBarControl</a>
 , <a class="el" href="classcg_text_box_control.html#a4820e162584de8455985351a2ba1fd6d">cgTextBoxControl</a>
 , <a class="el" href="classcg_app_window.html#a698de4d99f8134cef912b9c193dad3bd">cgAppWindow</a>
 </li>
@@ -802,11 +833,11 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 <li>op
 : <a class="el" href="structcg_light_node_1_1_lighting_op_pass.html#a48da4780b7bf50cb74184fa79c6d7fdd">cgLightNode::LightingOpPass</a>
 </li>
-<li>OpacityInDiffuse
-: <a class="el" href="classcg_render_driver.html#a277e73b233f4d3d8aec4a7e18b7432dba0a9732032121ee6d1da2e1eefaa074a2">cgRenderDriver</a>
-</li>
 <li>opacityInDiffuse
 : <a class="el" href="structcg_render_driver_1_1_export_vars.html#ad04200c96dfc1866de2c3decb0dc1ce6">cgRenderDriver::ExportVars</a>
+</li>
+<li>OpacityInDiffuse
+: <a class="el" href="classcg_render_driver.html#a277e73b233f4d3d8aec4a7e18b7432dba0a9732032121ee6d1da2e1eefaa074a2">cgRenderDriver</a>
 </li>
 <li>OpAnd
 : <a class="el" href="classcg_filter_expression.html#ac09c72fb533a3d404b0ed00175b7159ba4864d88ef0a5bf41bb1269749b6b8709">cgFilterExpression</a>
@@ -818,11 +849,11 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 : <a class="el" href="structcg_filter_expression_1_1_filter_instruction.html#ace8d11b9337e82e61e89988ba9b5885c">cgFilterExpression::FilterInstruction</a>
 </li>
 <li>open()
-: <a class="el" href="classcg_x_m_l_document.html#a94f41b9edd0b56453a0fa2c6c1965fd5">cgXMLDocument</a>
+: <a class="el" href="classcg_input_stream.html#a92c379264a2f511e7777c4f5777f5e57">cgInputStream</a>
 , <a class="el" href="classcg_audio_codec.html#ac6f73166bf20d83c3caeec6423be92f2">cgAudioCodec</a>
 , <a class="el" href="classcg_audio_codec___ogg.html#a1b916cc265b4a03b6747921dc6ad9519">cgAudioCodec_Ogg</a>
 , <a class="el" href="classcg_audio_codec___wav.html#a140bbdf12616aaca22b26f904f0433d5">cgAudioCodec_Wav</a>
-, <a class="el" href="classcg_input_stream.html#a92c379264a2f511e7777c4f5777f5e57">cgInputStream</a>
+, <a class="el" href="classcg_x_m_l_document.html#a94f41b9edd0b56453a0fa2c6c1965fd5">cgXMLDocument</a>
 , <a class="el" href="classcg_world.html#a7417af7545c8f4a8233d76d2df5770ba">cgWorld</a>
 </li>
 <li>openLuminanceBuffers()
@@ -851,12 +882,12 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 , <a class="el" href="classcg_variant.html#abe62e2e338b8b9cea9a1ec5fb02cda36">cgVariant</a>
 </li>
 <li>operator cgFloat *()
-: <a class="el" href="classcg_vector2.html#ae767c0de0f78b569716d1732999646e4">cgVector2</a>
-, <a class="el" href="classcg_euler_angles.html#a5674a8fbefa89438cad81137e0dd5e07">cgEulerAngles</a>
+: <a class="el" href="classcg_quaternion.html#a63e1919c49eb2ae34ef19f8e083b0726">cgQuaternion</a>
 , <a class="el" href="structcg_color_value.html#ad2aeae098a42805c63fc13c91e19f4bc">cgColorValue</a>
+, <a class="el" href="classcg_euler_angles.html#a5674a8fbefa89438cad81137e0dd5e07">cgEulerAngles</a>
 , <a class="el" href="classcg_matrix.html#a5933bac89c674e752082d77d65f035ea">cgMatrix</a>
 , <a class="el" href="classcg_plane.html#a0d3ff4f9151136dd9ac4ba043ad35110">cgPlane</a>
-, <a class="el" href="classcg_quaternion.html#a63e1919c49eb2ae34ef19f8e083b0726">cgQuaternion</a>
+, <a class="el" href="classcg_vector2.html#ae767c0de0f78b569716d1732999646e4">cgVector2</a>
 , <a class="el" href="classcg_vector3.html#aa58ebb4fbe23d2a8fbfb539d651d38fa">cgVector3</a>
 , <a class="el" href="classcg_vector4.html#a77b6c6aef7e27aa1f30598cc73665124">cgVector4</a>
 </li>
@@ -882,8 +913,8 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 : <a class="el" href="classcg_variant.html#a99c0138b3101b547ab896f1cba3f8e07">cgVariant</a>
 </li>
 <li>operator cgUInt32()
-: <a class="el" href="structcg_color_value.html#ad2afbcb411fadbeed3c1d1fffd187c17">cgColorValue</a>
-, <a class="el" href="classcg_variant.html#a95442afa8e087c958009342b1f539978">cgVariant</a>
+: <a class="el" href="classcg_variant.html#a95442afa8e087c958009342b1f539978">cgVariant</a>
+, <a class="el" href="structcg_color_value.html#ad2afbcb411fadbeed3c1d1fffd187c17">cgColorValue</a>
 </li>
 <li>operator cgUInt64()
 : <a class="el" href="classcg_variant.html#a5f32afa99767eea82c8496ba1f74a9d6">cgVariant</a>
@@ -904,13 +935,13 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 : <a class="el" href="classcg_auto_ptr.html#a3cbdac9ba54ea512fbe2cc81ea1cc6fb">cgAutoPtr&lt; _Vt, _Et &gt;</a>
 </li>
 <li>operator const cgFloat *()
-: <a class="el" href="classcg_vector3.html#a3eea807998a5b95e07338651f05a55b8">cgVector3</a>
+: <a class="el" href="classcg_vector2.html#abd227954e9c90073d172bef0f32bfed8">cgVector2</a>
 , <a class="el" href="structcg_color_value.html#a042d734330d7d6986a71b29d4799d5d4">cgColorValue</a>
 , <a class="el" href="classcg_euler_angles.html#a7277e9b3d957865e8c8b8cba4cd4e510">cgEulerAngles</a>
 , <a class="el" href="classcg_matrix.html#acfbb60d77f43b74fc8ede96e2994b876">cgMatrix</a>
 , <a class="el" href="classcg_plane.html#ad05904b620835aad903cdfb9ddbe4827">cgPlane</a>
 , <a class="el" href="classcg_quaternion.html#aa4b67085fd00fe81df28954af22b9718">cgQuaternion</a>
-, <a class="el" href="classcg_vector2.html#abd227954e9c90073d172bef0f32bfed8">cgVector2</a>
+, <a class="el" href="classcg_vector3.html#a3eea807998a5b95e07338651f05a55b8">cgVector3</a>
 , <a class="el" href="classcg_vector4.html#a4f4d4e228efded1966c11e85539bb6d9">cgVector4</a>
 </li>
 <li>operator const cgMatrix &amp;()
@@ -925,29 +956,29 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 , <a class="el" href="classcg_u_i_d.html#af045c2981f353b7923b758b877eaeb78">cgUID</a>
 </li>
 <li>operator!=()
-: <a class="el" href="classcg_quaternion.html#af9a4c1335270e607fc8f5e87341a59ea">cgQuaternion</a>
+: <a class="el" href="structcg_half.html#ab8b87862147da197ae435165ac62e290">cgHalf</a>
 , <a class="el" href="classcg_vector4.html#a68f1b18c0840d045ee22a945d2be2e00">cgVector4</a>
-, <a class="el" href="classcg_bounding_box.html#a12bf0f6177db3048a0f0af309bd473e0">cgBoundingBox</a>
+, <a class="el" href="structcg_sampler_state_desc.html#a888c67d38faabc9f70c8310e863d6f75">cgSamplerStateDesc</a>
+, <a class="el" href="classcg_vertex_format.html#ab2649ac3241fa39353601558c1717afb">cgVertexFormat</a>
+, <a class="el" href="class_resource_handle.html#aa7856b6bb8f72b8e13387a103f4fb57a">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
+, <a class="el" href="classcg_property_container.html#af4adc154e3504e0a7895762f41adcb77">cgPropertyContainer</a>
+, <a class="el" href="classcg_variant.html#a72e3bd8301b5467cf0d3cd855fbac587">cgVariant</a>
+, <a class="el" href="classcg_vector3.html#a401448fe1f857556c288d6eaa93f1173">cgVector3</a>
+, <a class="el" href="classcg_plane.html#a2ead528632960ddeb410a9fb760e43da">cgPlane</a>
+, <a class="el" href="structcg_rect_f.html#a0dea2936dd63007ba8515821ee8092d2">cgRectF</a>
 , <a class="el" href="structcg_point.html#a5e22641a1327b8feda1e5ffa665aed47">cgPoint</a>
-, <a class="el" href="structcg_half.html#ab8b87862147da197ae435165ac62e290">cgHalf</a>
 , <a class="el" href="structcg_point_f.html#a11aa869bad69e8eddb85f4db1200bef5">cgPointF</a>
 , <a class="el" href="structcg_size.html#ae0398d592b64e30b25925713638ccaef">cgSize</a>
 , <a class="el" href="structcg_size_f.html#a99d815f442e53a215d8f9f4287ff533b">cgSizeF</a>
 , <a class="el" href="structcg_range.html#a3df69068ce76bff0f7125933a0812155">cgRange</a>
 , <a class="el" href="structcg_range_f.html#add02a003defb82f040c5fab56a6582f7">cgRangeF</a>
 , <a class="el" href="structcg_rect.html#aa02c981c35a95566611a96928491fcac">cgRect</a>
-, <a class="el" href="structcg_rect_f.html#a0dea2936dd63007ba8515821ee8092d2">cgRectF</a>
+, <a class="el" href="classcg_bounding_box.html#a12bf0f6177db3048a0f0af309bd473e0">cgBoundingBox</a>
 , <a class="el" href="classcg_bounding_sphere.html#a9f9cc2c3dcb7ae958e0d54df7b291925">cgBoundingSphere</a>
 , <a class="el" href="classcg_matrix.html#ac2aa1caf285aaada20a2d9f13b85b8d8">cgMatrix</a>
-, <a class="el" href="classcg_plane.html#a2ead528632960ddeb410a9fb760e43da">cgPlane</a>
+, <a class="el" href="classcg_quaternion.html#af9a4c1335270e607fc8f5e87341a59ea">cgQuaternion</a>
 , <a class="el" href="classcg_transform.html#a94ae1015e06788c541a9262e11cfb7b8">cgTransform</a>
 , <a class="el" href="classcg_vector2.html#adda808f439850851276c2c632671e844">cgVector2</a>
-, <a class="el" href="classcg_vector3.html#a401448fe1f857556c288d6eaa93f1173">cgVector3</a>
-, <a class="el" href="structcg_sampler_state_desc.html#a888c67d38faabc9f70c8310e863d6f75">cgSamplerStateDesc</a>
-, <a class="el" href="classcg_vertex_format.html#ab2649ac3241fa39353601558c1717afb">cgVertexFormat</a>
-, <a class="el" href="class_resource_handle.html#aa7856b6bb8f72b8e13387a103f4fb57a">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
-, <a class="el" href="classcg_property_container.html#af4adc154e3504e0a7895762f41adcb77">cgPropertyContainer</a>
-, <a class="el" href="classcg_variant.html#a72e3bd8301b5467cf0d3cd855fbac587">cgVariant</a>
 </li>
 <li>operator&amp;()
 : <a class="el" href="classcg_auto_ptr.html#a55ba1c5d80dbbb4ab21406c5e5287519">cgAutoPtr&lt; _Vt, _Et &gt;</a>
@@ -957,196 +988,206 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 , <a class="el" href="class_str_i_cmp_1_1_char_less_i.html#af33867d9c70aa7ebf19606bdef491faa">StrICmp::CharLessI</a>
 , <a class="el" href="class_str_i_cmp.html#acfa8ba64bdec2169f4dfcac0fe118b8f">StrICmp</a>
 </li>
-<li>operator*
-: <a class="el" href="classcg_matrix.html#a05795635b15b40df5956278629a808d2">cgMatrix</a>
-, <a class="el" href="classcg_plane.html#a27d91ac68cd56f35ab16d0778fb29882">cgPlane</a>
-, <a class="el" href="classcg_quaternion.html#acfe7f24ff935f3b0d5a87b36625cf464">cgQuaternion</a>
-, <a class="el" href="classcg_transform.html#a97f724025551540f8fba0fd4b4247bd3">cgTransform</a>
-, <a class="el" href="structcg_color_value.html#ac686b9e1f21f938dcaad040b7b210d37">cgColorValue</a>
-, <a class="el" href="class_resource_handle.html#a886f62d992010aa55e077b9608925184">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
+<li>operator*()
+: <a class="el" href="classcg_matrix.html#ad687630f5eedd4da458235ce4fa71a88">cgMatrix</a>
+, <a class="el" href="classcg_auto_ptr.html#a17daf5ed9a53df3497e0735f661c21e0">cgAutoPtr&lt; _Vt, _Et &gt;</a>
+, <a class="el" href="classcg_bounding_box.html#a47e2c704e14b9c90d9460a5a2f19d4a8">cgBoundingBox</a>
+, <a class="el" href="classcg_matrix.html#a05795635b15b40df5956278629a808d2">cgMatrix</a>
+, <a class="el" href="classcg_plane.html#a5e327d39f340ddb9a5aba9c4435ddf13">cgPlane</a>
+, <a class="el" href="classcg_quaternion.html#a1cffb64848b61e633f3053a3af5a6755">cgQuaternion</a>
+, <a class="el" href="classcg_transform.html#a3bde2654020086886323d06990691f20">cgTransform</a>
 , <a class="el" href="classcg_vector2.html#a20199989a771b57c95044aaa19b44a4c">cgVector2</a>
 , <a class="el" href="classcg_vector4.html#a58c13f5e51c45359b1a493ae7bad46ce">cgVector4</a>
-, <a class="el" href="classcg_quaternion.html#a1cffb64848b61e633f3053a3af5a6755">cgQuaternion</a>
-, <a class="el" href="classcg_vector3.html#a66a0808c06c442c33a72533fd0c79ae8">cgVector3</a>
-, <a class="el" href="classcg_plane.html#a5e327d39f340ddb9a5aba9c4435ddf13">cgPlane</a>
-, <a class="el" href="classcg_vector3.html#abd6c56a7ae7c56086fa5f47603c600d9">cgVector3</a>
-, <a class="el" href="structcg_color_value.html#a18aa434b1ccc0fa43481113921ebb4a3">cgColorValue</a>
-, <a class="el" href="classcg_bounding_box.html#a47e2c704e14b9c90d9460a5a2f19d4a8">cgBoundingBox</a>
+, <a class="el" href="class_resource_handle.html#a886f62d992010aa55e077b9608925184">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
+, <a class="el" href="classcg_auto_ptr.html#aae78750902f2a9614a12ae0fba455dc5">cgAutoPtr&lt; _Vt, _Et &gt;</a>
+, <a class="el" href="classcg_quaternion.html#a8551e1fe34907076c084954d3618f2d7">cgQuaternion</a>
 , <a class="el" href="classcg_vector2.html#ab74f37e7584c231f7cea78ab00da28e5">cgVector2</a>
-, <a class="el" href="classcg_auto_ptr.html#a17daf5ed9a53df3497e0735f661c21e0">cgAutoPtr&lt; _Vt, _Et &gt;</a>
+, <a class="el" href="classcg_vector3.html#a66a0808c06c442c33a72533fd0c79ae8">cgVector3</a>
+, <a class="el" href="structcg_color_value.html#a18aa434b1ccc0fa43481113921ebb4a3">cgColorValue</a>
+, <a class="el" href="classcg_vector4.html#a752807c855e4131c0575f16987366def">cgVector4</a>
+, <a class="el" href="classcg_vector3.html#abd6c56a7ae7c56086fa5f47603c600d9">cgVector3</a>
+, <a class="el" href="classcg_transform.html#a97f724025551540f8fba0fd4b4247bd3">cgTransform</a>
+, <a class="el" href="classcg_plane.html#a27d91ac68cd56f35ab16d0778fb29882">cgPlane</a>
+, <a class="el" href="structcg_color_value.html#ac686b9e1f21f938dcaad040b7b210d37">cgColorValue</a>
 </li>
 <li>operator*=()
-: <a class="el" href="structcg_color_value.html#afd947b66369516d1900137cbfadab8f7">cgColorValue</a>
-, <a class="el" href="classcg_bounding_box.html#a025c7c8cd40f50847ea9ff4d3a7e3f7c">cgBoundingBox</a>
-, <a class="el" href="classcg_quaternion.html#a320ea77a2a2fc11f14db729c573063a1">cgQuaternion</a>
-, <a class="el" href="classcg_transform.html#a0939cadeffb2f146a33bee5be4b1e263">cgTransform</a>
-, <a class="el" href="classcg_vector2.html#a7c5a0926cfdc070ef8b798a34363c986">cgVector2</a>
+: <a class="el" href="classcg_quaternion.html#ae8d85588218dff91eca676254965e153">cgQuaternion</a>
 , <a class="el" href="classcg_bounding_box.html#a21e6748098092c2482548a648c4b94b0">cgBoundingBox</a>
-, <a class="el" href="classcg_transform.html#a3e97bc9ab7f9adde6a7caf9529e32f7a">cgTransform</a>
-, <a class="el" href="classcg_vector4.html#a1a6738d1d13c26b7dad8c79b80053ead">cgVector4</a>
-, <a class="el" href="classcg_matrix.html#a08b82e9a7fc1e3d52500abad164835af">cgMatrix</a>
 , <a class="el" href="classcg_plane.html#a732ccf62080780d755ba733218e78d73">cgPlane</a>
+, <a class="el" href="classcg_transform.html#a3e97bc9ab7f9adde6a7caf9529e32f7a">cgTransform</a>
+, <a class="el" href="structcg_color_value.html#afd947b66369516d1900137cbfadab8f7">cgColorValue</a>
+, <a class="el" href="classcg_matrix.html#a08b82e9a7fc1e3d52500abad164835af">cgMatrix</a>
 , <a class="el" href="classcg_vector3.html#a7e9e843366e47a06cf5aeba4dcae89f4">cgVector3</a>
-, <a class="el" href="classcg_quaternion.html#ae8d85588218dff91eca676254965e153">cgQuaternion</a>
+, <a class="el" href="classcg_vector4.html#a1a6738d1d13c26b7dad8c79b80053ead">cgVector4</a>
+, <a class="el" href="classcg_vector2.html#a7c5a0926cfdc070ef8b798a34363c986">cgVector2</a>
+, <a class="el" href="classcg_quaternion.html#a320ea77a2a2fc11f14db729c573063a1">cgQuaternion</a>
+, <a class="el" href="classcg_bounding_box.html#a025c7c8cd40f50847ea9ff4d3a7e3f7c">cgBoundingBox</a>
 , <a class="el" href="classcg_matrix.html#a27affe305455577abb17f730deb9bd59">cgMatrix</a>
 </li>
 <li>operator+()
-: <a class="el" href="classcg_matrix.html#aff831387f6cbd5aa7958a4c728f61ea2">cgMatrix</a>
-, <a class="el" href="classcg_plane.html#a5da6ed8f3b6a990c25b19c2b51759a55">cgPlane</a>
-, <a class="el" href="classcg_quaternion.html#a84519afb8481744c5e36f330172d6e8d">cgQuaternion</a>
-, <a class="el" href="classcg_vector3.html#a1f4ab083b8a4a333e7948a49045f6e82">cgVector3</a>
-, <a class="el" href="classcg_vector4.html#a7c4773cf0490c2e1520230714ff2add7">cgVector4</a>
+: <a class="el" href="classcg_vector2.html#ae9dd3ad9a8aeb33340dae2a96d27571c">cgVector2</a>
+, <a class="el" href="classcg_vector3.html#a71ed2065e48d4876bd4b8634c1dc1c91">cgVector3</a>
 , <a class="el" href="structcg_color_value.html#ad5102460cc52b02ee2cef3d7b31b8f5e">cgColorValue</a>
 , <a class="el" href="classcg_quaternion.html#a063275d4364321af418053b2e9afd84b">cgQuaternion</a>
+, <a class="el" href="classcg_matrix.html#aff831387f6cbd5aa7958a4c728f61ea2">cgMatrix</a>
 , <a class="el" href="classcg_vector4.html#a4994407fc988984ef4ce3a0bbe5a9d41">cgVector4</a>
-, <a class="el" href="classcg_vector2.html#ae9dd3ad9a8aeb33340dae2a96d27571c">cgVector2</a>
-, <a class="el" href="classcg_vector3.html#a71ed2065e48d4876bd4b8634c1dc1c91">cgVector3</a>
-, <a class="el" href="classcg_transform.html#a1c8f47991903bd551020664ccfffeb27">cgTransform</a>
+, <a class="el" href="classcg_plane.html#a5da6ed8f3b6a990c25b19c2b51759a55">cgPlane</a>
 , <a class="el" href="classcg_vector2.html#a7cb70b3c619a4f5c4fdd8ddd7df06555">cgVector2</a>
+, <a class="el" href="classcg_transform.html#a1c8f47991903bd551020664ccfffeb27">cgTransform</a>
+, <a class="el" href="classcg_vector4.html#a7c4773cf0490c2e1520230714ff2add7">cgVector4</a>
+, <a class="el" href="classcg_vector3.html#a1f4ab083b8a4a333e7948a49045f6e82">cgVector3</a>
+, <a class="el" href="classcg_quaternion.html#a84519afb8481744c5e36f330172d6e8d">cgQuaternion</a>
+, <a class="el" href="classcg_matrix.html#a246ae211d22d873d9f95a61254d96c48">cgMatrix</a>
 </li>
 <li>operator+=()
-: <a class="el" href="structcg_rect.html#a3346d89e018595584807fc569517ce9e">cgRect</a>
-, <a class="el" href="classcg_matrix.html#a68fd0c92ecd9fc6a7943e8aa388701d5">cgMatrix</a>
+: <a class="el" href="classcg_bounding_box.html#a3e273e868e5738992a80a5a9a253bc73">cgBoundingBox</a>
 , <a class="el" href="classcg_bounding_sphere.html#a6b3a1c36e411e132516c760435022edd">cgBoundingSphere</a>
-, <a class="el" href="classcg_transform.html#a7129c6e6041ec9d06c33fc1d19cc387c">cgTransform</a>
-, <a class="el" href="classcg_string.html#a976466c1a2f7ae7baeb69841eb81aa4d">cgString</a>
-, <a class="el" href="classcg_vector3.html#aa098b285da31f6a81a1971328365205c">cgVector3</a>
-, <a class="el" href="classcg_bounding_box.html#a3e273e868e5738992a80a5a9a253bc73">cgBoundingBox</a>
-, <a class="el" href="classcg_vector4.html#a2c978d12bc2c994d8b6479085656a2a9">cgVector4</a>
-, <a class="el" href="structcg_color_value.html#a383bb52da16a5b80cd2c4722407334cf">cgColorValue</a>
+, <a class="el" href="classcg_least_squares_sums.html#a39b715785ab0df7a5748ff939979f491">cgLeastSquaresSums</a>
 , <a class="el" href="classcg_quaternion.html#a5c5aad5f7c58893d8fa0b0d18dce9f68">cgQuaternion</a>
+, <a class="el" href="classcg_vector4.html#a2c978d12bc2c994d8b6479085656a2a9">cgVector4</a>
 , <a class="el" href="classcg_string.html#ac3021a5810f3d1cdb3702e67498317ef">cgString</a>
 , <a class="el" href="structcg_rect_f.html#a9fd7471e419649e2e45b69e3ec1b0d9b">cgRectF</a>
-, <a class="el" href="classcg_least_squares_sums.html#a39b715785ab0df7a5748ff939979f491">cgLeastSquaresSums</a>
+, <a class="el" href="classcg_string.html#af50fe30f490db256d4d00fed106b1f68">cgString</a>
+, <a class="el" href="classcg_matrix.html#a68fd0c92ecd9fc6a7943e8aa388701d5">cgMatrix</a>
+, <a class="el" href="classcg_vector3.html#aa098b285da31f6a81a1971328365205c">cgVector3</a>
+, <a class="el" href="structcg_color_value.html#a383bb52da16a5b80cd2c4722407334cf">cgColorValue</a>
+, <a class="el" href="classcg_string.html#a976466c1a2f7ae7baeb69841eb81aa4d">cgString</a>
+, <a class="el" href="structcg_rect.html#a3346d89e018595584807fc569517ce9e">cgRect</a>
+, <a class="el" href="classcg_transform.html#a7129c6e6041ec9d06c33fc1d19cc387c">cgTransform</a>
 , <a class="el" href="classcg_vector2.html#ae51fda425444e450e7db88bab20c51c7">cgVector2</a>
 </li>
 <li>operator-()
-: <a class="el" href="classcg_vector4.html#adb2873e0a4f87077139b1c4b498afdb3">cgVector4</a>
-, <a class="el" href="structcg_color_value.html#a23594c258e2613723d705af9979ce40f">cgColorValue</a>
-, <a class="el" href="classcg_quaternion.html#a7bb6e297e1d7ff833b0405436ae6694f">cgQuaternion</a>
-, <a class="el" href="classcg_vector2.html#ae05a15251b4044735df7f075366072e6">cgVector2</a>
-, <a class="el" href="classcg_vector3.html#a27ee05e63f961279f85159f3afb81f15">cgVector3</a>
-, <a class="el" href="classcg_vector4.html#a317800cc6f4f74b093c7d88db0d0e4a1">cgVector4</a>
-, <a class="el" href="classcg_vector2.html#a1a8dbc66d981a58076864bf4f46ded5d">cgVector2</a>
-, <a class="el" href="classcg_matrix.html#a2a11f498fac0427b430662cde064cd28">cgMatrix</a>
+: <a class="el" href="structcg_color_value.html#a23594c258e2613723d705af9979ce40f">cgColorValue</a>
 , <a class="el" href="classcg_plane.html#a0b7981b51105f03156b15c6895de612b">cgPlane</a>
-, <a class="el" href="classcg_vector3.html#a3b4d1f2ce1a6bd398e08f2d9ddc3cb00">cgVector3</a>
+, <a class="el" href="classcg_quaternion.html#a7bb6e297e1d7ff833b0405436ae6694f">cgQuaternion</a>
+, <a class="el" href="classcg_vector2.html#a1a8dbc66d981a58076864bf4f46ded5d">cgVector2</a>
+, <a class="el" href="classcg_vector4.html#a317800cc6f4f74b093c7d88db0d0e4a1">cgVector4</a>
+, <a class="el" href="classcg_matrix.html#a2a11f498fac0427b430662cde064cd28">cgMatrix</a>
+, <a class="el" href="classcg_vector3.html#a27ee05e63f961279f85159f3afb81f15">cgVector3</a>
+, <a class="el" href="classcg_vector4.html#adb2873e0a4f87077139b1c4b498afdb3">cgVector4</a>
+, <a class="el" href="classcg_vector2.html#ae05a15251b4044735df7f075366072e6">cgVector2</a>
 </li>
 <li>operator-=()
-: <a class="el" href="structcg_rect.html#a268c0dc0c4eebf0f857602b8179d57b5">cgRect</a>
-, <a class="el" href="structcg_color_value.html#a3be65c72a907528894ed4ffd8d0d547a">cgColorValue</a>
-, <a class="el" href="classcg_bounding_sphere.html#a0aac9b166f7218f263d7ceb61b1fd092">cgBoundingSphere</a>
-, <a class="el" href="classcg_vector3.html#ac782f0da5635ac9c79a0521309a9715e">cgVector3</a>
-, <a class="el" href="classcg_vector4.html#afeb221b7d95b1bc22eb051214de029fa">cgVector4</a>
-, <a class="el" href="classcg_matrix.html#a912b2e380f3d6e66351a4d2a42daf2a9">cgMatrix</a>
-, <a class="el" href="classcg_quaternion.html#af0c54c3d99fd176bd4b87638806a1351">cgQuaternion</a>
-, <a class="el" href="classcg_vector2.html#a30f723d0eae196d7655e6f6c00114cfb">cgVector2</a>
-, <a class="el" href="structcg_rect_f.html#abaeea0b86f549a942e2fd175ec68daba">cgRectF</a>
+: <a class="el" href="structcg_rect_f.html#abaeea0b86f549a942e2fd175ec68daba">cgRectF</a>
 , <a class="el" href="classcg_bounding_box.html#a0bed2c536b3de1653999f183625c6536">cgBoundingBox</a>
+, <a class="el" href="classcg_vector2.html#a30f723d0eae196d7655e6f6c00114cfb">cgVector2</a>
+, <a class="el" href="classcg_vector3.html#ac782f0da5635ac9c79a0521309a9715e">cgVector3</a>
+, <a class="el" href="classcg_quaternion.html#af0c54c3d99fd176bd4b87638806a1351">cgQuaternion</a>
+, <a class="el" href="classcg_bounding_sphere.html#a0aac9b166f7218f263d7ceb61b1fd092">cgBoundingSphere</a>
+, <a class="el" href="classcg_matrix.html#a912b2e380f3d6e66351a4d2a42daf2a9">cgMatrix</a>
+, <a class="el" href="structcg_rect.html#a268c0dc0c4eebf0f857602b8179d57b5">cgRect</a>
+, <a class="el" href="structcg_color_value.html#a3be65c72a907528894ed4ffd8d0d547a">cgColorValue</a>
+, <a class="el" href="classcg_vector4.html#afeb221b7d95b1bc22eb051214de029fa">cgVector4</a>
 </li>
 <li>operator-&gt;()
-: <a class="el" href="class_resource_handle.html#a7b598acca38362f4514d20b803911275">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
-, <a class="el" href="classcg_auto_ptr.html#a54160c86af9e52929a2088d037cead28">cgAutoPtr&lt; _Vt, _Et &gt;</a>
+: <a class="el" href="classcg_auto_ptr.html#a54160c86af9e52929a2088d037cead28">cgAutoPtr&lt; _Vt, _Et &gt;</a>
+, <a class="el" href="class_resource_handle.html#a7b598acca38362f4514d20b803911275">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
+, <a class="el" href="classcg_auto_ptr.html#abeb7530e374e5a0c46fdcb0f747693ff">cgAutoPtr&lt; _Vt, _Et &gt;</a>
+, <a class="el" href="class_resource_handle.html#a8a516f6f535fcc483688045ad7b71107">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
 </li>
 <li>operator/()
-: <a class="el" href="classcg_plane.html#ae909d1a3bd3a267e964827a856ed3406">cgPlane</a>
-, <a class="el" href="classcg_vector2.html#ae8faa96077979fc9080ce66fc0dba7a2">cgVector2</a>
-, <a class="el" href="classcg_vector4.html#a5101541f1ece4feb8e7f1913c8991b9d">cgVector4</a>
-, <a class="el" href="classcg_quaternion.html#ab5e8c05b32b633bda51e8b50dc78e454">cgQuaternion</a>
+: <a class="el" href="classcg_vector4.html#a5101541f1ece4feb8e7f1913c8991b9d">cgVector4</a>
 , <a class="el" href="classcg_matrix.html#af112edbdabfff94eeec723bb88126656">cgMatrix</a>
+, <a class="el" href="classcg_quaternion.html#ab5e8c05b32b633bda51e8b50dc78e454">cgQuaternion</a>
 , <a class="el" href="classcg_vector3.html#aa61e0003899984883295491b620bf35e">cgVector3</a>
+, <a class="el" href="classcg_plane.html#ae909d1a3bd3a267e964827a856ed3406">cgPlane</a>
 , <a class="el" href="structcg_color_value.html#a25185ea0d5a6839977794158ac2e58b4">cgColorValue</a>
+, <a class="el" href="classcg_vector2.html#ae8faa96077979fc9080ce66fc0dba7a2">cgVector2</a>
 </li>
 <li>operator/=()
-: <a class="el" href="classcg_plane.html#aa1276a78946545647a4fdf4e2566d657">cgPlane</a>
-, <a class="el" href="structcg_color_value.html#ab291e3d4c433a39a0d68e284074c4b48">cgColorValue</a>
+: <a class="el" href="structcg_color_value.html#ab291e3d4c433a39a0d68e284074c4b48">cgColorValue</a>
+, <a class="el" href="classcg_plane.html#aa1276a78946545647a4fdf4e2566d657">cgPlane</a>
 , <a class="el" href="classcg_quaternion.html#af7bcfc9f7ba15021867f6ad126f257f2">cgQuaternion</a>
-, <a class="el" href="classcg_vector2.html#a61a0edf7ba8e33916bcdccfda79f35e5">cgVector2</a>
-, <a class="el" href="classcg_vector3.html#aff49fe6c86d80fd80b0263da1f0bac0b">cgVector3</a>
 , <a class="el" href="classcg_vector4.html#a46bf39ed95fab77a418bcad1db868b11">cgVector4</a>
+, <a class="el" href="classcg_vector3.html#aff49fe6c86d80fd80b0263da1f0bac0b">cgVector3</a>
+, <a class="el" href="classcg_vector2.html#a61a0edf7ba8e33916bcdccfda79f35e5">cgVector2</a>
 , <a class="el" href="classcg_matrix.html#abb85fb90fec9f4670f80fb9593bca1d7">cgMatrix</a>
 </li>
 <li>operator&lt;()
-: <a class="el" href="structcg_image_processor_1_1_multi_op_shader_cache_key.html#a797a95ca7504751c6663bf255d17d132">cgImageProcessor::MultiOpShaderCacheKey</a>
-, <a class="el" href="structcg_size_f.html#aaca002690477251932c01c11182ec1f9">cgSizeF</a>
-, <a class="el" href="classcg_resource_manager.html#ae2763b1495364f66db85900dc39648aa">cgResourceManager</a>
-, <a class="el" href="classcg_shader_identifier.html#ac46538ff79f62393a12c3bf7f6f04be9">cgShaderIdentifier</a>
+: <a class="el" href="structcg_size.html#ab9f99ebdeff790b40f9c5e665348f038">cgSize</a>
 , <a class="el" href="classcg_mesh.html#a94a37ef5ffeaf880bb3729a717c3809a">cgMesh</a>
-, <a class="el" href="class_resource_handle.html#a83d8a649d18cb63441b13c28b720c4fa">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
-, <a class="el" href="classcg_resource_manager.html#ab0136a28ff0239d867c17cc473c4ee9d">cgResourceManager</a>
-, <a class="el" href="structcg_size.html#ab9f99ebdeff790b40f9c5e665348f038">cgSize</a>
+, <a class="el" href="classcg_physics_world.html#a80bd0f7ca33d85f4c451b88221cdb16a">cgPhysicsWorld</a>
+, <a class="el" href="classcg_mesh_shape_cache_key.html#aec409c500a85fe190141354373639eff">cgMeshShapeCacheKey</a>
+, <a class="el" href="classcg_resource_manager.html#a5f817da118d023a5bc919a4aafcd76c7">cgResourceManager</a>
 , <a class="el" href="classcg_mesh.html#aa8b03b3797f94eb7b5653807e4287442">cgMesh</a>
 , <a class="el" href="classcg_physics_shape_cache_key.html#a98509b5310e9cf9d72e0cbb09d78c2d2">cgPhysicsShapeCacheKey</a>
-, <a class="el" href="classcg_mesh_shape_cache_key.html#aec409c500a85fe190141354373639eff">cgMeshShapeCacheKey</a>
 , <a class="el" href="classcg_mesh.html#a5548101ec531b25c237ed33eb2cab493">cgMesh</a>
+, <a class="el" href="classcg_resource_manager.html#ab0136a28ff0239d867c17cc473c4ee9d">cgResourceManager</a>
+, <a class="el" href="class_resource_handle.html#a83d8a649d18cb63441b13c28b720c4fa">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
+, <a class="el" href="structcg_size_f.html#aaca002690477251932c01c11182ec1f9">cgSizeF</a>
+, <a class="el" href="classcg_resource_manager.html#ae2763b1495364f66db85900dc39648aa">cgResourceManager</a>
+, <a class="el" href="structcg_image_processor_1_1_multi_op_shader_cache_key.html#a797a95ca7504751c6663bf255d17d132">cgImageProcessor::MultiOpShaderCacheKey</a>
+, <a class="el" href="classcg_shader_identifier.html#ac46538ff79f62393a12c3bf7f6f04be9">cgShaderIdentifier</a>
 </li>
 <li>operator=()
-: <a class="el" href="classcg_variant.html#a8160b746b902fc7f0c051f000663946b">cgVariant</a>
-, <a class="el" href="classcg_input_stream.html#a498a28cb620af2d6724f89526a5f8b02">cgInputStream</a>
-, <a class="el" href="classcg_auto_ptr.html#ae732d0819de23e217c61ad84fa4197f9">cgAutoPtr&lt; _Vt, _Et &gt;</a>
-, <a class="el" href="classcg_variant.html#a9f0290e4f5c963cd0aa0b1ef9e718f3a">cgVariant</a>
-, <a class="el" href="class_resource_handle.html#a1ce0354d9b5b7607f7949b8ea56e2116">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
-, <a class="el" href="classcg_message.html#aac116633146fa075d5955dd16f99e335">cgMessage</a>
+: <a class="el" href="classcg_variant.html#a83b11bd4b5b38fa17716c6774574ba25">cgVariant</a>
 , <a class="el" href="classcg_string.html#a10d342fdb00c44c6db3a0693e1a9dbc1">cgString</a>
-, <a class="el" href="classcg_variant.html#a83b11bd4b5b38fa17716c6774574ba25">cgVariant</a>
-, <a class="el" href="classcg_x_m_l_document.html#a01a65ae1daee1b683b7d8a718c1b28a4">cgXMLDocument</a>
-, <a class="el" href="classcg_x_m_l_node.html#ac81ed4bb300142e533add2e700b820b1">cgXMLNode</a>
-, <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a8aee5e8da85fabd653b89788fdf8b4c9">cgScriptInterop::Types::ScriptArray</a>
-, <a class="el" href="classcg_variant.html#a6f4a3794f6c1df1f2eeb2f8c18dc3d3d">cgVariant</a>
-, <a class="el" href="classcg_auto_ptr.html#a31eeea60af3b30508ed2eea8d93b2bf7">cgAutoPtr&lt; _Vt, _Et &gt;</a>
-, <a class="el" href="classcg_variant.html#ae5d505395a07331025b5611c43674ae6">cgVariant</a>
-, <a class="el" href="classcg_x_m_l_attribute.html#ae8350b3512c6ad933664101c3c45c178">cgXMLAttribute</a>
-, <a class="el" href="classcg_vertex_format.html#a743f3c426668d45e342cdf472582a499">cgVertexFormat</a>
-, <a class="el" href="classcg_variant.html#a1d711d7f38df0b0b4542bf5fa66b2c70">cgVariant</a>
-, <a class="el" href="classcg_transform.html#add09253e211cc32d94886056bf5a41a3">cgTransform</a>
-, <a class="el" href="classcg_variant.html#ab2f4b69b01788ac9b2855110ca0aae60">cgVariant</a>
-, <a class="el" href="classcg_bezier_spline2.html#a3e25c8134180980a18c906c5f25e8cd6">cgBezierSpline2</a>
-, <a class="el" href="classcg_variant.html#a0171c378d97a80cd06cf37cafcfac366">cgVariant</a>
-, <a class="el" href="classcg_buffer_format_enum.html#a261949318553caa6ec22f01e785c318e">cgBufferFormatEnum</a>
-, <a class="el" href="classcg_variant.html#ab2a03c2c6efdda3dc6c581e95f9d1c2f">cgVariant</a>
-, <a class="el" href="classcg_string.html#aa11c86b698614fc7225ab5ab2c1a8eb2">cgString</a>
-, <a class="el" href="classcg_property_container.html#a8ce45b39c120115d1930ed3cdaa95306">cgPropertyContainer</a>
-, <a class="el" href="classcg_variant.html#a4662a7093d241a186df4faa5ac260cce">cgVariant</a>
-, <a class="el" href="classcg_string.html#a24a041db06ca3b80a833b638feca0b24">cgString</a>
-, <a class="el" href="classcg_variant.html#a3f1da12ca90f9d8af2244327bf628e02">cgVariant</a>
 , <a class="el" href="classcg_bezier_spline3.html#af9b740088a437fc2173c0a0a73d5ed8e">cgBezierSpline3</a>
+, <a class="el" href="classcg_string.html#af2f552d756d57357b1e1f98626c5ecc4">cgString</a>
+, <a class="el" href="classcg_message.html#aac116633146fa075d5955dd16f99e335">cgMessage</a>
+, <a class="el" href="classcg_array.html#a4b80595aa2fcabf3dbb1c7308ffe43f7">cgArray&lt; T &gt;</a>
+, <a class="el" href="classcg_variant.html#a8160b746b902fc7f0c051f000663946b">cgVariant</a>
+, <a class="el" href="classcg_vertex_format.html#a743f3c426668d45e342cdf472582a499">cgVertexFormat</a>
 , <a class="el" href="classcg_variant.html#a3a0989edb85170735b17f66aa2b79dc8">cgVariant</a>
+, <a class="el" href="classcg_buffer_format_enum.html#a261949318553caa6ec22f01e785c318e">cgBufferFormatEnum</a>
+, <a class="el" href="class_resource_handle.html#a1ce0354d9b5b7607f7949b8ea56e2116">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
+, <a class="el" href="classcg_input_stream.html#a498a28cb620af2d6724f89526a5f8b02">cgInputStream</a>
+, <a class="el" href="classcg_variant.html#a4662a7093d241a186df4faa5ac260cce">cgVariant</a>
+, <a class="el" href="classcg_bezier_spline2.html#a3e25c8134180980a18c906c5f25e8cd6">cgBezierSpline2</a>
+, <a class="el" href="classcg_variant.html#ae5d505395a07331025b5611c43674ae6">cgVariant</a>
+, <a class="el" href="classcg_auto_ptr.html#a31eeea60af3b30508ed2eea8d93b2bf7">cgAutoPtr&lt; _Vt, _Et &gt;</a>
+, <a class="el" href="classcg_x_m_l_attribute.html#ae8350b3512c6ad933664101c3c45c178">cgXMLAttribute</a>
+, <a class="el" href="classcg_variant.html#a9f0290e4f5c963cd0aa0b1ef9e718f3a">cgVariant</a>
+, <a class="el" href="classcg_x_m_l_node.html#ac81ed4bb300142e533add2e700b820b1">cgXMLNode</a>
+, <a class="el" href="classcg_variant.html#a535edd04ab8de27d4a37dea7881ac800">cgVariant</a>
+, <a class="el" href="classcg_x_m_l_document.html#a01a65ae1daee1b683b7d8a718c1b28a4">cgXMLDocument</a>
+, <a class="el" href="classcg_auto_ptr.html#ae732d0819de23e217c61ad84fa4197f9">cgAutoPtr&lt; _Vt, _Et &gt;</a>
+, <a class="el" href="classcg_transform.html#add09253e211cc32d94886056bf5a41a3">cgTransform</a>
+, <a class="el" href="classcg_string.html#aa11c86b698614fc7225ab5ab2c1a8eb2">cgString</a>
+, <a class="el" href="classcg_variant.html#a160c6108ef57853160629a7cd8c864e9">cgVariant</a>
+, <a class="el" href="classcg_string.html#a24a041db06ca3b80a833b638feca0b24">cgString</a>
+, <a class="el" href="classcg_variant.html#ab2f4b69b01788ac9b2855110ca0aae60">cgVariant</a>
+, <a class="el" href="classcg_property_container.html#a8ce45b39c120115d1930ed3cdaa95306">cgPropertyContainer</a>
+, <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a8aee5e8da85fabd653b89788fdf8b4c9">cgScriptInterop::Types::ScriptArray</a>
 </li>
 <li>operator==()
-: <a class="el" href="classcg_variant.html#aec6405601167aa0bbc7b08bfedb8f414">cgVariant</a>
-, <a class="el" href="classcg_vector3.html#a94b2a96b0e1c02e2991c44c20f0bb1b9">cgVector3</a>
-, <a class="el" href="classcg_bounding_box.html#a3e7ecabaf060e940f2d7e41bbf38a292">cgBoundingBox</a>
-, <a class="el" href="structcg_size.html#aae1886af6b1b542e7aef9ede719fd624">cgSize</a>
-, <a class="el" href="classcg_transform.html#a51a2f4b7b86ffdca914d6e0d8589b000">cgTransform</a>
-, <a class="el" href="classcg_vector2.html#ac93b4a867129bc19890ac1c19dde525b">cgVector2</a>
-, <a class="el" href="classcg_matrix.html#a5a7824a7ddd44432289074b49982d877">cgMatrix</a>
-, <a class="el" href="structcg_range.html#a08dffd3d66ebea9fa595e89cf3d846b6">cgRange</a>
-, <a class="el" href="class_resource_handle.html#a4c3b81f98eb235b302d197bfdeb9e4af">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
-, <a class="el" href="classcg_bezier_spline3.html#a1247f7f01aed781a8fabe33acd4f4147">cgBezierSpline3</a>
-, <a class="el" href="classcg_property_container.html#adab4fafea7b726e5f8737c979934b422">cgPropertyContainer</a>
-, <a class="el" href="structcg_rect_f.html#aa990b2fe30daae137272696921bac7ab">cgRectF</a>
-, <a class="el" href="structcg_point.html#ad5b80155fe99232508ac3e8e5f2312f7">cgPoint</a>
-, <a class="el" href="structcg_point_f.html#af82483e1c205f6804cc15f6142a115c4">cgPointF</a>
-, <a class="el" href="structcg_size_f.html#a192f09e8cb0fe64f7732aa301612879c">cgSizeF</a>
-, <a class="el" href="structcg_color_value.html#a3fceccc42bd52d66f9ed9498b26949b3">cgColorValue</a>
-, <a class="el" href="classcg_vector4.html#aabaac462db357e9b6321a4e968ef716c">cgVector4</a>
-, <a class="el" href="classcg_frustum.html#a62b17245e42359de8e1b556eb04ffa94">cgFrustum</a>
-, <a class="el" href="classcg_plane.html#a47a54fb76371f9472115dc3597734b23">cgPlane</a>
-, <a class="el" href="structcg_rect.html#a194fa301466501a13e776dd2b27cb33c">cgRect</a>
+: <a class="el" href="structcg_point.html#ad5b80155fe99232508ac3e8e5f2312f7">cgPoint</a>
 , <a class="el" href="classcg_vertex_format.html#a79b44f311730601b86c66322d0c239d0">cgVertexFormat</a>
+, <a class="el" href="classcg_transform.html#a51a2f4b7b86ffdca914d6e0d8589b000">cgTransform</a>
+, <a class="el" href="structcg_size_f.html#a192f09e8cb0fe64f7732aa301612879c">cgSizeF</a>
+, <a class="el" href="structcg_range_f.html#a392a1ad6dbaeb7c198f897bff1eb233f">cgRangeF</a>
+, <a class="el" href="structcg_range.html#a08dffd3d66ebea9fa595e89cf3d846b6">cgRange</a>
+, <a class="el" href="classcg_plane.html#a47a54fb76371f9472115dc3597734b23">cgPlane</a>
+, <a class="el" href="structcg_point_f.html#af82483e1c205f6804cc15f6142a115c4">cgPointF</a>
+, <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a271438367977bbdfbc01129bf2027099">cgScriptInterop::Types::ScriptArray</a>
+, <a class="el" href="structcg_color_value.html#a3fceccc42bd52d66f9ed9498b26949b3">cgColorValue</a>
+, <a class="el" href="classcg_frustum.html#a62b17245e42359de8e1b556eb04ffa94">cgFrustum</a>
+, <a class="el" href="classcg_vector4.html#aabaac462db357e9b6321a4e968ef716c">cgVector4</a>
+, <a class="el" href="structcg_size.html#aae1886af6b1b542e7aef9ede719fd624">cgSize</a>
+, <a class="el" href="structcg_sampler_state_desc.html#a19d79adb13f89e5e5048f240da5f853f">cgSamplerStateDesc</a>
+, <a class="el" href="classcg_property_container.html#adab4fafea7b726e5f8737c979934b422">cgPropertyContainer</a>
+, <a class="el" href="structcg_half.html#ae64af659eb6c7ae4799b526bee16e885">cgHalf</a>
+, <a class="el" href="classcg_vector3.html#a94b2a96b0e1c02e2991c44c20f0bb1b9">cgVector3</a>
+, <a class="el" href="structcg_rect.html#a194fa301466501a13e776dd2b27cb33c">cgRect</a>
+, <a class="el" href="structcg_rect_f.html#aa990b2fe30daae137272696921bac7ab">cgRectF</a>
+, <a class="el" href="classcg_bezier_spline3.html#a1247f7f01aed781a8fabe33acd4f4147">cgBezierSpline3</a>
 , <a class="el" href="classcg_quaternion.html#a5c29a141ce681db3635b0c4f10d41e36">cgQuaternion</a>
 , <a class="el" href="classcg_bounding_sphere.html#a4da51d001e54051ebb2ef2d5ba744412">cgBoundingSphere</a>
-, <a class="el" href="structcg_half.html#ae64af659eb6c7ae4799b526bee16e885">cgHalf</a>
-, <a class="el" href="structcg_sampler_state_desc.html#a19d79adb13f89e5e5048f240da5f853f">cgSamplerStateDesc</a>
-, <a class="el" href="structcg_range_f.html#a392a1ad6dbaeb7c198f897bff1eb233f">cgRangeF</a>
+, <a class="el" href="classcg_matrix.html#a5a7824a7ddd44432289074b49982d877">cgMatrix</a>
+, <a class="el" href="class_resource_handle.html#a4c3b81f98eb235b302d197bfdeb9e4af">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
+, <a class="el" href="classcg_variant.html#aec6405601167aa0bbc7b08bfedb8f414">cgVariant</a>
+, <a class="el" href="classcg_vector2.html#ac93b4a867129bc19890ac1c19dde525b">cgVector2</a>
+, <a class="el" href="classcg_bounding_box.html#a3e7ecabaf060e940f2d7e41bbf38a292">cgBoundingBox</a>
 </li>
 <li>operator&gt;()
-: <a class="el" href="structcg_size.html#aed235b631faa57683d6c41bfa945578c">cgSize</a>
-, <a class="el" href="class_resource_handle.html#a7e190e0e0dd9f41627d47c2be02c540f">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
+: <a class="el" href="class_resource_handle.html#a7e190e0e0dd9f41627d47c2be02c540f">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
 , <a class="el" href="structcg_size_f.html#a90a24eea3a826c741abbf4e5ca65d872">cgSizeF</a>
+, <a class="el" href="structcg_size.html#aed235b631faa57683d6c41bfa945578c">cgSize</a>
 </li>
 <li>operator[]()
-: <a class="el" href="classcg_auto_ptr.html#ad78c1f047881eaa5e05aafd8721869ce">cgAutoPtr&lt; _Vt, _Et &gt;</a>
+: <a class="el" href="classcg_auto_ptr.html#ac8f0796b5bee9965a7de03fa946568a9">cgAutoPtr&lt; _Vt, _Et &gt;</a>
+, <a class="el" href="classcg_array.html#a26a16d2a702ee03241685958678ba3ba">cgArray&lt; T &gt;</a>
+, <a class="el" href="classcg_auto_ptr.html#ad78c1f047881eaa5e05aafd8721869ce">cgAutoPtr&lt; _Vt, _Et &gt;</a>
 </li>
 <li>OpNAnd
 : <a class="el" href="classcg_filter_expression.html#ac09c72fb533a3d404b0ed00175b7159ba8544195e2023ece3c7b8ea769af45c00">cgFilterExpression</a>
@@ -1283,6 +1324,12 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 <li>other
 : <a class="el" href="structcg_pool_allocator_1_1rebind.html#a8a71bf70ecf23520fcc5b3774e18fd54">cgPoolAllocator&lt; T &gt;::rebind&lt; U &gt;</a>
 </li>
+<li>otherBody
+: <a class="el" href="structcg_body_collision.html#a5401f1adc84b1a62b1a51b182275e08d">cgBodyCollision</a>
+</li>
+<li>otherNode
+: <a class="el" href="structcg_node_collision.html#ae0bc8cbf49a6a2c05a5722472ae0a531">cgNodeCollision</a>
+</li>
 <li>outerCone
 : <a class="el" href="structcg_particle_emitter_properties.html#aa0b6a6f1db39599e6e91310dc5c5c888">cgParticleEmitterProperties</a>
 </li>
@@ -1331,7 +1378,7 @@ $(document).ready(function(){initNavTree('functions_0x6f.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Feb 27 2014 01:28:16 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:56 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

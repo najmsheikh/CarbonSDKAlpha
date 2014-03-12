@@ -1,9 +1,7 @@
 var structcg_collision_contact =
 [
-    [ "cgCollisionContact", "structcg_collision_contact.html#a7693428ff2b8a8ac75a4975ef434b1a3", null ],
-    [ "CGE_VECTOR_DECLARE", "structcg_collision_contact.html#a50b0dadc4fbbd68fc09160ba0ac819a4", null ],
-    [ "body", "structcg_collision_contact.html#a90545fd99a526a739c47c981f5c5461e", null ],
-    [ "collisionId", "structcg_collision_contact.html#a28cb2b36cd57e07730271d3478087fe8", null ],
-    [ "contactNormal", "structcg_collision_contact.html#a2773f71ac9aa532f50d90495b9099f5b", null ],
-    [ "intersectParam", "structcg_collision_contact.html#aa05367a2266615293d41a8e19a021208", null ]
+    [ "CGE_ARRAY_DECLARE", "structcg_collision_contact.html#ad7901b5997062c8fd3f242401890effd", null ],
+    [ "normal", "structcg_collision_contact.html#afdd61c14c67fee321b8ee3152cce2947", null ],
+    [ "point", "structcg_collision_contact.html#ab5c208d341fcb8bc657e9cee4904275d", null ],
+    [ "speed", "structcg_collision_contact.html#afaaa9d787441aa06219158ef6987d58b", null ]
 ];

@@ -40,8 +40,8 @@ namespace FilterExpression
             BINDSUCCESS( engine->registerObjectProperty( "FilterExpressionIdentifier", "uint64 value", offsetof(cgFilterExpression::Identifier,value) ) );
             
             // Requires array type for the value array methods.
-            BINDSUCCESS( engine->registerObjectType( "FilterExpressionIdentifier[]", sizeof(std::vector<cgFilterExpression::Identifier>), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
-            STDVectorHelper<cgFilterExpression::Identifier>::registerMethods( engine, "FilterExpressionIdentifier[]", "FilterExpressionIdentifier" );
+            ArrayBindHelper<cgFilterExpression::Identifier>::registerType( engine, "FilterExpressionIdentifier[]", "FilterExpressionIdentifier" );
+            ArrayBindHelper<cgFilterExpression::Identifier>::registerMethods( engine, "FilterExpressionIdentifier[]", "FilterExpressionIdentifier" );
 
             ///////////////////////////////////////////////////////////////////////
             // cgFilterExpression (Class)

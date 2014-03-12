@@ -20,7 +20,8 @@ namespace Types
         void declare( cgScriptEngine * engine )
         {
             // Value Types / Structures
-            BINDSUCCESS( engine->registerObjectType( "SceneCollisionContact", sizeof(cgSceneCollisionContact), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
+            BINDSUCCESS( engine->registerObjectType( "SceneRayCastContact", sizeof(cgSceneRayCastContact), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
+            BINDSUCCESS( engine->registerObjectType( "NodeCollision", sizeof(cgNodeCollision), asOBJ_VALUE | asOBJ_APP_CLASS_CDA ) );
 
             // Enumerations
             BINDSUCCESS( engine->registerEnum( "WorldComponentType" ) );
@@ -117,17 +118,30 @@ namespace Types
             BINDSUCCESS( engine->registerEnumValue( "TransformSource", "Navigation", cgTransformSource::Navigation ) );
 
             ///////////////////////////////////////////////////////////////////////
-            // cgSceneCollisionContact (Struct)
+            // cgSceneRayCastContact (Struct)
             ///////////////////////////////////////////////////////////////////////
             // Register the default constructor, destructor and assignment operators.
-            registerDefaultCDA<cgSceneCollisionContact>( engine, "SceneCollisionContact" );
+            registerDefaultCDA<cgSceneRayCastContact>( engine, "SceneRayCastContact" );
 
             // Register properties
-            BINDSUCCESS( engine->registerObjectProperty( "SceneCollisionContact", "ObjectNode @ node"    , offsetof(cgSceneCollisionContact,node) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "SceneCollisionContact", "PhysicsBody @ body"   , offsetof(cgSceneCollisionContact,body) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "SceneCollisionContact", "float intersectParam" , offsetof(cgSceneCollisionContact,intersectParam) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "SceneCollisionContact", "Vector3 contactNormal", offsetof(cgSceneCollisionContact,contactNormal) ) );
-            BINDSUCCESS( engine->registerObjectProperty( "SceneCollisionContact", "int collisionId"      , offsetof(cgSceneCollisionContact,collisionId) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "SceneRayCastContact", "ObjectNode @ node"    , offsetof(cgSceneRayCastContact,node) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "SceneRayCastContact", "PhysicsBody @ body"   , offsetof(cgSceneRayCastContact,body) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "SceneRayCastContact", "float intersectParam" , offsetof(cgSceneRayCastContact,intersectParam) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "SceneRayCastContact", "Vector3 contactNormal", offsetof(cgSceneRayCastContact,contactNormal) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "SceneRayCastContact", "int collisionId"      , offsetof(cgSceneRayCastContact,collisionId) ) );
+
+            ///////////////////////////////////////////////////////////////////////
+            // cgNodeCollision (Struct)
+            ///////////////////////////////////////////////////////////////////////
+            // Register the default constructor, destructor and assignment operators.
+            registerDefaultCDA<cgNodeCollision>( engine, "NodeCollision" );
+
+            // Register properties
+            BINDSUCCESS( engine->registerObjectProperty( "NodeCollision", "ObjectNode @ thisNode" , offsetof(cgNodeCollision,thisNode) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "NodeCollision", "ObjectNode @ otherNode", offsetof(cgNodeCollision,otherNode) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "NodeCollision", "PhysicsBody @ thisBody" , offsetof(cgNodeCollision,thisBody) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "NodeCollision", "PhysicsBody @ otherBody" , offsetof(cgNodeCollision,otherBody) ) );
+            BINDSUCCESS( engine->registerObjectProperty( "NodeCollision", "CollisionContact[] contacts", offsetof(cgNodeCollision,contacts) ) );
         }
 
     }; // End Class : Package

@@ -294,7 +294,7 @@ void cgRagdollController::constructHierarchy( cgObjectNode * currentNode, cgInt 
 
     // Iterate through the shape sub elements and construct a list
     // of matching physics shape objects.
-    std::vector<cgPhysicsShape*> physicsShapes;
+    cgArray<cgPhysicsShape*> physicsShapes;
     for ( size_t i = 0; i < objectShapes.size(); ++i )
     {
         cgPhysicsShape * newShape = ((cgCollisionShapeElement*)objectShapes[i])->generatePhysicsShape( mWorld );

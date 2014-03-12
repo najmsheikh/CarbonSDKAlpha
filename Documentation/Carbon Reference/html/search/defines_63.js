@@ -1,11 +1,13 @@
 var searchData=
 [
   ['cg_5fnull',['CG_NULL',['../cg_base_types_8h.html#ae28f568db83e03f77e0d1f3d96b89449',1,'cgBaseTypes.h']]],
+  ['cgarray_5fcapacitygrowthfactor',['CGARRAY_CAPACITYGROWTHFACTOR',['../cg_array_8h.html#a89ee273c83a492099f3b089844ea9712',1,'cgArray.h']]],
   ['cgassert',['cgAssert',['../cg_a_p_i_8h.html#ab7940492bf4ec3b42abfeea0ce20bafc',1,'cgAPI.h']]],
   ['cgassertex',['cgAssertEx',['../cg_a_p_i_8h.html#a201e4376477297b3db8fe044d4f42312',1,'cgAPI.h']]],
   ['cgdebugsource',['cgDebugSource',['../cg_base_types_8h.html#a8ac4e35712c99fbc6b12cbdcb2099969',1,'cgBaseTypes.h']]],
   ['cgdecomposeversion',['cgDecomposeVersion',['../cg_a_p_i_8h.html#afc4b6ecea2a16bc0e88f1cbb07ed2383',1,'cgAPI.h']]],
   ['cge_5fapi',['CGE_API',['../cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741',1,'cgAPI.h']]],
+  ['cge_5farray_5fdeclare',['CGE_ARRAY_DECLARE',['../cg_a_p_i_8h.html#a2ab94e67afc0cefe64f358fbde413ecc',1,'cgAPI.h']]],
   ['cge_5fdeque_5falloc_5fdeclare',['CGE_DEQUE_ALLOC_DECLARE',['../cg_a_p_i_8h.html#ad5a93d9a6379fcdfa5a4a9de1f1c2713',1,'cgAPI.h']]],
   ['cge_5fdeque_5fdeclare',['CGE_DEQUE_DECLARE',['../cg_a_p_i_8h.html#a2116c40856bc241d908154c4064cf1f3',1,'cgAPI.h']]],
   ['cge_5fdx9_5frender_5fsupport',['CGE_DX9_RENDER_SUPPORT',['../cg_config_8h.html#a3ebe5bcf2c5093c0cee292ac7b7cfb7f',1,'cgConfig.h']]],

@@ -1,7 +1,9 @@
 var cg_physics_types_8h =
 [
     [ "cgRigidBodyCreateParams", "structcg_rigid_body_create_params.html", "structcg_rigid_body_create_params" ],
+    [ "cgRayCastContact", "structcg_ray_cast_contact.html", "structcg_ray_cast_contact" ],
     [ "cgCollisionContact", "structcg_collision_contact.html", "structcg_collision_contact" ],
+    [ "cgBodyCollision", "structcg_body_collision.html", "structcg_body_collision" ],
     [ "_CGE_CGPHYSICSTYPES_H_", "cg_physics_types_8h.html#af80cc762e30f77f9fc7c1bb6ad563420", null ],
     [ "Base", "cg_physics_types_8h.html#afcd43a080fcdb8431c9b824310557921", [
       [ "None", "cg_physics_types_8h.html#afcd43a080fcdb8431c9b824310557921ac7228a5fe6563c3cc7906dae5bfd674c", null ],

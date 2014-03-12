@@ -79,7 +79,7 @@ protected:
         cgInt16             frameIndex;             // The index into the billboard buffer's frame array for this character
     
     }; // End Struct CharDesc
-    CGE_VECTOR_DECLARE(CharDesc*, CharacterArray)
+    CGE_ARRAY_DECLARE(CharDesc*, CharacterArray)
 
     // Font data may spill over onto multiple pages. This structure contains the page definition.
     struct FontSetPage
@@ -96,7 +96,7 @@ protected:
         } // End Constructor
 
     }; // End Struct FontSetPage
-    CGE_VECTOR_DECLARE(FontSetPage*, PageArray)
+    CGE_ARRAY_DECLARE(FontSetPage*, PageArray)
 
     //-------------------------------------------------------------------------
     // Protected Methods
@@ -157,7 +157,7 @@ public:
         cgRect   displayBounds;
         cgRect   bounds;
     };
-    CGE_VECTOR_DECLARE(TextChar, TextCharArray)
+    CGE_ARRAY_DECLARE(TextChar, TextCharArray)
 
     // Structure containing prepared data for each line of text to render
     struct TextLine
@@ -218,7 +218,7 @@ private:
         cgUInt32 firstCharacter;
         cgUInt32 lastCharacter;
     };
-    CGE_VECTOR_DECLARE(LineRange, LineRangeArray)
+    CGE_ARRAY_DECLARE(LineRange, LineRangeArray)
 
     //-------------------------------------------------------------------------
     // Private Variables

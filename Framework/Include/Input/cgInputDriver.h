@@ -122,8 +122,9 @@ public:
     cgConfigResult::Base        loadDefaultConfig       ( );
     bool                        saveConfig              ( const cgString & fileName );
     InitConfig                  getConfig               ( ) const;
-    bool                        initialize              ( cgAppWindow * focusWindow, bool windowed = true );
+    bool                        initialize              ( cgAppWindow * focusWindow, bool windowed = true, bool foregroundOnly = true );
     void                        poll                    ( );
+    void                        poll                    ( cgAppWindow * focusWndOverride );
     bool                        wasKeyPressed           ( cgInt32 keyCode ) const;
     bool                        isKeyPressed            ( cgInt32 keyCode ) const;
     bool                        isKeyPressed            ( cgInt32 keyCode, bool wasNotPressed ) const;
@@ -133,6 +134,7 @@ public:
     void                        setMouseMode            ( cgMouseHandlerMode::Base mode );
     cgMouseHandlerMode::Base    getMouseMode            ( ) const;
     const cgPoint             & getCursorPosition       ( ) const;
+    void                        resetInputStates        ( );
 
     // Object query functions
     bool                        isInitialized           ( ) const { return mInitialized; }
@@ -173,6 +175,8 @@ private:
     void                onKeyDown               ( cgInt32 keyCode, cgUInt32 modifiers );
     void                onKeyUp                 ( cgInt32 keyCode, cgUInt32 modifiers );
     void                onKeyPressed            ( cgInt32 keyCode, cgUInt32 modifiers );
+    void                processMouseState       ( );
+    void                processKeyboardState    ( bool useImmediateResolve, cgUInt32 currentTime );
 
     //-------------------------------------------------------------------------
     // Private Static Variables.

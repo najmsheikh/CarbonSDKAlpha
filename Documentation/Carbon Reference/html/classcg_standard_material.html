@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -156,6 +156,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a37af959e89c444ec5c7e5a65db5c6b10"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#a37af959e89c444ec5c7e5a65db5c6b10">queryReferenceType</a> (const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;type) const </td></tr>
 <tr class="memdesc:a37af959e89c444ec5c7e5a65db5c6b10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows the application to determine if the inheritance hierarchy supports a particular interface.  <a href="#a37af959e89c444ec5c7e5a65db5c6b10"></a><br/></td></tr>
 <tr class="separator:a37af959e89c444ec5c7e5a65db5c6b10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe2e12b67bf8db510eaa266ab744e95a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#afe2e12b67bf8db510eaa266ab744e95a">processMessage</a> (<a class="el" href="classcg_message.html">cgMessage</a> *pMessage)</td></tr>
+<tr class="memdesc:afe2e12b67bf8db510eaa266ab744e95a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process any messages sent to us from other objects, or other parts of the system via the reference messaging system (<a class="el" href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat...">cgReference</a>).  <a href="#afe2e12b67bf8db510eaa266ab744e95a"></a><br/></td></tr>
+<tr class="separator:afe2e12b67bf8db510eaa266ab744e95a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad60413417f462c8571963566e5c8b8b3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#ad60413417f462c8571963566e5c8b8b3">onComponentDeleted</a> ()</td></tr>
 <tr class="memdesc:ad60413417f462c8571963566e5c8b8b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">When the component is removed from the world, all of its rows needs to be removed from the world database. This virtual method allows it to do so.  <a href="#ad60413417f462c8571963566e5c8b8b3"></a><br/></td></tr>
 <tr class="separator:ad60413417f462c8571963566e5c8b8b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -435,9 +438,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4089bc9fc24b2e0bcc96376abd6c041c inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a4089bc9fc24b2e0bcc96376abd6c041c">deleteReference</a> ()</td></tr>
 <tr class="memdesc:a4089bc9fc24b2e0bcc96376abd6c041c inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force the deletion of this reference target.  <a href="#a4089bc9fc24b2e0bcc96376abd6c041c"></a><br/></td></tr>
 <tr class="separator:a4089bc9fc24b2e0bcc96376abd6c041c inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c78842232c529fe509dedebb1cecf6b inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#a2c78842232c529fe509dedebb1cecf6b">processMessage</a> (<a class="el" href="classcg_message.html">cgMessage</a> *message)</td></tr>
-<tr class="memdesc:a2c78842232c529fe509dedebb1cecf6b inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process any messages sent to us from other objects, or other parts of the system via the reference messaging system (<a class="el" href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat...">cgReference</a>).  <a href="#a2c78842232c529fe509dedebb1cecf6b"></a><br/></td></tr>
-<tr class="separator:a2c78842232c529fe509dedebb1cecf6b inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_reference.html#abc11be6582c83be070816daf60d96781">isInternalReference</a> () const </td></tr>
 <tr class="memdesc:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if this reference is either an internal or serialized reference.  <a href="#abc11be6582c83be070816daf60d96781"></a><br/></td></tr>
 <tr class="separator:abc11be6582c83be070816daf60d96781 inherit pub_methods_classcg_reference"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -512,9 +512,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a8d3f62f7e9209da4ec69feacbc2abd21"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#a8d3f62f7e9209da4ec69feacbc2abd21">onSamplerAdded</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;name, <a class="el" href="classcg_sampler.html">cgSampler</a> *sampler)</td></tr>
 <tr class="memdesc:a8d3f62f7e9209da4ec69feacbc2abd21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update cached member variables based on the newly added sampler.  <a href="#a8d3f62f7e9209da4ec69feacbc2abd21"></a><br/></td></tr>
 <tr class="separator:a8d3f62f7e9209da4ec69feacbc2abd21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a750453bd988224387d6ee409b86b7cb8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#a750453bd988224387d6ee409b86b7cb8">onSamplerRemoved</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;name)</td></tr>
-<tr class="memdesc:a750453bd988224387d6ee409b86b7cb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update cached member variables based on the removed sampler.  <a href="#a750453bd988224387d6ee409b86b7cb8"></a><br/></td></tr>
-<tr class="separator:a750453bd988224387d6ee409b86b7cb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8a2e86e58f1f1dfd3b9d152af14452a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#ae8a2e86e58f1f1dfd3b9d152af14452a">onSamplerRemoved</a> (const <a class="el" href="classcg_string.html">cgString</a> &amp;name, <a class="el" href="classcg_sampler.html">cgSampler</a> *sampler)</td></tr>
+<tr class="memdesc:ae8a2e86e58f1f1dfd3b9d152af14452a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update cached member variables based on the removed sampler.  <a href="#ae8a2e86e58f1f1dfd3b9d152af14452a"></a><br/></td></tr>
+<tr class="separator:ae8a2e86e58f1f1dfd3b9d152af14452a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15f21b727a5444e5eed176abd7901c0c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#a15f21b727a5444e5eed176abd7901c0c">serializeMaterial</a> ()</td></tr>
 <tr class="memdesc:a15f21b727a5444e5eed176abd7901c0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write or update the material data stored in the database.  <a href="#a15f21b727a5444e5eed176abd7901c0c"></a><br/></td></tr>
 <tr class="separator:a15f21b727a5444e5eed176abd7901c0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1584,7 +1584,7 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a750453bd988224387d6ee409b86b7cb8"></a>
+<a class="anchor" id="ae8a2e86e58f1f1dfd3b9d152af14452a"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1595,8 +1595,18 @@ Static Protected Attributes</h2></td></tr>
           <td class="memname">void cgStandardMaterial::onSamplerRemoved </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classcg_string.html">cgString</a> &amp;&#160;</td>
-          <td class="paramname"><em>strName</em></td><td>)</td>
+          <td class="paramname"><em>strName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="classcg_sampler.html">cgSampler</a> *&#160;</td>
+          <td class="paramname"><em>pSampler</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -1632,6 +1642,34 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Prepare any cached world queries as necessary. </p>
+
+</div>
+</div>
+<a class="anchor" id="afe2e12b67bf8db510eaa266ab744e95a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgStandardMaterial::processMessage </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_message.html">cgMessage</a> *&#160;</td>
+          <td class="paramname"><em>pMessage</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Process any messages sent to us from other objects, or other parts of the system via the reference messaging system (<a class="el" href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat...">cgReference</a>). </p>
+
+<p>Reimplemented from <a class="el" href="classcg_reference.html#a2c78842232c529fe509dedebb1cecf6b">cgReference</a>.</p>
 
 </div>
 </div>
@@ -2984,7 +3022,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_standard_material.html">cgStandardMaterial</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:28:11 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:51 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

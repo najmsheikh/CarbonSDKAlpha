@@ -3,6 +3,7 @@ var cg_world_8h =
     [ "cgWorldEventArgs", "structcg_world_event_args.html", "structcg_world_event_args" ],
     [ "cgSceneUpdateEventArgs", "structcg_scene_update_event_args.html", "structcg_scene_update_event_args" ],
     [ "cgSceneLoadEventArgs", "structcg_scene_load_event_args.html", "structcg_scene_load_event_args" ],
+    [ "cgSceneUnloadEventArgs", "structcg_scene_unload_event_args.html", "structcg_scene_unload_event_args" ],
     [ "cgWorldAssetUpdateEventArgs", "structcg_world_asset_update_event_args.html", "structcg_world_asset_update_event_args" ],
     [ "cgWorldEventListener", "classcg_world_event_listener.html", "classcg_world_event_listener" ],
     [ "cgWorld", "classcg_world.html", "classcg_world" ],

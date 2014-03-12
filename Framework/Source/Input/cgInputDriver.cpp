@@ -57,9 +57,10 @@ cgInputDriver::cgInputDriver() : cgReference( cgReferenceManager::generateIntern
     mDI               = CG_NULL;
     mDIKeyboard       = CG_NULL;
     mDIMouse          = CG_NULL;
-    mMousePosition.x   = 0;
-    mMousePosition.y   = 0;
-    mMouseMode         = cgMouseHandlerMode::Cursor;
+    mFocusWnd         = CG_NULL;
+    mMousePosition.x  = 0;
+    mMousePosition.y  = 0;
+    mMouseMode        = cgMouseHandlerMode::Cursor;
 
     // Clear any memory as required
     memset( &mConfig, 0, sizeof(InitConfig) );
@@ -345,7 +346,7 @@ cgMouseHandlerMode::Base cgInputDriver::getMouseMode( ) const
 /// Initialize the input driver.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgInputDriver::initialize( cgAppWindow * pFocusWnd, bool bWindowed )
+bool cgInputDriver::initialize( cgAppWindow * pFocusWnd, bool bWindowed, bool bForegroundOnly /* = true */ )
 {
     HRESULT  hRet;
     cgUInt32 nCoopFlags = 0;
@@ -376,8 +377,9 @@ bool cgInputDriver::initialize( cgAppWindow * pFocusWnd, bool bWindowed )
         nCoopFlags = DISCL_NONEXCLUSIVE;
 
     cgToDo( "CarbonWE", "Web engine fails to acquire input in Google Chrome when using foreground (background works)." );
-    // Only process input if the window has focus
-    nCoopFlags |= DISCL_FOREGROUND;
+    // Only process input if the window has focus?
+    if ( bForegroundOnly )
+        nCoopFlags |= DISCL_FOREGROUND;
 
     // Obtain an interface to the system mouse device.
     hRet = mDI->CreateDevice( GUID_SysMouse, &mDIMouse, CG_NULL );
@@ -486,16 +488,62 @@ bool cgInputDriver::initialize( cgAppWindow * pFocusWnd, bool bWindowed )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : resetInputStates ()
+/// <summary>
+/// Allows the application to reset the state of all buttons / keys, and 
+/// trigger the appropriate 'release' events.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgInputDriver::resetInputStates( )
+{
+    // Backup the current mouse button states
+    memcpy( mPrevMouseButtonStates, mMouseButtonStates, sizeof( mMouseButtonStates ) );
+
+    // Copy old key state data into "previous state" buffer
+    memcpy( mPrevKeyStates, mKeyStates, sizeof(mKeyStates) );
+
+    // Clear the state arrays
+    memset( mMouseButtonStates, 0, sizeof(mMouseButtonStates) );
+    memset( mKeyStates, 0, sizeof(mKeyStates) );
+
+    // Flush the mouse movement state.
+    if ( mDIMouse )
+    {
+        DIMOUSESTATE2 MouseState;
+        mDIMouse->GetDeviceState( sizeof(MouseState), &MouseState );
+    
+    } // End if mouse valid
+
+    // Process
+    processMouseState();
+    processKeyboardState(true, timeGetTime());
+}
+
+//-----------------------------------------------------------------------------
 //  Name : poll ()
 /// <summary>
 /// Poll all registered input devices and retrieve their states.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgInputDriver::poll(  )
+void cgInputDriver::poll( )
+{
+    poll( CG_NULL );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : poll ()
+/// <summary>
+/// Poll all registered input devices and retrieve their states.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgInputDriver::poll( cgAppWindow * focusWndOverride )
 {
     HRESULT         hRet;
     DIMOUSESTATE2   MouseState;
-    cgUInt32        nTime, nModifiers;
+
+    // Use supplied focus window if supplied.
+    if ( !focusWndOverride )
+        focusWndOverride = mFocusWnd;
 
     // Poll mouse state
     if ( mDIMouse )
@@ -533,9 +581,9 @@ void cgInputDriver::poll(  )
                 Offset.y = (cgFloat)MouseState.lY * mConfig.mouseSensitivity;
 
                 // Retrieve the client rectangle of our focus window and the current cursor position
-                rcClient = mFocusWnd->getClientRect( );
+                rcClient = focusWndOverride->getClientRect( );
                 ::GetCursorPos( (POINT*)&ptClient );
-                ptClient = mFocusWnd->screenToClient( ptClient );
+                ptClient = focusWndOverride->screenToClient( ptClient );
 
                 // Store the current position of the cursor in client space 
                 // when in cursor mode.
@@ -555,27 +603,14 @@ void cgInputDriver::poll(  )
 
             } // End if mouse wheel moved
 
-            // Any mouse states changed?
-            for ( cgInt32 i = 0; i < 5; ++i )
-            {
-                // Changed?
-                if ( (mMouseButtonStates[i] & 0x80) != (mPrevMouseButtonStates[i] & 0x80) )
-                {
-                    if ( mMouseButtonStates[i] & 0x80 )
-                        onMouseButtonDown( (cgInt32)mouseButtonIdxToEnum(i), mMousePosition );
-                    else
-                        onMouseButtonUp( (cgInt32)mouseButtonIdxToEnum(i), mMousePosition );
-
-                } // End if state of button changed
-
-            } // Next Mouse Button
+            processMouseState();
 
         } // End if success
 
     } // End if mouse available
 
     // Retrieve current time reference for repeat rate processing
-    nTime = timeGetTime();
+    cgUInt32 nTime = timeGetTime();
     
     // Poll keyboard state
     if ( mDIKeyboard )
@@ -646,7 +681,7 @@ void cgInputDriver::poll(  )
                     mKeyStates[ pData[i].dwOfs ] = (cgUInt8)pData[i].dwData;
 
                     // Build 'modifier' key states
-                    nModifiers = 0;
+                    cgUInt32 nModifiers = 0;
                     if ( isKeyPressed( cgKeys::LControl ) ) nModifiers |= cgModifierKeys::LeftControl;
                     if ( isKeyPressed( cgKeys::RControl ) ) nModifiers |= cgModifierKeys::RightControl;
                     if ( isKeyPressed( cgKeys::LShift   ) ) nModifiers |= cgModifierKeys::LeftShift;
@@ -715,53 +750,25 @@ void cgInputDriver::poll(  )
 
         } // End if immediate
 
-        // Do we want to use the immediate resolve process?
-        if ( useImmediateResolve )
-        {
-            // Build 'modifier' key states
-            nModifiers = 0;
-            if ( isKeyPressed( cgKeys::LControl ) ) nModifiers |= cgModifierKeys::LeftControl;
-            if ( isKeyPressed( cgKeys::RControl ) ) nModifiers |= cgModifierKeys::RightControl;
-            if ( isKeyPressed( cgKeys::LShift   ) ) nModifiers |= cgModifierKeys::LeftShift;
-            if ( isKeyPressed( cgKeys::RShift   ) ) nModifiers |= cgModifierKeys::RightShift;
-            if ( isKeyPressed( cgKeys::LAlt     ) ) nModifiers |= cgModifierKeys::LeftAlt;
-            if ( isKeyPressed( cgKeys::RAlt     ) ) nModifiers |= cgModifierKeys::RightAlt;
+        processKeyboardState( useImmediateResolve, nTime );
 
-            // Any key states changed?
-            for ( cgInt32 i = 0; i < 256; ++i )
-            {
-                // Changed?
-                if ( (mKeyStates[i] & 0x80) != (mPrevKeyStates[i] & 0x80) )
-                {
-                    if ( mKeyStates[i] & 0x80 )
-                    {
-                        onKeyDown( i, nModifiers );
-                        onKeyPressed( i, nModifiers );
+    } // End if keyboard available
+}
 
-                        // Store information about repeat onKeyPressed events that need to be sent
-                        KeyRepeatInfo Repeat;
-                        Repeat.timePressed       = nTime;
-                        Repeat.timeLastSignalled = nTime;
-                        mKeyRepeatData[ i ]      = Repeat;
-
-                    } // End if key was pressed
-                    else
-                    {
-                        onKeyUp( i, nModifiers );
-                        
-                        // Remove from repeat data list
-                        mKeyRepeatData.erase( i );
-
-                    } // End if key was released
-
-                } // End if state of button changed
-
-            } // Next Key
-
-        } // End if not resolving.
-
-        // Build current 'control' key states for repeat processing
-        nModifiers = 0;
+//-----------------------------------------------------------------------------
+//  Name : processKeyboardState () (Private)
+/// <summary>
+/// Process the state of the keyboard as it currently exists after the
+/// state array has been updated.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgInputDriver::processKeyboardState( bool useImmediateResolve, cgUInt32 currentTime )
+{
+    // Do we want to use the immediate resolve process?
+    if ( useImmediateResolve )
+    {
+        // Build 'modifier' key states
+        cgUInt32 nModifiers = 0;
         if ( isKeyPressed( cgKeys::LControl ) ) nModifiers |= cgModifierKeys::LeftControl;
         if ( isKeyPressed( cgKeys::RControl ) ) nModifiers |= cgModifierKeys::RightControl;
         if ( isKeyPressed( cgKeys::LShift   ) ) nModifiers |= cgModifierKeys::LeftShift;
@@ -769,36 +776,102 @@ void cgInputDriver::poll(  )
         if ( isKeyPressed( cgKeys::LAlt     ) ) nModifiers |= cgModifierKeys::LeftAlt;
         if ( isKeyPressed( cgKeys::RAlt     ) ) nModifiers |= cgModifierKeys::RightAlt;
 
-        // Iterate through the repeat messages that need to be sent.
-        KeyRepeatMap::iterator itRepeat;
-        for ( itRepeat = mKeyRepeatData.begin(); itRepeat != mKeyRepeatData.end(); ++itRepeat )
+        // Any key states changed?
+        for ( cgInt32 i = 0; i < 256; ++i )
         {
-            KeyRepeatInfo & Info  = itRepeat->second;
-
-            // Delay expired?
-            if ( nTime > (Info.timePressed + mConfig.keyRepeatDelay) )
+            // Changed?
+            if ( (mKeyStates[i] & 0x80) != (mPrevKeyStates[i] & 0x80) )
             {
-                // Has the first 'post-delay' message been sent yet?
-                if ( Info.timeLastSignalled == Info.timePressed )
+                if ( mKeyStates[i] & 0x80 )
                 {
-                    // Send the message
-                    onKeyPressed( itRepeat->first, nModifiers );
-                    Info.timeLastSignalled += mConfig.keyRepeatDelay;
-                
-                } // End if post-delay message not sent
-                else if ( nTime > (Info.timeLastSignalled + mConfig.keyRepeatRate) )
-                {
-                    // Send the message
-                    onKeyPressed( itRepeat->first, nModifiers );
-                    Info.timeLastSignalled += mConfig.keyRepeatRate;
+                    onKeyDown( i, nModifiers );
+                    onKeyPressed( i, nModifiers );
 
-                } // End if apply repeat
+                    // Store information about repeat onKeyPressed events that need to be sent
+                    KeyRepeatInfo Repeat;
+                    Repeat.timePressed       = currentTime;
+                    Repeat.timeLastSignalled = currentTime;
+                    mKeyRepeatData[ i ]      = Repeat;
+
+                } // End if key was pressed
+                else
+                {
+                    onKeyUp( i, nModifiers );
+                    
+                    // Remove from repeat data list
+                    mKeyRepeatData.erase( i );
+
+                } // End if key was released
+
+            } // End if state of button changed
+
+        } // Next Key
+
+    } // End if not resolving.
+
+    // Build current 'control' key states for repeat processing
+    cgUInt32 nModifiers = 0;
+    if ( isKeyPressed( cgKeys::LControl ) ) nModifiers |= cgModifierKeys::LeftControl;
+    if ( isKeyPressed( cgKeys::RControl ) ) nModifiers |= cgModifierKeys::RightControl;
+    if ( isKeyPressed( cgKeys::LShift   ) ) nModifiers |= cgModifierKeys::LeftShift;
+    if ( isKeyPressed( cgKeys::RShift   ) ) nModifiers |= cgModifierKeys::RightShift;
+    if ( isKeyPressed( cgKeys::LAlt     ) ) nModifiers |= cgModifierKeys::LeftAlt;
+    if ( isKeyPressed( cgKeys::RAlt     ) ) nModifiers |= cgModifierKeys::RightAlt;
+
+    // Iterate through the repeat messages that need to be sent.
+    KeyRepeatMap::iterator itRepeat;
+    for ( itRepeat = mKeyRepeatData.begin(); itRepeat != mKeyRepeatData.end(); ++itRepeat )
+    {
+        KeyRepeatInfo & Info  = itRepeat->second;
+
+        // Delay expired?
+        if ( currentTime > (Info.timePressed + mConfig.keyRepeatDelay) )
+        {
+            // Has the first 'post-delay' message been sent yet?
+            if ( Info.timeLastSignalled == Info.timePressed )
+            {
+                // Send the message
+                onKeyPressed( itRepeat->first, nModifiers );
+                Info.timeLastSignalled += mConfig.keyRepeatDelay;
             
-            } // End if delay has expired
+            } // End if post-delay message not sent
+            else if ( currentTime > (Info.timeLastSignalled + mConfig.keyRepeatRate) )
+            {
+                // Send the message
+                onKeyPressed( itRepeat->first, nModifiers );
+                Info.timeLastSignalled += mConfig.keyRepeatRate;
 
-        } // Next key
+            } // End if apply repeat
+        
+        } // End if delay has expired
 
-    } // End if keyboard available
+    } // Next key
+
+}
+
+//-----------------------------------------------------------------------------
+//  Name : processMouseState () (Private)
+/// <summary>
+/// Process the state of the mouse as it currently exists after the
+/// state array has been updated.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgInputDriver::processMouseState( )
+{
+    // Any mouse states changed?
+    for ( cgInt32 i = 0; i < 5; ++i )
+    {
+        // Changed?
+        if ( (mMouseButtonStates[i] & 0x80) != (mPrevMouseButtonStates[i] & 0x80) )
+        {
+            if ( mMouseButtonStates[i] & 0x80 )
+                onMouseButtonDown( (cgInt32)mouseButtonIdxToEnum(i), mMousePosition );
+            else
+                onMouseButtonUp( (cgInt32)mouseButtonIdxToEnum(i), mMousePosition );
+
+        } // End if state of button changed
+
+    } // Next Mouse Button
 }
 
 //-----------------------------------------------------------------------------

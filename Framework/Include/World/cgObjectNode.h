@@ -223,6 +223,7 @@ public:
 
     // Behaviors
     cgInt32                         addBehavior             ( cgObjectBehavior * behavior );
+    cgInt32                         addBehavior             ( const cgString & behavior );
     bool                            removeBehavior          ( cgObjectBehavior * behavior, bool destroy = true );
     bool                            removeBehavior          ( cgInt32 index, bool destroy = true );
     cgObjectBehavior              * getBehavior             ( cgInt32 index );
@@ -292,6 +293,7 @@ public:
     // Visibility
     virtual void                    showNode                ( bool visible = true, bool updateChildren = false );
     virtual bool                    isRenderable            ( ) const;
+    virtual bool                    isVisible               ( ) const;
     virtual bool                    isShadowCaster          ( ) const;
     virtual bool                    registerVisibility      ( cgVisibilitySet * visibilityData );
     virtual void                    unregisterVisibility    ( cgVisibilitySet * visibilityData );
@@ -314,8 +316,6 @@ public:
     virtual cgPhysicsController   * setPhysicsController    ( cgPhysicsController * controller, bool destroyOld );
     virtual cgPhysicsController   * getPhysicsController    ( );
     virtual bool                    supportsInputChannels	( ) const;
-    virtual void                    hitByObject             ( cgObjectNode * node, const cgVector3 & hitPoint, const cgVector3 & surfaceNormal );
-    virtual void                    objectHit               ( cgObjectNode * node, const cgVector3 & hitPoint, const cgVector3 & surfaceNormal );
 
     // Rendering
     virtual bool                    render                  ( cgCameraNode * camera, cgVisibilitySet * visibilityData );
@@ -360,7 +360,10 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgPhysicsBodyEventListener)
     //-------------------------------------------------------------------------
-    virtual void                    onPhysicsBodyTransformed    ( cgPhysicsBody * sender, cgPhysicsBodyTransformedEventArgs * e );
+    virtual void                    onPhysicsBodyTransformed        ( cgPhysicsBody * sender, cgPhysicsBodyTransformedEventArgs * e );
+    virtual void                    onPhysicsBodyCollisionBegin     ( cgPhysicsBody * sender, cgPhysicsBodyCollisionEventArgs * e );
+    virtual void                    onPhysicsBodyCollisionContinue  ( cgPhysicsBody * sender, cgPhysicsBodyCollisionEventArgs * e );
+    virtual void                    onPhysicsBodyCollisionEnd       ( cgPhysicsBody * sender, cgPhysicsBodyCollisionEventArgs * e );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgNavigationAgentEventListener)
@@ -454,7 +457,7 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Structures, Typedefs & Enumerations
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE      (cgObjectBehavior*, BehaviorArray)
+    CGE_ARRAY_DECLARE       (cgObjectBehavior*, BehaviorArray)
     CGE_UNORDEREDMAP_DECLARE(cgInt16, cgFloat, InputChannelMap)
 
     //-------------------------------------------------------------------------
@@ -463,6 +466,7 @@ protected:
     void                        prepareQueries                  ( );
     bool                        shouldSerialize                 ( ) const;
     bool                        serializeUpdateRate             ( );
+    bool                        serializeFlags                  ( );
     
     //-------------------------------------------------------------------------
     // Protected Virtual Methods
@@ -558,6 +562,8 @@ protected:
     static cgWorldQuery mNodeUpdateGroup;
     /// <summary>Node update physics properties.</summary>
     static cgWorldQuery mNodeUpdatePhysicsProperties;
+    /// <summary>Node visibility.</summary>
+    static cgWorldQuery mNodeUpdateVisibility;
     /// <summary>Node update processing interval (update rate).</summary>
     static cgWorldQuery mNodeUpdateUpdateRate;
     /// <summary>Update the Id of the node being targeted by this one.</summary>

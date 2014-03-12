@@ -101,7 +101,7 @@ private:
     // Private Typedefs, Structures and Enumerations
     //-------------------------------------------------------------------------
     CGE_UNORDEREDMAP_DECLARE(cgString, cgString, ProtocolMap)
-    CGE_VECTOR_DECLARE      (cgDataPackage*, PackageArray)
+    CGE_ARRAY_DECLARE       (cgDataPackage*, PackageArray)
     
     //-------------------------------------------------------------------------
     // Private Static Functions

@@ -42,6 +42,7 @@ class cgPhysicsController;
 // Newton Game Dynamics.
 struct NewtonWorld;
 struct NewtonBody;
+struct NewtonJoint;
 
 //-----------------------------------------------------------------------------
 // Event Argument Definitions
@@ -118,11 +119,11 @@ public:
     const cgVector3   & getDefaultGravity       ( ) const;
 
     // Queries
-    bool                rayCastClosest          ( const cgVector3 & from, const cgVector3 & to, cgCollisionContact & closestContact );
-    bool                rayCastAll              ( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgCollisionContact::Array & contacts );
+    bool                rayCastClosest          ( const cgVector3 & from, const cgVector3 & to, cgRayCastContact & closestContact );
+    bool                rayCastAll              ( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgRayCastContact::Array & contacts );
     void                rayCast                 ( const cgVector3 & from, const cgVector3 & to, RayCastPreFilterCallback preFilter, RayCastFilterCallback filter, void * userData );
-    //bool                convexCastClosest   ( const cgVector3 & from, const cgVector3 & to, cgCollisionContact & closestContact );
-    //bool                convexCastAll       ( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgCollisionContact::Array & contacts );
+    //bool                convexCastClosest   ( const cgVector3 & from, const cgVector3 & to, cgRayCastContact & closestContact );
+    //bool                convexCastAll       ( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgRayCastContact::Array & contacts );
 
     // Internal utilities
     NewtonWorld       * getInternalWorld        ( );
@@ -162,13 +163,6 @@ public:
 
 protected:
     //-------------------------------------------------------------------------
-    // Protected Typedefs
-    //-------------------------------------------------------------------------
-    CGE_SET_DECLARE(cgPhysicsEntity*, EntitySet )
-    CGE_SET_DECLARE(cgPhysicsController*, ControllerSet )
-    CGE_MAP_DECLARE(cgPhysicsShapeCacheKey, cgPhysicsShape*, PhysicsShapeCacheMap )
-
-    //-------------------------------------------------------------------------
     // Protected Structures
     //-------------------------------------------------------------------------
     struct RayCastFilterCallbackData
@@ -177,6 +171,34 @@ protected:
         RayCastPreFilterCallback preFilterCallback;
         void * userData;
     };
+
+    struct CollisionData
+    {
+        cgBodyCollision collision0;
+        cgBodyCollision collision1;
+        bool            processed;
+    };
+
+    struct ContactPair
+    {
+        // Constructor
+        ContactPair( const NewtonBody * _body0, const NewtonBody * _body1 ) :
+            body0( _body0 ), body1( _body1 ) {}
+        
+        // Public Variables
+        const NewtonBody * body0;
+        const NewtonBody * body1;
+    
+    }; // End Struct MaterialKey
+    friend bool CGE_API operator < ( const ContactPair&, const ContactPair& );
+
+    //-------------------------------------------------------------------------
+    // Protected Typedefs
+    //-------------------------------------------------------------------------
+    CGE_SET_DECLARE(cgPhysicsEntity*, EntitySet )
+    CGE_SET_DECLARE(cgPhysicsController*, ControllerSet )
+    CGE_MAP_DECLARE(cgPhysicsShapeCacheKey, cgPhysicsShape*, PhysicsShapeCacheMap )
+    CGE_MAP_DECLARE(ContactPair, CollisionData*, CollisionPairMap )
 
     //-------------------------------------------------------------------------
     // Protected Methods
@@ -187,6 +209,7 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Static Functions
     //-------------------------------------------------------------------------
+    static void             contactCallback     ( const NewtonJoint* contact, cgFloat timestep, cgInt threadIndex );
     static cgFloat          rayCastClosestFilter( const NewtonBody* const body, const cgFloat * const hitNormal, cgInt collisionId, void* const userData, cgFloat intersectParam );
     static cgFloat          rayCastAllFilter    ( const NewtonBody* const body, const cgFloat * const hitNormal, cgInt collisionId, void* const userData, cgFloat intersectParam );
     static cgFloat          rayCastFilter       ( const NewtonBody* const body, const cgFloat * const hitNormal, cgInt collisionId, void* const userData, cgFloat intersectParam );
@@ -197,6 +220,7 @@ protected:
     //-------------------------------------------------------------------------
     cgPhysicsEngine       * mEngine;            // Parent physics engine to which this world belongs.
     NewtonWorld           * mWorld;             // Newton's main physics world interface.
+    CollisionPairMap        mCollisionPairs;    // A map containing information about all currently active body collisions / contacts.
     cgDouble                mStepAccumulator;   // Accumulated time for stepping the physics simulation.
     cgDouble                mToPhysicsScale;    // Conversion scalar designed to convert values from game scale to physics system scale.
     cgDouble                mFromPhysicsScale;  // Conversion scalar designed to convert values from physics system scale to game scale.
@@ -206,5 +230,10 @@ protected:
     cgVector3               mDefaultGravity;    // Default gravity force for this physics world. Can be overridden by individual bodies.
     cgInt                   mDefaultMaterialIds[ cgDefaultPhysicsMaterialGroup::Count ];
 };
+
+//-----------------------------------------------------------------------------
+// Global Operators
+//-----------------------------------------------------------------------------
+inline bool CGE_API operator < (const cgPhysicsWorld::ContactPair & key1, const cgPhysicsWorld::ContactPair & key2);
 
 #endif // !_CGE_CGPHYSICSWORLD_H_

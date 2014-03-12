@@ -12,6 +12,6 @@ var searchData=
   ['nodeupdated',['nodeUpdated',['../classcg_object_node.html#af44d34ba13b8450bec593395a856ebbd',1,'cgObjectNode']]],
   ['noisegenerator',['NoiseGenerator',['../classcg_random_1_1_noise_generator.html#a1f625bc6ff3283da10218f4056111633',1,'cgRandom::NoiseGenerator']]],
   ['normalize',['normalize',['../classcg_plane.html#abd36d6b6e1eaf483a15ea276a454a511',1,'cgPlane::normalize()'],['../classcg_quaternion.html#acd8c98508cd446ec4445d803b0ce68c7',1,'cgQuaternion::normalize()'],['../classcg_vector2.html#adc2db5b2d4a79e3dfb32d0aba49f1d30',1,'cgVector2::normalize()'],['../classcg_vector3.html#a9a082cd461643096d04ca476af36118d',1,'cgVector3::normalize()'],['../classcg_vector4.html#aa1ad822746f8ce86245db8e09c7b76f4',1,'cgVector4::normalize()'],['../classcg_height_map.html#a1e1e8addc992be0e76f943928242e210',1,'cgHeightMap::normalize()']]],
-  ['notifydevicelost',['notifyDeviceLost',['../classcg_resource_manager.html#ab93d811a270057ecdb20e0a038bdbc3b',1,'cgResourceManager']]],
-  ['notifydevicerestored',['notifyDeviceRestored',['../classcg_resource_manager.html#aa9d9a0f049c9fbcaf10df34f69fd86c0',1,'cgResourceManager']]]
+  ['notifydevicelost',['notifyDeviceLost',['../classcg_resource_manager.html#a3472bea938754962f8c0345de1532876',1,'cgResourceManager']]],
+  ['notifydevicerestored',['notifyDeviceRestored',['../classcg_resource_manager.html#a5ae62302f2a684ecf909bfbb9c808fa5',1,'cgResourceManager']]]
 ];

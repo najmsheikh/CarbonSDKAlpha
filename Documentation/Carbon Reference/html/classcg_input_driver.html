@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -153,12 +153,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a141975c6ad58d6ac6c94717135784653"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_input_driver_1_1_init_config.html">InitConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#a141975c6ad58d6ac6c94717135784653">getConfig</a> () const </td></tr>
 <tr class="memdesc:a141975c6ad58d6ac6c94717135784653"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the configuration options for the input driver.  <a href="#a141975c6ad58d6ac6c94717135784653"></a><br/></td></tr>
 <tr class="separator:a141975c6ad58d6ac6c94717135784653"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9da5943963357e8b8abd575d68f552e9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#a9da5943963357e8b8abd575d68f552e9">initialize</a> (<a class="el" href="classcg_app_window.html">cgAppWindow</a> *focusWindow, bool windowed=true)</td></tr>
-<tr class="memdesc:a9da5943963357e8b8abd575d68f552e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the input driver.  <a href="#a9da5943963357e8b8abd575d68f552e9"></a><br/></td></tr>
-<tr class="separator:a9da5943963357e8b8abd575d68f552e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4499414130e19a6b8bd5c750de5bde8e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#a4499414130e19a6b8bd5c750de5bde8e">initialize</a> (<a class="el" href="classcg_app_window.html">cgAppWindow</a> *focusWindow, bool windowed=true, bool foregroundOnly=true)</td></tr>
+<tr class="memdesc:a4499414130e19a6b8bd5c750de5bde8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the input driver.  <a href="#a4499414130e19a6b8bd5c750de5bde8e"></a><br/></td></tr>
+<tr class="separator:a4499414130e19a6b8bd5c750de5bde8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a323cbc3237340592bf280956eee080b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#a323cbc3237340592bf280956eee080b9">poll</a> ()</td></tr>
 <tr class="memdesc:a323cbc3237340592bf280956eee080b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Poll all registered input devices and retrieve their states.  <a href="#a323cbc3237340592bf280956eee080b9"></a><br/></td></tr>
 <tr class="separator:a323cbc3237340592bf280956eee080b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b844078ea69260728077905fd6a4140"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#a0b844078ea69260728077905fd6a4140">poll</a> (<a class="el" href="classcg_app_window.html">cgAppWindow</a> *focusWndOverride)</td></tr>
+<tr class="memdesc:a0b844078ea69260728077905fd6a4140"><td class="mdescLeft">&#160;</td><td class="mdescRight">Poll all registered input devices and retrieve their states.  <a href="#a0b844078ea69260728077905fd6a4140"></a><br/></td></tr>
+<tr class="separator:a0b844078ea69260728077905fd6a4140"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37ba96fb85db4ff0506beeb6e05e7b24"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#a37ba96fb85db4ff0506beeb6e05e7b24">wasKeyPressed</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> keyCode) const </td></tr>
 <tr class="memdesc:a37ba96fb85db4ff0506beeb6e05e7b24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple query routine to determine if a key was pressed in the previous call to poll.  <a href="#a37ba96fb85db4ff0506beeb6e05e7b24"></a><br/></td></tr>
 <tr class="separator:a37ba96fb85db4ff0506beeb6e05e7b24"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -186,6 +189,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3d9a51e673ca8a4059c386da89e5be87"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_point.html">cgPoint</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#a3d9a51e673ca8a4059c386da89e5be87">getCursorPosition</a> () const </td></tr>
 <tr class="memdesc:a3d9a51e673ca8a4059c386da89e5be87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the current position of the mouse cursor when in cursor mouse mode.  <a href="#a3d9a51e673ca8a4059c386da89e5be87"></a><br/></td></tr>
 <tr class="separator:a3d9a51e673ca8a4059c386da89e5be87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add57655b4db87cd26063f2d1c0931a2e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#add57655b4db87cd26063f2d1c0931a2e">resetInputStates</a> ()</td></tr>
+<tr class="memdesc:add57655b4db87cd26063f2d1c0931a2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows the application to reset the state of all buttons / keys, and trigger the appropriate 'release' events.  <a href="#add57655b4db87cd26063f2d1c0931a2e"></a><br/></td></tr>
+<tr class="separator:add57655b4db87cd26063f2d1c0931a2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afcfd6085644db75266c272f235230a98"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#afcfd6085644db75266c272f235230a98">isInitialized</a> () const </td></tr>
 <tr class="separator:afcfd6085644db75266c272f235230a98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac493a5d28c92d3cbd802f030c04d1308"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_string.html">cgString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_input_driver.html#ac493a5d28c92d3cbd802f030c04d1308">keyCodeToCharacter</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> keyCode)</td></tr>
@@ -532,7 +538,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a9da5943963357e8b8abd575d68f552e9"></a>
+<a class="anchor" id="a4499414130e19a6b8bd5c750de5bde8e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -546,7 +552,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>bWindowed</em> = <code>true</code>&#160;</td>
+          <td class="paramname"><em>bWindowed</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bForegroundOnly</em> = <code>true</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -745,6 +757,24 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a0b844078ea69260728077905fd6a4140"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgInputDriver::poll </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_app_window.html">cgAppWindow</a> *&#160;</td>
+          <td class="paramname"><em>focusWndOverride</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Poll all registered input devices and retrieve their states. </p>
+
+</div>
+</div>
 <a class="anchor" id="a20f97eed318787c882f2b474e1119c71"></a>
 <div class="memitem">
 <div class="memproto">
@@ -770,6 +800,23 @@ Additional Inherited Members</h2></td></tr>
 <p>Allows the application to determine if the inheritance hierarchy supports a particular interface. </p>
 
 <p>Implements <a class="el" href="classcg_reference.html#a597d24d0d03d4cf61e2afcd842a43fa4">cgReference</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="add57655b4db87cd26063f2d1c0931a2e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgInputDriver::resetInputStates </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Allows the application to reset the state of all buttons / keys, and trigger the appropriate 'release' events. </p>
 
 </div>
 </div>
@@ -855,7 +902,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_input_driver.html">cgInputDriver</a></li>
-    <li class="footer">Generated on Thu Feb 27 2014 01:28:04 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:45 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

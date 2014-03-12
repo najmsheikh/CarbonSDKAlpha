@@ -598,8 +598,8 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Typedefs
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE(LightingOpPass, LightingOpPassArray)
-    CGE_VECTOR_DECLARE(cgShadowSettingsLight, ShadowSettingsArray)
+    CGE_ARRAY_DECLARE(LightingOpPass, LightingOpPassArray)
+    CGE_ARRAY_DECLARE(cgShadowSettingsLight, ShadowSettingsArray)
 
 	//-------------------------------------------------------------------------
     // Protected Virtual Functions

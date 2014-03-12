@@ -159,7 +159,7 @@ struct CodePage {
 
 	//Marks bytes up to <address> as used
 	void markUsedAddress(void* address) {
-		unsigned newUsed = (byte*)address - (byte*)page;
+		unsigned newUsed = (unsigned)((byte*)address - (byte*)page);
 		if(newUsed > used && newUsed <= size)
 			used = newUsed;
 	}
@@ -181,7 +181,7 @@ private:
 //Implementation in virtual_asm_<processor instruction set>.cpp (e.g. virtual_asm_x86.cpp)
 struct Processor {
 	//Pointer to the location for the next opcode
-	volatile byte* op;
+	byte* op;
 	//The current mode of operation, in bits
 	// e.g. 32 bits for x86, indicating that operations should treat addresses as if they were unsigned integers
 	unsigned bitMode, lastBitMode;
@@ -315,6 +315,13 @@ struct Processor {
 	void jump(JumpType type, volatile byte* dest);
 	//Jumps to the address in <reg>
 	void jump(Register& reg);
+	//Decrements ecx and jumps if it becomes 0; Optionally conditionally jumps based on a Zero/NotZero test
+	void loop(volatile byte* dest, JumpType type = Jump);
+
+	//Copies from *esi to *edi, and adjusts them both by the data size according to the direction flag
+	void string_copy(unsigned size);
+	//Sets direction flag for string copy
+	void setDirFlag(bool forward);
 
 	//Returns from a function (pop code pointer, jump there)
 	void ret();
@@ -345,6 +352,9 @@ struct FloatingPointUnit {
 
 	//FPU_1 becomes FPU_0 (Pops the fpu stack)
 	void pop();
+
+	//Exchanges contents of FPU_n and FPU_0
+	void exchange(FloatReg floatReg);
 
 	//Compares FPU_0 to floatReg, setting the CPU's flags according to the values' relation
 	// Optionally pops the fpu stack
@@ -407,13 +417,13 @@ struct ScaledIndex {
 //Implementation in virtual_asm_<processor instruction set>.cpp (e.g. virtual_asm_x86.cpp)
 struct MemAddress {
 	Processor& cpu;
-	RegCode code;
 	void* absolute_address;
-	unsigned char other;
 	int offset;
-	RegCode scaleReg;
-	unsigned char scaleFactor;
 	unsigned bitMode;
+	RegCode code;
+	RegCode scaleReg;
+	unsigned char other;
+	unsigned char scaleFactor;
 	bool Float;
 	bool Signed;
 

@@ -2,7 +2,7 @@ var classcg_object_render_context =
 [
     [ "cgObjectRenderContext", "classcg_object_render_context.html#a9874ad0b6d0c88fc5f415a8fdc487709", null ],
     [ "~cgObjectRenderContext", "classcg_object_render_context.html#ac2173c2267721d6569a4b03966dddff9", null ],
-    [ "CGE_VECTOR_DECLARE", "classcg_object_render_context.html#aaa16dec4ecedb260102b6aa94d210b59", null ],
+    [ "CGE_ARRAY_DECLARE", "classcg_object_render_context.html#ac048cab42a023999218986856415cfad", null ],
     [ "dispose", "classcg_object_render_context.html#a90b7aa9c5553d7900c260d3585ba1b2b", null ],
     [ "insertLight", "classcg_object_render_context.html#a00d098131b4cfa53c1acc8ce9004fd40", null ],
     [ "insertObject", "classcg_object_render_context.html#a16de682f08d73a42b4b69c971f31196a", null ],

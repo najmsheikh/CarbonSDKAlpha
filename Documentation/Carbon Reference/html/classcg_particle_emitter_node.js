@@ -6,7 +6,7 @@ var classcg_particle_emitter_node =
     [ "allocateClone", "classcg_particle_emitter_node.html#a3da036bd5ec045bb8ff32a3c7b87f814", null ],
     [ "allocateNew", "classcg_particle_emitter_node.html#aeef21372527aace438e41a7a34afa736", null ],
     [ "allowSandboxUpdate", "classcg_particle_emitter_node.html#a103f504eeead11df00608c9415102b60", null ],
-    [ "CGE_VECTOR_DECLARE", "classcg_particle_emitter_node.html#a421e0252f558c17bd71091dd5e32c320", null ],
+    [ "CGE_ARRAY_DECLARE", "classcg_particle_emitter_node.html#a59b77674bd740b66ddbf2ba9364ca745", null ],
     [ "dispose", "classcg_particle_emitter_node.html#a2cd2b71e8e4ba437d96f6e2d8977c98b", null ],
     [ "enableGravity", "classcg_particle_emitter_node.html#a23816a5c8070e8bc101dbad2c9689809", null ],
     [ "enableLayerEmission", "classcg_particle_emitter_node.html#ad8878303473f97bdf462128ec5e407bb", null ],

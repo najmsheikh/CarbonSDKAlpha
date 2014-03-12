@@ -84,11 +84,11 @@ public:
         cgUInt32    node;
         cgUInt32    leafOwner[2];
     };
-    CGE_VECTOR_DECLARE( cgPlane, PlaneArray );
-    CGE_VECTOR_DECLARE( cgBSPTreeLeaf, LeafArray );
-    CGE_VECTOR_DECLARE( cgBSPTreeSubNode, NodeArray );
-    CGE_VECTOR_DECLARE( cgVector3, PointArray );
-    CGE_VECTOR_DECLARE( Portal, PortalArray );
+    CGE_ARRAY_DECLARE( cgPlane, PlaneArray );
+    CGE_ARRAY_DECLARE( cgBSPTreeLeaf, LeafArray );
+    CGE_ARRAY_DECLARE( cgBSPTreeSubNode, NodeArray );
+    CGE_ARRAY_DECLARE( cgVector3, PointArray );
+    CGE_ARRAY_DECLARE( Portal, PortalArray );
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors
@@ -210,7 +210,7 @@ protected:
         cgByteArray         visBits;
         cgPlane             targetPlane;
     };
-    CGE_VECTOR_DECLARE( PVSPortal, PVSPortalArray );
+    CGE_ARRAY_DECLARE( PVSPortal, PVSPortalArray );
     
     //-------------------------------------------------------------------------
     // Protected Methods

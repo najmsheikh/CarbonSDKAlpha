@@ -1480,6 +1480,7 @@
     <ClInclude Include="..\..\Include\World\Objects\cgNavigationPatrolPoint.h" />
     <ClInclude Include="..\..\Include\World\Objects\cgNavigationWaypoint.h" />
     <ClInclude Include="..\..\Lib\AngelScript-JIT\as_jit.h" />
+    <ClInclude Include="..\..\Lib\AngelScript-JIT\virtual_asm.h" />
     <ClInclude Include="..\..\Lib\AngelScript\include\angelscript.h" />
     <ClInclude Include="..\..\Lib\AngelScript\source\as_array.h" />
     <ClInclude Include="..\..\Lib\AngelScript\source\as_atomic.h" />
@@ -1498,6 +1499,7 @@
     <ClInclude Include="..\..\Lib\AngelScript\source\as_map.h" />
     <ClInclude Include="..\..\Lib\AngelScript\source\as_memory.h" />
     <ClInclude Include="..\..\Lib\AngelScript\source\as_module.h" />
+	<ClInclude Include="..\..\Lib\AngelScript\source\as_namespace.h" />
     <ClInclude Include="..\..\Lib\AngelScript\source\as_objecttype.h" />
     <ClInclude Include="..\..\Lib\AngelScript\source\as_outputbuffer.h" />
     <ClInclude Include="..\..\Lib\AngelScript\source\as_parser.h" />
@@ -1848,6 +1850,7 @@
     <ClInclude Include="..\..\Include\System\Platform\cgWinAppWindow.h" />
     <ClInclude Include="..\..\Include\System\Platform\cgWinImage.h" />
     <ClInclude Include="..\..\Include\System\Platform\cgWinThreading.h" />
+	<ClInclude Include="..\..\Include\System\Platform\Containers\cgArray.h" />
     <ClInclude Include="..\..\Include\Rendering\cgBillboardBuffer.h" />
     <ClInclude Include="..\..\Include\Rendering\cgImageProcessor.h" />
     <ClInclude Include="..\..\Include\Rendering\cgObjectRenderContext.h" />

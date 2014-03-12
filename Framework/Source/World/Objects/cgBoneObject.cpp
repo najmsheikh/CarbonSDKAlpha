@@ -280,7 +280,11 @@ void cgBoneObject::sandboxRender( cgUInt32 flags, cgCameraNode * camera, cgVisib
 {
     // Always draw bones if requested. Otherwise, only show them if it belongs to an open group (or no group at all)
     if ( !(flags & cgSandboxRenderFlags::ShowBones) && issuer->getOwnerGroup() && !issuer->getOwnerGroup()->isOpen()  )
+    {
+        cgWorldObject::sandboxRender( flags, camera, visibilityData, gridPlane, issuer );
         return;
+    
+    } // End if Hidden
 
     // ONLY post-clear rendering.
     if ( !(flags & cgSandboxRenderFlags::PostDepthClear) )
@@ -1055,7 +1059,7 @@ void cgBoneNode::buildPhysicsBody( )
 
         // Iterate through the shape sub elements and construct a list
         // of matching physics shape objects.
-        std::vector<cgPhysicsShape*> physicsShapes;
+        cgArray<cgPhysicsShape*> physicsShapes;
         for ( size_t i = 0; i < objectShapes.size(); ++i )
         {
             cgPhysicsShape * shape = ((cgCollisionShapeElement*)objectShapes[i])->generatePhysicsShape( mParentScene->getPhysicsWorld() );
@@ -1102,6 +1106,7 @@ void cgBoneNode::buildPhysicsBody( )
         // Take ownership of the new rigid body.
         mPhysicsBody = rigidBody;
         mPhysicsBody->addReference( this );
+        mPhysicsBody->setUserData( this );
 
         // Assign to the 'cast only' material group so that it cannot collide with anything else.
         mPhysicsBody->setMaterialGroupId( cgDefaultPhysicsMaterialGroup::CastOnly );

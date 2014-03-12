@@ -750,39 +750,68 @@ cgSandboxMode::Base cgGetSandboxMode( )
 /// <summary>
 /// Set the current mode in which the engine is running. Valid sandbox modes
 /// accepted by this function are 'Enabled' or 'Preview'. You may not switch
-/// the sandbox mode from or to 'Disabled' in any case.
+/// the sandbox mode from or to 'Disabled' in any case.  By default, a message
+/// will be posted to subscribers of the cgSystemMessageGroups::MGID_System
+/// messaging group regarding this change.
 /// </summary>
 //-----------------------------------------------------------------------------
 bool cgSetSandboxMode( cgSandboxMode::Base mode )
+{
+    return cgSetSandboxMode( mode, true );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : cgSetSandboxMode()
+/// <summary>
+/// Set the current mode in which the engine is running. Valid sandbox modes
+/// accepted by this function are 'Enabled' or 'Preview'. You may not switch
+/// the sandbox mode from or to 'Disabled' in any case. By default, a message
+/// will be posted to subscribers of the cgSystemMessageGroups::MGID_System
+/// messaging group regarding this change, but this can be controlled via the
+/// 'sendMessage' parameter.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgSetSandboxMode( cgSandboxMode::Base mode, bool sendMessage )
 {
     if ( EngineConfig.sandboxMode == cgSandboxMode::Disabled )
         return false;
     if ( EngineConfig.sandboxMode == mode )
         return true;
-    
-    // Build event arguments structure.
-    cgSandboxMode::Base oldMode = EngineConfig.sandboxMode;
-    cgSandboxModeChangeEventArgs args;
-    args.oldMode = oldMode;
-    args.newMode = mode;
 
-    // Build message structure.
-    cgMessage msg;
-    msg.messageId = cgSystemMessages::System_SandboxModeChange;
-    msg.messageData = &args;
-    
-    // If we're switching FROM preview mode, send the message 
-    // before making the mode switch.
-    if ( mode == cgSandboxMode::Enabled )
-        cgReferenceManager::sendMessageToGroup( 0, cgSystemMessageGroups::MGID_System, &msg, 0 );
-    
-    // Switch mode
-    EngineConfig.sandboxMode = mode;
+    // Sending messages?
+    if ( sendMessage )
+    {
+        // Build event arguments structure.
+        cgSandboxMode::Base oldMode = EngineConfig.sandboxMode;
+        cgSandboxModeChangeEventArgs args;
+        args.oldMode = oldMode;
+        args.newMode = mode;
 
-    // If we're switching TO preview mode, send the message 
-    // after making the mode switch.
-    if ( mode == cgSandboxMode::Preview )
-        cgReferenceManager::sendMessageToGroup( 0, cgSystemMessageGroups::MGID_System, &msg, 0 );
+        // Build message structure.
+        cgMessage msg;
+        msg.messageId = cgSystemMessages::System_SandboxModeChange;
+        msg.messageData = &args;
+        
+        // If we're switching FROM preview mode, send the message 
+        // before making the mode switch.
+        if ( mode == cgSandboxMode::Enabled )
+            cgReferenceManager::sendMessageToGroup( 0, cgSystemMessageGroups::MGID_System, &msg, 0 );
+        
+        // Switch mode
+        EngineConfig.sandboxMode = mode;
+
+        // If we're switching TO preview mode, send the message 
+        // after making the mode switch.
+        if ( mode == cgSandboxMode::Preview )
+            cgReferenceManager::sendMessageToGroup( 0, cgSystemMessageGroups::MGID_System, &msg, 0 );
+
+    } // End if sendMessage
+    else
+    {
+        // Switch mode
+        EngineConfig.sandboxMode = mode;
+
+    } // End if !sendMessage
 
     // Done.
     return true;

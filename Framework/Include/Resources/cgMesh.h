@@ -73,7 +73,7 @@ public:
         VertexInfluence( cgUInt32 _index, cgFloat _weight ) :
             vertexIndex(_index), weight(_weight) {}
     };
-    CGE_VECTOR_DECLARE(VertexInfluence, VertexInfluenceArray)
+    CGE_ARRAY_DECLARE(VertexInfluence, VertexInfluenceArray)
 
     // Describes the vertices that are connected to the referenced bone, and how much influence it has on them.
     struct BoneInfluence
@@ -82,7 +82,7 @@ public:
         cgTransform             bindPoseTransform;  // The "bind pose" or "offset" transform that describes how the bone was positioned in relation to the original vertex data.
         VertexInfluenceArray    influences;         // List of vertices influenced by the referenced bone.
     };
-    CGE_VECTOR_DECLARE(BoneInfluence*, BoneArray)
+    CGE_ARRAY_DECLARE(BoneInfluence*, BoneArray)
     
     // Contains per-vertex influence and weight information.
     struct VertexData
@@ -92,7 +92,7 @@ public:
         cgInt32             palette;            // Index of the palette to which this vertex has been assigned.
         cgUInt32            originalVertex;     // The index of the original vertex stored in the mesh.
     };
-    CGE_VECTOR_DECLARE(VertexData*, BindVertexArray)
+    CGE_ARRAY_DECLARE(VertexData*, BindVertexArray)
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors
@@ -230,9 +230,9 @@ public:
     }; // End Struct Triangle
 
     // Typedefs
-    CGE_VECTOR_DECLARE(Triangle, TriangleArray)
-    CGE_VECTOR_DECLARE(MeshSubset*, SubsetArray)
-    CGE_VECTOR_DECLARE(cgBonePalette*, BonePaletteArray)
+    CGE_ARRAY_DECLARE(Triangle, TriangleArray)
+    CGE_ARRAY_DECLARE(MeshSubset*, SubsetArray)
+    CGE_ARRAY_DECLARE(cgBonePalette*, BonePaletteArray)
 
     //-------------------------------------------------------------------------
 	// Constructors & Destructors
@@ -416,8 +416,8 @@ protected:
             material( _material ), dataGroupId( _dataGroupId ) {}
 
     }; // End Struct MeshSubsetKey
-    CGE_MAP_DECLARE   (MeshSubsetKey, MeshSubset*, SubsetKeyMap)
-    CGE_VECTOR_DECLARE(MeshSubsetKey, SubsetKeyArray)
+    CGE_MAP_DECLARE  (MeshSubsetKey, MeshSubset*, SubsetKeyMap)
+    CGE_ARRAY_DECLARE(MeshSubsetKey, SubsetKeyArray)
 
     // Simple structure to allow us to leverage the hierarchical properties of a map
     // to accelerate the weld operation.

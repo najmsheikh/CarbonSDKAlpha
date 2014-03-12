@@ -419,9 +419,10 @@ public:
     cgUInt32                    getRenderClassId            ( const cgString & className ) const;
     const cgFilterExpression::IdentifierArray & getMaterialPropertyIdentifiers( ) const;
 
-    // update Process
+    // Update Process
     void                        enableUpdates               ( bool enabled );
     bool                        isUpdatingEnabled           ( ) const;
+    bool                        isUpdating                  ( ) const;
     void                        update                      ( );
     void                        queueNodeUpdates            ( cgObjectNode * node );
     void                        resolvedNodeUpdates         ( cgObjectNode * node );
@@ -458,8 +459,8 @@ public:
     bool                        setActiveCamera             ( cgCameraNode * camera );
     cgCameraNode              * getActiveCamera             ( ) const;
     cgLandscape               * importLandscape             ( const cgLandscapeImportParams & params );
-    bool                        rayCastClosest              ( const cgVector3 & from, const cgVector3 & to, cgSceneCollisionContact & closestContact );
-    bool                        rayCastAll                  ( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgSceneCollisionContact::Array & contacts );
+    bool                        rayCastClosest              ( const cgVector3 & from, const cgVector3 & to, cgSceneRayCastContact & closestContact );
+    bool                        rayCastAll                  ( const cgVector3 & from, const cgVector3 & to, bool sortContacts, cgSceneRayCastContact::Array & contacts );
     
     // Cell Management
     const cgVector3           & getCellSize                 ( ) const;
@@ -601,8 +602,8 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Typedefs
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE      (cgSceneController*, ControllerArray)
-    CGE_VECTOR_DECLARE      (cgVisibilitySet*, VisibilitySetArray)
+    CGE_ARRAY_DECLARE       (cgSceneController*, ControllerArray)
+    CGE_ARRAY_DECLARE       (cgVisibilitySet*, VisibilitySetArray)
     CGE_UNORDEREDMAP_DECLARE(cgUID, cgObjectNodeArray, ObjectNodeTypeMap)
     CGE_UNORDEREDMAP_DECLARE(cgString, cgObjectNode*, ObjectNodeNamedMap)
     CGE_UNORDEREDMAP_DECLARE(cgUID, cgSceneElementArray, SceneElementTypeMap)
@@ -650,6 +651,7 @@ protected:
     UpdateBucket            mUpdateBuckets[cgUpdateRate::Count];
     cgSceneUpdateFIFO       mPendingUpdateFIFO;
     bool                    mUpdatingEnabled;
+    bool                    mIsUpdating;
 
     // Controllers
     ControllerArray         mSceneControllers;          // List of applied scene controllers that may manipulate scene data.

@@ -19,10 +19,14 @@ var classcg_physics_body =
     [ "getMass", "classcg_physics_body.html#a0397fb1117a3056bb8c283447b28d7cb", null ],
     [ "getReferenceType", "classcg_physics_body.html#ab09b09b41cb09f1b0dc879aecdd2bdd2", null ],
     [ "getShape", "classcg_physics_body.html#a3820ac7b62dfa0d0bf274cc54a835c56", null ],
+    [ "getUserData", "classcg_physics_body.html#a973dd3c5ce570afff62d0d169fecd72b", null ],
     [ "getVelocity", "classcg_physics_body.html#a6b0030cef0cbc2bceb7629908c0a7fd0", null ],
     [ "isAutoSleepEnabled", "classcg_physics_body.html#af543b1d176f8244306fb0b3944ba635e", null ],
     [ "isContinuousCollisionEnabled", "classcg_physics_body.html#ae672a362a1e0900f3d3c2e59b27961a9", null ],
     [ "isCustomGravityEnabled", "classcg_physics_body.html#ac5a5ddf62324c52b18551531491e7657", null ],
+    [ "onPhysicsBodyCollisionBegin", "classcg_physics_body.html#a32810c0dbd79f6342a493e50376f31dc", null ],
+    [ "onPhysicsBodyCollisionContinue", "classcg_physics_body.html#aacb14f2bd25739d9a2dfc712d3098144", null ],
+    [ "onPhysicsBodyCollisionEnd", "classcg_physics_body.html#aef0e9c02b68e276f03a0db11557184c4", null ],
     [ "onPhysicsBodyTransformed", "classcg_physics_body.html#a7f8cdac84faff92a2e2a1f3bf0cb5a1c", null ],
     [ "queryReferenceType", "classcg_physics_body.html#afb9193d3da54c2656de3a5df2369e564", null ],
     [ "setAngularVelocity", "classcg_physics_body.html#a1cec26baad185b1af6a5ee323d3f6a60", null ],
@@ -30,6 +34,7 @@ var classcg_physics_body =
     [ "setMass", "classcg_physics_body.html#a78b2097bbb996979031a7baa51d79832", null ],
     [ "setMaterialGroupId", "classcg_physics_body.html#a27f7badbc9925380f62c2f88d08e156c", null ],
     [ "setMaterialGroupId", "classcg_physics_body.html#a93e67c5a1f68443ca0d54d33cd4b72a5", null ],
+    [ "setUserData", "classcg_physics_body.html#a9244c5341247c95dd396afbfcc69e755", null ],
     [ "setVelocity", "classcg_physics_body.html#a96a2d30ebe02f8c23e7ee956880f7829", null ],
     [ "mBody", "classcg_physics_body.html#a5360e2c6df5936a51bc73bfeb4a98419", null ],
     [ "mCustomGravity", "classcg_physics_body.html#a6572b72c45161a53f120d4b54ef7d99b", null ],
@@ -37,5 +42,6 @@ var classcg_physics_body =
     [ "mShape", "classcg_physics_body.html#a9ef541819d375296afc4fe7388e2ee72", null ],
     [ "mTotalForce", "classcg_physics_body.html#a47b9ab56601ac40186a94d25f2af052a", null ],
     [ "mTotalTorque", "classcg_physics_body.html#ac91cf4e05491cdb8a616c40a6cf7ceea", null ],
-    [ "mUseCustomGravity", "classcg_physics_body.html#aa6eda96901a5390303fac8c922952850", null ]
+    [ "mUseCustomGravity", "classcg_physics_body.html#aa6eda96901a5390303fac8c922952850", null ],
+    [ "mUserData", "classcg_physics_body.html#ae7d0c232e6e1caea91db7b0cc70d6ca3", null ]
 ];

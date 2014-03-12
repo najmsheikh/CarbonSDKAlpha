@@ -88,7 +88,7 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Typedefs, Structures and Enumerations
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE(cgNavigationTile*,NavigationTileArray)
+    CGE_ARRAY_DECLARE(cgNavigationTile*,NavigationTileArray)
 
     //-------------------------------------------------------------------------
     // Protected Methods

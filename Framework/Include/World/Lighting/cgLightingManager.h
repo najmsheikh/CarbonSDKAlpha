@@ -161,9 +161,9 @@ protected:
     }; // End Struct : ShadowSettingsData
     
     // Container declarations
-    CGE_MAP_DECLARE     (cgString, ShadowSettingsData, ShadowSettingsTable)
-    CGE_VECTOR_DECLARE  (cgRadianceGrid *, GridArray)
-    CGE_VECTOR_DECLARE  (cgRadianceBuffer *, RadianceBufferArray)
+    CGE_MAP_DECLARE  (cgString, ShadowSettingsData, ShadowSettingsTable)
+    CGE_ARRAY_DECLARE(cgRadianceGrid *, GridArray)
+    CGE_ARRAY_DECLARE(cgRadianceBuffer *, RadianceBufferArray)
 
     //-------------------------------------------------------------------------
     // Protected Methods

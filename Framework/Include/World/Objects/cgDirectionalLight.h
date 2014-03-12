@@ -247,7 +247,7 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Typedefs
     //-------------------------------------------------------------------------
-    CGE_VECTOR_DECLARE(cgShadowGenerator*, ShadowFrustumArray)
+    CGE_ARRAY_DECLARE(cgShadowGenerator*, ShadowFrustumArray)
 
     //-------------------------------------------------------------------------
     // Protected Methods

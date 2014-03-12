@@ -13,11 +13,10 @@
 #include "../source/as_scriptengine.h"
 #include "../source/as_scriptobject.h"
 #include "../source/as_texts.h"
+#include "../source/as_context.h"
 
 #include "virtual_asm.h"
 using namespace assembler;
-
-CriticalSection jitLock;
 
 #ifdef __amd64__
 #define stdcall
@@ -183,20 +182,18 @@ void stdcall i64_sra(long long* a, asDWORD* b, long long* r) {
 }
 
 int stdcall cmp_int64(long long* a, long long* b) {
-	long long c = *a - *b;
-	if( c == 0)
+	if(*a == *b )
 		return 0;
-	else if( c < 0)
+	else if(*a < *b)
 		return -1;
 	else
 		return 1;
 }
 
 int stdcall cmp_uint64(unsigned long long* a, unsigned long long* b) {
-	unsigned long long c = *a - *b;
-	if( c == 0)
+	if(*a == *b )
 		return 0;
-	else if( c < 0)
+	else if(*a < *b)
 		return -1;
 	else
 		return 1;
@@ -259,11 +256,39 @@ private:
 	void call_exit(asSSystemFunctionInterface* func);
 };
 
+struct SwitchRegion {
+	unsigned char** buffer;
+	unsigned count, remaining;
+
+	SwitchRegion() : buffer(0), count(0), remaining(0) {}
+};
+
+struct FutureJump {
+	void* jump;
+	FutureJump* next;
+
+	FutureJump() : jump(0), next(0) {}
+
+	FutureJump* advance() {
+		FutureJump* n = next;
+		delete this;
+		return n;
+	}
+};
+
 unsigned toSize(asEBCInstr instr) {
 	return asBCTypeSize[asBCInfo[instr].type];
 }
 
-asCJITCompiler::asCJITCompiler(unsigned Flags) : flags(Flags), activePage(0) {
+asCJITCompiler::asCJITCompiler(unsigned Flags)
+	: activePage(0), lock(new assembler::CriticalSection()), flags(Flags), activeJumpTable(0), currentTableSize(0)
+{
+}
+
+asCJITCompiler::~asCJITCompiler() {
+	if(activeJumpTable)
+		delete[] activeJumpTable;
+	delete lock;
 }
 
 //Returns the total number of bytes that will be pushed, until the next op that doesn't push
@@ -295,13 +320,28 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 
 	asDWORD *end = pOp + length, *start = pOp;
 
-	volatile byte** jumpTable = new volatile byte*[length];
-	memset(jumpTable,0,length * sizeof(void*));
-	bool tableInUse = false;
+	std::vector<SwitchRegion> switches;
+	SwitchRegion* activeSwitch = 0;
 
-	std::multimap<asDWORD*, void*> futureJumps;
+	lock->enter();
 
-	jitLock.enter();
+	//Get the jump table, or make a new one if necessary, and then zero it out
+	unsigned char** jumpTable = 0;
+	if(activeJumpTable) {
+		if(length <= currentTableSize) {
+			jumpTable = activeJumpTable;
+		}
+		else {
+			delete[] activeJumpTable;
+			jumpTable = new unsigned char*[length];
+			activeJumpTable = jumpTable;
+		}
+	}
+	else {
+		jumpTable = new unsigned char*[length];
+		activeJumpTable = jumpTable;
+	}
+	memset(jumpTable, 0, length * sizeof(void*));
 
 	//Get the active page, or create a new one if the current one is missing or too small (256 bytes for the entry and a few ops)
 	if(activePage == 0 || activePage->final || activePage->getFreeSize() < 256)
@@ -418,8 +458,16 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 	};
 
 	auto ReturnCondition = [&](JumpType condition) {
-		rarg = (void*)pOp;
-		cpu.jump(condition,ret_pos);
+		if(condition != Zero) {
+			rarg = (void*)pOp;
+			cpu.jump(condition,ret_pos);
+		}
+		else {
+			auto* j = cpu.prep_short_jump(NotZero);
+			rarg = (void*)pOp;
+			cpu.jump(Jump,ret_pos);
+			cpu.end_short_jump(j);
+		}
 	};
 
 	SystemCall sysCall(cpu, fpu, ReturnCondition, pOp, flags);
@@ -443,7 +491,7 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 	};
 
 	auto PrepareJitScriptCall = [&](asCScriptFunction* func) -> bool {
-		asDWORD* bc = func->byteCode.AddressOf();
+		asDWORD* bc = func->scriptData->byteCode.AddressOf();
 
 #ifdef JIT_64
 		Register arg0 = cpu.intArg64(0, 0, pax);
@@ -461,7 +509,7 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 
 	auto JitScriptCall = [&](asCScriptFunction* func) {
 		//Call the first jit entry in the target function
-		asDWORD* bc = func->byteCode.AddressOf();
+		asDWORD* bc = func->scriptData->byteCode.AddressOf();
 #ifdef JIT_64
 		Register arg0 = as<void*>(cpu.intArg64(0, 0));
 		Register arg1 = as<void*>(cpu.intArg64(1, 1));
@@ -474,9 +522,9 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 		arg0 = as<void*>(ebp);
 
 		asPWORD entryPoint = asBC_PTRARG(bc);
-		if(entryPoint && func->jitFunction) {
+		if(entryPoint && func->scriptData->jitFunction) {
 			arg1 = (void*)entryPoint;
-			ptr = (void*)func->jitFunction;
+			ptr = (void*)func->scriptData->jitFunction;
 		}
 		else {
 			DeferredCodePointer def;
@@ -507,11 +555,12 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 		//Read the first pointer from where byteCode is, which is the
 		//array pointer from asCArray, skip the asBC_JitEntry byte and
 		//then read the first entry pointer
-		arg1 = as<void*>(*pax + offsetof(asCScriptFunction, byteCode));
+		pax = as<void*>(*pax + offsetof(asCScriptFunction, scriptData));
+		arg1 = as<void*>(*pax + offsetof(asCScriptFunction::ScriptFunctionData, byteCode));
 		arg1 = as<void*>(*arg1 + sizeof(asDWORD));
 
 		//Read the jit function pointer from the asCScriptFunction
-		ptr = as<void*>(*pax + offsetof(asCScriptFunction, jitFunction));
+		ptr = as<void*>(*pax + offsetof(asCScriptFunction::ScriptFunctionData, jitFunction));
 
 		unsigned sb = cpu.call_cdecl_args("rr", &arg0, &arg1);
 		cpu.call(ptr);
@@ -579,13 +628,16 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 	auto do_jump = [&](JumpType type) {
 		asDWORD* bc = pOp + asBC_INTARG(pOp) + 2;
 		auto& jmp = jumpTable[bc - start];
-		if(jmp != 0) {
+		if(bc > pOp) {
+			//Prep the jump for a future instruction
+			auto* jumpData = new FutureJump;
+			jumpData->jump = cpu.prep_long_jump(type);
+			jumpData->next = jmp ? (FutureJump*)jmp : 0;
+			jmp = (byte*)jumpData;
+		}
+		else if(jmp != 0) {
 			//Jump to code that already exists
 			cpu.jump(type, jmp);
-		}
-		else if(bc > pOp) {
-			//Prep the jump for a future instruction
-			futureJumps.insert(std::pair<asDWORD*,void*>(bc,cpu.prep_long_jump(type)));
 		}
 		else {
 			//We can't handle this address, so generate a special return that does the jump ahead of time
@@ -597,13 +649,16 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 	auto do_jump_from = [&](JumpType type, asDWORD* op) {
 		asDWORD* bc = op + asBC_INTARG(op) + 2;
 		auto& jmp = jumpTable[bc - start];
-		if(jmp != 0) {
+		if(bc > op) {
+			//Prep the jump for a future instruction
+			auto* jumpData = new FutureJump;
+			jumpData->jump = cpu.prep_long_jump(type);
+			jumpData->next = jmp ? (FutureJump*)jmp : 0;
+			jmp = (byte*)jumpData;
+		}
+		else if(jmp != 0) {
 			//Jump to code that already exists
 			cpu.jump(type, jmp);
-		}
-		else if(bc > op) {
-			//Prep the jump for a future instruction
-			futureJumps.insert(std::pair<asDWORD*,void*>(bc,cpu.prep_long_jump(type)));
 		}
 		else {
 			//We can't handle this address, so generate a special return that does the jump ahead of time
@@ -613,9 +668,9 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 	};
 
 	auto check_space = [&](unsigned bytes) {
-		unsigned remaining = activePage->getFreeSize() - (cpu.op - byteStart);
+		unsigned remaining = activePage->getFreeSize() - (unsigned)(cpu.op - byteStart);
 		if(remaining < bytes) {
-			CodePage* newPage = new CodePage(codePageSize, reinterpret_cast<void*>(&toSize));
+			CodePage* newPage = new CodePage(codePageSize, ((char*)activePage->page + activePage->size));
 
 			cpu.migrate(*activePage, *newPage);
 
@@ -640,22 +695,25 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 			throw "Page exceeded...";
 
 		op = asEBCInstr(*(asBYTE*)pOp);
-		auto firstJump = futureJumps.lower_bound(pOp), lastJump = futureJumps.upper_bound(pOp);
+		auto* futureJump = (FutureJump*)jumpTable[pOp - start];
 
-		if(waitingForEntry && op != asBC_JitEntry) {
-			check_space(futureJumps.size() * (2 + sizeof(void*)*2));
-
-			//Handle cases where we jump to code we can't directly handle
-			if(firstJump != futureJumps.end() && firstJump->first == pOp) {
-				for(auto i = firstJump; i != lastJump; ++i)
-					cpu.end_long_jump(i->second);
-				futureJumps.erase(firstJump, lastJump);
-				check_space(32);
+		//Handle jumps from earlier ops
+		//NOTE: We can only handle jumps to groups of ops (typically a line)
+		//		If AngelScript ever starts jumping to within these small groups of ops, there will be errors
+		if(futureJump) {
+			if(waitingForEntry && op != asBC_JitEntry) {
+				check_space(48);
+				jumpTable[pOp - start] = (unsigned char*)cpu.op;
 				Return(true);
-			}
 
-			pOp += toSize(op);
-			continue;
+				do {
+					cpu.end_long_jump(futureJump->jump);
+					futureJump = futureJump->advance();
+				} while(futureJump);
+
+				pOp += toSize(op);
+				continue;
+			}
 		}
 		
 		//Check for remaining space of at least 64 bytes (roughly 3 max-sized ops)
@@ -666,7 +724,14 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 		check_space(64);
 #endif
 
-		jumpTable[pOp - start] = cpu.op;
+		//Deal with the most recent switch
+		if(activeSwitch) {
+			activeSwitch->buffer[int(activeSwitch->count) - int(activeSwitch->remaining)] = (unsigned char*)cpu.op;
+			if(--activeSwitch->remaining == 0)
+				activeSwitch = 0;
+		}
+
+		jumpTable[pOp - start] = (unsigned char*)cpu.op;
 
 #ifdef JIT_DEBUG
 		void* beg = (void*)cpu.op;
@@ -680,10 +745,9 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 #endif
 
 		//Handle jumps to code we hadn't made yet
-		if(firstJump != futureJumps.end() && firstJump->first == pOp) {
-			for(auto i = firstJump; i != lastJump; ++i)
-				cpu.end_long_jump(i->second);
-			futureJumps.erase(firstJump, lastJump);
+		while(futureJump) {
+			cpu.end_long_jump(futureJump->jump);
+			futureJump = futureJump->advance();
 		}
 
 		//Multi-op optimization - special cases where specific sets of ops serve a common purpose
@@ -811,7 +875,8 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 					continue;
 				}
 				break;
-			case asBC_PSF:
+			//TODO: Update this to use inline memcpy improvement
+			/*case asBC_PSF:
 			case asBC_PshVPtr:
 				if(reservedPushBytes == 0 && nextOp == asBC_COPY) {
 					//Optimize:
@@ -852,7 +917,7 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 					pOp = pThirdOp;
 					continue;
 				}
-				break;
+				break;*/
 			case asBC_CpyRtoV4:
 				if(nextOp == asBC_CpyVtoV4 && offset(pOp,0) == offset(pNextOp,1)) {
 					//Optimize
@@ -1298,30 +1363,90 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 		case asBC_COPY:
 			{
 				check_space(128);
+				unsigned bytes = unsigned(asBC_WORDARG0(pOp))*4;
+
 				if(currentEAX != EAX_Stack)
 					pax = as<void*>(*esi);
 				esi += sizeof(void*);
+
+				void* skip_err_return, *test1, *test2;
+
+				//Assuming memcpy() with function overhead is faster over 128 bytes
+				if(bytes <= 128) {
+					Register from(cpu, ESI, sizeof(void*)*8), to(cpu, EDI, sizeof(void*)*8);
+
+					pax &= pax;
+					test1 = cpu.prep_short_jump(Zero);
+
+					pdx = as<void*>(*esi);
+					pdx &= pdx;
+					test2 = cpu.prep_short_jump(Zero);
+
+					if(bytes == 4) {
+						as<asDWORD>(*pax).direct_copy(as<asDWORD>(*pdx), ecx);
+					}
+					else if(bytes == 8) {
+						as<asQWORD>(*pax).direct_copy(as<asQWORD>(*pdx), ecx);
+					}
+					else {
+						//Loop to copy all bytes for larger types
+						pdx.swap(from);
+						pax.swap(to);
+
+						unsigned copySize = (bytes % 8) == 0 ? 8 : 4;
+						unsigned iterations = bytes / copySize;
+						
+						//Avoid tiny loops
+						bool unroll = iterations <= 4;
+
+						if(!unroll)
+							pcx = iterations;
+						cpu.setDirFlag(true);
+
+						auto* loop = cpu.op;
+						cpu.string_copy(copySize);
+						if(unroll) {
+							for(unsigned i = 1; i < iterations; ++i)
+								cpu.string_copy(copySize);
+						}
+						else {
+							cpu.loop(loop);
+						}
+
+						from = pdx;
+						to = pax;
+					}
+
+					skip_err_return = cpu.prep_short_jump(Jump);
+				}
+				else {
 #ifdef JIT_64
-				Register arg1 = as<void*>(cpu.intArg64(1, 1));
+					Register arg1 = as<void*>(cpu.intArg64(1, 1));
 #else
-				Register arg1 = pcx;
+					Register arg1 = pdx;
 #endif
-				arg1 = as<void*>(*esi);
+					arg1 = as<void*>(*esi);
 
-				//Check for null pointers
-				pax &= pax;
-				void* test1 = cpu.prep_short_jump(Zero);
-				arg1 &= arg1;
-				void* test2 = cpu.prep_short_jump(Zero);
+					//Check for null pointers
+					pax &= pax;
+					test1 = cpu.prep_short_jump(Zero);
+					arg1 &= arg1;
+					test2 = cpu.prep_short_jump(Zero);
 				
-				as<void*>(*esi) = pax;
+					as<void*>(*esi) = pax;
 
-				cpu.call_cdecl((void*)memcpy,"rrc", &pax, &arg1, unsigned(asBC_WORDARG0(pOp))*4);
-				void* skip_ret = cpu.prep_short_jump(Jump);
+					cpu.call_cdecl((void*)memcpy,"rrc", &pax, &arg1, bytes);
+
+					skip_err_return = cpu.prep_short_jump(Jump);
+				}
+
 				//ERR
 				cpu.end_short_jump(test1); cpu.end_short_jump(test2);
+				//Need to restore stack pointer for AS to handle the error
+				esi -= sizeof(void*);
 				Return(false);
-				cpu.end_short_jump(skip_ret);
+				cpu.end_short_jump(skip_err_return);
+
 			} break;
 		//case asBC_PshC8: //All pushes are handled above, near asBC_PshC4
 		//case asBC_PshVPtr:
@@ -1420,26 +1545,43 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 			} break;
 		case asBC_JMPP:
 			if((flags & JIT_NO_SWITCHES) == 0) {
-				tableInUse = true;
+				unsigned cases = 1;
+				{
+					//This information isn't stored for us to recover, so we rely on the format of switch cases
+					//Each one is a series of asBC_JMP ops and a single remaining case at the end (default)
+					asDWORD* pNextOp = pOp + toSize(op);
+					asEBCInstr nextOp = asEBCInstr(*(asBYTE*)pNextOp);
+					while(nextOp == asBC_JMP) {
+						++cases;
+						pNextOp += toSize(asBC_JMP);
+						nextOp = asEBCInstr(*(asBYTE*)pNextOp);
+					}
+				}
 
-				pax = (void*)(jumpTable + ((pOp + 1) - start));
+				SwitchRegion region;
+				region.count = cases;
+				region.remaining = region.count;
+				region.buffer = new unsigned char*[region.count];
+				memset(region.buffer, 0, region.count * sizeof(void*));
+				switches.push_back(region);
+				activeSwitch = &switches.back();
+				
+				pax = (void*)(region.buffer);
 
 				pdx.copy_expanding(as<int>(*edi - offset0));
-				pdx += pdx;
 
 				pcx = as<void*>(*pax + pdx*sizeof(void*));
 
 				//Check for a pointer in the jump table to executable code
 				pcx &= pcx;
-				auto handled_jump = cpu.prep_short_jump(NotZero);
+				auto unhandled_jump = cpu.prep_short_jump(Zero);
+				cpu.jump(pcx);
 
+				cpu.end_short_jump(unhandled_jump);
 				//Copy the offsetted pointer to edx and return
 				ecx = (void*)(pOp + 1);
-				rarg.copy_address(*pcx + pdx*4);
+				rarg.copy_address(*pcx + pdx*(2*sizeof(asDWORD)));
 				cpu.jump(Jump,ret_pos);
-
-				cpu.end_short_jump(handled_jump);
-				cpu.jump(pcx);
 			}
 			else {
 				Return(true);
@@ -1925,8 +2067,7 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 		case asBC_DIVi:
 			ecx = *edi-offset2;
 
-			eax = ecx;
-			eax &= eax;
+			ecx &= ecx;
 			{
 			void* zero_test = cpu.prep_short_jump(NotZero);
 			Return(false);
@@ -1950,8 +2091,7 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 		case asBC_MODi:
 			ecx = *edi-offset2;
 
-			eax = ecx;
-			eax &= eax;
+			ecx &= ecx;
 			{
 			void* zero_test = cpu.prep_short_jump(NotZero);
 			Return(false);
@@ -2059,10 +2199,12 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 				eax = *edi-offset1;
 			eax -= asBC_INTARG(pOp+1);
 			*edi-offset0 = eax;
+			nextEAX = EAX_Offset + offset0;
 			break;
 		case asBC_MULIi:
 			eax.multiply_signed(*edi-offset1,asBC_INTARG(pOp+1));
 			*edi-offset0 = eax;
+			nextEAX = EAX_Offset + offset0;
 			break;
 		case asBC_ADDIf:
 			fpu.load_float(*edi-offset1);
@@ -2088,16 +2230,14 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 				pax = as<void*>(*esi);
 			eax = as<int>(*pax);
 			eax &= eax;
-			rarg = (void*)pOp;
-			cpu.jump(Zero,ret_pos);
+			ReturnCondition(Zero);
 			break;
 		case asBC_ChkNullV:
 			//Return if (*edi-offset0) == 0
 			if(currentEAX != EAX_Offset + offset0)
 				eax = *edi-offset0;
 			eax &= eax;
-			rarg = (void*)pOp;
-			cpu.jump(Zero,ret_pos);
+			ReturnCondition(Zero);
 			break;
 		case asBC_CALLINTF:
 			{
@@ -2123,7 +2263,7 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 				}
 			} break;
 		//asBC_SetV1 and asBC_SetV2 are aliased to asBC_SetV4
-		case asBC_Cast: //Can't handle casts (script call)
+		case asBC_Cast:
 			{
 				check_space(512);
 #ifdef JIT_64
@@ -2554,8 +2694,7 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 #ifdef JIT_64
 				pcx = as<uint64_t>(*edi-offset2);
 
-				pax = pcx;
-				pax &= pax;
+				pcx &= pcx;
 				{
 				void* zero_test = cpu.prep_short_jump(NotZero);
 				Return(false);
@@ -2584,8 +2723,7 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 #ifdef JIT_64
 				pcx = as<uint64_t>(*edi-offset2);
 
-				pax = pcx;
-				pax &= pax;
+				pcx &= pcx;
 				{
 				void* zero_test = cpu.prep_short_jump(NotZero);
 				Return(false);
@@ -2647,44 +2785,46 @@ int asCJITCompiler::CompileFunction(asIScriptFunction *function, asJITFunction *
 	if(waitingForEntry == false)
 		Return(true);
 
-	if(tableInUse)
-		jumpTables[*output] = (unsigned char**)jumpTable;
-	else
-		delete[] jumpTable;
+	for(auto i = switches.begin(), end = switches.end(); i != end; ++i)
+		jumpTables.insert(std::pair<asJITFunction,unsigned char**>(*output, i->buffer));
 
 	activePage->markUsedAddress((void*)cpu.op);
-	jitLock.leave();
+	lock->leave();
 	return 0;
 }
 
 void asCJITCompiler::finalizePages() {
-	jitLock.enter();
+	lock->enter();
 	for(auto page = pages.begin(); page != pages.end(); ++page)
 		if(!page->second->final)
 			page->second->finalize();
-	jitLock.leave();
+	lock->leave();
 }
 
 void asCJITCompiler::ReleaseJITFunction(asJITFunction func) {
-	jitLock.enter();
-	auto start = pages.lower_bound(func);
+	lock->enter();
+	{
+		auto start = pages.lower_bound(func);
 
-	while(start != pages.end() && start->first == func) {
-		if(start->second == activePage) {
-			activePage->drop();
-			activePage = 0;
+		while(start != pages.end() && start->first == func) {
+			if(start->second == activePage) {
+				activePage->drop();
+				activePage = 0;
+			}
+			start->second->drop();
+			start = pages.erase(start);
 		}
-		start->second->drop();
-		start = pages.erase(start);
 	}
 
-	auto table = jumpTables.find(func);
+	{
+		auto start = jumpTables.lower_bound(func);
 
-	if(table != jumpTables.end()) {
-		delete[] table->second;
-		jumpTables.erase(table);
+		while(start != jumpTables.end() && start->first == func) {
+			delete[] start->second;
+			start = jumpTables.erase(start);
+		}
 	}
-	jitLock.leave();
+	lock->leave();
 }
 
 unsigned findTotalPushBatchSize(asDWORD* nextOp, asDWORD* endOfBytecode) {
@@ -2981,7 +3121,7 @@ void SystemCall::call_64conv(asSSystemFunctionInterface* func,
 
 	call_entry(func, sFunc);
 
-	int argCount = sFunc->parameterTypes.GetLength();
+	int argCount = (int)sFunc->parameterTypes.GetLength();
 	unsigned stackBytes = 0;
 	unsigned argOffset = 0;
 	bool stackObject = false;
@@ -2992,24 +3132,29 @@ void SystemCall::call_64conv(asSSystemFunctionInterface* func,
 	bool retPointer = false;
 	bool retOnStack = false;
 	int firstPos = 0;
-
-	//if(sFunc->name == "draw")
-	//	bool f = false;
 	
 	//'this' before 'return pointer' on MSVC
 	if(pos == OP_This) {
 		Register reg = as<void*>(cpu.intArg64(0, 0));
-		if(objPointer) {
+		if(func->objForThiscall) {
+			reg = func->objForThiscall;
+		}
+		else if(objPointer) {
 			reg = *objPointer;
+
+			reg &= reg;
+			returnHandler(Zero);
+			reg += func->baseOffset;
 		}
 		else {
 			reg = as<void*>(*esi);
 			argOffset += sizeof(void*);
 			stackObject = true;
+
+			reg &= reg;
+			returnHandler(Zero);
+			reg += func->baseOffset;
 		}
-		reg &= reg;
-		returnHandler(Zero);
-		reg += func->baseOffset;
 
 		++intCount;
 		++a;
@@ -3094,7 +3239,28 @@ void SystemCall::call_64conv(asSSystemFunctionInterface* func,
 	cpu.call_cdecl_prep(stackBytes);
 
 	if(pos != OP_None && pos != OP_This) {
-		if(objPointer) {
+		if(func->objForThiscall) {
+			if(pos == OP_First) {
+				if(cpu.isIntArg64Register(firstPos, firstPos)) {
+					Register reg = as<void*>(cpu.intArg64(firstPos, firstPos));
+					reg = func->objForThiscall;
+				}
+				else {
+					temp = func->objForThiscall;
+				}
+			}
+			else if(pos == OP_Last) {
+				if(cpu.isIntArg64Register(intCount+1, a+1)) {
+					Register reg = as<void*>(cpu.intArg64(intCount+1, a+1));
+					reg = func->objForThiscall;
+				}
+				else {
+					temp = func->objForThiscall;
+					cpu.push(temp);
+				}
+			}
+		}
+		else if(objPointer) {
 			*objPointer &= *objPointer;
 			returnHandler(Zero);
 
@@ -3177,7 +3343,7 @@ void SystemCall::call_64conv(asSSystemFunctionInterface* func,
 			if(dword)
 				cpu.push(as<asDWORD>(*esi+argOffset));
 			else
-				cpu.push(as<asDWORD>(*esi+argOffset));
+				cpu.push(as<asQWORD>(*esi+argOffset));
 		}
 	};
 
@@ -3244,7 +3410,7 @@ void SystemCall::call_64conv(asSSystemFunctionInterface* func,
 	if(stackObject)
 		addParams += sizeof(void*);
 	if(func->paramSize > 0 || addParams > 0)
-		esi += func->paramSize * sizeof(asDWORD) + addParams;
+		esi += func->paramSize * sizeof(asDWORD) + (unsigned)addParams;
 
 	if(sFunc->returnType.IsObject() && !sFunc->returnType.IsReference()) {
 		if(sFunc->returnType.IsObjectHandle()) {
@@ -3600,8 +3766,12 @@ void SystemCall::call_thiscall(asSSystemFunctionInterface* func, asCScriptFuncti
 	call_entry(func,sFunc);
 
 	int firstArg = 0, lastArg = func->paramSize, argBytes;
+	bool popThis = false;
 
-	if(objPointer) {
+	if(func->objForThiscall) {
+		ecx = func->objForThiscall;
+	}
+	else if(objPointer) {
 		*objPointer &= *objPointer;
 		auto j = cpu.prep_short_jump(NotZero);
 			call_error();
@@ -3609,6 +3779,7 @@ void SystemCall::call_thiscall(asSSystemFunctionInterface* func, asCScriptFuncti
 		cpu.end_short_jump(j);
 	}
 	else {
+		popThis = true;
 		ecx = as<void*>(*esi);
 		firstArg = 1; lastArg += 1;
 
@@ -3650,7 +3821,7 @@ void SystemCall::call_thiscall(asSSystemFunctionInterface* func, asCScriptFuncti
 	cpu.call_thiscall_end(argBytes);
 
 	unsigned popCount = func->paramSize * sizeof(asDWORD);
-	if(!objPointer)
+	if(popThis)
 		popCount += sizeof(void*);
 	if(sFunc->DoesReturnOnStack())
 		popCount += sizeof(void*);
@@ -3727,7 +3898,7 @@ int stdcall callSysWrapper(int id, asIScriptContext* ctx, void* obj) {
 void stdcall returnScriptFunction(asCContext* ctx) {
 	// Return if this was the first function, or a nested execution
 	if( ctx->m_callStack.GetLength() == 0 ||
-		ctx->m_callStack[ctx->m_callStack.GetLength() - 5] == 0 )
+		ctx->m_callStack[ctx->m_callStack.GetLength() - 9] == 0 )
 	{
 		ctx->m_status = asEXECUTION_FINISHED;
 		return;

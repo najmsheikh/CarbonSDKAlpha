@@ -566,9 +566,10 @@ bool cgWorldConfiguration::loadSceneTable( )
         while( query.nextRow() )
         {
             // ToDo: move this logic into the descriptor itself.
+            cgUInt32 sceneType = cgSceneType::Standard;
             cgSceneDescriptor * sceneDescriptor = new cgSceneDescriptor();
             query.getColumn( _T("SceneId"), sceneDescriptor->sceneId );
-            query.getColumn( _T("SceneType"), (cgUInt32&)sceneDescriptor->type );
+            query.getColumn( _T("Type"), sceneType );
             query.getColumn( _T("FriendlyName"), sceneDescriptor->friendlyName );
             query.getColumn( _T("EditorName"), sceneDescriptor->name );
             query.getColumn( _T("Description"), sceneDescriptor->description );
@@ -585,6 +586,7 @@ bool cgWorldConfiguration::loadSceneTable( )
             query.getColumn( _T("CellDimensionsY"), sceneDescriptor->cellDimensions.y );
             query.getColumn( _T("CellDimensionsZ"), sceneDescriptor->cellDimensions.z );
             query.getColumn( _T("LandscapeId"), sceneDescriptor->landscapeId );
+            sceneDescriptor->type = (cgSceneType::Base)sceneType;
 
             // Ignore if a scene with this name already exists.
             if ( mSceneDescriptorLUT.find( sceneDescriptor->name ) != mSceneDescriptorLUT.end() )

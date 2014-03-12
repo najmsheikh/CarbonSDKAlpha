@@ -466,7 +466,7 @@ namespace cgImageOperation
     static const cgInt ColorControlsEnd   = (cgInt)BlueShift;
     static const cgInt ColorOnlyOperationsStart = (cgInt)SetColorRGB;
     static const cgInt ColorOnlyOperationsEnd   = (cgInt)SetColorA;
-    CGE_VECTOR_DECLARE( Base, Array )
+    CGE_ARRAY_DECLARE( Base, Array )
 
 } // End Namespace : cgImageOperation
 
@@ -838,7 +838,7 @@ struct CGE_API cgMaterialTerms
 struct CGE_API cgBlurOpDesc
 {
     // Typedefs
-    CGE_VECTOR_DECLARE( cgBlurOpDesc, Array )
+    CGE_ARRAY_DECLARE( cgBlurOpDesc, Array )
 
     // Members
     cgInt32                     passCount;
@@ -862,7 +862,7 @@ struct CGE_API cgBlurOpDesc
 struct cgDisplayMode
 {
     // Typedefs
-    CGE_VECTOR_DECLARE( cgDisplayMode, Array )
+    CGE_ARRAY_DECLARE( cgDisplayMode, Array )
 
     // Members
     union
@@ -879,7 +879,7 @@ struct cgDisplayMode
 struct cgAdapter
 {
     // Typedefs
-    CGE_VECTOR_DECLARE( cgAdapter, Array )
+    CGE_ARRAY_DECLARE( cgAdapter, Array )
 
     // Members
     cgInt32                 ordinal;

@@ -429,8 +429,8 @@ bool cgBSPVisTreeElement::buildTree( cgBSPTree * tree )
         return false;
 
     // Build the data needed for compilation.
-    std::vector<cgMeshHandle> meshes;
-    std::vector<cgTransform> transforms;
+    cgArray<cgMeshHandle> meshes;
+    cgArray<cgTransform> transforms;
     for ( size_t i = 0; i < mOcclusionGeometryIds.size(); ++i )
     {
         cgObjectNode * node = mParentScene->getObjectNodeById( mOcclusionGeometryIds[i] );

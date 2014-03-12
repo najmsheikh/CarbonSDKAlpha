@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.14</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
    </div>
   </td>
  </tr>
@@ -169,9 +169,6 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 <li>cgSceneCellKey()
 : <a class="el" href="structcg_scene_cell_key.html#a75a2e9ad5fdf7f9595ccda2d34451ad6">cgSceneCellKey</a>
 </li>
-<li>cgSceneCollisionContact()
-: <a class="el" href="structcg_scene_collision_contact.html#a688820494ce079bec29db29aa86305c3">cgSceneCollisionContact</a>
-</li>
 <li>cgSceneController()
 : <a class="el" href="classcg_scene_controller.html#ad214cc9ede4f533fe85d81691b5305aa">cgSceneController</a>
 </li>
@@ -195,6 +192,12 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 </li>
 <li>cgSceneMaterialEventArgs()
 : <a class="el" href="structcg_scene_material_event_args.html#a15b528bc14da07e544ce91ec254f607f">cgSceneMaterialEventArgs</a>
+</li>
+<li>cgSceneRayCastContact()
+: <a class="el" href="structcg_scene_ray_cast_contact.html#a2bd0277b3d962c3e3930d126d6b85029">cgSceneRayCastContact</a>
+</li>
+<li>cgSceneUnloadEventArgs()
+: <a class="el" href="structcg_scene_unload_event_args.html#aff589a3af05020d942d6498850df307d">cgSceneUnloadEventArgs</a>
 </li>
 <li>cgSceneUpdateEventArgs()
 : <a class="el" href="structcg_scene_update_event_args.html#aeebc4aa5698d7040ef713e2a2a227b98">cgSceneUpdateEventArgs</a>
@@ -376,11 +379,11 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 <li>sampleGlossTexture
 : <a class="el" href="structcg_render_driver_1_1_export_vars.html#accf22a5d75ddef77497ed47463952574">cgRenderDriver::ExportVars</a>
 </li>
-<li>sampleOpacityTexture
-: <a class="el" href="structcg_render_driver_1_1_export_vars.html#a65b501363844c2f06b43f519e1da34f5">cgRenderDriver::ExportVars</a>
-</li>
 <li>SampleOpacityTexture
 : <a class="el" href="classcg_render_driver.html#a277e73b233f4d3d8aec4a7e18b7432dba6940770024fc44d11b1a1a1cff6a551a">cgRenderDriver</a>
+</li>
+<li>sampleOpacityTexture
+: <a class="el" href="structcg_render_driver_1_1_export_vars.html#a65b501363844c2f06b43f519e1da34f5">cgRenderDriver::ExportVars</a>
 </li>
 <li>sampleRadius
 : <a class="el" href="structcg_reflectance_generator_1_1__cb_r_s_m.html#a8171695ca0dd005a96410924cb1cb96f">cgReflectanceGenerator::_cbRSM</a>
@@ -416,17 +419,17 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 <li>sampleScreenToViewScale
 : <a class="el" href="structcg_s_s_a_o_processor_1_1__cb_s_s_a_o.html#a49f9162052b7db1d1cddc06f11ebbb9b">cgSSAOProcessor::_cbSSAO</a>
 </li>
-<li>sampleSpecularColor
-: <a class="el" href="structcg_render_driver_1_1_export_vars.html#a20f40b3fc9955062e0741dad38399875">cgRenderDriver::ExportVars</a>
-</li>
 <li>SampleSpecularColor
 : <a class="el" href="classcg_render_driver.html#a277e73b233f4d3d8aec4a7e18b7432dbaac123c7f60b2e9cc1de6d0f606ad07a4">cgRenderDriver</a>
 </li>
-<li>sampleSpecularMask
-: <a class="el" href="structcg_render_driver_1_1_export_vars.html#a609e453c1fdff526b89bbf3c1920999f">cgRenderDriver::ExportVars</a>
+<li>sampleSpecularColor
+: <a class="el" href="structcg_render_driver_1_1_export_vars.html#a20f40b3fc9955062e0741dad38399875">cgRenderDriver::ExportVars</a>
 </li>
 <li>SampleSpecularMask
 : <a class="el" href="classcg_render_driver.html#a277e73b233f4d3d8aec4a7e18b7432dbaf618fe967efc7102166801e49921006f">cgRenderDriver</a>
+</li>
+<li>sampleSpecularMask
+: <a class="el" href="structcg_render_driver_1_1_export_vars.html#a609e453c1fdff526b89bbf3c1920999f">cgRenderDriver::ExportVars</a>
 </li>
 <li>samplesPerSecond
 : <a class="el" href="structcg_audio_buffer_format.html#ac0409f1d9a4a8ba5535b92de6531413a">cgAudioBufferFormat</a>
@@ -438,7 +441,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="struct_c_g_e_config.html#af5e245f977a45b0ac545594de45591b8">CGEConfig</a>
 </li>
 <li>sandboxRender()
-: <a class="el" href="classcg_spatial_tree_object.html#a381e81ea490a2ab54220d6f4e7eb8c54">cgSpatialTreeObject</a>
+: <a class="el" href="classcg_sound_emitter_object.html#a0a6dcd6191854a37df3fcd5a8a82ccb0">cgSoundEmitterObject</a>
+, <a class="el" href="classcg_spatial_tree_object.html#a381e81ea490a2ab54220d6f4e7eb8c54">cgSpatialTreeObject</a>
 , <a class="el" href="classcg_spline_object.html#ae4592c8f4580f10b37165a22e5da7b70">cgSplineObject</a>
 , <a class="el" href="classcg_spot_light_object.html#a83168a17d01775c9a77750c4aa163ab6">cgSpotLightObject</a>
 , <a class="el" href="classcg_target_object.html#a9ec03db93ae9ee010c5a485494b192a7">cgTargetObject</a>
@@ -452,6 +456,7 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 , <a class="el" href="classcg_navigation_mesh_element.html#a13a558b9305b2b83c8df67f79e852e53">cgNavigationMeshElement</a>
 , <a class="el" href="classcg_billboard_object.html#af0acd4ed7ae781a93d1f8bcca5d5a316">cgBillboardObject</a>
 , <a class="el" href="classcg_bone_object.html#affe38940bd8b6d48e9136d9677d63588">cgBoneObject</a>
+, <a class="el" href="classcg_camera_object.html#a3bb841cc7ff21ac034b28249682b89e7">cgCameraObject</a>
 , <a class="el" href="classcg_directional_light_object.html#a19916d932a01f3e3b8e40544c0ade445">cgDirectionalLightObject</a>
 , <a class="el" href="classcg_dummy_object.html#aee6b7117e49ba50c37ca21318a3bcc9f">cgDummyObject</a>
 , <a class="el" href="classcg_fixed_axis_joint_object.html#a61f4889485ae14de7485b66fb74065e2">cgFixedAxisJointObject</a>
@@ -466,7 +471,6 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 , <a class="el" href="classcg_point_light_object.html#a78da0f1cc3e8308c1d29b28c27ebb65f">cgPointLightObject</a>
 , <a class="el" href="classcg_projector_light_object.html#ab9078eac1e932c1b3e461d5fa07c54e1">cgProjectorLightObject</a>
 , <a class="el" href="classcg_skin_object.html#ad3891ba9e8139a74b0309152c9b94a28">cgSkinObject</a>
-, <a class="el" href="classcg_sound_emitter_object.html#a0a6dcd6191854a37df3fcd5a8a82ccb0">cgSoundEmitterObject</a>
 </li>
 <li>SandboxRenderMethod
 : <a class="el" href="classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998">cgNavigationMeshElement</a>
@@ -531,13 +535,14 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 <li>scene
 : <a class="el" href="structcg_scene_event_args.html#ad684ab2d69b9eadbf66e14fa95c19618">cgSceneEventArgs</a>
 , <a class="el" href="structcg_scene_load_event_args.html#ae831556e5da5a030f42d71d606d8b170">cgSceneLoadEventArgs</a>
+, <a class="el" href="structcg_scene_unload_event_args.html#ab52c90a15867a5ae811ab32d925b6b20">cgSceneUnloadEventArgs</a>
 </li>
 <li>sceneBounds
 : <a class="el" href="classcg_scene_descriptor.html#a33d07d3b0911b9b53bdcb7507ef79da0">cgSceneDescriptor</a>
 </li>
 <li>sceneId
-: <a class="el" href="classcg_scene_descriptor.html#a52febc48c05617888a5353be9357b707">cgSceneDescriptor</a>
-, <a class="el" href="structcg_scene_update_event_args.html#a22638d5838ee51f53a84e368e3b5cecb">cgSceneUpdateEventArgs</a>
+: <a class="el" href="structcg_scene_update_event_args.html#a22638d5838ee51f53a84e368e3b5cecb">cgSceneUpdateEventArgs</a>
+, <a class="el" href="classcg_scene_descriptor.html#a52febc48c05617888a5353be9357b707">cgSceneDescriptor</a>
 </li>
 <li>scissorTestEnable
 : <a class="el" href="structcg_rasterizer_state_desc.html#a067ea9c29be19e4e5cf2ded856cbb603">cgRasterizerStateDesc</a>
@@ -710,19 +715,23 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="structcg_navigation_agent_create_params.html#a0fe8b0c38755d08d1087a12797c1f05e">cgNavigationAgentCreateParams</a>
 </li>
 <li>serialize()
-: <a class="el" href="classcg_float_curve_animation_channel.html#a34f6c476d4ca389f8c0ffe61ad724839">cgFloatCurveAnimationChannel</a>
+: <a class="el" href="classcg_uniform_scale_target_controller.html#acf4330e8766a8936355ffe481505ed02">cgUniformScaleTargetController</a>
+, <a class="el" href="classcg_quaternion_target_controller.html#a76cc4707f4854b9fd341623817bb427b">cgQuaternionTargetController</a>
+, <a class="el" href="classcg_euler_angles_target_controller.html#a0c8cfd4c175c10a15ddc4debd3c1169b">cgEulerAnglesTargetController</a>
+, <a class="el" href="classcg_convex_hull_shape.html#a13c50a539f06df34d0de88b9fdcec688">cgConvexHullShape</a>
+, <a class="el" href="classcg_script_interop_1_1_utils_1_1_object_serializer.html#a73f023f21267ceee9cf7d5f05258fed4">cgScriptInterop::Utils::ObjectSerializer</a>
+, <a class="el" href="classcg_float_curve_animation_channel.html#a34f6c476d4ca389f8c0ffe61ad724839">cgFloatCurveAnimationChannel</a>
 , <a class="el" href="classcg_quaternion_animation_channel.html#a34d20f9bdde08e13254e7b3b182764ed">cgQuaternionAnimationChannel</a>
 , <a class="el" href="classcg_animation_target_controller.html#aff32f1fa5ef0e2a0996edaa61c05bd74">cgAnimationTargetController</a>
 , <a class="el" href="classcg_position_x_y_z_target_controller.html#af3b10a8524163b96bf1c07154262d020">cgPositionXYZTargetController</a>
 , <a class="el" href="classcg_scale_x_y_z_target_controller.html#a90332b129ce257636f558228d1d3aef8">cgScaleXYZTargetController</a>
-, <a class="el" href="classcg_uniform_scale_target_controller.html#acf4330e8766a8936355ffe481505ed02">cgUniformScaleTargetController</a>
-, <a class="el" href="classcg_quaternion_target_controller.html#a76cc4707f4854b9fd341623817bb427b">cgQuaternionTargetController</a>
-, <a class="el" href="classcg_euler_angles_target_controller.html#a0c8cfd4c175c10a15ddc4debd3c1169b">cgEulerAnglesTargetController</a>
-, <a class="el" href="classcg_convex_hull_shape.html#a13c50a539f06df34d0de88b9fdcec688">cgConvexHullShape</a>
 </li>
 <li>SerializeDirtyFlags
 : <a class="el" href="classcg_landscape_layer_material.html#a010ef3cc89bbab5852f11c9a61d39c0e">cgLandscapeLayerMaterial</a>
 , <a class="el" href="classcg_standard_material.html#a253bc8f6d60c77a6a3754f559ce84a51">cgStandardMaterial</a>
+</li>
+<li>serializeFlags()
+: <a class="el" href="classcg_object_node.html#a94d7d629c4d9c59c179562f56738efde">cgObjectNode</a>
 </li>
 <li>serializeMaterial()
 : <a class="el" href="classcg_landscape_layer_material.html#ac54bf789ebc18d2424e70634b847111f">cgLandscapeLayerMaterial</a>
@@ -1111,6 +1120,9 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 <li>setCustomProperty()
 : <a class="el" href="classcg_object_node.html#a1df5d7940088fd4ecb6a2728d8e89913">cgObjectNode</a>
 </li>
+<li>setData()
+: <a class="el" href="classcg_script_interop_1_1_utils_1_1_object_serializer_bridge.html#a5bf3bb50c0a4333385e46e661786ffa5">cgScriptInterop::Utils::ObjectSerializerBridge</a>
+</li>
 <li>setDataGroup()
 : <a class="el" href="classcg_bone_palette.html#aadee836e2974ab2f61c88fb21e557ef0">cgBonePalette</a>
 </li>
@@ -1283,10 +1295,9 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 , <a class="el" href="classcg_text_box_control.html#a5f8465e7aaf7a3837bb94568bd72ca5e">cgTextBoxControl</a>
 </li>
 <li>setForegroundBlur()
-: <a class="el" href="classcg_camera_object.html#aa7fe2a2ad5e9bbba84ce19e52068791c">cgCameraObject</a>
-, <a class="el" href="classcg_camera_node.html#a8bbea7b555e441ec39b0039501e5f337">cgCameraNode</a>
-, <a class="el" href="classcg_depth_of_field_processor.html#a8264995bebfbd05b48112eb28b5b2816">cgDepthOfFieldProcessor</a>
+: <a class="el" href="classcg_depth_of_field_processor.html#a8264995bebfbd05b48112eb28b5b2816">cgDepthOfFieldProcessor</a>
 , <a class="el" href="classcg_camera_object.html#ad11641270b56b6df157c4db96d032083">cgCameraObject</a>
+, <a class="el" href="classcg_camera_node.html#a8bbea7b555e441ec39b0039501e5f337">cgCameraNode</a>
 </li>
 <li>setForegroundExtents()
 : <a class="el" href="classcg_depth_of_field_processor.html#af0a4d77a4395798e0295faf4781ce4ec">cgDepthOfFieldProcessor</a>
@@ -1598,9 +1609,9 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 , <a class="el" href="classcg_mesh_node.html#a56e30739cdd61a6753255a568ed9c1b2">cgMeshNode</a>
 </li>
 <li>setMeshMaterial()
-: <a class="el" href="classcg_mesh_node.html#a42ea7cd3ed8ac9ef078ea36b051fbc45">cgMeshNode</a>
+: <a class="el" href="classcg_mesh.html#a879735a9cc8ed512916c0ba521357b9e">cgMesh</a>
 , <a class="el" href="classcg_mesh_object.html#aa391dc5c3c8e58464945b80a62778d84">cgMeshObject</a>
-, <a class="el" href="classcg_mesh.html#a879735a9cc8ed512916c0ba521357b9e">cgMesh</a>
+, <a class="el" href="classcg_mesh_node.html#a42ea7cd3ed8ac9ef078ea36b051fbc45">cgMeshNode</a>
 </li>
 <li>setMetalnessTerms()
 : <a class="el" href="classcg_standard_material.html#a43e24f15bf2464f2929bb4b2a43e5474">cgStandardMaterial</a>
@@ -1627,8 +1638,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_sampler.html#a4a309e82a627dd76c392bf0bbe63c4bc">cgSampler</a>
 </li>
 <li>setMode()
-: <a class="el" href="classcg_target_node.html#a5986e9fb46cccd1bcb6ca839f5b177ef">cgTargetNode</a>
-, <a class="el" href="classcg_target_object.html#a84342b288e9ae9d0e6a42d427731ff9f">cgTargetObject</a>
+: <a class="el" href="classcg_target_object.html#a84342b288e9ae9d0e6a42d427731ff9f">cgTargetObject</a>
+, <a class="el" href="classcg_target_node.html#a5986e9fb46cccd1bcb6ca839f5b177ef">cgTargetNode</a>
 </li>
 <li>setMouseMode()
 : <a class="el" href="classcg_input_driver.html#a8ae2b7ce2ece9dc10a0a732ee0bde3e0">cgInputDriver</a>
@@ -1647,11 +1658,11 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 , <a class="el" href="classcg_text_box_control.html#af2b54dd5300d0cad32ea86546c15434e">cgTextBoxControl</a>
 </li>
 <li>setName()
-: <a class="el" href="classcg_animation_set.html#a0e5adce72345c3e6f3ed335b5893694e">cgAnimationSet</a>
-, <a class="el" href="classcg_u_i_control.html#a537d31497e3ba00ffdf19931af0cdc0f">cgUIControl</a>
+: <a class="el" href="classcg_u_i_control.html#a537d31497e3ba00ffdf19931af0cdc0f">cgUIControl</a>
+, <a class="el" href="classcg_x_m_l_node.html#a2f3b9bcafd658f429d3b9af516e81c0d">cgXMLNode</a>
+, <a class="el" href="classcg_animation_set.html#a0e5adce72345c3e6f3ed335b5893694e">cgAnimationSet</a>
 , <a class="el" href="classcg_material.html#ae7a2d7890b1c4ab35970920946e1c706">cgMaterial</a>
 , <a class="el" href="classcg_x_m_l_attribute.html#a2b92ef405480f618df79021c960b73e8">cgXMLAttribute</a>
-, <a class="el" href="classcg_x_m_l_node.html#a2f3b9bcafd658f429d3b9af516e81c0d">cgXMLNode</a>
 , <a class="el" href="classcg_object_node.html#afbdd979dbdbd795bf7b2c606570d26df">cgObjectNode</a>
 </li>
 <li>setNearClip()
@@ -1701,31 +1712,30 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_standard_material.html#aafc1065b95c90667d6c36c53bd1de4fb">cgStandardMaterial</a>
 </li>
 <li>setOpen()
-: <a class="el" href="classcg_actor_object.html#a3a7842f9dac76c9dc54bd5216c0499fc">cgActorObject</a>
+: <a class="el" href="classcg_group_node.html#aa55096b2c0b9a2752febb3e1d1aa2dd5">cgGroupNode</a>
+, <a class="el" href="classcg_actor_object.html#a3a7842f9dac76c9dc54bd5216c0499fc">cgActorObject</a>
 , <a class="el" href="classcg_group_object.html#aa8309407209d5cf0f5215866e6103c36">cgGroupObject</a>
-, <a class="el" href="classcg_group_node.html#aa55096b2c0b9a2752febb3e1d1aa2dd5">cgGroupNode</a>
 </li>
 <li>setOrientation()
-: <a class="el" href="classcg_object_node.html#aa82f024e8302ce58ef59e1d83e66c383">cgObjectNode</a>
-, <a class="el" href="classcg_transform.html#a8932403d8bf5861b0bf0505736efc6e9">cgTransform</a>
+: <a class="el" href="classcg_transform.html#a8932403d8bf5861b0bf0505736efc6e9">cgTransform</a>
 , <a class="el" href="classcg_kinematic_controller_joint.html#a6661833bd1328cb43b1d8acee64dd470">cgKinematicControllerJoint</a>
 , <a class="el" href="classcg_object_node.html#aaecfbf9baea28eafb203c4f80b927f30">cgObjectNode</a>
 </li>
 <li>setOuterCone()
-: <a class="el" href="classcg_spot_light_node.html#a2f7b6abcff266814a49afa6aff4fe9ae">cgSpotLightNode</a>
+: <a class="el" href="classcg_spot_light_object.html#a10345a48b9bc5dcd9ef5999ebb3cb323">cgSpotLightObject</a>
 , <a class="el" href="classcg_particle_emitter_object.html#a29e4ffa81f1a51ede58d2ee80e5c675f">cgParticleEmitterObject</a>
 , <a class="el" href="classcg_particle_emitter_node.html#a749c0a9df0d5b0d263565e4a9650f944">cgParticleEmitterNode</a>
-, <a class="el" href="classcg_spot_light_object.html#a10345a48b9bc5dcd9ef5999ebb3cb323">cgSpotLightObject</a>
+, <a class="el" href="classcg_spot_light_node.html#a2f7b6abcff266814a49afa6aff4fe9ae">cgSpotLightNode</a>
 </li>
 <li>setOuterRange()
-: <a class="el" href="classcg_sound_emitter_node.html#a7c538831db6978d2ea95c2a3cf14638a">cgSoundEmitterNode</a>
+: <a class="el" href="classcg_sound_emitter_object.html#a8a9132f48d1d2df32aa07af390aaf802">cgSoundEmitterObject</a>
+, <a class="el" href="classcg_point_light_object.html#a12096dcd2d6fb5cacafa71da1fea6d46">cgPointLightObject</a>
 , <a class="el" href="classcg_hemisphere_light_object.html#acddf87f503cfa18771f06319bf1e87f3">cgHemisphereLightObject</a>
 , <a class="el" href="classcg_hemisphere_light_node.html#a0b43c91fcf65a6d0d960882f3386ed32">cgHemisphereLightNode</a>
-, <a class="el" href="classcg_point_light_object.html#a12096dcd2d6fb5cacafa71da1fea6d46">cgPointLightObject</a>
 , <a class="el" href="classcg_point_light_node.html#a96940af69e991ccb05ffafe0adfbf003">cgPointLightNode</a>
 , <a class="el" href="classcg_projector_light_object.html#a174736ca84bccca8d2b3b6508a775af9">cgProjectorLightObject</a>
 , <a class="el" href="classcg_projector_light_node.html#a1278dd270a33e9761e9e5c9d2b6e3dcc">cgProjectorLightNode</a>
-, <a class="el" href="classcg_sound_emitter_object.html#a8a9132f48d1d2df32aa07af390aaf802">cgSoundEmitterObject</a>
+, <a class="el" href="classcg_sound_emitter_node.html#a7c538831db6978d2ea95c2a3cf14638a">cgSoundEmitterNode</a>
 , <a class="el" href="classcg_spot_light_object.html#a6d98ac344dc1dc4b9e81a56deb0915c7">cgSpotLightObject</a>
 , <a class="el" href="classcg_spot_light_node.html#a97a181ba03ca65b1319cce48e449807d">cgSpotLightNode</a>
 </li>
@@ -1742,7 +1752,7 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="structcg_command_packet.html#af877e353abe87779c9e2efee6c0ff6a7">cgCommandPacket</a>
 </li>
 <li>setPadding()
-: <a class="el" href="classcg_u_i_control.html#a73969a6453088b4f97266f25295d9d86">cgUIControl</a>
+: <a class="el" href="classcg_u_i_control.html#a2114a235ba639475c01637f734b050d4">cgUIControl</a>
 </li>
 <li>setPan()
 : <a class="el" href="classcg_audio_buffer.html#a89811bfa1f7ab2642c8ff2566e13e964">cgAudioBuffer</a>
@@ -1766,20 +1776,22 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 , <a class="el" href="classcg_object_behavior.html#ab9834ced23019ef34bd154945fe1c6c8">cgObjectBehavior</a>
 </li>
 <li>setParentVisible()
-: <a class="el" href="classcg_list_box_control.html#a3c817c62cbe3b617dac47d06e90bbf4d">cgListBoxControl</a>
-, <a class="el" href="classcg_u_i_control.html#a46ad9fef42d9aa9aadeb42a4ddfe84bc">cgUIControl</a>
+: <a class="el" href="classcg_u_i_control.html#a46ad9fef42d9aa9aadeb42a4ddfe84bc">cgUIControl</a>
+, <a class="el" href="classcg_list_box_control.html#a3c817c62cbe3b617dac47d06e90bbf4d">cgListBoxControl</a>
 , <a class="el" href="classcg_text_box_control.html#a6f0411cea9746ff534d95535949899e4">cgTextBoxControl</a>
 </li>
 <li>setParticleAirResistance()
-: <a class="el" href="classcg_particle_emitter_object.html#a7f7370e0f1613576c0be66e4cc6a7b2a">cgParticleEmitterObject</a>
-, <a class="el" href="classcg_particle_emitter_node.html#a9b576e1d40509b1f120e6df46d2258b6">cgParticleEmitterNode</a>
+: <a class="el" href="classcg_particle_emitter_node.html#a9b576e1d40509b1f120e6df46d2258b6">cgParticleEmitterNode</a>
+, <a class="el" href="classcg_particle_emitter_object.html#a7f7370e0f1613576c0be66e4cc6a7b2a">cgParticleEmitterObject</a>
 </li>
 <li>setParticleAngularSpeed()
-: <a class="el" href="classcg_particle_emitter_object.html#aabdd3afc574f8a8dd55ff1840ed8dc13">cgParticleEmitterObject</a>
+: <a class="el" href="classcg_particle_emitter_node.html#a39a7c2ee7fe63627007bca52ae7938a9">cgParticleEmitterNode</a>
+, <a class="el" href="classcg_particle_emitter_object.html#aabdd3afc574f8a8dd55ff1840ed8dc13">cgParticleEmitterObject</a>
 , <a class="el" href="classcg_particle_emitter_node.html#a3bb73d3cf05f4e51207fc81eb4eab238">cgParticleEmitterNode</a>
 </li>
 <li>setParticleBaseScale()
-: <a class="el" href="classcg_particle_emitter_object.html#a670bf21103394fb304725ab6cc1eee45">cgParticleEmitterObject</a>
+: <a class="el" href="classcg_particle_emitter_node.html#a4fbebdba16ee7b4c8ab9dd0b8b996532">cgParticleEmitterNode</a>
+, <a class="el" href="classcg_particle_emitter_object.html#a670bf21103394fb304725ab6cc1eee45">cgParticleEmitterObject</a>
 , <a class="el" href="classcg_particle_emitter_node.html#aeb320c85702ab2c00b35d6b49da135c3">cgParticleEmitterNode</a>
 </li>
 <li>setParticleBlendMethod()
@@ -1787,23 +1799,20 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 , <a class="el" href="classcg_particle_emitter_node.html#acfb35ef91329d6b4e02e43df360067ab">cgParticleEmitterNode</a>
 </li>
 <li>setParticleLifetime()
-: <a class="el" href="classcg_particle_emitter_node.html#a39ab0527471cf0f6174195615d9af845">cgParticleEmitterNode</a>
-, <a class="el" href="classcg_particle_emitter_object.html#a53d1949188ce30ab1f31bf16f4291bcb">cgParticleEmitterObject</a>
-, <a class="el" href="classcg_particle_emitter_node.html#a6e5f0f1d03ec563ea43909dc7f2e9c69">cgParticleEmitterNode</a>
+: <a class="el" href="classcg_particle_emitter_object.html#a53d1949188ce30ab1f31bf16f4291bcb">cgParticleEmitterObject</a>
+, <a class="el" href="classcg_particle_emitter_node.html#a39ab0527471cf0f6174195615d9af845">cgParticleEmitterNode</a>
 </li>
 <li>setParticleMass()
-: <a class="el" href="classcg_particle_emitter_node.html#aeb1eff173fc9b7769ebd566b54afcb5b">cgParticleEmitterNode</a>
-, <a class="el" href="classcg_particle_emitter_object.html#aa22c8867d5140d7ee45dfe2ab729a0f4">cgParticleEmitterObject</a>
-, <a class="el" href="classcg_particle_emitter_node.html#a0e18f7fdc14ad0b6167388a23f21df8e">cgParticleEmitterNode</a>
+: <a class="el" href="classcg_particle_emitter_object.html#aaa80969f8e7ef60a878fa2ef1c75a369">cgParticleEmitterObject</a>
+, <a class="el" href="classcg_particle_emitter_node.html#aeb1eff173fc9b7769ebd566b54afcb5b">cgParticleEmitterNode</a>
 </li>
 <li>setParticleSize()
-: <a class="el" href="classcg_particle_emitter_object.html#af39adad99367a6cb76a6a1923139b7de">cgParticleEmitterObject</a>
+: <a class="el" href="classcg_particle_emitter_object.html#abe9a3d8c3787d0997de3b2111ed29a40">cgParticleEmitterObject</a>
 , <a class="el" href="classcg_particle_emitter_node.html#a41d759c38126d583a7c13d60bef1b36b">cgParticleEmitterNode</a>
 </li>
 <li>setParticleSpeed()
-: <a class="el" href="classcg_particle_emitter_node.html#a60cae685a84cad3e4b1b5f782a820998">cgParticleEmitterNode</a>
-, <a class="el" href="classcg_particle_emitter_object.html#a66726976e67706541a9b95af923cf8a7">cgParticleEmitterObject</a>
-, <a class="el" href="classcg_particle_emitter_node.html#a83415da7af627ad366f665964674b0d9">cgParticleEmitterNode</a>
+: <a class="el" href="classcg_particle_emitter_object.html#a9de0553d511127a08ef8b3f248497b2e">cgParticleEmitterObject</a>
+, <a class="el" href="classcg_particle_emitter_node.html#a60cae685a84cad3e4b1b5f782a820998">cgParticleEmitterNode</a>
 </li>
 <li>setParticleTexture()
 : <a class="el" href="classcg_particle_emitter_object.html#a2c29f5d0f58d7213e6c6722ffe33682d">cgParticleEmitterObject</a>
@@ -1828,7 +1837,7 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_random_1_1_noise_generator.html#ab18291a25c81faf11a2488241c620eeb">cgRandom::NoiseGenerator</a>
 </li>
 <li>setPhysicsController()
-: <a class="el" href="classcg_object_node.html#a553fdab9c51eac49bba5f711dec055b6">cgObjectNode</a>
+: <a class="el" href="classcg_object_node.html#a795e734fd7334dd853cb424e90e6ca2b">cgObjectNode</a>
 </li>
 <li>setPhysicsModel()
 : <a class="el" href="classcg_object_node.html#a2499d2df9f52799e0cf68432c998e060">cgObjectNode</a>
@@ -1837,8 +1846,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_audio_buffer.html#a985e513da75f6b057fd465470c76604c">cgAudioBuffer</a>
 </li>
 <li>setPivotTransform()
-: <a class="el" href="classcg_hinge_joint.html#a929e50f96ef37f4ed78a4701b112643c">cgHingeJoint</a>
-, <a class="el" href="classcg_ball_joint.html#abea1624916488e1c13da369412804e2c">cgBallJoint</a>
+: <a class="el" href="classcg_ball_joint.html#abea1624916488e1c13da369412804e2c">cgBallJoint</a>
+, <a class="el" href="classcg_hinge_joint.html#a929e50f96ef37f4ed78a4701b112643c">cgHingeJoint</a>
 </li>
 <li>setPixel()
 : <a class="el" href="classcg_landscape_texture_data.html#a2ec4794c559dd56ada6eafd78cbe198c">cgLandscapeTextureData</a>
@@ -1854,11 +1863,12 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 , <a class="el" href="classcg_projector_light_node.html#a6efc691bc20f915f0635488759a4a11b">cgProjectorLightNode</a>
 </li>
 <li>setPosition()
-: <a class="el" href="classcg_transform.html#a52f235744319cf0071d23529bb168f85">cgTransform</a>
-, <a class="el" href="classcg_u_i_control.html#a40cdc2c58678a3fbc2525b15bdfaef26">cgUIControl</a>
-, <a class="el" href="classcg_transform.html#a30c89b676d2cb9ca8e6b3b0f8347aab4">cgTransform</a>
-, <a class="el" href="classcg_kinematic_controller_joint.html#a95d348f3cc362f997a9f414a552f2a07">cgKinematicControllerJoint</a>
+: <a class="el" href="classcg_u_i_control.html#a3f3221ff2a73a37d2d63d42c2f104264">cgUIControl</a>
 , <a class="el" href="classcg_billboard.html#a19617fbd181162beeeb4d97caee7aa6e">cgBillboard</a>
+, <a class="el" href="classcg_u_i_control.html#a40cdc2c58678a3fbc2525b15bdfaef26">cgUIControl</a>
+, <a class="el" href="classcg_transform.html#a52f235744319cf0071d23529bb168f85">cgTransform</a>
+, <a class="el" href="classcg_kinematic_controller_joint.html#a95d348f3cc362f997a9f414a552f2a07">cgKinematicControllerJoint</a>
+, <a class="el" href="classcg_billboard.html#a303cc1eba9e66b758fc13dfd872775bb">cgBillboard</a>
 , <a class="el" href="classcg_object_node.html#ac83aeafed06fed0ae683e85043a435c3">cgObjectNode</a>
 </li>
 <li>setPreviousSibling()
@@ -1895,10 +1905,10 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_character_controller.html#aea4009822813e868fa1ba81487f382ad">cgCharacterController</a>
 </li>
 <li>setRangeAdjust()
-: <a class="el" href="classcg_hemisphere_light_object.html#ac71c0329fc4da73676387d307030b8a5">cgHemisphereLightObject</a>
+: <a class="el" href="classcg_point_light_node.html#a5af5ba5320dc5288aec291778578e18d">cgPointLightNode</a>
+, <a class="el" href="classcg_hemisphere_light_object.html#ac71c0329fc4da73676387d307030b8a5">cgHemisphereLightObject</a>
 , <a class="el" href="classcg_hemisphere_light_node.html#adb7a5bf2fc125f92afb9db059f4dbe9f">cgHemisphereLightNode</a>
 , <a class="el" href="classcg_point_light_object.html#a146de4553ff236038f0539e39dfb6e0a">cgPointLightObject</a>
-, <a class="el" href="classcg_point_light_node.html#a5af5ba5320dc5288aec291778578e18d">cgPointLightNode</a>
 </li>
 <li>setRasterizerState()
 : <a class="el" href="classcg_render_driver.html#af73f376bb3d2bc4056cd0222276d8e7e">cgRenderDriver</a>
@@ -1934,8 +1944,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_render_driver.html#a8eab2256507d6d5f0edec35390b976fd">cgRenderDriver</a>
 </li>
 <li>setResourceLost()
-: <a class="el" href="classcg_resource.html#a344815d561d103f642f73baca874ffa1">cgResource</a>
-, <a class="el" href="class_resource_handle_base.html#a4e81eab2edb4de6fdc89eeeccea189cf">ResourceHandleBase</a>
+: <a class="el" href="class_resource_handle_base.html#a4e81eab2edb4de6fdc89eeeccea189cf">ResourceHandleBase</a>
+, <a class="el" href="classcg_resource.html#a344815d561d103f642f73baca874ffa1">cgResource</a>
 </li>
 <li>setResourceName()
 : <a class="el" href="classcg_resource.html#ae85730793dd8ff1ff7cb8bddd7b1f12b">cgResource</a>
@@ -1944,8 +1954,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_resource.html#a1f85f1cdf929af03b2dd269cb0ee65ec">cgResource</a>
 </li>
 <li>setRimColor()
-: <a class="el" href="classcg_light_object.html#a6aa47488fa0346239f274b7a68a565af">cgLightObject</a>
-, <a class="el" href="classcg_light_node.html#a3033efc70e3cfdba2483c70daa0cef94">cgLightNode</a>
+: <a class="el" href="classcg_light_node.html#a3033efc70e3cfdba2483c70daa0cef94">cgLightNode</a>
+, <a class="el" href="classcg_light_object.html#a6aa47488fa0346239f274b7a68a565af">cgLightObject</a>
 </li>
 <li>setRimHDRScale()
 : <a class="el" href="classcg_light_object.html#ae48730c4f608a7c9daf8a6bd62b1abe1">cgLightObject</a>
@@ -1962,8 +1972,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 </li>
 <li>setRotation()
 : <a class="el" href="classcg_billboard3_d.html#ac84876392c75feff29f47901982cbedf">cgBillboard3D</a>
-, <a class="el" href="classcg_billboard_object.html#a5c039244138e994db5d407f4ec282337">cgBillboardObject</a>
 , <a class="el" href="classcg_billboard_node.html#a3dfe60c6311673ed7dd43f5bfdac7459">cgBillboardNode</a>
+, <a class="el" href="classcg_billboard_object.html#a5c039244138e994db5d407f4ec282337">cgBillboardObject</a>
 </li>
 <li>setRotationBlurAmount()
 : <a class="el" href="classcg_motion_blur_processor.html#a9ce7573f3eda165e9304512c37674ed5">cgMotionBlurProcessor</a>
@@ -1987,11 +1997,10 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_image_processor.html#ae91aa63f0c22316ff6bb423cb1a2c210">cgImageProcessor</a>
 </li>
 <li>setScale()
-: <a class="el" href="classcg_billboard3_d.html#a7ea26969324c73c461fc8a10f742ca76">cgBillboard3D</a>
+: <a class="el" href="classcg_billboard3_d.html#a5437220c968f415157229867bd94c53c">cgBillboard3D</a>
 , <a class="el" href="classcg_landscape_layer_material.html#a7da8a4c73da7614072d562af1e608bc4">cgLandscapeLayerMaterial</a>
 , <a class="el" href="classcg_billboard_object.html#adad778b3514d0f2f785c5d95c0bbaffe">cgBillboardObject</a>
 , <a class="el" href="classcg_billboard_node.html#a4c76c24c8f852ccac196b65c9879623b">cgBillboardNode</a>
-, <a class="el" href="classcg_billboard3_d.html#a5437220c968f415157229867bd94c53c">cgBillboard3D</a>
 </li>
 <li>setScaleCurves()
 : <a class="el" href="classcg_particle_emitter_object.html#ade180eab46a1f8442e72f38fc56a5e0b">cgParticleEmitterObject</a>
@@ -2001,8 +2010,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_image_box_control.html#a130929da66bb9741e274db0adc22eaf3">cgImageBoxControl</a>
 </li>
 <li>setScaleXCurve()
-: <a class="el" href="classcg_particle_emitter_node.html#ad9156e962e62c2ef38cff579bab1be8e">cgParticleEmitterNode</a>
-, <a class="el" href="classcg_particle_emitter_object.html#ab29a927ab889f0c20b948bc0cfdc7f2a">cgParticleEmitterObject</a>
+: <a class="el" href="classcg_particle_emitter_object.html#ab29a927ab889f0c20b948bc0cfdc7f2a">cgParticleEmitterObject</a>
+, <a class="el" href="classcg_particle_emitter_node.html#ad9156e962e62c2ef38cff579bab1be8e">cgParticleEmitterNode</a>
 </li>
 <li>setScaleYCurve()
 : <a class="el" href="classcg_particle_emitter_object.html#a6c17c5b26329a63ba0f46249aea8f1e7">cgParticleEmitterObject</a>
@@ -2017,12 +2026,15 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 <li>setScissorRectangle()
 : <a class="el" href="classcg_light_node.html#ae6aa4bb5bbc5a87833edfd5902dac2bd">cgLightNode</a>
 </li>
+<li>setScreenSizeOverride()
+: <a class="el" href="classcg_render_driver.html#a71676e64f0fda2ef592202f1c20115f3">cgRenderDriver</a>
+</li>
 <li>setSearchFlags()
 : <a class="el" href="classcg_visibility_set.html#ae250338b906d7eefab076aeed12ccd95">cgVisibilitySet</a>
 </li>
 <li>setSeed()
-: <a class="el" href="classcg_random_1_1_noise_generator.html#a9f42a25249b35988ea0b57ceae19e7e8">cgRandom::NoiseGenerator</a>
-, <a class="el" href="classcg_random_1_1_park_miller.html#a0b5abaf88e08d6f1c105ad4f564a39d6">cgRandom::ParkMiller</a>
+: <a class="el" href="classcg_random_1_1_park_miller.html#a0b5abaf88e08d6f1c105ad4f564a39d6">cgRandom::ParkMiller</a>
+, <a class="el" href="classcg_random_1_1_noise_generator.html#a9f42a25249b35988ea0b57ceae19e7e8">cgRandom::NoiseGenerator</a>
 </li>
 <li>setSelected()
 : <a class="el" href="classcg_object_node.html#a780060e1ba51afb45d526bee7d0aae2f">cgObjectNode</a>
@@ -2041,12 +2053,12 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 , <a class="el" href="classcg_light_node.html#aff3703fc01f34a54c83bcb6badcb0260">cgLightNode</a>
 </li>
 <li>setShadowLODMinDistance()
-: <a class="el" href="classcg_light_object.html#a76d2028d63e124eaed76ac2f89234d5a">cgLightObject</a>
-, <a class="el" href="classcg_light_node.html#a204145992e008071d6dfaf3163d8978a">cgLightNode</a>
+: <a class="el" href="classcg_light_node.html#a204145992e008071d6dfaf3163d8978a">cgLightNode</a>
+, <a class="el" href="classcg_light_object.html#a76d2028d63e124eaed76ac2f89234d5a">cgLightObject</a>
 </li>
 <li>setShadowMapEdgeProcess()
-: <a class="el" href="classcg_point_light_node.html#ad6807e582e585356f224593eace3ee34">cgPointLightNode</a>
-, <a class="el" href="classcg_point_light_object.html#ad4270c4e723d0cf8e9203af422e64a2d">cgPointLightObject</a>
+: <a class="el" href="classcg_point_light_object.html#ad4270c4e723d0cf8e9203af422e64a2d">cgPointLightObject</a>
+, <a class="el" href="classcg_point_light_node.html#ad6807e582e585356f224593eace3ee34">cgPointLightNode</a>
 </li>
 <li>setShadowMaxDistance()
 : <a class="el" href="classcg_light_object.html#afca16bc0eaa3e020be55595ab87deca8">cgLightObject</a>
@@ -2057,21 +2069,21 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 , <a class="el" href="classcg_light_node.html#a278b79809cd044760952d598f24f4589">cgLightNode</a>
 </li>
 <li>setShadowStage()
-: <a class="el" href="classcg_skin_node.html#ad906bc5a32be2429b238e2aa9cd1ef05">cgSkinNode</a>
-, <a class="el" href="classcg_light_object.html#a323a7066b853025d1b7cd86c8ed806e2">cgLightObject</a>
-, <a class="el" href="classcg_skin_object.html#a93e5f98c187008b7c1cd34d5f7e1a176">cgSkinObject</a>
-, <a class="el" href="classcg_light_node.html#a9cf7bb5c9f9ce536befce5e617b55d8f">cgLightNode</a>
-, <a class="el" href="classcg_mesh_node.html#ada61fbed5e4c496af9a3532b2e74f7c0">cgMeshNode</a>
+: <a class="el" href="classcg_light_node.html#a9cf7bb5c9f9ce536befce5e617b55d8f">cgLightNode</a>
 , <a class="el" href="classcg_mesh_object.html#a40279198b1accaa91602faa4eb8a478e">cgMeshObject</a>
+, <a class="el" href="classcg_mesh_node.html#ada61fbed5e4c496af9a3532b2e74f7c0">cgMeshNode</a>
+, <a class="el" href="classcg_light_object.html#a323a7066b853025d1b7cd86c8ed806e2">cgLightObject</a>
+, <a class="el" href="classcg_skin_node.html#ad906bc5a32be2429b238e2aa9cd1ef05">cgSkinNode</a>
+, <a class="el" href="classcg_skin_object.html#a93e5f98c187008b7c1cd34d5f7e1a176">cgSkinObject</a>
 </li>
 <li>setShadowUpdateRate()
-: <a class="el" href="classcg_spot_light_node.html#ae0caf30bc10251349c4911da9f44e4c8">cgSpotLightNode</a>
+: <a class="el" href="classcg_directional_light_node.html#af360ea48c7bfaab158646413e4c95b65">cgDirectionalLightNode</a>
 , <a class="el" href="classcg_spot_light_object.html#a349b7221581a9ae9245fc4b973d47506">cgSpotLightObject</a>
-, <a class="el" href="classcg_directional_light_node.html#af360ea48c7bfaab158646413e4c95b65">cgDirectionalLightNode</a>
 , <a class="el" href="classcg_point_light_object.html#a6d3ec59c981146f1f019bcb5194e4e67">cgPointLightObject</a>
 , <a class="el" href="classcg_point_light_node.html#af17b5d58a8f52932535ae9cbd898da7f">cgPointLightNode</a>
-, <a class="el" href="classcg_projector_light_node.html#a475188b681415421101a24b98afb89fb">cgProjectorLightNode</a>
+, <a class="el" href="classcg_spot_light_node.html#ae0caf30bc10251349c4911da9f44e4c8">cgSpotLightNode</a>
 , <a class="el" href="classcg_directional_light_object.html#a06130d1763af376427f3bfee6a924736">cgDirectionalLightObject</a>
+, <a class="el" href="classcg_projector_light_node.html#a475188b681415421101a24b98afb89fb">cgProjectorLightNode</a>
 , <a class="el" href="classcg_projector_light_object.html#ad6c70ac9b54e8848794e5a6e78c29d66">cgProjectorLightObject</a>
 </li>
 <li>setSimulationQuality()
@@ -2081,19 +2093,23 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_timer.html#af20a3ffc0e04e2d9d9af6fedaffaa8c3">cgTimer</a>
 </li>
 <li>setSize()
-: <a class="el" href="classcg_billboard_object.html#aa417070fad807cf93aff1cccee3a5a9d">cgBillboardObject</a>
-, <a class="el" href="classcg_projector_light_node.html#ad08c256c62fa21964b908730062a6317">cgProjectorLightNode</a>
-, <a class="el" href="classcg_win_app_window.html#acdfbaa77df43cbf8f54aac3265c83d8f">cgWinAppWindow</a>
-, <a class="el" href="classcg_u_i_control.html#ab855fad0b8aca6dfaede2d4722179270">cgUIControl</a>
-, <a class="el" href="classcg_app_window.html#a494d38f509f4aded0ab65c0c2a755e19">cgAppWindow</a>
-, <a class="el" href="classcg_dummy_node.html#a799ac0c262e24fabbb623f38974592e1">cgDummyNode</a>
-, <a class="el" href="classcg_u_i_control.html#a556b94dd22aade3a522ecf353ad4a6ea">cgUIControl</a>
-, <a class="el" href="classcg_billboard.html#a2389be71617b5b74b0c709f1736a1413">cgBillboard</a>
-, <a class="el" href="classcg_billboard_node.html#a3078791d7174b069dfc517c564950a6e">cgBillboardNode</a>
+: <a class="el" href="classcg_billboard.html#a2389be71617b5b74b0c709f1736a1413">cgBillboard</a>
+, <a class="el" href="classcg_projector_light_node.html#a33b791c8eebd0ea6701d3da0b27ca901">cgProjectorLightNode</a>
 , <a class="el" href="classcg_dummy_object.html#a4db97df4912197929e9895836f4214aa">cgDummyObject</a>
-, <a class="el" href="classcg_projector_light_object.html#a1544835c60155d902ccfa364a800ef6b">cgProjectorLightObject</a>
+, <a class="el" href="classcg_u_i_control.html#ab855fad0b8aca6dfaede2d4722179270">cgUIControl</a>
+, <a class="el" href="classcg_billboard_node.html#a3078791d7174b069dfc517c564950a6e">cgBillboardNode</a>
+, <a class="el" href="classcg_u_i_control.html#a556b94dd22aade3a522ecf353ad4a6ea">cgUIControl</a>
+, <a class="el" href="classcg_win_app_window.html#acdfbaa77df43cbf8f54aac3265c83d8f">cgWinAppWindow</a>
+, <a class="el" href="classcg_dummy_node.html#a799ac0c262e24fabbb623f38974592e1">cgDummyNode</a>
+, <a class="el" href="classcg_projector_light_node.html#ad08c256c62fa21964b908730062a6317">cgProjectorLightNode</a>
 , <a class="el" href="classcg_billboard.html#adeaeed8222ed5f6205dac5313d5c4920">cgBillboard</a>
+, <a class="el" href="classcg_projector_light_object.html#a1544835c60155d902ccfa364a800ef6b">cgProjectorLightObject</a>
+, <a class="el" href="classcg_billboard_object.html#aa417070fad807cf93aff1cccee3a5a9d">cgBillboardObject</a>
 , <a class="el" href="classcg_projector_light_object.html#ae13c6829041f81ca2f5774f83bf8605f">cgProjectorLightObject</a>
+, <a class="el" href="classcg_app_window.html#a494d38f509f4aded0ab65c0c2a755e19">cgAppWindow</a>
+</li>
+<li>setSizeUninitialized()
+: <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#aa24ba2a7ce4af4f72dab36d83eb22a5a">cgScriptInterop::Types::ScriptArray</a>
 </li>
 <li>setSkyType()
 : <a class="el" href="classcg_sky_element.html#a2fe11d7a086e15b98691381961fc3240">cgSkyElement</a>
@@ -2105,30 +2121,32 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_winsock_broadcast_client.html#a36e85a941fb368324fa0586fe47d521e">cgWinsockBroadcastClient</a>
 </li>
 <li>setSource()
-: <a class="el" href="classcg_resample_chain.html#a7ebea4008df9e4b62090065994b15dbc">cgResampleChain</a>
-, <a class="el" href="classcg_resample_chain_m_r_t.html#a51b7a114900ac804298f09cb8d6fc129">cgResampleChainMRT</a>
-, <a class="el" href="classcg_resample_chain.html#ad777dcc0ae1b7db0d491070287b9a894">cgResampleChain</a>
+: <a class="el" href="classcg_resample_chain.html#ad777dcc0ae1b7db0d491070287b9a894">cgResampleChain</a>
+, <a class="el" href="classcg_resample_chain_m_r_t.html#a8805fc01bdc82b17732a830a488a8a6c">cgResampleChainMRT</a>
+, <a class="el" href="classcg_resample_chain.html#a955186aa1ce3d2a09b4569c1ecc1156c">cgResampleChain</a>
 , <a class="el" href="classcg_resample_chain_m_r_t.html#a12d68bfa7e42fb390d3d780b0957566d">cgResampleChainMRT</a>
+, <a class="el" href="classcg_resample_chain.html#a7ebea4008df9e4b62090065994b15dbc">cgResampleChain</a>
+, <a class="el" href="classcg_resample_chain_m_r_t.html#a51b7a114900ac804298f09cb8d6fc129">cgResampleChainMRT</a>
 </li>
 <li>setSourceFile()
-: <a class="el" href="classcg_sound_emitter_node.html#af7ec53405b0139969825738cae34be76">cgSoundEmitterNode</a>
-, <a class="el" href="classcg_sound_emitter_object.html#aa4d7071dfee7af31229db02eba7a39c3">cgSoundEmitterObject</a>
+: <a class="el" href="classcg_sound_emitter_object.html#aa4d7071dfee7af31229db02eba7a39c3">cgSoundEmitterObject</a>
+, <a class="el" href="classcg_sound_emitter_node.html#af7ec53405b0139969825738cae34be76">cgSoundEmitterNode</a>
 </li>
 <li>setSpecular()
 : <a class="el" href="classcg_standard_material.html#adb7ac414e377fe8b0970ae3e30a516ac">cgStandardMaterial</a>
 </li>
 <li>setSpecularBackColor()
-: <a class="el" href="classcg_hemisphere_light_object.html#ae6f4e882dadf563dff0ac29890a0500b">cgHemisphereLightObject</a>
-, <a class="el" href="classcg_hemisphere_light_node.html#acd46a8b6c9322a3c4e462c4b38f50aaf">cgHemisphereLightNode</a>
+: <a class="el" href="classcg_hemisphere_light_node.html#acd46a8b6c9322a3c4e462c4b38f50aaf">cgHemisphereLightNode</a>
+, <a class="el" href="classcg_hemisphere_light_object.html#ae6f4e882dadf563dff0ac29890a0500b">cgHemisphereLightObject</a>
 </li>
 <li>setSpecularBackHDRScale()
-: <a class="el" href="classcg_hemisphere_light_object.html#a769b1c839d9cecf858383d8c45631863">cgHemisphereLightObject</a>
-, <a class="el" href="classcg_hemisphere_light_node.html#a9d2e067ec0b155a04c10a8bf02ceccb3">cgHemisphereLightNode</a>
+: <a class="el" href="classcg_hemisphere_light_node.html#a9d2e067ec0b155a04c10a8bf02ceccb3">cgHemisphereLightNode</a>
+, <a class="el" href="classcg_hemisphere_light_object.html#a769b1c839d9cecf858383d8c45631863">cgHemisphereLightObject</a>
 </li>
 <li>setSpecularColor()
-: <a class="el" href="classcg_light_node.html#a2bd3b58ce21cc80edf0474dcedfe4a21">cgLightNode</a>
+: <a class="el" href="classcg_light_object.html#a8d95963aabb5baed6938cc0b930a7dcd">cgLightObject</a>
 , <a class="el" href="classcg_hemisphere_light_object.html#a0583e22d2702d66e1ad1690a4e420609">cgHemisphereLightObject</a>
-, <a class="el" href="classcg_light_object.html#a8d95963aabb5baed6938cc0b930a7dcd">cgLightObject</a>
+, <a class="el" href="classcg_light_node.html#a2bd3b58ce21cc80edf0474dcedfe4a21">cgLightNode</a>
 </li>
 <li>setSpecularHDRScale()
 : <a class="el" href="classcg_light_object.html#ada138fc66310e485b8bfb07b339837e6">cgLightObject</a>
@@ -2139,8 +2157,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 , <a class="el" href="classcg_light_node.html#a3a5ad51f0579dbe61e4eb3814c156c45">cgLightNode</a>
 </li>
 <li>setSpecularMinDistance()
-: <a class="el" href="classcg_light_node.html#a2d6ff711fc1c08da6340762d767b1e1e">cgLightNode</a>
-, <a class="el" href="classcg_light_object.html#a43a6b00657513172d9d2aab9ed64c3eb">cgLightObject</a>
+: <a class="el" href="classcg_light_object.html#a43a6b00657513172d9d2aab9ed64c3eb">cgLightObject</a>
+, <a class="el" href="classcg_light_node.html#a2d6ff711fc1c08da6340762d767b1e1e">cgLightNode</a>
 </li>
 <li>setSpecularOpacity()
 : <a class="el" href="classcg_standard_material.html#ae9b07ff60ac188fe245a926bf510c320">cgStandardMaterial</a>
@@ -2149,12 +2167,12 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_standard_material.html#a2b53323db9d35a08acd3b61226f14187">cgStandardMaterial</a>
 </li>
 <li>setSplineData()
-: <a class="el" href="classcg_spline_node.html#abfd6cbf9821283692e04f820c389d5bb">cgSplineNode</a>
-, <a class="el" href="classcg_spline_object.html#a8e21bbaf5542911a480f0cbdcce2ceda">cgSplineObject</a>
+: <a class="el" href="classcg_spline_object.html#a8e21bbaf5542911a480f0cbdcce2ceda">cgSplineObject</a>
+, <a class="el" href="classcg_spline_node.html#abfd6cbf9821283692e04f820c389d5bb">cgSplineNode</a>
 </li>
 <li>setSplinePoint()
-: <a class="el" href="classcg_bezier_spline3.html#a18e61542e74b6acfdc0b7e626d1d66c7">cgBezierSpline3</a>
-, <a class="el" href="classcg_bezier_spline2.html#a11a0841ddd7a1dc6cc629456d10c742b">cgBezierSpline2</a>
+: <a class="el" href="classcg_bezier_spline2.html#a11a0841ddd7a1dc6cc629456d10c742b">cgBezierSpline2</a>
+, <a class="el" href="classcg_bezier_spline3.html#a18e61542e74b6acfdc0b7e626d1d66c7">cgBezierSpline3</a>
 </li>
 <li>setStates()
 : <a class="el" href="classcg_sampler.html#a4f97c91fa99edfb13af9d54eb7ebbe08">cgSampler</a>
@@ -2163,17 +2181,17 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_scroll_bar_control.html#a0e93ba0be0dd3c28448098e71b5fa5ad">cgScrollBarControl</a>
 </li>
 <li>setStreamSource()
-: <a class="el" href="classcg_input_stream.html#a862008997fe8722778da9e7f79f9855f">cgInputStream</a>
+: <a class="el" href="classcg_input_stream.html#a56b6c2b657f83f916987f07871375944">cgInputStream</a>
 , <a class="el" href="classcg_render_driver.html#a5b635024e6e2f3cfce5810a0e15d9bc6">cgRenderDriver</a>
-, <a class="el" href="classcg_input_stream.html#aa77a2d93ccda0da8fb58b813af47f5c4">cgInputStream</a>
+, <a class="el" href="classcg_input_stream.html#a3c1505e00a055da91adc73bb5702a2c6">cgInputStream</a>
 </li>
 <li>setStrength()
 : <a class="el" href="classcg_sampler.html#a932fb6069681f96bf7ed40bf6ae34332">cgSampler</a>
 </li>
 <li>setSurfaceShader()
-: <a class="el" href="classcg_standard_material.html#a9ac571f6da42a42e5c777381d8ab4095">cgStandardMaterial</a>
+: <a class="el" href="classcg_landscape_layer_material.html#adbcd546d3efb41375f4a76900112aceb">cgLandscapeLayerMaterial</a>
 , <a class="el" href="classcg_material.html#aac67f08285265ff5ca6122c8794168e6">cgMaterial</a>
-, <a class="el" href="classcg_landscape_layer_material.html#adbcd546d3efb41375f4a76900112aceb">cgLandscapeLayerMaterial</a>
+, <a class="el" href="classcg_standard_material.html#a9ac571f6da42a42e5c777381d8ab4095">cgStandardMaterial</a>
 </li>
 <li>setSystemScale()
 : <a class="el" href="classcg_physics_world.html#a7496aeb6cd73307b44d86d80612105cc">cgPhysicsWorld</a>
@@ -2185,8 +2203,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_target_node.html#acc4680490e7e63079efbf9081f0bb43e">cgTargetNode</a>
 </li>
 <li>setTargetMethod()
-: <a class="el" href="classcg_target_node.html#ac25ca923671e954a46c8c08e92c82f5e">cgTargetNode</a>
-, <a class="el" href="classcg_object_node.html#a183cbb147c25b33e287c028e0481f9d5">cgObjectNode</a>
+: <a class="el" href="classcg_object_node.html#a183cbb147c25b33e287c028e0481f9d5">cgObjectNode</a>
+, <a class="el" href="classcg_target_node.html#ac25ca923671e954a46c8c08e92c82f5e">cgTargetNode</a>
 </li>
 <li>setTargetRate()
 : <a class="el" href="classcg_motion_blur_processor.html#a7a7a3bbfbe9685dddf68d2adc35f9e52">cgMotionBlurProcessor</a>
@@ -2198,28 +2216,29 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_x_m_l_attribute.html#aa46f9bf5f6f778ebcc0d4eb6b358f083">cgXMLAttribute</a>
 </li>
 <li>setTextColor()
-: <a class="el" href="classcg_text_box_control.html#a27d178473a6b79fe6f5bd59da7b18cf1">cgTextBoxControl</a>
-, <a class="el" href="classcg_u_i_control.html#af4c4b53c9d7acf7fd80624df06f9c4ad">cgUIControl</a>
+: <a class="el" href="classcg_combo_box_control.html#add300cc00a4419dfe990913d869b55aa">cgComboBoxControl</a>
 , <a class="el" href="classcg_label_control.html#a4159ee320ec6cf1a44cf8134eb0b9556">cgLabelControl</a>
-, <a class="el" href="classcg_button_control.html#a6e8f76e9a361771f51f6f2c739e5b0ab">cgButtonControl</a>
-, <a class="el" href="classcg_check_box_control.html#a4a5b6d3fa637ca38abb02695e79c6571">cgCheckBoxControl</a>
-, <a class="el" href="classcg_combo_box_control.html#add300cc00a4419dfe990913d869b55aa">cgComboBoxControl</a>
 , <a class="el" href="classcg_list_box_control.html#aee7654424fde2afc5272af69c9cb75ef">cgListBoxControl</a>
+, <a class="el" href="classcg_button_control.html#a6e8f76e9a361771f51f6f2c739e5b0ab">cgButtonControl</a>
+, <a class="el" href="classcg_u_i_control.html#af4c4b53c9d7acf7fd80624df06f9c4ad">cgUIControl</a>
+, <a class="el" href="classcg_check_box_control.html#a4a5b6d3fa637ca38abb02695e79c6571">cgCheckBoxControl</a>
+, <a class="el" href="classcg_text_box_control.html#a27d178473a6b79fe6f5bd59da7b18cf1">cgTextBoxControl</a>
 </li>
 <li>setTexture()
-: <a class="el" href="classcg_render_driver.html#a5a46760fb14db4e755d79cf80cd47c51">cgRenderDriver</a>
-, <a class="el" href="classcg_sampler.html#af8846e57fbbfbaccee47eea1ddb85b29">cgSampler</a>
+: <a class="el" href="classcg_sampler.html#a12457f71b4cbd81ba2b4cc05e0c2d5b5">cgSampler</a>
+, <a class="el" href="classcg_render_driver.html#a5a46760fb14db4e755d79cf80cd47c51">cgRenderDriver</a>
 </li>
 <li>setThisObject()
 : <a class="el" href="classcg_script.html#a9a01ebbd850ca82a635bbd5d678c473f">cgScript</a>
 </li>
 <li>setThreadData()
-: <a class="el" href="classcg_win_thread.html#a65eae10167f4d73048f6b46d9749c92d">cgWinThread</a>
-, <a class="el" href="classcg_thread.html#a27f8345e1402f44bc19342ce273ea2a8">cgThread</a>
+: <a class="el" href="classcg_thread.html#a27f8345e1402f44bc19342ce273ea2a8">cgThread</a>
+, <a class="el" href="classcg_win_thread.html#a65eae10167f4d73048f6b46d9749c92d">cgWinThread</a>
 </li>
 <li>setTiling()
-: <a class="el" href="classcg_projector_light_node.html#ab7d41ceb95731dd772d79aab5b34df7c">cgProjectorLightNode</a>
-, <a class="el" href="classcg_projector_light_object.html#a84cc515f81f80b613f2568566902c30d">cgProjectorLightObject</a>
+: <a class="el" href="classcg_projector_light_node.html#a4287585b9af96cd8e42ec9fa64b22460">cgProjectorLightNode</a>
+, <a class="el" href="classcg_projector_light_object.html#a62310345aad4c54c2f1092a14db05a33">cgProjectorLightObject</a>
+, <a class="el" href="classcg_projector_light_node.html#ab7d41ceb95731dd772d79aab5b34df7c">cgProjectorLightNode</a>
 </li>
 <li>settings
 : <a class="el" href="structcg_lighting_manager_1_1_shadow_settings_data.html#a65ec4402734cd67b5242359e6b8caa1e">cgLightingManager::ShadowSettingsData</a>
@@ -2228,8 +2247,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_image_processor.html#acc8acd99068ddfdc33131baa35eb4dfa">cgImageProcessor</a>
 </li>
 <li>setTitle()
-: <a class="el" href="classcg_win_app_window.html#a762a1c605ef24622bd32b95557e6169b">cgWinAppWindow</a>
-, <a class="el" href="classcg_app_window.html#a86ba2ba57ed7f411ef7f15aef9ead108">cgAppWindow</a>
+: <a class="el" href="classcg_app_window.html#a86ba2ba57ed7f411ef7f15aef9ead108">cgAppWindow</a>
+, <a class="el" href="classcg_win_app_window.html#a762a1c605ef24622bd32b95557e6169b">cgWinAppWindow</a>
 </li>
 <li>setToneMapMethod()
 : <a class="el" href="classcg_tone_map_processor.html#a8b1802da8fe66bc331b2e245fcb64c65">cgToneMapProcessor</a>
@@ -2247,8 +2266,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_animation_controller.html#aab56bcddb9ad8eae25eb0c43e1245688">cgAnimationController</a>
 </li>
 <li>setTrackFadeTimes()
-: <a class="el" href="classcg_audio_driver.html#a4a11069deeb1b01b8614dd5b4e73e5f9">cgAudioDriver</a>
-, <a class="el" href="classcg_actor_node.html#a739a3273a2763f3296b160686f13a6ec">cgActorNode</a>
+: <a class="el" href="classcg_actor_node.html#a739a3273a2763f3296b160686f13a6ec">cgActorNode</a>
+, <a class="el" href="classcg_audio_driver.html#a4a11069deeb1b01b8614dd5b4e73e5f9">cgAudioDriver</a>
 </li>
 <li>setTrackFrameLimits()
 : <a class="el" href="classcg_animation_controller.html#a125f506f89f4532f9e6f529519672abf">cgAnimationController</a>
@@ -2269,12 +2288,12 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_animation_controller.html#a5bddbf358cbe616fe11a70ec49cc9f34">cgAnimationController</a>
 </li>
 <li>setTransform()
-: <a class="el" href="classcg_collision_shape_element.html#a59ab689cdbf0d5cb35e4b371d8270e8a">cgCollisionShapeElement</a>
-, <a class="el" href="classcg_hull_collision_shape_element.html#a9bdcf27f821e047f13a681cbba553aed">cgHullCollisionShapeElement</a>
-, <a class="el" href="classcg_capsule_collision_shape_element.html#a5fd2448ef07410298e85b0bf04f4561d">cgCapsuleCollisionShapeElement</a>
-, <a class="el" href="classcg_physics_entity.html#a2fae4a85ed422217354031619453b9a4">cgPhysicsEntity</a>
-, <a class="el" href="classcg_rigid_body.html#a4abc00d4bd9a992baff929c233d82604">cgRigidBody</a>
+: <a class="el" href="classcg_capsule_collision_shape_element.html#a5fd2448ef07410298e85b0bf04f4561d">cgCapsuleCollisionShapeElement</a>
+, <a class="el" href="classcg_collision_shape_element.html#a59ab689cdbf0d5cb35e4b371d8270e8a">cgCollisionShapeElement</a>
 , <a class="el" href="classcg_kinematic_controller_joint.html#a20e0ca10e8db3d27f75b5b8e09dac6c8">cgKinematicControllerJoint</a>
+, <a class="el" href="classcg_rigid_body.html#a4abc00d4bd9a992baff929c233d82604">cgRigidBody</a>
+, <a class="el" href="classcg_physics_entity.html#a2fae4a85ed422217354031619453b9a4">cgPhysicsEntity</a>
+, <a class="el" href="classcg_hull_collision_shape_element.html#a9bdcf27f821e047f13a681cbba553aed">cgHullCollisionShapeElement</a>
 </li>
 <li>setTransformCallback()
 : <a class="el" href="classcg_rigid_body.html#af064bd15af2e7eb8d1645368412d264c">cgRigidBody</a>
@@ -2301,30 +2320,32 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_render_driver.html#ae861a762099240012fadf162541eb38e">cgRenderDriver</a>
 </li>
 <li>setUserData()
-: <a class="el" href="classcg_sphere_tree_sub_node.html#af7df289bc22d728dd24d601ebd0d5b62">cgSphereTreeSubNode</a>
+: <a class="el" href="classcg_script_object.html#ae90d12f8574c702b77b12acfc14b76a6">cgScriptObject</a>
+, <a class="el" href="classcg_sphere_tree_sub_node.html#af7df289bc22d728dd24d601ebd0d5b62">cgSphereTreeSubNode</a>
+, <a class="el" href="classcg_physics_body.html#a9244c5341247c95dd396afbfcc69e755">cgPhysicsBody</a>
 </li>
 <li>setUserId()
 : <a class="el" href="classcg_object_behavior.html#a5d962dbcdf990561c0dc8e28fb837de8">cgObjectBehavior</a>
 </li>
 <li>setValue()
-: <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#ac1eb0958f9596e2c6339e3d1b3b5a3c7">cgScriptInterop::Types::ScriptArray</a>
-, <a class="el" href="classcg_surface_shader.html#a7c795b8ec8c52cc2033a5efd49634b1e">cgSurfaceShader</a>
+: <a class="el" href="classcg_surface_shader.html#a7c795b8ec8c52cc2033a5efd49634b1e">cgSurfaceShader</a>
+, <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#ac1eb0958f9596e2c6339e3d1b3b5a3c7">cgScriptInterop::Types::ScriptArray</a>
 , <a class="el" href="classcg_scroll_bar_control.html#a713fc7e3ba78d6003eb63c581f25488a">cgScrollBarControl</a>
 </li>
 <li>setValueRange()
 : <a class="el" href="classcg_scroll_bar_control.html#a68c035e34f78b157a1976deaba79062b">cgScrollBarControl</a>
 </li>
 <li>setVector()
-: <a class="el" href="classcg_constant_buffer.html#a2b7f2b1ca32d4d1c9ba9cab341c66912">cgConstantBuffer</a>
-, <a class="el" href="classcg_surface_shader.html#a92afc7fa34402cb57190d4651ccf418a">cgSurfaceShader</a>
-, <a class="el" href="classcg_constant_buffer.html#ae8404794d56df6096ea6ad91a3555c47">cgConstantBuffer</a>
+: <a class="el" href="classcg_constant_buffer.html#a17969962a57228897e1575662ff448b6">cgConstantBuffer</a>
 , <a class="el" href="classcg_surface_shader.html#a8f6a59bf05b4fe080fd05cfce2817d65">cgSurfaceShader</a>
-, <a class="el" href="classcg_constant_buffer.html#a17969962a57228897e1575662ff448b6">cgConstantBuffer</a>
+, <a class="el" href="classcg_constant_buffer.html#ae8404794d56df6096ea6ad91a3555c47">cgConstantBuffer</a>
+, <a class="el" href="classcg_surface_shader.html#a92afc7fa34402cb57190d4651ccf418a">cgSurfaceShader</a>
+, <a class="el" href="classcg_constant_buffer.html#a2b7f2b1ca32d4d1c9ba9cab341c66912">cgConstantBuffer</a>
 </li>
 <li>setVelocity()
-: <a class="el" href="classcg_particle.html#a466578226b32e1826a365678bf78ac40">cgParticle</a>
-, <a class="el" href="classcg_physics_body.html#a96a2d30ebe02f8c23e7ee956880f7829">cgPhysicsBody</a>
+: <a class="el" href="classcg_physics_body.html#a96a2d30ebe02f8c23e7ee956880f7829">cgPhysicsBody</a>
 , <a class="el" href="classcg_object_node.html#a5bbd5f1e0a5f7750ff878b140d176f2d">cgObjectNode</a>
+, <a class="el" href="classcg_particle.html#a466578226b32e1826a365678bf78ac40">cgParticle</a>
 </li>
 <li>setVelocityScaleStrength()
 : <a class="el" href="classcg_particle_emitter_object.html#a14d269e15a2a1c272f753785a678bb19">cgParticleEmitterObject</a>
@@ -2379,10 +2400,10 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_sphere_tree_sub_node.html#aae3771ad0dbfb8e46a3af9d706201d68">cgSphereTreeSubNode</a>
 </li>
 <li>setVisible()
-: <a class="el" href="classcg_u_i_control.html#a0df85da155a5fa77b91cfb50a24eb278">cgUIControl</a>
+: <a class="el" href="classcg_list_box_control.html#af97b67f7efcefb0fb4d87f35d4e608b1">cgListBoxControl</a>
 , <a class="el" href="classcg_text_box_control.html#ab95ba2289bfae8e49605c2f7f60562c3">cgTextBoxControl</a>
 , <a class="el" href="classcg_billboard.html#a481225d3d5f2137d158eb04419119e1a">cgBillboard</a>
-, <a class="el" href="classcg_list_box_control.html#af97b67f7efcefb0fb4d87f35d4e608b1">cgListBoxControl</a>
+, <a class="el" href="classcg_u_i_control.html#a0df85da155a5fa77b91cfb50a24eb278">cgUIControl</a>
 , <a class="el" href="classcg_terrain_block.html#afd9972244727d38a2320b86bc332787b">cgTerrainBlock</a>
 </li>
 <li>setVisiblePercentage()
@@ -2412,10 +2433,11 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 <li>setWorldTransform()
 : <a class="el" href="classcg_object_node.html#ab45365262fcbfe7d6c7b4970cf528436">cgObjectNode</a>
 , <a class="el" href="classcg_render_driver.html#a8bc5776b82cfb720e975d7d5ce271fe9">cgRenderDriver</a>
+, <a class="el" href="classcg_object_node.html#ad3d89ad357f2308da4b8b4ece607333a">cgObjectNode</a>
 </li>
 <li>setZoomFactor()
-: <a class="el" href="classcg_camera_object.html#a37610670142c6ac10295e42723d3f05b">cgCameraObject</a>
-, <a class="el" href="classcg_camera_node.html#af3cc6f67c67c25240cd19bccd6c3b41b">cgCameraNode</a>
+: <a class="el" href="classcg_camera_node.html#af3cc6f67c67c25240cd19bccd6c3b41b">cgCameraNode</a>
+, <a class="el" href="classcg_camera_object.html#a37610670142c6ac10295e42723d3f05b">cgCameraObject</a>
 </li>
 <li>SHA1()
 : <a class="el" href="classcg_checksum_1_1_s_h_a1.html#ad49a5108ffd6996b1133bf41224ff726">cgChecksum::SHA1</a>
@@ -2430,8 +2452,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="structcg_resource_manager_1_1_shader_key.html#a29b4026f0302d17e41ee54c159b27aea">cgResourceManager::ShaderKey</a>
 </li>
 <li>shadingQuality
-: <a class="el" href="structcg_render_driver_config.html#ada30f0053886ae13ba28850540960cbd">cgRenderDriverConfig</a>
-, <a class="el" href="structcg_render_driver_1_1_export_vars.html#acf0e2b0409e9d00d0d5716f59847244f">cgRenderDriver::ExportVars</a>
+: <a class="el" href="structcg_render_driver_1_1_export_vars.html#acf0e2b0409e9d00d0d5716f59847244f">cgRenderDriver::ExportVars</a>
+, <a class="el" href="structcg_render_driver_config.html#ada30f0053886ae13ba28850540960cbd">cgRenderDriverConfig</a>
 </li>
 <li>shadow()
 : <a class="el" href="classcg_matrix.html#a5b1892c0396619468692202a0c18c875">cgMatrix</a>
@@ -2485,8 +2507,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="structcg_rigid_body_create_params.html#a82b1be5a61781f293146bbf84790730f">cgRigidBodyCreateParams</a>
 </li>
 <li>shouldAutoPlay()
-: <a class="el" href="classcg_sound_emitter_object.html#a293bade511ab30dc412842b0e260bc08">cgSoundEmitterObject</a>
-, <a class="el" href="classcg_sound_emitter_node.html#a7552d9e397a786ef0838872ec83d43f5">cgSoundEmitterNode</a>
+: <a class="el" href="classcg_sound_emitter_node.html#a7552d9e397a786ef0838872ec83d43f5">cgSoundEmitterNode</a>
+, <a class="el" href="classcg_sound_emitter_object.html#a293bade511ab30dc412842b0e260bc08">cgSoundEmitterObject</a>
 </li>
 <li>shouldMuteOutsideRange()
 : <a class="el" href="classcg_sound_emitter_object.html#a94ec0694b7b63b73b65423f8630ba154">cgSoundEmitterObject</a>
@@ -2496,22 +2518,22 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_shadow_generator.html#a11a888566eb15e927e28e0058140e4e6">cgShadowGenerator</a>
 </li>
 <li>shouldSerialize()
-: <a class="el" href="classcg_object_node.html#a7ad49f620c438f73d4fb3a5e02161e75">cgObjectNode</a>
-, <a class="el" href="classcg_world_resource_component.html#adea04630d75b292e2ecabe9bd0bb2779">cgWorldResourceComponent</a>
+: <a class="el" href="classcg_world_resource_component.html#adea04630d75b292e2ecabe9bd0bb2779">cgWorldResourceComponent</a>
+, <a class="el" href="classcg_object_node.html#a7ad49f620c438f73d4fb3a5e02161e75">cgObjectNode</a>
 , <a class="el" href="classcg_landscape.html#ae5a49949be6055fe16d8aaf5b197abca">cgLandscape</a>
 , <a class="el" href="classcg_world_component.html#aa825e54739485e53c860ebf2c97e279e">cgWorldComponent</a>
 </li>
 <li>show()
-: <a class="el" href="classcg_win_app_window.html#a0886496edad2bd571d6672a472a71ea1">cgWinAppWindow</a>
-, <a class="el" href="classcg_app_window.html#a60b4350b2704956f73f13e49d965a963">cgAppWindow</a>
+: <a class="el" href="classcg_app_window.html#a60b4350b2704956f73f13e49d965a963">cgAppWindow</a>
+, <a class="el" href="classcg_win_app_window.html#a0886496edad2bd571d6672a472a71ea1">cgWinAppWindow</a>
 </li>
 <li>ShowAll
 : <a class="el" href="classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998a41e258f8e284f7643e5058214e049f78">cgNavigationMeshElement</a>
 </li>
 <li>showCursor()
-: <a class="el" href="classcg_u_i_cursor_layer.html#a80c62d8fbfb27e380c60d3b7ae13f102">cgUICursorLayer</a>
-, <a class="el" href="classcg_win_app_window.html#a7d5f4c18b17105c77b41ea44741cd14a">cgWinAppWindow</a>
+: <a class="el" href="classcg_win_app_window.html#a7d5f4c18b17105c77b41ea44741cd14a">cgWinAppWindow</a>
 , <a class="el" href="classcg_app_window.html#adca58d7db253663e77c655ac04cdf667">cgAppWindow</a>
+, <a class="el" href="classcg_u_i_cursor_layer.html#a80c62d8fbfb27e380c60d3b7ae13f102">cgUICursorLayer</a>
 </li>
 <li>showDropDown()
 : <a class="el" href="classcg_combo_box_control.html#a0f1c9b425088439bab54f97b8d569e17">cgComboBoxControl</a>
@@ -2523,14 +2545,14 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_object_node.html#a81fdf694e55ab4ad6cab5b94759d873f">cgObjectNode</a>
 </li>
 <li>shutdown()
-: <a class="el" href="classcg_reference_manager.html#af1dee4966bf9bbd6636110310ebf2572">cgReferenceManager</a>
+: <a class="el" href="classcg_thread_pool.html#ad4df7a7a6bab0ed6cc4f61575141b73e">cgThreadPool</a>
 </li>
 <li>shutDown()
 : <a class="el" href="classcg_application.html#ada923c0f1fbc00701c0d01a8ec54c518">cgApplication</a>
 </li>
 <li>shutdown()
-: <a class="el" href="classcg_thread_pool.html#ad4df7a7a6bab0ed6cc4f61575141b73e">cgThreadPool</a>
-, <a class="el" href="classcg_file_system.html#a0bf38cbb4b046cd0ba290f4b6fc08059">cgFileSystem</a>
+: <a class="el" href="classcg_file_system.html#a0bf38cbb4b046cd0ba290f4b6fc08059">cgFileSystem</a>
+, <a class="el" href="classcg_reference_manager.html#af1dee4966bf9bbd6636110310ebf2572">cgReferenceManager</a>
 </li>
 <li>signal()
 : <a class="el" href="classcg_win_event.html#ac798c8cd95e9ee9219e39938e5ef2572">cgWinEvent</a>
@@ -2544,30 +2566,32 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_extruded_bounding_box.html#a9e6411069caf77b4b2d84b5a3f1a9c61">cgExtrudedBoundingBox</a>
 </li>
 <li>Simple
-: <a class="el" href="classcg_u_i_control.html#a60d6b4b0e23ce6d1ca173cb8789a87d6a7fed5d0517e485e91add4d413c1ff592">cgUIControl</a>
-, <a class="el" href="classcg_terrain_block.html#a3b906979eec2189912771d1c2608debdab54f97125929e3ef883e901dc21f752c">cgTerrainBlock</a>
+: <a class="el" href="classcg_terrain_block.html#a3b906979eec2189912771d1c2608debdab54f97125929e3ef883e901dc21f752c">cgTerrainBlock</a>
+, <a class="el" href="classcg_u_i_control.html#a60d6b4b0e23ce6d1ca173cb8789a87d6a7fed5d0517e485e91add4d413c1ff592">cgUIControl</a>
 </li>
 <li>simulateEllipsoidSlide()
 : <a class="el" href="classcg_collision.html#ad214cff7e848ba0a537293a169abc983">cgCollision</a>
 </li>
 <li>SinglePoint
-: <a class="el" href="classcg_kinematic_controller_joint.html#ae7f50ae7ce9e6124d2ade8fbfbf94a3ea9ab5ee5154a7466b11f692ecdf55daac">cgKinematicControllerJoint</a>
-, <a class="el" href="classcg_kinematic_controller_joint_object.html#a9080cf2080ce4ac48f4e343d364d2683a04f4caf2406ae710f47280ce47d865fd">cgKinematicControllerJointObject</a>
+: <a class="el" href="classcg_kinematic_controller_joint_object.html#a9080cf2080ce4ac48f4e343d364d2683a04f4caf2406ae710f47280ce47d865fd">cgKinematicControllerJointObject</a>
+, <a class="el" href="classcg_kinematic_controller_joint.html#ae7f50ae7ce9e6124d2ade8fbfbf94a3ea9ab5ee5154a7466b11f692ecdf55daac">cgKinematicControllerJoint</a>
 </li>
 <li>sizable
 : <a class="el" href="structcg_u_i_form_properties.html#a6b96782589cf3b9b92eca095117854aa">cgUIFormProperties</a>
 , <a class="el" href="structcg_u_i_form_style_desc.html#a1443e6c00494f057f01909d0152383c7">cgUIFormStyleDesc</a>
 </li>
 <li>size
-: <a class="el" href="structcg_display_mode.html#a36677fb4b2d1f7f56eeee28a0fb482dd">cgDisplayMode</a>
-, <a class="el" href="structcg_window_size_event_args.html#ad4c8978ca2f254afbb72b92770f6c6b6">cgWindowSizeEventArgs</a>
-, <a class="el" href="structcg_viewport.html#ac81be98d0dcb9652e0f1c5f8321bbdad">cgViewport</a>
-, <a class="el" href="classcg_script_interop_1_1_utils_1_1_s_t_d_vector_helper_base.html#abd58b792c90f19778288f71c0439b033">cgScriptInterop::Utils::STDVectorHelperBase&lt; _elemType &gt;</a>
+: <a class="el" href="structcg_viewport.html#ac81be98d0dcb9652e0f1c5f8321bbdad">cgViewport</a>
 , <a class="el" href="structcg_audio_buffer_format.html#a83197ee1039221ff66ad2726689eb7a3">cgAudioBufferFormat</a>
+, <a class="el" href="classcg_script_interop_1_1_utils_1_1_array_bind_helper_base.html#a90c180b8f0e9ac38cb347cbfd76c4ad5">cgScriptInterop::Utils::ArrayBindHelperBase&lt; _elemType &gt;</a>
+, <a class="el" href="structcg_display_mode.html#a36677fb4b2d1f7f56eeee28a0fb482dd">cgDisplayMode</a>
+, <a class="el" href="structcg_window_size_event_args.html#ad4c8978ca2f254afbb72b92770f6c6b6">cgWindowSizeEventArgs</a>
 , <a class="el" href="structcg_rect.html#a9b6ce3b61c7fa47b7abca778e718b639">cgRect</a>
+, <a class="el" href="classcg_array_base.html#a37ed477a1f3422c39446f710d2542e56">cgArrayBase</a>
 </li>
 <li>size_type
 : <a class="el" href="classcg_pool_allocator.html#aef55eec9e5c876f75e154f4f6a764f78">cgPoolAllocator&lt; T &gt;</a>
+, <a class="el" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">cgArrayBase</a>
 </li>
 <li>skipStatement()
 : <a class="el" href="classcg_script_preprocessor.html#aaada24451412aa624364366bc819f9b8">cgScriptPreprocessor</a>
@@ -2592,9 +2616,9 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="structcg_indirect_lighting_grid_slice.html#a5f2586e4505f45ddc9f967848a4b3a85">cgIndirectLightingGridSlice</a>
 </li>
 <li>slopeAxis
-: <a class="el" href="structcg_landscape_1_1ct_procedural_data.html#a2f963e0482045b12ba9f157d89c77db9">cgLandscape::ctProceduralData</a>
+: <a class="el" href="structcg_landscape_1_1_effect_procedural_data.html#ac088ef494c69d290f3030a2123fc9f18">cgLandscape::EffectProceduralData</a>
 , <a class="el" href="structcg_landscape_paint_params.html#a7d074af4edff56cec34204a63e82ae0c">cgLandscapePaintParams</a>
-, <a class="el" href="structcg_landscape_1_1_effect_procedural_data.html#ac088ef494c69d290f3030a2123fc9f18">cgLandscape::EffectProceduralData</a>
+, <a class="el" href="structcg_landscape_1_1ct_procedural_data.html#a2f963e0482045b12ba9f157d89c77db9">cgLandscape::ctProceduralData</a>
 , <a class="el" href="structcg_landscape_1_1_procedural_layer_ref.html#a476c7d21e30193baa538e1f8c8beabc3">cgLandscape::ProceduralLayerRef</a>
 </li>
 <li>slopeBias
@@ -2602,12 +2626,12 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 , <a class="el" href="structcg_landscape_1_1_procedural_layer_ref.html#ac4cb600f601e9accc4c6224eb4a6523f">cgLandscape::ProceduralLayerRef</a>
 </li>
 <li>slopeParams
-: <a class="el" href="structcg_landscape_1_1_effect_procedural_data.html#a6301149ea72e5f0fac54165c50cb199f">cgLandscape::EffectProceduralData</a>
-, <a class="el" href="structcg_landscape_1_1ct_procedural_data.html#aabd16967ab000dbb259c881af5c674c0">cgLandscape::ctProceduralData</a>
+: <a class="el" href="structcg_landscape_1_1ct_procedural_data.html#aabd16967ab000dbb259c881af5c674c0">cgLandscape::ctProceduralData</a>
+, <a class="el" href="structcg_landscape_1_1_effect_procedural_data.html#a6301149ea72e5f0fac54165c50cb199f">cgLandscape::EffectProceduralData</a>
 </li>
 <li>slopeScale
-: <a class="el" href="structcg_landscape_1_1_procedural_layer_ref.html#ab887da9933dbef03e80f2d139ccc05f8">cgLandscape::ProceduralLayerRef</a>
-, <a class="el" href="structcg_landscape_paint_params.html#a9b9717ceeb700f9b623ccb3c9481a4b8">cgLandscapePaintParams</a>
+: <a class="el" href="structcg_landscape_paint_params.html#a9b9717ceeb700f9b623ccb3c9481a4b8">cgLandscapePaintParams</a>
+, <a class="el" href="structcg_landscape_1_1_procedural_layer_ref.html#ab887da9933dbef03e80f2d139ccc05f8">cgLandscape::ProceduralLayerRef</a>
 </li>
 <li>slopeScaleBias
 : <a class="el" href="structcg_shadow_settings_light.html#a2f62f02da5cec6ff69b894801a37ab2b">cgShadowSettingsLight</a>
@@ -2631,8 +2655,17 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 <li>SolidLeaf
 : <a class="el" href="classcg_b_s_p_tree.html#a2663a9fd422764606c8fbdf55772eb10">cgBSPTree</a>
 </li>
+<li>sort()
+: <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a81ad5d710055e76143f51bef55bc5102">cgScriptInterop::Types::ScriptArray</a>
+</li>
+<li>sortAsc()
+: <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#a22014e3ba74acdadf3feba22ae492c5b">cgScriptInterop::Types::ScriptArray</a>
+</li>
 <li>sortByX()
 : <a class="el" href="classcg_bezier_spline2.html#ab745f04e65d9c7bc7fbeb134a8ff186e">cgBezierSpline2</a>
+</li>
+<li>sortDesc()
+: <a class="el" href="classcg_script_interop_1_1_types_1_1_script_array.html#ac635d902a9867f9b6b93fa4e12950f56">cgScriptInterop::Types::ScriptArray</a>
 </li>
 <li>sortedRender
 : <a class="el" href="structcg_particle_emitter_properties.html#a4a9bc55332a682ddbd70a5cb566e3077">cgParticleEmitterProperties</a>
@@ -2726,7 +2759,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="structcg_material_terms.html#af9c6305e97f273756cc184c3711f7a52">cgMaterialTerms</a>
 </li>
 <li>speed
-: <a class="el" href="structcg_particle_emitter_properties.html#a47257a63c7750e9699fcedbb51a82752">cgParticleEmitterProperties</a>
+: <a class="el" href="structcg_collision_contact.html#afaaa9d787441aa06219158ef6987d58b">cgCollisionContact</a>
+, <a class="el" href="structcg_particle_emitter_properties.html#a47257a63c7750e9699fcedbb51a82752">cgParticleEmitterProperties</a>
 , <a class="el" href="structcg_animation_track_desc.html#a93949d4d54eb453b5f767beeb3522a2d">cgAnimationTrackDesc</a>
 </li>
 <li>sphereIntersectLineSegment()
@@ -2775,13 +2809,14 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_character_controller.html#ad30fcbfe78d7b711524a9efbc70f3bb6">cgCharacterController</a>
 </li>
 <li>start()
-: <a class="el" href="classcg_win_thread.html#a1313200c2901624e643d9f1dc156e6ab">cgWinThread</a>
+: <a class="el" href="classcg_thread.html#a53bf2fb5c489357c02fd7fbe90b18637">cgThread</a>
+, <a class="el" href="classcg_win_thread.html#a1313200c2901624e643d9f1dc156e6ab">cgWinThread</a>
 , <a class="el" href="classcg_thread.html#a8f3c86417db81562ffd6138887d7c611">cgThread</a>
 </li>
 <li>state
 : <a class="el" href="structcg_audio_driver_1_1_ambient_item.html#a4066fa2ff3adcee904b6459c03005004">cgAudioDriver::AmbientItem</a>
-, <a class="el" href="structcg_app_state_manager_1_1_state_desc.html#a16dd51061dd76c679e99ea1fd5bfd90b">cgAppStateManager::StateDesc</a>
 , <a class="el" href="structcg_actor_node_1_1_animation_item.html#aef1006c9c328c6969ab742bea95eb776">cgActorNode::AnimationItem</a>
+, <a class="el" href="structcg_app_state_manager_1_1_state_desc.html#a16dd51061dd76c679e99ea1fd5bfd90b">cgAppStateManager::StateDesc</a>
 </li>
 <li>State_Active
 : <a class="el" href="classcg_u_i_control.html#a577ae670be538b7ca9170c0bacf28a0fae195e3cf0b33d9b62d44c5fa43243e60">cgUIControl</a>
@@ -2841,11 +2876,11 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="structcg_depth_stencil_state_desc.html#a020826e7863d021b7a63bed531c1c14a">cgDepthStencilStateDesc</a>
 </li>
 <li>step()
-: <a class="el" href="classcg_world_query.html#a960bfac0e0d90c4e1d078b9ccc93bdb3">cgWorldQuery</a>
-, <a class="el" href="classcg_navigation_handler.html#af1795e7492201949c224aff1b82336bf">cgNavigationHandler</a>
-, <a class="el" href="classcg_world_query.html#a34c5eff5a70a7359695d4ee3545c3bdd">cgWorldQuery</a>
-, <a class="el" href="classcg_object_render_context.html#ac5b08af91827d79c3adabb3832e55aa3">cgObjectRenderContext</a>
+: <a class="el" href="classcg_world_query.html#a34c5eff5a70a7359695d4ee3545c3bdd">cgWorldQuery</a>
 , <a class="el" href="structcg_physics_world_step_event_args.html#a1cc92075ff48cce83ca6f0833713f835">cgPhysicsWorldStepEventArgs</a>
+, <a class="el" href="classcg_navigation_handler.html#af1795e7492201949c224aff1b82336bf">cgNavigationHandler</a>
+, <a class="el" href="classcg_object_render_context.html#ac5b08af91827d79c3adabb3832e55aa3">cgObjectRenderContext</a>
+, <a class="el" href="classcg_world_query.html#a960bfac0e0d90c4e1d078b9ccc93bdb3">cgWorldQuery</a>
 </li>
 <li>stepAll()
 : <a class="el" href="classcg_world_query.html#a1e2f4dcbdb6bf36ed8a5b572d8d263f6">cgWorldQuery</a>
@@ -2866,9 +2901,9 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_scroll_bar_control.html#a4f80baf07a9358dbcbea81cfe7d0f859">cgScrollBarControl</a>
 </li>
 <li>stop()
-: <a class="el" href="classcg_audio_buffer.html#a0b7e41f6c4a29343ab8d51c1311f4ebe">cgAudioBuffer</a>
+: <a class="el" href="classcg_sound_emitter_node.html#a6b7594a655ab0d6ceca58a468a287b86">cgSoundEmitterNode</a>
 , <a class="el" href="classcg_app_state_manager.html#a8450d0ac294cba50838ebc5ab494f3f3">cgAppStateManager</a>
-, <a class="el" href="classcg_sound_emitter_node.html#a6b7594a655ab0d6ceca58a468a287b86">cgSoundEmitterNode</a>
+, <a class="el" href="classcg_audio_buffer.html#a0b7e41f6c4a29343ab8d51c1311f4ebe">cgAudioBuffer</a>
 </li>
 <li>stopAmbientTrack()
 : <a class="el" href="classcg_audio_driver.html#abf60dbdc7e94576a17d5d854f5648f13">cgAudioDriver</a>
@@ -2889,7 +2924,7 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="structcg_landscape_paint_params.html#af639ecfaa05ed0bafd52e4e3603c9087">cgLandscapePaintParams</a>
 </li>
 <li>stretchRect()
-: <a class="el" href="classcg_render_driver.html#aaaffc42b974edfe4927c56e898fc12c7">cgRenderDriver</a>
+: <a class="el" href="classcg_render_driver.html#aa3ddaef13d321254252a541fc53fc03b">cgRenderDriver</a>
 </li>
 <li>StrICmp()
 : <a class="el" href="class_str_i_cmp.html#a28caaeb2a92521e5d15421d31374b408">StrICmp</a>
@@ -2904,11 +2939,11 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="structcg_u_i_form_style_desc.html#aedde1330fba55da5d51b23e514b2b97f">cgUIFormStyleDesc</a>
 </li>
 <li>submitConstraints()
-: <a class="el" href="classcg_fixed_axis_joint.html#a8f7fdbf2a57847e1adad9db7df9e383f">cgFixedAxisJoint</a>
-, <a class="el" href="classcg_physics_joint.html#af2855c027d319233090bb5d32a3541c3">cgPhysicsJoint</a>
+: <a class="el" href="classcg_ball_joint.html#a54273f77e4236a102a50824197e9231f">cgBallJoint</a>
 , <a class="el" href="classcg_kinematic_controller_joint.html#ac3f52ccae47dd8d4ebae170d0375e5b2">cgKinematicControllerJoint</a>
-, <a class="el" href="classcg_ball_joint.html#a54273f77e4236a102a50824197e9231f">cgBallJoint</a>
+, <a class="el" href="classcg_physics_joint.html#af2855c027d319233090bb5d32a3541c3">cgPhysicsJoint</a>
 , <a class="el" href="classcg_hinge_joint.html#a7e138dc2bb1218bd6b5f5201e512a805">cgHingeJoint</a>
+, <a class="el" href="classcg_fixed_axis_joint.html#a8f7fdbf2a57847e1adad9db7df9e383f">cgFixedAxisJoint</a>
 </li>
 <li>subPass
 : <a class="el" href="structcg_light_node_1_1_lighting_op_pass.html#ac252bba10f6a7b73ce2543cfb1b237d8">cgLightNode::LightingOpPass</a>
@@ -2927,8 +2962,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 </li>
 <li>subtract()
 : <a class="el" href="classcg_vector4.html#a6ce8a43b63641fa94b80b1b9e442d807">cgVector4</a>
-, <a class="el" href="classcg_vector2.html#a0793e32fbaaf32d192fea67b63c76616">cgVector2</a>
 , <a class="el" href="classcg_vector3.html#ab316ff1baf478100d76d9efd0d8d3690">cgVector3</a>
+, <a class="el" href="classcg_vector2.html#a0793e32fbaaf32d192fea67b63c76616">cgVector2</a>
 </li>
 <li>subType
 : <a class="el" href="classcg_script_argument.html#a4bc4ba65a39054a344ea1617dfadc91a">cgScriptArgument</a>
@@ -2952,10 +2987,10 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_rendering_capabilities.html#a500c49bfe5336e3be4fa2ef9bbebec93">cgRenderingCapabilities</a>
 </li>
 <li>supportsInputChannels()
-: <a class="el" href="classcg_character_controller.html#a194e461c7c6d78b3ff0fe5b934db380a">cgCharacterController</a>
+: <a class="el" href="classcg_object_behavior.html#a76f21422cb869da876daea6c97770217">cgObjectBehavior</a>
 , <a class="el" href="classcg_physics_controller.html#a59edc985be7c090f62c181709d4696a7">cgPhysicsController</a>
+, <a class="el" href="classcg_character_controller.html#a194e461c7c6d78b3ff0fe5b934db380a">cgCharacterController</a>
 , <a class="el" href="classcg_object_node.html#afb57c88a1aa22d9d341f814f01a36474">cgObjectNode</a>
-, <a class="el" href="classcg_object_behavior.html#a76f21422cb869da876daea6c97770217">cgObjectBehavior</a>
 </li>
 <li>supportsLinearSampling()
 : <a class="el" href="classcg_texture.html#a1bdbd048e6a1493e7ac201ca22531d42">cgTexture</a>
@@ -2973,33 +3008,33 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_rendering_capabilities.html#a64ae7ee0a36b26ff3aecd9e2884c538b">cgRenderingCapabilities</a>
 </li>
 <li>supportsSubElement()
-: <a class="el" href="classcg_mesh_node.html#a7a143fd175153968fd4d62ff2f3a27b0">cgMeshNode</a>
-, <a class="el" href="classcg_actor_object.html#a6dbf7aa9079b024250787d25b82d0c59">cgActorObject</a>
-, <a class="el" href="classcg_joint_object.html#a72a1649ab9e102c2621a424c590410ad">cgJointObject</a>
-, <a class="el" href="classcg_object_node.html#ac5493bdc39001585cc4e480360447c89">cgObjectNode</a>
+: <a class="el" href="classcg_actor_object.html#a6dbf7aa9079b024250787d25b82d0c59">cgActorObject</a>
+, <a class="el" href="classcg_mesh_node.html#a7a143fd175153968fd4d62ff2f3a27b0">cgMeshNode</a>
+, <a class="el" href="classcg_mesh_object.html#a7ae9d8ec44975a1c879f5104af774474">cgMeshObject</a>
 , <a class="el" href="classcg_skin_object.html#af625ea82a03cfaf59cd92ae93cb550f9">cgSkinObject</a>
 , <a class="el" href="classcg_world_object.html#afeae4422d692d6490ac669f3a70b177c">cgWorldObject</a>
-, <a class="el" href="classcg_mesh_object.html#a7ae9d8ec44975a1c879f5104af774474">cgMeshObject</a>
-</li>
-<li>SurfaceFresnel
-: <a class="el" href="classcg_render_driver.html#a277e73b233f4d3d8aec4a7e18b7432dba38fb59780edb3caa6d5f359bb45803e7">cgRenderDriver</a>
+, <a class="el" href="classcg_joint_object.html#a72a1649ab9e102c2621a424c590410ad">cgJointObject</a>
+, <a class="el" href="classcg_object_node.html#ac5493bdc39001585cc4e480360447c89">cgObjectNode</a>
 </li>
 <li>surfaceFresnel
 : <a class="el" href="structcg_render_driver_1_1_export_vars.html#a3fc6cd03ab7f74db4cc435ba6eb79199">cgRenderDriver::ExportVars</a>
 </li>
-<li>surfaceNormals
-: <a class="el" href="structcg_render_driver_1_1_export_vars.html#a12c35abe52dd448b67f40f52e412aa09">cgRenderDriver::ExportVars</a>
+<li>SurfaceFresnel
+: <a class="el" href="classcg_render_driver.html#a277e73b233f4d3d8aec4a7e18b7432dba38fb59780edb3caa6d5f359bb45803e7">cgRenderDriver</a>
 </li>
 <li>SurfaceNormals
 : <a class="el" href="classcg_render_driver.html#a99ef3d1a928e46ff08c5db2ab8b3c1c3ae7af9ece2c0c5a46d365eb524175e2dc">cgRenderDriver</a>
 </li>
+<li>surfaceNormals
+: <a class="el" href="structcg_render_driver_1_1_export_vars.html#a12c35abe52dd448b67f40f52e412aa09">cgRenderDriver::ExportVars</a>
+</li>
 <li>surfaceNormalType
 : <a class="el" href="structcg_render_driver_1_1_export_vars.html#a43eb25cc01fac175082d6a772d60db8f">cgRenderDriver::ExportVars</a>
 </li>
-<li>suspend
-: <a class="el" href="structcg_app_state_1_1_method_handles.html#a2357606ce9e15711e98fe22ae74f9ff7">cgAppState::MethodHandles</a>
+<li>suspend()
+: <a class="el" href="classcg_app_state.html#a9e9c017cd8067c164f6b9945005adc83">cgAppState</a>
 , <a class="el" href="classcg_win_thread.html#ad81f69f98705e4e4650eb9abcaa573e4">cgWinThread</a>
-, <a class="el" href="classcg_app_state.html#a9e9c017cd8067c164f6b9945005adc83">cgAppState</a>
+, <a class="el" href="structcg_app_state_1_1_method_handles.html#a2357606ce9e15711e98fe22ae74f9ff7">cgAppState::MethodHandles</a>
 , <a class="el" href="classcg_thread.html#ac47eab98528c3eee6ed6bc0497e0542d">cgThread</a>
 </li>
 <li>Suspended
@@ -3013,7 +3048,8 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 : <a class="el" href="classcg_animation_set.html#a8cf7060c82f5e46c06d54053eddefee4">cgAnimationSet</a>
 </li>
 <li>swap()
-: <a class="el" href="class_resource_handle.html#a70d7b0c1d6876081ed2772e067414911">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
+: <a class="el" href="classcg_array.html#a3a226dc667ddfe7091802dce40474643">cgArray&lt; T &gt;</a>
+, <a class="el" href="class_resource_handle.html#a70d7b0c1d6876081ed2772e067414911">ResourceHandle&lt; _RT, _BaseClass &gt;</a>
 </li>
 <li>swizzle
 : <a class="el" href="structcg_landscape_texture_data_1_1_render_batch.html#a95884f4a7a9cef5046b5d270afd77ae6">cgLandscapeTextureData::RenderBatch</a>
@@ -3024,7 +3060,7 @@ $(document).ready(function(){initNavTree('functions_0x73.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Feb 27 2014 01:28:16 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Tue Mar 11 2014 07:02:56 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

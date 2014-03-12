@@ -179,7 +179,7 @@ asCString asCDataType::Format(bool includeNamespace) const
 	else if( objectType )
 	{
 		str += objectType->name;
-		if( objectType->flags & asOBJ_TEMPLATE )
+		if( objectType->templateSubTypes.GetLength() > 0 )
 		{
 			str += "<";
 			for( asUINT subtypeIndex = 0; subtypeIndex < objectType->templateSubTypes.GetLength(); subtypeIndex++ )
@@ -551,6 +551,10 @@ int asCDataType::GetSizeInMemoryDWords() const
 	if( s == 0 ) return 0;
 	if( s <= 4 ) return 1;
 	
+	// Pad the size to 4 bytes
+	if( s & 0x3 )
+		s += 4 - (s & 0x3);
+
 	return s/4;
 }
 

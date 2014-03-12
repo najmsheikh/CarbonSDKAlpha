@@ -45,12 +45,12 @@ class cgDX11EnumAdapter;
 //-----------------------------------------------------------------------------
 // STL Vector Typedefs for Easy Access
 //-----------------------------------------------------------------------------
-typedef std::vector<cgUInt32>                 DX11VectorUInt32;
-typedef std::vector<DXGI_MODE_DESC>           DX11VectorDisplayMode;
-typedef std::vector<cgDX11EnumDeviceOptions*> DX11VectorDeviceOptions;
-typedef std::vector<cgDX11EnumOutput*>        DX11VectorOutput;
-typedef std::vector<cgDX11EnumDevice*>        DX11VectorDevice;
-typedef std::vector<cgDX11EnumAdapter*>       DX11VectorAdapter;
+typedef cgArray<cgUInt32>                 DX11VectorUInt32;
+typedef cgArray<DXGI_MODE_DESC>           DX11VectorDisplayMode;
+typedef cgArray<cgDX11EnumDeviceOptions*> DX11VectorDeviceOptions;
+typedef cgArray<cgDX11EnumOutput*>        DX11VectorOutput;
+typedef cgArray<cgDX11EnumDevice*>        DX11VectorDevice;
+typedef cgArray<cgDX11EnumAdapter*>       DX11VectorAdapter;
 
 //-----------------------------------------------------------------------------
 // Main Class Declarations

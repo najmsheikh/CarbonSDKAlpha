@@ -1099,7 +1099,7 @@ bool cgFontSet::parseFontSet( const cgXMLNode & node, const cgString & fontDefin
 
             // Resize the character map array if required
             if ( (characterId + 1) > (cgUInt16)mCharacterMap.size() )
-                mCharacterMap.resize( characterId + 1 );
+                mCharacterMap.resize( characterId + 1, CG_NULL );
 
             // Add this to the character map
             mCharacterMap[ characterId ] = new CharDesc( character );

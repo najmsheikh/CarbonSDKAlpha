@@ -101,6 +101,7 @@ public:
     cgConfigResult::Base    loadDefaultConfig   ( );
     bool                    saveConfig          ( const cgString & fileName );
     bool                    initialize          ( cgResourceManager * resourceManager );
+    void                    reset               ( );
     bool                    begin               ( );
     cgResourceManager     * getResourceManager  ( ) { return mResourceManager; }
     cgRenderDriver        * getRenderDriver     ( );
