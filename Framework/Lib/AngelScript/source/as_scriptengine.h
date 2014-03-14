@@ -102,11 +102,14 @@ public:
 	virtual int            RegisterObjectProperty(const char *obj, const char *declaration, int byteOffset);
 	virtual int            RegisterObjectMethod(const char *obj, const char *declaration, const asSFuncPtr &funcPointer, asDWORD callConv);
 	virtual int            RegisterObjectBehaviour(const char *obj, asEBehaviours behaviour, const char *declaration, const asSFuncPtr &funcPointer, asDWORD callConv, void *objForThiscall = 0);
+	// TODO: 2.29.0: Rename to RegisterScriptInterface. Too often do developers think they should use this to register C++ interface
 	virtual int            RegisterInterface(const char *name);
+	// TODO: 2.29.0: Rename to RegisterScriptInterfaceMethod.
 	virtual int            RegisterInterfaceMethod(const char *intf, const char *declaration);
 	virtual asUINT         GetObjectTypeCount() const;
 	virtual asIObjectType *GetObjectTypeByIndex(asUINT index) const;
 	virtual asIObjectType *GetObjectTypeByName(const char *name) const;
+	// TODO: 2.29.0: Add GetObjectTypeByDecl() that supports for example "array<int>"
 
 	// String factory
 	virtual int RegisterStringFactory(const char *datatype, const asSFuncPtr &factoryFunc, asDWORD callConv, void *objForThiscall = 0);
@@ -188,7 +191,7 @@ public:
 	virtual asETokenClass ParseToken(const char *string, size_t stringLength = 0, int *tokenLength = 0) const;
 
 	// Garbage collection
-	virtual int  GarbageCollect(asDWORD flags = asGC_FULL_CYCLE);
+	virtual int  GarbageCollect(asDWORD flags);
 	virtual void GetGCStatistics(asUINT *currentSize, asUINT *totalDestroyed, asUINT *totalDetected, asUINT *newObjects, asUINT *totalNewDestroyed) const;
 	virtual int  NotifyGarbageCollectorOfNewObject(void *obj, asIObjectType *type);
 	virtual int  GetObjectInGC(asUINT idx, asUINT *seqNbr, void **obj = 0, asIObjectType **type = 0);
@@ -227,6 +230,9 @@ public:
 
 	void *CallAlloc(asCObjectType *objType) const;
 	void  CallFree(void *obj) const;
+
+	// TODO: interface: This should be the public interface
+	int  GarbageCollect(asDWORD flags = asGC_FULL_CYCLE, asUINT numIterations = 1);
 
 	void *CallGlobalFunctionRetPtr(int func) const;
 	void *CallGlobalFunctionRetPtr(int func, void *param1) const;

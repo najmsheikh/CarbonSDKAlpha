@@ -433,7 +433,7 @@ asPWORD asCScriptEngine::GetEngineProperty(asEEngineProp property) const
 		return 0;
 	}
 
-	return 0;
+	UNREACHABLE_RETURN;
 }
 
 // interface
@@ -627,7 +627,7 @@ asCScriptEngine::~asCScriptEngine()
 		}
 	}
 
-	GarbageCollect(asGC_FULL_CYCLE);
+	GarbageCollect();
 	FreeUnusedGlobalProperties();
 	ClearUnusedTypes();
 
@@ -637,7 +637,7 @@ asCScriptEngine::~asCScriptEngine()
 			scriptFunctions[n]->DestroyInternal();
 
 	// There may be instances where one more gc cycle must be run
-	GarbageCollect(asGC_FULL_CYCLE);
+	GarbageCollect();
 	ClearUnusedTypes();
 
 	// If the application hasn't registered GC behaviours for all types
@@ -995,6 +995,7 @@ asIJITCompiler *asCScriptEngine::GetJITCompiler() const
 }
 
 // interface
+// TODO: interface: tokenLength should be asUINT
 asETokenClass asCScriptEngine::ParseToken(const char *string, size_t stringLength, int *tokenLength) const
 {
 	if( stringLength == 0 )
@@ -1137,9 +1138,23 @@ int asCScriptEngine::ClearUnusedTypes()
 				refCount = 2*(int)type->beh.factories.GetLength();
 				if( type->beh.listFactory )
 					refCount += 2;
+
+				// If it is an orphaned script type, then the gc holds 1 reference too
+				bool isScriptTemplate = false;
+				for( asUINT s = 0; s < type->templateSubTypes.GetLength(); s++ )
+				{
+					if( type->templateSubTypes[s].GetObjectType() && (type->templateSubTypes[s].GetObjectType()->flags & asOBJ_SCRIPT_OBJECT) )
+					{
+						isScriptTemplate = true;
+						break;
+					}
+				}
+				
+				if( isScriptTemplate && type->module == 0 )
+					refCount++;
 			}
 
-			if( type->GetRefCount() == refCount )
+			if( type->GetRefCount() == refCount || type->GetRefCount() == 0 )
 			{
 				if( type->flags & asOBJ_TEMPLATE )
 				{
@@ -1460,6 +1475,7 @@ int asCScriptEngine::RegisterInterfaceMethod(const char *intf, const char *decla
 	r = bld.ParseFunctionDeclaration(func->objectType, declaration, func, false);
 	if( r < 0 )
 	{
+		func->funcType = asFUNC_DUMMY;
 		asDELETE(func,asCScriptFunction);
 		return ConfigError(asINVALID_DECLARATION, "RegisterInterfaceMethod", intf, declaration);
 	}
@@ -1468,6 +1484,7 @@ int asCScriptEngine::RegisterInterfaceMethod(const char *intf, const char *decla
 	r = bld.CheckNameConflictMember(dt.GetObjectType(), func->name.AddressOf(), 0, 0, false);
 	if( r < 0 )
 	{
+		func->funcType = asFUNC_DUMMY;
 		asDELETE(func,asCScriptFunction);
 		return ConfigError(asNAME_TAKEN, "RegisterInterfaceMethod", intf, declaration);
 	}
@@ -2055,6 +2072,33 @@ int asCScriptEngine::RegisterBehaviourToObjectType(asCObjectType *objectType, as
 			return ConfigError(asINVALID_DECLARATION, "RegisterObjectBehaviour", objectType->name.AddressOf(), decl);
 		}
 
+		if( behaviour == asBEHAVE_LIST_FACTORY )
+		{
+			// Make sure the factory takes a reference as its last parameter
+			if( objectType->flags & asOBJ_TEMPLATE )
+			{
+				if( func.parameterTypes.GetLength() != 2 || !func.parameterTypes[1].IsReference() )
+				{
+					if( listPattern )
+						listPattern->Destroy(this);
+
+					WriteMessage("", 0, 0, asMSGTYPE_ERROR, TXT_TEMPLATE_LIST_FACTORY_EXPECTS_2_REF_PARAMS);
+					return ConfigError(asINVALID_DECLARATION, "RegisterObjectBehaviour", objectType->name.AddressOf(), decl);
+				}
+			}
+			else
+			{
+				if( func.parameterTypes.GetLength() != 1 || !func.parameterTypes[0].IsReference() )
+				{
+					if( listPattern )
+						listPattern->Destroy(this);
+
+					WriteMessage("", 0, 0, asMSGTYPE_ERROR, TXT_LIST_FACTORY_EXPECTS_1_REF_PARAM);
+					return ConfigError(asINVALID_DECLARATION, "RegisterObjectBehaviour", objectType->name.AddressOf(), decl);
+				}
+			}
+		}
+
 		// TODO: Verify that the same factory function hasn't been registered already
 
 		// Don't accept duplicates
@@ -2084,30 +2128,6 @@ int asCScriptEngine::RegisterBehaviourToObjectType(asCObjectType *objectType, as
 			if( behaviour == asBEHAVE_LIST_FACTORY )
 			{
 				beh->listFactory = func.id;
-
-				// Make sure the factory takes a reference as its last parameter
-				if( objectType->flags & asOBJ_TEMPLATE )
-				{
-					if( func.parameterTypes.GetLength() != 2 || !func.parameterTypes[1].IsReference() )
-					{
-						if( listPattern )
-							listPattern->Destroy(this);
-
-						WriteMessage("", 0, 0, asMSGTYPE_ERROR, TXT_TEMPLATE_LIST_FACTORY_EXPECTS_2_REF_PARAMS);
-						return ConfigError(asINVALID_DECLARATION, "RegisterObjectBehaviour", objectType->name.AddressOf(), decl);
-					}
-				}
-				else
-				{
-					if( func.parameterTypes.GetLength() != 1 || !func.parameterTypes[0].IsReference() )
-					{
-						if( listPattern )
-							listPattern->Destroy(this);
-
-						WriteMessage("", 0, 0, asMSGTYPE_ERROR, TXT_LIST_FACTORY_EXPECTS_1_REF_PARAM);
-						return ConfigError(asINVALID_DECLARATION, "RegisterObjectBehaviour", objectType->name.AddressOf(), decl);
-					}
-				}
 
 				// Store the list pattern for this function
 				int r = scriptFunctions[func.id]->RegisterListPattern(decl, listPattern);
@@ -3215,6 +3235,8 @@ void asCScriptEngine::RemoveTemplateInstanceType(asCObjectType *t)
 {
 	int n;
 
+	RemoveFromTypeIdMap(t);
+
 	// Destroy the factory stubs
 	for( n = 0; n < (int)t->beh.factories.GetLength(); n++ )
 	{
@@ -3235,10 +3257,8 @@ void asCScriptEngine::RemoveTemplateInstanceType(asCObjectType *t)
 	// Destroy the specialized functions
 	for( n = 1; n < (int)t->beh.operators.GetLength(); n += 2 )
 	{
-		if( t->beh.operators[n] && scriptFunctions[t->beh.operators[n]]->objectType == t )
-		{
+		if( t->beh.operators[n] )
 			scriptFunctions[t->beh.operators[n]]->Release();
-		}
 	}
 	t->beh.operators.SetLength(0);
 
@@ -3255,18 +3275,22 @@ void asCScriptEngine::RemoveTemplateInstanceType(asCObjectType *t)
 		}
 	}
 
-	for( n = (int)generatedTemplateTypes.GetLength()-1; n >= 0; n-- )
+	// Only delete it if the refCount is 0
+	if( t->refCount.get() == 0 )
 	{
-		if( generatedTemplateTypes[n] == t )
+		for( n = (int)generatedTemplateTypes.GetLength()-1; n >= 0; n-- )
 		{
-			if( n == (signed)generatedTemplateTypes.GetLength()-1 )
-				generatedTemplateTypes.PopLast();
-			else
-				generatedTemplateTypes[n] = generatedTemplateTypes.PopLast();
+			if( generatedTemplateTypes[n] == t )
+			{
+				if( n == (signed)generatedTemplateTypes.GetLength()-1 )
+					generatedTemplateTypes.PopLast();
+				else
+					generatedTemplateTypes[n] = generatedTemplateTypes.PopLast();
+			}
 		}
-	}
 
-	asDELETE(t,asCObjectType);
+		asDELETE(t,asCObjectType);
+	}
 }
 
 // internal
@@ -4219,10 +4243,17 @@ int asCScriptEngine::GetObjectInGC(asUINT idx, asUINT *seqNbr, void **obj, asIOb
 	return gc.GetObjectInGC(idx, seqNbr, obj, type);
 }
 
+// internal
+int asCScriptEngine::GarbageCollect(asDWORD flags, asUINT iterations)
+{
+	return gc.GarbageCollect(flags, iterations);
+}
+
 // interface
+// TODO: interface: Allow caller to inform number of iterations
 int asCScriptEngine::GarbageCollect(asDWORD flags)
 {
-	return gc.GarbageCollect(flags);
+	return gc.GarbageCollect(flags, 1);
 }
 
 // interface
@@ -4371,7 +4402,7 @@ const char *asCScriptEngine::GetTypeDeclaration(int typeId, bool includeNamespac
 	return tempString->AddressOf();
 }
 
-// TODO: interface: Deprecate. This function is not necessary now that all primitive types have fixed typeIds
+// interface
 int asCScriptEngine::GetSizeOfPrimitiveType(int typeId) const
 {
 	asCDataType dt = GetDataTypeFromTypeId(typeId);
@@ -5558,7 +5589,7 @@ void asCScriptEngine::DestroySubList(asBYTE *&buffer, asSListPatternNode *&node)
 	node = node->next;
 	while( node )
 	{
-		if( node->type == asLPT_REPEAT )
+		if( node->type == asLPT_REPEAT || node->type == asLPT_REPEAT_SAME )
 		{
 			// Align the offset to 4 bytes boundary
 			if( (asPWORD(buffer) & 0x3) )
