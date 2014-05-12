@@ -92,6 +92,16 @@ namespace cgSandboxRenderFlags
 
 }; // End Namespace : cgSandboxRenderFlags
 
+namespace cgPickingFlags
+{
+    enum Base
+    {
+        Wireframe           = 0x1,
+        TraverseGroups		= 0x10
+    };
+
+}; // End Namespace : cgPickingFlags
+
 // Contains items which describe how often to perform an update (i.e. on an object)
 namespace cgUpdateRate
 {

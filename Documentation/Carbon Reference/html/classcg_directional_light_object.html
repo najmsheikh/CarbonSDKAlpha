@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
    </div>
   </td>
  </tr>
@@ -162,9 +162,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a19916d932a01f3e3b8e40544c0ade445"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_directional_light_object.html#a19916d932a01f3e3b8e40544c0ade445">sandboxRender</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, <a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, const <a class="el" href="classcg_plane.html">cgPlane</a> &amp;gridPlane, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer)</td></tr>
 <tr class="memdesc:a19916d932a01f3e3b8e40544c0ade445"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the object to render its 'sandbox' representation &ndash; that is the representation to be displayed within an editing environment.  <a href="#a19916d932a01f3e3b8e40544c0ade445"></a><br/></td></tr>
 <tr class="separator:a19916d932a01f3e3b8e40544c0ade445"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb4dca93c7ec4502ca3173cbd6e01295"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_directional_light_object.html#acb4dca93c7ec4502ca3173cbd6e01295">pick</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer, const <a class="el" href="structcg_size.html">cgSize</a> &amp;viewportSize, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, bool wireframe, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> wireTolerance, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;distanceOut)</td></tr>
-<tr class="memdesc:acb4dca93c7ec4502ca3173cbd6e01295"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified object space ray, determine if this object is intersected and also compute the object space intersection distance.  <a href="#acb4dca93c7ec4502ca3173cbd6e01295"></a><br/></td></tr>
-<tr class="separator:acb4dca93c7ec4502ca3173cbd6e01295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba9e9e58cb3e758537dffc15ada8d1ab"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_directional_light_object.html#aba9e9e58cb3e758537dffc15ada8d1ab">pick</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer, const <a class="el" href="structcg_size.html">cgSize</a> &amp;viewportSize, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> wireTolerance, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;distanceOut)</td></tr>
+<tr class="memdesc:aba9e9e58cb3e758537dffc15ada8d1ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified object space ray, determine if this object is intersected and also compute the object space intersection distance.  <a href="#aba9e9e58cb3e758537dffc15ada8d1ab"></a><br/></td></tr>
+<tr class="separator:aba9e9e58cb3e758537dffc15ada8d1ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbf5755fab1e22e2725e086c5d249de9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_directional_light_object.html#acbf5755fab1e22e2725e086c5d249de9">applyObjectRescale</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> scale)</td></tr>
 <tr class="memdesc:acbf5755fab1e22e2725e086c5d249de9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply a scale to all <em>local</em> data internal to this object. For instance, in the case of a light source its range parameters will be scaled. For a mesh, the vertex data will be scaled, etc.  <a href="#acbf5755fab1e22e2725e086c5d249de9"></a><br/></td></tr>
 <tr class="separator:acbf5755fab1e22e2725e086c5d249de9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1207,7 +1207,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="acb4dca93c7ec4502ca3173cbd6e01295"></a>
+<a class="anchor" id="aba9e9e58cb3e758537dffc15ada8d1ab"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1247,8 +1247,8 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>bWireframe</em>, </td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>nFlags</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1277,7 +1277,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Given the specified object space ray, determine if this object is intersected and also compute the object space intersection distance. </p>
 
-<p>Reimplemented from <a class="el" href="classcg_world_object.html#a5b5f4cf514f6e22a6f6b62a8912fb73a">cgWorldObject</a>.</p>
+<p>Reimplemented from <a class="el" href="classcg_world_object.html#afbde3e2db1bbcb93c202e8e5edbaa576">cgWorldObject</a>.</p>
 
 </div>
 </div>
@@ -1579,7 +1579,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_directional_light_object.html">cgDirectionalLightObject</a></li>
-    <li class="footer">Generated on Tue Mar 11 2014 07:02:43 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon May 12 2014 08:23:33 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

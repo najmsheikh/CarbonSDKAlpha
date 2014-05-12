@@ -14,7 +14,7 @@ var classcg_bone_object =
     [ "insertComponentData", "classcg_bone_object.html#a08cf64b9bb1cba1ff15aff2807366eb4", null ],
     [ "onComponentCreated", "classcg_bone_object.html#a19b34b4862deb2c9edfd48994ff11796", null ],
     [ "onComponentLoading", "classcg_bone_object.html#a2c0ee04a51ee78d0fb55355347381acd", null ],
-    [ "pick", "classcg_bone_object.html#ab4c18b45e45a4b4b95453791e8e0f3b7", null ],
+    [ "pick", "classcg_bone_object.html#af3dcc8ad1515e95cedeadc1dde66f1bb", null ],
     [ "prepareQueries", "classcg_bone_object.html#a6088d8fc2c51de8d4c8268e6a4af7e83", null ],
     [ "queryReferenceType", "classcg_bone_object.html#a17941a3719253c5c20d4f37498f78d30", null ],
     [ "sandboxRender", "classcg_bone_object.html#affe38940bd8b6d48e9136d9677d63588", null ],

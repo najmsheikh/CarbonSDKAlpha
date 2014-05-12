@@ -46,6 +46,7 @@ var cg_message_types_8h =
     [ "AppWindow_OnUpdateCursor", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7a67b8a02c7777ea242bb2e745c48669d0", null ],
     [ "World_Disposing", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7a3073edbc262ac96c43310a5edc1abc82", null ],
     [ "World_SceneAdded", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7aa3751b6d50dedaa699c21a1bfa0eb7d5", null ],
+    [ "World_SceneRemoved", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7af3be9dc4a475987e5a47ffac3bf6b3d7", null ],
     [ "World_SceneLoading", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7a8d40d649820baa91b2d7b4e92f4f2c6a", null ],
     [ "World_SceneLoadFailed", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7a9c84ee456228583bfdaed96f794deb9b", null ],
     [ "World_SceneLoaded", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7ae87ade9bb9e526e2f2e4c08fcda82f11", null ],

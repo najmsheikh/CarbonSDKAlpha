@@ -254,7 +254,7 @@ cgRangeF cgHingeJointObject::getLimits( ) const
 /// intersected and also compute the object space intersection distance. 
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgHingeJointObject::pick( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distance )
+bool cgHingeJointObject::pick( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgUInt32 flags, cgFloat wireTolerance, cgFloat & distance )
 {
     // Only valid in sandbox mode.
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
@@ -286,7 +286,7 @@ bool cgHingeJointObject::pick( cgCameraNode * camera, cgObjectNode * issuer, con
     cgVector3::normalize( meshRayDirection, meshRayDirection );
 
     // Pass through
-    bool result = mesh->pick( camera, viewportSize, issuer->getWorldTransform(false), meshRayOrigin, meshRayDirection, wireframe, wireTolerance, distance );
+    bool result = mesh->pick( camera, viewportSize, issuer->getWorldTransform(false), meshRayOrigin, meshRayDirection, flags, wireTolerance, distance );
 
     // Scale distance back out
     if ( result )

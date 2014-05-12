@@ -19,6 +19,6 @@ CREATE TRIGGER [SceneElements::BSPVisTree_OnDelete]
   ON [SceneElements::BSPVisTree]
   BEGIN
     DELETE FROM [Scenes::Elements] WHERE ElementId=old.RefId;
-    DELETE FROM [Scenes::BSPVisTree::Occluders] WHERE ElementId=old.RefId;
+    DELETE FROM [SceneElements::BSPVisTree::Occluders] WHERE ElementId=old.RefId;
   END;
 

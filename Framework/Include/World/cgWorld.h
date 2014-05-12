@@ -119,6 +119,7 @@ public:
     //-------------------------------------------------------------------------
     virtual void    onWorldDisposing    ( cgWorldEventArgs * e ) {};
     virtual void    onSceneAdded        ( cgSceneUpdateEventArgs * e ) {};
+	virtual void    onSceneRemoved		( cgSceneUpdateEventArgs * e ) {};
     virtual void    onSceneLoading      ( cgSceneLoadEventArgs * e ) {};
     virtual void    onSceneLoadFailed   ( cgSceneLoadEventArgs * e ) {};
     virtual void    onSceneLoaded       ( cgSceneLoadEventArgs * e ) {};
@@ -171,6 +172,8 @@ public:
     bool                        save                        ( const cgString & fileName );
     cgUInt32                    createScene                 ( const cgSceneDescriptor & description );
     cgScene                   * loadScene                   ( cgUInt32 sceneId );
+	cgScene                   * loadScene                   ( cgUInt32 sceneId, bool suppressEvents );
+	bool						deleteScene					( cgUInt32 sceneId );
     void                        unloadScene                 ( cgUInt32 sceneId );
     void                        unloadScene                 ( cgScene * scene );
     void                        update                      ( );
@@ -196,6 +199,8 @@ public:
     cgRenderDriver            * getRenderDriver             ( ) const;
     cgResourceManager         * getResourceManager          ( ) const;
     bool                        isSceneLoaded               ( cgUInt32 sceneId ) const;
+	cgInputStream             & getSourceStream				( );
+	cgInputStream             & getDatabaseStream			( );
     
     // Database methods
     void                        componentTablesCreated      ( const cgUID & typeIdentifier );
@@ -244,6 +249,7 @@ protected:
     // Event Virtuals
     virtual void                onWorldDisposing            ( cgWorldEventArgs * e );
     virtual void                onSceneAdded                ( cgSceneUpdateEventArgs * e );
+	virtual void                onSceneRemoved				( cgSceneUpdateEventArgs * e );
     virtual void                onSceneLoading              ( cgSceneLoadEventArgs * e );
     virtual void                onSceneLoadFailed           ( cgSceneLoadEventArgs * e );
     virtual void                onSceneLoaded               ( cgSceneLoadEventArgs * e );

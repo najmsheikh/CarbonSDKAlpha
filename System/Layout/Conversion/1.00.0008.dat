@@ -1,0 +1,176 @@
+bool upgrade_1000007_to_1000008( World @ world )
+{
+    String sql;
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Add soft references for each material referenced by mesh subsets.
+    ///////////////////////////////////////////////////////////////////////////
+	
+	if ( world.tableExists( "DataSources::Mesh::Subsets" ) )
+	{
+		// Build the material update query.
+		sql = "UPDATE [Materials::Standard] SET RefCount=RefCount+1 WHERE RefId=?1";
+		WorldQuery @ updateQuery = WorldQuery( world, sql );
+		if ( !updateQuery.isPrepared() )
+			return false;
+		
+		// Build the mesh subset selection query.
+		sql = "SELECT MaterialId FROM [DataSources::Mesh::Subsets]";
+		WorldQuery @ query = WorldQuery( world, sql );
+		if ( !query.isPrepared() )
+			return false;
+			
+		// Execute the query
+		if ( !query.step() )
+			return false;
+		
+		// Step through each subset and update the referenced material's refcount
+		while ( query.nextRow() )
+		{
+			uint32 materialId;
+			query.getColumn(0,materialId);
+			if ( materialId > 0 )
+			{
+				updateQuery.bindParameter(1,materialId );
+				if ( !updateQuery.step(true) )
+					return false;
+			
+			} // End if references material
+		
+		} // Next result
+		
+	} // End if has subsets
+	
+	///////////////////////////////////////////////////////////////////////////
+    // Add soft references for each material referenced by procedural landscape 
+	// layers.
+    ///////////////////////////////////////////////////////////////////////////
+	
+	if ( world.tableExists( "Landscapes::ProceduralLayers" ) )
+	{
+		// Build the material update query.
+		sql = "UPDATE [Materials::LandscapeLayer] SET RefCount=RefCount+1 WHERE RefId=?1";
+		WorldQuery @ updateQuery = WorldQuery( world, sql );
+		if ( !updateQuery.isPrepared() )
+			return false;
+		
+		// Build the mesh subset selection query.
+		sql = "SELECT MaterialId FROM [Landscapes::ProceduralLayers]";
+		WorldQuery @ query = WorldQuery( world, sql );
+		if ( !query.isPrepared() )
+			return false;
+			
+		// Execute the query
+		if ( !query.step() )
+			return false;
+		
+		// Step through each layer and update the referenced material's refcount
+		while ( query.nextRow() )
+		{
+			uint32 materialId;
+			query.getColumn(0,materialId);
+			if ( materialId > 0 )
+			{
+				updateQuery.bindParameter(1,materialId );
+				if ( !updateQuery.step(true) )
+					return false;
+			
+			} // End if references material
+		
+		} // Next result
+		
+	} // End if has layers
+	
+	///////////////////////////////////////////////////////////////////////////
+    // Add soft references for each material referenced by painted landscape 
+	// layers.
+    ///////////////////////////////////////////////////////////////////////////
+	
+	if ( world.tableExists( "Landscapes::BlockLayers" ) )
+	{
+		// Build the material update query.
+		sql = "UPDATE [Materials::LandscapeLayer] SET RefCount=RefCount+1 WHERE RefId=?1";
+		WorldQuery @ updateQuery = WorldQuery( world, sql );
+		if ( !updateQuery.isPrepared() )
+			return false;
+		
+		// Build the mesh subset selection query.
+		sql = "SELECT MaterialId FROM [Landscapes::BlockLayers]";
+		WorldQuery @ query = WorldQuery( world, sql );
+		if ( !query.isPrepared() )
+			return false;
+			
+		// Execute the query
+		if ( !query.step() )
+			return false;
+		
+		// Step through each layer and update the referenced material's refcount
+		while ( query.nextRow() )
+		{
+			uint32 materialId;
+			query.getColumn(0,materialId);
+			if ( materialId > 0 )
+			{
+				updateQuery.bindParameter(1,materialId );
+				if ( !updateQuery.step(true) )
+					return false;
+			
+			} // End if references material
+		
+		} // Next result
+		
+	} // End if has layers
+	
+	///////////////////////////////////////////////////////////////////////////
+    // Repair incorrect trigger in Landscapes::Blocks table.
+    ///////////////////////////////////////////////////////////////////////////
+	
+	// First drop old trigger
+	if ( !world.executeQuery( "DROP TRIGGER [Landscapes::Blocks_OnDelete]", false ) )
+		return false;
+		
+	// Add the correct trigger.
+	sql  = "CREATE TRIGGER [Landscapes::Blocks_OnDelete]";
+	sql += "  BEFORE DELETE";
+	sql += "  ON [Landscapes::Blocks]";
+	sql += "  BEGIN";
+	sql += "    DELETE FROM [Landscapes::BlockLOD] WHERE BlockId=old.BlockId;";
+	sql += "    DELETE FROM [Landscapes::BlockLayers] WHERE BlockId=old.BlockId;";
+	sql += "  END;";
+	
+	// Execute the query
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+	
+	///////////////////////////////////////////////////////////////////////////
+    // Repair incorrect trigger in SceneElements::BSPVisTree table.
+    ///////////////////////////////////////////////////////////////////////////
+	
+	if ( world.tableExists( "SceneElements::BSPVisTree" ) )
+	{
+		// First drop old trigger
+		if ( !world.executeQuery( "DROP TRIGGER [SceneElements::BSPVisTree_OnDelete]", false ) )
+			return false;
+			
+		// Add the correct trigger.
+		sql  = "CREATE TRIGGER [SceneElements::BSPVisTree_OnDelete]";
+		sql += "  BEFORE DELETE";
+		sql += "  ON [SceneElements::BSPVisTree]";
+		sql += "  BEGIN";
+		sql += "    DELETE FROM [Scenes::Elements] WHERE ElementId=old.RefId;";
+		sql += "    DELETE FROM [SceneElements::BSPVisTree::Occluders] WHERE ElementId=old.RefId;";
+		sql += "  END;";
+		
+		// Execute the query
+		if ( !world.executeQuery( sql, false ) )
+			return false;
+			
+	} // End if table exists
+
+    // Update version number to 1.00.0008
+    if ( !world.executeQuery( "UPDATE [Configuration] SET Version=1,Subversion=0,Revision=8 WHERE Type='Primary'", false ) )
+        return false;
+
+    // Success!
+    return true;
+}

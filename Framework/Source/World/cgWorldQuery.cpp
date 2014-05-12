@@ -461,10 +461,22 @@ bool cgWorldQuery::nextRow( )
 //-----------------------------------------------------------------------------
 //  Name : reset( )
 /// <summary>
+/// Reset the entire query so it can be run again. Automatically clears error
+/// state by default.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgWorldQuery::reset( )
+{
+	return reset( true );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : reset( )
+/// <summary>
 /// Reset the entire query so it can be run again.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgWorldQuery::reset( bool bClearErrorState /* = true */ )
+bool cgWorldQuery::reset( bool bClearErrorState )
 {
     // Reset error status
     if ( bClearErrorState == true )

@@ -339,7 +339,7 @@ public:
     virtual bool                    canClone                ( ) const;
 
     // Sandbox Integration
-    virtual bool                    pick                    ( cgCameraNode * camera, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut, cgObjectNode *& closestNodeOut );
+    virtual bool                    pick                    ( cgCameraNode * camera, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgUInt32 flags, cgFloat wireTolerance, cgFloat & distanceOut, cgObjectNode *& closestNodeOut );
     virtual bool                    sandboxRender           ( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane );
     virtual bool                    isSelected              ( ) const;
     virtual void                    setSelected             ( bool selected, bool updateDependents = true, bool sendNotifications = true, cgObjectNodeMap & alteredNodes = cgObjectNodeMap() );

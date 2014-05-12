@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
    </div>
   </td>
  </tr>
@@ -177,6 +177,15 @@ Public Member Functions</h2></td></tr>
 cgFilterExpression::IdentifierArray &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#aa0c2561766b6aeb25f9da41c9bf2d9e9">getMaterialPropertyIdentifiers</a> () const </td></tr>
 <tr class="memdesc:aa0c2561766b6aeb25f9da41c9bf2d9e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the pre-constructed list of identifiers (compatible with <a class="el" href="classcg_filter_expression.html" title="A utility class that allows for complex (string based) boolean style expressions to be supplied that ...">cgFilterExpression</a>) for the various user defined material properties types.  <a href="#aa0c2561766b6aeb25f9da41c9bf2d9e9"></a><br/></td></tr>
 <tr class="separator:aa0c2561766b6aeb25f9da41c9bf2d9e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a215fc59e2b9a255d6fdc9c7197717e76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a215fc59e2b9a255d6fdc9c7197717e76">suppressEvents</a> (bool suppress)</td></tr>
+<tr class="memdesc:a215fc59e2b9a255d6fdc9c7197717e76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call this method to enable or disable the dispatching of events that normally takes place when actions are performed on the scene such as creating or deleting objects, adding scene elements, etc. All events supported by '<a class="el" href="classcg_scene_event_listener.html" title="Abstract interface class from which other classes can derive in order to recieve messages whenever sc...">cgSceneEventListener</a>' will be suppressed when enabled.  <a href="#a215fc59e2b9a255d6fdc9c7197717e76"></a><br/></td></tr>
+<tr class="separator:a215fc59e2b9a255d6fdc9c7197717e76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe2ea334fd5172476f520ad11e063941"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#afe2ea334fd5172476f520ad11e063941">isEventSuppressionEnabled</a> () const </td></tr>
+<tr class="memdesc:afe2ea334fd5172476f520ad11e063941"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine whether or not standard scene events are currently being suppressed.  <a href="#afe2ea334fd5172476f520ad11e063941"></a><br/></td></tr>
+<tr class="separator:afe2ea334fd5172476f520ad11e063941"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5577c13664a2ff9adfd9ba4e420df0bd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a5577c13664a2ff9adfd9ba4e420df0bd">clear</a> ()</td></tr>
+<tr class="memdesc:a5577c13664a2ff9adfd9ba4e420df0bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Completely destroy and remove all resident scene nodes and elements leaving a completely empty scene.  <a href="#a5577c13664a2ff9adfd9ba4e420df0bd"></a><br/></td></tr>
+<tr class="separator:a5577c13664a2ff9adfd9ba4e420df0bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc2f7b31f998d700b6aedd1930b1106b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#afc2f7b31f998d700b6aedd1930b1106b">enableUpdates</a> (bool enabled)</td></tr>
 <tr class="memdesc:afc2f7b31f998d700b6aedd1930b1106b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the state which determines whether scene objects will automatically receive calls to their 'update' method during scene update processing.  <a href="#afc2f7b31f998d700b6aedd1930b1106b"></a><br/></td></tr>
 <tr class="separator:afc2f7b31f998d700b6aedd1930b1106b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -426,9 +435,9 @@ cgFilterExpression::IdentifierArray &amp;&#160;</td><td class="memItemRight" val
 <tr class="memitem:a6b28bfcb67a4123a5b4844e5417a2819"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_object_node.html">cgObjectNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a6b28bfcb67a4123a5b4844e5417a2819">pickClosestNode</a> (const <a class="el" href="structcg_size.html">cgSize</a> &amp;viewportSize, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;intersectionOut)</td></tr>
 <tr class="memdesc:a6b28bfcb67a4123a5b4844e5417a2819"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified ray, find the closest node that is intersected by that ray and return it. Also return the intersection point on the node.  <a href="#a6b28bfcb67a4123a5b4844e5417a2819"></a><br/></td></tr>
 <tr class="separator:a6b28bfcb67a4123a5b4844e5417a2819"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79bdc3ef9ac7e51eee0f2370d8948dce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_object_node.html">cgObjectNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a79bdc3ef9ac7e51eee0f2370d8948dce">pickClosestNode</a> (const <a class="el" href="structcg_size.html">cgSize</a> &amp;viewportSize, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, bool wireframe, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> wireTolerance, <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;intersectionOut)</td></tr>
-<tr class="memdesc:a79bdc3ef9ac7e51eee0f2370d8948dce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified ray, find the closest node that is intersected by that ray and return it. Also return the intersection point on the node.  <a href="#a79bdc3ef9ac7e51eee0f2370d8948dce"></a><br/></td></tr>
-<tr class="separator:a79bdc3ef9ac7e51eee0f2370d8948dce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65bfb7695401ec01e55ec69f44223c3c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_object_node.html">cgObjectNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a65bfb7695401ec01e55ec69f44223c3c">pickClosestNode</a> (const <a class="el" href="structcg_size.html">cgSize</a> &amp;viewportSize, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> wireTolerance, <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;intersectionOut)</td></tr>
+<tr class="memdesc:a65bfb7695401ec01e55ec69f44223c3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified ray, find the closest node that is intersected by that ray and return it. Also return the intersection point on the node.  <a href="#a65bfb7695401ec01e55ec69f44223c3c"></a><br/></td></tr>
+<tr class="separator:a65bfb7695401ec01e55ec69f44223c3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a312182cd0c701e77feb7619b5fb78c0f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a312182cd0c701e77feb7619b5fb78c0f">groupSelected</a> (bool asActor)</td></tr>
 <tr class="memdesc:a312182cd0c701e77feb7619b5fb78c0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Group together any currently selected nodes into either a standard collection group, or optionally as an actor.  <a href="#a312182cd0c701e77feb7619b5fb78c0f"></a><br/></td></tr>
 <tr class="separator:a312182cd0c701e77feb7619b5fb78c0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -675,6 +684,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:aa680b7ec9f341e5df707a6dacca2b721"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6b14623acbe6998dfee2789c06d16a1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#af6b14623acbe6998dfee2789c06d16a1">mIsLoading</a></td></tr>
 <tr class="separator:af6b14623acbe6998dfee2789c06d16a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84cd9df9242529ed70035471dab2fb0d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a84cd9df9242529ed70035471dab2fb0d">mSuppressEvents</a></td></tr>
+<tr class="separator:a84cd9df9242529ed70035471dab2fb0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abca7dbb3830fdadf2f028a5f072627f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_physics_world.html">cgPhysicsWorld</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#abca7dbb3830fdadf2f028a5f072627f5">mPhysicsWorld</a></td></tr>
 <tr class="separator:abca7dbb3830fdadf2f028a5f072627f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0148efe752a0922e10ddd3f3d3b55920"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_landscape.html">cgLandscape</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_scene.html#a0148efe752a0922e10ddd3f3d3b55920">mLandscape</a></td></tr>
@@ -1057,6 +1068,23 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Determine if the currently selected nodes can be ungrouped. </p>
+
+</div>
+</div>
+<a class="anchor" id="a5577c13664a2ff9adfd9ba4e420df0bd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgScene::clear </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Completely destroy and remove all resident scene nodes and elements leaving a completely empty scene. </p>
 
 </div>
 </div>
@@ -2352,6 +2380,23 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="afe2ea334fd5172476f520ad11e063941"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgScene::isEventSuppressionEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Determine whether or not standard scene events are currently being suppressed. </p>
+
+</div>
+</div>
 <a class="anchor" id="a81d04893e47c784c349913754a1a203c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3179,7 +3224,7 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a79bdc3ef9ac7e51eee0f2370d8948dce"></a>
+<a class="anchor" id="a65bfb7695401ec01e55ec69f44223c3c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -3204,8 +3249,8 @@ Static Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>wireframe</em>, </td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>flags</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -3897,6 +3942,24 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Each update list has a different rate that can be used in order to reduce the amount of nodes which potentially have to be updated each frame. This function simply adds the node to the relevant internal update list based on the specified rate. </p>
+
+</div>
+</div>
+<a class="anchor" id="a215fc59e2b9a255d6fdc9c7197717e76"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgScene::suppressEvents </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>suppress</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Call this method to enable or disable the dispatching of events that normally takes place when actions are performed on the scene such as creating or deleting objects, adding scene elements, etc. All events supported by '<a class="el" href="classcg_scene_event_listener.html" title="Abstract interface class from which other classes can derive in order to recieve messages whenever sc...">cgSceneEventListener</a>' will be suppressed when enabled. </p>
 
 </div>
 </div>
@@ -4832,6 +4895,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a84cd9df9242529ed70035471dab2fb0d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgScene::mSuppressEvents</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a35761b94855d3f380c0dad6ecc0b844f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -4902,7 +4985,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_scene.html">cgScene</a></li>
-    <li class="footer">Generated on Tue Mar 11 2014 07:02:50 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon May 12 2014 08:23:40 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -20,7 +20,7 @@ var classcg_spot_light_object =
     [ "insertComponentData", "classcg_spot_light_object.html#a2b3444c5f807f4d7f6ab1a0d4117a818", null ],
     [ "onComponentCreated", "classcg_spot_light_object.html#aadfb98a0cbf3181d9ec077105405c568", null ],
     [ "onComponentLoading", "classcg_spot_light_object.html#ab3eb5a09b02b368bf05c0f79b673190a", null ],
-    [ "pick", "classcg_spot_light_object.html#a1e87c765cd56204e81deceaf9b8a301e", null ],
+    [ "pick", "classcg_spot_light_object.html#a4370e9cadaa637ba3db7e1c34a35549e", null ],
     [ "prepareQueries", "classcg_spot_light_object.html#a31e0345c28e7e6627380961766fcee62", null ],
     [ "queryReferenceType", "classcg_spot_light_object.html#ad51f5611522c455c57c585fd2826b06b", null ],
     [ "sandboxRender", "classcg_spot_light_object.html#a83168a17d01775c9a77750c4aa163ab6", null ],

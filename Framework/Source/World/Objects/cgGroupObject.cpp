@@ -554,7 +554,7 @@ void cgGroupNode::alterOpenState( bool bState, cgObjectNode * pNode )
 /// of FLT_MAX initially.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgGroupNode::pick( cgCameraNode * pCamera, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance, cgObjectNode *& pClosestNode )
+bool cgGroupNode::pick( cgCameraNode * pCamera, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, cgUInt32 nFlags, cgFloat fWireTolerance, cgFloat & fDistance, cgObjectNode *& pClosestNode )
 {
     bool bChildHit = false;
 
@@ -563,13 +563,14 @@ bool cgGroupNode::pick( cgCameraNode * pCamera, const cgSize & ViewportSize, con
     for ( itChild = mChildren.begin(); itChild != mChildren.end(); ++itChild )
     {
         cgObjectNode * pChildNode = *itChild;
-        bChildHit |= pChildNode->pick( pCamera, ViewportSize, vOrigin, vDir, bWireframe, fWireTolerance, fDistance, pClosestNode );
+        bChildHit |= pChildNode->pick( pCamera, ViewportSize, vOrigin, vDir, nFlags, fWireTolerance, fDistance, pClosestNode );
     
     } // Next Child
 
-    // If the group is open, pass through to children as normal and
-    // do not interfere with the picking process.
-    if ( isOpen() )
+    // If the group is open (or the caller requested that we traverse
+	// into groups), pass through to children as normal and do not interfere 
+	// with the picking process.
+	if ( isOpen() || (nFlags & cgPickingFlags::TraverseGroups) )
     {
         return bChildHit;
     

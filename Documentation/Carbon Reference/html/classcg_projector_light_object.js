@@ -27,7 +27,7 @@ var classcg_projector_light_object =
     [ "onComponentCreated", "classcg_projector_light_object.html#ad76b41c936ea9c54f731ef5ccacec0a0", null ],
     [ "onComponentDeleted", "classcg_projector_light_object.html#a2bf9a01b15dec7075724d2c3236dad34", null ],
     [ "onComponentLoading", "classcg_projector_light_object.html#adb316aaa8cbfa008f2845938ed426c76", null ],
-    [ "pick", "classcg_projector_light_object.html#a2db4f072a350c775961f7566ad263897", null ],
+    [ "pick", "classcg_projector_light_object.html#a5bcd0a5e9dd6f0bb54054bd9ea49a108", null ],
     [ "prepareQueries", "classcg_projector_light_object.html#a08ee97bb9984b9da8f54aa57f37791d6", null ],
     [ "queryReferenceType", "classcg_projector_light_object.html#a435218b04b3d4bf4a87846b4e4306724", null ],
     [ "sandboxRender", "classcg_projector_light_object.html#ab9078eac1e932c1b3e461d5fa07c54e1", null ],

@@ -72,6 +72,7 @@ var namespaces =
     [ "cgParticleBlendMethod", "namespacecg_particle_blend_method.html", null ],
     [ "cgParticleEmitterType", "namespacecg_particle_emitter_type.html", null ],
     [ "cgPhysicsModel", "namespacecg_physics_model.html", null ],
+    [ "cgPickingFlags", "namespacecg_picking_flags.html", null ],
     [ "cgPlaneQuery", "namespacecg_plane_query.html", null ],
     [ "cgPlatform", "namespacecg_platform.html", null ],
     [ "cgPrimitiveType", "namespacecg_primitive_type.html", null ],

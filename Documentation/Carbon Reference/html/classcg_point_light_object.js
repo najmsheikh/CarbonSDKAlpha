@@ -32,7 +32,7 @@ var classcg_point_light_object =
     [ "insertComponentData", "classcg_point_light_object.html#aeb5fb3596b7d0b51086985495bbc30a6", null ],
     [ "onComponentCreated", "classcg_point_light_object.html#a57f4e491e15e33d00afcc3ae06abcfff", null ],
     [ "onComponentLoading", "classcg_point_light_object.html#a34cb6348af6f7f8accb330be66796505", null ],
-    [ "pick", "classcg_point_light_object.html#a8a94a216ca0ba1c0cb24b117773f868f", null ],
+    [ "pick", "classcg_point_light_object.html#ac9042d7779a350dd63a2645c603e69f8", null ],
     [ "prepareQueries", "classcg_point_light_object.html#ae5f40f356e21931d1dfb79fe6a0bb676", null ],
     [ "queryReferenceType", "classcg_point_light_object.html#ada54b003283579fc83d7c8a6b0076c02", null ],
     [ "sandboxRender", "classcg_point_light_object.html#a78da0f1cc3e8308c1d29b28c27ebb65f", null ],

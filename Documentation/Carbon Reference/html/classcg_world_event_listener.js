@@ -7,6 +7,7 @@ var classcg_world_event_listener =
     [ "onSceneLoaded", "classcg_world_event_listener.html#ac4df533de04c5f29e00e3ab0ff9969e6", null ],
     [ "onSceneLoadFailed", "classcg_world_event_listener.html#abe6b86574ce70284f1509987ae5df530", null ],
     [ "onSceneLoading", "classcg_world_event_listener.html#af53800cb9b88eeb3652c2738c66b466c", null ],
+    [ "onSceneRemoved", "classcg_world_event_listener.html#a72251466ec7f512585822bef61464725", null ],
     [ "onSceneUnloading", "classcg_world_event_listener.html#a78ed091e6ad1af79be4775755b782efc", null ],
     [ "onWorldDisposing", "classcg_world_event_listener.html#a1a9ac743775e4438b7ea2fa61791812a", null ]
 ];

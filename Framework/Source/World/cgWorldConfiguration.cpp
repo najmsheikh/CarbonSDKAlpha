@@ -54,6 +54,7 @@ cgWorldQuery cgWorldConfiguration::mInsertMaterialProperty;
 cgWorldQuery cgWorldConfiguration::mInsertRenderClass;
 cgWorldQuery cgWorldConfiguration::mInsertScene;
 cgWorldQuery cgWorldConfiguration::mUpdateScene;
+cgWorldQuery cgWorldConfiguration::mDeleteScene;
 
 ///////////////////////////////////////////////////////////////////////////////
 // cgWorldConfiguration Member Functions
@@ -99,6 +100,8 @@ void cgWorldConfiguration::prepareQueries()
     {
         if ( !mInsertScene.isPrepared() )
             mInsertScene.prepare( mWorld, _T("INSERT INTO 'Scenes' VALUES(NULL,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17)"), true );
+		if ( !mDeleteScene.isPrepared() )
+            mDeleteScene.prepare( mWorld, _T("DELETE FROM 'Scenes' WHERE SceneId=?1"), true );
         if ( !mUpdateScene.isPrepared() )
             mUpdateScene.prepare( mWorld, _T("UPDATE 'Scenes' SET Type=?1, FriendlyName=?2, EditorName=?3, Description=?4, Flags=?5, RenderControlScript=?6, DistanceDisplayUnits=?6, ")
                                           _T("BoundsMinX=?8, BoundsMinY=?9, BoundsMinZ=?10, BoundsMaxX=?11, BoundsMaxY=?12, BoundsMaxZ=?13, ")
@@ -264,6 +267,18 @@ cgConfigResult::Base cgWorldConfiguration::loadConfiguration( cgUInt32 minSuppor
             cgDecomposeVersion( maxSupportedVersion, newVersion, newSubversion, newRevision );
             cgAppLog::write( cgAppLog::Info, _T("Attempting to upgrade layout of world database from v%i.%02i.%04i to v%i.%02i.%04i.\n"), 
                              version, subversion, revision, newVersion, newSubversion, newRevision );
+
+			// Backup the database.
+			cgString sourceFile = mWorld->getSourceStream().getSourceFile();
+			cgString destinationFile = cgFileSystem::getDirectoryName( sourceFile );
+			destinationFile += _T("\\") + cgFileSystem::getFileName(sourceFile,true);
+			destinationFile += cgString::format( _T("-backup-v%i.%02i.%04i.cwm"), version, subversion, revision );
+			if ( !cgFileSystem::copyFile(sourceFile, destinationFile, true ) )
+			{
+				cgAppLog::write( cgAppLog::Error, _T("Failed to create backup of world database to '%s'. The user may not have sufficient permissions. The upgrade operation has been aborted.\n"), destinationFile.c_str() );
+				return cgConfigResult::Error;
+		    
+			} // End if failed
 
             // Load the upgrade script.
             cgScriptEngine * engine = cgScriptEngine::getInstance();
@@ -831,6 +846,55 @@ bool cgWorldConfiguration::insertRenderClass( const cgString & identifier, const
     // Success!
     return true;
 
+}
+
+//-----------------------------------------------------------------------------
+// Name : removeScene () (Protected)
+/// <summary>
+/// Remove the specified scene descripter from the database. 
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgWorldConfiguration::removeScene( cgUInt32 sceneId )
+{
+	prepareQueries();
+	mDeleteScene.bindParameter( 1, sceneId );
+
+	// Execute the query.
+    if ( !mDeleteScene.step( true ) )
+    {
+        cgString error;
+        if ( mDeleteScene.getLastError( error ) )
+            cgAppLog::write( cgAppLog::Error, _T("Failed to remove descriptor for scene '0x%x' from the world database. Error: %s.\n"), sceneId, error.c_str() );
+        else
+            cgAppLog::write( cgAppLog::Error, _T("Failed to remove descriptor for scene '0x%x' from the world database.\n"), sceneId );
+        return false;
+
+    } // End if delete failed
+
+	// Find the scene descriptor entry.
+	size_t sceneIndex = size_t(-1);
+	for ( size_t i = 0 ; i < mSceneDescriptors.size(); ++i )
+    {
+        if ( mSceneDescriptors[i]->sceneId == sceneId )
+		{
+			sceneIndex = i;
+			break;
+		
+		} // End if matching
+        
+    } // Next Descriptor
+	if ( sceneIndex == size_t(-1) )
+		return false;
+
+	// Remove it from the scene descriptor array and then rebuild the LUT.
+	delete mSceneDescriptors[ sceneIndex ];
+	mSceneDescriptors.erase( mSceneDescriptors.begin() + sceneIndex );
+	mSceneDescriptorLUT.clear();
+	for ( size_t i = 0; i < mSceneDescriptors.size(); ++i )
+		mSceneDescriptorLUT[mSceneDescriptors[i]->name] = i;
+
+	// Success
+	return true;
 }
 
 //-----------------------------------------------------------------------------

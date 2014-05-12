@@ -25,7 +25,7 @@ var classcg_collision_shape_element =
     [ "insertComponentData", "classcg_collision_shape_element.html#ac637352d47724849de9f8fc7068eca08", null ],
     [ "onComponentCreated", "classcg_collision_shape_element.html#af16dd1c9c5cee31da762ddd424bb2185", null ],
     [ "onComponentLoading", "classcg_collision_shape_element.html#a4e130212ae56b182a86e9322641f5f3f", null ],
-    [ "pick", "classcg_collision_shape_element.html#a435814c654d5bd8fd2e757877a39e2d8", null ],
+    [ "pick", "classcg_collision_shape_element.html#a5aa4300ddfb90d1447d3b2f15d262629", null ],
     [ "prepareQueries", "classcg_collision_shape_element.html#a7a6d64786bc1c1579c7dc3511a893553", null ],
     [ "queryReferenceType", "classcg_collision_shape_element.html#a7bc3bae1fb424a907d8f874387d0bc2f", null ],
     [ "sandboxRender", "classcg_collision_shape_element.html#a92c85d45eeeeaabf920056bbae1f8720", null ],

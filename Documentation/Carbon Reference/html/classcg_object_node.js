@@ -134,7 +134,7 @@ var classcg_object_node =
     [ "onPhysicsBodyCollisionEnd", "classcg_object_node.html#adef126397377aed9a7a3d4e3eb6bdfef", null ],
     [ "onPhysicsBodyTransformed", "classcg_object_node.html#a780bb6facb32ec1a43228b7417b87776", null ],
     [ "onResolvePendingUpdates", "classcg_object_node.html#a801158a45b4ee31a97be1135544b7df7", null ],
-    [ "pick", "classcg_object_node.html#a57a2704a57e8263d3986a9cfa75fba60", null ],
+    [ "pick", "classcg_object_node.html#a258c400af116ed96380269e11d24e2c7", null ],
     [ "prepareQueries", "classcg_object_node.html#a8c878fda9193caaa8ae5b0e22e4c96cd", null ],
     [ "processMessage", "classcg_object_node.html#a7576a757b6d1b0364257c572ae7b72b3", null ],
     [ "queryObjectType", "classcg_object_node.html#a4296ace30897b1b12d259a31f7a9e385", null ],

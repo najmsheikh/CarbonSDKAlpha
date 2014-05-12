@@ -20,7 +20,7 @@ var classcg_billboard_object =
     [ "isRenderable", "classcg_billboard_object.html#a8ae4b369aaebfbc9d6dc2d9ff77545ae", null ],
     [ "onComponentCreated", "classcg_billboard_object.html#a74521744be5c37ee651036c6b11ea8d5", null ],
     [ "onComponentLoading", "classcg_billboard_object.html#af587e5db8f6a9376b9d375e793204cfa", null ],
-    [ "pick", "classcg_billboard_object.html#a39fec78b64352a808cd70d37f0ad7a9b", null ],
+    [ "pick", "classcg_billboard_object.html#a9ae4c172dcd59d8724df3743b85b1ceb", null ],
     [ "prepareQueries", "classcg_billboard_object.html#a21cf46392f475d6c87c3c7ba156541c4", null ],
     [ "queryReferenceType", "classcg_billboard_object.html#a09a290ece961e55e6f064d8919736e54", null ],
     [ "render", "classcg_billboard_object.html#abf28d5bc9124d464c18acce9f9790e09", null ],

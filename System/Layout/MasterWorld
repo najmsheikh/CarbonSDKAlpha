@@ -457,7 +457,7 @@ DELETE
 ON [Landscapes::Blocks]
 BEGIN
   DELETE FROM [Landscapes::BlockLOD] WHERE BlockId=old.BlockId;  
-  DELETE FROM [Landscapes::BlockLayers] WHERE BlockId=old.BlockLayers;
+  DELETE FROM [Landscapes::BlockLayers] WHERE BlockId=old.BlockId;
 END;
 
 --Table: Landscapes::BlockLayers

@@ -193,7 +193,7 @@ public:
     //-------------------------------------------------------------------------
     // Typedefs
     //-------------------------------------------------------------------------
-    CGE_ARRAY_DECLARE( ProceduralLayerRef, ProceduralLayerArray )
+    CGE_ARRAY_DECLARE( ProceduralLayerRef*, ProceduralLayerArray )
     CGE_ARRAY_DECLARE( cgTerrainBlock*, TerrainBlockArray )
     CGE_ARRAY_DECLARE( cgTerrainLOD*, TerrainLODArray )
 
@@ -209,6 +209,7 @@ public:
     bool                            load                    ( cgUInt32 landscapeId );
     bool                            import                  ( cgHeightMap * heightMap, const cgVector3 & dimensions, cgUInt32 initFlags );
     bool                            import                  ( const cgLandscapeImportParams & params );
+	bool							deleteLandscape			( );
     bool                            heightMapUpdated        ( const cgRect & bounds );
     bool                            setDimensions           ( const cgVector3 & dimensions );
     bool                            setDimensions           ( const cgVector3 & dimensions, bool rebuildTerrain );
@@ -279,7 +280,7 @@ public:
     //virtual void                    sandboxRender           ( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer );
     //virtual bool                    render                  ( cgCameraNode * camera, cgVisibilitySet * visibilityData, cgObjectNode * issuer );
     //virtual bool                    renderSubset            ( cgCameraNode * camera, cgVisibilitySet * visibilityData, cgObjectNode * issuer, const ResourceHandle & material );
-    //virtual bool                    pick                    ( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & origin, const cgVector3 & direction, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut );
+    //virtual bool                    pick                    ( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & origin, const cgVector3 & direction, cgUInt32 flags, cgFloat wireTolerance, cgFloat & distanceOut );
     //virtual bool                    isRenderable            ( ) const;
     //virtual bool                    isShadowCaster          ( ) const;
     
@@ -507,6 +508,7 @@ protected:
     //-------------------------------------------------------------------------
     // Cached database queries.
     static cgWorldQuery     mInsertLandscape;
+	static cgWorldQuery     mDeleteLandscape;
     static cgWorldQuery     mInsertProceduralLayer;
     static cgWorldQuery     mUpdateLandscapeLayout;
     static cgWorldQuery     mUpdateTextureConfig;
@@ -835,7 +837,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Typedefs
     //-------------------------------------------------------------------------
-    CGE_ARRAY_DECLARE( LayerReference, LayerReferenceArray )
+    CGE_ARRAY_DECLARE( LayerReference*, LayerReferenceArray )
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors

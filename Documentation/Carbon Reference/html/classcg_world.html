@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
    </div>
   </td>
  </tr>
@@ -155,6 +155,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae37a93aaef23fd833508537f7cce0b12"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_scene.html">cgScene</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world.html#ae37a93aaef23fd833508537f7cce0b12">loadScene</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> sceneId)</td></tr>
 <tr class="memdesc:ae37a93aaef23fd833508537f7cce0b12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate and load the specified scene by identifier. This will activate a scene such that all required data will be loaded / begin to load and it can now be updated/rendered.  <a href="#ae37a93aaef23fd833508537f7cce0b12"></a><br/></td></tr>
 <tr class="separator:ae37a93aaef23fd833508537f7cce0b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a278f309f780a47e6e30c7ddfe042ee44"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_scene.html">cgScene</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world.html#a278f309f780a47e6e30c7ddfe042ee44">loadScene</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> sceneId, bool suppressEvents)</td></tr>
+<tr class="memdesc:a278f309f780a47e6e30c7ddfe042ee44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate and load the specified scene by identifier. This will activate a scene such that all required data will be loaded / begin to load and it can now be updated/rendered.  <a href="#a278f309f780a47e6e30c7ddfe042ee44"></a><br/></td></tr>
+<tr class="separator:a278f309f780a47e6e30c7ddfe042ee44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17474322da8e2cc0ba1334d2f72c17aa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world.html#a17474322da8e2cc0ba1334d2f72c17aa">deleteScene</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> sceneId)</td></tr>
+<tr class="memdesc:a17474322da8e2cc0ba1334d2f72c17aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the specified scene and all its child objects from the world database.  <a href="#a17474322da8e2cc0ba1334d2f72c17aa"></a><br/></td></tr>
+<tr class="separator:a17474322da8e2cc0ba1334d2f72c17aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b56e706e5420e42517adb6e1ff84191"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world.html#a2b56e706e5420e42517adb6e1ff84191">unloadScene</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> sceneId)</td></tr>
 <tr class="memdesc:a2b56e706e5420e42517adb6e1ff84191"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unload the loaded scene from the scene manager. This overloaded method allows the scene to be specified by name.  <a href="#a2b56e706e5420e42517adb6e1ff84191"></a><br/></td></tr>
 <tr class="separator:a2b56e706e5420e42517adb6e1ff84191"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -230,6 +236,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4f45a1122b0347d759cab4fdfc926b83"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world.html#a4f45a1122b0347d759cab4fdfc926b83">isSceneLoaded</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> sceneId) const </td></tr>
 <tr class="memdesc:a4f45a1122b0347d759cab4fdfc926b83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the specified scene is currently loaded / active.  <a href="#a4f45a1122b0347d759cab4fdfc926b83"></a><br/></td></tr>
 <tr class="separator:a4f45a1122b0347d759cab4fdfc926b83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7b15df26b19bdcd23806e0ae60fb10a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world.html#ad7b15df26b19bdcd23806e0ae60fb10a">getSourceStream</a> ()</td></tr>
+<tr class="memdesc:ad7b15df26b19bdcd23806e0ae60fb10a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a reference to the input stream for the world database original specified in the call to '<a class="el" href="classcg_world.html#a7417af7545c8f4a8233d76d2df5770ba" title="Establish a connection with the specified world database and import any necessary initial data...">cgWorld::open()</a>'. Note that this may not be the actual database stream that is in use if the framework is currently utilising a temporary working copy of the database. To get a reference to the actual database stream currently in use, see '<a class="el" href="classcg_world.html#ac3fa91d1660f3d0e377b3153a0a2266d" title="Retrieve a reference to the actual input stream to the world database that is currently being used to...">cgWorld::getDatabaseStream()</a>'.  <a href="#ad7b15df26b19bdcd23806e0ae60fb10a"></a><br/></td></tr>
+<tr class="separator:ad7b15df26b19bdcd23806e0ae60fb10a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3fa91d1660f3d0e377b3153a0a2266d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world.html#ac3fa91d1660f3d0e377b3153a0a2266d">getDatabaseStream</a> ()</td></tr>
+<tr class="memdesc:ac3fa91d1660f3d0e377b3153a0a2266d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a reference to the actual input stream to the world database that is currently being used to stream world data. Note that this may not be the original source database stream that was specified to '<a class="el" href="classcg_world.html#a7417af7545c8f4a8233d76d2df5770ba" title="Establish a connection with the specified world database and import any necessary initial data...">cgWorld::open()</a>' if the framework is currently utilising a temporary working copy of the database.  <a href="#ac3fa91d1660f3d0e377b3153a0a2266d"></a><br/></td></tr>
+<tr class="separator:ac3fa91d1660f3d0e377b3153a0a2266d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bc8f175d4a8da9acfbf0e5acd4a15bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world.html#a6bc8f175d4a8da9acfbf0e5acd4a15bd">componentTablesCreated</a> (const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;typeIdentifier)</td></tr>
 <tr class="memdesc:a6bc8f175d4a8da9acfbf0e5acd4a15bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called in order register the fact that type tables have been created in the world database for the specified component.  <a href="#a6bc8f175d4a8da9acfbf0e5acd4a15bd"></a><br/></td></tr>
 <tr class="separator:a6bc8f175d4a8da9acfbf0e5acd4a15bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -373,6 +385,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:ad7fe5f101693ceb7a5d449444da06bb1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world.html#ad7fe5f101693ceb7a5d449444da06bb1">onSceneAdded</a> (<a class="el" href="structcg_scene_update_event_args.html">cgSceneUpdateEventArgs</a> *e)</td></tr>
 <tr class="memdesc:ad7fe5f101693ceb7a5d449444da06bb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be overriden or called by derived class when a new scene is added to the world in order to notify all listeners.  <a href="#ad7fe5f101693ceb7a5d449444da06bb1"></a><br/></td></tr>
 <tr class="separator:ad7fe5f101693ceb7a5d449444da06bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3790e17ad4eb408f1d318fd7ba1a72fd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world.html#a3790e17ad4eb408f1d318fd7ba1a72fd">onSceneRemoved</a> (<a class="el" href="structcg_scene_update_event_args.html">cgSceneUpdateEventArgs</a> *e)</td></tr>
+<tr class="memdesc:a3790e17ad4eb408f1d318fd7ba1a72fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be overriden or called by derived class when an existing scene is removed from the world in order to notify all listeners.  <a href="#a3790e17ad4eb408f1d318fd7ba1a72fd"></a><br/></td></tr>
+<tr class="separator:a3790e17ad4eb408f1d318fd7ba1a72fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a441f85ecf1e2e696a723d5e62ea0728c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world.html#a441f85ecf1e2e696a723d5e62ea0728c">onSceneLoading</a> (<a class="el" href="structcg_scene_load_event_args.html">cgSceneLoadEventArgs</a> *e)</td></tr>
 <tr class="memdesc:a441f85ecf1e2e696a723d5e62ea0728c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be overriden or called by derived class when a scene is about to be loaded in order to notify all listeners.  <a href="#a441f85ecf1e2e696a723d5e62ea0728c"></a><br/></td></tr>
 <tr class="separator:a441f85ecf1e2e696a723d5e62ea0728c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -923,6 +938,24 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a17474322da8e2cc0ba1334d2f72c17aa"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgWorld::deleteScene </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>sceneId</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Remove the specified scene and all its child objects from the world database. </p>
+
+</div>
+</div>
 <a class="anchor" id="ac367dbc7ad093fb8142931c07de27a7e"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1062,6 +1095,23 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Retrieve the internal SQLite database connection. </p>
+
+</div>
+</div>
+<a class="anchor" id="ac3fa91d1660f3d0e377b3153a0a2266d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp; cgWorld::getDatabaseStream </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve a reference to the actual input stream to the world database that is currently being used to stream world data. Note that this may not be the original source database stream that was specified to '<a class="el" href="classcg_world.html#a7417af7545c8f4a8233d76d2df5770ba" title="Establish a connection with the specified world database and import any necessary initial data...">cgWorld::open()</a>' if the framework is currently utilising a temporary working copy of the database. </p>
 
 </div>
 </div>
@@ -1291,6 +1341,23 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ad7b15df26b19bdcd23806e0ae60fb10a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_input_stream.html">cgInputStream</a> &amp; cgWorld::getSourceStream </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve a reference to the input stream for the world database original specified in the call to '<a class="el" href="classcg_world.html#a7417af7545c8f4a8233d76d2df5770ba" title="Establish a connection with the specified world database and import any necessary initial data...">cgWorld::open()</a>'. Note that this may not be the actual database stream that is in use if the framework is currently utilising a temporary working copy of the database. To get a reference to the actual database stream currently in use, see '<a class="el" href="classcg_world.html#ac3fa91d1660f3d0e377b3153a0a2266d" title="Retrieve a reference to the actual input stream to the world database that is currently being used to...">cgWorld::getDatabaseStream()</a>'. </p>
+
+</div>
+</div>
 <a class="anchor" id="a4f45a1122b0347d759cab4fdfc926b83"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1393,6 +1460,34 @@ Protected Attributes</h2></td></tr>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
           <td class="paramname"><em>sceneId</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Allocate and load the specified scene by identifier. This will activate a scene such that all required data will be loaded / begin to load and it can now be updated/rendered. </p>
+
+</div>
+</div>
+<a class="anchor" id="a278f309f780a47e6e30c7ddfe042ee44"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_scene.html">cgScene</a> * cgWorld::loadScene </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>sceneId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>suppressEvents</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1614,6 +1709,32 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Can be overriden or called by derived class when a scene is about to be loaded in order to notify all listeners. </p>
+
+</div>
+</div>
+<a class="anchor" id="a3790e17ad4eb408f1d318fd7ba1a72fd"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgWorld::onSceneRemoved </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcg_scene_update_event_args.html">cgSceneUpdateEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Can be overriden or called by derived class when an existing scene is removed from the world in order to notify all listeners. </p>
 
 </div>
 </div>
@@ -2152,7 +2273,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_world.html">cgWorld</a></li>
-    <li class="footer">Generated on Tue Mar 11 2014 07:02:53 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon May 12 2014 08:23:44 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

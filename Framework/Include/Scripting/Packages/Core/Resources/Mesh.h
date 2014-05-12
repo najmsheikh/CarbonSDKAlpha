@@ -64,7 +64,7 @@ namespace Mesh
             // ToDo: bool endPrepare          ( bool hardwareCopy = true, bool weld = true, bool optimize = true );
 
             BINDSUCCESS( engine->registerObjectMethod( "Mesh", "bool pick( const Vector3&in, const Vector3&in, float &inout )", asMETHODPR(cgMesh, pick, ( const cgVector3&, const cgVector3&, cgFloat& ), bool ), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Mesh", "bool pick( CameraNode@+, const Size &in, const Transform &in, const Vector3 &in, const Vector3 &in, bool, float, float &inout )", asMETHODPR(cgMesh, pick, ( cgCameraNode*, const cgSize&, const cgTransform&, const cgVector3&, const cgVector3&, bool, cgFloat, cgFloat & ), bool ), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Mesh", "bool pick( CameraNode@+, const Size &in, const Transform &in, const Vector3 &in, const Vector3 &in, uint32, float, float &inout )", asMETHODPR(cgMesh, pick, ( cgCameraNode*, const cgSize&, const cgTransform&, const cgVector3&, const cgVector3&, cgUInt32, cgFloat, cgFloat & ), bool ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Mesh", "bool pickFace( const Vector3 &in, const Vector3 &in, Vector3 &inout, uint &inout, MaterialHandle &inout )", asMETHODPR(cgMesh, pickFace, ( const cgVector3&, const cgVector3&, cgVector3&, cgUInt32&, cgMaterialHandle& ), bool ), asCALL_THISCALL) );
 
             BINDSUCCESS( engine->registerObjectMethod( "Mesh", "void setDefaultColor( uint )", asMETHODPR(cgMesh, setDefaultColor, ( cgUInt32 ), void ), asCALL_THISCALL) );

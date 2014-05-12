@@ -132,6 +132,7 @@ protected:
     bool                    insertObjectType                ( const cgUID & typeIdentifier, const cgString & databaseTable );
     bool                    insertObjectSubElementType      ( const cgUID & typeIdentifier, const cgString & databaseTable );
     bool                    insertSceneElementType          ( const cgUID & typeIdentifier, const cgString & databaseTable );
+	bool					removeScene						( cgUInt32 sceneId );
 
     // Internal
     bool                    loadSceneTable                  ( );
@@ -180,6 +181,7 @@ private:
     static cgWorldQuery         mInsertMaterialProperty;        // Insert new information about a user-defined material property into the 'Configuration::MaterialProperties' table.
     static cgWorldQuery         mInsertRenderClass;             // Insert new information about a user-defined object render class into the 'Configuration::RenderClasses' table.
     static cgWorldQuery         mInsertScene;                   // Insert a new scene descriptor into the database.
+	static cgWorldQuery         mDeleteScene;                   // Remove the specified scene descriptor from the database.
     static cgWorldQuery         mUpdateScene;                   // Update an existing scene descriptor within the database.
 
 }; // End Class cgWorldConfiguration

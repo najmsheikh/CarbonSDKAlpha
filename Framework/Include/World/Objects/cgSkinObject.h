@@ -83,7 +83,7 @@ public:
     virtual bool                getSubElementCategories ( cgObjectSubElementCategory::Map & categories ) const;
     virtual bool                supportsSubElement      ( const cgUID & category, const cgUID & identifier ) const;
     virtual cgBoundingBox       getLocalBoundingBox     ( );
-    virtual bool                pick                    ( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut );
+    virtual bool                pick                    ( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgUInt32 flags, cgFloat wireTolerance, cgFloat & distanceOut );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldComponent)

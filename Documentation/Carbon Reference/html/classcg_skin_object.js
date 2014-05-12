@@ -15,7 +15,7 @@ var classcg_skin_object =
     [ "onComponentDeleted", "classcg_skin_object.html#a88859c1f62a1815ef6cacb5045f599eb", null ],
     [ "onComponentLoading", "classcg_skin_object.html#aceb95e7cd166dbe28fcd83570e84ae33", null ],
     [ "onComponentModified", "classcg_skin_object.html#a97f12f4b7ec2c4b811141bff76ae5e47", null ],
-    [ "pick", "classcg_skin_object.html#aa56f49324e106beb4b1fe43bc5cc6289", null ],
+    [ "pick", "classcg_skin_object.html#ab57d8966959c960c8430ea38ac37c615", null ],
     [ "prepareQueries", "classcg_skin_object.html#ad2ddbf5df8ef1b726ecab63a87e00331", null ],
     [ "queryReferenceType", "classcg_skin_object.html#a5eb709f01d4c1e67efadb834fc157685", null ],
     [ "render", "classcg_skin_object.html#a8cc38fce07cad51b3c22dfe8e8fb5533", null ],

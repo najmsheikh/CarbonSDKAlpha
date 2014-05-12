@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
    </div>
   </td>
  </tr>
@@ -172,7 +172,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:af521cd75225ab789e0526375af2df078"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple utility function to create a cone mesh of the specified size.  <a href="#af521cd75225ab789e0526375af2df078"></a><br/></td></tr>
 <tr class="separator:af521cd75225ab789e0526375af2df078"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b1e83df51a2f94cb5e024a2a0b3b9da"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh_object.html#a5b1e83df51a2f94cb5e024a2a0b3b9da">pickFace</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;intersectionOut, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> &amp;faceOut, <a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> &amp;materialOut)</td></tr>
-<tr class="memdesc:a5b1e83df51a2f94cb5e024a2a0b3b9da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to <a class="el" href="classcg_mesh_object.html#a9acd2ca84f34b6a486f6ad392e7fb2e2" title="Given the specified object space ray, determine if this object is intersected and also compute the ob...">pick()</a> but is used to simply determine which face was intersected and which material is assigned to it.  <a href="#a5b1e83df51a2f94cb5e024a2a0b3b9da"></a><br/></td></tr>
+<tr class="memdesc:a5b1e83df51a2f94cb5e024a2a0b3b9da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to <a class="el" href="classcg_mesh_object.html#af00608edee3b7553f11b66cd894b19a8" title="Given the specified object space ray, determine if this object is intersected and also compute the ob...">pick()</a> but is used to simply determine which face was intersected and which material is assigned to it.  <a href="#a5b1e83df51a2f94cb5e024a2a0b3b9da"></a><br/></td></tr>
 <tr class="separator:a5b1e83df51a2f94cb5e024a2a0b3b9da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa391dc5c3c8e58464945b80a62778d84"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh_object.html#aa391dc5c3c8e58464945b80a62778d84">setMeshMaterial</a> (const <a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> &amp;material)</td></tr>
 <tr class="memdesc:aa391dc5c3c8e58464945b80a62778d84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply the specified material to every face in the mesh, replacing that previously assigned.  <a href="#aa391dc5c3c8e58464945b80a62778d84"></a><br/></td></tr>
@@ -201,9 +201,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8ffaaff4a85efc489d3f51c5f7276321"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh_object.html#a8ffaaff4a85efc489d3f51c5f7276321">sandboxRender</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, <a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, const <a class="el" href="classcg_plane.html">cgPlane</a> &amp;gridPlane, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer)</td></tr>
 <tr class="memdesc:a8ffaaff4a85efc489d3f51c5f7276321"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the object to render its 'sandbox' representation &ndash; that is the representation to be displayed within an editing environment.  <a href="#a8ffaaff4a85efc489d3f51c5f7276321"></a><br/></td></tr>
 <tr class="separator:a8ffaaff4a85efc489d3f51c5f7276321"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9acd2ca84f34b6a486f6ad392e7fb2e2"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh_object.html#a9acd2ca84f34b6a486f6ad392e7fb2e2">pick</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer, const <a class="el" href="structcg_size.html">cgSize</a> &amp;viewportSize, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, bool wireframe, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> wireTolerance, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;distanceOut)</td></tr>
-<tr class="memdesc:a9acd2ca84f34b6a486f6ad392e7fb2e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified object space ray, determine if this object is intersected and also compute the object space intersection distance.  <a href="#a9acd2ca84f34b6a486f6ad392e7fb2e2"></a><br/></td></tr>
-<tr class="separator:a9acd2ca84f34b6a486f6ad392e7fb2e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af00608edee3b7553f11b66cd894b19a8"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh_object.html#af00608edee3b7553f11b66cd894b19a8">pick</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer, const <a class="el" href="structcg_size.html">cgSize</a> &amp;viewportSize, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayOrigin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;rayDirection, <a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> flags, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> wireTolerance, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;distanceOut)</td></tr>
+<tr class="memdesc:af00608edee3b7553f11b66cd894b19a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the specified object space ray, determine if this object is intersected and also compute the object space intersection distance.  <a href="#af00608edee3b7553f11b66cd894b19a8"></a><br/></td></tr>
+<tr class="separator:af00608edee3b7553f11b66cd894b19a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1ae948341da45aebef6cd8a1244a32d"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_mesh_object.html#ac1ae948341da45aebef6cd8a1244a32d">render</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="classcg_visibility_set.html">cgVisibilitySet</a> *visibilityData, <a class="el" href="classcg_object_node.html">cgObjectNode</a> *issuer)</td></tr>
 <tr class="memdesc:ac1ae948341da45aebef6cd8a1244a32d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render the world object.  <a href="#ac1ae948341da45aebef6cd8a1244a32d"></a><br/></td></tr>
 <tr class="separator:ac1ae948341da45aebef6cd8a1244a32d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1477,7 +1477,7 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a9acd2ca84f34b6a486f6ad392e7fb2e2"></a>
+<a class="anchor" id="af00608edee3b7553f11b66cd894b19a8"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1517,8 +1517,8 @@ Static Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>bWireframe</em>, </td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td>
+          <td class="paramname"><em>nFlags</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1547,9 +1547,9 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Given the specified object space ray, determine if this object is intersected and also compute the object space intersection distance. </p>
 
-<p>Reimplemented from <a class="el" href="classcg_world_object.html#a5b5f4cf514f6e22a6f6b62a8912fb73a">cgWorldObject</a>.</p>
+<p>Reimplemented from <a class="el" href="classcg_world_object.html#afbde3e2db1bbcb93c202e8e5edbaa576">cgWorldObject</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_skin_object.html#aa56f49324e106beb4b1fe43bc5cc6289">cgSkinObject</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_skin_object.html#ab57d8966959c960c8430ea38ac37c615">cgSkinObject</a>.</p>
 
 </div>
 </div>
@@ -1595,7 +1595,7 @@ Static Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Similar to <a class="el" href="classcg_mesh_object.html#a9acd2ca84f34b6a486f6ad392e7fb2e2" title="Given the specified object space ray, determine if this object is intersected and also compute the ob...">pick()</a> but is used to simply determine which face was intersected and which material is assigned to it. </p>
+<p>Similar to <a class="el" href="classcg_mesh_object.html#af00608edee3b7553f11b66cd894b19a8" title="Given the specified object space ray, determine if this object is intersected and also compute the ob...">pick()</a> but is used to simply determine which face was intersected and which material is assigned to it. </p>
 
 </div>
 </div>
@@ -2091,7 +2091,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_mesh_object.html">cgMeshObject</a></li>
-    <li class="footer">Generated on Tue Mar 11 2014 07:02:46 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon May 12 2014 08:23:36 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

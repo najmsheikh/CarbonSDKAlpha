@@ -14,7 +14,7 @@ var classcg_spline_object =
     [ "insertComponentData", "classcg_spline_object.html#a6df901fdd8db86ff10ff65cc8ab3429c", null ],
     [ "onComponentCreated", "classcg_spline_object.html#a4f260b31a56fe99a15a830f89d30c97a", null ],
     [ "onComponentLoading", "classcg_spline_object.html#a0143583714a7f03a47bac6443f1ccc18", null ],
-    [ "pick", "classcg_spline_object.html#aca683e672a9ab547cf21989894461e36", null ],
+    [ "pick", "classcg_spline_object.html#a6c6f19fb3539abb09cb3eecaf501f020", null ],
     [ "prepareQueries", "classcg_spline_object.html#a8ba3262d8b083d8bd41f2091c7cdd21b", null ],
     [ "queryReferenceType", "classcg_spline_object.html#a9e32addd200125613c8e8540d63bb5ac", null ],
     [ "sandboxRender", "classcg_spline_object.html#ae4592c8f4580f10b37165a22e5da7b70", null ],

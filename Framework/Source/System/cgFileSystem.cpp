@@ -584,7 +584,8 @@ cgString cgFileSystem::getRelativePath( const cgString & strPathFile, const cgSt
 //-----------------------------------------------------------------------------
 //  Name : getDirectoryName () (Static)
 /// <summary>
-/// Given a full path name, return just the direction portion of it.
+/// Given a full path name, return just the directory portion of it, excluding
+/// the trailing slash.
 /// </summary>
 //-----------------------------------------------------------------------------
 cgString cgFileSystem::getDirectoryName( const cgString & strPathFile )

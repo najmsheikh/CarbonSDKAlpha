@@ -1885,13 +1885,30 @@ cgSceneElement * cgWorld::loadSceneElement( const cgUID & typeIdentifier, cgUInt
 //-----------------------------------------------------------------------------
 cgScene * cgWorld::loadScene( cgUInt32 sceneId )
 {
+	return loadScene( sceneId, false );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : loadScene ()
+/// <summary>
+/// Allocate and load the specified scene by identifier. This will activate
+/// a scene such that all required data will be loaded / begin to load
+/// and it can now be updated/rendered.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgScene * cgWorld::loadScene( cgUInt32 sceneId, bool suppressEvents )
+{
     // Is this scene already loaded?
     cgScene * existingScene = CG_NULL;
     if ( existingScene = getLoadedSceneById( sceneId ) )
     {
         // Even though the scene existed, we still want to trigger notices.
-        onSceneLoading( &cgSceneLoadEventArgs( existingScene ) );
-        onSceneLoaded( &cgSceneLoadEventArgs( existingScene ) );
+		if ( !suppressEvents )
+		{
+			onSceneLoading( &cgSceneLoadEventArgs( existingScene ) );
+			onSceneLoaded( &cgSceneLoadEventArgs( existingScene ) );
+		
+		} // End if !suppressEvents
         return existingScene;
     
     } // End if existing
@@ -1910,9 +1927,13 @@ cgScene * cgWorld::loadScene( cgUInt32 sceneId )
     
     // Allocate the scene
     cgScene * newScene = new cgScene( this, description );
+	
+	// Set default state of event suppression member.
+	newScene->suppressEvents( suppressEvents );
 
     // Notify whoever is interested that this scene is about to be loaded.
-    onSceneLoading( &cgSceneLoadEventArgs( newScene ) );
+	if ( !suppressEvents )
+		onSceneLoading( &cgSceneLoadEventArgs( newScene ) );
 
     // Begin loading the scene
     if ( !newScene->load() )
@@ -1920,7 +1941,8 @@ cgScene * cgWorld::loadScene( cgUInt32 sceneId )
         cgAppLog::write( cgAppLog::Error, _T("Scene '%s' failed to complete the loading process. See any previous errors for more information where available.\n"), description->name.c_str() );
 
         // Notify subscribers that the load failed.
-        onSceneLoadFailed( &cgSceneLoadEventArgs( newScene ) );
+		if ( !suppressEvents )
+			onSceneLoadFailed( &cgSceneLoadEventArgs( newScene ) );
 
         // Clean up and bail
         newScene->scriptSafeDispose( );
@@ -1929,7 +1951,8 @@ cgScene * cgWorld::loadScene( cgUInt32 sceneId )
     } // End if failed to begin loading
 
     // Loading was a success!
-    onSceneLoaded( &cgSceneLoadEventArgs( newScene ) );
+	if ( !suppressEvents )
+		onSceneLoaded( &cgSceneLoadEventArgs( newScene ) );
 
     // Add to the active scene map
     mActiveScenes.push_back( newScene );
@@ -1953,10 +1976,14 @@ void cgWorld::unloadScene( cgUInt32 sceneId )
     if ( !scene ) return;
 
     // Notify anyone interested that the scene is being unloaded.
-    cgSceneUnloadEventArgs e( scene );
-    onSceneUnloading( &e );
-    if ( e.cancel )
-        return;
+	if ( !scene->isEventSuppressionEnabled() )
+	{
+		cgSceneUnloadEventArgs e( scene );
+		onSceneUnloading( &e );
+		if ( e.cancel )
+			return;
+
+	} // End if !suppressEvents
 
     // Remove from the loaded scene list
     SceneArray::iterator itScene = std::find( mActiveScenes.begin(), mActiveScenes.end(), scene );
@@ -1983,10 +2010,14 @@ void cgWorld::unloadScene( cgScene * scene )
         return;
 
     // Notify anyone interested that the scene is being unloaded.
-    cgSceneUnloadEventArgs e( scene );
-    onSceneUnloading( &e );
-    if ( e.cancel )
-        return;
+	if ( !scene->isEventSuppressionEnabled() )
+	{
+		cgSceneUnloadEventArgs e( scene );
+		onSceneUnloading( &e );
+		if ( e.cancel )
+			return;
+
+	} // End if !suppressEvents
 
     // Remove from the loaded scene list
     SceneArray::iterator itScene = std::find( mActiveScenes.begin(), mActiveScenes.end(), scene );
@@ -1997,6 +2028,45 @@ void cgWorld::unloadScene( cgScene * scene )
     // Cleanup the scene but pay attention to script
     // reference count on delete.
     scene->scriptSafeDispose( );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : deleteScene ()
+/// <summary>
+/// Remove the specified scene and all its child objects from the world 
+/// database.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgWorld::deleteScene( cgUInt32 sceneId )
+{
+	// Deleting a scene requires that the scene be loaded in a clean state.
+	// If it is already open, first unload it.
+	cgScene * scene = getLoadedSceneById( sceneId );
+	if ( scene )
+		unloadScene( scene );
+	
+	// Load / reload the scene without firing events.
+	scene = loadScene( sceneId, true );
+	if ( !scene )
+		return false;
+
+	// Force the scene to clear its data in its entirety.
+	scene->clear();
+
+	// Unload the scene
+	unloadScene( scene );
+
+	// Delete it from the scene table.
+	mConfiguration->removeScene(sceneId);
+
+	// Send the event that delete is complete.
+	onSceneRemoved( &cgSceneUpdateEventArgs(sceneId) );
+
+	// Vaccuum the database
+	executeQuery( _T("VACUUM"), false );
+
+	// Success!
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -2245,6 +2315,36 @@ cgResourceManager * cgWorld::getResourceManager( ) const
 }
 
 //-----------------------------------------------------------------------------
+//  Name : getSourceStream ()
+/// <summary>
+/// Retrieve a reference to the input stream for the world database original
+/// specified in the call to 'cgWorld::open()'. Note that this may not be the
+/// actual database stream that is in use if the framework is currently 
+/// utilising a temporary working copy of the database. To get a reference to
+/// the actual database stream currently in use, see 'cgWorld::getDatabaseStream()'.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInputStream & cgWorld::getSourceStream( )
+{
+	return mOriginalStream;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getDatabaseStream ()
+/// <summary>
+/// Retrieve a reference to the actual input stream to the world database that 
+/// is currently being used to stream world data. Note that this may not be the
+/// original source database stream that was specified to 'cgWorld::open()' if 
+/// the framework is currently utilising a temporary working copy of the 
+/// database.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgInputStream & cgWorld::getDatabaseStream( )
+{
+	return mDatabaseStream;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : onAssetAdded () (Private, Static)
 /// <summary>
 /// Internal callback function, registered with the world database as the
@@ -2429,6 +2529,31 @@ void cgWorld::onSceneAdded( cgSceneUpdateEventArgs * e )
     // Build the message for anyone listening via messaging system
     cgMessage message;
     message.messageId      = cgSystemMessages::World_SceneAdded;
+    message.messageData    = e;
+
+    // Send to anyone interested
+    cgReferenceManager::sendMessageToGroup( getReferenceId(), cgSystemMessageGroups::MGID_World, &message );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : onSceneRemoved () (Virtual)
+/// <summary>
+/// Can be overriden or called by derived class when an existing scene is 
+/// removed from the world in order to notify all listeners.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgWorld::onSceneRemoved( cgSceneUpdateEventArgs * e )
+{
+    // Trigger 'onSceneRemoved' of all listeners(duplicate list in case
+    // it is altered in response to event).
+    EventListenerList::iterator itListener;
+    EventListenerList listeners = mEventListeners;
+    for ( itListener = listeners.begin(); itListener != listeners.end(); ++itListener )
+        ((cgWorldEventListener*)(*itListener))->onSceneRemoved( e );
+
+    // Build the message for anyone listening via messaging system
+    cgMessage message;
+    message.messageId      = cgSystemMessages::World_SceneRemoved;
     message.messageData    = e;
 
     // Send to anyone interested

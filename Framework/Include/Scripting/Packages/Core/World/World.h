@@ -46,8 +46,10 @@ namespace World
             // ToDo: create
             BINDSUCCESS( engine->registerObjectMethod("World", "bool save( const String &in )", asMETHODPR(cgWorld,save,(const cgString&), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod("World", "Scene@+ loadScene( uint )", asMETHODPR(cgWorld,loadScene,(cgUInt32), cgScene*), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod("World", "Scene@+ loadScene( uint, bool )", asMETHODPR(cgWorld,loadScene,(cgUInt32, bool), cgScene*), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod("World", "void unloadScene( uint )", asMETHODPR(cgWorld,unloadScene,(cgUInt32), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod("World", "void unloadScene( Scene@ )", asMETHODPR(cgWorld,unloadScene,(cgScene*), void), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod("World", "bool deleteScene( uint )", asMETHODPR(cgWorld,deleteScene,(cgUInt32), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod("World", "void update( )", asMETHODPR(cgWorld,update,(), void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod("World", "uint generateRefId( bool )", asMETHODPR(cgWorld,generateRefId,( bool ), cgUInt32), asCALL_THISCALL) );
             // ToDo: getConfiguration
@@ -84,6 +86,51 @@ namespace World
             // Register the reference/object handle support for the objects.
             registerHandleBehaviors<cgWorldQuery>( engine );
 
+			// Register the object factories
+            BINDSUCCESS( engine->registerObjectBehavior( "WorldQuery", asBEHAVE_FACTORY, "WorldQuery@ f()", asFUNCTIONPR(worldQueryFactory, (), cgWorldQuery*), asCALL_CDECL) );
+            BINDSUCCESS( engine->registerObjectBehavior( "WorldQuery", asBEHAVE_FACTORY, "WorldQuery@ f( World@+, const String &in )", asFUNCTIONPR(worldQueryFactory, ( cgWorld *, const cgString& ), cgWorldQuery*), asCALL_CDECL) );
+
+			// Register the object methods
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool prepare( World@+, const String &in, bool )", asMETHODPR(cgWorldQuery,prepare,(cgWorld*,const cgString&, bool), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "void unprepare( )", asMETHODPR(cgWorldQuery,unprepare,(), void), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool step( )", asMETHODPR(cgWorldQuery,step,(), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool step( bool )", asMETHODPR(cgWorldQuery,step,( bool ), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "void stepAll( )", asMETHODPR(cgWorldQuery,stepAll,(), void), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool reset( )", asMETHODPR(cgWorldQuery,reset,(), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool reset( bool )", asMETHODPR(cgWorldQuery,reset,(bool), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool resetCurrent( )", asMETHODPR(cgWorldQuery,resetCurrent,(), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool nextRow( )", asMETHODPR(cgWorldQuery,nextRow,(), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( const String &in, bool &inout )", asMETHODPR(cgWorldQuery,getColumn,( const cgString&, bool&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( int16, bool &inout )", asMETHODPR(cgWorldQuery,getColumn,( cgInt16, bool&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( const String &in, uint32 &inout )", asMETHODPR(cgWorldQuery,getColumn,( const cgString&, cgUInt32&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( int16, uint32 &inout )", asMETHODPR(cgWorldQuery,getColumn,( cgInt16, cgUInt32&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( const String &in, int32 &inout )", asMETHODPR(cgWorldQuery,getColumn,( const cgString&, cgInt32&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( int16, int32 &inout )", asMETHODPR(cgWorldQuery,getColumn,( cgInt16, cgInt32&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( const String &in, uint16 &inout )", asMETHODPR(cgWorldQuery,getColumn,( const cgString&, cgUInt16&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( int16, uint16 &inout )", asMETHODPR(cgWorldQuery,getColumn,( cgInt16, cgUInt16&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( const String &in, int16 &inout )", asMETHODPR(cgWorldQuery,getColumn,( const cgString&, cgInt16&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( int16, int16 &inout )", asMETHODPR(cgWorldQuery,getColumn,( cgInt16, cgInt16&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( const String &in, float &inout )", asMETHODPR(cgWorldQuery,getColumn,( const cgString&, cgFloat&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( int16, float &inout )", asMETHODPR(cgWorldQuery,getColumn,( cgInt16, cgFloat&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( const String &in, double &inout )", asMETHODPR(cgWorldQuery,getColumn,( const cgString&, cgDouble&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( int16, double &inout )", asMETHODPR(cgWorldQuery,getColumn,( cgInt16, cgDouble&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( const String &in, String &inout )", asMETHODPR(cgWorldQuery,getColumn,( const cgString&, cgString&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getColumn( int16, String &inout )", asMETHODPR(cgWorldQuery,getColumn,( cgInt16, cgString&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool bindParameter( int16, const String &in )", asMETHODPR(cgWorldQuery,bindParameter,( cgInt16, const cgString&), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool bindParameter( int16, bool )", asMETHODPR(cgWorldQuery,bindParameter,( cgInt16, bool), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool bindParameter( int16, float )", asMETHODPR(cgWorldQuery,bindParameter,( cgInt16, cgFloat), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool bindParameter( int16, double )", asMETHODPR(cgWorldQuery,bindParameter,( cgInt16, cgDouble), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool bindParameter( int16, uint32 )", asMETHODPR(cgWorldQuery,bindParameter,( cgInt16, cgUInt32), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool bindParameter( int16, int32 )", asMETHODPR(cgWorldQuery,bindParameter,( cgInt16, cgInt32), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool bindParameter( int16, uint16 )", asMETHODPR(cgWorldQuery,bindParameter,( cgInt16, cgUInt16), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool bindParameter( int16, int16 )", asMETHODPR(cgWorldQuery,bindParameter,( cgInt16, cgInt16), bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool hasResults( ) const", asMETHODPR(cgWorldQuery,hasResults,( ) const, bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "int32 getLastInsertId( ) const", asMETHODPR(cgWorldQuery,getLastInsertId,( ) const, cgInt32), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getLastError( ) const", asMETHODPR(cgWorldQuery,getLastError,( ) const, bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getLastError( String &inout ) const", asMETHODPR(cgWorldQuery,getLastError,( cgString& ) const, bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool isPrepared( ) const", asMETHODPR(cgWorldQuery,isPrepared,( ) const, bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "World@+ getWorld( ) const", asMETHODPR(cgWorldQuery,getWorld,( ) const, cgWorld*), asCALL_THISCALL) );
+
             ///////////////////////////////////////////////////////////////////////
             // Global Utility Functions
             ///////////////////////////////////////////////////////////////////////
@@ -104,6 +151,28 @@ namespace World
         static bool worldOpen( const cgString & stream, cgWorld * thisPointer )
         {
             return thisPointer->open( stream );
+        }
+
+		//---------------------------------------------------------------------
+        //  Name : worldQueryFactory () (Static)
+        /// <summary>
+        /// Construct a new instance of the cgWorldQuery class.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static cgWorldQuery * worldQueryFactory( )
+        {
+            return new cgWorldQuery();
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : worldQueryFactory () (Static)
+        /// <summary>
+        /// Construct a new instance of the cgWorldQuery class.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static cgWorldQuery * worldQueryFactory( cgWorld * world, const cgString & statements )
+        {
+            return new cgWorldQuery( world, statements );
         }
 
     }; // End Class : Package

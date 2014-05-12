@@ -171,7 +171,7 @@ cgBoundingBox cgBoneObject::getLocalBoundingBox( )
 /// intersected and also compute the object space intersection distance. 
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgBoneObject::pick( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distance )
+bool cgBoneObject::pick( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgUInt32 flags, cgFloat wireTolerance, cgFloat & distance )
 {
     // Only valid in sandbox mode.
     if ( cgGetSandboxMode() != cgSandboxMode::Enabled )
@@ -220,7 +220,7 @@ bool cgBoneObject::pick( cgCameraNode * camera, cgObjectNode * issuer, const cgS
             cgVector3::normalize( meshRayDirection, meshRayDirection );
 
             // Pass through
-            if ( mesh->pick( camera, viewportSize, t, meshRayOrigin, meshRayDirection, wireframe, wireTolerance, distance ) )
+            if ( mesh->pick( camera, viewportSize, t, meshRayOrigin, meshRayDirection, flags, wireTolerance, distance ) )
             {
                 cgVector3 intersection = meshRayOrigin + meshRayDirection * distance;
                 diffTransform.inverseTransformCoord( intersection, intersection );
@@ -254,7 +254,7 @@ bool cgBoneObject::pick( cgCameraNode * camera, cgObjectNode * issuer, const cgS
         cgVector3::normalize( meshRayDirection, meshRayDirection );
 
         // Pass through
-        if ( mesh->pick( camera, viewportSize, t, meshRayOrigin, meshRayDirection, wireframe, wireTolerance, distance ) )
+        if ( mesh->pick( camera, viewportSize, t, meshRayOrigin, meshRayDirection, flags, wireTolerance, distance ) )
         {
             cgVector3 intersection = meshRayOrigin + meshRayDirection * distance;
             diffTransform.inverseTransformCoord( intersection, intersection );

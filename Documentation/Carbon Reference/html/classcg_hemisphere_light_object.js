@@ -21,7 +21,7 @@ var classcg_hemisphere_light_object =
     [ "insertComponentData", "classcg_hemisphere_light_object.html#a42cecb170d443ec0ce0cae82ea0f0e43", null ],
     [ "onComponentCreated", "classcg_hemisphere_light_object.html#a657464788bffc27eee071d47dc45e10f", null ],
     [ "onComponentLoading", "classcg_hemisphere_light_object.html#a53ceb6469caa7b0075d7e716435bbaba", null ],
-    [ "pick", "classcg_hemisphere_light_object.html#a9a867118215f80544e818126877a56b8", null ],
+    [ "pick", "classcg_hemisphere_light_object.html#ac6fc385f8157a89760725ad3a3b23603", null ],
     [ "prepareQueries", "classcg_hemisphere_light_object.html#a52c6d64e5d8b463a69eb46b8f922c336", null ],
     [ "queryReferenceType", "classcg_hemisphere_light_object.html#a2bf881a4d2e89713a00328535ad29d42", null ],
     [ "sandboxRender", "classcg_hemisphere_light_object.html#a306b2b782c4033175ad65b0b978fca26", null ],

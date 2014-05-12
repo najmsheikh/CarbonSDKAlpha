@@ -16,7 +16,7 @@ var classcg_hinge_joint_object =
     [ "isLimited", "classcg_hinge_joint_object.html#ac97af91259bfaa408eaaa9082ca0e814", null ],
     [ "onComponentCreated", "classcg_hinge_joint_object.html#ac1aadd0e61f55c4efc1056d68d17933d", null ],
     [ "onComponentLoading", "classcg_hinge_joint_object.html#a8f9c33714596376e11eec4026ac4370b", null ],
-    [ "pick", "classcg_hinge_joint_object.html#ae196dab39b4cace94b06ae6b50b5bd1d", null ],
+    [ "pick", "classcg_hinge_joint_object.html#a83e28548d10ca3f47b62e81ee77e2b82", null ],
     [ "prepareQueries", "classcg_hinge_joint_object.html#aeac2ff9b206c2adaf094ccf193db51ff", null ],
     [ "queryReferenceType", "classcg_hinge_joint_object.html#a298bd227aa0b57419462635afa4753b9", null ],
     [ "sandboxRender", "classcg_hinge_joint_object.html#a21532d5d00cbf545286cb996c4be7245", null ],

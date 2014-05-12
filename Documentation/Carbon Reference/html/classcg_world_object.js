@@ -25,7 +25,7 @@ var classcg_world_object =
     [ "onComponentCreated", "classcg_world_object.html#ab968ef227a2bbef6c822a2bd6dec4a91", null ],
     [ "onComponentDeleted", "classcg_world_object.html#a420e1da9794f894c87b809795542a0d7", null ],
     [ "onComponentLoading", "classcg_world_object.html#aa26898281b2b604a2f8f6028c9aed860", null ],
-    [ "pick", "classcg_world_object.html#a5b5f4cf514f6e22a6f6b62a8912fb73a", null ],
+    [ "pick", "classcg_world_object.html#afbde3e2db1bbcb93c202e8e5edbaa576", null ],
     [ "prepareQueries", "classcg_world_object.html#afb4145712dba57c7a5ee8c41c9b91f81", null ],
     [ "queryReferenceType", "classcg_world_object.html#a6d6a4636dbf11a092a49a4c71b06cad5", null ],
     [ "registerType", "classcg_world_object.html#a8beb6e009096cb3fe66f8f9abcd5f052", null ],

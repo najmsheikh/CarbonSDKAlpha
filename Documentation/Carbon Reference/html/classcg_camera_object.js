@@ -24,7 +24,7 @@ var classcg_camera_object =
     [ "isDepthOfFieldEnabled", "classcg_camera_object.html#a2707bfe80fa51ef24f38f99cef6e99f5", null ],
     [ "onComponentCreated", "classcg_camera_object.html#af549af1e6fdf9e504e50427f6598be01", null ],
     [ "onComponentLoading", "classcg_camera_object.html#a0b100547d9b31b8af6f6d794874ef546", null ],
-    [ "pick", "classcg_camera_object.html#a017df591dc484b4866553ee084b9c040", null ],
+    [ "pick", "classcg_camera_object.html#a3a585ab13b565cae07a8889908e3ce24", null ],
     [ "queryReferenceType", "classcg_camera_object.html#ae0c82d5c7d7360cf83ca907b21427075", null ],
     [ "sandboxRender", "classcg_camera_object.html#a3bb841cc7ff21ac034b28249682b89e7", null ],
     [ "setBackgroundBlur", "classcg_camera_object.html#ab5023711031a66aaa3ae0212169d06ba", null ],

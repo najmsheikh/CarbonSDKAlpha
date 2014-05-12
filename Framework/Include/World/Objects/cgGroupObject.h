@@ -157,7 +157,7 @@ public:
     // Public Virtual Methods (Overrides cgObjectNode)
     //-------------------------------------------------------------------------
     virtual cgBoundingBox       getLocalBoundingBox     ( );
-    virtual bool                pick                    ( cgCameraNode * camera, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut, cgObjectNode *& closestNode );
+    virtual bool                pick                    ( cgCameraNode * camera, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgUInt32 flags, cgFloat wireTolerance, cgFloat & distanceOut, cgObjectNode *& closestNode );
     virtual void                setSelected             ( bool selected, bool updateDependents = true, bool sendNotifications = true, cgObjectNodeMap & alteredNodes = cgObjectNodeMap() );
     virtual bool                onNodeDeleted           ( );
 

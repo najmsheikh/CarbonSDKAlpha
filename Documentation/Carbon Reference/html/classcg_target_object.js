@@ -14,7 +14,7 @@ var classcg_target_object =
     [ "insertComponentData", "classcg_target_object.html#a6e8a61e5b9a852a4dfe86e745bc40dac", null ],
     [ "onComponentCreated", "classcg_target_object.html#a139137094d1435a52331640dfc3d2e35", null ],
     [ "onComponentLoading", "classcg_target_object.html#a980d13c2dafdd60c928eac91bbe441ba", null ],
-    [ "pick", "classcg_target_object.html#a6352effd6f23d6bb1e57cb6d11ee86a8", null ],
+    [ "pick", "classcg_target_object.html#a9d0744153394c7948f7f940d459c8c76", null ],
     [ "prepareQueries", "classcg_target_object.html#a32fe282bc293d93c79706eb1a0d2417d", null ],
     [ "queryReferenceType", "classcg_target_object.html#a7e7581c294795fa649b9e9d748d35789", null ],
     [ "sandboxRender", "classcg_target_object.html#a9ec03db93ae9ee010c5a485494b192a7", null ],

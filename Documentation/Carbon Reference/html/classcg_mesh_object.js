@@ -27,7 +27,7 @@ var classcg_mesh_object =
     [ "onComponentDeleted", "classcg_mesh_object.html#a896edf07718ea7ddda2e08344a1528eb", null ],
     [ "onComponentLoading", "classcg_mesh_object.html#a747c694b67c2b2a1e2a0e5c319282142", null ],
     [ "onComponentModified", "classcg_mesh_object.html#ae670b0cba1ed7c63f779882b115a17e8", null ],
-    [ "pick", "classcg_mesh_object.html#a9acd2ca84f34b6a486f6ad392e7fb2e2", null ],
+    [ "pick", "classcg_mesh_object.html#af00608edee3b7553f11b66cd894b19a8", null ],
     [ "pickFace", "classcg_mesh_object.html#a5b1e83df51a2f94cb5e024a2a0b3b9da", null ],
     [ "prepareQueries", "classcg_mesh_object.html#ac2eb0fd9902487583e03e7252ec48580", null ],
     [ "queryReferenceType", "classcg_mesh_object.html#a82824c2d243608a58cb66eeea85294d3", null ],

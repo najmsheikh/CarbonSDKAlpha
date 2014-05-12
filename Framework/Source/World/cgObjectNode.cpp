@@ -3056,7 +3056,7 @@ void cgObjectNode::onComponentModified( cgComponentModifiedEventArgs * e )
 /// of FLT_MAX initially.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgObjectNode::pick( cgCameraNode * camera, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgFloat & distanceOut, cgObjectNode *& closestNodeOut )
+bool cgObjectNode::pick( cgCameraNode * camera, const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgUInt32 flags, cgFloat wireTolerance, cgFloat & distanceOut, cgObjectNode *& closestNodeOut )
 {
     bool hitDetected = false;
 
@@ -3065,7 +3065,7 @@ bool cgObjectNode::pick( cgCameraNode * camera, const cgSize & viewportSize, con
     {
         cgObjectNode * pChild = *itNode;
         if ( pChild )
-            hitDetected |= pChild->pick( camera, viewportSize, rayOrigin, rayDirection, wireframe, wireTolerance, distanceOut, closestNodeOut );
+            hitDetected |= pChild->pick( camera, viewportSize, rayOrigin, rayDirection, flags, wireTolerance, distanceOut, closestNodeOut );
     
     } // Next Child
 
@@ -3088,7 +3088,7 @@ bool cgObjectNode::pick( cgCameraNode * camera, const cgSize & viewportSize, con
 
     // Pass through to object
     cgFloat t = FLT_MAX;
-    if ( !mReferencedObject->pick( camera, this, viewportSize, objectRayOrigin, objectRayDirection, wireframe, wireTolerance, t ) )
+    if ( !mReferencedObject->pick( camera, this, viewportSize, objectRayOrigin, objectRayDirection, flags, wireTolerance, t ) )
         return hitDetected;
 
     // Compute final object space intersection point.

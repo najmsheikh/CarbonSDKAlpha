@@ -19,7 +19,7 @@ var classcg_kinematic_controller_joint_object =
     [ "insertComponentData", "classcg_kinematic_controller_joint_object.html#adc8fdc9d8b3a83f519691e243ac0216b", null ],
     [ "onComponentCreated", "classcg_kinematic_controller_joint_object.html#a181dcd25006095a1dc264bba959c0117", null ],
     [ "onComponentLoading", "classcg_kinematic_controller_joint_object.html#a3cf1073a4b2d62a24fc46fe528a6ebb1", null ],
-    [ "pick", "classcg_kinematic_controller_joint_object.html#a88f6bdbfc6398d3e1f8fb6a2b29fe373", null ],
+    [ "pick", "classcg_kinematic_controller_joint_object.html#a101c807ac92239003dfb4c814de28bef", null ],
     [ "prepareQueries", "classcg_kinematic_controller_joint_object.html#a47662416c61d09bf6a5c0e53aa00a8d7", null ],
     [ "queryReferenceType", "classcg_kinematic_controller_joint_object.html#a3dcdd48d4887593c1de1d20dc16f0255", null ],
     [ "sandboxRender", "classcg_kinematic_controller_joint_object.html#a8b488aab920752ad9edca76a8ea1fd54", null ],

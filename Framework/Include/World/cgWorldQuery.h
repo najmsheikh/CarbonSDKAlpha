@@ -72,7 +72,8 @@ public:
     bool            step            ( );
     bool            step            ( bool autoReset );
     void            stepAll         ( );
-    bool            reset           ( bool resetErrorState = true );
+	bool            reset           ( );
+    bool            reset           ( bool resetErrorState );
     bool            resetCurrent    ( );
     bool            nextRow         ( );
 

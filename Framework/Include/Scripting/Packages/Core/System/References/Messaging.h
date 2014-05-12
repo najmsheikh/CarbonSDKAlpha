@@ -106,6 +106,7 @@ namespace Messaging
             // Messages issued by cgWorld
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "World_Disposing", cgSystemMessages::World_Disposing ) );
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "World_SceneAdded", cgSystemMessages::World_SceneAdded ) );
+			BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "World_SceneRemoved", cgSystemMessages::World_SceneRemoved ) );
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "World_SceneLoading", cgSystemMessages::World_SceneLoading ) );
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "World_SceneLoadFailed", cgSystemMessages::World_SceneLoadFailed ) );
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "World_SceneLoaded", cgSystemMessages::World_SceneLoaded ) );

@@ -10,7 +10,7 @@ var classcg_navigation_waypoint_object =
     [ "insertComponentData", "classcg_navigation_waypoint_object.html#af0cdb15da5b61c40273923e25297fadc", null ],
     [ "onComponentCreated", "classcg_navigation_waypoint_object.html#a7b0010e94739f4048c8d58865d099d7f", null ],
     [ "onComponentLoading", "classcg_navigation_waypoint_object.html#a6d81d6605c265c546c24a80884c872dd", null ],
-    [ "pick", "classcg_navigation_waypoint_object.html#a834a63365b16a804c09d648344c1b9dc", null ],
+    [ "pick", "classcg_navigation_waypoint_object.html#abde57374c96c8387115a557288505939", null ],
     [ "prepareQueries", "classcg_navigation_waypoint_object.html#a697c7467bbcbd0bbc63fe1adc1f96ba5", null ],
     [ "queryReferenceType", "classcg_navigation_waypoint_object.html#a8200874e33d56ece8eca72b44eae5fe0", null ],
     [ "sandboxRender", "classcg_navigation_waypoint_object.html#adc15b07f8b1e36a7d74c3c4c186a80f5", null ],

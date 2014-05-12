@@ -1,0 +1,19 @@
+var NAVTREEINDEX61 =
+{
+"structcg_world_configuration_1_1_render_class_desc.html#ad81a3d9c693bb71fa23c65f2a91244f6":[1,0,542,1,1],
+"structcg_world_event_args.html":[1,0,543],
+"structcg_world_event_args.html#aa977295c341a48ce473e74258ced74ef":[1,0,543,0],
+"structcg_world_event_args.html#af88b313b78c0dfd275523fa0934aa474":[1,0,543,1],
+"structcg_world_object_type_desc.html":[1,0,546],
+"structcg_world_object_type_desc.html#a016cdb62866b4d978d562afbefdb9fc9":[1,0,546,2],
+"structcg_world_object_type_desc.html#a1b3103e308d2292f14a6c1c167128632":[1,0,546,3],
+"structcg_world_object_type_desc.html#a26c61e99d50ac2a1706f86f4842d3da8":[1,0,546,9],
+"structcg_world_object_type_desc.html#a26eb02b8f822ce06c4043ada098317ef":[1,0,546,1],
+"structcg_world_object_type_desc.html#a408a31cbd9994c7172a217087431adbc":[1,0,546,8],
+"structcg_world_object_type_desc.html#a621a41516f70f2a2be859add8b16947b":[1,0,546,7],
+"structcg_world_object_type_desc.html#a678a3dab68769ff3595e145e98253789":[1,0,546,6],
+"structcg_world_object_type_desc.html#a745240d80d1d1a004a6843eaee4c085d":[1,0,546,5],
+"structcg_world_object_type_desc.html#aadb08139895a7cbf19e132de2e2186c0":[1,0,546,0],
+"structcg_world_object_type_desc.html#ae23923fe80c0191d8ed19168efb7da7c":[1,0,546,4],
+"structcg_world_object_type_desc.html#aedbd01e230fa65ce1168f2e3cd8dd15a":[1,0,546,10]
+};

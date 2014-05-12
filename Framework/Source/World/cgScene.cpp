@@ -133,6 +133,7 @@ cgScene::cgScene( cgWorld * world, const cgSceneDescriptor * description )  : cg
     mSceneTree                  = CG_NULL;
     mStaticVisTree              = CG_NULL;
     mIsUpdating                 = false;
+	mSuppressEvents				= false;
 
     // Allocate the lighting manager on the heap
     mLightingManager            = new cgLightingManager( this );
@@ -1030,6 +1031,98 @@ bool cgScene::resetScene( )
 
     // Success!
     return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : clear ()
+/// <summary>
+/// Completely destroy and remove all resident scene nodes and elements leaving
+/// a completely empty scene.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgScene::clear( )
+{
+	bool shouldSerialize = ( cgGetSandboxMode() == cgSandboxMode::Enabled && getSceneId() != 0 );
+
+	// Clear selection.
+	clearSelection();
+
+	// Begin a transaction.
+	if ( shouldSerialize )
+		mWorld->beginTransaction( _T("scene::clear") );
+
+	// Destroy all object nodes.
+	if ( !deleteObjectNodes( mObjectNodes ) )
+	{
+		if ( shouldSerialize )
+			mWorld->rollbackTransaction( _T("scene::clear") );
+		return false;
+	
+	} // End if failed
+
+	// Destroy all scene elements.
+	cgSceneElementArray elements = mElements;
+	for ( size_t i = 0; i < elements.size(); ++i )
+	{
+		if ( !deleteSceneElement( elements[i] ) )
+		{
+			if ( shouldSerialize )
+				mWorld->rollbackTransaction( _T("scene::clear") );
+			return false;
+		
+		} // End if failed
+	
+	} // Next element
+
+	// Destroy landscape.
+	if ( mLandscape )
+	{
+		if ( shouldSerialize && mSceneDescriptor.landscapeId != 0 && !mLandscape->deleteLandscape() )
+		{
+			mWorld->rollbackTransaction( _T("scene::clear") );
+			return false;
+		
+		} // End if failed
+
+		// Cleanup
+		delete mLandscape;
+
+	} // End if has landscape
+	mLandscape = CG_NULL;
+
+	// Update the scene's landscape reference identifier in the database.
+	if ( shouldSerialize && mSceneDescriptor.landscapeId != 0 )
+        mWorld->updateSceneDescriptorById( getSceneId(), mSceneDescriptor );
+
+	// Destroy any remaining cells.
+	if ( shouldSerialize )
+	{
+		cgSceneCellMap::iterator itCell;
+		for ( itCell = mCells.begin(); itCell != mCells.end(); ++itCell )
+		{
+			if ( !itCell->second->remove( mWorld, mSceneDescriptor.sceneId ) )
+			{
+				mWorld->rollbackTransaction( _T("scene::clear") );
+				return false;
+			
+			} // End if failed
+
+		} // Next cell
+	
+	} // End if should serialize
+
+	// Remove all active materials.
+	SceneMaterialMap materials = mActiveMaterials;
+	SceneMaterialMap::iterator itMaterial;
+	for ( itMaterial = materials.begin(); itMaterial != materials.end(); ++itMaterial )
+		removeSceneMaterial( itMaterial->second );
+
+	// Commit the changes
+	if ( shouldSerialize )
+		mWorld->commitTransaction( _T("scene::clear") );
+	
+	// Success
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -4266,7 +4359,7 @@ bool cgScene::deleteObjectNodes( cgObjectNodeMap & nodes )
 //-----------------------------------------------------------------------------
 cgObjectNode * cgScene::pickClosestNode( const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgVector3 & intersectionOut )
 {
-    return pickClosestNode( viewportSize, rayOrigin, rayDirection, false, 0.0f, intersectionOut );
+    return pickClosestNode( viewportSize, rayOrigin, rayDirection, 0, 0.0f, intersectionOut );
 }
 
 //-----------------------------------------------------------------------------
@@ -4276,7 +4369,7 @@ cgObjectNode * cgScene::pickClosestNode( const cgSize & viewportSize, const cgVe
 /// that ray and return it. Also return the intersection point on the node.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgObjectNode * cgScene::pickClosestNode( const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgVector3 & intersectionOut )
+cgObjectNode * cgScene::pickClosestNode( const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgUInt32 flags, cgFloat wireTolerance, cgVector3 & intersectionOut )
 {
     // Validate requirements
     if ( !mActiveCamera )
@@ -4293,7 +4386,7 @@ cgObjectNode * cgScene::pickClosestNode( const cgSize & viewportSize, const cgVe
         // Check for intersection
         cgObjectNode * hitNode;
         cgFloat distance = FLT_MAX;
-        if ( itNode->second->pick( mActiveCamera, viewportSize, rayOrigin, rayDirection, wireframe, wireTolerance, distance, hitNode ) )
+        if ( itNode->second->pick( mActiveCamera, viewportSize, rayOrigin, rayDirection, flags, wireTolerance, distance, hitNode ) )
         {
             // Is this the closest so far?
             if ( distance < closestDistance )
@@ -5008,10 +5101,6 @@ void cgScene::removeSceneMaterial( cgMaterial * material )
         SceneMaterialMap::iterator itMaterial = mActiveMaterials.find( material->getReferenceId() );
         if ( itMaterial != mActiveMaterials.end() )
         {
-            // Remove this scene's ownership reference.
-            material->removeReference( CG_NULL, false );
-            mActiveMaterials.erase( itMaterial );
-
             // Remove usage information to the database if not an internal scene.
             if ( getSceneId() != 0 )
             {
@@ -5026,6 +5115,10 @@ void cgScene::removeSceneMaterial( cgMaterial * material )
 
             // Notify anyone interested.
             onMaterialRemoved( &cgSceneMaterialEventArgs( this, material ) );
+
+			// Remove this scene's ownership reference.
+            material->removeReference( CG_NULL, false );
+            mActiveMaterials.erase( itMaterial );
 
             // Scene is now dirty
             setDirty( true );
@@ -5110,6 +5203,31 @@ bool cgScene::isActiveMaterial( cgMaterial * material ) const
 }
 
 //-----------------------------------------------------------------------------
+// Name : suppressEvents ()
+/// <summary>
+/// Call this method to enable or disable the dispatching of events that
+/// normally takes place when actions are performed on the scene such as
+/// creating or deleting objects, adding scene elements, etc. All events
+/// supported by 'cgSceneEventListener' will be suppressed when enabled.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScene::suppressEvents( bool suppress )
+{
+	mSuppressEvents = suppress;
+}
+
+//-----------------------------------------------------------------------------
+// Name : isEventSuppressionEnabled ()
+/// <summary>
+/// Determine whether or not standard scene events are currently being suppressed.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgScene::isEventSuppressionEnabled( ) const
+{
+	return mSuppressEvents;
+}
+
+//-----------------------------------------------------------------------------
 // Name : onSceneLoadProgress () (Virtual)
 /// <summary>
 /// Can be overriden or called by derived class in order to trigger the event
@@ -5118,6 +5236,9 @@ bool cgScene::isActiveMaterial( cgMaterial * material ) const
 //-----------------------------------------------------------------------------
 void cgScene::onSceneLoadProgress( cgSceneLoadProgressEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onSceneLoadProgress' of all listeners.
     EventListenerList::iterator itListener;
     for ( itListener = mEventListeners.begin(); itListener != mEventListeners.end(); ++itListener )
@@ -5138,6 +5259,9 @@ void cgScene::onSceneLoadProgress( cgSceneLoadProgressEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onNodeAdded( cgNodeUpdatedEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onNodeAdded' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;
@@ -5155,6 +5279,9 @@ void cgScene::onNodeAdded( cgNodeUpdatedEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onNodeDeleted( cgNodeUpdatedEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onNodeDeleted' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;
@@ -5172,6 +5299,9 @@ void cgScene::onNodeDeleted( cgNodeUpdatedEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onNodesDeleted( cgNodesUpdatedEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onNodesDeleted' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;
@@ -5189,6 +5319,9 @@ void cgScene::onNodesDeleted( cgNodesUpdatedEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onNodeNameChange( cgNodeUpdatedEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onNodeNameChange' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;
@@ -5206,6 +5339,9 @@ void cgScene::onNodeNameChange( cgNodeUpdatedEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onNodeParentChange( cgNodeParentChangeEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onNodeParentChange' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;
@@ -5223,6 +5359,9 @@ void cgScene::onNodeParentChange( cgNodeParentChangeEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onSceneElementAdded( cgSceneElementEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onSceneElementAdded' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;
@@ -5240,6 +5379,9 @@ void cgScene::onSceneElementAdded( cgSceneElementEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onSceneElementDeleted( cgSceneElementEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onSceneElementDeleted' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;
@@ -5257,6 +5399,9 @@ void cgScene::onSceneElementDeleted( cgSceneElementEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onSceneDirtyChange( cgSceneEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onSceneDirtyChange' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;
@@ -5274,6 +5419,9 @@ void cgScene::onSceneDirtyChange( cgSceneEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onSelectionUpdated( cgSelectionUpdatedEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onSelectionUpdated' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;
@@ -5291,6 +5439,9 @@ void cgScene::onSelectionUpdated( cgSelectionUpdatedEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onSelectionCleared( cgSceneEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onSelectionCleared' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;
@@ -5308,6 +5459,9 @@ void cgScene::onSelectionCleared( cgSceneEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onModifySelection( cgSceneEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onModifySelection' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;
@@ -5325,6 +5479,9 @@ void cgScene::onModifySelection( cgSceneEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onDeleteSelection( cgSceneEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onDeleteSelection' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;
@@ -5342,6 +5499,9 @@ void cgScene::onDeleteSelection( cgSceneEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onSelectionSetAdded( cgSelectionSetEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onSelectionSetAdded' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;
@@ -5359,6 +5519,9 @@ void cgScene::onSelectionSetAdded( cgSelectionSetEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onSelectionSetRemoved( cgSelectionSetEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onSelectionSetRemoved' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;
@@ -5376,6 +5539,9 @@ void cgScene::onSelectionSetRemoved( cgSelectionSetEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onMaterialAdded( cgSceneMaterialEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onMaterialAdded' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;
@@ -5393,6 +5559,9 @@ void cgScene::onMaterialAdded( cgSceneMaterialEventArgs * e )
 //-----------------------------------------------------------------------------
 void cgScene::onMaterialRemoved( cgSceneMaterialEventArgs * e )
 {
+	if ( mSuppressEvents )
+		return;
+
     // Trigger 'onMaterialRemoved' of all listeners (duplicate list in case
     // it is altered in response to event).
     EventListenerList::iterator itListener;

@@ -36,6 +36,7 @@ var classcg_world_configuration =
     [ "loadSceneTable", "classcg_world_configuration.html#a5e8b2947a1a5d760611d66d86c3d9f18", null ],
     [ "newConfiguration", "classcg_world_configuration.html#a84b89f3dc8e8ac440c800c9bd44105d7", null ],
     [ "prepareQueries", "classcg_world_configuration.html#a70591430d0d5a1c2f6b903cebbbfe2ac", null ],
+    [ "removeScene", "classcg_world_configuration.html#abf4d0aa9327ac31fff0c97241ebcc0f7", null ],
     [ "updateSceneDescriptorById", "classcg_world_configuration.html#a19afeaff43c7f60a6e9a7b70f504c19b", null ],
     [ "cgWorld", "classcg_world_configuration.html#abcee1c030be53915c71dc73b8085f0a1", null ],
     [ "mLayoutStatus", "classcg_world_configuration.html#a789164452862dae6f03de446b0e457d3", null ],

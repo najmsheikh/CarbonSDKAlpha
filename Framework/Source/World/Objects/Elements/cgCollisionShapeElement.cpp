@@ -521,7 +521,7 @@ void cgCollisionShapeElement::sandboxRender( cgUInt32 flags, cgCameraNode * pCam
 /// intersected and also compute the world space intersection distance.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgCollisionShapeElement::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance )
+bool cgCollisionShapeElement::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, cgUInt32 nFlags, cgFloat fWireTolerance, cgFloat & fDistance )
 {
     // Broadphase test -- OOBB.
     // Retrieve the final world transformation for this shape

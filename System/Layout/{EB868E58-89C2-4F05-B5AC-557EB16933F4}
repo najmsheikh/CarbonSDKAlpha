@@ -1,0 +1,34 @@
+--Table: Objects::Camera -- {EB868E58-89C2-4F05-B5AC-557EB16933F4}
+
+CREATE TABLE [Objects::Camera] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [ProjectionMode] smallint DEFAULT 0, 
+  [FOV] real DEFAULT 60, 
+  [NearClip] real DEFAULT (0.2), 
+  [FarClip] real DEFAULT 500, 
+  [ZoomFactor] real DEFAULT 1, 
+  [DoFEnabled] tinyint(1) DEFAULT 0, 
+  [DoFFGMin] real DEFAULT 0, 
+  [DoFFGMax] real DEFAULT 0,  
+  [DoFFGPassesHigh] smallint DEFAULT 0,  
+  [DoFFGPixelRadiusHigh] smallint DEFAULT 0,  
+  [DoFFGDistanceFactorHigh] real DEFAULT 0,  
+  [DoFFGPassesLow] smallint DEFAULT 0,  
+  [DoFFGPixelRadiusLow] smallint DEFAULT 0,  
+  [DoFFGDistanceFactorLow] real DEFAULT 0,  
+  [DoFBGMin] real DEFAULT 0, 
+  [DoFBGMax] real DEFAULT 0,  
+  [DoFBGPassesHigh] smallint DEFAULT 0,  
+  [DoFBGPixelRadiusHigh] smallint DEFAULT 0,  
+  [DoFBGDistanceFactorHigh] real DEFAULT 0,  
+  [DoFBGPassesLow] smallint DEFAULT 0,  
+  [DoFBGPixelRadiusLow] smallint DEFAULT 0,  
+  [DoFBGDistanceFactorLow] real DEFAULT 0,
+  [RefCount] integer DEFAULT 0 );
+
+CREATE TRIGGER [Objects::Camera_OnDelete]
+  BEFORE DELETE
+  ON [Objects::Camera]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;

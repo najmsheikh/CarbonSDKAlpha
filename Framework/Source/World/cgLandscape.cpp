@@ -83,6 +83,7 @@ bool operator < ( const ProceduralBatchKey & v1, const ProceduralBatchKey & v2 )
 // Static Member Definitions
 //-----------------------------------------------------------------------------
 cgWorldQuery cgLandscape::mInsertLandscape;
+cgWorldQuery cgLandscape::mDeleteLandscape;
 cgWorldQuery cgLandscape::mInsertProceduralLayer;
 cgWorldQuery cgLandscape::mUpdateLandscapeLayout;
 cgWorldQuery cgLandscape::mUpdateTextureConfig;
@@ -367,6 +368,13 @@ void cgLandscape::dispose( bool bDisposeBase )
     mProceduralBatches.clear();
     
     // Destroy procedural layer information
+	for ( size_t i = 0; i < mProceduralLayers.size(); ++i )
+	{
+		// Just disconnect during standard disposal.
+		mProceduralLayers[i]->layerType.enableDatabaseUpdate(false,false);
+		delete mProceduralLayers[i];
+	
+	} // Next layer
     mProceduralLayers.clear();
     
     // Destroy geo-mip optimization table
@@ -641,28 +649,32 @@ bool cgLandscape::load( cgUInt32 nLandscapeId )
     for ( ; mLoadProceduralLayers.nextRow(); )
     {
         // Allocate new slot in the procedural layer array.
-        mProceduralLayers.resize( mProceduralLayers.size() + 1 );
-        ProceduralLayerRef & Layer = mProceduralLayers.back();
+		ProceduralLayerRef * pLayer = new ProceduralLayerRef();
+        mProceduralLayers.push_back( pLayer );
 
         // Recieve standard parameters
-        mLoadProceduralLayers.getColumn( _T("LayerId"), Layer.layerId );
-        mLoadProceduralLayers.getColumn( _T("Name"), Layer.name );
-        mLoadProceduralLayers.getColumn( _T("EnableHeight"), Layer.enableHeight );
-        mLoadProceduralLayers.getColumn( _T("MinHeight"), Layer.minimumHeight );
-        mLoadProceduralLayers.getColumn( _T("MaxHeight"), Layer.maximumHeight );
-        mLoadProceduralLayers.getColumn( _T("HeightAttenBand"), Layer.heightAttenuationBand );
-        mLoadProceduralLayers.getColumn( _T("SlopeAxisX"), Layer.slopeAxis.x );
-        mLoadProceduralLayers.getColumn( _T("SlopeAxisY"), Layer.slopeAxis.y );
-        mLoadProceduralLayers.getColumn( _T("SlopeAxisZ"), Layer.slopeAxis.z );
-        mLoadProceduralLayers.getColumn( _T("SlopeScale"), Layer.slopeScale );
-        mLoadProceduralLayers.getColumn( _T("SlopeBias"), Layer.slopeBias );
-        mLoadProceduralLayers.getColumn( _T("InvertSlope"), Layer.invertSlope );
-        mLoadProceduralLayers.getColumn( _T("Weight"), Layer.weight );
+        mLoadProceduralLayers.getColumn( _T("LayerId"), pLayer->layerId );
+        mLoadProceduralLayers.getColumn( _T("Name"), pLayer->name );
+        mLoadProceduralLayers.getColumn( _T("EnableHeight"), pLayer->enableHeight );
+        mLoadProceduralLayers.getColumn( _T("MinHeight"), pLayer->minimumHeight );
+        mLoadProceduralLayers.getColumn( _T("MaxHeight"), pLayer->maximumHeight );
+        mLoadProceduralLayers.getColumn( _T("HeightAttenBand"), pLayer->heightAttenuationBand );
+        mLoadProceduralLayers.getColumn( _T("SlopeAxisX"), pLayer->slopeAxis.x );
+        mLoadProceduralLayers.getColumn( _T("SlopeAxisY"), pLayer->slopeAxis.y );
+        mLoadProceduralLayers.getColumn( _T("SlopeAxisZ"), pLayer->slopeAxis.z );
+        mLoadProceduralLayers.getColumn( _T("SlopeScale"), pLayer->slopeScale );
+        mLoadProceduralLayers.getColumn( _T("SlopeBias"), pLayer->slopeBias );
+        mLoadProceduralLayers.getColumn( _T("InvertSlope"), pLayer->invertSlope );
+        mLoadProceduralLayers.getColumn( _T("Weight"), pLayer->weight );
 
         // Retrieve layer type material.
         cgUInt32 nMaterialId = 0;
         mLoadProceduralLayers.getColumn( _T("MaterialId"), nMaterialId );
-        pResources->loadMaterial( &Layer.layerType, mParentScene->getParentWorld(), cgMaterialType::LandscapeLayer, nMaterialId, false, 0, cgDebugSource() );
+        pResources->loadMaterial( &pLayer->layerType, mParentScene->getParentWorld(), cgMaterialType::LandscapeLayer, nMaterialId, false, 0, cgDebugSource() );
+
+		// Reconnect to the material if necessary.
+		if ( shouldSerialize() )
+			pLayer->layerType.enableDatabaseUpdate( true, false );
 
     } // Next Block
 
@@ -780,6 +792,8 @@ void cgLandscape::prepareQueries()
         // Prepare the SQL statements as necessary.
         if ( mInsertLandscape.isPrepared() == false )
             mInsertLandscape.prepare( pWorld, _T("INSERT INTO 'Landscapes' VALUES(NULL,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13)"), true );
+		if ( mDeleteLandscape.isPrepared() == false )
+            mDeleteLandscape.prepare( pWorld, _T("DELETE FROM 'Landscapes' WHERE LandscapeId=?1"), true );
         if ( mInsertProceduralLayer.isPrepared() == false )
             mInsertProceduralLayer.prepare( pWorld, _T("INSERT INTO 'Landscapes::ProceduralLayers' VALUES(NULL,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15)"), true );
         if ( mUpdateLandscapeLayout.isPrepared() == false )
@@ -879,6 +893,70 @@ bool cgLandscape::GetTypeInfo( Guid typeIdentifier, cgObjectTypeInfo % info )
     // Unknown type identifier.
     return false;
 }*/
+
+//-----------------------------------------------------------------------------
+// Name : deleteLandscape()
+/// <summary>
+/// Delete the landscape from the world database.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgLandscape::deleteLandscape( )
+{
+	cgWorld * pWorld = mParentScene->getParentWorld();
+    if ( shouldSerialize() )
+	{
+        // Begin a transaction.
+        pWorld->beginTransaction( _T("landscapeDelete") );
+
+		// Prepare the queries we need.
+		prepareQueries();
+
+		// Dereference painted layer materials.
+		for ( size_t i = 0; i < mTerrainBlocks.size(); ++i )
+		{
+			cgTerrainBlock * pBlock = mTerrainBlocks[i];
+			if ( !pBlock )
+				continue;
+
+			// Get texturing data.
+			cgLandscapeTextureData * pData = pBlock->getTextureData();
+			if ( !pData )
+				continue;
+
+			// Process layers.
+			const cgLandscapeTextureData::LayerReferenceArray & aLayers = pData->getLayers();
+			for ( size_t i = 0; i < aLayers.size(); ++i )
+			{
+				// Full and immediate removal.
+				aLayers[i]->layerType.close(true);
+
+			} // Next layer
+
+		} // Next block
+
+		// Delete the landscape entry. Triggers will take care of the rest.
+        mDeleteLandscape.bindParameter( 1, mLandscapeId );
+        if ( mDeleteLandscape.step( true ) == false )
+        {
+            cgString strError;
+            mDeleteLandscape.getLastError( strError );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to delete world entry for landscape '0x%x'. Error: %s\n"), mLandscapeId, strError.c_str() );
+            pWorld->rollbackTransaction( _T("landscapeDelete") );
+            return false;
+        
+        } // End if failed
+
+		// Commit the transaction
+		pWorld->commitTransaction( _T("landscapeDelete") );
+
+	} // End if shouldSerialize
+
+	// Release all allocated memory.
+	dispose( false );
+
+	// Success!
+	return true;
+}
 
 //-----------------------------------------------------------------------------
 // Name : import()
@@ -3063,20 +3141,20 @@ void cgLandscape::batchProceduralDraws( )
             // We need to collect together three layers at a time.
             for ( ; nCurrentLayer < mProceduralLayers.size() && nLayerCount < 3; ++nCurrentLayer )
             {
-                const ProceduralLayerRef & LayerRef = mProceduralLayers[nCurrentLayer];
+                const ProceduralLayerRef * pLayerRef = mProceduralLayers[nCurrentLayer];
 
                 // Skip if this is a NULL layer
-                if ( LayerRef.layerType.isValid() == false )
+                if ( pLayerRef->layerType.isValid() == false )
                     continue;
                 
                 // Can this procedural layer possibly apply here based on height?
-                if ( LayerRef.enableHeight == true )
+                if ( pLayerRef->enableHeight == true )
                 {
                     Bounds = pBlock->getBoundingBox( );
 
                     // Height parameters are enabled
-                    if ( (Bounds.min.y > (LayerRef.maximumHeight + LayerRef.heightAttenuationBand)) ||
-                         (Bounds.max.y < (LayerRef.minimumHeight - LayerRef.heightAttenuationBand)) )
+                    if ( (Bounds.min.y > (pLayerRef->maximumHeight + pLayerRef->heightAttenuationBand)) ||
+                         (Bounds.max.y < (pLayerRef->minimumHeight - pLayerRef->heightAttenuationBand)) )
                         continue;
                 
                 } // End if check
@@ -4666,7 +4744,7 @@ const cgLandscape::ProceduralLayerArray & cgLandscape::getProceduralLayers( ) co
 //-----------------------------------------------------------------------------
 const cgLandscape::ProceduralLayerRef & cgLandscape::getProceduralLayer( cgUInt32 nLayerId ) const
 {
-    return mProceduralLayers[ nLayerId ];
+    return *mProceduralLayers[ nLayerId ];
 }
 
 //-----------------------------------------------------------------------------
@@ -4682,8 +4760,8 @@ bool cgLandscape::setProceduralLayer( cgUInt32 nLayerId, const cgLandscape::Proc
         return false;
 
     // Serialize as necessary.
-    cgUInt32 nDBId = mProceduralLayers[nLayerId].layerId;
-    if ( shouldSerialize() == true && nDBId != 0  )
+    cgUInt32 nDBId = mProceduralLayers[nLayerId]->layerId;
+    if ( shouldSerialize() && nDBId )
     {
         // Begin a transaction that we can roll back.
         cgWorld * pWorld = mParentScene->getParentWorld();
@@ -4721,9 +4799,15 @@ bool cgLandscape::setProceduralLayer( cgUInt32 nLayerId, const cgLandscape::Proc
 
     } // End if !internal
 
-    // Update internal array.
-    mProceduralLayers[ nLayerId ] = Layer;
-    mProceduralLayers[ nLayerId ].layerId = nDBId;
+    // Build new layer and connect reference material as necessary.
+	ProceduralLayerRef * pNewLayer = new ProceduralLayerRef(Layer);
+	if ( shouldSerialize() )
+		pNewLayer->layerType.enableDatabaseUpdate( true, true );
+	
+	// Destroy prior data and replace.
+	delete mProceduralLayers[nLayerId];
+    mProceduralLayers[ nLayerId ] = pNewLayer;
+    mProceduralLayers[ nLayerId ]->layerId = nDBId;
 
     // Re-batch procedural layers as required.
     batchProceduralDraws();
@@ -4740,7 +4824,7 @@ bool cgLandscape::setProceduralLayer( cgUInt32 nLayerId, const cgLandscape::Proc
 //-----------------------------------------------------------------------------
 void cgLandscape::updateProceduralLayers( const ProceduralLayerArray & aLayers )
 {
-    cgUInt32Array aInsertIds;
+    /*cgUInt32Array aInsertIds;
 
     // Insert the new object.
     if ( shouldSerialize() == true )
@@ -4804,6 +4888,7 @@ void cgLandscape::updateProceduralLayers( const ProceduralLayerArray & aLayers )
     } // End if !internal
 
     // Replace array and re-batch.
+	// TODO: Build new array, add material references, batch, and then dereference prior.
     mProceduralLayers = aLayers;
     batchProceduralDraws();
 
@@ -4813,7 +4898,7 @@ void cgLandscape::updateProceduralLayers( const ProceduralLayerArray & aLayers )
         for ( size_t i = 0; i < mProceduralLayers.size(); ++i )
             mProceduralLayers[i].layerId = aInsertIds[i];
     
-    } // End if inserted layers
+    } // End if inserted layers*/
 }
 
 //-----------------------------------------------------------------------------
@@ -6808,6 +6893,13 @@ cgLandscapeTextureData::cgLandscapeTextureData( cgLandscape * pLandscape, cgTerr
 cgLandscapeTextureData::~cgLandscapeTextureData()
 {
     // Release layer reference data
+	for ( size_t i = 0; i < mLayers.size(); ++i )
+	{
+		// Just perform a regular 'disconnect' in this case.
+		mLayers[i]->layerType.enableDatabaseUpdate(false, false);
+		delete mLayers[i];
+	
+	} // Next layer
     mLayers.clear();
     
     // Dispose of any allocated blend maps
@@ -6880,37 +6972,41 @@ bool cgLandscapeTextureData::loadLayers()
             continue;
 
         // Create a new in-memory layer.
-        mLayers.resize( mLayers.size() + 1 );
-        LayerReference & NewLayer = mLayers.back();
+		LayerReference * pNewLayer = new LayerReference();
+        mLayers.push_back( pNewLayer );
 
         // Load the referenced layer type
         cgUInt32 nLayerType = 0;
         mLoadLayers.getColumn( _T("MaterialId"), nLayerType );
-        pResources->loadMaterial( &NewLayer.layerType, mParentLandscape->getScene()->getParentWorld(), 
+        pResources->loadMaterial( &pNewLayer->layerType, mParentLandscape->getScene()->getParentWorld(), 
                                   cgMaterialType::LandscapeLayer, nLayerType, false, 0, cgDebugSource() );
 
+		// If necessary, reconnect to this material.
+		if ( mParentLandscape->shouldSerialize() )
+			pNewLayer->layerType.enableDatabaseUpdate( true, false );
+
         // Setup remaining layer details.
-        mLoadLayers.getColumn( _T("LayerId"), NewLayer.layerId );
-        NewLayer.referenceCount          = nRefCount;
-        NewLayer.combinedBlendMap  = 0xFFFFFFFF;   // Unknown
-        NewLayer.channel           = 0xFF;         // Unknown
-        NewLayer.eraseLayer        = false;
+        mLoadLayers.getColumn( _T("LayerId"), pNewLayer->layerId );
+        pNewLayer->referenceCount      = nRefCount;
+        pNewLayer->combinedBlendMap    = 0xFFFFFFFF;   // Unknown
+        pNewLayer->channel             = 0xFF;         // Unknown
+        pNewLayer->eraseLayer          = false;
         
         // Reset texture dirty status.
-        NewLayer.dirty             = false;
-        NewLayer.dirtyRectangle            = cgRect( INT_MAX, INT_MAX, -INT_MAX, -INT_MAX );
+        pNewLayer->dirty               = false;
+        pNewLayer->dirtyRectangle      = cgRect( INT_MAX, INT_MAX, -INT_MAX, -INT_MAX );
 
         // Reset final blend map dirty status.
-        NewLayer.finalDirty        = false;
-        NewLayer.finalDirtyRectangle       = cgRect( INT_MAX, INT_MAX, -INT_MAX, -INT_MAX );
+        pNewLayer->finalDirty          = false;
+        pNewLayer->finalDirtyRectangle = cgRect( INT_MAX, INT_MAX, -INT_MAX, -INT_MAX );
 
         // Populate blend map from the loaded layer data.
         cgUInt32 nBlendMapSize = 0;
         cgByte * pBlendMapData = CG_NULL;
         mLoadLayers.getColumn( _T("BlendMapData"), (void**)&pBlendMapData, nBlendMapSize );
-        NewLayer.blendMap.resize( mBlendMapSize.width * mBlendMapSize.height );
-        if ( nBlendMapSize == NewLayer.blendMap.size() && pBlendMapData != CG_NULL )
-            memcpy( &NewLayer.blendMap[0], pBlendMapData, nBlendMapSize );
+        pNewLayer->blendMap.resize( mBlendMapSize.width * mBlendMapSize.height );
+        if ( nBlendMapSize == pNewLayer->blendMap.size() && pBlendMapData != CG_NULL )
+            memcpy( &pNewLayer->blendMap[0], pBlendMapData, nBlendMapSize );
         
     } // Next Block
 
@@ -7008,7 +7104,7 @@ bool cgLandscapeTextureData::beginPaint( const cgMaterialHandle & hType, const c
         // Is this layer already referenced within this block?
         for ( size_t i = 0; i < mLayers.size(); ++i )
         {
-            if ( mLayers[i].layerType == hType )
+            if ( mLayers[i]->layerType == hType )
             {
                 nLayerIndex = (cgInt32)i;
                 break;
@@ -7051,34 +7147,38 @@ bool cgLandscapeTextureData::beginPaint( const cgMaterialHandle & hType, const c
         } // End if serialize
 
         // Create a new in-memory layer.
-        mLayers.resize( mLayers.size() + 1 );
-        LayerReference & NewLayer = mLayers.back();
+		LayerReference * pNewLayer = new LayerReference();
+		mLayers.push_back( pNewLayer );
         nLayerIndex = cgInt32(mLayers.size() - 1);
 
         // If we are adding a new layer, the first thing we need to do is to
         // allocate the blend map memory into which we will paint.
-        NewLayer.blendMap.resize( mBlendMapSize.width * mBlendMapSize.height );
+        pNewLayer->blendMap.resize( mBlendMapSize.width * mBlendMapSize.height );
 
         // Setup remaining layer details.
-        NewLayer.layerType         = hType;
-        NewLayer.referenceCount          = 0;
-        NewLayer.combinedBlendMap  = 0xFFFFFFFF;   // Unknown
-        NewLayer.channel           = 0xFF;         // Unknown
-        NewLayer.layerId           = nLayerDatabaseId;
-        NewLayer.eraseLayer        = Params.erase;
+        pNewLayer->layerType           = hType;
+        pNewLayer->referenceCount      = 0;
+        pNewLayer->combinedBlendMap    = 0xFFFFFFFF;   // Unknown
+        pNewLayer->channel             = 0xFF;         // Unknown
+        pNewLayer->layerId             = nLayerDatabaseId;
+        pNewLayer->eraseLayer          = Params.erase;
         
         // Reset texture dirty status.
-        NewLayer.dirty             = false;
-        NewLayer.dirtyRectangle            = cgRect( INT_MAX, INT_MAX, -INT_MAX, -INT_MAX );
+        pNewLayer->dirty               = false;
+        pNewLayer->dirtyRectangle      = cgRect( INT_MAX, INT_MAX, -INT_MAX, -INT_MAX );
 
         // Reset final blend map dirty status.
-        NewLayer.finalDirty        = false;
-        NewLayer.finalDirtyRectangle       = cgRect( INT_MAX, INT_MAX, -INT_MAX, -INT_MAX );
+        pNewLayer->finalDirty          = false;
+        pNewLayer->finalDirtyRectangle = cgRect( INT_MAX, INT_MAX, -INT_MAX, -INT_MAX );
+
+		// Hold a reference to the new layer type if necessary.
+		if ( !Params.erase && mParentLandscape->shouldSerialize() )
+			pNewLayer->layerType.enableDatabaseUpdate( true, true );
 
         // A new layer was added. We need to re-optimize the blend map textures
         // and construct render pass data ready for rendering in an optimal fashion 
         // (max. 4 layers per pass) -- unless this is a temporary erase layer.
-        if ( !NewLayer.eraseLayer )
+        if ( !pNewLayer->eraseLayer )
             optimizeLayers();
 
     } // End if adding
@@ -7086,11 +7186,11 @@ bool cgLandscapeTextureData::beginPaint( const cgMaterialHandle & hType, const c
     // We also need to create a temporary area into which to paint. This buffer
     // will not actually be committed to the layer until the user completes 
     // the painting operation (click drag release).
-    mLayers[ nLayerIndex ].blendMapPaint.resize( mBlendMapSize.width * mBlendMapSize.height );
+    mLayers[ nLayerIndex ]->blendMapPaint.resize( mBlendMapSize.width * mBlendMapSize.height );
 
     // Painting is now enabled for this block.
     mIsPainting  = true;
-    mParams       = Params;
+    mParams      = Params;
     mPaintLayer  = nLayerIndex;
 
     // Success!
@@ -7176,7 +7276,7 @@ bool cgLandscapeTextureData::paint( cgFloat fX, cgFloat fZ )
         return false;
 
     // Retrieve the layer reference into which we will paint.
-    LayerReference & Layer = mLayers[ mPaintLayer ];
+    LayerReference * pLayer = mLayers[ mPaintLayer ];
 
     // Compute the full rectangle of the cells that will ultimately 
     // be modified after filtering has taken place (texture dirty rectangle).
@@ -7217,7 +7317,7 @@ bool cgLandscapeTextureData::paint( cgFloat fX, cgFloat fZ )
     pData->fillCircle( fX - (cgFloat)xStart, fZ - (cgFloat)yStart, fDrawRadius );
 
     // Copy into relevant location of our paint buffer.
-    cgByte * pDest = &Layer.blendMapPaint[xStart + yStart * mBlendMapSize.width];
+    cgByte * pDest = &pLayer->blendMapPaint[xStart + yStart * mBlendMapSize.width];
     const cgByte * pSrc = pData->getBuffer();
     for ( cgUInt32 y = 0; y < pData->getHeight(); ++y )
     {
@@ -7240,20 +7340,20 @@ bool cgLandscapeTextureData::paint( cgFloat fX, cgFloat fZ )
     delete pData;
 
     // Update smallest possible area
-    cgRect & rc = Layer.dirtyRectangle;
+    cgRect & rc = pLayer->dirtyRectangle;
     if ( xStart   < rc.left   ) rc.left   = xStart;
     if ( yStart   < rc.top    ) rc.top    = yStart;
     if ( xEnd + 1 > rc.right  ) rc.right  = xEnd + 1;
     if ( yEnd + 1 > rc.bottom ) rc.bottom = yEnd + 1;
-    Layer.dirty = (rc.isEmpty() == false);
+    pLayer->dirty = (rc.isEmpty() == false);
 
     // Add the current dirty rectangle to our final blend map update area if necessary.
-    cgRect & rcf = Layer.finalDirtyRectangle;
+    cgRect & rcf = pLayer->finalDirtyRectangle;
     if ( rc.left   < rcf.left   ) rcf.left   = rc.left;
     if ( rc.top    < rcf.top    ) rcf.top    = rc.top;
     if ( rc.right  > rcf.right  ) rcf.right  = rc.right;
     if ( rc.bottom > rcf.bottom ) rcf.bottom = rc.bottom;
-    Layer.finalDirty  = (rcf.isEmpty() == false);
+    pLayer->finalDirty  = (rcf.isEmpty() == false);
 
     // Success!
     return true;
@@ -7272,26 +7372,26 @@ bool cgLandscapeTextureData::setPixel( cgInt32 x, cgInt32 y )
         return false;
 
     // Retrieve the layer reference into which we will paint.
-    LayerReference & Layer = mLayers[ mPaintLayer ];
+    LayerReference * pLayer = mLayers[ mPaintLayer ];
 
     // Paint 1.0 into the temporary blend map buffer.
-    Layer.blendMapPaint[ y * mBlendMapSize.width + x ] = 255;
+    pLayer->blendMapPaint[ y * mBlendMapSize.width + x ] = 255;
     
     // Update smallest possible area
-    cgRect & rc = Layer.dirtyRectangle;
+    cgRect & rc = pLayer->dirtyRectangle;
     if ( x < rc.left       ) rc.left   = x;
     if ( y < rc.top        ) rc.top    = y;
     if ( (x+1) > rc.right  ) rc.right  = x + 1;
     if ( (y+1) > rc.bottom ) rc.bottom = y + 1;
-    Layer.dirty = (rc.isEmpty() == false);
+    pLayer->dirty = (rc.isEmpty() == false);
 
     // Add the current dirty rectangle to our final blend map update area if necessary.
-    cgRect & rcf = Layer.finalDirtyRectangle;
+    cgRect & rcf = pLayer->finalDirtyRectangle;
     if ( rc.left   < rcf.left   ) rcf.left   = rc.left;
     if ( rc.top    < rcf.top    ) rcf.top    = rc.top;
     if ( rc.right  > rcf.right  ) rcf.right  = rc.right;
     if ( rc.bottom > rcf.bottom ) rcf.bottom = rc.bottom;
-    Layer.finalDirty  = (rcf.isEmpty() == false);
+    pLayer->finalDirty  = (rcf.isEmpty() == false);
 
     // Success!
     return true;
@@ -7314,7 +7414,7 @@ bool cgLandscapeTextureData::paintLine( cgFloat fXFrom, cgFloat fZFrom, cgFloat 
         return false;
 
     // Retrieve the layer reference into which we will paint.
-    LayerReference & Layer = mLayers[ mPaintLayer ];
+    LayerReference * pLayer = mLayers[ mPaintLayer ];
 
     // Compute the full rectangle of the cells that will ultimately 
     // be modified after filtering has taken place (texture dirty rectangle).
@@ -7358,7 +7458,7 @@ bool cgLandscapeTextureData::paintLine( cgFloat fXFrom, cgFloat fZFrom, cgFloat 
                      fXTo - (cgFloat)xStart, fZTo - (cgFloat)yStart );
 
     // Copy into relevant location of our paint buffer.
-    cgByte * pDest = &Layer.blendMapPaint[xStart + yStart * mBlendMapSize.width];
+    cgByte * pDest = &pLayer->blendMapPaint[xStart + yStart * mBlendMapSize.width];
     const cgByte * pSrc = pData->getBuffer();
     for ( cgUInt32 y = 0; y < pData->getHeight(); ++y )
     {
@@ -7381,20 +7481,20 @@ bool cgLandscapeTextureData::paintLine( cgFloat fXFrom, cgFloat fZFrom, cgFloat 
     delete pData;
 
     // Update smallest possible area
-    cgRect & rc = Layer.dirtyRectangle;
+    cgRect & rc = pLayer->dirtyRectangle;
     if ( xStart   < rc.left   ) rc.left   = xStart;
     if ( yStart   < rc.top    ) rc.top    = yStart;
     if ( xEnd + 1 > rc.right  ) rc.right  = xEnd + 1;
     if ( yEnd + 1 > rc.bottom ) rc.bottom = yEnd + 1;
-    Layer.dirty = (rc.isEmpty() == false);
+    pLayer->dirty = (rc.isEmpty() == false);
 
     // Add the current dirty rectangle to our final blend map update area if necessary.
-    cgRect & rcf = Layer.finalDirtyRectangle;
+    cgRect & rcf = pLayer->finalDirtyRectangle;
     if ( rc.left   < rcf.left   ) rcf.left   = rc.left;
     if ( rc.top    < rcf.top    ) rcf.top    = rc.top;
     if ( rc.right  > rcf.right  ) rcf.right  = rc.right;
     if ( rc.bottom > rcf.bottom ) rcf.bottom = rc.bottom;
-    Layer.finalDirty  = (rcf.isEmpty() == false);
+    pLayer->finalDirty  = (rcf.isEmpty() == false);
 
     // Success!
     return true;
@@ -7421,8 +7521,8 @@ void cgLandscapeTextureData::endPaint( )
     cgResourceManager * pResources = mParentLandscape->getScene()->getResourceManager();
     
     // We'll be commiting changes to the paint layer.
-    LayerReference & PaintLayer = mLayers[mPaintLayer];
-    if ( PaintLayer.finalDirty == false )
+    LayerReference * pPaintLayer = mLayers[mPaintLayer];
+    if ( pPaintLayer->finalDirty == false )
     {
         mIsPainting = false;
         mPaintLayer = -1;
@@ -7431,34 +7531,34 @@ void cgLandscapeTextureData::endPaint( )
     } // End if update occurred
 
     // Trigger a final preview texture update if necessary.
-    if ( PaintLayer.dirty == true )
+    if ( pPaintLayer->dirty == true )
         updatePaintPreview();
 
     // Remove temporary paint buffers to conserve memory.
-    PaintLayer.blendMapPaint.clear();
+    pPaintLayer->blendMapPaint.clear();
 
     // Use the texture data as the source for the final buffers.
     for ( size_t i = 0; i < mLayers.size(); ++i )
     {
         // Skip erase layers (they have no texture).
-        LayerReference & Layer = mLayers[i];
-        if ( Layer.eraseLayer == true )
+        LayerReference * pLayer = mLayers[i];
+        if ( pLayer->eraseLayer == true )
             continue;
         
         // Lock source texture for read access.
-        cgTexture * pSourceTexture = mCombinedBlendMaps[Layer.combinedBlendMap].texture.getResource(true);
-        cgByte    * pSrc           = (cgByte*)pSourceTexture->lock( PaintLayer.finalDirtyRectangle, nSrcPitch, cgLockFlags::ReadOnly );
+        cgTexture * pSourceTexture = mCombinedBlendMaps[pLayer->combinedBlendMap].texture.getResource(true);
+        cgByte    * pSrc           = (cgByte*)pSourceTexture->lock( pPaintLayer->finalDirtyRectangle, nSrcPitch, cgLockFlags::ReadOnly );
         
         // ToDo: Handle errors.
         
         // Offset to the correct 8bit layer location (BGRA)
-        pSrc += (3 - Layer.channel);
+        pSrc += (3 - pLayer->channel);
 
         // Iterate and update output layer from paint layer.
-        cgByte * pDest = &Layer.blendMap[PaintLayer.finalDirtyRectangle.left + PaintLayer.finalDirtyRectangle.top * mBlendMapSize.width];
-        for ( y = 0; y < PaintLayer.finalDirtyRectangle.height(); ++y )
+        cgByte * pDest = &pLayer->blendMap[pPaintLayer->finalDirtyRectangle.left + pPaintLayer->finalDirtyRectangle.top * mBlendMapSize.width];
+        for ( y = 0; y < pPaintLayer->finalDirtyRectangle.height(); ++y )
         {
-            for ( x = 0; x < PaintLayer.finalDirtyRectangle.width(); ++x )
+            for ( x = 0; x < pPaintLayer->finalDirtyRectangle.width(); ++x )
             {
                 // Retrieve the previous cell weight at this location.
                 nOldWeight = *pDest;
@@ -7471,21 +7571,21 @@ void cgLandscapeTextureData::endPaint( )
                 // Determine if this is a new reference to this layer (i.e. a 0 weight
                 // is about to become a valid weight) or vice versa.
                 if ( nOldWeight == 0 && nNewWeight != 0 )
-                    Layer.referenceCount++;
+                    pLayer->referenceCount++;
                 else if ( nOldWeight != 0 && nNewWeight == 0 )
-                    Layer.referenceCount--;
+                    pLayer->referenceCount--;
 
                 // ToDo: remove.
                 #if defined(_DEBUG)
-                    if ( Layer.referenceCount < 0 )
-                        cgAppLog::write( cgAppLog::Debug, _T("An invalid landscape reference count of %i was discovered.\n"), Layer.referenceCount );
+                    if ( pLayer->referenceCount < 0 )
+                        cgAppLog::write( cgAppLog::Debug, _T("An invalid landscape reference count of %i was discovered.\n"), pLayer->referenceCount );
                 #endif
 
             } // Next Column
 
             // Move to next row.
-            pDest += mBlendMapSize.width - PaintLayer.finalDirtyRectangle.width();
-            pSrc  += nSrcPitch - (PaintLayer.finalDirtyRectangle.width() * 4);
+            pDest += mBlendMapSize.width - pPaintLayer->finalDirtyRectangle.width();
+            pSrc  += nSrcPitch - (pPaintLayer->finalDirtyRectangle.width() * 4);
 
         } // Next Row
     
@@ -7494,8 +7594,8 @@ void cgLandscapeTextureData::endPaint( )
     } // Next Layer
 
     // Mark painting as complete.
-    PaintLayer.finalDirty  = false;
-    PaintLayer.finalDirtyRectangle = cgRect( INT_MAX, INT_MAX, -INT_MAX, -INT_MAX );
+    pPaintLayer->finalDirty  = false;
+    pPaintLayer->finalDirtyRectangle = cgRect( INT_MAX, INT_MAX, -INT_MAX, -INT_MAX );
     mIsPainting = false;
     mPaintLayer = -1;
 
@@ -7507,13 +7607,13 @@ void cgLandscapeTextureData::endPaint( )
     for ( cgInt32 i = 0; i < nCount; ++i )
     {
         // Remove unreferenced layers.
-        if ( mLayers[i].referenceCount == 0 )
+        if ( mLayers[i]->referenceCount == 0 )
         {
             // Remove from database if necessary.
-            if ( mLayers[i].layerId != 0 && mParentLandscape->shouldSerialize() == true )
+            if ( mLayers[i]->layerId != 0 && mParentLandscape->shouldSerialize() == true )
             {
                 prepareQueries();
-                mDeleteLayer.bindParameter( 1, mLayers[i].layerId );
+                mDeleteLayer.bindParameter( 1, mLayers[i]->layerId );
                 if ( mDeleteLayer.step( true ) == false )
                     continue;
             
@@ -7524,9 +7624,9 @@ void cgLandscapeTextureData::endPaint( )
                 cgAppLog::write( cgAppLog::Debug, _T("Disposing of layer %i.\n"), i );
             #endif
 
-            // Dispose of unnecessary data.
-            mLayers[i].blendMap.clear();
-            mLayers[i].blendMapPaint.clear();
+            // Destroy the layer, we're done with it (full delete, will update database for
+			// resource handles as necessary).
+			delete mLayers[i];
             
             // Shuffle data back.
             for ( cgInt32 j = i + 1; j < nCount; ++j )
@@ -7540,20 +7640,20 @@ void cgLandscapeTextureData::endPaint( )
         else
         {
             // Update the database as necessary.
-            if ( mLayers[i].layerId != 0 && mParentLandscape->shouldSerialize() == true )
+            if ( mLayers[i]->layerId != 0 && mParentLandscape->shouldSerialize() == true )
             {
                 prepareQueries();
-                const cgLandscapeTextureData::LayerReference & Layer = mLayers[i];
-                mUpdateLayerPaintData.bindParameter( 1, &Layer.blendMap[0], mBlendMapSize.width * mBlendMapSize.height );
-                mUpdateLayerPaintData.bindParameter( 2, Layer.referenceCount );
-                mUpdateLayerPaintData.bindParameter( 3, Layer.layerId );
+                const cgLandscapeTextureData::LayerReference * pLayer = mLayers[i];
+                mUpdateLayerPaintData.bindParameter( 1, &pLayer->blendMap[0], mBlendMapSize.width * mBlendMapSize.height );
+                mUpdateLayerPaintData.bindParameter( 2, pLayer->referenceCount );
+                mUpdateLayerPaintData.bindParameter( 3, pLayer->layerId );
                 
                 // Execute
                 if ( mUpdateLayerPaintData.step( true ) == false )
                 {
                     cgString strError;
                     mUpdateLayerPaintData.getLastError( strError );
-                    cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("Failed to update block blend map layer '%i' for block '%i' within landscape object '0x%x'. Error: %s\n"), Layer.layerId, mParentBlock->getDatabaseId(), mParentLandscape->getDatabaseId(), strError.c_str() );
+                    cgAppLog::write( cgAppLog::Debug | cgAppLog::Warning, _T("Failed to update block blend map layer '%i' for block '%i' within landscape object '0x%x'. Error: %s\n"), pLayer->layerId, mParentBlock->getDatabaseId(), mParentLandscape->getDatabaseId(), strError.c_str() );
                 
                 } // End if failed
 
@@ -7599,7 +7699,7 @@ void cgLandscapeTextureData::filterPaintLayer( cgByteArray & aData )
     cgVector2   vecTexelSize;
     
     // Clone the paint layer.
-    LayerReference & PaintLayer = mLayers[ mPaintLayer ];
+    LayerReference * pPaintLayer = mLayers[ mPaintLayer ];
     
     // Compute the world space "size" of an individual cell in the blend map
     const cgVector3 & vecScale = mParentLandscape->getTerrainScale();
@@ -7614,7 +7714,7 @@ void cgLandscapeTextureData::filterPaintLayer( cgByteArray & aData )
     if ( nKernelSizeX < 3 || nKernelSizeY < 3 )
     {
         // No filtering, just duplicate the paint buffer.
-        aData = PaintLayer.blendMapPaint;
+        aData = pPaintLayer->blendMapPaint;
         return;
     
     } // End if no filter
@@ -7623,10 +7723,10 @@ void cgLandscapeTextureData::filterPaintLayer( cgByteArray & aData )
     // within nHalfKernelSize around the dirty rectangle of this block. This can then
     // be used to seamlessly filter across terrain block boundaries etc.
     cgRect rcSource;
-    rcSource.left   = PaintLayer.dirtyRectangle.left - nHalfKernelSizeX;
-    rcSource.top    = PaintLayer.dirtyRectangle.top - nHalfKernelSizeY;
-    rcSource.right  = rcSource.left + PaintLayer.dirtyRectangle.width() + (nHalfKernelSizeX*2);
-    rcSource.bottom = rcSource.top + PaintLayer.dirtyRectangle.height() + (nHalfKernelSizeY*2);
+    rcSource.left   = pPaintLayer->dirtyRectangle.left - nHalfKernelSizeX;
+    rcSource.top    = pPaintLayer->dirtyRectangle.top - nHalfKernelSizeY;
+    rcSource.right  = rcSource.left + pPaintLayer->dirtyRectangle.width() + (nHalfKernelSizeX*2);
+    rcSource.bottom = rcSource.top + pPaintLayer->dirtyRectangle.height() + (nHalfKernelSizeY*2);
 
     // Translate the source rectangle into a global terrain rectangle
     cgRect rcBlendMapArea = getBlendMapArea();
@@ -7695,16 +7795,16 @@ void cgLandscapeTextureData::filterPaintLayer( cgByteArray & aData )
     } // Next Row
 
     // Switch buffers (ping-pong)
-    aData = PaintLayer.blendMapPaint;
+    aData = pPaintLayer->blendMapPaint;
     
     // The second pass filter need only update the dirty region.
     xStart = nHalfKernelSizeX;
-    xEnd   = xStart + PaintLayer.dirtyRectangle.width();
+    xEnd   = xStart + pPaintLayer->dirtyRectangle.width();
     yStart = nHalfKernelSizeY;
-    yEnd   = yStart + PaintLayer.dirtyRectangle.height();
+    yEnd   = yStart + pPaintLayer->dirtyRectangle.height();
 
     // Filter each texel in the dirty rectangle - Seperable V axis filter.
-    pDest = &aData[PaintLayer.dirtyRectangle.left + PaintLayer.dirtyRectangle.top * mBlendMapSize.width];
+    pDest = &aData[pPaintLayer->dirtyRectangle.left + pPaintLayer->dirtyRectangle.top * mBlendMapSize.width];
     for ( y = yStart; y < yEnd; ++y )
     {
         for ( x = xStart; x < xEnd; ++x )
@@ -7784,8 +7884,8 @@ void cgLandscapeTextureData::updatePaintPreview(  )
         return;
 
     // Is anything to be done?
-    LayerReference & PaintLayer = mLayers[ mPaintLayer ];
-    if ( PaintLayer.dirty == false )
+    LayerReference * pPaintLayer = mLayers[ mPaintLayer ];
+    if ( pPaintLayer->dirty == false )
         return;
 
     // Filter the dirty rectangle of the paint texture as required based on the selected 
@@ -7813,23 +7913,23 @@ void cgLandscapeTextureData::updatePaintPreview(  )
     for ( size_t i = 0; i < mCombinedBlendMaps.size(); ++i )
     {
         cgTexture * pTexture = mCombinedBlendMaps[ i ].texture.getResource(true);
-        ppLockData[i] = (cgByte*)pTexture->lock( PaintLayer.dirtyRectangle, pPitchData[i], cgLockFlags::WriteOnly );
+        ppLockData[i] = (cgByte*)pTexture->lock( pPaintLayer->dirtyRectangle, pPitchData[i], cgLockFlags::WriteOnly );
 
         // ToDo: Handle errors
     
     } // Next Texture
 
     // We're only updating the area indicated by the dirty rectangle.
-    cgByte * pOriginal = &PaintLayer.blendMap[PaintLayer.dirtyRectangle.left + PaintLayer.dirtyRectangle.top * mBlendMapSize.width];
-    cgByte * pPaint    = &aFilteredBuffer[PaintLayer.dirtyRectangle.left + PaintLayer.dirtyRectangle.top * mBlendMapSize.width];
+    cgByte * pOriginal = &pPaintLayer->blendMap[pPaintLayer->dirtyRectangle.left + pPaintLayer->dirtyRectangle.top * mBlendMapSize.width];
+    cgByte * pPaint    = &aFilteredBuffer[pPaintLayer->dirtyRectangle.left + pPaintLayer->dirtyRectangle.top * mBlendMapSize.width];
 
     // To save some time, we'll also keep a pointer to the paint layer's 
     // texture data (Offset to the correct 8bit layer location (BGRA)) /unless/
     // this is a temporary erase layer (which has no physical texture data).
-    if ( PaintLayer.eraseLayer == false )
+    if ( pPaintLayer->eraseLayer == false )
     {
-        pDest  = ppLockData[ PaintLayer.combinedBlendMap ] + (3 - PaintLayer.channel);
-        nPitch = pPitchData[ PaintLayer.combinedBlendMap ];
+        pDest  = ppLockData[ pPaintLayer->combinedBlendMap ] + (3 - pPaintLayer->channel);
+        nPitch = pPitchData[ pPaintLayer->combinedBlendMap ];
     
     } // End if !erase layer
 
@@ -7851,9 +7951,9 @@ void cgLandscapeTextureData::updatePaintPreview(  )
     } // End if lock normals
 
     // Iterate through each texel in the dirty rectangle
-    for ( y = 0; y < PaintLayer.dirtyRectangle.height(); ++y )
+    for ( y = 0; y < pPaintLayer->dirtyRectangle.height(); ++y )
     {
-        for ( x = 0; x < PaintLayer.dirtyRectangle.width(); ++x, ++pOriginal, ++pPaint, pDest += 4 )
+        for ( x = 0; x < pPaintLayer->dirtyRectangle.width(); ++x, ++pOriginal, ++pPaint, pDest += 4 )
         {
             // Advanced parameters selected?
             nPaintValue = 0;
@@ -7862,8 +7962,8 @@ void cgLandscapeTextureData::updatePaintPreview(  )
                 bool bCull = false;
 
                 // First compute the terrain U/V location (0 to 1 range) for the center of this texel.
-                cgFloat fX = (cgFloat)nBlockStartX + (((cgFloat)(PaintLayer.dirtyRectangle.left + x) + 0.5f) / mBlendMapResolution.width);
-                cgFloat fY = (cgFloat)nBlockStartY + (((cgFloat)(PaintLayer.dirtyRectangle.top + y) + 0.5f) / mBlendMapResolution.height);
+                cgFloat fX = (cgFloat)nBlockStartX + (((cgFloat)(pPaintLayer->dirtyRectangle.left + x) + 0.5f) / mBlendMapResolution.width);
+                cgFloat fY = (cgFloat)nBlockStartY + (((cgFloat)(pPaintLayer->dirtyRectangle.top + y) + 0.5f) / mBlendMapResolution.height);
                 cgFloat fU = fX / (cgFloat)TerrainQuads.width;
                 cgFloat fV = fY / (cgFloat)TerrainQuads.height;
 
@@ -7995,7 +8095,7 @@ void cgLandscapeTextureData::updatePaintPreview(  )
 
                 // Write out to the paint layer's physical texture (if not an
                 // erase layer which has no physical texture)
-                if ( PaintLayer.eraseLayer == false )
+                if ( pPaintLayer->eraseLayer == false )
                     *pDest = (cgByte)nNewValue;
 
                 // Compute the remaining "weight" available for all other layers
@@ -8011,8 +8111,8 @@ void cgLandscapeTextureData::updatePaintPreview(  )
                         continue;
 
                     // Sum the weight for this layer.
-                    LayerReference & Layer = mLayers[i];
-                    pWeights[i] = ((cgFloat)*(ppLockData[Layer.combinedBlendMap] + (3 - Layer.channel))) / 255.0f;
+                    LayerReference * pLayer = mLayers[i];
+                    pWeights[i] = ((cgFloat)*(ppLockData[pLayer->combinedBlendMap] + (3 - pLayer->channel))) / 255.0f;
                     fLayerWeights += pWeights[i];
 
                 } // Next Layer
@@ -8031,9 +8131,9 @@ void cgLandscapeTextureData::updatePaintPreview(  )
                             continue;
 
                         // Compute new weight
-                        LayerReference & Layer = mLayers[i];
+                        LayerReference * pLayer = mLayers[i];
                         nNewValue = (cgInt32)((pWeights[i] * fWeightScale) * 255.0f);
-                        *(ppLockData[Layer.combinedBlendMap] + (3 - Layer.channel)) = (cgByte)min( 0xFF, nNewValue );
+                        *(ppLockData[pLayer->combinedBlendMap] + (3 - pLayer->channel)) = (cgByte)min( 0xFF, nNewValue );
 
                     } // Next Layer
                 
@@ -8048,14 +8148,14 @@ void cgLandscapeTextureData::updatePaintPreview(  )
         } // Next Column
         
         // Move down to next row in destination texture.
-        pDest     += nPitch - (PaintLayer.dirtyRectangle.width() * 4);
-        pOriginal += mBlendMapSize.width - PaintLayer.dirtyRectangle.width();
-        pPaint    += mBlendMapSize.width - PaintLayer.dirtyRectangle.width();
+        pDest     += nPitch - (pPaintLayer->dirtyRectangle.width() * 4);
+        pOriginal += mBlendMapSize.width - pPaintLayer->dirtyRectangle.width();
+        pPaint    += mBlendMapSize.width - pPaintLayer->dirtyRectangle.width();
         
         
         // Increment lock data ready for next row
         for ( size_t i = 0; i < mCombinedBlendMaps.size(); ++i )
-            ppLockData[i] += pPitchData[i] - (PaintLayer.dirtyRectangle.width() * 4);
+            ppLockData[i] += pPitchData[i] - (pPaintLayer->dirtyRectangle.width() * 4);
 
     } // Next Row
 
@@ -8080,8 +8180,8 @@ void cgLandscapeTextureData::updatePaintPreview(  )
     } // End if unlock normals
 
     // Reset paint layer dirty status.
-    PaintLayer.dirty  = false;
-    PaintLayer.dirtyRectangle = cgRect( INT_MAX, INT_MAX, -INT_MAX, -INT_MAX );
+    pPaintLayer->dirty  = false;
+    pPaintLayer->dirtyRectangle = cgRect( INT_MAX, INT_MAX, -INT_MAX, -INT_MAX );
 }
 
 //-----------------------------------------------------------------------------
@@ -8159,7 +8259,7 @@ void cgLandscapeTextureData::optimizeLayers()
     for ( size_t i = 0; i < mLayers.size(); ++i )
     {
         // If this is an erase layer, it doesn't count.
-        if ( mLayers[i].eraseLayer == true )
+        if ( mLayers[i]->eraseLayer == true )
         {
             aLayerAssigned[i] = true;
             continue;
@@ -8170,7 +8270,7 @@ void cgLandscapeTextureData::optimizeLayers()
         nRemainingLayers++;
 
         // This is a bump layer too?
-        cgLandscapeLayerMaterial * pType = (cgLandscapeLayerMaterial*)mLayers[i].layerType.getResource(false);
+        cgLandscapeLayerMaterial * pType = (cgLandscapeLayerMaterial*)mLayers[i]->layerType.getResource(false);
         if ( pType->getNormalSampler() != CG_NULL )
             nRemainingBumpLayers++;
 
@@ -8188,7 +8288,7 @@ void cgLandscapeTextureData::optimizeLayers()
             // Construct initial default parameters.
             NewBatch.layerCount       = 0;
             NewBatch.swizzle          = false;
-            NewBatch.maximumLayers        = 4;
+            NewBatch.maximumLayers    = 4;
             
             // Have prior batches been constructed (before this one)?
             if ( mRenderBatches.size() > 1 )
@@ -8200,8 +8300,8 @@ void cgLandscapeTextureData::optimizeLayers()
                     // The prior batch used only 2 of the 4 available channels in 
                     // the texture. We can add some more.
                     NewBatch.maximumLayers = 2;
-                    NewBatch.swizzle   = true;
-                    bSwizzledLast       = true;
+                    NewBatch.swizzle       = true;
+                    bSwizzledLast          = true;
                 
                 } // End if we can swizzle.
                 else
@@ -8245,7 +8345,7 @@ void cgLandscapeTextureData::optimizeLayers()
                     continue;
 
                 // Select this if it is a bump layer.
-                cgLandscapeLayerMaterial * pType = (cgLandscapeLayerMaterial*)mLayers[i].layerType.getResource(false);
+                cgLandscapeLayerMaterial * pType = (cgLandscapeLayerMaterial*)mLayers[i]->layerType.getResource(false);
                 if ( pType->getNormalSampler() != CG_NULL )
                 {
                     nSelectedLayer = i;
@@ -8282,7 +8382,7 @@ void cgLandscapeTextureData::optimizeLayers()
                     continue;
 
                 // Select this if it is NOT a bump layer.
-                cgLandscapeLayerMaterial * pType = (cgLandscapeLayerMaterial*)mLayers[i].layerType.getResource(false);
+                cgLandscapeLayerMaterial * pType = (cgLandscapeLayerMaterial*)mLayers[i]->layerType.getResource(false);
                 if ( pType->getNormalSampler() == CG_NULL )
                 {
                     nSelectedLayer = i;
@@ -8390,25 +8490,25 @@ void cgLandscapeTextureData::optimizeLayers()
         // For each layer referenced by the batch
         for ( cgInt32 j = 0; j < Batch.layerCount; ++j )
         {
-            LayerReference & Layer = mLayers[Batch.layers[j]];
+            LayerReference * pLayer = mLayers[Batch.layers[j]];
 
             // Which channel will this layer reference?
             cgInt32 nChannel = j + ((Batch.swizzle == true) ? 2 : 0);
 
             // Has layer location been altered?
-            if ( Layer.combinedBlendMap != Batch.combinedBlendMap || Layer.channel != nChannel )
+            if ( pLayer->combinedBlendMap != Batch.combinedBlendMap || pLayer->channel != nChannel )
             {
                 // Layer data has "moved". Update final layer location.
-                Layer.combinedBlendMap = Batch.combinedBlendMap;
-                Layer.channel          = (cgByte)nChannel;
+                pLayer->combinedBlendMap = Batch.combinedBlendMap;
+                pLayer->channel          = (cgByte)nChannel;
                 
                 // Update the relevant channel in the texture.
-                updateLayerTexture( Layer, cgRect( 0, 0, mBlendMapSize.width, mBlendMapSize.height ) );
+                updateLayerTexture( *pLayer, cgRect( 0, 0, mBlendMapSize.width, mBlendMapSize.height ) );
             
             } // End if changed
 
             // Update combined blend map channel usage information
-            BlendMap.channelUsage |= (1 << Layer.channel);
+            BlendMap.channelUsage |= (1 << pLayer->channel);
 
         } // Next Layer
 
@@ -8446,7 +8546,7 @@ void cgLandscapeTextureData::optimizeLayers()
         // Collect the layer states
         for ( cgInt32 j = 0; j < Batch.layerCount; ++j )
         {
-            cgLandscapeLayerMaterial * pType = (cgLandscapeLayerMaterial*)mLayers[Batch.layers[j]].layerType.getResource();
+            cgLandscapeLayerMaterial * pType = (cgLandscapeLayerMaterial*)mLayers[Batch.layers[j]]->layerType.getResource();
 
             // Collect texturing properties
             cgLandscape::ctLayerData & Data = pBatchData->layers[j];
@@ -8586,7 +8686,7 @@ bool cgLandscapeTextureData::beginDrawPass( cgRenderDriver * pDriver )
     // Set the necessary samplers and collect layer states
     for ( cgInt32 i = 0; i < Batch.layerCount; ++i )
     {
-        cgLandscapeLayerMaterial * pType = (cgLandscapeLayerMaterial*)mLayers[Batch.layers[i]].layerType.getResource();
+        cgLandscapeLayerMaterial * pType = (cgLandscapeLayerMaterial*)mLayers[Batch.layers[i]]->layerType.getResource();
 
         // ToDo: 9999 - This is kinda manual, vs simply being able to call 'pType->Apply()'.
         // I'm not sure how we can make this more generic yet, but the following works for now.
@@ -8794,7 +8894,7 @@ const cgByteArray & cgLandscapeTextureData::getPaintData( ) const
         return Empty;
 
     // Get the paint layer.
-    return mLayers[ mPaintLayer ].blendMapPaint;
+    return mLayers[ mPaintLayer ]->blendMapPaint;
 }
 
 //-----------------------------------------------------------------------------

@@ -1,5 +1,6 @@
 var NAVTREEINDEX6 =
 {
+"cg_navigation_patrol_point_8h_source.html":[2,0,278],
 "cg_navigation_tile_8cpp.html":[2,0,279],
 "cg_navigation_tile_8h.html":[2,0,280],
 "cg_navigation_tile_8h.html#a936b11fe0db989074600f03845adedfc":[2,0,280,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX6 =
 "cg_rendering_capabilities_8h_source.html":[2,0,345],
 "cg_rendering_types_8h.html":[2,0,346],
 "cg_rendering_types_8h.html#a03738a7323d354718d8784e02a4a6044":[2,0,346,41],
-"cg_rendering_types_8h.html#a104e96f0ff3f3e8fcad106f73e7ed563":[2,0,346,37],
-"cg_rendering_types_8h.html#a104e96f0ff3f3e8fcad106f73e7ed563a14117162a7fa9ab86758fbc1bb0c1336":[2,0,346,37,0]
+"cg_rendering_types_8h.html#a104e96f0ff3f3e8fcad106f73e7ed563":[2,0,346,37]
 };

@@ -93,10 +93,11 @@ namespace cgSystemMessages
         // Messages issued by cgWorld
         World_Disposing                 = 7001,
         World_SceneAdded                = 7002,
-        World_SceneLoading              = 7003,
-        World_SceneLoadFailed           = 7004,
-        World_SceneLoaded               = 7005,
-        World_SceneUnloading            = 7006,
+		World_SceneRemoved				= 7003,
+        World_SceneLoading              = 7004,
+        World_SceneLoadFailed           = 7005,
+        World_SceneLoaded               = 7006,
+        World_SceneUnloading            = 7007,
 
         // Messages issued by cgWorldComponent
         WorldComponent_Created          = 8001,

@@ -30,6 +30,10 @@ var cg_world_types_8h =
       [ "ShowCollisionShapes", "cg_world_types_8h.html#aa7d91d49ec0d1b28a2557b23e15aa188a0c003231654e1e0cf90fda42ef3f98c5", null ],
       [ "ShowBones", "cg_world_types_8h.html#aa7d91d49ec0d1b28a2557b23e15aa188a9eed0fb2ed3965b25696651908b9106b", null ]
     ] ],
+    [ "Base", "cg_world_types_8h.html#aa74cc5a9baa201be666cdfbddb6a9d91", [
+      [ "Wireframe", "cg_world_types_8h.html#aa74cc5a9baa201be666cdfbddb6a9d91ad91411b41f1704ca2247efebd6d5b713", null ],
+      [ "TraverseGroups", "cg_world_types_8h.html#aa74cc5a9baa201be666cdfbddb6a9d91a9c149321e67c5518a08bbbe035f3e52f", null ]
+    ] ],
     [ "Base", "cg_world_types_8h.html#a0da2807d89bc281aaedc56c1edbdbd24", [
       [ "Never", "cg_world_types_8h.html#a0da2807d89bc281aaedc56c1edbdbd24ae2284e67ee6fee13e79f8ae95a98c317", null ],
       [ "Always", "cg_world_types_8h.html#a0da2807d89bc281aaedc56c1edbdbd24afb0920becbef155be3563752b65b4361", null ],

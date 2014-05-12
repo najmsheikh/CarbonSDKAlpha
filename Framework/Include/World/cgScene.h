@@ -418,6 +418,9 @@ public:
     bool                        isLoading                   ( ) const;
     cgUInt32                    getRenderClassId            ( const cgString & className ) const;
     const cgFilterExpression::IdentifierArray & getMaterialPropertyIdentifiers( ) const;
+	void						suppressEvents				( bool suppress );
+	bool						isEventSuppressionEnabled	( ) const;
+	bool						clear						( );
 
     // Update Process
     void                        enableUpdates               ( bool enabled );
@@ -519,7 +522,7 @@ public:
     bool                        deleteObjectNodes           ( cgObjectNodeMap & nodes );
     bool                        deleteSceneElement          ( cgSceneElement * element );
     cgObjectNode              * pickClosestNode             ( const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgVector3 & intersectionOut );
-    cgObjectNode              * pickClosestNode             ( const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, bool wireframe, cgFloat wireTolerance, cgVector3 & intersectionOut );
+    cgObjectNode              * pickClosestNode             ( const cgSize & viewportSize, const cgVector3 & rayOrigin, const cgVector3 & rayDirection, cgUInt32 flags, cgFloat wireTolerance, cgVector3 & intersectionOut );
     void                        groupSelected               ( bool asActor );
     cgGroupNode               * groupObjectNodes            ( cgObjectNodeMap & nodes, bool asActor );
     void                        ungroupSelected             ( );
@@ -633,6 +636,7 @@ protected:
     cgScriptHandle          mRenderScript;              // Script based render control logic.
     cgScriptObject        * mScriptObject;              // Reference to the scripted render control object (owned exclusively by the script).
     bool                    mIsLoading;                 // Is the scene in the process of loading?
+	bool					mSuppressEvents;			// Should standard scene events be dispatched?
     
     // Additional Scene Components
     cgPhysicsWorld        * mPhysicsWorld;              // The physics world responsible for handling the dynamics portion of the scene update.

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.15</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
    </div>
   </td>
  </tr>
@@ -180,6 +180,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad7c10e7d5d3f6d618b0e7a93176b58a7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#ad7c10e7d5d3f6d618b0e7a93176b58a7">import</a> (const <a class="el" href="structcg_landscape_import_params.html">cgLandscapeImportParams</a> &amp;params)</td></tr>
 <tr class="memdesc:ad7c10e7d5d3f6d618b0e7a93176b58a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load / initialize the terrain based on the specified parameters.  <a href="#ad7c10e7d5d3f6d618b0e7a93176b58a7"></a><br/></td></tr>
 <tr class="separator:ad7c10e7d5d3f6d618b0e7a93176b58a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3674d42d8f1823557b93e8a321d34348"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#a3674d42d8f1823557b93e8a321d34348">deleteLandscape</a> ()</td></tr>
+<tr class="memdesc:a3674d42d8f1823557b93e8a321d34348"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete the landscape from the world database.  <a href="#a3674d42d8f1823557b93e8a321d34348"></a><br/></td></tr>
+<tr class="separator:a3674d42d8f1823557b93e8a321d34348"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac36072193afcbb5efa8590a8ef6fc3a5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#ac36072193afcbb5efa8590a8ef6fc3a5">heightMapUpdated</a> (const <a class="el" href="structcg_rect.html">cgRect</a> &amp;bounds)</td></tr>
 <tr class="memdesc:ac36072193afcbb5efa8590a8ef6fc3a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called in order to notify us that a specific piece of the heightmap has been updated. Note : Only applies if the Dynamic flag has been used during load.  <a href="#ac36072193afcbb5efa8590a8ef6fc3a5"></a><br/></td></tr>
 <tr class="separator:ac36072193afcbb5efa8590a8ef6fc3a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -579,6 +582,8 @@ Protected Attributes</h2></td></tr>
 Static Protected Attributes</h2></td></tr>
 <tr class="memitem:a6c0b544fe2b3a7b6a41f35ed8dcad212"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#a6c0b544fe2b3a7b6a41f35ed8dcad212">mInsertLandscape</a></td></tr>
 <tr class="separator:a6c0b544fe2b3a7b6a41f35ed8dcad212"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a885b8fdf63ba7f66eba042a0a82417ca"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#a885b8fdf63ba7f66eba042a0a82417ca">mDeleteLandscape</a></td></tr>
+<tr class="separator:a885b8fdf63ba7f66eba042a0a82417ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a875ca24fe00b43c72730cab61d938c8e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#a875ca24fe00b43c72730cab61d938c8e">mInsertProceduralLayer</a></td></tr>
 <tr class="separator:a875ca24fe00b43c72730cab61d938c8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a127d37a29d6ee20e03e4b2b466f555ad"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#a127d37a29d6ee20e03e4b2b466f555ad">mUpdateLandscapeLayout</a></td></tr>
@@ -944,6 +949,23 @@ Static Protected Attributes</h2></td></tr>
 <p>Called just prior to drawing the landscape in order to compute the list of visible terrain blocks and landscape cells. </p>
 
 <p>Reimplemented from <a class="el" href="classcg_spatial_tree.html#a9609bab3ffdd8b38376d107a0df0b897">cgSpatialTree</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3674d42d8f1823557b93e8a321d34348"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgLandscape::deleteLandscape </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Delete the landscape from the world database. </p>
 
 </div>
 </div>
@@ -2445,6 +2467,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a885b8fdf63ba7f66eba042a0a82417ca"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_world_query.html">cgWorldQuery</a> cgLandscape::mDeleteLandscape</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="aa05984c827013199cba5c4108f7b7e58"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3669,7 +3711,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_landscape.html">cgLandscape</a></li>
-    <li class="footer">Generated on Tue Mar 11 2014 07:02:45 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon May 12 2014 08:23:35 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

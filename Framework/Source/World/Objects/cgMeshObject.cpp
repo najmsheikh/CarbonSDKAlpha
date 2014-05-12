@@ -598,7 +598,7 @@ bool cgMeshObject::createTorus( cgFloat fOuterRadius, cgFloat fInnerRadius, cgUI
 /// intersected and also compute the object space intersection distance. 
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgMeshObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance )
+bool cgMeshObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, cgUInt32 nFlags, cgFloat fWireTolerance, cgFloat & fDistance )
 {
     // Retrieve the underlying mesh resource and pick if available
     cgMesh * pMesh = mMesh.getResource(true);
@@ -606,7 +606,7 @@ bool cgMeshObject::pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const c
         return false;
     
     // Pass through
-    return pMesh->pick( pCamera, ViewportSize, pIssuer->getWorldTransform(false), vOrigin, vDir, bWireframe, fWireTolerance, fDistance );
+    return pMesh->pick( pCamera, ViewportSize, pIssuer->getWorldTransform(false), vOrigin, vDir, nFlags, fWireTolerance, fDistance );
 }
 
 //-----------------------------------------------------------------------------

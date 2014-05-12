@@ -214,6 +214,10 @@ cgMesh::cgMesh( cgUInt32 nReferenceId, cgWorld * pWorld, cgMesh * pInit ) : cgWo
         pNewSubset->vertexCount = pSrcSubset->vertexCount;
         mMeshSubsets[i] = pNewSubset;
 
+		// If necessary, enable database updates for subset information.
+		if ( shouldSerialize() )
+			pNewSubset->material.enableDatabaseUpdate( true, true );
+
     } // Next Subset
 
     // Duplicate data group subset lookup tables.
@@ -533,6 +537,25 @@ bool cgMesh::loadResource( )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : onComponentDeleted() (Virtual)
+/// <summary>
+/// When the component is removed from the world, all of its rows needs to be
+/// removed from the world database. This virtual method allows it to do so.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgMesh::onComponentDeleted( )
+{
+	// Dereference all subset materials on deletion only. Standard unload
+	// will just disconnect.
+	for ( size_t i = 0; i < mMeshSubsets.size(); ++i )
+		delete mMeshSubsets[i];
+	mMeshSubsets.clear();
+
+	// Call base class implementation last.
+	cgWorldResourceComponent::onComponentDeleted();
+}
+
+//-----------------------------------------------------------------------------
 //  Name : unloadResource ()
 /// <summary>
 /// If deferred loading is employed, destroy the underlying resources.
@@ -540,14 +563,18 @@ bool cgMesh::loadResource( )
 //-----------------------------------------------------------------------------
 bool cgMesh::unloadResource( )
 {
-    SubsetArray::iterator itSubset;
-    size_t                i;
-
     // Iterate through the different subsets in the mesh and clean up
+	SubsetArray::iterator itSubset;
     for ( itSubset = mMeshSubsets.begin(); itSubset != mMeshSubsets.end(); ++itSubset )
     {
-        if ( *itSubset != CG_NULL )
+        if ( *itSubset )
+		{
+			// Just perform a standard 'disconnect' in the 
+			// regular unload case.
+			(*itSubset)->material.enableDatabaseUpdate(false);
             delete (*itSubset);
+		
+		} // End if valid subset
     
     } // Next Subset
     mMeshSubsets.clear();
@@ -557,7 +584,7 @@ bool cgMesh::unloadResource( )
     mObjectMaterials.clear();
 
     // Release bone palettes and skin data (if any)
-    for ( i = 0; i < mBonePalettes.size(); ++i )
+    for ( size_t i = 0; i < mBonePalettes.size(); ++i )
     {
         if ( mBonePalettes[i] != CG_NULL )
             delete mBonePalettes[i];
@@ -726,6 +753,7 @@ bool cgMesh::loadMesh( cgUInt32 nSourceRefId, cgResourceManager * pManager /* = 
 
         // Iterate through each row returned and generate new subsets
         // in addition to populating the triangle data array.
+		bool bMaterialReplacement = false;
         DataGroupSubsetMap::iterator itDataGroup;
         MaterialSubsetMap::iterator itMaterial;
         mTriangleData.resize( mFaceCount );
@@ -745,8 +773,14 @@ bool cgMesh::loadMesh( cgUInt32 nSourceRefId, cgResourceManager * pManager /* = 
             // Select the final valid material.
             if ( nMaterial > 0 )
             {
-                if ( mManager->loadMaterial( &pSubset->material, mWorld, cgMaterialType::Standard, nMaterial, false, 0, cgDebugSource() ) == false )
-                    throw cgExceptions::ResultException( _T("cgResourceManager::loadMaterial"), cgDebugSource() );
+                if ( !mManager->loadMaterial( &pSubset->material, mWorld, cgMaterialType::Standard, nMaterial, false, 0, cgDebugSource() ) )
+				{
+					// Use default material if none was loaded.
+					generateDefaultMaterial( );
+					pSubset->material = mDefaultMaterial;
+					bMaterialReplacement = true;
+				
+				} // End if failed to load
             
             } // End if material assigned
             else
@@ -760,6 +794,10 @@ bool cgMesh::loadMesh( cgUInt32 nSourceRefId, cgResourceManager * pManager /* = 
             // Add to list for fast linear access, and lookup table for sorted search.
             mMeshSubsets.push_back( pSubset );
             mSubsetLookup[ MeshSubsetKey( pSubset->material, pSubset->dataGroupId ) ] = pSubset;
+
+			// Reconnect subset material to database if necessary.
+			if ( shouldSerialize() )
+				pSubset->material.enableDatabaseUpdate(true);
 
             // Add to data group lookup table
             itDataGroup = mDataGroups.find( pSubset->dataGroupId );
@@ -863,7 +901,13 @@ bool cgMesh::loadMesh( cgUInt32 nSourceRefId, cgResourceManager * pManager /* = 
             if ( nMaterial > 0 )
             {
                 if ( !mManager->loadMaterial( &hMaterial, mWorld, cgMaterialType::Standard, nMaterial, false, 0, cgDebugSource() ) )
-                    throw cgExceptions::ResultException( _T("cgResourceManager::loadMaterial"), cgDebugSource() );
+				{
+					// Use default material if none was loaded.
+					generateDefaultMaterial( );
+					hMaterial = mDefaultMaterial;
+					bMaterialReplacement = true;
+				
+				} // End if failed to load
             
             } // End if material assigned
             else
@@ -943,6 +987,14 @@ bool cgMesh::loadMesh( cgUInt32 nSourceRefId, cgResourceManager * pManager /* = 
         
         } // Next Palette
 
+		// We may need to resort the mesh data if materials were reassigned.
+		if ( bMaterialReplacement && mPrepareStatus != cgMeshStatus::Prepared )
+		{
+			bHardwareCopy = false;
+			sortMeshData( true, bHardwareCopy );
+		
+		} // End if materials replaced
+
         // Create hardware VB/IB as necessary. 
         if ( bHardwareCopy )
         {
@@ -988,7 +1040,7 @@ bool cgMesh::loadMesh( cgUInt32 nSourceRefId, cgResourceManager * pManager /* = 
         } // End if not wrapping
         else
         {
-            // We are wrapping. Everything is already serialized.
+            // We are wrapping. Everything is potentially already serialized....
             mMeshSerialized       = true;
             mDBIndicesDirty       = false;
             mDBFormatDirty        = false;
@@ -4236,10 +4288,9 @@ bool cgMesh::sortMeshData( bool bOptimize, bool bBuildHardwareBuffers )
     MaterialSubsetMap::iterator itMaterial;
     cgUInt32 i, j;
 
-    // Clear out any old data.
-    for ( i = 0; i < mMeshSubsets.size(); ++i )
-        delete mMeshSubsets[i];
-    mMeshSubsets.clear();
+	// Clear out any old data EXCEPT the old subset index
+	// We'll need this in order to understand how to update
+	// the material reference counting later on.
     mDataGroups.clear();
     mMaterials.clear();
     mSubsetLookup.clear();
@@ -4268,9 +4319,10 @@ bool cgMesh::sortMeshData( bool bOptimize, bool bBuildHardwareBuffers )
     } // Next Triangle
 
     // We should now have a complete list of subsets and the number of triangles
-    // which should exist in each. Populate final mesh subset table and update start / count 
+    // which should exist in each. Populate mesh subset table and update start / count 
     // values so that we can correctly generate the new sorted index buffer.
     cgUInt32 nCounter = 0;
+	SubsetArray NewSubsets;
     for ( itSubsetSize = SubsetSizes.begin(); itSubsetSize != SubsetSizes.end(); ++itSubsetSize )
     {
         // Construct a new subset and populate with initial construction 
@@ -4294,7 +4346,7 @@ bool cgMesh::sortMeshData( bool bOptimize, bool bBuildHardwareBuffers )
 
         // Add to list for fast linear access, and lookup table
         // for sorted search.
-        mMeshSubsets.push_back( pSubset );
+        NewSubsets.push_back( pSubset );
         mSubsetLookup[ Key ] = pSubset;
 
         // Add to data group lookup table
@@ -4363,7 +4415,7 @@ bool cgMesh::sortMeshData( bool bOptimize, bool bBuildHardwareBuffers )
     // materials and data groups are added next to one another in the final
     // index buffer. This ensures that we can batch draw all subsets that share 
     // common properties.
-    std::sort( mMeshSubsets.begin(), mMeshSubsets.end(), subsetSortPredicate );
+    std::sort( NewSubsets.begin(), NewSubsets.end(), subsetSortPredicate );
 
     // Perform the same sort on the data group and material mapped lists.
     // Also take the time to build the final list of materials used by this mesh
@@ -4387,9 +4439,9 @@ bool cgMesh::sortMeshData( bool bOptimize, bool bBuildHardwareBuffers )
     // if requested. Otherwise, just copy them over directly.
     pSrcIndices = pDstIndices;
     pDstIndices = mSystemIB;
-    for ( nCounter = 0, i = 0; i < (size_t)mMeshSubsets.size(); ++i )
+    for ( nCounter = 0, i = 0; i < (size_t)NewSubsets.size(); ++i )
     {
-        MeshSubset * pSubset = mMeshSubsets[i];
+        MeshSubset * pSubset = NewSubsets[i];
         
         // Note: Remember that at this stage, the subset's 'vertexCount' member still describes
         // a 'max' vertex (not a count)... We're correcting this later.
@@ -4415,10 +4467,10 @@ bool cgMesh::sortMeshData( bool bOptimize, bool bBuildHardwareBuffers )
     // Rebuild the additional triangle data based on the newly sorted
     // subset data, and also convert the previously recorded maximum
     // vertex value (stored in "VertexCount") into its final form
-    for ( i = 0; i < (cgUInt32)mMeshSubsets.size(); ++i )
+    for ( i = 0; i < (cgUInt32)NewSubsets.size(); ++i )
     {
         // Convert vertex "Max" to "Count"
-        MeshSubset * pSubset = mMeshSubsets[i];
+        MeshSubset * pSubset = NewSubsets[i];
         pSubset->vertexCount = (pSubset->vertexCount - pSubset->vertexStart) + 1;
         
         // Update additional triangle data array.
@@ -4471,6 +4523,27 @@ bool cgMesh::sortMeshData( bool bOptimize, bool bBuildHardwareBuffers )
     // Index data and subsets have been updated and potentially need to be serialized.
     mDBIndicesDirty = true;
     mDBSubsetsDirty = true;
+
+	// If it is necessary for us to serialize, enable reference count updates
+	// for the subset data and update.
+	if ( shouldSerialize() )
+	{
+		for ( i = 0; i < NewSubsets.size(); ++i )
+		{
+			MeshSubset * pSubset = NewSubsets[i];
+			pSubset->material.enableDatabaseUpdate( true, true );
+		
+		} // Next New Subset
+
+	} // End if serializing
+
+	// Destroy old subset data.
+	for ( i = 0; i < mMeshSubsets.size(); ++i )
+	    delete mMeshSubsets[i];
+	mMeshSubsets.clear();
+
+	// Use the new subset data.
+	mMeshSubsets = NewSubsets;
 
     // Update database data as necessary.
     if ( !serializeMesh( ) )
@@ -6235,7 +6308,7 @@ bool cgMesh::pick( const cgVector3 & vOrigin, const cgVector3 & vDir, cgFloat & 
 /// overload supports both wireframe and solid picking.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgMesh::pick( cgCameraNode * pCamera, const cgSize & ViewportSize, const cgTransform & ObjectTransform, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance )
+bool cgMesh::pick( cgCameraNode * pCamera, const cgSize & ViewportSize, const cgTransform & ObjectTransform, const cgVector3 & vOrigin, const cgVector3 & vDir, cgUInt32 nFlags, cgFloat fWireTolerance, cgFloat & fDistance )
 {
     // Mesh must be prepared for picking to be supported.
     if ( mPrepareStatus != cgMeshStatus::Prepared )
@@ -6248,7 +6321,7 @@ bool cgMesh::pick( cgCameraNode * pCamera, const cgSize & ViewportSize, const cg
     if ( mBoundingBox.isPopulated() == true )
     {
         // If we're in wireframe mode, this must be expanded to include the wireframe tolerance.
-        if ( !bWireframe )
+		if ( !(nFlags & cgPickingFlags::Wireframe) )
         {
             if ( !mBoundingBox.intersect( vOrigin, vDir, fDistance, false ) )
                 return false;
@@ -6269,7 +6342,7 @@ bool cgMesh::pick( cgCameraNode * pCamera, const cgSize & ViewportSize, const cg
     cgUInt32 nFace;
     cgMaterialHandle hMaterial;
     cgFloat fLocalDistance = FLT_MAX;
-    if ( pickMeshSubset( 0xFFFFFFFF, pCamera, ViewportSize, ObjectTransform, vOrigin, vDir, bWireframe, fWireTolerance, fLocalDistance, nFace, hMaterial ) == false )
+    if ( pickMeshSubset( 0xFFFFFFFF, pCamera, ViewportSize, ObjectTransform, vOrigin, vDir, nFlags, fWireTolerance, fLocalDistance, nFace, hMaterial ) == false )
         return false;
 
     // Intersected!
@@ -6300,7 +6373,7 @@ bool cgMesh::pickFace( const cgVector3 & vOrigin, const cgVector3 & vDir, cgVect
     } // End if bounds generated
 
     // Now test the physical mesh data.
-    if ( pickMeshSubset( 0xFFFFFFFF, CG_NULL, cgSize(), cgTransform::Identity, vOrigin, vDir, false, 0, fLocalDistance, nFace, hMaterial ) == false )
+    if ( pickMeshSubset( 0xFFFFFFFF, CG_NULL, cgSize(), cgTransform::Identity, vOrigin, vDir, 0, 0, fLocalDistance, nFace, hMaterial ) == false )
         return false;
 
     // Compute the final intersection point and return.
@@ -6315,7 +6388,7 @@ bool cgMesh::pickFace( const cgVector3 & vOrigin, const cgVector3 & vDir, cgVect
 /// a ray for picking etc.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgMesh::pickMeshSubset( cgUInt32 nDataGroupId, cgCameraNode * pCamera, const cgSize & ViewportSize, const cgTransform & ObjectTransform, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, cgFloat fWireTolerance, cgFloat & fDistance, cgUInt32 & nFace, cgMaterialHandle & hMaterial )
+bool cgMesh::pickMeshSubset( cgUInt32 nDataGroupId, cgCameraNode * pCamera, const cgSize & ViewportSize, const cgTransform & ObjectTransform, const cgVector3 & vOrigin, const cgVector3 & vDir, cgUInt32 nFlags, cgFloat fWireTolerance, cgFloat & fDistance, cgUInt32 & nFace, cgMaterialHandle & hMaterial )
 {
     cgFloat          t, fClosestDistance = FLT_MAX;
     cgUInt32         nClosestFace = 0;
@@ -6334,7 +6407,7 @@ bool cgMesh::pickMeshSubset( cgUInt32 nDataGroupId, cgCameraNode * pCamera, cons
         return false;
 
     // Wireframe or solid picking?
-    if ( bWireframe == false )
+	if ( !(nFlags & cgPickingFlags::Wireframe) )
     {
         // Solid picking. Test for intersection against our internal mesh representation
         if ( nDataGroupId == 0xFFFFFFFF )

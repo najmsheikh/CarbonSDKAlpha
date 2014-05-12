@@ -13,7 +13,7 @@ var classcg_dummy_object =
     [ "insertComponentData", "classcg_dummy_object.html#a2bd5a032dad15ffd2eb9cf82316fdc03", null ],
     [ "onComponentCreated", "classcg_dummy_object.html#ab31f4610af621500d8b32dd3bd539f28", null ],
     [ "onComponentLoading", "classcg_dummy_object.html#acada66f0db8ef4b4641bfcc4e63017b4", null ],
-    [ "pick", "classcg_dummy_object.html#a19e983a99af54ed6e2f70b2b07667593", null ],
+    [ "pick", "classcg_dummy_object.html#af7c5d277bdeef9eede93f9e9ec81b939", null ],
     [ "prepareQueries", "classcg_dummy_object.html#a07d3409cb2f245aad0eb3580978ba3bf", null ],
     [ "queryReferenceType", "classcg_dummy_object.html#a13be3e19bf77303447e8913dfe5925e8", null ],
     [ "sandboxRender", "classcg_dummy_object.html#aee6b7117e49ba50c37ca21318a3bcc9f", null ],

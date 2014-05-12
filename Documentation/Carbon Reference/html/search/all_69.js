@@ -175,6 +175,7 @@ var searchData=
   ['isenabled',['isEnabled',['../classcg_u_i_control.html#ad47a1b5995d6e2a2dfde3ddc315c4e8c',1,'cgUIControl::isEnabled() const '],['../classcg_u_i_control.html#a43a5a8fcc28c3a8d3cbd752225e0ccf9',1,'cgUIControl::isEnabled(bool includeParentState) const ']]],
   ['iseof',['isEOF',['../classcg_input_stream.html#a074381983cd166702aa31aae20797b67',1,'cgInputStream']]],
   ['iseven',['isEven',['../namespacecg_math_utility.html#a7d3d6dcdb3d8f29d7ba6536c064e3076',1,'cgMathUtility']]],
+  ['iseventsuppressionenabled',['isEventSuppressionEnabled',['../classcg_scene.html#afe2ea334fd5172476f520ad11e063941',1,'cgScene']]],
   ['isfailed',['isFailed',['../classcg_script.html#abff6d70b9c2cb778b1e399f3958687b9',1,'cgScript']]],
   ['isflagset',['isFlagSet',['../classcg_sphere_tree_sub_node.html#a982165187d74fd1af194b84f1f3bca24',1,'cgSphereTreeSubNode']]],
   ['isflymodeenabled',['isFlyModeEnabled',['../classcg_character_controller.html#a7eb6c5509ce7d23ae5869587349ae9ac',1,'cgCharacterController']]],

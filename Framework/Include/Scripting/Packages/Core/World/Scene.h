@@ -47,6 +47,9 @@ namespace Scene
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "void update( )", asMETHODPR(cgScene,update,(),void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "void render( )", asMETHODPR(cgScene,render,(),void), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "void unload( )", asMETHODPR(cgScene,unload,(),void), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "Scene", "bool clear( )", asMETHODPR(cgScene,clear,(),bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "Scene", "void suppressEvents( bool )", asMETHODPR(cgScene,suppressEvents,(bool),void), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "Scene", "bool isEventSuppressionEnabled( ) const", asMETHODPR(cgScene,isEventSuppressionEnabled,() const,bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "bool isUpdating( ) const", asMETHODPR(cgScene,isUpdating,() const,bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "bool isUpdatingEnabled( ) const", asMETHODPR(cgScene,isUpdatingEnabled,() const,bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "void addRootNode( ObjectNode@+ )", asMETHODPR(cgScene,addRootNode,( cgObjectNode* ),void), asCALL_THISCALL) );
@@ -63,7 +66,7 @@ namespace Scene
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "uint getRenderClassId( const String&in ) const", asMETHODPR(cgScene,getRenderClassId,( const cgString&) const, cgUInt32 ), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "bool beginRenderPass( const String &in )", asMETHODPR(cgScene,beginRenderPass,( const cgString& ), bool), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "void endRenderPass( )", asMETHODPR(cgScene,endRenderPass,( ), void), asCALL_THISCALL) );
-            BINDSUCCESS( engine->registerObjectMethod( "Scene", "ObjectNode@+ pickClosestNode( const Size &in, const Vector3 &in, const Vector3 &in, bool, float, Vector3 &inout )", asMETHODPR(cgScene,pickClosestNode,( const cgSize&, const cgVector3&, const cgVector3&, bool, cgFloat, cgVector3& ), cgObjectNode*), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "Scene", "ObjectNode@+ pickClosestNode( const Size &in, const Vector3 &in, const Vector3 &in, uint32, float, Vector3 &inout )", asMETHODPR(cgScene,pickClosestNode,( const cgSize&, const cgVector3&, const cgVector3&, cgUInt32, cgFloat, cgVector3& ), cgObjectNode*), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "ObjectNode@+ pickClosestNode( const Size &in, const Vector3 &in, const Vector3 &in, Vector3 &inout )", asMETHODPR(cgScene,pickClosestNode,( const cgSize&, const cgVector3&, const cgVector3&, cgVector3& ), cgObjectNode*), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "PhysicsWorld@+ getPhysicsWorld( ) const", asMETHODPR(cgScene,getPhysicsWorld,( ) const, cgPhysicsWorld*), asCALL_THISCALL) );
             BINDSUCCESS( engine->registerObjectMethod( "Scene", "ObjectNode@+ loadObjectNode( uint, CloneMethod, bool )", asMETHODPR(cgScene,loadObjectNode,( cgUInt32, cgCloneMethod::Base, bool ), cgObjectNode*), asCALL_THISCALL) );

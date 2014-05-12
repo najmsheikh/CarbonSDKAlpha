@@ -17,7 +17,7 @@ var classcg_group_node =
     [ "onGroupRefAdded", "classcg_group_node.html#a41132eafcabb7e241818615a58c8b4d8", null ],
     [ "onGroupRefRemoved", "classcg_group_node.html#ae7f1698a7d8609bc5d25d21676cc556e", null ],
     [ "onNodeDeleted", "classcg_group_node.html#abe4a24d89f3bbdf311c072c6676d1c16", null ],
-    [ "pick", "classcg_group_node.html#a147f4cb72f26963cdec8d801272d5979", null ],
+    [ "pick", "classcg_group_node.html#afd2cfc7adf3c532d38b822152d629339", null ],
     [ "queryReferenceType", "classcg_group_node.html#aa24d3df9c949f2ff330fd4c6a006a739", null ],
     [ "setOpen", "classcg_group_node.html#aa55096b2c0b9a2752febb3e1d1aa2dd5", null ],
     [ "setSelected", "classcg_group_node.html#a7da798ac1ce3d8e54105afa465cba85c", null ],

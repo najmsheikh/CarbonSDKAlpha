@@ -18,7 +18,7 @@ var classcg_directional_light_object =
     [ "insertComponentData", "classcg_directional_light_object.html#a2738a60ddf609edc817d7202fcf91d05", null ],
     [ "onComponentCreated", "classcg_directional_light_object.html#a5554f1cd0a621108adf589770be5a54b", null ],
     [ "onComponentLoading", "classcg_directional_light_object.html#a3a0b57fbfecf3f012cf94280f0dfc53e", null ],
-    [ "pick", "classcg_directional_light_object.html#acb4dca93c7ec4502ca3173cbd6e01295", null ],
+    [ "pick", "classcg_directional_light_object.html#aba9e9e58cb3e758537dffc15ada8d1ab", null ],
     [ "prepareQueries", "classcg_directional_light_object.html#aa0caa45404a3352c385a920ce33cc9a8", null ],
     [ "queryReferenceType", "classcg_directional_light_object.html#a7cbc2b86fc9007dad51bda52cc84e948", null ],
     [ "sandboxRender", "classcg_directional_light_object.html#a19916d932a01f3e3b8e40544c0ade445", null ],
