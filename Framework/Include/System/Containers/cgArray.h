@@ -637,6 +637,10 @@ public:
         insert( end(), other.begin(), other.end() );
         return *this;
     }
+    inline bool operator< (const cgArray<value_type> & other ) const
+    {
+        return std::lexicographical_compare(begin(), end(), other.begin(), other.end() );
+	}
 
 private:
     //-------------------------------------------------------------------------
