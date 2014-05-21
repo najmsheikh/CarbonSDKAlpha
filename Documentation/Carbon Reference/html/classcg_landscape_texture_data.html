@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
    </div>
   </td>
  </tr>
@@ -118,6 +118,17 @@ $(document).ready(function(){initNavTree('classcg_landscape_texture_data.html','
  <a href="classcg_landscape_texture_data.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="cg_landscape_8h_source.html">cgLandscape.h</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for cgLandscapeTextureData:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classcg_landscape_texture_data.png" usemap="#cgLandscapeTextureData_map" alt=""/>
+  <map id="cgLandscapeTextureData_map" name="cgLandscapeTextureData_map">
+<area href="classcg_world_component_event_listener.html" title="Abstract interface class from which other classes can derive in order to recieve messages whenever wo..." alt="cgWorldComponentEventListener" shape="rect" coords="0,112,236,136"/>
+<area href="classcg_event_listener.html" title="Abstract interface class from which other listener classes can derive in order to recieve messages wh..." alt="cgEventListener" shape="rect" coords="0,56,236,80"/>
+<area href="classcg_script_interop_1_1_disposable_script_object.html" title="Base class from which objects should be derived if they need to be passed to a script by reference as..." alt="cgScriptInterop::DisposableScriptObject" shape="rect" coords="0,0,236,24"/>
+</map>
+ </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -138,6 +149,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a44fbe2a5dd4d3e68e89eb4d2868f47f0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_texture_data.html#a44fbe2a5dd4d3e68e89eb4d2868f47f0">~cgLandscapeTextureData</a> ()</td></tr>
 <tr class="memdesc:a44fbe2a5dd4d3e68e89eb4d2868f47f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clean up any resources being used. <a href="#a44fbe2a5dd4d3e68e89eb4d2868f47f0"></a><br/></td></tr>
 <tr class="separator:a44fbe2a5dd4d3e68e89eb4d2868f47f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea889ff9e3215b6e3e6b30629d587f3b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_texture_data.html#aea889ff9e3215b6e3e6b30629d587f3b">onComponentModified</a> (<a class="el" href="classcg_reference.html">cgReference</a> *sender, <a class="el" href="structcg_component_modified_event_args.html">cgComponentModifiedEventArgs</a> *e)</td></tr>
+<tr class="memdesc:aea889ff9e3215b6e3e6b30629d587f3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">When a referenced object component is modified, this method is called to allow us to take any appropriate action.  <a href="#aea889ff9e3215b6e3e6b30629d587f3b"></a><br/></td></tr>
+<tr class="separator:aea889ff9e3215b6e3e6b30629d587f3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92414c36bfa0ee8b9b5460de136264b1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_texture_data.html#a92414c36bfa0ee8b9b5460de136264b1">loadLayers</a> ()</td></tr>
 <tr class="memdesc:a92414c36bfa0ee8b9b5460de136264b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load layer data from the database.  <a href="#a92414c36bfa0ee8b9b5460de136264b1"></a><br/></td></tr>
 <tr class="separator:a92414c36bfa0ee8b9b5460de136264b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,6 +185,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:add38be273adb4ae707cfe7a698bda740"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_texture_data.html#add38be273adb4ae707cfe7a698bda740">endDrawPass</a> (<a class="el" href="classcg_render_driver.html">cgRenderDriver</a> *driver)</td></tr>
 <tr class="memdesc:add38be273adb4ae707cfe7a698bda740"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called during rendering in order to complete a rendering pass. Returns false when no more passes are required.  <a href="#add38be273adb4ae707cfe7a698bda740"></a><br/></td></tr>
 <tr class="separator:add38be273adb4ae707cfe7a698bda740"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecd7b936ef644de82e42a8642c67446f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_texture_data.html#aecd7b936ef644de82e42a8642c67446f">updateClutterCells</a> ()</td></tr>
+<tr class="memdesc:aecd7b936ef644de82e42a8642c67446f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called in order to update the per-block clutter instance data for each layer that references a clutter material.  <a href="#aecd7b936ef644de82e42a8642c67446f"></a><br/></td></tr>
+<tr class="separator:aecd7b936ef644de82e42a8642c67446f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88310f51d59801f20307e1822adeeea6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_texture_data.html#a88310f51d59801f20307e1822adeeea6">drawClutter</a> (<a class="el" href="classcg_render_driver.html">cgRenderDriver</a> *driver, <a class="el" href="namespacecg_landscape_render_method.html#a9b26366b0d13b47d2e804ed527d18a69">cgLandscapeRenderMethod::Base</a> method)</td></tr>
+<tr class="memdesc:a88310f51d59801f20307e1822adeeea6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render the clutter (foliage, etc.) contained within this terrain block.  <a href="#a88310f51d59801f20307e1822adeeea6"></a><br/></td></tr>
+<tr class="separator:a88310f51d59801f20307e1822adeeea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63a21932f9b887fc34e842ed43eeaabf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_texture_data.html#a63a21932f9b887fc34e842ed43eeaabf">isPainting</a> () const </td></tr>
 <tr class="memdesc:a63a21932f9b887fc34e842ed43eeaabf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if painting is currently enabled for this block.  <a href="#a63a21932f9b887fc34e842ed43eeaabf"></a><br/></td></tr>
 <tr class="separator:a63a21932f9b887fc34e842ed43eeaabf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -189,9 +209,41 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae8910a605d4f22b04451769379ef38ba"><td class="memItemLeft" align="right" valign="top">const LayerReferenceArray &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_texture_data.html#ae8910a605d4f22b04451769379ef38ba">getLayers</a> () const </td></tr>
 <tr class="memdesc:ae8910a605d4f22b04451769379ef38ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a list of all the terrain texture layers associated with this block.  <a href="#ae8910a605d4f22b04451769379ef38ba"></a><br/></td></tr>
 <tr class="separator:ae8910a605d4f22b04451769379ef38ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classcg_world_component_event_listener"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcg_world_component_event_listener')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcg_world_component_event_listener.html">cgWorldComponentEventListener</a></td></tr>
+<tr class="memitem:a28c90c95b37cbe9f8f73cd99de9bc7bb inherit pub_methods_classcg_world_component_event_listener"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_component_event_listener.html#a28c90c95b37cbe9f8f73cd99de9bc7bb">onComponentCreated</a> (<a class="el" href="classcg_reference.html">cgReference</a> *sender, <a class="el" href="structcg_component_created_event_args.html">cgComponentCreatedEventArgs</a> *e)</td></tr>
+<tr class="separator:a28c90c95b37cbe9f8f73cd99de9bc7bb inherit pub_methods_classcg_world_component_event_listener"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aada83cd9fc08bf5bf91202bd2f5ca26e inherit pub_methods_classcg_world_component_event_listener"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_component_event_listener.html#aada83cd9fc08bf5bf91202bd2f5ca26e">onComponentLoading</a> (<a class="el" href="classcg_reference.html">cgReference</a> *sender, <a class="el" href="structcg_component_loading_event_args.html">cgComponentLoadingEventArgs</a> *e)</td></tr>
+<tr class="separator:aada83cd9fc08bf5bf91202bd2f5ca26e inherit pub_methods_classcg_world_component_event_listener"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac4c6da2a112b46f4a054c0ec6b4567e inherit pub_methods_classcg_world_component_event_listener"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_component_event_listener.html#aac4c6da2a112b46f4a054c0ec6b4567e">onComponentDeleted</a> (<a class="el" href="classcg_reference.html">cgReference</a> *sender)</td></tr>
+<tr class="separator:aac4c6da2a112b46f4a054c0ec6b4567e inherit pub_methods_classcg_world_component_event_listener"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classcg_event_listener"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcg_event_listener')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcg_event_listener.html">cgEventListener</a></td></tr>
+<tr class="memitem:af4bd6ad295f5aab30774738dae42bb20 inherit pub_methods_classcg_event_listener"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_event_listener.html#af4bd6ad295f5aab30774738dae42bb20">~cgEventListener</a> ()</td></tr>
+<tr class="separator:af4bd6ad295f5aab30774738dae42bb20 inherit pub_methods_classcg_event_listener"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classcg_script_interop_1_1_disposable_script_object"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcg_script_interop_1_1_disposable_script_object')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcg_script_interop_1_1_disposable_script_object.html">cgScriptInterop::DisposableScriptObject</a></td></tr>
+<tr class="memitem:a815b9a991113bb99acea9e15af2920a2 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a815b9a991113bb99acea9e15af2920a2">DisposableScriptObject</a> ()</td></tr>
+<tr class="separator:a815b9a991113bb99acea9e15af2920a2 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae47d06d33261be75410289bfbca5a76f inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#ae47d06d33261be75410289bfbca5a76f">~DisposableScriptObject</a> ()</td></tr>
+<tr class="separator:ae47d06d33261be75410289bfbca5a76f inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbb8bf99532976e578bb5c631b6b554c inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#acbb8bf99532976e578bb5c631b6b554c">scriptAddRef</a> ()</td></tr>
+<tr class="separator:acbb8bf99532976e578bb5c631b6b554c inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4dd0fcb0e94571f7af8e2d2afe58120 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#ae4dd0fcb0e94571f7af8e2d2afe58120">scriptReleaseRef</a> ()</td></tr>
+<tr class="separator:ae4dd0fcb0e94571f7af8e2d2afe58120 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ac736e569233a8c1909bd5f3bdfbf6c inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a6ac736e569233a8c1909bd5f3bdfbf6c">scriptDecrementRef</a> ()</td></tr>
+<tr class="separator:a6ac736e569233a8c1909bd5f3bdfbf6c inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36cc028af4f3b6480abfb1830dddc36d inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a36cc028af4f3b6480abfb1830dddc36d">scriptSafeDispose</a> ()</td></tr>
+<tr class="separator:a36cc028af4f3b6480abfb1830dddc36d inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a607a22a9c1cb9252904e5097a1dab7a7 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_script_interop_1_1_disposable_script_object.html#a607a22a9c1cb9252904e5097a1dab7a7">dispose</a> (bool disposeBase)</td></tr>
+<tr class="memdesc:a607a22a9c1cb9252904e5097a1dab7a7 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any memory, references or resources allocated by this object. Derived classes should implement this behavior.  <a href="#a607a22a9c1cb9252904e5097a1dab7a7"></a><br/></td></tr>
+<tr class="separator:a607a22a9c1cb9252904e5097a1dab7a7 inherit pub_methods_classcg_script_interop_1_1_disposable_script_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:a4c21c47a0cb4b3a392bb556e53f6a7a6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_texture_data.html#a4c21c47a0cb4b3a392bb556e53f6a7a6">updateBatchConstants</a> ()</td></tr>
+<tr class="memdesc:a4c21c47a0cb4b3a392bb556e53f6a7a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the constant buffer data for the painted layer rendering batches based on the texture layer parameters.  <a href="#a4c21c47a0cb4b3a392bb556e53f6a7a6"></a><br/></td></tr>
+<tr class="separator:a4c21c47a0cb4b3a392bb556e53f6a7a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae28597813bf5b27dcbe44f5e708ba9ea"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_texture_data.html#ae28597813bf5b27dcbe44f5e708ba9ea">updateClutterCells</a> (<a class="el" href="structcg_landscape_texture_data_1_1_layer_reference.html">LayerReference</a> &amp;layer, const <a class="el" href="structcg_rect.html">cgRect</a> &amp;bounds)</td></tr>
+<tr class="memdesc:ae28597813bf5b27dcbe44f5e708ba9ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called in order to update the per-block clutter instance data for each layer that references a clutter material.  <a href="#ae28597813bf5b27dcbe44f5e708ba9ea"></a><br/></td></tr>
+<tr class="separator:ae28597813bf5b27dcbe44f5e708ba9ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c8acf46a8ec374c85ded1ab2b59ca97"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_texture_data.html#a0c8acf46a8ec374c85ded1ab2b59ca97">updateLayerTexture</a> (<a class="el" href="structcg_landscape_texture_data_1_1_layer_reference.html">LayerReference</a> &amp;layer, const <a class="el" href="structcg_rect.html">cgRect</a> &amp;bounds)</td></tr>
 <tr class="memdesc:a0c8acf46a8ec374c85ded1ab2b59ca97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called in order to reconstruct the renderable blend map for a layer.  <a href="#a0c8acf46a8ec374c85ded1ab2b59ca97"></a><br/></td></tr>
 <tr class="separator:a0c8acf46a8ec374c85ded1ab2b59ca97"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -368,6 +420,34 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Called in order to enable painting for this block. </p>
+
+</div>
+</div>
+<a class="anchor" id="a88310f51d59801f20307e1822adeeea6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgLandscapeTextureData::drawClutter </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_render_driver.html">cgRenderDriver</a> *&#160;</td>
+          <td class="paramname"><em>driver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacecg_landscape_render_method.html#a9b26366b0d13b47d2e804ed527d18a69">cgLandscapeRenderMethod::Base</a>&#160;</td>
+          <td class="paramname"><em>method</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Render the clutter (foliage, etc.) contained within this terrain block. </p>
 
 </div>
 </div>
@@ -615,6 +695,44 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aea889ff9e3215b6e3e6b30629d587f3b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgLandscapeTextureData::onComponentModified </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_reference.html">cgReference</a> *&#160;</td>
+          <td class="paramname"><em>sender</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structcg_component_modified_event_args.html">cgComponentModifiedEventArgs</a> *&#160;</td>
+          <td class="paramname"><em>e</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>When a referenced object component is modified, this method is called to allow us to take any appropriate action. </p>
+
+<p>Reimplemented from <a class="el" href="classcg_world_component_event_listener.html#a304127570be5a997566a4c50ab62c1d8">cgWorldComponentEventListener</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a76ea9a8008eb311f0b8051ceca6ce922"></a>
 <div class="memitem">
 <div class="memproto">
@@ -758,6 +876,84 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set the very specific pixel in the blend map to the current paint value. </p>
+
+</div>
+</div>
+<a class="anchor" id="a4c21c47a0cb4b3a392bb556e53f6a7a6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgLandscapeTextureData::updateBatchConstants </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update the constant buffer data for the painted layer rendering batches based on the texture layer parameters. </p>
+
+</div>
+</div>
+<a class="anchor" id="aecd7b936ef644de82e42a8642c67446f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgLandscapeTextureData::updateClutterCells </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Called in order to update the per-block clutter instance data for each layer that references a clutter material. </p>
+
+</div>
+</div>
+<a class="anchor" id="ae28597813bf5b27dcbe44f5e708ba9ea"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgLandscapeTextureData::updateClutterCells </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcg_landscape_texture_data_1_1_layer_reference.html">LayerReference</a> &amp;&#160;</td>
+          <td class="paramname"><em>layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_rect.html">cgRect</a> &amp;&#160;</td>
+          <td class="paramname"><em>bounds</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called in order to update the per-block clutter instance data for each layer that references a clutter material. </p>
 
 </div>
 </div>
@@ -1183,7 +1379,9 @@ Static Protected Attributes</h2></td></tr>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="cg_landscape_8h_source.html">cgLandscape.h</a></li>
+<li><a class="el" href="cg_landscape_01-_01_copy_8cpp.html">cgLandscape - Copy.cpp</a></li>
 <li><a class="el" href="cg_landscape_8cpp.html">cgLandscape.cpp</a></li>
+<li><a class="el" href="cg_landscape_old_8cpp.html">cgLandscapeOld.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -1191,7 +1389,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_landscape_texture_data.html">cgLandscapeTextureData</a></li>
-    <li class="footer">Generated on Mon May 12 2014 08:23:35 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Wed May 21 2014 19:31:39 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

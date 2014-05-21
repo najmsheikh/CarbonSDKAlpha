@@ -153,7 +153,7 @@ void cgWorldResourceComponent::onComponentModified( cgComponentModifiedEventArgs
     // it is altered in response to event).
     EventListenerList Listeners = mEventListeners;
     for ( itListener = Listeners.begin(); itListener != Listeners.end(); ++itListener )
-        ((cgWorldComponentEventListener*)(*itListener))->onComponentModified( e );
+        ((cgWorldComponentEventListener*)(*itListener))->onComponentModified( this, e );
     
     // Build the message for anyone listening via messaging system
     Msg.messageId      = cgSystemMessages::WorldComponent_Modified;
@@ -182,7 +182,7 @@ bool cgWorldResourceComponent::onComponentCreated( cgComponentCreatedEventArgs *
     // it is altered in response to event).
     EventListenerList Listeners = mEventListeners;
     for ( itListener = Listeners.begin(); itListener != Listeners.end(); ++itListener )
-        ((cgWorldComponentEventListener*)(*itListener))->onComponentCreated( e );
+        ((cgWorldComponentEventListener*)(*itListener))->onComponentCreated( this, e );
     
     // Build the message for anyone listening via messaging system
     Msg.messageId      = cgSystemMessages::WorldComponent_Created;
@@ -251,7 +251,7 @@ bool cgWorldResourceComponent::onComponentLoading( cgComponentLoadingEventArgs *
     // it is altered in response to event).
     EventListenerList Listeners = mEventListeners;
     for ( itListener = Listeners.begin(); itListener != Listeners.end(); ++itListener )
-        ((cgWorldComponentEventListener*)(*itListener))->onComponentLoading( e );
+        ((cgWorldComponentEventListener*)(*itListener))->onComponentLoading( this, e );
     
     // Build the message for anyone listening via messaging system
     Msg.messageId      = cgSystemMessages::WorldComponent_Loading;
@@ -292,7 +292,7 @@ void cgWorldResourceComponent::onComponentDeleted( )
     // it is altered in response to event).
     EventListenerList Listeners = mEventListeners;
     for ( itListener = Listeners.begin(); itListener != Listeners.end(); ++itListener )
-        ((cgWorldComponentEventListener*)(*itListener))->onComponentDeleted( );
+        ((cgWorldComponentEventListener*)(*itListener))->onComponentDeleted( this );
     
     // Build the message for anyone listening via messaging system
     Msg.messageId      = cgSystemMessages::WorldComponent_Deleted;

@@ -9,6 +9,7 @@ var classcg_material =
     [ "beginPopulate", "classcg_material.html#a69395e0025f10f251a730f07a8c9f712", null ],
     [ "beginPopulate", "classcg_material.html#a117d08922a0731f8c27afbe974f5d54c", null ],
     [ "buildPreviewImage", "classcg_material.html#a38748fb2556fa7f4e6bf7dbe1a718d9e", null ],
+    [ "canBatch", "classcg_material.html#a0488bd8ca4beb1928afaec48139bfc11", null ],
     [ "compare", "classcg_material.html#a500e69d0269febe9e8d0b6b5bcca17db", null ],
     [ "dispose", "classcg_material.html#ab3741b156d280dfb58255cb7a7f93984", null ],
     [ "endPopulate", "classcg_material.html#a3518e2fefe6667d9e86eae43c6b15417", null ],

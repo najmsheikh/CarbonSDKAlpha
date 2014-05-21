@@ -30,11 +30,10 @@
 #include <Resources/cgMaterial.h>
 #include <Rendering/cgRenderingTypes.h>
 #include <World/cgWorldQuery.h>
-#include <System/cgPropertyContainer.h>
 
 //-----------------------------------------------------------------------------
 // Forward Declarations
-//-------------------------------------------------------------------   ----------
+//-----------------------------------------------------------------------------
 class cgSampler;
 
 //-----------------------------------------------------------------------------
@@ -91,6 +90,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgMaterial)
     //-------------------------------------------------------------------------
+    virtual bool                canBatch                    ( ) const { return true; }
     virtual cgInt               compare                     ( const cgMaterial & material ) const;
     virtual bool                loadMaterial                ( cgUInt32 sourceRefId, cgResourceManager * manager = CG_NULL );
     virtual bool                apply                       ( cgRenderDriver * driver );
@@ -107,6 +107,7 @@ public:
     const cgVector2           & getBaseScale                ( ) const;
     const cgVector2           & getOffset                   ( ) const;
     cgFloat                     getAngle                    ( ) const;
+    const cgMaterialHandle    & getClutterMaterial          ( ) const;
     bool                        getTilingReduction          ( ) const;
     void                        setColorSampler             ( cgSampler * sampler );
     void                        setNormalSampler            ( cgSampler * sampler );
@@ -114,6 +115,7 @@ public:
     void                        setBaseScale                ( const cgVector2 & scale );
     void                        setOffset                   ( const cgVector2 & offset );
     void                        setAngle                    ( cgFloat angle );
+    void                        setClutterMaterial          ( cgMaterialHandle material );
     void                        enableTilingReduction       ( bool enable );
     bool                        loadColorSampler            ( cgInputStream stream );
     bool                        loadNormalSampler           ( cgInputStream stream );
@@ -129,7 +131,8 @@ protected:
         ScaleDirty              = 0x20,
         OffsetDirty             = 0x40,
         AngleDirty              = 0x80,
-        TilingReductionDirty    = 0x100
+        TilingReductionDirty    = 0x100,
+        ClutterDirty            = 0x200
     };
 
     //-------------------------------------------------------------------------
@@ -157,6 +160,8 @@ protected:
     cgFloat             mAngle;
     /// <summary>Tiling reduction is enabled / disabled for this layer.</summary>
     bool                mTilingReduction;
+    /// <summary>Reference to any clutter material associated with this layer.</summary>
+    cgMaterialHandle    mClutterMaterial;
 
     //-------------------------------------------------------------------------
     // Protected Static Variables
@@ -170,6 +175,7 @@ protected:
     static cgWorldQuery mUpdateOffset;
     static cgWorldQuery mUpdateAngle;
     static cgWorldQuery mUpdateTilingReduction;
+    static cgWorldQuery mUpdateClutter;
     static cgWorldQuery mUpdatePreview;
     static cgWorldQuery mLoadMaterial;
 };

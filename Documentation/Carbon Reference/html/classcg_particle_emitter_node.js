@@ -47,7 +47,7 @@ var classcg_particle_emitter_node =
     [ "getVelocityScaleStrength", "classcg_particle_emitter_node.html#a689ef863db84374f681158b0b597cd9b", null ],
     [ "isGravityEnabled", "classcg_particle_emitter_node.html#a91eb975b39d1785e3594c58a03c114d9", null ],
     [ "isLayerEmissionEnabled", "classcg_particle_emitter_node.html#a809a71b9aeca642901c8940c245954d5", null ],
-    [ "onComponentModified", "classcg_particle_emitter_node.html#a37da6596bbe5c1d3d1953334bf0a846f", null ],
+    [ "onComponentModified", "classcg_particle_emitter_node.html#a25a47f91bce48b6b061513f67bfa548b", null ],
     [ "onNodeCreated", "classcg_particle_emitter_node.html#af8965b8cb4fffde4e1242f6aa00a7d93", null ],
     [ "onNodeLoading", "classcg_particle_emitter_node.html#a8c52c98304e7293a1ab2ff075fe65a38", null ],
     [ "particlesSpent", "classcg_particle_emitter_node.html#a44d3e71ac705fa976390223ba5efa47d", null ],

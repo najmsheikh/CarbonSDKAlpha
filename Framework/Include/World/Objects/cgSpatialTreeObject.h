@@ -132,7 +132,7 @@ public:
     virtual bool                onNodeCreated           ( const cgUID & objectType, cgCloneMethod::Base cloneMethod );
     virtual bool                onNodeLoading           ( const cgUID & objectType, cgWorldQuery * nodeData, cgSceneCell * parentCell, cgCloneMethod::Base cloneMethod );
     virtual bool                registerVisibility      ( cgVisibilitySet * pSet );
-    virtual void                onComponentModified     ( cgComponentModifiedEventArgs * e );
+    virtual void                onComponentModified     ( cgReference * sender, cgComponentModifiedEventArgs * e );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)

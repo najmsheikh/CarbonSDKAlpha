@@ -27,6 +27,7 @@
 #include <World/cgLandscapeTypes.h>
 #include <World/cgWorldQuery.h>
 #include <World/cgSpatialTree.h>
+#include <World/cgWorldComponent.h>
 #include <Resources/cgResourceHandles.h>
 #include <Math/cgLeastSquares.h>
 
@@ -43,6 +44,8 @@ class cgHeightMap;
 class cgTerrainLOD;
 class cgLandscapeSubNode;
 class cgVertexFormat;
+class cgRigidBody;
+class cgClutterCell;
 
 //-----------------------------------------------------------------------------
 // Main Class Declarations
@@ -264,39 +267,11 @@ public:
     bool                            renderPass              ( cgLandscapeRenderMethod::Base pass, cgCameraNode * camera, cgVisibilitySet * visibilityData );
 
     //-------------------------------------------------------------------------
-    // Public Virtual Methods (Overrides cgWorldComponent)
-    //-------------------------------------------------------------------------
-    // ToDo: 9999 - Remove
-    //virtual bool                    onComponentCreated      ( cgComponentCreatedEventArgs * e );
-    //virtual bool                    onComponentLoading      ( cgComponentLoadingEventArgs * e );
-    //virtual void                    onComponentModified     ( cgComponentModifiedEventArgs * e );
-    //virtual void                    onComponentDeleted      ( );
-    //virtual cgString                getDatabaseTable        ( ) const;
-
-    //-------------------------------------------------------------------------
-    // Public Virtual Methods (Overrides cgWorldObject)
-    //-------------------------------------------------------------------------
-    // ToDo: 9999 - Remove
-    //virtual void                    sandboxRender           ( cgUInt32 flags, cgCameraNode * camera, cgVisibilitySet * visibilityData, const cgPlane & gridPlane, cgObjectNode * issuer );
-    //virtual bool                    render                  ( cgCameraNode * camera, cgVisibilitySet * visibilityData, cgObjectNode * issuer );
-    //virtual bool                    renderSubset            ( cgCameraNode * camera, cgVisibilitySet * visibilityData, cgObjectNode * issuer, const ResourceHandle & material );
-    //virtual bool                    pick                    ( cgCameraNode * camera, cgObjectNode * issuer, const cgSize & viewportSize, const cgVector3 & origin, const cgVector3 & direction, cgUInt32 flags, cgFloat wireTolerance, cgFloat & distanceOut );
-    //virtual bool                    isRenderable            ( ) const;
-    //virtual bool                    isShadowCaster          ( ) const;
-    
-    //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgSpatialTree)
     //-------------------------------------------------------------------------
     virtual cgSpatialTreeSubNode  * allocateNode            ( cgSpatialTreeSubNode * init = CG_NULL );
     virtual cgSpatialTreeLeaf     * allocateLeaf            ( cgSpatialTreeLeaf * init = CG_NULL );
     virtual void                    computeVisibility       ( const cgFrustum & frustum, cgVisibilitySet * visibilityData, cgUInt32 flags, cgSpatialTreeInstance * issuer );
-
-    //-------------------------------------------------------------------------
-    // Public Virtual Methods (Overrides cgReference)
-    //-------------------------------------------------------------------------
-    // ToDo: 9999 - Remove
-    //virtual const cgUID           & getReferenceType        ( ) const { return RTID_LandscapeObject; }
-    //virtual bool                    queryReferenceType      ( const cgUID & type ) const;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
@@ -578,6 +553,12 @@ public:
 //-----------------------------------------------------------------------------
 class CGE_API cgTerrainBlock
 {
+    //-------------------------------------------------------------------------
+    // Friend List
+    //-------------------------------------------------------------------------
+    friend class cgLandscape;
+    friend class cgLandscapeTextureData;
+
 public:
     //-------------------------------------------------------------------------
     // Public Enumerations
@@ -650,6 +631,9 @@ public:
     const cgBoundingBox   & getBoundingBox          ( ) const;
     void                    draw                    ( cgRenderDriver * driver, RenderMode mode );
 
+    // TODO FOLIAGE
+    void                    drawClutter             ( cgRenderDriver * driver, cgLandscapeRenderMethod::Base method );
+
     // Properties
     cgInt32                 getCurrentLOD           ( ) const;
     cgUInt32                getBlockIndex           ( ) const;
@@ -669,7 +653,8 @@ protected:
     bool            buildVertexBuffer       ( const cgInt32Array & mipLookUp );
     bool            updateVertexBuffer      ( const cgInt32Array & mipLookUp );
     void            calculateLODVariance    ( );
-    cgUInt32        GetHeightMapIndex       ( cgInt32 x, cgInt32 z ) const;
+    void            buildPhysicsBody        ( );
+    cgUInt32        getHeightMapIndex       ( cgInt32 x, cgInt32 z ) const;
 
     //-------------------------------------------------------------------------
     // Protected Variables
@@ -708,6 +693,10 @@ protected:
     cgLandscapeTextureData* mTextureData;
     /// <summary>Is the block visible?</summary>
     bool                    mVisible;
+    /// <summary>The static physics body used to represent the shape of this terrain block.</summary>
+    cgRigidBody           * mPhysicsBody;
+    /// <summary>List of spatial tree leaf nodes that fall into this block.</summary>
+    cgArray<cgLandscapeSubNode*> mLeafNodes;
 
     //-------------------------------------------------------------------------
     // Protected Static Variables
@@ -741,7 +730,7 @@ public:
     //-----------------------------------------------------------------------------
     // Public Methods
     //---------------------------------------------------------------------------
-    void            updateOcclusionData ( );
+    void            updateOcclusionData ( bool pushUp );
 
     //-----------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgSpatialTreeSubNode)
@@ -756,6 +745,7 @@ public:
     cgPlane             maximumHorizonPlane;    // The maximum horizon plane
     cgVector3         * minimumHorizonPoints;   // Minimum horizon geometry used for building the horizon buffer
     cgVector3         * maximumHorizonPoints;   // Maximum horizon geometry used for testing for occlusion
+    cgLandscapeSubNode* parentNode;             // The parent landscape sub node.
     
 protected:
     //-----------------------------------------------------------------------------
@@ -799,7 +789,7 @@ public:
 /// rendering the block.
 /// </summary>
 //-----------------------------------------------------------------------------
-class CGE_API cgLandscapeTextureData
+class CGE_API cgLandscapeTextureData : public cgWorldComponentEventListener
 {
 public:
     //-------------------------------------------------------------------------
@@ -831,6 +821,8 @@ public:
         cgUInt32                layerId;
         /// <summary>When true, this layer describes temporary 'erasing' data used by the erase painting tools.</summary>
         bool                    eraseLayer;
+        /// <summary>If the layer defines clutter, this array houses the actual clutter cell instances used for managing / rendering the data.</summary>
+        cgArray<cgClutterCell*> clutterCells;
 
     }; // End Struct LayerReference
 
@@ -844,6 +836,11 @@ public:
     //-------------------------------------------------------------------------
      cgLandscapeTextureData( cgLandscape * landscape, cgTerrainBlock * parentBlock );
     ~cgLandscapeTextureData( );
+
+    //-------------------------------------------------------------------------
+    // Public Virtual Methods (Overrides cgWorldComponentEventListener)
+    //-------------------------------------------------------------------------
+    virtual void                onComponentModified ( cgReference * sender, cgComponentModifiedEventArgs * e );
 
     //-------------------------------------------------------------------------
     // Public Methods
@@ -860,6 +857,9 @@ public:
     bool                        beginDraw           ( cgRenderDriver * driver );
     bool                        beginDrawPass       ( cgRenderDriver * driver );
     bool                        endDrawPass         ( cgRenderDriver * driver );
+
+    bool                        updateClutterCells  ( );
+    void                        drawClutter         ( cgRenderDriver * driver, cgLandscapeRenderMethod::Base method );
 
     // Notifications
     // ToDo: 9999 - With material
@@ -923,6 +923,8 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Methods
     //-------------------------------------------------------------------------
+    bool    updateBatchConstants( );
+    bool    updateClutterCells  ( LayerReference & layer, const cgRect & bounds );
     void    updateLayerTexture  ( LayerReference & layer, const cgRect & bounds );
     void    filterPaintLayer    ( cgByteArray & data );
     void    optimizeLayers      ( );

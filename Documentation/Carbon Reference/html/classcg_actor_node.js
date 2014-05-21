@@ -24,7 +24,7 @@ var classcg_actor_node =
     [ "getReferenceType", "classcg_actor_node.html#a9ac5aa91e9c26237e303a67a3c82c1a9", null ],
     [ "isAnimationTrackPlaying", "classcg_actor_node.html#a8698cd5428b435d9cb38f5d3dc405f90", null ],
     [ "isAnimationTrackPlaying", "classcg_actor_node.html#a27748a8105026dcb82e8cf2c2543773b", null ],
-    [ "onComponentModified", "classcg_actor_node.html#ad4f984cb1eed0a3ad11bcd54110c035d", null ],
+    [ "onComponentModified", "classcg_actor_node.html#a0caed65815a904bb5e1febc431e29a90", null ],
     [ "onGroupRefAdded", "classcg_actor_node.html#aa912f34d3abd94909193c89b82df9ac1", null ],
     [ "onGroupRefRemoved", "classcg_actor_node.html#a6920a754b6578fd70a266864cfeef1b3", null ],
     [ "onInstanceIdentifierChange", "classcg_actor_node.html#ae62e1494cf5c24e30208c04d63796678", null ],

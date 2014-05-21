@@ -1,0 +1,117 @@
+bool upgrade_1000008_to_1000009( World @ world )
+{
+    String sql;
+
+	///////////////////////////////////////////////////////////////////////////
+    // A new column has been added to the landscape layer material table.
+    ///////////////////////////////////////////////////////////////////////////
+	
+	// Copy existing layer table data into temporary table and drop the original.
+	sql  = "CREATE TEMPORARY TABLE [TEMP_Materials::LandscapeLayer] AS SELECT * FROM [Materials::LandscapeLayer];";
+	sql += "DROP TABLE [Materials::LandscapeLayer];";
+
+	// Create the updated table.
+	sql += "CREATE TABLE [Materials::LandscapeLayer] (";
+	sql += "  [RefId] integer NOT NULL PRIMARY KEY, ";
+	sql += "  [Name] varchar(128), ";
+	sql += "  [ColorSamplerId] integer, ";
+	sql += "  [NormalSamplerId] integer, ";
+	sql += "  [ScaleU] real, ";
+	sql += "  [ScaleV] real, ";
+	sql += "  [BaseScaleU] real, ";
+	sql += "  [BaseScaleV] real, ";
+	sql += "  [OffsetU] real, ";
+	sql += "  [OffsetV] real, ";
+	sql += "  [Rotation] real, ";
+	sql += "  [TilingReduction] tinyint(1), ";
+	sql += "  [AssociatedClutterId] integer DEFAULT 0, ";
+	sql += "  [PreviewImage] blob, ";
+	sql += "  [RefCount] integer DEFAULT 0);";
+
+	sql += "  CREATE TRIGGER [Materials::LandscapeLayer_OnDelete]";
+	sql += "  BEFORE DELETE";
+	sql += "  ON [Materials::LandscapeLayer]";
+	sql += "  BEGIN";
+	sql += "    DELETE FROM [Scenes::MaterialUsage] WHERE MaterialId=old.RefId;";
+	sql += "  END;";
+
+	// Copy data over to new table.
+	sql += "INSERT INTO [Materials::LandscapeLayer] SELECT";
+	sql += "  [RefId], ";
+	sql += "  [Name], ";
+	sql += "  [ColorSamplerId], ";
+	sql += "  [NormalSamplerId], ";
+	sql += "  [ScaleU], ";
+	sql += "  [ScaleV], ";
+	sql += "  [BaseScaleU], ";
+	sql += "  [BaseScaleV], ";
+	sql += "  [OffsetU], ";
+	sql += "  [OffsetV], ";
+	sql += "  [Rotation], ";
+	sql += "  [TilingReduction], ";
+	sql += "  0, ";
+	sql += "  [PreviewImage], ";
+	sql += "  [RefCount] FROM [TEMP_Materials::LandscapeLayer];";
+
+	// Drop the temporary table.
+	sql += "DROP TABLE [TEMP_Materials::LandscapeLayer];";
+
+	// Execute the query
+	if ( !world.executeQuery( sql, false ) )
+		return false;
+    
+	///////////////////////////////////////////////////////////////////////////
+    // Added new Materials::Clutter and Materials::Clutter::FoliageLayers
+	// tables.
+    ///////////////////////////////////////////////////////////////////////////
+	
+    // Create the tables.
+    sql  = "CREATE TABLE [Materials::Clutter] (";
+	sql += "  [RefId] integer NOT NULL PRIMARY KEY, ";
+	sql += "  [Name] varchar(128), ";
+	sql += "  [PreviewImage] blob, ";
+	sql += "  [RefCount] integer DEFAULT (0));";
+	sql += "CREATE TRIGGER [Materials::Clutter_OnDelete]";
+	sql += "  BEFORE DELETE";
+	sql += "  ON [Materials::Clutter]";
+	sql += "  BEGIN";
+	sql += "    DELETE FROM [Scenes::MaterialUsage] WHERE MaterialId=old.RefId;  ";
+	sql += "    DELETE FROM [Materials::Clutter::VegetationLayers] WHERE MaterialId=old.RefId;";
+	sql += "  END;";
+
+	sql += "CREATE TABLE [Materials::Clutter::FoliageLayers] (";
+	sql += "  [LayerId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, ";
+	sql += "  [MaterialId] integer, ";
+	sql += "  [Name] varchar(128), ";
+	sql += "  [RenderMethod] smallint DEFAULT 0, ";
+	sql += "  [AnimationMethod] smallint DEFAULT 0, ";
+	sql += "  [MinWidth] real, ";
+	sql += "  [MaxWidth] real, ";
+	sql += "  [MinHeight] real, ";
+	sql += "  [MaxHeight] REAL, ";
+	sql += "  [GrowthChance] real, ";
+	sql += "  [ClusterElements] smallint DEFAULT 3, ";
+	sql += "  [ClusterEmbed] real DEFAULT 0, ";
+	sql += "  [ClusterSeparation] real DEFAULT 1, ";
+	sql += "  [ClusterRadius] real DEFAULT 0, ";
+	sql += "  [Seed] integer DEFAULT 0, ";
+	sql += "  [ColorSamplerId] integer DEFAULT 0, ";
+	sql += "  [NormalSamplerId] integer DEFAULT 0, ";
+	sql += "  [SpecularSamplerId] integer DEFAULT 0, ";
+	sql += "  [Color0] integer, ";
+	sql += "  [Color1] integer, ";
+	sql += "  [FadeBeginDistance] real, ";
+	sql += "  [FadeEndDistance] real);";
+	sql += "CREATE INDEX [Materials::Clutter::VegetationLayer_MaterialIdIndex] ON [Materials::Clutter::FoliageLayers] ([MaterialId]);";
+
+	// Execute
+    if ( !world.executeQuery( sql, false ) )
+        return false;
+
+    // Update version number to 1.00.0009
+    if ( !world.executeQuery( "UPDATE [Configuration] SET Version=1,Subversion=0,Revision=9 WHERE Type='Primary'", false ) )
+        return false;
+
+    // Success!
+    return true;
+}

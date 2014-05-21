@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
    </div>
   </td>
  </tr>
@@ -137,9 +137,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a32a1364129db57d5a90022bb1744add7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_sub_node.html#a32a1364129db57d5a90022bb1744add7">~cgLandscapeSubNode</a> ()</td></tr>
 <tr class="memdesc:a32a1364129db57d5a90022bb1744add7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class destructor. <a href="#a32a1364129db57d5a90022bb1744add7"></a><br/></td></tr>
 <tr class="separator:a32a1364129db57d5a90022bb1744add7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70abc5d4c3c9b98c362664b922918736"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_sub_node.html#a70abc5d4c3c9b98c362664b922918736">updateOcclusionData</a> ()</td></tr>
-<tr class="memdesc:a70abc5d4c3c9b98c362664b922918736"><td class="mdescLeft">&#160;</td><td class="mdescRight">The terrain data contained within this node has either been updated or we're loading / compiling for the first time. Compute the occlusion planes and geometry required.  <a href="#a70abc5d4c3c9b98c362664b922918736"></a><br/></td></tr>
-<tr class="separator:a70abc5d4c3c9b98c362664b922918736"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4c75081b4f2536beaa2df332bc812a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_sub_node.html#af4c75081b4f2536beaa2df332bc812a8">updateOcclusionData</a> (bool pushUp)</td></tr>
+<tr class="memdesc:af4c75081b4f2536beaa2df332bc812a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The terrain data contained within this node has either been updated or we're loading / compiling for the first time. Compute the occlusion planes and geometry required.  <a href="#af4c75081b4f2536beaa2df332bc812a8"></a><br/></td></tr>
+<tr class="separator:af4c75081b4f2536beaa2df332bc812a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f9887b6074678532c8c61d70531b525"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_sub_node.html#a6f9887b6074678532c8c61d70531b525">nodeConstructed</a> ()</td></tr>
 <tr class="memdesc:a6f9887b6074678532c8c61d70531b525"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will be called whenever a node has been fully constructed by whichever build function is executing. This allows any derived class to perform any post build processing.  <a href="#a6f9887b6074678532c8c61d70531b525"></a><br/></td></tr>
 <tr class="separator:a6f9887b6074678532c8c61d70531b525"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -212,6 +212,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a8db35ebf59390620727edf79b6e50c2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa35e579c67d1107a333a8f4f530090db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_vector3.html">cgVector3</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_sub_node.html#aa35e579c67d1107a333a8f4f530090db">maximumHorizonPoints</a></td></tr>
 <tr class="separator:aa35e579c67d1107a333a8f4f530090db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace83c139d0c2193c78d2b074a80cf74e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_landscape_sub_node.html">cgLandscapeSubNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_sub_node.html#ace83c139d0c2193c78d2b074a80cf74e">parentNode</a></td></tr>
+<tr class="separator:ace83c139d0c2193c78d2b074a80cf74e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -381,14 +383,15 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a70abc5d4c3c9b98c362664b922918736"></a>
+<a class="anchor" id="af4c75081b4f2536beaa2df332bc812a8"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void cgLandscapeSubNode::updateOcclusionData </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bPushUp</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -487,9 +490,23 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ace83c139d0c2193c78d2b074a80cf74e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_landscape_sub_node.html">cgLandscapeSubNode</a>* cgLandscapeSubNode::parentNode</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="cg_landscape_8h_source.html">cgLandscape.h</a></li>
+<li><a class="el" href="cg_landscape_01-_01_copy_8cpp.html">cgLandscape - Copy.cpp</a></li>
 <li><a class="el" href="cg_landscape_8cpp.html">cgLandscape.cpp</a></li>
+<li><a class="el" href="cg_landscape_old_8cpp.html">cgLandscapeOld.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -497,7 +514,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_landscape_sub_node.html">cgLandscapeSubNode</a></li>
-    <li class="footer">Generated on Mon May 12 2014 08:23:35 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Wed May 21 2014 19:31:38 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

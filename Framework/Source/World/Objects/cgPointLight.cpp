@@ -2736,7 +2736,7 @@ bool cgPointLightNode::renderFrustum( cgCameraNode * pRenderCamera, cgInt32 nFru
 /// order to notify any listeners of this fact.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgPointLightNode::onComponentModified( cgComponentModifiedEventArgs * e )
+void cgPointLightNode::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
 {
     // What property was modified?
     if ( e->context == _T("OuterRange") || e->context == _T("RangeAdjust") || e->context == _T("ApplyRescale") )
@@ -2766,7 +2766,7 @@ void cgPointLightNode::onComponentModified( cgComponentModifiedEventArgs * e )
     } // End if Range | RangeAdjust | ApplyRescale
 
     // Call base class implementation last
-    cgLightNode::onComponentModified( e );
+    cgLightNode::onComponentModified( sender, e );
 
 }
 

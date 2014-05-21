@@ -1,4 +1,48 @@
---Table:: Materials::LandscapeLayer
+--Table: Materials::Clutter::FoliageLayers
+
+CREATE TABLE [Materials::Clutter::FoliageLayers] (
+  [LayerId] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [MaterialId] integer, 
+  [Name] varchar(128), 
+  [RenderMethod] smallint DEFAULT 0, 
+  [AnimationMethod] smallint DEFAULT 0, 
+  [MinWidth] real, 
+  [MaxWidth] real, 
+  [MinHeight] real, 
+  [MaxHeight] REAL, 
+  [GrowthChance] real, 
+  [ClusterElements] smallint DEFAULT 3, 
+  [ClusterEmbed] real DEFAULT 0, 
+  [ClusterSeparation] real DEFAULT 1, 
+  [ClusterRadius] real DEFAULT 0, 
+  [Seed] integer DEFAULT 0, 
+  [ColorSamplerId] integer DEFAULT 0, 
+  [NormalSamplerId] integer DEFAULT 0, 
+  [SpecularSamplerId] integer DEFAULT 0, 
+  [Color0] integer, 
+  [Color1] integer, 
+  [FadeBeginDistance] real, 
+  [FadeEndDistance] real);
+
+CREATE INDEX [Materials::Clutter::VegetationLayer_MaterialIdIndex] ON [Materials::Clutter::FoliageLayers] ([MaterialId]);
+
+--Table: Materials::Clutter
+
+CREATE TABLE [Materials::Clutter] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [Name] varchar(128), 
+  [PreviewImage] blob, 
+  [RefCount] integer DEFAULT (0));
+
+CREATE TRIGGER [Materials::Clutter_OnDelete]
+BEFORE DELETE
+ON [Materials::Clutter]
+BEGIN
+  DELETE FROM [Scenes::MaterialUsage] WHERE MaterialId=old.RefId;  
+  DELETE FROM [Materials::Clutter::VegetationLayers] WHERE MaterialId=old.RefId;
+END;
+
+--Table: Materials::LandscapeLayer
 
 CREATE TABLE [Materials::LandscapeLayer] (
   [RefId] integer NOT NULL PRIMARY KEY, 
@@ -13,6 +57,7 @@ CREATE TABLE [Materials::LandscapeLayer] (
   [OffsetV] real,
   [Rotation] real,
   [TilingReduction] tinyint(1),
+  [AssociatedClutterId] integer DEFAULT 0,
   [PreviewImage] blob, 
   [RefCount] integer DEFAULT 0);
 CREATE TRIGGER [Materials::LandscapeLayer_OnDelete]

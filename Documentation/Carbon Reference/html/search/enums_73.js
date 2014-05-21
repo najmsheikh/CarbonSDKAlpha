@@ -2,7 +2,7 @@ var searchData=
 [
   ['sandboxrendermethod',['SandboxRenderMethod',['../classcg_navigation_mesh_element.html#a9c58d3f2aea4659dc4d2679017416998',1,'cgNavigationMeshElement']]],
   ['seekorigin',['SeekOrigin',['../classcg_input_stream.html#a074dc4e7b0553d24a4096291bb2bf531',1,'cgInputStream']]],
-  ['serializedirtyflags',['SerializeDirtyFlags',['../classcg_landscape_layer_material.html#a010ef3cc89bbab5852f11c9a61d39c0e',1,'cgLandscapeLayerMaterial::SerializeDirtyFlags()'],['../classcg_standard_material.html#a253bc8f6d60c77a6a3754f559ce84a51',1,'cgStandardMaterial::SerializeDirtyFlags()']]],
+  ['serializedirtyflags',['SerializeDirtyFlags',['../classcg_foliage_clutter_layer.html#a99dd7fe526f93c1c6d80f0ef40fd2459',1,'cgFoliageClutterLayer::SerializeDirtyFlags()'],['../classcg_clutter_material.html#aba7ae13a96ca9e4afc66b1c894f91cbd',1,'cgClutterMaterial::SerializeDirtyFlags()'],['../classcg_landscape_layer_material.html#a010ef3cc89bbab5852f11c9a61d39c0e',1,'cgLandscapeLayerMaterial::SerializeDirtyFlags()'],['../classcg_standard_material.html#a253bc8f6d60c77a6a3754f559ce84a51',1,'cgStandardMaterial::SerializeDirtyFlags()']]],
   ['shadowcubeface',['ShadowCubeFace',['../classcg_point_light_object.html#ac8cca83c54e7119cc7e38f467a71b153',1,'cgPointLightObject']]],
   ['shadowmapprocess',['ShadowMapProcess',['../classcg_point_light_object.html#a82e2b3ce3f08455fbaea0c3c8bda37da',1,'cgPointLightObject']]],
   ['shadowoperation',['ShadowOperation',['../classcg_shadow_generator.html#aa1c8a6486bc6c7a89f5325540b23540e',1,'cgShadowGenerator']]],

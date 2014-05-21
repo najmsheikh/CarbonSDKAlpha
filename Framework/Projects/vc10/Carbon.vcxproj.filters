@@ -343,6 +343,9 @@
     <Filter Include="Source Files\Scripting\Angelscript-JIT">
       <UniqueIdentifier>{0eb77f0d-746c-4818-9e8e-811d43b200ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\System\Containers">
+      <UniqueIdentifier>{d52e58c4-ae4d-4b25-bab0-08b81a32e4f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\cgBase.cpp">
@@ -1161,6 +1164,15 @@
     <ClCompile Include="..\..\Lib\AngelScript-JIT\virtual_asm_x86.cpp">
       <Filter>Source Files\Scripting\Angelscript-JIT</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Physics\Shapes\cgDisplacementShape.cpp">
+      <Filter>Source Files\Physics\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\World\Elements\cgLandscapeElement.cpp">
+      <Filter>Source Files\World\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Resources\cgClutterMaterial.cpp">
+      <Filter>Source Files\Resources\Materials</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Lib\AngelScript\source\as_array.h">
@@ -1214,7 +1226,7 @@
     <ClInclude Include="..\..\Lib\AngelScript\source\as_module.h">
       <Filter>Source Files\Scripting\Angelscript\Include</Filter>
     </ClInclude>
-	<ClInclude Include="..\..\Lib\AngelScript\source\as_namespace.h">
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_namespace.h">
       <Filter>Source Files\Scripting\Angelscript\Include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Lib\AngelScript\source\as_objecttype.h">
@@ -2264,9 +2276,6 @@
     <ClInclude Include="..\..\Include\System\Platform\cgWinThreading.h">
       <Filter>Header Files\System\Platform</Filter>
     </ClInclude>
-	<ClInclude Include="..\..\Include\System\Containers\cgArray.h">
-      <Filter>Header Files\System\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\Rendering\cgBillboardBuffer.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
@@ -2527,6 +2536,18 @@
     </ClInclude>
     <ClInclude Include="..\..\Lib\AngelScript-JIT\virtual_asm.h">
       <Filter>Source Files\Scripting\Angelscript-JIT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\World\Elements\cgLandscapeElement.h">
+      <Filter>Header Files\World\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Resources\cgClutterMaterial.h">
+      <Filter>Header Files\Resources\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Physics\Shapes\cgDisplacementShape.h">
+      <Filter>Header Files\Physics\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\Containers\cgArray.h">
+      <Filter>Header Files\System\Containers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -50,6 +50,7 @@ cgWorldQuery cgLandscapeLayerMaterial::mUpdateScale;
 cgWorldQuery cgLandscapeLayerMaterial::mUpdateOffset;
 cgWorldQuery cgLandscapeLayerMaterial::mUpdateAngle;
 cgWorldQuery cgLandscapeLayerMaterial::mUpdateTilingReduction;
+cgWorldQuery cgLandscapeLayerMaterial::mUpdateClutter;
 cgWorldQuery cgLandscapeLayerMaterial::mUpdatePreview;
 cgWorldQuery cgLandscapeLayerMaterial::mLoadMaterial;
 
@@ -73,6 +74,12 @@ cgLandscapeLayerMaterial::cgLandscapeLayerMaterial( cgUInt32 referenceId, cgWorl
     mAngle           = 0.0f;
     mTilingReduction = true;
 
+    // The clutter material handle should manage the resource as an 'owner' 
+    // handle. This will ensure that soft (database) reference counting will 
+    // be considered and that the object ownership is correctly recorded.
+    mClutterMaterial.setOwnerDetails( this );
+    mClutterMaterial.enableDatabaseUpdate( (isInternalReference() == false) );
+
     // Local component type as represented in the database is equivalent
     // to the numeric value assigned to 'cgMaterialType::LandscapeLayer'.
     mComponentTypeId = (cgUInt32)cgMaterialType::LandscapeLayer;
@@ -94,6 +101,12 @@ cgLandscapeLayerMaterial::cgLandscapeLayerMaterial( cgUInt32 referenceId, cgWorl
     mOffset          = cgVector2(0,0);
     mAngle           = 0.0f;
     mTilingReduction = true;
+
+    // The clutter material handle should manage the resource as an 'owner' 
+    // handle. This will ensure that soft (database) reference counting will 
+    // be considered and that the object ownership is correctly recorded.
+    mClutterMaterial.setOwnerDetails( this );
+    mClutterMaterial.enableDatabaseUpdate( (isInternalReference() == false) );
 
     // Local component type as represented in the database is equivalent
     // to the numeric value assigned to 'cgMaterialType::LandscapeLayer'.
@@ -119,6 +132,15 @@ cgLandscapeLayerMaterial::cgLandscapeLayerMaterial( cgUInt32 referenceId, cgWorl
     mAngle           = init->mAngle;
     mTilingReduction = init->mTilingReduction;
     mSurfaceShader   = init->mSurfaceShader;
+
+    // The clutter material handle should manage the resource as an 'owner' 
+    // handle. This will ensure that soft (database) reference counting will 
+    // be considered and that the object ownership is correctly recorded.
+    mClutterMaterial.setOwnerDetails( this );
+    mClutterMaterial.enableDatabaseUpdate( (isInternalReference() == false) );
+
+    // Duplicate clutter material.
+    mClutterMaterial = init->mClutterMaterial;
 
     // Duplicate sampler data
     mColorSampler    = mManager->cloneSampler( world, isInternalReference(), init->mColorSampler );
@@ -152,6 +174,17 @@ void cgLandscapeLayerMaterial::dispose( bool disposeBase )
 {
     // We are in the process of disposing?
     mDisposing = true;
+
+    // We should simply 'disconnect' from the clutter material, never
+    // physically remove the reference from the database.
+    mClutterMaterial.enableDatabaseUpdate( false );
+
+    // Release the resources we're managing (if any).
+    mClutterMaterial.close();
+
+    // Re-enable clutter material handle database updates in case
+    // the object is resurrected.
+    mClutterMaterial.enableDatabaseUpdate( (isInternalReference() == false) );
 
     // Dispose base.
     if ( disposeBase == true )
@@ -204,7 +237,7 @@ void cgLandscapeLayerMaterial::prepareQueries()
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         if ( mInsertMaterial.isPrepared() == false )
-            mInsertMaterial.prepare( mWorld, _T("INSERT INTO 'Materials::LandscapeLayer' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14)"), true );  
+            mInsertMaterial.prepare( mWorld, _T("INSERT INTO 'Materials::LandscapeLayer' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15)"), true );  
         if ( mUpdateName.isPrepared() == false )
             mUpdateName.prepare( mWorld, _T("UPDATE 'Materials::LandscapeLayer' SET Name=?1 WHERE RefId=?2"), true );  
         if ( mUpdateSamplers.isPrepared() == false )
@@ -219,6 +252,8 @@ void cgLandscapeLayerMaterial::prepareQueries()
             mUpdateAngle.prepare( mWorld, _T("UPDATE 'Materials::LandscapeLayer' SET Rotation=?1 WHERE RefId=?2"), true );  
         if ( mUpdateTilingReduction.isPrepared() == false )
             mUpdateTilingReduction.prepare( mWorld, _T("UPDATE 'Materials::LandscapeLayer' SET TilingReduction=?1 WHERE RefId=?2"), true );  
+        if ( mUpdateClutter.isPrepared() == false )
+            mUpdateClutter.prepare( mWorld, _T("UPDATE 'Materials::LandscapeLayer' SET AssociatedClutterId=?1 WHERE RefId=?2"), true );  
         if ( mUpdatePreview.isPrepared() == false )
             mUpdatePreview.prepare( mWorld, _T("UPDATE 'Materials::LandscapeLayer' SET PreviewImage=?1 WHERE RefId=?2"), true ); 
     
@@ -277,11 +312,14 @@ bool cgLandscapeLayerMaterial::serializeMaterial( )
             // Quality
             mInsertMaterial.bindParameter( 12, mTilingReduction );
 
+            // Clutter
+            mInsertMaterial.bindParameter( 13, mClutterMaterial.getReferenceId() );
+
             // Preview Image
-            mInsertMaterial.bindParameter( 13, CG_NULL, 0 );
+            mInsertMaterial.bindParameter( 14, CG_NULL, 0 );
 
             // Database ref count (just in case it has already been adjusted)
-            mInsertMaterial.bindParameter( 14, mSoftRefCount );
+            mInsertMaterial.bindParameter( 15, mSoftRefCount );
 
             // Process!
             if ( !mInsertMaterial.step( true )  )
@@ -449,6 +487,27 @@ bool cgLandscapeLayerMaterial::serializeMaterial( )
 
         } // End if tiling reduction dirty
 
+        // Serialize clutter properties
+        if ( mDBDirtyFlags & ClutterDirty )
+        {
+            mUpdateClutter.bindParameter( 1, mClutterMaterial.getReferenceId() );
+            mUpdateClutter.bindParameter( 2, mReferenceId );
+            
+            // Process!
+            if ( mUpdateClutter.step( true ) == false )
+            {
+                cgString error;
+                mUpdateClutter.getLastError( error );
+                throw cgExceptions::ResultException( cgString::format(_T("Failed to update clutter properties for landscape layer material resource '0x%x'. Error: %s"), mReferenceId, error.c_str()), cgDebugSource() );
+
+            } // End if failed
+
+            // Property has been serialized
+            mDBDirtyFlags &= ~ClutterDirty;
+
+        } // End if clutter properties dirty
+
+
         // Commit recorded changes.
         mWorld->commitTransaction( _T("serializeMaterial") );
 
@@ -558,6 +617,35 @@ bool cgLandscapeLayerMaterial::loadMaterial( cgUInt32 sourceRefId, cgResourceMan
 
         // Quality
         mLoadMaterial.getColumn( _T("TilingReduction"), mTilingReduction );
+
+        // Clutter material
+        cgUInt32 clutterId;
+        mLoadMaterial.getColumn( _T("AssociatedClutterId"), clutterId );
+        if ( clutterId )
+        {
+            cgMaterialHandle clutterMaterial;
+            mManager->loadMaterial( &clutterMaterial, mWorld, cgMaterialType::Clutter, clutterId, false, 0, cgDebugSource() );
+
+            // If this is not a new material (i.e. we're somehow simply re-loading an existing material)
+            // then just skip the resource handle swap to save a headache :)
+            if ( clutterMaterial != mClutterMaterial )
+            {
+                // We should now take ownership of this resource. First close
+                // our existing material handle since we need to change the handle
+                // options (see below) without interfering with the release.
+                mClutterMaterial.close();
+                
+                // Since we're reloading prior information, the database ref count should
+                // NOT be incremented when we attach (i.e. we're just reconnecting).
+                mClutterMaterial.enableDatabaseUpdate( false );
+
+                // Take ownership and then restore handle options.
+                mClutterMaterial = clutterMaterial;
+                mClutterMaterial.enableDatabaseUpdate( (isInternalReference() == false) );
+
+            } // End if different mesh
+
+        } // End if defines clutter
         
         // Preview Image
         // mLoadMaterial.getColumn( 22, CG_NULL, 0 ); // ToDo: 9999
@@ -671,6 +759,11 @@ bool cgLandscapeLayerMaterial::buildPreviewImage( cgScene * scene, cgRenderView 
 //-----------------------------------------------------------------------------
 void cgLandscapeLayerMaterial::onComponentDeleted( )
 {
+    // Remove our physical reference to any clutter material. Full database 
+    // update and potentially removal should be allowed to occur (i.e. a full 
+    // de-reference rather than a simple disconnect) in this case.
+    mClutterMaterial.close();
+
     // Remove our physical references to any child samplers. Full database update 
     // and potentially removal should be allowed to occur (i.e. a full 
     // de-reference rather than a simple disconnect) in this case.
@@ -703,6 +796,12 @@ cgInt cgLandscapeLayerMaterial::compare( const cgMaterial & material ) const
 
     // Rapid numeric / handle only tests
     const cgLandscapeLayerMaterial & m = (const cgLandscapeLayerMaterial&)material;
+
+    // Compare clutter handles.
+    if ( mClutterMaterial < m.mClutterMaterial )
+        return -1;
+    else if ( mClutterMaterial > m.mClutterMaterial )
+        return 1;
 
     // Compare samplers
     if ( !mColorSampler && m.mColorSampler )
@@ -1031,6 +1130,33 @@ void cgLandscapeLayerMaterial::setAngle( cgFloat value )
 }
 
 //-----------------------------------------------------------------------------
+// Name : setClutterMaterial ( )
+/// <summary>
+/// Set the clutter definition material associated with this layer (if any).
+/// The landscape will be populated with the clutter defined by this material
+/// wherever the layer may be painted.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgLandscapeLayerMaterial::setClutterMaterial( cgMaterialHandle material )
+{
+    // Is this a no-op?
+    if ( material == mClutterMaterial )
+        return;
+
+    // Update internal member
+    cgUInt32 oldClutterMaterialId = material.getReferenceId();
+    mClutterMaterial = material;
+
+    // Angle is now dirty
+    mDBDirtyFlags |= ClutterDirty;
+    serializeMaterial();
+
+    // Notify listeners that material data has changed.
+    static const cgString strContext = _T("ClutterMaterial");
+    onComponentModified( &cgComponentModifiedEventArgs( strContext, oldClutterMaterialId ) );
+}
+
+//-----------------------------------------------------------------------------
 // Name : getTilingReduction ( )
 /// <summary>
 /// Get the flag that indicates whether or not tiling reduction should be
@@ -1040,6 +1166,18 @@ void cgLandscapeLayerMaterial::setAngle( cgFloat value )
 bool cgLandscapeLayerMaterial::getTilingReduction( ) const
 {
     return mTilingReduction;
+}
+
+//-----------------------------------------------------------------------------
+// Name : getClutterMaterial ( )
+/// <summary>
+/// Retrieve the clutter definition material associated with this landscape
+/// layer (if any).
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgMaterialHandle & cgLandscapeLayerMaterial::getClutterMaterial( ) const
+{
+    return mClutterMaterial;
 }
 
 //-----------------------------------------------------------------------------

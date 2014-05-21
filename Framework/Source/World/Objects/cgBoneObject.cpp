@@ -743,7 +743,7 @@ cgObjectNode * cgBoneNode::allocateClone( const cgUID & type, cgUInt32 reference
 /// order to notify any listeners of this fact.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgBoneNode::onComponentModified( cgComponentModifiedEventArgs * e )
+void cgBoneNode::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
 {
     // What was modified?
     if ( e->context == _T("InitialCollisionState") )
@@ -762,7 +762,7 @@ void cgBoneNode::onComponentModified( cgComponentModifiedEventArgs * e )
     } // End if HasCollisionVolume
     
     // Call base class implementation last
-    cgObjectNode::onComponentModified( e );
+    cgObjectNode::onComponentModified( sender, e );
 }
 
 //-----------------------------------------------------------------------------

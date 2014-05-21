@@ -98,6 +98,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgMaterial)
     //-------------------------------------------------------------------------
+    virtual bool                    canBatch                    ( ) const { return true; }
     virtual cgInt                   compare                     ( const cgMaterial & material ) const;
     virtual bool                    loadMaterial                ( cgUInt32 sourceRefId, cgResourceManager * resourceManager = CG_NULL );
     virtual bool                    apply                       ( cgRenderDriver * driver );

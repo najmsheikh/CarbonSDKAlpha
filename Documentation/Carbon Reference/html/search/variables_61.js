@@ -19,7 +19,7 @@ var searchData=
   ['align',['align',['../structcg_u_i_element_area.html#ad054ee9f60c7fbba82d4ef963cca92d2',1,'cgUIElementArea']]],
   ['alignment',['alignment',['../structcg_constant_desc.html#a1a0671838110b900175547cb83950fdb',1,'cgConstantDesc::alignment()'],['../structcg_constant_type_desc.html#abd92eb358cf2f73a64a4a56980d21101',1,'cgConstantTypeDesc::alignment()']]],
   ['alinear',['aLinear',['../structcg_image_processor_1_1_samplers.html#aa0e3fbb086e20cf3a8d769d2ea100363',1,'cgImageProcessor::Samplers']]],
-  ['alldirty',['AllDirty',['../classcg_animation_set.html#abc7ba76e82d2f47a88a535d0e0ddb4df',1,'cgAnimationSet::AllDirty()'],['../classcg_material.html#a50ab97a18dfa8a8a82c3df3c3c8b5a90',1,'cgMaterial::AllDirty()']]],
+  ['alldirty',['AllDirty',['../classcg_animation_set.html#abc7ba76e82d2f47a88a535d0e0ddb4df',1,'cgAnimationSet::AllDirty()'],['../classcg_clutter_layer.html#a3571acb3b399b27ebae939453dfe7647',1,'cgClutterLayer::AllDirty()'],['../classcg_material.html#a50ab97a18dfa8a8a82c3df3c3c8b5a90',1,'cgMaterial::AllDirty()']]],
   ['alphablendstate',['alphaBlendState',['../structcg_lighting_system_states.html#a26fcaae4bc3605d07a53ee56eecf7c66',1,'cgLightingSystemStates']]],
   ['alphamaskamount',['alphaMaskAmount',['../structcg_glare_processor_1_1__cb_bright_pass.html#aced8ad4f9114603c27017c26832e705a',1,'cgGlareProcessor::_cbBrightPass']]],
   ['alphatest',['alphaTest',['../structcg_render_driver_1_1_export_vars.html#a912118bf014a1d0fdc3963c734d501a6',1,'cgRenderDriver::ExportVars']]],

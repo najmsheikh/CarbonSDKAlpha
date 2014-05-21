@@ -29,6 +29,7 @@ var classcg_array =
     [ "insert", "classcg_array.html#a15174b2b57bd81a0d21d628c742ad90b", null ],
     [ "insert", "classcg_array.html#a5f7bac165065c8a950411496fb691136", null ],
     [ "insert", "classcg_array.html#a48be5ad8a01843a4e7c8a2d5f3a37b10", null ],
+    [ "operator<", "classcg_array.html#a4a00bd99a31330774eea8db578011931", null ],
     [ "operator=", "classcg_array.html#a4b80595aa2fcabf3dbb1c7308ffe43f7", null ],
     [ "operator[]", "classcg_array.html#a26a16d2a702ee03241685958678ba3ba", null ],
     [ "operator[]", "classcg_array.html#ab9f319a9fdd4627eaf17080ebb576e45", null ],

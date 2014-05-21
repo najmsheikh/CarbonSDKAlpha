@@ -13,7 +13,7 @@ var classcg_group_node =
     [ "getLocalBoundingBox", "classcg_group_node.html#a9a2f792f210f1061f00c00e3735cfc06", null ],
     [ "getReferenceType", "classcg_group_node.html#a4209492925c129ee9a51aafcdcf601c8", null ],
     [ "isOpen", "classcg_group_node.html#a67c91d59f5cdabd7a66c88340ebc21a6", null ],
-    [ "onComponentModified", "classcg_group_node.html#aa0e32099b51e75afad254a23afe3a704", null ],
+    [ "onComponentModified", "classcg_group_node.html#a72d45cc08319f1196272dd0c60e4f760", null ],
     [ "onGroupRefAdded", "classcg_group_node.html#a41132eafcabb7e241818615a58c8b4d8", null ],
     [ "onGroupRefRemoved", "classcg_group_node.html#ae7f1698a7d8609bc5d25d21676cc556e", null ],
     [ "onNodeDeleted", "classcg_group_node.html#abe4a24d89f3bbdf311c072c6676d1c16", null ],

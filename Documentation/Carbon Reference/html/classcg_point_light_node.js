@@ -36,7 +36,7 @@ var classcg_point_light_node =
     [ "getShadowFaceNeighbors", "classcg_point_light_node.html#a8423d9880728563ad83c32e3ffbc59b7", null ],
     [ "getShadowMapEdgeProcess", "classcg_point_light_node.html#a44346000bc12bde2503279822f70d527", null ],
     [ "getShadowUpdateRate", "classcg_point_light_node.html#a9396d78f8c58ac7c56b7dcdfa5daca0e", null ],
-    [ "onComponentModified", "classcg_point_light_node.html#a15132e63b57533b45c6ced02fdaa31d6", null ],
+    [ "onComponentModified", "classcg_point_light_node.html#aa644d619797079caeb0ed38060b9b8a2", null ],
     [ "pointInVolume", "classcg_point_light_node.html#a73677f525d71ae8b4028719c694caa9b", null ],
     [ "postCreate", "classcg_point_light_node.html#a22bc6f2dbc6a347ff76a699d02f9c11d", null ],
     [ "queryReferenceType", "classcg_point_light_node.html#a1c815efabc5ca9f2e20d5e7b6d38773e", null ],

@@ -7,6 +7,7 @@ var classcg_bounding_box =
     [ "closestPoint", "classcg_bounding_box.html#a144b4410ec03d2ae38ccfb20d3618892", null ],
     [ "containsPoint", "classcg_bounding_box.html#a10f7421890dc978cd52635bfd91e4dda", null ],
     [ "containsPoint", "classcg_bounding_box.html#a6e55b7f29d04b34dc9401a7ddd3bc13b", null ],
+    [ "containsPoint", "classcg_bounding_box.html#a6fe4182574ec28c114442f98cd7dd6e3", null ],
     [ "depth", "classcg_bounding_box.html#a38503d6513859d92a1eca08bfcf03814", null ],
     [ "fromPoints", "classcg_bounding_box.html#a73aab2c305e38eba6cc4af40c1352619", null ],
     [ "getCenter", "classcg_bounding_box.html#a4b624f58b1ce60350a3004426b199372", null ],

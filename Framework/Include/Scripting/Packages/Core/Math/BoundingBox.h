@@ -57,6 +57,7 @@ namespace BoundingBox
             BINDSUCCESS( engine->registerObjectMethod( "BoundingBox", "bool intersect( const Vector3 &in, const Vector3 &in, const Vector3&, const BoundingBox& ) const", asMETHODPR(cgBoundingBox,intersect,( const cgVector3&, const cgVector3&, const cgVector3&, const cgBoundingBox& ) const, bool ), asCALL_THISCALL ) );
             BINDSUCCESS( engine->registerObjectMethod( "BoundingBox", "bool containsPoint( const Vector3 &in ) const", asMETHODPR(cgBoundingBox,containsPoint,( const cgVector3& ) const, bool ), asCALL_THISCALL ) );
             BINDSUCCESS( engine->registerObjectMethod( "BoundingBox", "bool containsPoint( const Vector3 &in, const Vector3 &in ) const", asMETHODPR(cgBoundingBox,containsPoint,( const cgVector3&, const cgVector3& ) const, bool ), asCALL_THISCALL ) );
+            BINDSUCCESS( engine->registerObjectMethod( "BoundingBox", "bool containsPoint( const Vector3 &in, float ) const", asMETHODPR(cgBoundingBox,containsPoint,( const cgVector3&, cgFloat ) const, bool ), asCALL_THISCALL ) );
             BINDSUCCESS( engine->registerObjectMethod( "BoundingBox", "Vector3 closestPoint( const Vector3 &in ) const", asMETHODPR(cgBoundingBox,closestPoint,( const cgVector3& ) const, cgVector3 ), asCALL_THISCALL ) );
             BINDSUCCESS( engine->registerObjectMethod( "BoundingBox", "void validate( )", asMETHODPR(cgBoundingBox,validate,( ), void ), asCALL_THISCALL ) );
             BINDSUCCESS( engine->registerObjectMethod( "BoundingBox", "void reset( )", asMETHODPR(cgBoundingBox,reset,( ), void ), asCALL_THISCALL ) );

@@ -40,7 +40,7 @@ var classcg_camera_node =
     [ "isDepthOfFieldEnabled", "classcg_camera_node.html#a88ee0dc8913b87ad2471c369397cb6c9", null ],
     [ "isFrustumLocked", "classcg_camera_node.html#a4fc4ac92d86c1c5e40ba6f21f3786f42", null ],
     [ "lockFrustum", "classcg_camera_node.html#a3d205bcf7d75e840a1c84533b1e9f776", null ],
-    [ "onComponentModified", "classcg_camera_node.html#a57dd835f31151cc70995ecc118f01f4d", null ],
+    [ "onComponentModified", "classcg_camera_node.html#a4ff0bf531d9bd9028aedbe7158dc55ad", null ],
     [ "projectionInterlace", "classcg_camera_node.html#a8ea1d7ca2b146ab1ad89ba845c61496c", null ],
     [ "queryReferenceType", "classcg_camera_node.html#a36fcce948a0243a00015498a3845f101", null ],
     [ "recordCurrentMatrices", "classcg_camera_node.html#a665223ffcaff5d2a4815d6ee99ddacb5", null ],

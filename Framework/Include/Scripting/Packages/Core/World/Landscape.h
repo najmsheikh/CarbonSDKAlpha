@@ -39,6 +39,8 @@ namespace Landscape
             BINDSUCCESS( engine->registerEnumValue( "LandscapeRenderMethod", "TerrainShadowFill" , cgLandscapeRenderMethod::TerrainShadowFill ) );
             BINDSUCCESS( engine->registerEnumValue( "LandscapeRenderMethod", "TerrainGBufferFill", cgLandscapeRenderMethod::TerrainGBufferFill ) );
             BINDSUCCESS( engine->registerEnumValue( "LandscapeRenderMethod", "TerrainGBufferPost", cgLandscapeRenderMethod::TerrainGBufferPost ) );
+            BINDSUCCESS( engine->registerEnumValue( "LandscapeRenderMethod", "ClutterDepthFill"  , cgLandscapeRenderMethod::ClutterDepthFill ) );
+            BINDSUCCESS( engine->registerEnumValue( "LandscapeRenderMethod", "ClutterGBufferFill", cgLandscapeRenderMethod::ClutterGBufferFill ) );
 
             ///////////////////////////////////////////////////////////////////////
             // cgLandscapeFlags (Enum)

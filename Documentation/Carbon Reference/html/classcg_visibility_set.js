@@ -10,6 +10,7 @@ var classcg_visibility_set =
     [ "addVisibleMaterial", "classcg_visibility_set.html#adfd2cd27bbfc4cbe6892085639fccf07", null ],
     [ "addVisibleObject", "classcg_visibility_set.html#a336ebc1c95788fce412a953678e13869", null ],
     [ "clear", "classcg_visibility_set.html#a25b411baa2fe1d4fa76d0b42e03204aa", null ],
+    [ "clearVisibleGroups", "classcg_visibility_set.html#a56cb637eddfff3edc09ebf3f4c7062ae", null ],
     [ "compute", "classcg_visibility_set.html#a3ba69307ab2636d7cc394871511fafd1", null ],
     [ "dispose", "classcg_visibility_set.html#a33022e9f85713dddd2a205fab1aec3d5", null ],
     [ "getResultId", "classcg_visibility_set.html#a6df5389145f6222ddfb736bde6f167ae", null ],

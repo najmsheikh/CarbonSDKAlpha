@@ -42,6 +42,7 @@ var searchData=
   ['float',['Float',['../namespacecg_constant_type.html#a2d9d0eec0cb355603edb3383600dba99a8596c5ac38196bee9ec88e5140ba5bb4',1,'cgConstantType::Float()'],['../namespacecg_script_argument_type.html#a5650d75b4dfb5bdcafcbab0cc6aacd0fa859c7391f275ce110cbfea8faff2d61e',1,'cgScriptArgumentType::Float()']]],
   ['floatingpoint',['FloatingPoint',['../namespacecg_format_search_flags.html#a8c7781209131b41f1a16a0415e97409aa6bad833f0bb6bac05cd38dc8f436ea2c',1,'cgFormatSearchFlags']]],
   ['fogmodel',['FogModel',['../namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a81093014afa219ecf9fd6c053cbbd90b',1,'cgSystemState']]],
+  ['foliage',['Foliage',['../namespacecg_clutter_type.html#ab3ff58eb17442529670fc39690115167af3de2f2d8cecddd7404e8eee193732bc',1,'cgClutterType']]],
   ['force_5f32bit',['Force_32bit',['../classcg_audio_codec.html#ae4ab3056deb15bbfc456e5b006a1cd3fad6bc9709b9fbc265a813061e96bfae12',1,'cgAudioCodec']]],
   ['forcenew',['ForceNew',['../namespacecg_resource_flags.html#ae8b450953398e7d4e56c4989f6ecb073add475113321614fa13a9e24373369861',1,'cgResourceFlags']]],
   ['fourchannels',['FourChannels',['../namespacecg_format_search_flags.html#a8c7781209131b41f1a16a0415e97409aa7d593f1a0d45fc8e4b6c0b752a1363a9',1,'cgFormatSearchFlags']]],

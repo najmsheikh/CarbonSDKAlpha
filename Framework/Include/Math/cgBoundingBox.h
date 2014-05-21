@@ -59,6 +59,7 @@ public:
     bool            intersect           ( const cgVector3 & v0, const cgVector3 & v1, const cgVector3 & v2, const cgBoundingBox & triangleBounds ) const;
     bool            containsPoint       ( const cgVector3 & point ) const;
     bool            containsPoint       ( const cgVector3 & point, const cgVector3 & tolerance ) const;
+    bool            containsPoint       ( const cgVector3 & point, cgFloat tolerance ) const;
     cgVector3       closestPoint        ( const cgVector3 & sourcePoint ) const;
     void            validate            ( );
     void            reset               ( );

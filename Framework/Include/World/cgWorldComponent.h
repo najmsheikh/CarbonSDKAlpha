@@ -36,6 +36,7 @@
 //-----------------------------------------------------------------------------
 class cgWorld;
 class cgWorldQuery;
+class cgWorldComponent;
 
 //-----------------------------------------------------------------------------
 // Globally Unique Type Id(s)
@@ -96,6 +97,12 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
+    virtual void    onComponentModified ( cgReference * sender, cgComponentModifiedEventArgs * e ) {};
+    virtual void    onComponentCreated  ( cgReference * sender, cgComponentCreatedEventArgs * e ) {};
+    virtual void    onComponentLoading  ( cgReference * sender, cgComponentLoadingEventArgs * e ) {};
+    virtual void    onComponentDeleted  ( cgReference * sender ) {};
+
+private:
     virtual void    onComponentModified ( cgComponentModifiedEventArgs * e ) {};
     virtual void    onComponentCreated  ( cgComponentCreatedEventArgs * e ) {};
     virtual void    onComponentLoading  ( cgComponentLoadingEventArgs * e ) {};

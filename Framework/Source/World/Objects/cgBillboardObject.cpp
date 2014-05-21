@@ -717,7 +717,7 @@ bool cgBillboardNode::queryReferenceType( const cgUID & type ) const
 /// order to notify any listeners of this fact.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgBillboardNode::onComponentModified( cgComponentModifiedEventArgs * e )
+void cgBillboardNode::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
 {
     static const cgString BillboardAlignment = _T("BillboardAlignment");
     if ( e->context == BillboardAlignment )
@@ -756,7 +756,7 @@ void cgBillboardNode::onComponentModified( cgComponentModifiedEventArgs * e )
     } // End if other changes
 
     // Call base class implementation last
-    cgObjectNode::onComponentModified( e );
+    cgObjectNode::onComponentModified( sender, e );
 }
 
 //-----------------------------------------------------------------------------

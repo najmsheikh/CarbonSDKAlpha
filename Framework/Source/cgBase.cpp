@@ -93,6 +93,7 @@
 #include <World/Elements/cgBSPVisTreeElement.h>
 #include <World/Elements/cgNavigationMeshElement.h>
 #include <World/Elements/cgSkyElement.h>
+#include <World/Elements/cgLandscapeElement.h>
 
 // Physics Controllers
 #include <Physics/Controllers/cgCharacterController.h>
@@ -313,6 +314,7 @@ bool cgEngineInit( const CGEConfig & Config, cgLogOutput * pOutput /* = CG_NULL 
     cgSceneElement::registerType( RTID_BSPVisTreeElement    , _T("Visibility Tree"), cgBSPVisTreeElement::allocateNew );
     cgSceneElement::registerType( RTID_NavigationMeshElement, _T("Navigation Mesh"), cgNavigationMeshElement::allocateNew );
     cgSceneElement::registerType( RTID_SkyElement           , _T("Sky")            , cgSkyElement::allocateNew );
+    cgSceneElement::registerType( RTID_LandscapeElement     , _T("Landscape")      , cgLandscapeElement::allocateNew );
 
     // Initialize the main script engine
     cgScriptEngine * pEngine = cgScriptEngine::getInstance();

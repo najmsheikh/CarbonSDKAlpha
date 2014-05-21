@@ -7,6 +7,7 @@ var searchData=
   ['mappedfile',['MappedFile',['../namespacecg_stream_type.html#a51fb2dd6b8e37d239ef6a4e5167f8956a913aaca050d006ded1f4b00598c1da60',1,'cgStreamType']]],
   ['master',['Master',['../namespacecg_world_type.html#ae25700bef3e243c265450227a0ceb796ab227bfac303f615dbe65bd5dcfd0c88b',1,'cgWorldType']]],
   ['material',['Material',['../namespacecg_resource_type.html#ab3ea99a2ba657fda52b52d2d23099ed9a19dbfbcbdcfcc2c15b356051c4ce45f1',1,'cgResourceType']]],
+  ['materialpropertiesdirty',['MaterialPropertiesDirty',['../classcg_foliage_clutter_layer.html#a99dd7fe526f93c1c6d80f0ef40fd2459a7de9fa3edb40807abbb64e890b33416c',1,'cgFoliageClutterLayer']]],
   ['max',['Max',['../namespacecg_blend_operation.html#a9da37b7b3eacbd1d74ec7ffbc5fff775a5f8694376fcf64a590b418e57ac454b7',1,'cgBlendOperation']]],
   ['maximum',['Maximum',['../classcg_bezier_spline2.html#aabada3f0020df73222d70debd93dd6daa67a71f3b949b3c6a1c47c50e25ab9032',1,'cgBezierSpline2']]],
   ['maximumblendindex',['MaximumBlendIndex',['../namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8acf6952fd844522a670f60fd8bb6d2f21',1,'cgSystemState']]],

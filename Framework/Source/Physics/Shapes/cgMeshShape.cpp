@@ -758,7 +758,6 @@ cgInt cgMeshShape::onGetFacesInAABB( void * const userData, const cgFloat * cons
 /// <summary>
 /// Compare the physics shapes to see if they describe the same data.
 /// </summary>
-/// <copydetails cref="cgScriptInterop::DisposableScriptObject::dispose()" />
 //-----------------------------------------------------------------------------
 cgInt cgMeshShape::compare( cgPhysicsShape * pShape ) const
 {
@@ -807,9 +806,9 @@ bool cgMeshShapeCacheKey::operator<( const cgPhysicsShapeCacheKey & Key ) const
     {
         cgMeshShape * pMeshShape = (cgMeshShape*)Key.mShape;
         cgInt nResult = (mMesh == pMeshShape->mMesh) ? 0 : (mMesh < pMeshShape->mMesh) ? -1 : 1;
-        if ( nResult != 0 ) return (nResult < 0) ? true : false;
+        if ( nResult != 0 ) return (nResult < 0);
         nResult = mOffset.compare( pMeshShape->mOffset );
-        if ( nResult != 0 ) return (nResult < 0) ? true : false;
+        if ( nResult != 0 ) return (nResult < 0);
 
         // Exact match (not less than).
         return false;

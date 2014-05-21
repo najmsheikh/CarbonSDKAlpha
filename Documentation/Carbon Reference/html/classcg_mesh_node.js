@@ -19,7 +19,7 @@ var classcg_mesh_node =
     [ "getReferenceType", "classcg_mesh_node.html#acc418ca5db066d167ba2ce8647ad155f", null ],
     [ "getShadowStage", "classcg_mesh_node.html#aefa667136acf6e29def5f6929863ed8c", null ],
     [ "getSubElementCategories", "classcg_mesh_node.html#a4015e859dde559e8acc3c21deda9f1ab", null ],
-    [ "onComponentModified", "classcg_mesh_node.html#a7f6ab1b2039da38cc0e5d74c7afd4033", null ],
+    [ "onComponentModified", "classcg_mesh_node.html#ad532b92b9140abd16f9d6e55cf2cfe60", null ],
     [ "onNodeCreated", "classcg_mesh_node.html#a78a00f3d7886e1a6bba2dd54fe90e0b4", null ],
     [ "onNodeLoading", "classcg_mesh_node.html#aedb57cf5cf89a0de645250dbb417875e", null ],
     [ "onResolvePendingUpdates", "classcg_mesh_node.html#ac6da376f1501a225f684edeceec96414", null ],

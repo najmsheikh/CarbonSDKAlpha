@@ -1016,6 +1016,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\Source\Physics\Shapes\cgDisplacementShape.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\Source\Physics\Shapes\cgMeshShape.cpp"
 						>
 					</File>
@@ -1312,6 +1316,10 @@
 					Name="Materials"
 					>
 					<File
+						RelativePath="..\..\Source\Resources\cgClutterMaterial.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\Source\Resources\cgLandscapeLayerMaterial.cpp"
 						>
 					</File>
@@ -1569,6 +1577,10 @@
 					>
 					<File
 						RelativePath="..\..\Source\World\Elements\cgBSPVisTreeElement.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\World\Elements\cgLandscapeElement.cpp"
 						>
 					</File>
 					<File
@@ -5814,6 +5826,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\Include\Physics\Shapes\cgDisplacementShape.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\Include\Physics\Shapes\cgMeshShape.h"
 						>
 					</File>
@@ -6017,6 +6033,10 @@
 				<Filter
 					Name="Materials"
 					>
+					<File
+						RelativePath="..\..\Include\Resources\cgClutterMaterial.h"
+						>
+					</File>
 					<File
 						RelativePath="..\..\Include\Resources\cgLandscapeLayerMaterial.h"
 						>
@@ -6283,6 +6303,10 @@
 					>
 					<File
 						RelativePath="..\..\Include\World\Elements\cgBSPVisTreeElement.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Include\World\Elements\cgLandscapeElement.h"
 						>
 					</File>
 					<File

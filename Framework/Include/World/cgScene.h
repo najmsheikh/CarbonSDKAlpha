@@ -188,6 +188,7 @@ public:
     // Public Virtual Methods
     //-------------------------------------------------------------------------
     virtual void    onSceneLoadProgress     ( cgSceneLoadProgressEventArgs * e ) {};
+    virtual void    onSceneReloaded         ( cgSceneEventArgs * e ) {};
     virtual void    onSceneDirtyChange      ( cgSceneEventArgs * e ) {};
     virtual void    onNodeAdded             ( cgNodeUpdatedEventArgs * e ) {};
     virtual void    onNodeDeleted           ( cgNodeUpdatedEventArgs * e ) {};
@@ -548,6 +549,7 @@ public:
     // Public Virtual Methods
     //-------------------------------------------------------------------------
     virtual void                onSceneLoadProgress         ( cgSceneLoadProgressEventArgs * e );
+    virtual void                onSceneReloaded             ( cgSceneEventArgs * e );
     virtual void                onSceneDirtyChange          ( cgSceneEventArgs * e );
     virtual void                onNodeAdded                 ( cgNodeUpdatedEventArgs * e );
     virtual void                onNodeNameChange            ( cgNodeUpdatedEventArgs * e );

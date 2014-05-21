@@ -13,6 +13,7 @@ var classcg_scene_event_listener =
     [ "onSceneElementAdded", "classcg_scene_event_listener.html#a85e4c2284aa1f3d6340f2ae014d834f4", null ],
     [ "onSceneElementDeleted", "classcg_scene_event_listener.html#abe36a02c51bce49b63e0d6714f736d5b", null ],
     [ "onSceneLoadProgress", "classcg_scene_event_listener.html#a6e1ec6184ecb72908d081d051c15ea90", null ],
+    [ "onSceneReloaded", "classcg_scene_event_listener.html#a1d87ec6328086efb70879cc8dd4c7471", null ],
     [ "onSelectionCleared", "classcg_scene_event_listener.html#a071a8300e500774caf568ed7f5a10eea", null ],
     [ "onSelectionSetAdded", "classcg_scene_event_listener.html#a2810114a4c59a3a541419a1349ad051e", null ],
     [ "onSelectionSetRemoved", "classcg_scene_event_listener.html#aa178c77e67d828918e9c57b9e3c82bfc", null ],

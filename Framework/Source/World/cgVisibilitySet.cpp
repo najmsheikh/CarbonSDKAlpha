@@ -426,6 +426,17 @@ void cgVisibilitySet::addVisibleGroup( void * pContext, cgInt32 nDataGroupId )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : clearVisibleGroups ()
+/// <summary>
+/// Clear out the list of visible groups associated with a given context object
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgVisibilitySet::clearVisibleGroups( void * pContext )
+{
+    mAssociatedGroups.erase( pContext );
+}
+
+//-----------------------------------------------------------------------------
 //  Name : getVisibleObjects ()
 /// <summary>
 /// Retrieve the list of visible objects.

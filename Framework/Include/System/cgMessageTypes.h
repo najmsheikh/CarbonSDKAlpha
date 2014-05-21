@@ -83,6 +83,7 @@ namespace cgSystemMessages
 
         // Messages issued by cgScene
         Scene_LoadProgressUpdate        = 5001,
+        Scene_Reloaded                  = 5002,
 
         // Messages issued by cgAppWindow
         AppWindow_OnCreate              = 6001,

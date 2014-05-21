@@ -96,6 +96,7 @@ var searchData=
   ['rendermode_5fhover',['RenderMode_Hover',['../classcg_u_i_control.html#aaece26be16b6c4ed6c5b9aea429dd63aa86e30262e81df4a64e2984b32ad63d6d',1,'cgUIControl']]],
   ['rendermode_5fnormal',['RenderMode_Normal',['../classcg_u_i_control.html#aaece26be16b6c4ed6c5b9aea429dd63aaa1582efa6560b5cdf6126ad0f4ce5326',1,'cgUIControl']]],
   ['rendermode_5fpressed',['RenderMode_Pressed',['../classcg_u_i_control.html#aaece26be16b6c4ed6c5b9aea429dd63aaa872b85cb1d07e8ba0948d45772b26a0',1,'cgUIControl']]],
+  ['renderpropertiesdirty',['RenderPropertiesDirty',['../classcg_foliage_clutter_layer.html#a99dd7fe526f93c1c6d80f0ef40fd2459a63035c36239a1a0c88124ce2041dfb4f',1,'cgFoliageClutterLayer']]],
   ['rendertarget',['RenderTarget',['../namespacecg_resource_type.html#ab3ea99a2ba657fda52b52d2d23099ed9a58b1c767d7db7ccf23fefac22945a942',1,'cgResourceType::RenderTarget()'],['../namespacecg_buffer_type.html#abb80324b86cad34bb6200716229decada0ab906ef51e9c3697b63e3e7c1d7cbbd',1,'cgBufferType::RenderTarget()']]],
   ['rendertargetcube',['RenderTargetCube',['../namespacecg_buffer_type.html#abb80324b86cad34bb6200716229decadafa07e6df96a3f1537addbd8a8bde9fa3',1,'cgBufferType']]],
   ['replace',['Replace',['../namespacecg_stencil_operation.html#ad20a21b804457c5d7d2d7eb2c1de2f96a16b0012ccab2edeca2040956f22f3d53',1,'cgStencilOperation']]],

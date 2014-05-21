@@ -1422,7 +1422,7 @@ void cgMeshNode::computeWorldSize()
 /// order to notify any listeners of this fact.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgMeshNode::onComponentModified( cgComponentModifiedEventArgs * e )
+void cgMeshNode::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
 {
     // What was modified?
     if ( e->context == _T("MeshData") || e->context == _T("ApplyRescale") )
@@ -1461,7 +1461,7 @@ void cgMeshNode::onComponentModified( cgComponentModifiedEventArgs * e )
     } // End if ShadowStage
 
     // Call base class implementation last
-    cgObjectNode::onComponentModified( e );
+    cgObjectNode::onComponentModified( sender, e );
 }
 
 //-----------------------------------------------------------------------------

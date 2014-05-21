@@ -5,6 +5,7 @@ var searchData=
   ['edgemap',['EdgeMap',['../namespacecg_shadow_resource_type.html#af7855c1bb881a57307b358bc20feaf90ab2c65dc1cfecaec283be560ebb18bae6',1,'cgShadowResourceType']]],
   ['edgemask',['EdgeMask',['../namespacecg_shadow_method.html#acf7076ff28e0dff7301a6561920d1456a0879ef7f3c430212953ad7a1c697084b',1,'cgShadowMethod']]],
   ['eightsamples',['EightSamples',['../namespacecg_multi_sample_type.html#adbecbd99f00273f79d94f7adde751574a9e84a55a7806cbce49636e6201f5db26',1,'cgMultiSampleType']]],
+  ['elementpropertiesdirty',['ElementPropertiesDirty',['../classcg_foliage_clutter_layer.html#a99dd7fe526f93c1c6d80f0ef40fd2459a73deda87412f169e781228e6c695d5d8',1,'cgFoliageClutterLayer']]],
   ['elevensamples',['ElevenSamples',['../namespacecg_multi_sample_type.html#adbecbd99f00273f79d94f7adde751574a20429a70fd93c40f79b7e910ac113592',1,'cgMultiSampleType']]],
   ['ellipsis',['Ellipsis',['../namespacecg_text_truncation_mode.html#ac3b5904d9a76bff8bdd635b99dd2ff7ea31422f4a070836f1438bf470f79755e5',1,'cgTextTruncationMode']]],
   ['emissive',['Emissive',['../classcg_render_driver.html#a277e73b233f4d3d8aec4a7e18b7432dba2f1f65004d332c1bef1cf4f712cc09cd',1,'cgRenderDriver::Emissive()'],['../namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a9856523f535e2b11068e65676c859b6e',1,'cgSystemState::Emissive()']]],

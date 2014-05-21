@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
    </div>
   </td>
  </tr>
@@ -164,6 +164,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac418be39c9f23ccd47c8ae547db06bb3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_layer_material.html#ac418be39c9f23ccd47c8ae547db06bb3">dispose</a> (bool disposeBase)</td></tr>
 <tr class="memdesc:ac418be39c9f23ccd47c8ae547db06bb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any memory, references or resources allocated by this object.  <a href="#ac418be39c9f23ccd47c8ae547db06bb3"></a><br/></td></tr>
 <tr class="separator:ac418be39c9f23ccd47c8ae547db06bb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae84337477e0fd90abdf9c41db0ee09c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_layer_material.html#aae84337477e0fd90abdf9c41db0ee09c">canBatch</a> () const </td></tr>
+<tr class="separator:aae84337477e0fd90abdf9c41db0ee09c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad09bdaf806b7db053dace8bb677c5ea4"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_layer_material.html#ad09bdaf806b7db053dace8bb677c5ea4">compare</a> (const <a class="el" href="classcg_material.html">cgMaterial</a> &amp;material) const </td></tr>
 <tr class="memdesc:ad09bdaf806b7db053dace8bb677c5ea4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a deep compare allowing us to perform rapid binary tree style searches (such as the map in our resource manager).  <a href="#ad09bdaf806b7db053dace8bb677c5ea4"></a><br/></td></tr>
 <tr class="separator:ad09bdaf806b7db053dace8bb677c5ea4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -200,6 +202,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4961196f8d14b8198fc984bdd37655f4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_layer_material.html#a4961196f8d14b8198fc984bdd37655f4">getAngle</a> () const </td></tr>
 <tr class="memdesc:a4961196f8d14b8198fc984bdd37655f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the planar mapped texture coordinate rotation angle (in degrees) for layers of this type.  <a href="#a4961196f8d14b8198fc984bdd37655f4"></a><br/></td></tr>
 <tr class="separator:a4961196f8d14b8198fc984bdd37655f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55956fd262a3d00119ed6d72eae33dcf"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_layer_material.html#a55956fd262a3d00119ed6d72eae33dcf">getClutterMaterial</a> () const </td></tr>
+<tr class="memdesc:a55956fd262a3d00119ed6d72eae33dcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the clutter definition material associated with this landscape layer (if any).  <a href="#a55956fd262a3d00119ed6d72eae33dcf"></a><br/></td></tr>
+<tr class="separator:a55956fd262a3d00119ed6d72eae33dcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63e4628ecb80ea448bdb4b251ab7c5d4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_layer_material.html#a63e4628ecb80ea448bdb4b251ab7c5d4">getTilingReduction</a> () const </td></tr>
 <tr class="memdesc:a63e4628ecb80ea448bdb4b251ab7c5d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the flag that indicates whether or not tiling reduction should be applied for layers of this type.  <a href="#a63e4628ecb80ea448bdb4b251ab7c5d4"></a><br/></td></tr>
 <tr class="separator:a63e4628ecb80ea448bdb4b251ab7c5d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -221,6 +226,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a613bdb8d75dd8be7beea1210976dc707"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_layer_material.html#a613bdb8d75dd8be7beea1210976dc707">setAngle</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> angle)</td></tr>
 <tr class="memdesc:a613bdb8d75dd8be7beea1210976dc707"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the planar mapped texture coordinate rotation angle (in degrees) for layers of this type.  <a href="#a613bdb8d75dd8be7beea1210976dc707"></a><br/></td></tr>
 <tr class="separator:a613bdb8d75dd8be7beea1210976dc707"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38508951e49bee7ce81b93ba9502fcde"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_layer_material.html#a38508951e49bee7ce81b93ba9502fcde">setClutterMaterial</a> (<a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> material)</td></tr>
+<tr class="memdesc:a38508951e49bee7ce81b93ba9502fcde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the clutter definition material associated with this layer (if any). The landscape will be populated with the clutter defined by this material wherever the layer may be painted.  <a href="#a38508951e49bee7ce81b93ba9502fcde"></a><br/></td></tr>
+<tr class="separator:a38508951e49bee7ce81b93ba9502fcde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a141337b1ac61e24f5f416f2808b1af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_layer_material.html#a0a141337b1ac61e24f5f416f2808b1af">enableTilingReduction</a> (bool enable)</td></tr>
 <tr class="memdesc:a0a141337b1ac61e24f5f416f2808b1af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the flag that indicates whether or not tiling reduction should be applied for layers of this type.  <a href="#a0a141337b1ac61e24f5f416f2808b1af"></a><br/></td></tr>
 <tr class="separator:a0a141337b1ac61e24f5f416f2808b1af"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -436,7 +444,8 @@ Protected Types</h2></td></tr>
 <a class="el" href="classcg_landscape_layer_material.html#a010ef3cc89bbab5852f11c9a61d39c0eac5a3a9e6f8940aad9fc5f1bbb4a31f5d">OffsetDirty</a> = 0x40, 
 <br/>
 &#160;&#160;<a class="el" href="classcg_landscape_layer_material.html#a010ef3cc89bbab5852f11c9a61d39c0ea1f8020f7f4fe8a70e4bd0a7dd245ccf8">AngleDirty</a> = 0x80, 
-<a class="el" href="classcg_landscape_layer_material.html#a010ef3cc89bbab5852f11c9a61d39c0ea6f64dba44adb0a46f70df8b4dcc843c0">TilingReductionDirty</a> = 0x100
+<a class="el" href="classcg_landscape_layer_material.html#a010ef3cc89bbab5852f11c9a61d39c0ea6f64dba44adb0a46f70df8b4dcc843c0">TilingReductionDirty</a> = 0x100, 
+<a class="el" href="classcg_landscape_layer_material.html#a010ef3cc89bbab5852f11c9a61d39c0ea4688adc1712cea48b80c3269fcf20b5c">ClutterDirty</a> = 0x200
 <br/>
  }</td></tr>
 <tr class="separator:a010ef3cc89bbab5852f11c9a61d39c0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -476,6 +485,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:aa482f4ed587f599492db54e19511765a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_layer_material.html#aa482f4ed587f599492db54e19511765a">mTilingReduction</a></td></tr>
 <tr class="memdesc:aa482f4ed587f599492db54e19511765a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tiling reduction is enabled / disabled for this layer. <a href="#aa482f4ed587f599492db54e19511765a"></a><br/></td></tr>
 <tr class="separator:aa482f4ed587f599492db54e19511765a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac605a1ea91a6870b240694bf47dbafbe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_layer_material.html#ac605a1ea91a6870b240694bf47dbafbe">mClutterMaterial</a></td></tr>
+<tr class="memdesc:ac605a1ea91a6870b240694bf47dbafbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to any clutter material associated with this layer. <a href="#ac605a1ea91a6870b240694bf47dbafbe"></a><br/></td></tr>
+<tr class="separator:ac605a1ea91a6870b240694bf47dbafbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classcg_material"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_material')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_material.html">cgMaterial</a></td></tr>
 <tr class="memitem:aa288a701fa23238683391877e94c1246 inherit pro_attribs_classcg_material"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_material.html#aa288a701fa23238683391877e94c1246">mSourceRefId</a></td></tr>
 <tr class="separator:aa288a701fa23238683391877e94c1246 inherit pro_attribs_classcg_material"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -565,6 +577,8 @@ Static Protected Attributes</h2></td></tr>
 <tr class="separator:ac700ebdcf8f4668e137d7e854cbfd700"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f83fd602d958085fd0eb045f9c2b152"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_layer_material.html#a2f83fd602d958085fd0eb045f9c2b152">mUpdateTilingReduction</a></td></tr>
 <tr class="separator:a2f83fd602d958085fd0eb045f9c2b152"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa97e20e2cb78ad9d53a365176ea36e5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_layer_material.html#aaa97e20e2cb78ad9d53a365176ea36e5">mUpdateClutter</a></td></tr>
+<tr class="separator:aaa97e20e2cb78ad9d53a365176ea36e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02fabf29aa877af6c858528d9ba86ecd"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_layer_material.html#a02fabf29aa877af6c858528d9ba86ecd">mUpdatePreview</a></td></tr>
 <tr class="separator:a02fabf29aa877af6c858528d9ba86ecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa69732252db959e98265300c1bc49f85"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcg_world_query.html">cgWorldQuery</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape_layer_material.html#aa69732252db959e98265300c1bc49f85">mLoadMaterial</a></td></tr>
@@ -611,6 +625,8 @@ Static Protected Attributes</h2></td></tr>
 <tr><td valign="top"><em><a class="anchor" id="a010ef3cc89bbab5852f11c9a61d39c0ea1f8020f7f4fe8a70e4bd0a7dd245ccf8"></a>AngleDirty</em>&nbsp;</td><td>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="a010ef3cc89bbab5852f11c9a61d39c0ea6f64dba44adb0a46f70df8b4dcc843c0"></a>TilingReductionDirty</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a010ef3cc89bbab5852f11c9a61d39c0ea4688adc1712cea48b80c3269fcf20b5c"></a>ClutterDirty</em>&nbsp;</td><td>
 </td></tr>
 </table>
 </dd>
@@ -807,6 +823,31 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aae84337477e0fd90abdf9c41db0ee09c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool cgLandscapeLayerMaterial::canBatch </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classcg_material.html#a0488bd8ca4beb1928afaec48139bfc11">cgMaterial</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ad09bdaf806b7db053dace8bb677c5ea4"></a>
 <div class="memitem">
 <div class="memproto">
@@ -913,6 +954,23 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the planar mapped texture coordinate scale for any second base application of this layer's texture. </p>
+
+</div>
+</div>
+<a class="anchor" id="a55956fd262a3d00119ed6d72eae33dcf"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> &amp; cgLandscapeLayerMaterial::getClutterMaterial </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the clutter definition material associated with this landscape layer (if any). </p>
 
 </div>
 </div>
@@ -1298,6 +1356,24 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a38508951e49bee7ce81b93ba9502fcde"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgLandscapeLayerMaterial::setClutterMaterial </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a>&#160;</td>
+          <td class="paramname"><em>material</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the clutter definition material associated with this layer (if any). The landscape will be populated with the clutter defined by this material wherever the layer may be painted. </p>
+
+</div>
+</div>
 <a class="anchor" id="a1bc716df97236e9924bdd9fbbe4994da"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1465,6 +1541,28 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac605a1ea91a6870b240694bf47dbafbe"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_resource_handles_8h.html#a53d673398f23a5e08f8c0ed23bc4b656">cgMaterialHandle</a> cgLandscapeLayerMaterial::mClutterMaterial</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reference to any clutter material associated with this layer.</p>
 
 </div>
 </div>
@@ -1658,6 +1756,26 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aaa97e20e2cb78ad9d53a365176ea36e5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_world_query.html">cgWorldQuery</a> cgLandscapeLayerMaterial::mUpdateClutter</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="ac8d5b553430ecc7dac0ad52a330254a3"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1788,7 +1906,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_landscape_layer_material.html">cgLandscapeLayerMaterial</a></li>
-    <li class="footer">Generated on Mon May 12 2014 08:23:35 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Wed May 21 2014 19:31:38 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -1685,7 +1685,7 @@ bool cgSpotLightNode::setCellTransform( const cgTransform & Transform, cgTransfo
 /// order to notify any listeners of this fact.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgSpotLightNode::onComponentModified( cgComponentModifiedEventArgs * e )
+void cgSpotLightNode::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
 {
     // What property was modified?
     if ( e->context == _T("OuterRange") || e->context == _T("OuterCone") || e->context == _T("ApplyRescale") )
@@ -1746,7 +1746,7 @@ void cgSpotLightNode::onComponentModified( cgComponentModifiedEventArgs * e )
     } // End if AttenMaskSampler
 
     // Call base class implementation last
-    cgLightNode::onComponentModified( e );
+    cgLightNode::onComponentModified( sender, e );
     
 }
 

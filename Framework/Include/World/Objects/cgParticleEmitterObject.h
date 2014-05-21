@@ -253,7 +253,7 @@ public:
     virtual bool                registerVisibility      ( cgVisibilitySet * visibilityData );
     virtual bool                onNodeCreated           ( const cgUID & objectType, cgCloneMethod::Base cloneMethod );
     virtual bool                onNodeLoading           ( const cgUID & objectType, cgWorldQuery * nodeData, cgSceneCell * parentCell, cgCloneMethod::Base cloneMethod );
-    virtual void                onComponentModified     ( cgComponentModifiedEventArgs * e );
+    virtual void                onComponentModified     ( cgReference * sender, cgComponentModifiedEventArgs * e );
     virtual void                update                  ( cgFloat timeDelta );
     virtual bool                allowSandboxUpdate      ( ) const;
 

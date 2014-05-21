@@ -676,7 +676,7 @@ void cgGroupNode::getGroupedNodes( cgObjectNodeMap & NodesOut, cgGroupNode * pPa
 /// order to notify any listeners of this fact.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgGroupNode::onComponentModified( cgComponentModifiedEventArgs * e )
+void cgGroupNode::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
 {
     // What was modified?
     if ( e->context == _T("Open") )
@@ -708,7 +708,7 @@ void cgGroupNode::onComponentModified( cgComponentModifiedEventArgs * e )
     } // End if Open
 
     // Call base class implementation last
-    cgObjectNode::onComponentModified( e );
+    cgObjectNode::onComponentModified( sender, e );
 }
 
 //-----------------------------------------------------------------------------

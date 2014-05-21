@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
    </div>
   </td>
  </tr>
@@ -270,6 +270,9 @@ $(document).ready(function(){initNavTree('functions_vars_0x63.html','');});
 : <a class="el" href="structcg_component_created_event_args.html#a48477e0f6f8281fd253dc017918f4402">cgComponentCreatedEventArgs</a>
 , <a class="el" href="structcg_component_loading_event_args.html#a2b766ab562161a8ba7105e0561d2cc2a">cgComponentLoadingEventArgs</a>
 </li>
+<li>clutterCells
+: <a class="el" href="structcg_landscape_texture_data_1_1_layer_reference.html#af973d1122c7334f786501ec5266b7096">cgLandscapeTextureData::LayerReference</a>
+</li>
 <li>cmpFunc
 : <a class="el" href="structcg_script_interop_1_1_types_1_1_script_array_1_1_array_cache.html#a864acb0b6ec2f2ba706366e56cbadea5">cgScriptInterop::Types::ScriptArray::ArrayCache</a>
 </li>
@@ -297,12 +300,13 @@ $(document).ready(function(){initNavTree('functions_vars_0x63.html','');});
 <li>color
 : <a class="el" href="structcg_text_metrics_1_1_text_char.html#abee137fb54f97cb0a978f89c95c0ae2f">cgTextMetrics::TextChar</a>
 , <a class="el" href="classcg_screen_vertex.html#a3a18fe94bc09d97eb64df86337b2496c">cgScreenVertex</a>
-, <a class="el" href="structcg_reflectance_generator_1_1__cb_r_s_m.html#a7db09df9bece338627c31542eeec789b">cgReflectanceGenerator::_cbRSM</a>
 , <a class="el" href="classcg_shaded_vertex.html#a10f6610313e5b2225690e52b2c35e4be">cgShadedVertex</a>
 , <a class="el" href="classcg_billboard3_d_vertex.html#a0d152c3965babffde85a9c9b9be87838">cgBillboard3DVertex</a>
 , <a class="el" href="classcg_billboard2_d_vertex.html#ac665b3c6c48ea10154545e15886ade51">cgBillboard2DVertex</a>
+, <a class="el" href="classcg_foliage_vertex.html#a9d99c61e89f7dc08d8272075fb89ed99">cgFoliageVertex</a>
 , <a class="el" href="classcg_terrain_vertex.html#a39fcbadc5f2721088b02637afba3eeb6">cgTerrainVertex</a>
 , <a class="el" href="structcg_landscape_1_1cb_terrain_base_data.html#ad357c43eab9c611a2423dc84c5fe415b">cgLandscape::cbTerrainBaseData</a>
+, <a class="el" href="structcg_reflectance_generator_1_1__cb_r_s_m.html#a7db09df9bece338627c31542eeec789b">cgReflectanceGenerator::_cbRSM</a>
 </li>
 <li>colorACurve
 : <a class="el" href="structcg_particle_emitter_properties.html#a937216068440c48e9425f23054afd2fa">cgParticleEmitterProperties</a>
@@ -399,26 +403,29 @@ $(document).ready(function(){initNavTree('functions_vars_0x63.html','');});
 : <a class="el" href="structcg_body_collision.html#a08ee700932b94a3e8ca672397563e6fd">cgBodyCollision</a>
 </li>
 <li>context
-: <a class="el" href="structcg_u_i_control_1_1_event_handler.html#a07b0cf154eb732ccd7dc785a7c6d058c">cgUIControl::EventHandler</a>
-, <a class="el" href="structcg_component_modified_event_args.html#a97cef2adcb4ac4ff589aaac4ee4f73cf">cgComponentModifiedEventArgs</a>
+: <a class="el" href="structcg_component_modified_event_args.html#a97cef2adcb4ac4ff589aaac4ee4f73cf">cgComponentModifiedEventArgs</a>
+, <a class="el" href="structcg_u_i_control_1_1_event_handler.html#a07b0cf154eb732ccd7dc785a7c6d058c">cgUIControl::EventHandler</a>
 , <a class="el" href="structcg_callback_data.html#ade04d8afebbcd93836e260737763a028">cgCallbackData</a>
 </li>
 <li>controlPointIn
-: <a class="el" href="structcg_bezier_spline3_1_1_spline_point.html#a47db1c3081c19ecdaf9f560db1f2914c">cgBezierSpline3::SplinePoint</a>
-, <a class="el" href="structcg_bezier_spline2_1_1_spline_point.html#af473363cb9c2de2dcd1dc9a70f6bba27">cgBezierSpline2::SplinePoint</a>
+: <a class="el" href="structcg_bezier_spline2_1_1_spline_point.html#af473363cb9c2de2dcd1dc9a70f6bba27">cgBezierSpline2::SplinePoint</a>
+, <a class="el" href="structcg_bezier_spline3_1_1_spline_point.html#a47db1c3081c19ecdaf9f560db1f2914c">cgBezierSpline3::SplinePoint</a>
 </li>
 <li>controlPointOut
-: <a class="el" href="structcg_bezier_spline3_1_1_spline_point.html#a279786bc71606840752a66a95d2fdcd2">cgBezierSpline3::SplinePoint</a>
-, <a class="el" href="structcg_bezier_spline2_1_1_spline_point.html#a1e9f46a488050d68802d714dd19310d8">cgBezierSpline2::SplinePoint</a>
+: <a class="el" href="structcg_bezier_spline2_1_1_spline_point.html#a1e9f46a488050d68802d714dd19310d8">cgBezierSpline2::SplinePoint</a>
+, <a class="el" href="structcg_bezier_spline3_1_1_spline_point.html#a279786bc71606840752a66a95d2fdcd2">cgBezierSpline3::SplinePoint</a>
+</li>
+<li>coords
+: <a class="el" href="classcg_foliage_vertex.html#a68071f7a973e68f010427a2133492808">cgFoliageVertex</a>
 </li>
 <li>correctNormals
 : <a class="el" href="structcg_render_driver_1_1_export_vars.html#a241442014e3a1aef9e58b21ab69e0e49">cgRenderDriver::ExportVars</a>
 </li>
 <li>cullMode
-: <a class="el" href="structcg_shadow_generator_operation.html#a85d9ffdea3fd1ed3c7e9b381c54ad279">cgShadowGeneratorOperation</a>
+: <a class="el" href="structcg_shadow_settings_light.html#a06ee82e187fb78cc794687d017c184e6">cgShadowSettingsLight</a>
+, <a class="el" href="structcg_shadow_generator_operation.html#a85d9ffdea3fd1ed3c7e9b381c54ad279">cgShadowGeneratorOperation</a>
 , <a class="el" href="structcg_render_driver_1_1_export_vars.html#aec3c4628edb7253d50040d3906cb36f1">cgRenderDriver::ExportVars</a>
 , <a class="el" href="structcg_shadow_settings.html#ab0e591a8b2fee0ea47df14cda85b8459">cgShadowSettings</a>
-, <a class="el" href="structcg_shadow_settings_light.html#a06ee82e187fb78cc794687d017c184e6">cgShadowSettingsLight</a>
 , <a class="el" href="structcg_rasterizer_state_desc.html#aebc9f0ce169b6b20033f354031991cef">cgRasterizerStateDesc</a>
 </li>
 <li>curr
@@ -442,7 +449,7 @@ $(document).ready(function(){initNavTree('functions_vars_0x63.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon May 12 2014 08:23:47 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Wed May 21 2014 19:31:51 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

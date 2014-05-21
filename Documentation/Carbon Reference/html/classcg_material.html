@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
    </div>
   </td>
  </tr>
@@ -123,13 +123,14 @@ Inheritance diagram for cgMaterial:</div>
  <div class="center">
   <img src="classcg_material.png" usemap="#cgMaterial_map" alt=""/>
   <map id="cgMaterial_map" name="cgMaterial_map">
-<area href="classcg_world_resource_component.html" title="The basic representation of all resource components that make up the world. Typical derived classes w..." alt="cgWorldResourceComponent" shape="rect" coords="123,224,359,248"/>
-<area href="classcg_resource.html" title="Designed as a base class for accessing underlying resource data such as textures, materials..." alt="cgResource" shape="rect" coords="123,168,359,192"/>
-<area href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat..." alt="cgReference" shape="rect" coords="123,112,359,136"/>
-<area href="classcg_event_dispatcher.html" title="Base class from which other classes may derive if they want to be able to have listeners register wit..." alt="cgEventDispatcher" shape="rect" coords="123,56,359,80"/>
-<area href="classcg_script_interop_1_1_disposable_script_object.html" title="Base class from which objects should be derived if they need to be passed to a script by reference as..." alt="cgScriptInterop::DisposableScriptObject" shape="rect" coords="123,0,359,24"/>
-<area href="classcg_landscape_layer_material.html" title="Describes properties, for both physical processing and rendering purposes, of a manually painted land..." alt="cgLandscapeLayerMaterial" shape="rect" coords="0,336,236,360"/>
-<area href="classcg_standard_material.html" title="Describes physical properties, for both physical processing and rendering purposes, of any given surface in the world. " alt="cgStandardMaterial" shape="rect" coords="246,336,482,360"/>
+<area href="classcg_world_resource_component.html" title="The basic representation of all resource components that make up the world. Typical derived classes w..." alt="cgWorldResourceComponent" shape="rect" coords="246,224,482,248"/>
+<area href="classcg_resource.html" title="Designed as a base class for accessing underlying resource data such as textures, materials..." alt="cgResource" shape="rect" coords="246,168,482,192"/>
+<area href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat..." alt="cgReference" shape="rect" coords="246,112,482,136"/>
+<area href="classcg_event_dispatcher.html" title="Base class from which other classes may derive if they want to be able to have listeners register wit..." alt="cgEventDispatcher" shape="rect" coords="246,56,482,80"/>
+<area href="classcg_script_interop_1_1_disposable_script_object.html" title="Base class from which objects should be derived if they need to be passed to a script by reference as..." alt="cgScriptInterop::DisposableScriptObject" shape="rect" coords="246,0,482,24"/>
+<area href="classcg_clutter_material.html" title="Describes properties for procedurally defining scene clutter (foliage, rocks, trees, etc.) that can be applied to landscapes and other scene elements. " alt="cgClutterMaterial" shape="rect" coords="0,336,236,360"/>
+<area href="classcg_landscape_layer_material.html" title="Describes properties, for both physical processing and rendering purposes, of a manually painted land..." alt="cgLandscapeLayerMaterial" shape="rect" coords="246,336,482,360"/>
+<area href="classcg_standard_material.html" title="Describes physical properties, for both physical processing and rendering purposes, of any given surface in the world. " alt="cgStandardMaterial" shape="rect" coords="492,336,728,360"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -173,6 +174,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5e91114d2ae7297b94f7f415c87e302e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_image.html">cgImage</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_material.html#a5e91114d2ae7297b94f7f415c87e302e">getPreviewImage</a> ()</td></tr>
 <tr class="memdesc:a5e91114d2ae7297b94f7f415c87e302e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the constructed (or loaded) preview image used by the sandbox material editor to display a representation of this material.  <a href="#a5e91114d2ae7297b94f7f415c87e302e"></a><br/></td></tr>
 <tr class="separator:a5e91114d2ae7297b94f7f415c87e302e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0488bd8ca4beb1928afaec48139bfc11"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_material.html#a0488bd8ca4beb1928afaec48139bfc11">canBatch</a> () const </td></tr>
+<tr class="separator:a0488bd8ca4beb1928afaec48139bfc11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25cda39ef6903fad076cc59ab02ebdb8"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_material.html#a25cda39ef6903fad076cc59ab02ebdb8">apply</a> (<a class="el" href="classcg_render_driver.html">cgRenderDriver</a> *driver)=0</td></tr>
 <tr class="separator:a25cda39ef6903fad076cc59ab02ebdb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac566cac7deab3e80762856612633da9d"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_material.html#ac566cac7deab3e80762856612633da9d">loadMaterial</a> (<a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> sourceRefId, <a class="el" href="classcg_resource_manager.html">cgResourceManager</a> *resourceManager=<a class="el" href="cg_base_types_8h.html#ae28f568db83e03f77e0d1f3d96b89449">CG_NULL</a>)=0</td></tr>
@@ -628,7 +631,7 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classcg_standard_material.html#a5cd06c204fd05674ffee71a8be43e142">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#a8041c143d7980a5061e57ecb5566dbf8">cgLandscapeLayerMaterial</a>.</p>
+<p>Implemented in <a class="el" href="classcg_clutter_material.html#af96073576b9e525f5ee90d2850de7d89">cgClutterMaterial</a>, <a class="el" href="classcg_standard_material.html#a5cd06c204fd05674ffee71a8be43e142">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#a8041c143d7980a5061e57ecb5566dbf8">cgLandscapeLayerMaterial</a>.</p>
 
 </div>
 </div>
@@ -715,7 +718,32 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Construct the preview image used by the sandbox material editor to display a representation of this material. An internal scene is provided which is set up with an appropriate render control script should it be required (for instance, object rendering). </p>
 
-<p>Reimplemented in <a class="el" href="classcg_standard_material.html#af1cb54b1b9b278e527c5ff79c1c08b5e">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#aadd00e4eaaac0f16a075005f59de9679">cgLandscapeLayerMaterial</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_clutter_material.html#a621bfc553ef936719bcafc9924144c2a">cgClutterMaterial</a>, <a class="el" href="classcg_standard_material.html#af1cb54b1b9b278e527c5ff79c1c08b5e">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#aadd00e4eaaac0f16a075005f59de9679">cgLandscapeLayerMaterial</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0488bd8ca4beb1928afaec48139bfc11"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool cgMaterial::canBatch </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classcg_standard_material.html#a1ed3efb25f0059a1a859f9c321809350">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#aae84337477e0fd90abdf9c41db0ee09c">cgLandscapeLayerMaterial</a>.</p>
 
 </div>
 </div>
@@ -743,7 +771,7 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Performs a deep compare allowing us to perform rapid binary tree style searches (such as the map in our resource manager). </p>
 
-<p>Reimplemented in <a class="el" href="classcg_standard_material.html#abd5d452f5a613b02dced094f6760fa45">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#ad09bdaf806b7db053dace8bb677c5ea4">cgLandscapeLayerMaterial</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_clutter_material.html#ab5ed158ade11f384faf627bf5f46bb2b">cgClutterMaterial</a>, <a class="el" href="classcg_standard_material.html#abd5d452f5a613b02dced094f6760fa45">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#ad09bdaf806b7db053dace8bb677c5ea4">cgLandscapeLayerMaterial</a>.</p>
 
 </div>
 </div>
@@ -774,7 +802,7 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcg_world_resource_component.html#a91f0c1b28e10e42578afd67d257779ac">cgWorldResourceComponent</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_standard_material.html#a40151e02d606c0a1d8e7af44b7e10fd2">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#ac418be39c9f23ccd47c8ae547db06bb3">cgLandscapeLayerMaterial</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_clutter_material.html#a527f0fbd1154c1dfd9d4a344ad9592b8">cgClutterMaterial</a>, <a class="el" href="classcg_standard_material.html#a40151e02d606c0a1d8e7af44b7e10fd2">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#ac418be39c9f23ccd47c8ae547db06bb3">cgLandscapeLayerMaterial</a>.</p>
 
 </div>
 </div>
@@ -877,7 +905,7 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcg_world_resource_component.html#a3bf0caba3de8b93157734fd066d16e13">cgWorldResourceComponent</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_standard_material.html#a9ca55add44c48951ace44342e5fc77a7">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#afc356870d4f5b5c9e16d3eed45b6eb69">cgLandscapeLayerMaterial</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_clutter_material.html#a3b633adc7d052a97bb557756a117eb9f">cgClutterMaterial</a>, <a class="el" href="classcg_standard_material.html#a9ca55add44c48951ace44342e5fc77a7">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#afc356870d4f5b5c9e16d3eed45b6eb69">cgLandscapeLayerMaterial</a>.</p>
 
 </div>
 </div>
@@ -960,7 +988,7 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Load the specified material from the supplied database file. Note : This function requires you to specify the resource manager into which you would like all additional resources to be loaded (such as textures, etc.) if you are not loading this material directly via the <a class="el" href="classcg_resource_manager.html#a67e30589938a2170860da92eb7d9ded4" title="Load the material with matching source reference identifier from the specified world database...">cgResourceManager::loadMaterial()</a> methods. </p>
 
-<p>Implemented in <a class="el" href="classcg_standard_material.html#a8fa9f6062c9292a249dd9663d31bcc96">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#a4673365184afe75f1ad691d62b65e5f3">cgLandscapeLayerMaterial</a>.</p>
+<p>Implemented in <a class="el" href="classcg_clutter_material.html#aec1af65b73c0fee1f8553a487b951266">cgClutterMaterial</a>, <a class="el" href="classcg_standard_material.html#a8fa9f6062c9292a249dd9663d31bcc96">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#a4673365184afe75f1ad691d62b65e5f3">cgLandscapeLayerMaterial</a>.</p>
 
 </div>
 </div>
@@ -1017,7 +1045,7 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcg_world_resource_component.html#a42d5f5256d95c80c2631f7fb6450d904">cgWorldResourceComponent</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_standard_material.html#a37af959e89c444ec5c7e5a65db5c6b10">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#a8d7e57b2bdb3be2c578374e98d908d57">cgLandscapeLayerMaterial</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_clutter_material.html#ab7f449b880fb4cce8bb7ee31993e5890">cgClutterMaterial</a>, <a class="el" href="classcg_standard_material.html#a37af959e89c444ec5c7e5a65db5c6b10">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#a8d7e57b2bdb3be2c578374e98d908d57">cgLandscapeLayerMaterial</a>.</p>
 
 </div>
 </div>
@@ -1071,7 +1099,7 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Reset / restore any applicable data when the material is no longer set to the device. </p>
 
-<p>Reimplemented in <a class="el" href="classcg_standard_material.html#ad28067f21bbdafb6800ae8219b855510">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#a73d5dee1f86499edd6e9c73dd989dc80">cgLandscapeLayerMaterial</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_clutter_material.html#a46125a3ab7633b662324d6b75fcd8063">cgClutterMaterial</a>, <a class="el" href="classcg_standard_material.html#ad28067f21bbdafb6800ae8219b855510">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#a73d5dee1f86499edd6e9c73dd989dc80">cgLandscapeLayerMaterial</a>.</p>
 
 </div>
 </div>
@@ -1096,7 +1124,7 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classcg_standard_material.html#a15f21b727a5444e5eed176abd7901c0c">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#ac54bf789ebc18d2424e70634b847111f">cgLandscapeLayerMaterial</a>.</p>
+<p>Implemented in <a class="el" href="classcg_clutter_material.html#a2aa20182cfe89017fcfde88c0b28523c">cgClutterMaterial</a>, <a class="el" href="classcg_standard_material.html#a15f21b727a5444e5eed176abd7901c0c">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#ac54bf789ebc18d2424e70634b847111f">cgLandscapeLayerMaterial</a>.</p>
 
 </div>
 </div>
@@ -1214,7 +1242,7 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Load the surface shader file specified for rendering with this material. </p>
 
-<p>Reimplemented in <a class="el" href="classcg_standard_material.html#a9ac571f6da42a42e5c777381d8ab4095">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#adbcd546d3efb41375f4a76900112aceb">cgLandscapeLayerMaterial</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_clutter_material.html#aae2d07caa62abfd7d47bc824c546502b">cgClutterMaterial</a>, <a class="el" href="classcg_standard_material.html#a9ac571f6da42a42e5c777381d8ab4095">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#adbcd546d3efb41375f4a76900112aceb">cgLandscapeLayerMaterial</a>.</p>
 
 </div>
 </div>
@@ -1243,7 +1271,7 @@ Static Protected Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classcg_resource.html#aabdc9dcf062076152356ca2ffb442ca1">cgResource</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_standard_material.html#a4b8f08e87e2eff879b4f588ef0c7d0e2">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#a2168f13d4829381e2a307e5649c17cbd">cgLandscapeLayerMaterial</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_clutter_material.html#aba3059089d933ae220abad48de06ebb6">cgClutterMaterial</a>, <a class="el" href="classcg_standard_material.html#a4b8f08e87e2eff879b4f588ef0c7d0e2">cgStandardMaterial</a>, and <a class="el" href="classcg_landscape_layer_material.html#a2168f13d4829381e2a307e5649c17cbd">cgLandscapeLayerMaterial</a>.</p>
 
 </div>
 </div>
@@ -1478,7 +1506,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_material.html">cgMaterial</a></li>
-    <li class="footer">Generated on Mon May 12 2014 08:23:36 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Wed May 21 2014 19:31:39 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

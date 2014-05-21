@@ -24,6 +24,7 @@ var classcg_standard_material =
     [ "apply", "classcg_standard_material.html#a5cd06c204fd05674ffee71a8be43e142", null ],
     [ "applySamplers", "classcg_standard_material.html#a192d1f77c8610051118fb6a6d16fb567", null ],
     [ "buildPreviewImage", "classcg_standard_material.html#af1cb54b1b9b278e527c5ff79c1c08b5e", null ],
+    [ "canBatch", "classcg_standard_material.html#a1ed3efb25f0059a1a859f9c321809350", null ],
     [ "compare", "classcg_standard_material.html#abd5d452f5a613b02dced094f6760fa45", null ],
     [ "dispose", "classcg_standard_material.html#a40151e02d606c0a1d8e7af44b7e10fd2", null ],
     [ "getActiveSurfaceShader", "classcg_standard_material.html#aa2d2d5e0b9ff9620e9322f50a35dc9f1", null ],

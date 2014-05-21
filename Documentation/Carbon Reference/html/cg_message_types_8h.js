@@ -40,6 +40,7 @@ var cg_message_types_8h =
     [ "UI_CheckBox_OnClick", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7a155cf87284718d609f013a596e3cf911", null ],
     [ "UI_CheckBox_OnCheckedStateChange", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7aac3728a7195af3c962392d5c2ef588e5", null ],
     [ "Scene_LoadProgressUpdate", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7a98fcc18ab9f5783073d335e17253689e", null ],
+    [ "Scene_Reloaded", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7a6561cf6f6e688088bb3a63670302cfbe", null ],
     [ "AppWindow_OnCreate", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7a319662b1a71bccff7c4e548dfc61afe5", null ],
     [ "AppWindow_OnClose", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7a40e52750bfbcfd39f2753744c743a799", null ],
     [ "AppWindow_OnSize", "cg_message_types_8h.html#a685c9ac19b219d56cda93c8ac9a72ac7a67b4210998674bc43662abbc217f6b69", null ],

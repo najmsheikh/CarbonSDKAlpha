@@ -3088,7 +3088,7 @@ cgObjectNode * cgParticleEmitterNode::allocateClone( const cgUID & type, cgUInt3
 /// order to notify any listeners of this fact.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgParticleEmitterNode::onComponentModified( cgComponentModifiedEventArgs * e )
+void cgParticleEmitterNode::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
 {
     // Add / remove layers.
     size_t oldLayerCount = mEmitters.size();
@@ -3196,7 +3196,7 @@ void cgParticleEmitterNode::onComponentModified( cgComponentModifiedEventArgs * 
     } // Next layer
 
     // Call base class implementation last
-    cgObjectNode::onComponentModified( e );
+    cgObjectNode::onComponentModified( sender, e );
 }
 
 //-----------------------------------------------------------------------------

@@ -21,7 +21,7 @@ var classcg_hemisphere_light_node =
     [ "getReferenceType", "classcg_hemisphere_light_node.html#a4489f3dfcc5b093ad3a8a168fae83ada", null ],
     [ "getSpecularBackColor", "classcg_hemisphere_light_node.html#adac3e7b4dbaed2ecbfc13d4fe904acc9", null ],
     [ "getSpecularBackHDRScale", "classcg_hemisphere_light_node.html#a614940b603ea1b901dcf02856ae6bfa1", null ],
-    [ "onComponentModified", "classcg_hemisphere_light_node.html#a067f91488df3bb829cf52110cc62a13b", null ],
+    [ "onComponentModified", "classcg_hemisphere_light_node.html#ad621e8eee744139316daedf41d5d4264", null ],
     [ "pointInVolume", "classcg_hemisphere_light_node.html#a43b19dd3434ce39415772f69580e494d", null ],
     [ "postCreate", "classcg_hemisphere_light_node.html#a731fbac83e861acab9cfa4d44e81bd2e", null ],
     [ "queryReferenceType", "classcg_hemisphere_light_node.html#a81c650e44c2975509584bdab6d3855b4", null ],

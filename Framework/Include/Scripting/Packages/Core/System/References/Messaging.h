@@ -96,6 +96,7 @@ namespace Messaging
 
             // Messages issued by cgSceneLoader
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "Scene_LoadProgressUpdate", cgSystemMessages::Scene_LoadProgressUpdate ) );
+            BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "Scene_Reloaded", cgSystemMessages::Scene_Reloaded ) );
 
             // Messages issued by cgAppWindow
             BINDSUCCESS( engine->registerEnumValue( "SystemMessages", "AppWindow_OnCreate", cgSystemMessages::AppWindow_OnCreate ) );

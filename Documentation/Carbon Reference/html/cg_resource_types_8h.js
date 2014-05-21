@@ -173,7 +173,8 @@ var cg_resource_types_8h =
     ] ],
     [ "Base", "cg_resource_types_8h.html#ad845fcc1aa22be5f41ea681a2c7ac2c2", [
       [ "Standard", "cg_resource_types_8h.html#ad845fcc1aa22be5f41ea681a2c7ac2c2a6fd355bcd761d3d875776eec2778617b", null ],
-      [ "LandscapeLayer", "cg_resource_types_8h.html#ad845fcc1aa22be5f41ea681a2c7ac2c2a4194767df111865ba49d97c7c88d38cf", null ]
+      [ "LandscapeLayer", "cg_resource_types_8h.html#ad845fcc1aa22be5f41ea681a2c7ac2c2a4194767df111865ba49d97c7c88d38cf", null ],
+      [ "Clutter", "cg_resource_types_8h.html#ad845fcc1aa22be5f41ea681a2c7ac2c2ab3125521e9c4fa1b6b5262f2671043da", null ]
     ] ],
     [ "Base", "cg_resource_types_8h.html#abb80324b86cad34bb6200716229decad", [
       [ "None", "cg_resource_types_8h.html#abb80324b86cad34bb6200716229decada343f3ceb39fddefe80029f817882eeb9", null ],

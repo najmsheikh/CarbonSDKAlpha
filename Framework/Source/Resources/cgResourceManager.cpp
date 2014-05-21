@@ -31,6 +31,7 @@
 #include <Resources/cgAnimationSet.h>
 #include <Resources/cgStandardMaterial.h>
 #include <Resources/cgLandscapeLayerMaterial.h>
+#include <Resources/cgClutterMaterial.h>
 #include <Resources/cgSurfaceShaderScript.h>
 #include <Resources/cgSurfaceShader.h>
 #include <Resources/cgHardwareShaders.h>
@@ -2149,6 +2150,10 @@ bool cgResourceManager::createMaterial( cgMaterialHandle * hResOut, bool bIntern
             pMaterial = new cgLandscapeLayerMaterial( nResourceRefId, pWorld );
             break;
 
+        case cgMaterialType::Clutter:
+            pMaterial = new cgClutterMaterial( nResourceRefId, pWorld );
+            break;
+
     } // End switch type
 
     // Valid material?
@@ -2177,9 +2182,10 @@ bool cgResourceManager::buildMaterialBatchTable( MaterialMap & Table )
     const ResourceItemList & Materials = mMaterials;
     for ( itMaterial = Materials.begin(); itMaterial != Materials.end(); ++itMaterial )
     {
-        // Add the material for batcing.
+        // Add the material for batcing if valid.
         cgMaterial * pMaterial = (cgMaterial*)(*itMaterial);
-        Table[ MaterialKey( pMaterial ) ] = pMaterial;
+        if ( pMaterial->canBatch() )
+            Table[ MaterialKey( pMaterial ) ] = pMaterial;
 
     } // Next Material
 
@@ -2289,6 +2295,10 @@ bool cgResourceManager::loadMaterial( cgMaterialHandle * hResOut, cgWorld * pWor
 
             case cgMaterialType::LandscapeLayer:
                 pNewMaterial = new cgLandscapeLayerMaterial( nDestRefId, pWorld, nSourceRefId );
+                break;
+
+            case cgMaterialType::Clutter:
+                pNewMaterial = new cgClutterMaterial( nDestRefId, pWorld, nSourceRefId );
                 break;
 
         } // End switch type

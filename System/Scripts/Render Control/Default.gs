@@ -896,7 +896,13 @@ class StandardRenderControl : IScriptedRenderControl
 				// Draw terrain
                 Landscape @ landscape = mScene.getLandscape();
                 if ( @landscape != null ) //TODO: Add a TerrainDepthNormalFill method as well
+				{
                     landscape.renderPass( LandscapeRenderMethod::TerrainDepthFill, activeCamera, cameraVis );
+					
+					// Draw clutter / foliage
+					landscape.renderPass( LandscapeRenderMethod::ClutterDepthFill, activeCamera, cameraVis );
+					
+				} // End if has landscape
 								
 				// Draw all opaque objects that will use deferred shading. Collapse attributes for optimization purposes as we just need a simple depth draw.
                 queue.begin( cameraVis );
@@ -969,7 +975,7 @@ class StandardRenderControl : IScriptedRenderControl
 		// Apply the normals fitting texture to reduce quantization artifacts
         // ToDo: The fact that this is hardcoded isn't particularly ideal.
         // Especially given the fact that it isn't in the 'reserved' range (12-15)
-        // in Mesh.sh. We should probably add this to the sqStandardMaterial class
+        // in Mesh.sh. We should probably add this to the cgStandardMaterial class
         // directly and bind it as a 'default' sampler just like we do with diffuse
         // and normal map? Revisit this.
 		mNormalsFitSampler.apply( 8, mNormalsFitTexture );
@@ -978,16 +984,24 @@ class StandardRenderControl : IScriptedRenderControl
         Landscape @ landscape = mScene.getLandscape();
         if ( @landscape != null )
         {
-			// Temporary: Draw a terrain depth pass separately
-			if ( renderDriver.beginTargetRender( mDepthBuffer, mDepthStencilBuffer ) )
+			// Temporary: Draw a terrain depth pass separately if it wasn't 
+			// already drawn in a separate depth pass.
+			if ( !mDrawDepth )
 			{
-				// Draw terrain
-				landscape.renderPass( LandscapeRenderMethod::TerrainDepthFill, activeCamera, activeCamera.getVisibilitySet() );
+				if ( renderDriver.beginTargetRender( mDepthBuffer, mDepthStencilBuffer ) )
+				{
+					// Draw terrain
+					landscape.renderPass( LandscapeRenderMethod::TerrainDepthFill, activeCamera, activeCamera.getVisibilitySet() );
+					
+					// Draw clutter / foliage
+					landscape.renderPass( LandscapeRenderMethod::ClutterDepthFill, activeCamera, activeCamera.getVisibilitySet() );
 
-				// End rendering to specified target.
-				renderDriver.endTargetRender();
+					// End rendering to specified target.
+					renderDriver.endTargetRender();
+				
+				} // End if beginTargetRender()
 			
-			} // End if beginTargetRender()
+			} // End if !mDrawDepth
 			
             // Setup render targets and perform terrain g-buffer fill
             targets.resize( 2 );
@@ -996,6 +1010,7 @@ class StandardRenderControl : IScriptedRenderControl
 			if ( renderDriver.beginTargetRender( targets, mDepthStencilBuffer ) )
             {
                 landscape.renderPass( LandscapeRenderMethod::TerrainGBufferFill, activeCamera, activeCamera.getVisibilitySet() );
+				landscape.renderPass( LandscapeRenderMethod::ClutterGBufferFill, activeCamera, activeCamera.getVisibilitySet() );
                 renderDriver.endTargetRender();
 
             } // End if beginTargetRender()

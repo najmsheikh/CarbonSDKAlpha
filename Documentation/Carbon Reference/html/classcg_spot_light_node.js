@@ -36,7 +36,7 @@ var classcg_spot_light_node =
     [ "getOuterRange", "classcg_spot_light_node.html#a26bbd71d04c0b623b7ff5eb1877b79e4", null ],
     [ "getReferenceType", "classcg_spot_light_node.html#af19062ddf0a2dde78ecdab1343732a4f", null ],
     [ "getShadowUpdateRate", "classcg_spot_light_node.html#a38394800065db7a0eadc7e323f726f62", null ],
-    [ "onComponentModified", "classcg_spot_light_node.html#a98fbf26df81bf93a740b72058f6dc8bc", null ],
+    [ "onComponentModified", "classcg_spot_light_node.html#a21500abe6c1d37d1e4e74fd5d2dba78a", null ],
     [ "pointInVolume", "classcg_spot_light_node.html#aa6bce15cdbfce8f331525b63dbd0cd71", null ],
     [ "postCreate", "classcg_spot_light_node.html#a2f1bbbd56dba1a6ce1e1ea23028e10cd", null ],
     [ "queryReferenceType", "classcg_spot_light_node.html#ad5e6e1efc36e6d044dcae04bdd8e8ca6", null ],

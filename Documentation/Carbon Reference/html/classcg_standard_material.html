@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
    </div>
   </td>
  </tr>
@@ -168,6 +168,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a40151e02d606c0a1d8e7af44b7e10fd2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#a40151e02d606c0a1d8e7af44b7e10fd2">dispose</a> (bool disposeBase)</td></tr>
 <tr class="memdesc:a40151e02d606c0a1d8e7af44b7e10fd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any memory, references or resources allocated by this object.  <a href="#a40151e02d606c0a1d8e7af44b7e10fd2"></a><br/></td></tr>
 <tr class="separator:a40151e02d606c0a1d8e7af44b7e10fd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ed3efb25f0059a1a859f9c321809350"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#a1ed3efb25f0059a1a859f9c321809350">canBatch</a> () const </td></tr>
+<tr class="separator:a1ed3efb25f0059a1a859f9c321809350"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd5d452f5a613b02dced094f6760fa45"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="cg_base_types_8h.html#a56025923e37960cbd26905608b2f0d06">cgInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_standard_material.html#abd5d452f5a613b02dced094f6760fa45">compare</a> (const <a class="el" href="classcg_material.html">cgMaterial</a> &amp;material) const </td></tr>
 <tr class="memdesc:abd5d452f5a613b02dced094f6760fa45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a deep compare allowing us to perform rapid binary tree style searches (such as the map in our resource manager).  <a href="#abd5d452f5a613b02dced094f6760fa45"></a><br/></td></tr>
 <tr class="separator:abd5d452f5a613b02dced094f6760fa45"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1030,6 +1032,31 @@ Static Protected Attributes</h2></td></tr>
 <p>Construct the preview image used by the sandbox material editor to display a representation of this material. An internal scene is provided which is set up with an appropriate render control script should it be required (for instance, object rendering). </p>
 
 <p>Reimplemented from <a class="el" href="classcg_material.html#a38748fb2556fa7f4e6bf7dbe1a718d9e">cgMaterial</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1ed3efb25f0059a1a859f9c321809350"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool cgStandardMaterial::canBatch </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classcg_material.html#a0488bd8ca4beb1928afaec48139bfc11">cgMaterial</a>.</p>
 
 </div>
 </div>
@@ -3022,7 +3049,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_standard_material.html">cgStandardMaterial</a></li>
-    <li class="footer">Generated on Mon May 12 2014 08:23:42 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Wed May 21 2014 19:31:45 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

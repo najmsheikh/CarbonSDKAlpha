@@ -241,7 +241,7 @@ public:
     // Public Virtual Methods (Overrides cgObjectNode)
     //-------------------------------------------------------------------------
     virtual bool                registerVisibility      ( cgVisibilitySet * visibilityData );
-    virtual void                onComponentModified     ( cgComponentModifiedEventArgs * e );
+    virtual void                onComponentModified     ( cgReference * sender, cgComponentModifiedEventArgs * e );
     virtual void                onResolvePendingUpdates ( cgUInt32 updates );
     virtual bool                onNodeLoading           ( const cgUID & objectType, cgWorldQuery * nodeData, cgSceneCell * parentCell, cgCloneMethod::Base cloneMethod );
     virtual bool                onNodeCreated           ( const cgUID & objectType, cgCloneMethod::Base cloneMethod );

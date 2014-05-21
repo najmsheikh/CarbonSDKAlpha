@@ -60,7 +60,9 @@ namespace cgLandscapeRenderMethod
         TerrainDepthFill   = 0,
         TerrainShadowFill,
         TerrainGBufferFill,
-        TerrainGBufferPost
+        TerrainGBufferPost,
+        ClutterDepthFill,
+        ClutterGBufferFill
     };
 
 } // End Namespace : cgLandscapeRenderMethod

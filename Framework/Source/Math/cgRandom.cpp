@@ -266,7 +266,7 @@ void NoiseGenerator::initializeExponents()
     for ( cgInt i = 0; i <= (cgInt)mOctaves; ++i )
     {
         // Compute weight for each frequency
-        mTables.exponents[i] = (cgFloat)powf( (cgFloat)frequency, (cgFloat)-mPersistance );
+        mTables.exponents[i] = (cgFloat)powf( (cgFloat)frequency, (cgFloat)-mPersistence );
         frequency *= mFrequency;
 
     } // Next Frequency
@@ -309,15 +309,15 @@ cgFloat NoiseGenerator::generatePerlin( const cgVector2 & vec ) const
     cgFloat octaves     = mOctaves;
     cgFloat amplitude   = mAmplitude;
     cgFloat freq_factor = mFrequency;
-    cgFloat persistance = mPersistance;
+    cgFloat persistence = mPersistence;
 
     // Generate
     cgFloat total = 0.0f;
     for( cgInt i = 0; i < (cgInt)octaves; ++i ) 
     {
-        total       += generateNoise2( cgVector2(vec.x * freq_factor, vec.y * freq_factor) ) * (amplitude + persistance);
-        persistance *= P;
-        amplitude   *= persistance;
+        total       += generateNoise2( cgVector2(vec.x * freq_factor, vec.y * freq_factor) ) * (amplitude + persistence);
+        persistence *= P;
+        amplitude   *= persistence;
         freq_factor *= 2;
     
     } // Next Frequency
@@ -473,7 +473,7 @@ void NoiseGenerator::setNoiseType( NoiseType value )
         case Perlin:
             mOctaves          = 8;
             mFrequency        = 0.04f;
-            mPersistance      = 0.5f;
+            mPersistence      = 0.5f;
             mAmplitude        = 0.65f;
             break;
 
@@ -513,25 +513,25 @@ void NoiseGenerator::setSeed( cgUInt32 value )
 }
 
 //-----------------------------------------------------------------------------
-// Name : getPersistance ( )
+// Name : getPersistence ( )
 /// <summary>
-/// Get the noise persistance.
+/// Get the noise persistence.
 /// </summary>
 //-----------------------------------------------------------------------------
-cgFloat NoiseGenerator::getPersistance( ) const
+cgFloat NoiseGenerator::getPersistence( ) const
 {
-    return mPersistance;
+    return mPersistence;
 }
 
 //-----------------------------------------------------------------------------
-// Name : setPersistance ( )
+// Name : setPersistence ( )
 /// <summary>
-/// Set the noise persistance.
+/// Set the noise persistence.
 /// </summary>
 //-----------------------------------------------------------------------------
-void NoiseGenerator::setPersistance( cgFloat value )
+void NoiseGenerator::setPersistence( cgFloat value )
 {
-    mPersistance = value;
+    mPersistence = value;
 
     // Recompute spectral weights table
     initializeExponents();

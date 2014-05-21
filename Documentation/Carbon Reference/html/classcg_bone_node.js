@@ -15,7 +15,7 @@ var classcg_bone_node =
     [ "isCollisionEnabled", "classcg_bone_node.html#a098eb2b0956335d96e713dd3f6276175", null ],
     [ "move", "classcg_bone_node.html#a3a202429f0a4667b54d5d01f92b600b0", null ],
     [ "moveLocal", "classcg_bone_node.html#a1b6263140376d95819f2726e3f1cf51f", null ],
-    [ "onComponentModified", "classcg_bone_node.html#a890ca89db0046348242a3c288ad30ff8", null ],
+    [ "onComponentModified", "classcg_bone_node.html#af60492e59d80bc27c71bbf94e3ccd461", null ],
     [ "onNodeInit", "classcg_bone_node.html#a8b60197d994ffd21173b84b7fc589bf8", null ],
     [ "queryReferenceType", "classcg_bone_node.html#a044ca3b9a8c729131928d44c4af670d6", null ],
     [ "setBoneOrientation", "classcg_bone_node.html#ad5b1e1d69f2c2f8fa1301f5ff6fac217", null ],

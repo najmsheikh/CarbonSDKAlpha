@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
    </div>
   </td>
  </tr>
@@ -623,171 +623,175 @@ $(document).ready(function(){initNavTree('cg_array_8h_source.html','');});
 <div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;        <a class="code" href="classcg_array.html#a15174b2b57bd81a0d21d628c742ad90b" title="Insert a new item at the specified location in the array. ">insert</a>( <a class="code" href="classcg_array.html#aca17298966b39a1d490bcafb43f5d2dd">end</a>(), other.<a class="code" href="classcg_array.html#ad2d46102888d19b7f8adf3146a4cc14c" title="Retrieve the iterator items that allow for forward iteration through the array. ">begin</a>(), other.<a class="code" href="classcg_array.html#aca17298966b39a1d490bcafb43f5d2dd">end</a>() );</div>
 <div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;    }</div>
-<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;</div>
-<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;    <span class="comment">// Private Methods</span></div>
-<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;    <span class="comment">//  Name : _realloc ()</span></div>
-<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;<span class="comment"></span>    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;    <span class="keywordtype">void</span> _realloc( <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> newSize, <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> newCapacity, <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> operateAt )</div>
-<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;    {</div>
-<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;        <span class="comment">// How many entries are being inserted (0 if equal or shrinking)</span></div>
-<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;        <a class="code" href="classcg_array_base.html#a028c3837fdaa7136f8ce252323ff7570">difference_type</a> insertCount = (newSize &gt; <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a>) ? newSize - <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a> : 0;</div>
-<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;        </div>
-<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;        <span class="comment">// How many entries are being removed (0 if equal or growing)</span></div>
-<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;        <a class="code" href="classcg_array_base.html#a028c3837fdaa7136f8ce252323ff7570">difference_type</a> removeCount = (newSize &lt; <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a>) ? <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a> - newSize : 0;</div>
-<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;</div>
-<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;        <span class="comment">// If size isn&#39;t changing, just assume we&#39;re operating at the end</span></div>
-<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;        <span class="comment">// to simplify later sections of this method.</span></div>
-<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;        <span class="keywordflow">if</span> ( newSize == <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a> )</div>
-<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;            operateAt = <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a>;</div>
-<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;</div>
-<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;        <span class="comment">// Clamp the operation point to the NEW size (in case of shrinking).</span></div>
-<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;        <span class="keywordflow">if</span> ( operateAt &gt; newSize )</div>
-<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;            operateAt = newSize;</div>
+<div class="line"><a name="l00640"></a><span class="lineno"><a class="code" href="classcg_array.html#a4a00bd99a31330774eea8db578011931">  640</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> operator&lt; (const cgArray&lt;value_type&gt; &amp; other ) <span class="keyword">const</span></div>
+<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;    {</div>
+<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;        <span class="keywordflow">return</span> std::lexicographical_compare(<a class="code" href="classcg_array.html#ad2d46102888d19b7f8adf3146a4cc14c" title="Retrieve the iterator items that allow for forward iteration through the array. ">begin</a>(), <a class="code" href="classcg_array.html#aca17298966b39a1d490bcafb43f5d2dd">end</a>(), other.begin(), other.end() );</div>
+<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;    }</div>
+<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;</div>
+<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;    <span class="comment">// Private Methods</span></div>
+<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;    <span class="comment">//  Name : _realloc ()</span></div>
+<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;<span class="comment"></span>    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;    <span class="keywordtype">void</span> _realloc( <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> newSize, <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> newCapacity, <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> operateAt )</div>
+<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;    {</div>
+<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;        <span class="comment">// How many entries are being inserted (0 if equal or shrinking)</span></div>
+<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;        <a class="code" href="classcg_array_base.html#a028c3837fdaa7136f8ce252323ff7570">difference_type</a> insertCount = (newSize &gt; <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a>) ? newSize - <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a> : 0;</div>
+<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;        </div>
+<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;        <span class="comment">// How many entries are being removed (0 if equal or growing)</span></div>
+<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;        <a class="code" href="classcg_array_base.html#a028c3837fdaa7136f8ce252323ff7570">difference_type</a> removeCount = (newSize &lt; <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a>) ? <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a> - newSize : 0;</div>
+<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;</div>
+<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;        <span class="comment">// If size isn&#39;t changing, just assume we&#39;re operating at the end</span></div>
+<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;        <span class="comment">// to simplify later sections of this method.</span></div>
+<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;        <span class="keywordflow">if</span> ( newSize == <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a> )</div>
+<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;            operateAt = <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a>;</div>
 <div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;</div>
-<div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;        <span class="comment">// If existing capacity differs from the prior capacity</span></div>
-<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;        <span class="comment">// then we need to re-allocate.</span></div>
-<div class="line"><a name="l00671"></a><span class="lineno">  671</span>&#160;        <span class="keywordflow">if</span> ( newCapacity != <a class="code" href="classcg_array_base.html#a65af6aa92b7a3d9b17d89953f5b4d8ca">mCapacity</a> )</div>
-<div class="line"><a name="l00672"></a><span class="lineno">  672</span>&#160;        {</div>
-<div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160;            <span class="comment">// Allocate enough room in a new buffer for new capacity (not</span></div>
-<div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;            <span class="comment">// initialized at this stage). Take care to include the &#39;end&#39;</span></div>
-<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;            <span class="comment">// element that always exists at the end of the array.</span></div>
-<div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;            <span class="keywordtype">char</span> * newBuffer = <span class="keyword">new</span> <span class="keywordtype">char</span>[ (newCapacity + 1) * <span class="keyword">sizeof</span>(<a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>) ];</div>
-<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;</div>
-<div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;            <span class="comment">// Any prior data to copy?</span></div>
-<div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160;            <span class="keywordflow">if</span> ( <a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a> )</div>
-<div class="line"><a name="l00680"></a><span class="lineno">  680</span>&#160;            {</div>
-<div class="line"><a name="l00681"></a><span class="lineno">  681</span>&#160;                <span class="comment">// We now need to duplicate the data from the old buffer. This</span></div>
-<div class="line"><a name="l00682"></a><span class="lineno">  682</span>&#160;                <span class="comment">// is achieved as a two stage process for the data that falls</span></div>
-<div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160;                <span class="comment">// on either side of the element specified by the &#39;operateAt&#39;</span></div>
-<div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160;                <span class="comment">// parameter. We use placement new to invoke the appropriate copy </span></div>
-<div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;                <span class="comment">// constructor in all cases since the new buffer&#39;s memory has</span></div>
-<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;                <span class="comment">// yet to be initialized.</span></div>
-<div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> dst  = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)newBuffer) + operateAt;</div>
-<div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> last = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)newBuffer);</div>
-<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> src  = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>) + operateAt;</div>
-<div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;                <span class="keywordflow">while</span> ( dst != last )</div>
-<div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160;                    <span class="keyword">new</span> (--dst) <a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>( *--src );</div>
-<div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;</div>
-<div class="line"><a name="l00693"></a><span class="lineno">  693</span>&#160;                <span class="comment">// Now do the same for the other side of the point of operation.</span></div>
-<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;                <span class="comment">// We potentially need to move data after the insertion point &#39;up&#39; by </span></div>
-<div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;                <span class="comment">// the required number of places indicated by the difference in size </span></div>
-<div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;                <span class="comment">// (unless we are shrinking, or inserting at the end of the array).</span></div>
-<div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;                dst  = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)newBuffer) + newSize;</div>
-<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;                last = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)newBuffer) + operateAt + insertCount;</div>
-<div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;                src  = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#aacb1535a6137e880896f2d47f6d2f282">mEnd</a>);</div>
-<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;                <span class="keywordflow">while</span> ( dst != last )</div>
-<div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;                    <span class="keyword">new</span> (--dst) <a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>( *--src );</div>
-<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;</div>
-<div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;            } <span class="comment">// End if has old data</span></div>
-<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;</div>
-<div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160;            <span class="comment">// This is now our new buffer</span></div>
-<div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;            _dealloc();</div>
-<div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160;            <a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a> = newBuffer;</div>
+<div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;        <span class="comment">// Clamp the operation point to the NEW size (in case of shrinking).</span></div>
+<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;        <span class="keywordflow">if</span> ( operateAt &gt; newSize )</div>
+<div class="line"><a name="l00671"></a><span class="lineno">  671</span>&#160;            operateAt = newSize;</div>
+<div class="line"><a name="l00672"></a><span class="lineno">  672</span>&#160;</div>
+<div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160;        <span class="comment">// If existing capacity differs from the prior capacity</span></div>
+<div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;        <span class="comment">// then we need to re-allocate.</span></div>
+<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;        <span class="keywordflow">if</span> ( newCapacity != <a class="code" href="classcg_array_base.html#a65af6aa92b7a3d9b17d89953f5b4d8ca">mCapacity</a> )</div>
+<div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;        {</div>
+<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;            <span class="comment">// Allocate enough room in a new buffer for new capacity (not</span></div>
+<div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;            <span class="comment">// initialized at this stage). Take care to include the &#39;end&#39;</span></div>
+<div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160;            <span class="comment">// element that always exists at the end of the array.</span></div>
+<div class="line"><a name="l00680"></a><span class="lineno">  680</span>&#160;            <span class="keywordtype">char</span> * newBuffer = <span class="keyword">new</span> <span class="keywordtype">char</span>[ (newCapacity + 1) * <span class="keyword">sizeof</span>(<a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>) ];</div>
+<div class="line"><a name="l00681"></a><span class="lineno">  681</span>&#160;</div>
+<div class="line"><a name="l00682"></a><span class="lineno">  682</span>&#160;            <span class="comment">// Any prior data to copy?</span></div>
+<div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160;            <span class="keywordflow">if</span> ( <a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a> )</div>
+<div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160;            {</div>
+<div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;                <span class="comment">// We now need to duplicate the data from the old buffer. This</span></div>
+<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;                <span class="comment">// is achieved as a two stage process for the data that falls</span></div>
+<div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;                <span class="comment">// on either side of the element specified by the &#39;operateAt&#39;</span></div>
+<div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160;                <span class="comment">// parameter. We use placement new to invoke the appropriate copy </span></div>
+<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160;                <span class="comment">// constructor in all cases since the new buffer&#39;s memory has</span></div>
+<div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;                <span class="comment">// yet to be initialized.</span></div>
+<div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> dst  = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)newBuffer) + operateAt;</div>
+<div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> last = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)newBuffer);</div>
+<div class="line"><a name="l00693"></a><span class="lineno">  693</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> src  = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>) + operateAt;</div>
+<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;                <span class="keywordflow">while</span> ( dst != last )</div>
+<div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;                    <span class="keyword">new</span> (--dst) <a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>( *--src );</div>
+<div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;</div>
+<div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;                <span class="comment">// Now do the same for the other side of the point of operation.</span></div>
+<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;                <span class="comment">// We potentially need to move data after the insertion point &#39;up&#39; by </span></div>
+<div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;                <span class="comment">// the required number of places indicated by the difference in size </span></div>
+<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;                <span class="comment">// (unless we are shrinking, or inserting at the end of the array).</span></div>
+<div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;                dst  = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)newBuffer) + newSize;</div>
+<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;                last = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)newBuffer) + operateAt + insertCount;</div>
+<div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;                src  = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#aacb1535a6137e880896f2d47f6d2f282">mEnd</a>);</div>
+<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;                <span class="keywordflow">while</span> ( dst != last )</div>
+<div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160;                    <span class="keyword">new</span> (--dst) <a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>( *--src );</div>
+<div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;</div>
+<div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160;            } <span class="comment">// End if has old data</span></div>
 <div class="line"><a name="l00708"></a><span class="lineno">  708</span>&#160;</div>
-<div class="line"><a name="l00709"></a><span class="lineno">  709</span>&#160;        } <span class="comment">// End if capacity altered</span></div>
-<div class="line"><a name="l00710"></a><span class="lineno">  710</span>&#160;        <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160;        {</div>
-<div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;            <span class="comment">// Growing or shrinking?</span></div>
-<div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;            <span class="keywordflow">if</span> ( insertCount &gt; 0 &amp;&amp; operateAt &lt; <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a> )</div>
-<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;            {</div>
-<div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160;                <span class="comment">// We potentially need to move data after the insertion point &#39;up&#39; by </span></div>
-<div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160;                <span class="comment">// the required number of places indicated by the difference in size.</span></div>
-<div class="line"><a name="l00717"></a><span class="lineno">  717</span>&#160;                <span class="comment">// For all entries that have yet to be constructed, we need to use </span></div>
-<div class="line"><a name="l00718"></a><span class="lineno">  718</span>&#160;                <span class="comment">// placement new and the copy constructor.</span></div>
-<div class="line"><a name="l00719"></a><span class="lineno">  719</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> dst   = (((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+newSize);</div>
-<div class="line"><a name="l00720"></a><span class="lineno">  720</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> last  = (dst-insertCount);</div>
-<div class="line"><a name="l00721"></a><span class="lineno">  721</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> src   = last;</div>
-<div class="line"><a name="l00722"></a><span class="lineno">  722</span>&#160;                <span class="keywordflow">while</span> ( dst != last )</div>
-<div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;                    <span class="keyword">new</span> ( --dst ) <a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>( *--src );</div>
-<div class="line"><a name="l00724"></a><span class="lineno">  724</span>&#160;                </div>
-<div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160;                <span class="comment">// We can just use the assignment operator for the rest.</span></div>
-<div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160;                last = (((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+operateAt+insertCount);</div>
-<div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160;                <span class="keywordflow">while</span> ( dst != last )</div>
-<div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;                    *--dst = *--src;</div>
-<div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;                </div>
-<div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;                <span class="comment">// Finally; destruct the values that exist between the insert </span></div>
-<div class="line"><a name="l00731"></a><span class="lineno">  731</span>&#160;                <span class="comment">// range that have since been moved by the above loop(s).</span></div>
-<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;                last = (((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+operateAt);</div>
-<div class="line"><a name="l00733"></a><span class="lineno">  733</span>&#160;                <span class="keywordflow">while</span> ( dst != last )</div>
-<div class="line"><a name="l00734"></a><span class="lineno">  734</span>&#160;                    (--dst)-&gt;~<a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>();</div>
-<div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;</div>
-<div class="line"><a name="l00736"></a><span class="lineno">  736</span>&#160;            } <span class="comment">// End if inserting</span></div>
-<div class="line"><a name="l00737"></a><span class="lineno">  737</span>&#160;            <span class="keywordflow">else</span> <span class="keywordflow">if</span> ( removeCount &gt; 0 )</div>
-<div class="line"><a name="l00738"></a><span class="lineno">  738</span>&#160;            {</div>
-<div class="line"><a name="l00739"></a><span class="lineno">  739</span>&#160;                <span class="comment">// We are potentially shrinking. First ensure that the destructor</span></div>
-<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;                <span class="comment">// is called for any elements in the buffer that are positioned</span></div>
-<div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160;                <span class="comment">// within the region to be removed.</span></div>
-<div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> dst   = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+operateAt+removeCount;</div>
-<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> last  = (dst-removeCount);</div>
-<div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;                <span class="keywordflow">while</span> ( dst != last )</div>
-<div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;                    (--dst)-&gt;~<a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>();</div>
-<div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;</div>
-<div class="line"><a name="l00747"></a><span class="lineno">  747</span>&#160;                <span class="comment">// Shift values down as necessary using placement new</span></div>
-<div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;                <span class="comment">// to reconstruct the values, ensuring we call the</span></div>
-<div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;                <span class="comment">// destructor on each prior element as it moves.</span></div>
-<div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;                dst   = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+operateAt;</div>
-<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> src = dst + removeCount;</div>
-<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;                last  = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+<a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a>;</div>
-<div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160;                <span class="keywordflow">while</span> ( src != last )</div>
-<div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;                {</div>
-<div class="line"><a name="l00755"></a><span class="lineno">  755</span>&#160;                    <span class="keyword">new</span> ( dst++ ) <a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>( *src );</div>
-<div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160;                    (src++)-&gt;~<a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>();</div>
-<div class="line"><a name="l00757"></a><span class="lineno">  757</span>&#160;                }                    </div>
-<div class="line"><a name="l00758"></a><span class="lineno">  758</span>&#160;</div>
-<div class="line"><a name="l00759"></a><span class="lineno">  759</span>&#160;            } <span class="comment">// End if removing</span></div>
-<div class="line"><a name="l00760"></a><span class="lineno">  760</span>&#160;</div>
-<div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160;        } <span class="comment">// End if no capacity alteration</span></div>
+<div class="line"><a name="l00709"></a><span class="lineno">  709</span>&#160;            <span class="comment">// This is now our new buffer</span></div>
+<div class="line"><a name="l00710"></a><span class="lineno">  710</span>&#160;            _dealloc();</div>
+<div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160;            <a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a> = newBuffer;</div>
+<div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;</div>
+<div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;        } <span class="comment">// End if capacity altered</span></div>
+<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160;        {</div>
+<div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160;            <span class="comment">// Growing or shrinking?</span></div>
+<div class="line"><a name="l00717"></a><span class="lineno">  717</span>&#160;            <span class="keywordflow">if</span> ( insertCount &gt; 0 &amp;&amp; operateAt &lt; <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a> )</div>
+<div class="line"><a name="l00718"></a><span class="lineno">  718</span>&#160;            {</div>
+<div class="line"><a name="l00719"></a><span class="lineno">  719</span>&#160;                <span class="comment">// We potentially need to move data after the insertion point &#39;up&#39; by </span></div>
+<div class="line"><a name="l00720"></a><span class="lineno">  720</span>&#160;                <span class="comment">// the required number of places indicated by the difference in size.</span></div>
+<div class="line"><a name="l00721"></a><span class="lineno">  721</span>&#160;                <span class="comment">// For all entries that have yet to be constructed, we need to use </span></div>
+<div class="line"><a name="l00722"></a><span class="lineno">  722</span>&#160;                <span class="comment">// placement new and the copy constructor.</span></div>
+<div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> dst   = (((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+newSize);</div>
+<div class="line"><a name="l00724"></a><span class="lineno">  724</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> last  = (dst-insertCount);</div>
+<div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> src   = last;</div>
+<div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160;                <span class="keywordflow">while</span> ( dst != last )</div>
+<div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160;                    <span class="keyword">new</span> ( --dst ) <a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>( *--src );</div>
+<div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;                </div>
+<div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;                <span class="comment">// We can just use the assignment operator for the rest.</span></div>
+<div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;                last = (((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+operateAt+insertCount);</div>
+<div class="line"><a name="l00731"></a><span class="lineno">  731</span>&#160;                <span class="keywordflow">while</span> ( dst != last )</div>
+<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;                    *--dst = *--src;</div>
+<div class="line"><a name="l00733"></a><span class="lineno">  733</span>&#160;                </div>
+<div class="line"><a name="l00734"></a><span class="lineno">  734</span>&#160;                <span class="comment">// Finally; destruct the values that exist between the insert </span></div>
+<div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;                <span class="comment">// range that have since been moved by the above loop(s).</span></div>
+<div class="line"><a name="l00736"></a><span class="lineno">  736</span>&#160;                last = (((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+operateAt);</div>
+<div class="line"><a name="l00737"></a><span class="lineno">  737</span>&#160;                <span class="keywordflow">while</span> ( dst != last )</div>
+<div class="line"><a name="l00738"></a><span class="lineno">  738</span>&#160;                    (--dst)-&gt;~<a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>();</div>
+<div class="line"><a name="l00739"></a><span class="lineno">  739</span>&#160;</div>
+<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;            } <span class="comment">// End if inserting</span></div>
+<div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160;            <span class="keywordflow">else</span> <span class="keywordflow">if</span> ( removeCount &gt; 0 )</div>
+<div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;            {</div>
+<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;                <span class="comment">// We are potentially shrinking. First ensure that the destructor</span></div>
+<div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;                <span class="comment">// is called for any elements in the buffer that are positioned</span></div>
+<div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;                <span class="comment">// within the region to be removed.</span></div>
+<div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> dst   = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+operateAt+removeCount;</div>
+<div class="line"><a name="l00747"></a><span class="lineno">  747</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> last  = (dst-removeCount);</div>
+<div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;                <span class="keywordflow">while</span> ( dst != last )</div>
+<div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;                    (--dst)-&gt;~<a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>();</div>
+<div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;</div>
+<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;                <span class="comment">// Shift values down as necessary using placement new</span></div>
+<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;                <span class="comment">// to reconstruct the values, ensuring we call the</span></div>
+<div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160;                <span class="comment">// destructor on each prior element as it moves.</span></div>
+<div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;                dst   = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+operateAt;</div>
+<div class="line"><a name="l00755"></a><span class="lineno">  755</span>&#160;                <a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a> src = dst + removeCount;</div>
+<div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160;                last  = ((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+<a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a>;</div>
+<div class="line"><a name="l00757"></a><span class="lineno">  757</span>&#160;                <span class="keywordflow">while</span> ( src != last )</div>
+<div class="line"><a name="l00758"></a><span class="lineno">  758</span>&#160;                {</div>
+<div class="line"><a name="l00759"></a><span class="lineno">  759</span>&#160;                    <span class="keyword">new</span> ( dst++ ) <a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>( *src );</div>
+<div class="line"><a name="l00760"></a><span class="lineno">  760</span>&#160;                    (src++)-&gt;~<a class="code" href="classcg_array.html#a0067f14f4ad3a938f792ba1d208d24aa">value_type</a>();</div>
+<div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160;                }                    </div>
 <div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160;</div>
-<div class="line"><a name="l00763"></a><span class="lineno">  763</span>&#160;        <span class="comment">// Resize complete.</span></div>
-<div class="line"><a name="l00764"></a><span class="lineno">  764</span>&#160;        <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a>     = newSize;</div>
-<div class="line"><a name="l00765"></a><span class="lineno">  765</span>&#160;        <a class="code" href="classcg_array_base.html#a65af6aa92b7a3d9b17d89953f5b4d8ca">mCapacity</a> = newCapacity;</div>
-<div class="line"><a name="l00766"></a><span class="lineno">  766</span>&#160;        <a class="code" href="classcg_array_base.html#aacb1535a6137e880896f2d47f6d2f282">mEnd</a>      = (((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+<a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a>);</div>
-<div class="line"><a name="l00767"></a><span class="lineno">  767</span>&#160;    }</div>
-<div class="line"><a name="l00768"></a><span class="lineno">  768</span>&#160;</div>
-<div class="line"><a name="l00769"></a><span class="lineno">  769</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00770"></a><span class="lineno">  770</span>&#160;    <span class="comment">//  Name : _dealloc ()</span></div>
-<div class="line"><a name="l00774"></a><span class="lineno">  774</span>&#160;<span class="comment"></span>    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00775"></a><span class="lineno">  775</span>&#160;    <span class="keywordtype">void</span> _dealloc( )</div>
-<div class="line"><a name="l00776"></a><span class="lineno">  776</span>&#160;    {</div>
-<div class="line"><a name="l00777"></a><span class="lineno">  777</span>&#160;        <span class="comment">// Call the destructor for all &#39;active&#39; elements in the buffer</span></div>
-<div class="line"><a name="l00778"></a><span class="lineno">  778</span>&#160;        <span class="comment">// (we used placement new to initialize only those we needed).</span></div>
-<div class="line"><a name="l00779"></a><span class="lineno">  779</span>&#160;        <span class="keywordflow">for</span> ( <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> i = 0; i &lt; <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a>; ++i )</div>
-<div class="line"><a name="l00780"></a><span class="lineno">  780</span>&#160;            (((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+i)-&gt;~value_type();</div>
-<div class="line"><a name="l00781"></a><span class="lineno">  781</span>&#160;</div>
-<div class="line"><a name="l00782"></a><span class="lineno">  782</span>&#160;        <span class="comment">// Delete the internal buffer (no destructor).</span></div>
-<div class="line"><a name="l00783"></a><span class="lineno">  783</span>&#160;        <span class="keyword">delete</span>[] (<span class="keywordtype">char</span>*)mStart;</div>
-<div class="line"><a name="l00784"></a><span class="lineno">  784</span>&#160;        mStart = 0;</div>
-<div class="line"><a name="l00785"></a><span class="lineno">  785</span>&#160;        <a class="code" href="classcg_array_base.html#aacb1535a6137e880896f2d47f6d2f282">mEnd</a>   = 0;</div>
-<div class="line"><a name="l00786"></a><span class="lineno">  786</span>&#160;    }</div>
-<div class="line"><a name="l00787"></a><span class="lineno">  787</span>&#160;</div>
-<div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;    <span class="comment">//  Name : _nextCapacity ()</span></div>
-<div class="line"><a name="l00793"></a><span class="lineno">  793</span>&#160;<span class="comment"></span>    <span class="comment">//-------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00794"></a><span class="lineno">  794</span>&#160;    <span class="keyword">inline</span> <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> _nextCapacity( <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> current, <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> newSize )</div>
-<div class="line"><a name="l00795"></a><span class="lineno">  795</span>&#160;    {</div>
-<div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160;        <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> next = current, newNext;</div>
-<div class="line"><a name="l00797"></a><span class="lineno">  797</span>&#160;        <span class="keywordflow">while</span> ( next &lt; newSize )</div>
-<div class="line"><a name="l00798"></a><span class="lineno">  798</span>&#160;        {</div>
-<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;            newNext = (<a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a>)((<span class="keywordtype">float</span>)next * <a class="code" href="cg_array_8h.html#a89ee273c83a492099f3b089844ea9712">CGARRAY_CAPACITYGROWTHFACTOR</a>);</div>
-<div class="line"><a name="l00800"></a><span class="lineno">  800</span>&#160;            next = (newNext == next) ? newNext + 1 : newNext;</div>
-<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;        </div>
-<div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;        } <span class="comment">// Next attempt</span></div>
-<div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;        <span class="keywordflow">return</span> next;</div>
-<div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160;    }</div>
-<div class="line"><a name="l00805"></a><span class="lineno">  805</span>&#160;};</div>
-<div class="line"><a name="l00806"></a><span class="lineno">  806</span>&#160;</div>
-<div class="line"><a name="l00807"></a><span class="lineno">  807</span>&#160;<span class="preprocessor">#endif // !_CGE_CGARRAY_H_</span></div>
+<div class="line"><a name="l00763"></a><span class="lineno">  763</span>&#160;            } <span class="comment">// End if removing</span></div>
+<div class="line"><a name="l00764"></a><span class="lineno">  764</span>&#160;</div>
+<div class="line"><a name="l00765"></a><span class="lineno">  765</span>&#160;        } <span class="comment">// End if no capacity alteration</span></div>
+<div class="line"><a name="l00766"></a><span class="lineno">  766</span>&#160;</div>
+<div class="line"><a name="l00767"></a><span class="lineno">  767</span>&#160;        <span class="comment">// Resize complete.</span></div>
+<div class="line"><a name="l00768"></a><span class="lineno">  768</span>&#160;        <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a>     = newSize;</div>
+<div class="line"><a name="l00769"></a><span class="lineno">  769</span>&#160;        <a class="code" href="classcg_array_base.html#a65af6aa92b7a3d9b17d89953f5b4d8ca">mCapacity</a> = newCapacity;</div>
+<div class="line"><a name="l00770"></a><span class="lineno">  770</span>&#160;        <a class="code" href="classcg_array_base.html#aacb1535a6137e880896f2d47f6d2f282">mEnd</a>      = (((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+<a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a>);</div>
+<div class="line"><a name="l00771"></a><span class="lineno">  771</span>&#160;    }</div>
+<div class="line"><a name="l00772"></a><span class="lineno">  772</span>&#160;</div>
+<div class="line"><a name="l00773"></a><span class="lineno">  773</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00774"></a><span class="lineno">  774</span>&#160;    <span class="comment">//  Name : _dealloc ()</span></div>
+<div class="line"><a name="l00778"></a><span class="lineno">  778</span>&#160;<span class="comment"></span>    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00779"></a><span class="lineno">  779</span>&#160;    <span class="keywordtype">void</span> _dealloc( )</div>
+<div class="line"><a name="l00780"></a><span class="lineno">  780</span>&#160;    {</div>
+<div class="line"><a name="l00781"></a><span class="lineno">  781</span>&#160;        <span class="comment">// Call the destructor for all &#39;active&#39; elements in the buffer</span></div>
+<div class="line"><a name="l00782"></a><span class="lineno">  782</span>&#160;        <span class="comment">// (we used placement new to initialize only those we needed).</span></div>
+<div class="line"><a name="l00783"></a><span class="lineno">  783</span>&#160;        <span class="keywordflow">for</span> ( <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> i = 0; i &lt; <a class="code" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a>; ++i )</div>
+<div class="line"><a name="l00784"></a><span class="lineno">  784</span>&#160;            (((<a class="code" href="classcg_array.html#afd194009b4b1c55a54bdc3c3fa08706f">pointer</a>)<a class="code" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a>)+i)-&gt;~value_type();</div>
+<div class="line"><a name="l00785"></a><span class="lineno">  785</span>&#160;</div>
+<div class="line"><a name="l00786"></a><span class="lineno">  786</span>&#160;        <span class="comment">// Delete the internal buffer (no destructor).</span></div>
+<div class="line"><a name="l00787"></a><span class="lineno">  787</span>&#160;        <span class="keyword">delete</span>[] (<span class="keywordtype">char</span>*)mStart;</div>
+<div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;        mStart = 0;</div>
+<div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;        <a class="code" href="classcg_array_base.html#aacb1535a6137e880896f2d47f6d2f282">mEnd</a>   = 0;</div>
+<div class="line"><a name="l00790"></a><span class="lineno">  790</span>&#160;    }</div>
+<div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;</div>
+<div class="line"><a name="l00792"></a><span class="lineno">  792</span>&#160;    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00793"></a><span class="lineno">  793</span>&#160;    <span class="comment">//  Name : _nextCapacity ()</span></div>
+<div class="line"><a name="l00797"></a><span class="lineno">  797</span>&#160;<span class="comment"></span>    <span class="comment">//-------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00798"></a><span class="lineno">  798</span>&#160;    <span class="keyword">inline</span> <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> _nextCapacity( <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> current, <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> newSize )</div>
+<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;    {</div>
+<div class="line"><a name="l00800"></a><span class="lineno">  800</span>&#160;        <a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a> next = current, newNext;</div>
+<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;        <span class="keywordflow">while</span> ( next &lt; newSize )</div>
+<div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;        {</div>
+<div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;            newNext = (<a class="code" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a>)((<span class="keywordtype">float</span>)next * <a class="code" href="cg_array_8h.html#a89ee273c83a492099f3b089844ea9712">CGARRAY_CAPACITYGROWTHFACTOR</a>);</div>
+<div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160;            next = (newNext == next) ? newNext + 1 : newNext;</div>
+<div class="line"><a name="l00805"></a><span class="lineno">  805</span>&#160;        </div>
+<div class="line"><a name="l00806"></a><span class="lineno">  806</span>&#160;        } <span class="comment">// Next attempt</span></div>
+<div class="line"><a name="l00807"></a><span class="lineno">  807</span>&#160;        <span class="keywordflow">return</span> next;</div>
+<div class="line"><a name="l00808"></a><span class="lineno">  808</span>&#160;    }</div>
+<div class="line"><a name="l00809"></a><span class="lineno">  809</span>&#160;};</div>
+<div class="line"><a name="l00810"></a><span class="lineno">  810</span>&#160;</div>
+<div class="line"><a name="l00811"></a><span class="lineno">  811</span>&#160;<span class="preprocessor">#endif // !_CGE_CGARRAY_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="dir_c33361510b5d8458f9ad99ec7c35be6a.html">System</a></li><li class="navelem"><a class="el" href="dir_20accb854afd3c61255d16300c0e3463.html">Containers</a></li><li class="navelem"><a class="el" href="cg_array_8h.html">cgArray.h</a></li>
-    <li class="footer">Generated on Mon May 12 2014 08:23:20 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Wed May 21 2014 19:31:21 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

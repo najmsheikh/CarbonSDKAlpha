@@ -329,7 +329,8 @@ namespace cgMaterialType
     enum Base
     {
         Standard        = 1,
-        LandscapeLayer  = 2
+        LandscapeLayer  = 2,
+        Clutter         = 3
     };
 
 } // End Namespace : cgMaterialType

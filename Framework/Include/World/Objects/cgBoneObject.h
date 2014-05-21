@@ -164,7 +164,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgObjectNode)
     //-------------------------------------------------------------------------
-    virtual void                onComponentModified     ( cgComponentModifiedEventArgs * e );
+    virtual void                onComponentModified     ( cgReference * sender, cgComponentModifiedEventArgs * e );
     virtual bool                onNodeInit              ( const cgUInt32IndexMap & nodeReferenceRemap );
     virtual void                move                    ( const cgVector3 & amount );
     virtual void                moveLocal               ( const cgVector3 & amount );

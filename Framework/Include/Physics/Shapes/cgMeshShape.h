@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 // cgMeshShape Header Includes
 //-----------------------------------------------------------------------------
-#include <Physics/Shapes/cgConvexShape.h>
+#include <Physics/cgPhysicsShape.h>
 #include <Scripting/cgScriptInterop.h>
 #include <Resources/cgResourceHandles.h>
 #include <Math/cgBoundingBox.h>

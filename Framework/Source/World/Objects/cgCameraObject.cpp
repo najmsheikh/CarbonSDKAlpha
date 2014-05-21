@@ -2308,7 +2308,7 @@ void cgCameraNode::projectionInterlace()
 /// order to notify any listeners of this fact.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgCameraNode::onComponentModified( cgComponentModifiedEventArgs * e )
+void cgCameraNode::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
 {
     // All modifications require projection matrix and
     // frustum to be updated.
@@ -2316,5 +2316,5 @@ void cgCameraNode::onComponentModified( cgComponentModifiedEventArgs * e )
     mFrustumDirty = true;
 
     // Call base class implementation last
-    cgObjectNode::onComponentModified( e );
+    cgObjectNode::onComponentModified( sender, e );
 }

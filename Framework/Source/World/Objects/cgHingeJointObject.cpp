@@ -1173,7 +1173,7 @@ bool cgHingeJointNode::onNodeDeleted( )
 /// order to notify any listeners of this fact.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgHingeJointNode::onComponentModified( cgComponentModifiedEventArgs * e )
+void cgHingeJointNode::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
 {
     // Unregister any prior event listeners.
     cgObjectNode * body0Node = getBody0Node();
@@ -1189,7 +1189,7 @@ void cgHingeJointNode::onComponentModified( cgComponentModifiedEventArgs * e )
     rebuildJoint();
 
     // Call base class implementation last
-    cgJointNode::onComponentModified( e );
+    cgJointNode::onComponentModified( sender, e );
 }
 
 //-----------------------------------------------------------------------------

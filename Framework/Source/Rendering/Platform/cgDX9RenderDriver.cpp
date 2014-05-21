@@ -1463,7 +1463,7 @@ bool cgDX9RenderDriver::setVertexFormat( cgVertexFormat * pFormat )
 
     // If the old vertex format had a different stride to the new format, we need to
     // rebind vertex buffers.
-    /*cgToDo( "Carbon General", "Vertex format system needs to be overhauled to maintain a stride per stream?" )
+    cgToDo( "Carbon General", "Vertex format system needs to be overhauled to maintain a stride per stream?" )
     if ( !pOldFormat || (pOldFormat->getStride() != pFormat->getStride()) )
     {
         for ( cgUInt32 i = 0; i < cgRenderDriver::MaxStreamSlots; ++i )
@@ -1473,13 +1473,13 @@ bool cgDX9RenderDriver::setVertexFormat( cgVertexFormat * pFormat )
             mD3DDevice->GetStreamSource( i, &pBuffer, &o, &s );
             if ( pBuffer )
             {
-                mD3DDevice->setStreamSource( i, pBuffer, 0, pFormat->getStride() );
+                mD3DDevice->SetStreamSource( i, pBuffer, 0, pFormat->getStride() );
                 pBuffer->Release();
             }
 
         } // Next vertex stream
 
-    } // End if stride changed*/
+    } // End if stride changed
 
     // Call base class implementation to set it to the internal stack.
     cgRenderDriver::setVertexFormat( pFormat );

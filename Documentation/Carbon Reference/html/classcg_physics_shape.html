@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
    </div>
   </td>
  </tr>
@@ -121,11 +121,12 @@ Inheritance diagram for cgPhysicsShape:</div>
  <div class="center">
   <img src="classcg_physics_shape.png" usemap="#cgPhysicsShape_map" alt=""/>
   <map id="cgPhysicsShape_map" name="cgPhysicsShape_map">
-<area href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat..." alt="cgReference" shape="rect" coords="861,112,1097,136"/>
-<area href="classcg_event_dispatcher.html" title="Base class from which other classes may derive if they want to be able to have listeners register wit..." alt="cgEventDispatcher" shape="rect" coords="861,56,1097,80"/>
-<area href="classcg_script_interop_1_1_disposable_script_object.html" title="Base class from which objects should be derived if they need to be passed to a script by reference as..." alt="cgScriptInterop::DisposableScriptObject" shape="rect" coords="861,0,1097,24"/>
+<area href="classcg_reference.html" title="Base class which provides standardized reference counting behaviors in addition to recording informat..." alt="cgReference" shape="rect" coords="984,112,1220,136"/>
+<area href="classcg_event_dispatcher.html" title="Base class from which other classes may derive if they want to be able to have listeners register wit..." alt="cgEventDispatcher" shape="rect" coords="984,56,1220,80"/>
+<area href="classcg_script_interop_1_1_disposable_script_object.html" title="Base class from which objects should be derived if they need to be passed to a script by reference as..." alt="cgScriptInterop::DisposableScriptObject" shape="rect" coords="984,0,1220,24"/>
 <area href="classcg_convex_shape.html" title="Base class from which all physics shape that can easily be classified as convex should derive..." alt="cgConvexShape" shape="rect" coords="738,224,974,248"/>
-<area href="classcg_mesh_shape.html" title="Class implementing collision only properties for an arbitrary mesh. This shape cannot be used with a ..." alt="cgMeshShape" shape="rect" coords="984,224,1220,248"/>
+<area href="classcg_displacement_shape.html" title="Class implementing collision only properties for an arbitrary displacement / height map (such as that..." alt="cgDisplacementShape" shape="rect" coords="984,224,1220,248"/>
+<area href="classcg_mesh_shape.html" title="Class implementing collision only properties for an arbitrary mesh. This shape cannot be used with a ..." alt="cgMeshShape" shape="rect" coords="1230,224,1466,248"/>
 <area href="classcg_box_shape.html" title="Class implementing collision / dynamics properties for a simple box shape. " alt="cgBoxShape" shape="rect" coords="0,280,236,304"/>
 <area href="classcg_capsule_shape.html" title="Class implementing collision / dynamics properties for a simple capsule shape. " alt="cgCapsuleShape" shape="rect" coords="246,280,482,304"/>
 <area href="classcg_cone_shape.html" title="Class implementing collision / dynamics properties for a simple cone shape. " alt="cgConeShape" shape="rect" coords="492,280,728,304"/>
@@ -340,7 +341,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Compare the physics shapes to see if they describe the same data. </p>
 <p>&lt;copydetails cref="cgScriptInterop::DisposableScriptObject::dispose()"&gt; </p>
 
-<p>Reimplemented in <a class="el" href="classcg_mesh_shape.html#aeae286ae2b474c1eef4f351b00db95be">cgMeshShape</a>, <a class="el" href="classcg_convex_hull_shape.html#a19baed9331888464337468b1a1f8b02f">cgConvexHullShape</a>, <a class="el" href="classcg_box_shape.html#ab0c1fd5f256b4f7049855ef5a8bb3f95">cgBoxShape</a>, <a class="el" href="classcg_capsule_shape.html#a3221133f77a2649d2cc9858574a09733">cgCapsuleShape</a>, <a class="el" href="classcg_cone_shape.html#a9912ddab5f055e1a579a06dcc913036c">cgConeShape</a>, <a class="el" href="classcg_cylinder_shape.html#acead6e435dd7a2b1b85c2ce058322bb2">cgCylinderShape</a>, <a class="el" href="classcg_sphere_shape.html#a79c6b7df42fe1ec43d95c99c3b08b9a1">cgSphereShape</a>, and <a class="el" href="classcg_null_shape.html#aa43c9cd3c3d147b02f09f46a087eb4ec">cgNullShape</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_displacement_shape.html#aa018eb76512a9adb328e9434d1bc5bfe">cgDisplacementShape</a>, <a class="el" href="classcg_mesh_shape.html#aeae286ae2b474c1eef4f351b00db95be">cgMeshShape</a>, <a class="el" href="classcg_convex_hull_shape.html#a19baed9331888464337468b1a1f8b02f">cgConvexHullShape</a>, <a class="el" href="classcg_box_shape.html#ab0c1fd5f256b4f7049855ef5a8bb3f95">cgBoxShape</a>, <a class="el" href="classcg_capsule_shape.html#a3221133f77a2649d2cc9858574a09733">cgCapsuleShape</a>, <a class="el" href="classcg_cone_shape.html#a9912ddab5f055e1a579a06dcc913036c">cgConeShape</a>, <a class="el" href="classcg_cylinder_shape.html#acead6e435dd7a2b1b85c2ce058322bb2">cgCylinderShape</a>, <a class="el" href="classcg_sphere_shape.html#a79c6b7df42fe1ec43d95c99c3b08b9a1">cgSphereShape</a>, and <a class="el" href="classcg_null_shape.html#aa43c9cd3c3d147b02f09f46a087eb4ec">cgNullShape</a>.</p>
 
 </div>
 </div>
@@ -371,7 +372,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcg_reference.html#af081655ab5cc38075fc2fd3d5d7cd879">cgReference</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_mesh_shape.html#a3fde9876caf269f66c7c146add47a14e">cgMeshShape</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_displacement_shape.html#af0a554d9e3193af4d69840199f6e0f55">cgDisplacementShape</a>, and <a class="el" href="classcg_mesh_shape.html#a3fde9876caf269f66c7c146add47a14e">cgMeshShape</a>.</p>
 
 </div>
 </div>
@@ -415,7 +416,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classcg_reference.html#a2d82a999b1c74fc4517bc41567bb4b53">cgReference</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_mesh_shape.html#a4aceaf2c28003474f06d034eb64bf3be">cgMeshShape</a>, <a class="el" href="classcg_convex_hull_shape.html#a5aa28f29563d1fe833d86215862504e8">cgConvexHullShape</a>, <a class="el" href="classcg_box_shape.html#a398bb2c60ba20b82267bf95a495290e5">cgBoxShape</a>, <a class="el" href="classcg_capsule_shape.html#a672076da60dcbd8ab50a0df228defaa1">cgCapsuleShape</a>, <a class="el" href="classcg_cone_shape.html#a91d3a5b0d7bb39155796b16aac812f02">cgConeShape</a>, <a class="el" href="classcg_cylinder_shape.html#af870a51bcacc25e3e9c3a952f8a2a996">cgCylinderShape</a>, <a class="el" href="classcg_sphere_shape.html#abf9750d0fd595def965276a385b39df6">cgSphereShape</a>, <a class="el" href="classcg_null_shape.html#abb7c6770abad30928b84d111bc03669d">cgNullShape</a>, and <a class="el" href="classcg_convex_shape.html#a112bcec5ef5a8d5809e63bea97eff01c">cgConvexShape</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_displacement_shape.html#a0226817254ef82c217c57951a4917fd3">cgDisplacementShape</a>, <a class="el" href="classcg_mesh_shape.html#a4aceaf2c28003474f06d034eb64bf3be">cgMeshShape</a>, <a class="el" href="classcg_convex_hull_shape.html#a5aa28f29563d1fe833d86215862504e8">cgConvexHullShape</a>, <a class="el" href="classcg_box_shape.html#a398bb2c60ba20b82267bf95a495290e5">cgBoxShape</a>, <a class="el" href="classcg_capsule_shape.html#a672076da60dcbd8ab50a0df228defaa1">cgCapsuleShape</a>, <a class="el" href="classcg_cone_shape.html#a91d3a5b0d7bb39155796b16aac812f02">cgConeShape</a>, <a class="el" href="classcg_cylinder_shape.html#af870a51bcacc25e3e9c3a952f8a2a996">cgCylinderShape</a>, <a class="el" href="classcg_sphere_shape.html#abf9750d0fd595def965276a385b39df6">cgSphereShape</a>, <a class="el" href="classcg_null_shape.html#abb7c6770abad30928b84d111bc03669d">cgNullShape</a>, and <a class="el" href="classcg_convex_shape.html#a112bcec5ef5a8d5809e63bea97eff01c">cgConvexShape</a>.</p>
 
 </div>
 </div>
@@ -445,7 +446,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classcg_reference.html#a597d24d0d03d4cf61e2afcd842a43fa4">cgReference</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcg_mesh_shape.html#a8ad2d0b5d3935e38aeb8837526e51643">cgMeshShape</a>, <a class="el" href="classcg_convex_hull_shape.html#ad1e40b32c6b99de58861e211296205ea">cgConvexHullShape</a>, <a class="el" href="classcg_box_shape.html#af9d614c9d9f2e959b080dc13c8befe03">cgBoxShape</a>, <a class="el" href="classcg_capsule_shape.html#af4a5646d4a6c9e33953891fc51dcb2f8">cgCapsuleShape</a>, <a class="el" href="classcg_cone_shape.html#a10e6813832fd6530e70533fbf956a9ad">cgConeShape</a>, <a class="el" href="classcg_cylinder_shape.html#a2d9d7a923d825c91ef0c5d943481c081">cgCylinderShape</a>, <a class="el" href="classcg_sphere_shape.html#ab412b8d53646f5229d4549b30277d4e0">cgSphereShape</a>, <a class="el" href="classcg_null_shape.html#a3712c3cb7ad692c02551dd649e854f53">cgNullShape</a>, and <a class="el" href="classcg_convex_shape.html#a12c5132dce41c5f068b5a399d13b3902">cgConvexShape</a>.</p>
+<p>Reimplemented in <a class="el" href="classcg_displacement_shape.html#ae1c9d8b04d090fa20c99d0027132e9c0">cgDisplacementShape</a>, <a class="el" href="classcg_mesh_shape.html#a8ad2d0b5d3935e38aeb8837526e51643">cgMeshShape</a>, <a class="el" href="classcg_convex_hull_shape.html#ad1e40b32c6b99de58861e211296205ea">cgConvexHullShape</a>, <a class="el" href="classcg_box_shape.html#af9d614c9d9f2e959b080dc13c8befe03">cgBoxShape</a>, <a class="el" href="classcg_capsule_shape.html#af4a5646d4a6c9e33953891fc51dcb2f8">cgCapsuleShape</a>, <a class="el" href="classcg_cone_shape.html#a10e6813832fd6530e70533fbf956a9ad">cgConeShape</a>, <a class="el" href="classcg_cylinder_shape.html#a2d9d7a923d825c91ef0c5d943481c081">cgCylinderShape</a>, <a class="el" href="classcg_sphere_shape.html#ab412b8d53646f5229d4549b30277d4e0">cgSphereShape</a>, <a class="el" href="classcg_null_shape.html#a3712c3cb7ad692c02551dd649e854f53">cgNullShape</a>, and <a class="el" href="classcg_convex_shape.html#a12c5132dce41c5f068b5a399d13b3902">cgConvexShape</a>.</p>
 
 </div>
 </div>
@@ -520,7 +521,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_physics_shape.html">cgPhysicsShape</a></li>
-    <li class="footer">Generated on Mon May 12 2014 08:23:38 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Wed May 21 2014 19:31:41 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

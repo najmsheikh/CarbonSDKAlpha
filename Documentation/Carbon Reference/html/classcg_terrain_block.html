@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
    </div>
   </td>
  </tr>
@@ -187,6 +187,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a65a2ee4998e8473b99e4641e3e6b4de5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#a65a2ee4998e8473b99e4641e3e6b4de5">draw</a> (<a class="el" href="classcg_render_driver.html">cgRenderDriver</a> *driver, <a class="el" href="classcg_terrain_block.html#a3b906979eec2189912771d1c2608debd">RenderMode</a> mode)</td></tr>
 <tr class="memdesc:a65a2ee4998e8473b99e4641e3e6b4de5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render this terrain block.  <a href="#a65a2ee4998e8473b99e4641e3e6b4de5"></a><br/></td></tr>
 <tr class="separator:a65a2ee4998e8473b99e4641e3e6b4de5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4d93c3ce78aceacd7bb122b5cd39a6b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#aa4d93c3ce78aceacd7bb122b5cd39a6b">drawClutter</a> (<a class="el" href="classcg_render_driver.html">cgRenderDriver</a> *driver, <a class="el" href="namespacecg_landscape_render_method.html#a9b26366b0d13b47d2e804ed527d18a69">cgLandscapeRenderMethod::Base</a> method)</td></tr>
+<tr class="memdesc:aa4d93c3ce78aceacd7bb122b5cd39a6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render the clutter (foliage, etc.) contained within this terrain block.  <a href="#aa4d93c3ce78aceacd7bb122b5cd39a6b"></a><br/></td></tr>
+<tr class="separator:aa4d93c3ce78aceacd7bb122b5cd39a6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf2298bab1a85762894ad535b6dd9616"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#aaf2298bab1a85762894ad535b6dd9616">getCurrentLOD</a> () const </td></tr>
 <tr class="memdesc:aaf2298bab1a85762894ad535b6dd9616"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the currently selected level of detail for this block.  <a href="#aaf2298bab1a85762894ad535b6dd9616"></a><br/></td></tr>
 <tr class="separator:aaf2298bab1a85762894ad535b6dd9616"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -228,9 +231,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a5c6318dbf1fd3470f9a60a7fc66ad03f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a242aeab6436881a8a9cb39b409f534fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#a242aeab6436881a8a9cb39b409f534fb">calculateLODVariance</a> ()</td></tr>
 <tr class="separator:a242aeab6436881a8a9cb39b409f534fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a135f0cf1c2932a22ccc54d6e41529d0c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#a135f0cf1c2932a22ccc54d6e41529d0c">GetHeightMapIndex</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> x, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> z) const </td></tr>
-<tr class="memdesc:a135f0cf1c2932a22ccc54d6e41529d0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the correct index into our internal heightmap buffer given the specified coordinates. Note : The coordinates specified are relative to the overall heightmap i.e. not to the section of heightmap stored locally  <a href="#a135f0cf1c2932a22ccc54d6e41529d0c"></a><br/></td></tr>
-<tr class="separator:a135f0cf1c2932a22ccc54d6e41529d0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ff73bbb59c5e01487f6f8cccacc78dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#a7ff73bbb59c5e01487f6f8cccacc78dc">buildPhysicsBody</a> ()</td></tr>
+<tr class="memdesc:a7ff73bbb59c5e01487f6f8cccacc78dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the physics shape and rigid body that will be used to represent this terrain block within the physics world.  <a href="#a7ff73bbb59c5e01487f6f8cccacc78dc"></a><br/></td></tr>
+<tr class="separator:a7ff73bbb59c5e01487f6f8cccacc78dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac29c8c3c8bbb50cfeb2354bac9034d64"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#ac29c8c3c8bbb50cfeb2354bac9034d64">getHeightMapIndex</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> x, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> z) const </td></tr>
+<tr class="memdesc:ac29c8c3c8bbb50cfeb2354bac9034d64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the correct index into our internal heightmap buffer given the specified coordinates. Note : The coordinates specified are relative to the overall heightmap i.e. not to the section of heightmap stored locally  <a href="#ac29c8c3c8bbb50cfeb2354bac9034d64"></a><br/></td></tr>
+<tr class="separator:ac29c8c3c8bbb50cfeb2354bac9034d64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -285,6 +291,12 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:aea99db811e34f3f3e7be8bcc01b2eeb3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#aea99db811e34f3f3e7be8bcc01b2eeb3">mVisible</a></td></tr>
 <tr class="memdesc:aea99db811e34f3f3e7be8bcc01b2eeb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is the block visible? <a href="#aea99db811e34f3f3e7be8bcc01b2eeb3"></a><br/></td></tr>
 <tr class="separator:aea99db811e34f3f3e7be8bcc01b2eeb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a733812ce9f4bc0b2e61f735e53093a8a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_rigid_body.html">cgRigidBody</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#a733812ce9f4bc0b2e61f735e53093a8a">mPhysicsBody</a></td></tr>
+<tr class="memdesc:a733812ce9f4bc0b2e61f735e53093a8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The static physics body used to represent the shape of this terrain block. <a href="#a733812ce9f4bc0b2e61f735e53093a8a"></a><br/></td></tr>
+<tr class="separator:a733812ce9f4bc0b2e61f735e53093a8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad123f500d3ed732b317eb2a43c21b435"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_array.html">cgArray</a>&lt; <a class="el" href="classcg_landscape_sub_node.html">cgLandscapeSubNode</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#ad123f500d3ed732b317eb2a43c21b435">mLeafNodes</a></td></tr>
+<tr class="memdesc:ad123f500d3ed732b317eb2a43c21b435"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of spatial tree leaf nodes that fall into this block. <a href="#ad123f500d3ed732b317eb2a43c21b435"></a><br/></td></tr>
+<tr class="separator:ad123f500d3ed732b317eb2a43c21b435"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
@@ -411,6 +423,31 @@ Static Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a7ff73bbb59c5e01487f6f8cccacc78dc"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgTerrainBlock::buildPhysicsBody </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct the physics shape and rigid body that will be used to represent this terrain block within the physics world. </p>
+
+</div>
+</div>
 <a class="anchor" id="ad22352d88e6aef8af6a2712ec6b5dbe4"></a>
 <div class="memitem">
 <div class="memproto">
@@ -581,6 +618,34 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aa4d93c3ce78aceacd7bb122b5cd39a6b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgTerrainBlock::drawClutter </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_render_driver.html">cgRenderDriver</a> *&#160;</td>
+          <td class="paramname"><em>driver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacecg_landscape_render_method.html#a9b26366b0d13b47d2e804ed527d18a69">cgLandscapeRenderMethod::Base</a>&#160;</td>
+          <td class="paramname"><em>method</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Render the clutter (foliage, etc.) contained within this terrain block. </p>
+
+</div>
+</div>
 <a class="anchor" id="aa455e73242b18a297a629f397f4711d3"></a>
 <div class="memitem">
 <div class="memproto">
@@ -677,7 +742,7 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a135f0cf1c2932a22ccc54d6e41529d0c"></a>
+<a class="anchor" id="ac29c8c3c8bbb50cfeb2354bac9034d64"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -685,7 +750,7 @@ Static Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> cgTerrainBlock::GetHeightMapIndex </td>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a> cgTerrainBlock::getHeightMapIndex </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
           <td class="paramname"><em>x</em>, </td>
@@ -1218,6 +1283,28 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ad123f500d3ed732b317eb2a43c21b435"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_array.html">cgArray</a>&lt;<a class="el" href="classcg_landscape_sub_node.html">cgLandscapeSubNode</a>*&gt; cgTerrainBlock::mLeafNodes</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>List of spatial tree leaf nodes that fall into this block.</p>
+
+</div>
+</div>
 <a class="anchor" id="a373dbe55227fff4c0e3f01e74318447f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1345,6 +1432,28 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Parent landscape element.</p>
+
+</div>
+</div>
+<a class="anchor" id="a733812ce9f4bc0b2e61f735e53093a8a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_rigid_body.html">cgRigidBody</a>* cgTerrainBlock::mPhysicsBody</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The static physics body used to represent the shape of this terrain block.</p>
 
 </div>
 </div>
@@ -1480,7 +1589,9 @@ Static Protected Attributes</h2></td></tr>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="cg_landscape_8h_source.html">cgLandscape.h</a></li>
+<li><a class="el" href="cg_landscape_01-_01_copy_8cpp.html">cgLandscape - Copy.cpp</a></li>
 <li><a class="el" href="cg_landscape_8cpp.html">cgLandscape.cpp</a></li>
+<li><a class="el" href="cg_landscape_old_8cpp.html">cgLandscapeOld.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -1488,7 +1599,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_terrain_block.html">cgTerrainBlock</a></li>
-    <li class="footer">Generated on Mon May 12 2014 08:23:42 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Wed May 21 2014 19:31:45 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -7,6 +7,7 @@ var searchData=
   ['_5fcbbrightpass',['_cbBrightPass',['../structcg_glare_processor_1_1__cb_bright_pass.html',1,'cgGlareProcessor']]],
   ['_5fcbdepthoffield',['_cbDepthOfField',['../structcg_depth_of_field_processor_1_1__cb_depth_of_field.html',1,'cgDepthOfFieldProcessor']]],
   ['_5fcbdownsample',['_cbDownsample',['../structcg_tone_map_processor_1_1__cb_downsample.html',1,'cgToneMapProcessor']]],
+  ['_5fcbfoliagedata',['_cbFoliageData',['../structcg_foliage_clutter_layer_1_1__cb_foliage_data.html',1,'cgFoliageClutterLayer']]],
   ['_5fcbgrid',['_cbGrid',['../structcg_radiance_grid_1_1__cb_grid.html',1,'cgRadianceGrid']]],
   ['_5fcbilrbrightpass',['_cbILRBrightPass',['../structcg_glare_processor_1_1__cb_i_l_r_bright_pass.html',1,'cgGlareProcessor']]],
   ['_5fcbilrcompositepass',['_cbILRCompositePass',['../structcg_glare_processor_1_1__cb_i_l_r_composite_pass.html',1,'cgGlareProcessor']]],

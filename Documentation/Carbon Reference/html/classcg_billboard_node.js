@@ -15,7 +15,7 @@ var classcg_billboard_node =
     [ "getScale", "classcg_billboard_node.html#a6593f60636bdf860f1393d45433ba352", null ],
     [ "getSize", "classcg_billboard_node.html#a85111f32a8994e961cea15305573a2b9", null ],
     [ "isBillboardAligned", "classcg_billboard_node.html#ac97ddc9d2a388f07f9a66faf57940ea0", null ],
-    [ "onComponentModified", "classcg_billboard_node.html#a393c19348ed823465f3d284e19cdadbd", null ],
+    [ "onComponentModified", "classcg_billboard_node.html#a1acc71f3a0f7e384516c044974cd7b15", null ],
     [ "onNodeCreated", "classcg_billboard_node.html#a4d7b8bffeddf04dfabee26b7b9af6551", null ],
     [ "onNodeLoading", "classcg_billboard_node.html#aa7670a4b12af6d252487de05cea15039", null ],
     [ "queryReferenceType", "classcg_billboard_node.html#a93aeabae5b8e1fbdcfd2d0d2fd54ad75", null ],

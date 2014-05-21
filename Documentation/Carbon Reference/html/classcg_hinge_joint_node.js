@@ -16,7 +16,7 @@ var classcg_hinge_joint_node =
     [ "getReferenceType", "classcg_hinge_joint_node.html#a1bebfa7b3a60fdd93f5e09209c3587c1", null ],
     [ "getSandboxIconInfo", "classcg_hinge_joint_node.html#a3b23e5e116a060f55e0b0c9cc8493e25", null ],
     [ "isLimited", "classcg_hinge_joint_node.html#ab08b141acfa9715299c01d060b01204e", null ],
-    [ "onComponentModified", "classcg_hinge_joint_node.html#a2b0bc144c18609438316281c36168ed8", null ],
+    [ "onComponentModified", "classcg_hinge_joint_node.html#ad1a6b11e507f1d26c5f75868eac8395e", null ],
     [ "onNodeCreated", "classcg_hinge_joint_node.html#ab1532cd0637de89760159bb15560af7f", null ],
     [ "onNodeDeleted", "classcg_hinge_joint_node.html#a88db20281ff81bb4330beca12bdc28b7", null ],
     [ "onNodeInit", "classcg_hinge_joint_node.html#a00c41bc567da27b3bfd4a6134a65a585", null ],

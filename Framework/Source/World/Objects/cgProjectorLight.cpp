@@ -2204,7 +2204,7 @@ bool cgProjectorLightNode::setCellTransform( const cgTransform & Transform, cgTr
 /// order to notify any listeners of this fact.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgProjectorLightNode::onComponentModified( cgComponentModifiedEventArgs * e )
+void cgProjectorLightNode::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
 {
     // What property was modified?
     if ( e->context == _T("OuterRange") || e->context == _T("ApplyRescale") )
@@ -2248,7 +2248,7 @@ void cgProjectorLightNode::onComponentModified( cgComponentModifiedEventArgs * e
     } // End if FoV | Size
 
     // Call base class implementation last
-    cgLightNode::onComponentModified( e );
+    cgLightNode::onComponentModified( sender, e );
     
 }
 

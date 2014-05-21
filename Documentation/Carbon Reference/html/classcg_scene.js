@@ -105,6 +105,7 @@ var classcg_scene =
     [ "onSceneElementAdded", "classcg_scene.html#a9f58be73de6fd333b4af3c457f6db5c1", null ],
     [ "onSceneElementDeleted", "classcg_scene.html#a90603475755912b322ad430182d61400", null ],
     [ "onSceneLoadProgress", "classcg_scene.html#a9b12555860991525aa4054836a2bd211", null ],
+    [ "onSceneReloaded", "classcg_scene.html#a8ac352911b2d0e1e532c88692ba8aee1", null ],
     [ "onSelectionCleared", "classcg_scene.html#a2b1ce0bc147edc3203766e1eb92f58b9", null ],
     [ "onSelectionSetAdded", "classcg_scene.html#ae5ca8ade5ff06b2ea5dcc0738931b888", null ],
     [ "onSelectionSetRemoved", "classcg_scene.html#acd6e68eb0d70e989f228ae11b1867cc6", null ],

@@ -36,17 +36,16 @@
 #include <Resources/cgConstantBuffer.h>
 #include <Resources/cgVertexBuffer.h>
 #include <Resources/cgIndexBuffer.h>
+#include <Resources/cgClutterMaterial.h>
 #include <Rendering/cgRenderDriver.h>
 #include <Rendering/cgVertexFormats.h>
 #include <Rendering/cgSampler.h>
+#include <Physics/cgPhysicsWorld.h>
+#include <Physics/Bodies/cgRigidBody.h>
+#include <Physics/Shapes/cgDisplacementShape.h>
 #include <Math/cgCollision.h>
 #include <Math/cgMathUtility.h>
 #include <System/cgImage.h>
-
-// ToDo: 9999 - When the spatial tree moves, all objects contained within it need to undergo
-// an UpdateObjectOwnership process.
-
-// ToDo: 9999 - When the landscape is modified, the spatial tree LSSums planes need to be updated again.
 
 //-----------------------------------------------------------------------------
 // Module Local Structures
@@ -175,164 +174,6 @@ cgLandscape::cgLandscape( cgScene * pScene ) : cgSpatialTree( )
     mCullDistances[2] = dist;
     mObjectCullDistance = 8000;
     mObjectCullDistanceSq = mObjectCullDistance * mObjectCullDistance;
-
-    // ToDo: Testing!
-    //cgHeightMap ^ oHeightMap = gcnew cgHeightMap( 2049, 2049, 1000 );
-    //oHeightMap->LoadSquareRaw( Program::GetAppPath() + "/Oblivion - 2049x2049.raw", cgHeightMap::RawFormat::Gray16 );
-    //oHeightMap->LoadSquareRaw( Program::GetAppPath() + "/Extinction3 - Final.raw", cgHeightMap::RawFormat::Gray16 );
-
-    //cgHeightMap ^ oHeightMap = gcnew cgHeightMap( 2689, 2817, 1000 );
-    //oHeightMap->LoadRaw( Program::GetAppPath() + "/Morrowind.raw", 2689, 2817, cgHeightMap::RawFormat::Gray16 );
-    //oHeightMap->Normalize( -3453, 30422 );
-
-    //cgHeightMap ^ oHeightMap = gcnew cgHeightMap( 4097, 4097, 1000 );
-    //oHeightMap->LoadSquareRaw( Program::GetAppPath() + "/Oblivion - 4097x4097.raw", cgHeightMap::RawFormat::Gray16 );
-
-#if 0
-    cgLandscapeLayerType * pLayerType = new cgLandscapeLayerType( this );
-    pLayerType->SetName( L"Rock" );
-    pLayerType->LoadColorSampler( L"Test Assets/Landscape/terrainhdrock01.dds" );
-    pLayerType->LoadNormalSampler( L"Test Assets/Landscape/terrainhdrock01_n.dds" );
-    pLayerType->SetScale( cgVector2( 512, 512 ) );
-    pLayerType->SetAngle( 0 ); //45;
-    m_aLayerTypes->push_back( pLayerType );
-    
-    pLayerType = new cgLandscapeLayerType( this );
-    pLayerType->SetName( L"Grass" );
-    pLayerType->LoadColorSampler( L"Test Assets/Landscape/terraingcgrass01.dds" );
-    pLayerType->LoadNormalSampler( L"Test Assets/Landscape/terraingcgrass01_n.dds" );
-    pLayerType->SetScale( cgVector2( 512, 512 ) );
-    pLayerType->SetAngle( 0 );
-    m_aLayerTypes->push_back( pLayerType );
-    
-    pLayerType = new cgLandscapeLayerType( this );
-    pLayerType->SetName( L"Mud" );
-    pLayerType->LoadColorSampler( L"Test Assets/Landscape/terrainmud03.dds" );
-    pLayerType->LoadNormalSampler( L"Test Assets/Landscape/terrainmud03_n.dds" );
-    pLayerType->SetScale( cgVector2( 512, 512 ) );
-    pLayerType->SetAngle( 0 ); //15; 
-    m_aLayerTypes->push_back( pLayerType );
-    
-    pLayerType = new cgLandscapeLayerType( this );
-    pLayerType->SetName( L"Snow" );
-    pLayerType->LoadColorSampler( L"Test Assets/Landscape/snow031.jpg" );
-    pLayerType->LoadNormalSampler( L"Test Assets/Landscape/snow031_NRM.png" );
-    pLayerType->SetScale( cgVector2( 128, 128 ) );
-    pLayerType->SetAngle( 0 );
-    m_aLayerTypes->push_back( pLayerType );
-    
-    pLayerType = new cgLandscapeLayerType( this );
-    pLayerType->SetName( L"Snow 02" );
-    pLayerType->LoadColorSampler( L"Test Assets/Landscape/snow031.jpg" );
-    pLayerType->SetScale( cgVector2( 128, 128 ) );
-    pLayerType->SetAngle( 32 );
-    m_aLayerTypes->push_back( pLayerType );
-    
-    pLayerType = new cgLandscapeLayerType( this );
-    pLayerType->SetName( L"Hull_004" );
-    pLayerType->LoadColorSampler( L"Test Assets/Landscape/Hull_004.dds" );
-    pLayerType->LoadNormalSampler( L"Test Assets/Landscape/Hull_004N.dds" );
-    pLayerType->SetScale( cgVector2( 128, 128 ) );
-    pLayerType->SetAngle( 13 );
-    m_aLayerTypes->push_back( pLayerType );
-
-#endif
-
-    // ToDo: Testing procedurals.
-    /*ProceduralLayerRef layer;
-    
-    // Rock.
-    layer.oLayer              = 0; 
-    layer.minimumHeight          = -1;
-    layer.maximumHeight          = 3000;
-    layer.heightAttenuationBand    = 0.0f;
-    layer.slopeAxis        = Vector3(0,1,0);
-    layer.slopeScale         = 0.0f;
-    layer.slopeBias          = 1.0f;
-    layer.weight             = 1.0f;
-    mProceduralLayers.Add( layer );*/
-
-#if 0
-    // ToDo: Testing procedurals.
-    ProceduralLayerRef layer;
-    
-    // Grass.
-    layer.Name                = L"Procedural Grass";
-    layer.nLayerType          = 1;
-    layer.fMinHeight          = -1;
-    layer.fMaxHeight          = 3000;
-    layer.fHeightAttenBand    = 0.0f;
-    layer.vecSlopeAxis        = cgVector3(0,1,0);
-    layer.fSlopeScale         = 0.0f;
-    layer.fSlopeBias          = 1.0f;
-    layer.fWeight             = 1.0f;
-    layer.bEnableHeight       = false;
-    m_aProceduralLayers.push_back( layer );
-
-    // Mud.
-    layer.Name                = L"Procedural Mud";
-    layer.nLayerType          = 2;
-    layer.fMinHeight          = -1;
-    layer.fMaxHeight          = 228.3f;
-    layer.fHeightAttenBand    = 20.0f;
-    layer.vecSlopeAxis        = cgVector3(0,1,0);
-    layer.fSlopeScale         = 0.0f;
-    layer.fSlopeBias          = 1.0f;
-    layer.fWeight             = 1.0f;
-    layer.bEnableHeight       = true;
-    m_aProceduralLayers.push_back( layer );
-    
-    /*// Rock.
-    layer.Name                = L"Procedural Rock";
-    layer.nLayerType          = 0;
-    layer.fMinHeight          = -1;
-    layer.fMaxHeight          = 3000;
-    layer.fHeightAttenBand    = 0;
-    layer.vecSlopeAxis        = cgVector3(0,1,0);
-    layer.fSlopeScale         = 3.0f;
-    layer.fSlopeBias          = -0.5f;
-    layer.fWeight             = 1.0f;
-    layer.bEnableHeight       = false;
-    m_aProceduralLayers.push_back( layer );*/
-
-    // Snow.
-    layer.Name                = L"Procedural Snow";
-    layer.nLayerType          = 3;
-    layer.fMinHeight          = 700;
-    layer.fMaxHeight          = 3000;
-    layer.fHeightAttenBand    = 100.0f;
-    CGEVec3Normalize( &layer.vecSlopeAxis, &cgVector3(-0.25f,0.1f,-1) );
-    //layer.fSlopeScale         = -2.0f;
-    //layer.fSlopeBias          = 2.0f + (0.5f);
-    layer.fSlopeScale         = 3.0f;
-    layer.fSlopeBias          = -0.5f;
-    layer.fWeight             = 1.2f;
-    layer.bEnableHeight       = true;
-    m_aProceduralLayers.push_back( layer );
-
-    /*// Snow2.
-    layer.nLayerType              = 3;
-    layer.fMinHeight          = 1100;
-    layer.fMaxHeight          = 3000;
-    layer.fHeightAttenBand    = 200.0f;
-    //layer.fSlopeScale         = 3.0f;
-    //layer.fSlopeBias          = -0.5f;
-    layer.fSlopeScale         = 3.0f;
-    layer.fSlopeBias          = -0.5f;
-    layer.fWeight             = 1.0f;
-    m_aProceduralLayers.Add( layer );*/
-
-#endif
-    
-    // Default
-    //cgHeightMap ^ oHeightMap = gcnew cgHeightMap( 257, 257, 0 );
-    //load( oHeightMap, Vector3(256, 1500, 256), LandscapeFlags::Dynamic | LandscapeFlags::LODIgnoreY );
-
-    // Morrowind
-    //load( oHeightMap, Vector3( 10000, 1500, 10000 ), LandscapeFlags::Dynamic | LandscapeFlags::LODIgnoreY );
-
-    // Oblivion
-    //load( oHeightMap, Vector3( 10000, 3500, 10000 ), LandscapeFlags::Dynamic | LandscapeFlags::LODIgnoreY );
 }
 
 //-----------------------------------------------------------------------------
@@ -693,65 +534,6 @@ bool cgLandscape::load( cgUInt32 nLandscapeId )
     return true;
 }
 
-/*//-----------------------------------------------------------------------------
-// Name : onComponentCreated() (Virtual)
-/// <summary>
-/// When the component is first created, it needs to be inserted fully into the
-/// world database. This virtual method allows the component to do so.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgLandscape::onComponentCreated( cgComponentCreatedEventArgs * e )
-{
-    // Insert the new object.
-    if ( shouldSerialize() == true )
-    {
-        prepareQueries();
-        mInsertLandscape.bindParameter( 1, m_nReferenceId );
-        mInsertLandscape.bindParameter( 2, mBlockLayout.width );
-        mInsertLandscape.bindParameter( 3, mBlockLayout.height );
-        mInsertLandscape.bindParameter( 4, mBlockSize.width );
-        mInsertLandscape.bindParameter( 5, mBlockSize.height );
-        mInsertLandscape.bindParameter( 6, mBlendMapSize.width );
-        mInsertLandscape.bindParameter( 7, mBlendMapSize.height );
-        mInsertLandscape.bindParameter( 8, mDimensions.x );
-        mInsertLandscape.bindParameter( 9, mDimensions.y );
-        mInsertLandscape.bindParameter( 10, mDimensions.z );
-        mInsertLandscape.bindParameter( 11, mOffset.x );
-        mInsertLandscape.bindParameter( 12, mOffset.y );
-        mInsertLandscape.bindParameter( 13, mOffset.z );
-        mInsertLandscape.bindParameter( 14, (cgUInt32)0 ); // Flags
-        
-        // Execute
-        if ( mInsertLandscape.step( true ) == false )
-        {
-            cgString strError;
-            mInsertLandscape.getLastError( strError );
-            cgAppLog::write( cgAppLog::Error, _T("Failed to insert data for landscape object '0x%x' into database. Error: %s\n"), m_nReferenceId, strError.c_str() );
-            return false;
-        
-        } // End if failed
-
-    } // End if !internal
-
-    // Call base class implementation last.
-    return cgSpatialTreeObject::onComponentCreated( e );
-}
-
-//-----------------------------------------------------------------------------
-// Name : onComponentDeleted() (Virtual)
-/// <summary>
-/// When the component is removed from the world, all of its rows needs to be
-/// removed from the world database. This virtual method allows it to do so.
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgLandscape::onComponentDeleted( )
-{
-    // ToDo: 9999
-
-    // Call base class implementation last.
-    cgSpatialTreeObject::onComponentDeleted( );
-}*/
-
 //-----------------------------------------------------------------------------
 // Name : shouldSerialize ( )
 /// <summary>
@@ -815,84 +597,6 @@ void cgLandscape::prepareQueries()
     if ( mLoadProceduralLayers.isPrepared() == false )
         mLoadProceduralLayers.prepare( pWorld, _T("SELECT * FROM 'Landscapes::ProceduralLayers' WHERE LandscapeId=?1 ORDER BY LayerIndex ASC"), true );
 }
-
-// ToDo: Temp - Reload the effect file
-/*void cgLandscape::ReloadEffect::set( bool value )
-{
-    // Load the landscape specific effect file ready for drawing
-    cgResourceManager * pResources oResources = m_oParentScene->ResourceManager;
-    oResources->RemoveEffect( m_oLandscapeEffect );
-    m_oLandscapeEffect = oResources->LoadEffect( Program::GetAppPath() + L"/System/Effects/Landscape.fx" );
-}*/
-
-/*//-----------------------------------------------------------------------------
-// Name : InsertObject() (Virtual)
-/// <summary>
-/// When the object is first created, it needs to be inserted fully into the
-/// world database. This virtual method allows the object to do so.
-/// </summary>
-//-----------------------------------------------------------------------------
-int cgLandscape::InsertObject( int typeId, cgWorld ^ world )
-{
-    // Call base class implementation
-    cgBaseObject::InsertObject( typeId, world );
-
-    // Insert the new object.
-    //prepareQueries();
-    //m_oqInsertDummy->bindParameter( 1, m_fSize );
-    //m_oqInsertDummy->step( true );
-    //m_nObjectId = m_oqInsertDummy->LastInsertId;
-    return m_nObjectId;
-}
-
-//-----------------------------------------------------------------------------
-// Name : RemoveObject() (Virtual)
-/// <summary>
-/// When the object is removed from the scene, all of its data needs to be
-/// removed from the world database. This virtual method allows the object to 
-/// do so.
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgLandscape::RemoveObject( cgWorld ^ world )
-{
-    // Call base class implementation
-    cgBaseObject::RemoveObject( world );
-
-    // Remove the object.
-    if ( m_nObjectId != 0 )
-    {
-        //prepareQueries();
-        //m_oqRemoveDummy->bindParameter( 1, m_nObjectId );
-        //m_oqInsertDummy->step( true );
-    
-    } // End if valid object
-}
-
-//-----------------------------------------------------------------------------
-// Name : GetTypeInfo() (Static)
-/// <summary>
-/// Retrieve information about the type of this object.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgLandscape::GetTypeInfo( Guid typeIdentifier, cgObjectTypeInfo % info )
-{
-    // Is this our type?
-    if ( typeIdentifier == ElementIdentifiers::Landscape )
-    {
-        info.Author     = L"Game Institute";
-        info.Identifier = typeIdentifier;
-        info.name       = L"Landscape";
-        info.TableName  = L"Elements::Landscape";
-        info.TypeName   = (cgLandscape::typeid)->FullName;
-
-        // Success!
-        return true;
-
-    } // End if matches
-
-    // Unknown type identifier.
-    return false;
-}*/
 
 //-----------------------------------------------------------------------------
 // Name : deleteLandscape()
@@ -967,7 +671,7 @@ bool cgLandscape::deleteLandscape( )
 bool cgLandscape::import( cgHeightMap * pHeightMap, const cgVector3 & Dimensions, cgUInt32 InitFlags )
 {
     cgLandscapeImportParams Params;
-    Params.heightMap        = pHeightMap;
+    Params.heightMap         = pHeightMap;
     Params.dimensions        = Dimensions;
     Params.initFlags         = InitFlags;
     Params.blockGrid         = cgSize(128,128);
@@ -1329,8 +1033,8 @@ bool cgLandscape::postInit( )
     // Depth stencil states
     cgDepthStencilStateDesc DepthStencilDesc;
     DepthStencilDesc.stencilEnable                      = true;
-    DepthStencilDesc.frontFace.stencilFunction              = cgComparisonFunction::Always;
-    DepthStencilDesc.frontFace.stencilPassOperation            = cgStencilOperation::Replace;
+    DepthStencilDesc.frontFace.stencilFunction          = cgComparisonFunction::Always;
+    DepthStencilDesc.frontFace.stencilPassOperation     = cgStencilOperation::Replace;
     if ( !pResources->createDepthStencilState( &mDepthFillDepthState, DepthStencilDesc, 0, cgDebugSource() ) )
         return false;
 
@@ -1340,8 +1044,8 @@ bool cgLandscape::postInit( )
     // Blend states
     cgBlendStateDesc BlendDesc;
     BlendDesc.renderTarget[0].blendEnable               = true;
-    BlendDesc.renderTarget[0].sourceBlend                  = cgBlendMode::SrcAlpha;
-    BlendDesc.renderTarget[0].destinationBlend                 = cgBlendMode::InvSrcAlpha;
+    BlendDesc.renderTarget[0].sourceBlend               = cgBlendMode::SrcAlpha;
+    BlendDesc.renderTarget[0].destinationBlend          = cgBlendMode::InvSrcAlpha;
     if ( !pResources->createBlendState( &mProceduralBlendState, BlendDesc, 0, cgDebugSource() ) )
         return false;
 
@@ -1349,7 +1053,7 @@ bool cgLandscape::postInit( )
     DepthStencilDesc                                    = cgDepthStencilStateDesc(); // Defaults
     DepthStencilDesc.depthEnable                        = true;
     DepthStencilDesc.depthWriteEnable                   = false;
-    DepthStencilDesc.depthFunction                          = cgComparisonFunction::Equal;
+    DepthStencilDesc.depthFunction                      = cgComparisonFunction::Equal;
     if ( !pResources->createDepthStencilState( &mProceduralDepthState, DepthStencilDesc, 0, cgDebugSource() ) )
         return false;
 
@@ -1359,8 +1063,8 @@ bool cgLandscape::postInit( )
     // Blend states
     BlendDesc                                           = cgBlendStateDesc();       // Defaults
     BlendDesc.renderTarget[0].blendEnable               = true;
-    BlendDesc.renderTarget[0].sourceBlend                  = cgBlendMode::One;
-    BlendDesc.renderTarget[0].destinationBlend                 = cgBlendMode::One;
+    BlendDesc.renderTarget[0].sourceBlend               = cgBlendMode::One;
+    BlendDesc.renderTarget[0].destinationBlend          = cgBlendMode::One;
     if ( !pResources->createBlendState( &mPaintedBlendState, BlendDesc, 0, cgDebugSource() ) )
         return false;
 
@@ -1368,7 +1072,7 @@ bool cgLandscape::postInit( )
     DepthStencilDesc                                    = cgDepthStencilStateDesc(); // Defaults
     DepthStencilDesc.depthEnable                        = true;
     DepthStencilDesc.depthWriteEnable                   = false;
-    DepthStencilDesc.depthFunction                          = cgComparisonFunction::Equal;
+    DepthStencilDesc.depthFunction                      = cgComparisonFunction::Equal;
     if ( !pResources->createDepthStencilState( &mPaintedDepthState, DepthStencilDesc, 0, cgDebugSource() ) )
         return false;
 
@@ -1378,11 +1082,11 @@ bool cgLandscape::postInit( )
     // Blend states
     BlendDesc                                           = cgBlendStateDesc();   // Defaults
     BlendDesc.renderTarget[0].blendEnable               = true;
-    BlendDesc.renderTarget[0].sourceBlend                  = cgBlendMode::One;     // Add the source rgb to dest rgb.
-    BlendDesc.renderTarget[0].destinationBlend                 = cgBlendMode::One;
+    BlendDesc.renderTarget[0].sourceBlend               = cgBlendMode::One;     // Add the source rgb to dest rgb.
+    BlendDesc.renderTarget[0].destinationBlend          = cgBlendMode::One;
     BlendDesc.renderTarget[0].separateAlphaBlendEnable  = true;
-    BlendDesc.renderTarget[0].sourceBlendAlpha             = cgBlendMode::One;     // Replace the dest alpha with the source alpha.
-    BlendDesc.renderTarget[0].destinationBlendAlpha            = cgBlendMode::Zero;
+    BlendDesc.renderTarget[0].sourceBlendAlpha          = cgBlendMode::One;     // Replace the dest alpha with the source alpha.
+    BlendDesc.renderTarget[0].destinationBlendAlpha     = cgBlendMode::Zero;
     if ( !pResources->createBlendState( &mPostProcessBlendState, BlendDesc, 0, cgDebugSource() ) )
         return false;
     
@@ -1564,7 +1268,7 @@ void cgLandscape::beginPaint( const cgMaterialHandle & hType, const cgLandscapeP
     // Painting is now enabled.
     mIsPainting     = true;
     mPaintLayerType = hType;
-    mPaintParams     = params;
+    mPaintParams    = params;
 }
 
 //-----------------------------------------------------------------------------
@@ -1739,24 +1443,6 @@ bool cgLandscape::compileSpatialTree( )
         return false;
     
     } // End if degenerate root node
-
-    /*// Since the /scene graph/ node(s) will ultimately store the leaves that 
-    // we construct during this process such that instancing/referencing can 
-    // continue to function without us needing to duplicate all other spatial 
-    // tree elements, our first job is to find all referencing nodes and clear
-    // out any leaves that they contain.
-    cgReference::ReferenceMap::iterator itTree;
-    for ( itTree = m_ReferencedBy->begin(); itTree != m_ReferencedBy->end(); ++itTree )
-    {
-        cgReference * pReference = (itTree->second).pReference;
-        if ( pReference != CG_NULL && pReference->QueryReferenceType( RTID_LandscapeNode ) == true )
-        {
-            cgLandscapeNode * pTree = (cgLandscapeNode*)pReference;
-            pTree->ClearTreeData();
-        
-        } // Next LandscapeNode
-    
-    } // Next Reference Holder*/
     
     // Allocate the root node
     mRootNode = allocateNode();
@@ -1830,6 +1516,10 @@ bool cgLandscape::buildTree( cgUInt32 nLevel, cgLandscapeSubNode * pNode, const 
 
         // Notify the node that it has been fully constructed
         pNode->nodeConstructed();
+
+        // Store the connection between the terrain block and the leaf
+        if ( nDataGroupId >= 0 )
+            mTerrainBlocks[nDataGroupId]->mLeafNodes.push_back( pNode );
         
         // We have reached a leaf, so we can stop compiling this tree branch
         return true;
@@ -1883,6 +1573,7 @@ bool cgLandscape::buildTree( cgUInt32 nLevel, cgLandscapeSubNode * pNode, const 
 
         // Allocate child node
         pNode->setChildNode(i, allocateNode() );
+        ((cgLandscapeSubNode*)pNode->getChildNode(i))->parentNode = pNode;
         nTotalNodes++;
 
         // Recurse into this new node
@@ -1895,7 +1586,7 @@ bool cgLandscape::buildTree( cgUInt32 nLevel, cgLandscapeSubNode * pNode, const 
     pNode->nodeConstructed();
 
     if ( pNode == mRootNode )
-        cgAppLog::write( _T("%i Total nodes constructed\r\n"), nTotalNodes );
+        cgAppLog::write( cgAppLog::Debug, _T("%i total nodes constructed\r\n"), nTotalNodes );
 
     // Success!
     return true;
@@ -2630,83 +2321,6 @@ bool cgLandscape::buildLODLevel( cgUInt32 nMipLevel )
     return bResult;
 }
 
-/*//-----------------------------------------------------------------------------
-//  Name : SandboxRender ( ) (Virtual)
-/// <summary>
-/// Allow the object to render its 'sandbox' representation -- that is the
-/// representation to be displayed within an editing environment.
-/// </summary>
-//-----------------------------------------------------------------------------
-void cgLandscape::SandboxRender( cgCameraNode * pCamera, cgVisibilitySet * pVisData, bool bWireframe, const cgPlane & GridPlane, cgObjectNode * pIssuer )
-{
-    // Sandbox render is only necessary in wireframe mode.
-    // Standard scene rendering behavior applies in other modes.
-    if ( bWireframe == false )
-        return;
-
-    // ToDo: 9999
-    // Get access to required systems.
-    cgRenderDriver    * pDriver    = cgRenderDriver::getInstance();
-    cgResourceManager * pResources = cgResourceManager::getInstance();
-
-    // Retrieve the underlying mesh resource if available
-    cgMesh * pMesh = m_hMesh;
-    if ( pMesh == CG_NULL || pMesh->IsLoaded() == false )
-        return;
-
-    // Load the sandbox rendering shader if it is not already loaded.
-    if ( m_hSandboxEffect.isValid() == false )
-        pResources->LoadEffectFile( &m_hSandboxEffect, _T("sys://Shaders/SandboxElements.sh"), 0, cgDebugSource() );
-    
-    // Use wireframe drawing for every subset using mesh color
-    sgEffectFile * pEffect = m_hSandboxEffect;
-    if ( pEffect == CG_NULL || pEffect->IsLoaded() == false )
-        return;
-    pEffect->SetTechnique( _T("drawWireframeMesh") );
-
-    // Select the color to render with
-    cgColorValue color = (pIssuer->IsSelected() == false) ? pIssuer->GetNodeColor() : cgColorValue( 0xFFFFFFFF );
-    pEffect->SetValue( _T("DiffuseReflectance"), &color, sizeof(cgColorValue) );
-
-    // Draw the entire mesh
-    pDriver->FlushMaterials();
-    pDriver->SetEffect( m_hSandboxEffect );
-    pDriver->setWorldTransform( &pIssuer->getWorldTransform( false ) );
-    pMesh->draw( cgMeshDrawMode::EffectPasses );
-}*/
-
-//-----------------------------------------------------------------------------
-//  Name : Pick ( ) (Virtual)
-/// <summary>
-/// Given the specified object space ray, determine if this object is 
-/// intersected and also compute the object space intersection distance. 
-/// </summary>
-//-----------------------------------------------------------------------------
-/*bool cgLandscape::Pick( cgCameraNode * pCamera, cgObjectNode * pIssuer, const cgSize & ViewportSize, const cgVector3 & vOrigin, const cgVector3 & vDir, bool bWireframe, const cgVector3 & vWireTolerance, cgFloat & fDistance )
-{
-    // ToDo: 9999 - Ignoring wireframe for the moment.
-    if ( bWireframe == true )
-        return false;
-
-    // Landscape populated?
-    if ( mRootNode == CG_NULL )
-        return false;
-
-    // First, test for broadphase intersection against our bounding box
-    if ( mRootNode->getBoundingBox().intersect( vOrigin, vDir, fDistance, false ) == false )
-        return false;
-
-    // Now test the physical terrain data.
-    // ToDo: Not /critically/ important, but we should compute a
-    // reasonable ray 'velocity' (length) rather than hardcoding.
-    if ( getRayIntersect( vOrigin, vDir * 40000.0f, fDistance, 10.0f ) == false )
-        return false;
-
-    // Return final (local) distance
-    fDistance = 40000.0f * fDistance;
-    return true;
-}*/
-
 //-----------------------------------------------------------------------------
 //  Name : renderPass ()
 /// <summary>
@@ -2743,26 +2357,8 @@ bool cgLandscape::renderPass( cgLandscapeRenderMethod::Base Pass, cgCameraNode *
     // Clear world transform (landscape is always defined in world space)
     pDriver->setWorldTransform( CG_NULL );
 
-    // ToDo: 9999 - If we change the visibility set to store data groups
-    // rather than leaves (like Prescience did), this will no longer be
-    // necessary. As another plus, the 'VisibilitySet::Apply()' concept can go away
-    // allowing mesh based spatial trees to pull directly from the pre-prepared
-    // (ordered) data group set.
-    
-    // Process all visible 'cells' in the current visibility set in order to retrieve a list
-    // of blocks that should be rendered.
-    // ToDo: 9999 -VISIBILITY
-    /*cgInt32Set DataGroups;
-    cgSceneLeafSet::const_iterator itLeaf;
-    const cgSceneLeafSet & Leaves = pVisData->GetVisibleLeaves( pIssuer );
-    for ( itLeaf = Leaves.begin(); itLeaf != Leaves.end(); ++itLeaf )
-    {
-        cgInt32 nDataGroup = (*itLeaf)->getDataGroupId();
-        if ( nDataGroup >= 0 )
-            DataGroups.insert( nDataGroup );
-
-    } // Next visible leaf*/
-    cgInt32Set & DataGroups = pVisData->getVisibleGroups(this);
+    // Retrieve list of visible terrain blocks.
+    cgInt32Set & VisibleBlocks = pVisData->getVisibleGroups(this);
 
     // Retrieve shader constant buffers ready for population.
     cgSurfaceShader * pShader = mLandscapeShader.getResource(true);
@@ -2861,10 +2457,10 @@ bool cgLandscape::renderPass( cgLandscapeRenderMethod::Base Pass, cgCameraNode *
         } // End if TerrainShadowFill
 
         // Render entire (visible) terrain.
-        if ( DataGroups.empty() == false )
+        if ( VisibleBlocks.empty() == false )
         {
             cgInt32Set::const_iterator itGroup;
-            for ( itGroup = DataGroups.begin(); itGroup != DataGroups.end(); ++itGroup )
+            for ( itGroup = VisibleBlocks.begin(); itGroup != VisibleBlocks.end(); ++itGroup )
             {
                 cgTerrainBlock * pBlock = mTerrainBlocks[*itGroup];
                 if ( pBlock == CG_NULL ) continue;
@@ -2889,10 +2485,10 @@ bool cgLandscape::renderPass( cgLandscapeRenderMethod::Base Pass, cgCameraNode *
         mNormalSampler->apply();
 
         // Render each visible block using its paint map.
-        if ( !DataGroups.empty() )
+        if ( !VisibleBlocks.empty() )
         {
             cgInt32Set::const_iterator itGroup;
-            for ( itGroup = DataGroups.begin(); itGroup != DataGroups.end(); ++itGroup )
+            for ( itGroup = VisibleBlocks.begin(); itGroup != VisibleBlocks.end(); ++itGroup )
             {
                 cgTerrainBlock * pBlock = mTerrainBlocks[*itGroup];
                 if ( !pBlock ) continue;
@@ -3058,7 +2654,7 @@ bool cgLandscape::renderPass( cgLandscapeRenderMethod::Base Pass, cgCameraNode *
                     if ( pBlock == CG_NULL ) continue;
 
                     // Skip if block is not visible
-                    if ( DataGroups.find( pBlock->getBlockIndex() ) == DataGroups.end() )
+                    if ( VisibleBlocks.find( pBlock->getBlockIndex() ) == VisibleBlocks.end() )
                         continue;
                     
                     // Render the block
@@ -3080,7 +2676,7 @@ bool cgLandscape::renderPass( cgLandscapeRenderMethod::Base Pass, cgCameraNode *
         } // Next Sampler
 
     } // End if TerrainGBufferFill
-    else
+    else if ( Pass == cgLandscapeRenderMethod::TerrainGBufferPost )
     {
         // Setup states required for this process.
         pDriver->setBlendState( mPostProcessBlendState );
@@ -3102,6 +2698,26 @@ bool cgLandscape::renderPass( cgLandscapeRenderMethod::Base Pass, cgCameraNode *
         pDriver->drawScreenQuad();
 
     } // End if TerrainGBufferPost
+    else if ( Pass == cgLandscapeRenderMethod::ClutterDepthFill ||
+              Pass == cgLandscapeRenderMethod::ClutterGBufferFill )
+    {
+        // Render each visible block using its paint map.
+        if ( !VisibleBlocks.empty() )
+        {
+            cgInt32Set::const_iterator itGroup;
+            for ( itGroup = VisibleBlocks.begin(); itGroup != VisibleBlocks.end(); ++itGroup )
+            {
+                cgTerrainBlock * pBlock = mTerrainBlocks[*itGroup];
+                if ( !pBlock ) continue;
+            
+                // Just render the block
+                pBlock->drawClutter( pDriver, Pass );
+
+            } // Next Block
+
+        } // End if anything visible
+
+    } // End if ClutterDepthFill
 
     // Success!
     return true;
@@ -3589,6 +3205,7 @@ void cgLandscape::computeVisibility( const cgFrustum & Frustum, cgVisibilitySet 
     // Start the traversal.
     mOcclusionSuccess = 0;
     mOcclusionFailure = 0;
+    pVisData->clearVisibleGroups( this );
     updateTreeVisibility( pIssuer, (cgLandscapeSubNode*)mRootNode, Frustum, vecPos, mtxVisibility, mOcclusionCull, pVisData, nFlags );
 
     // Is it worth sampling occlusion again next frame?
@@ -4924,180 +4541,6 @@ bool cgLandscape::isYVariant( ) const
     return mYVTree;
 }
 
-/*///////////////////////////////////////////////////////////////////////////////
-// cgLandscapeNode Member Definitions
-///////////////////////////////////////////////////////////////////////////////
-//-----------------------------------------------------------------------------
-//  Name : cgLandscapeNode () (Constructor)
-/// <summary>
-/// Constructor for this class.
-/// </summary>
-//-----------------------------------------------------------------------------
-cgLandscapeNode::cgLandscapeNode( cgUInt32 nReferenceId, cgScene * pScene ) : cgSpatialTreeNode( nReferenceId, pScene )
-{
-    // Initialize variables to sensible defaults.
-    m_strObjectClass = _T("Landscape");
-}
-
-//-----------------------------------------------------------------------------
-//  Name : cgLandscapeNode () (Constructor)
-/// <summary>
-/// Constructor for this class.
-/// </summary>
-//-----------------------------------------------------------------------------
-cgLandscapeNode::cgLandscapeNode( cgUInt32 nReferenceId, cgScene * pScene, cgObjectNode * pInit, cgCloneMethod::Base InitMethod, const cgTransform & InitTransform ) : cgSpatialTreeNode( nReferenceId, pScene, pInit, InitMethod, InitTransform )
-{
-}
-
-//-----------------------------------------------------------------------------
-//  Name : ~cgSpatialTreeNode () (Destructor)
-/// <summary>
-/// Destructor for this class.
-/// </summary>
-//-----------------------------------------------------------------------------
-cgLandscapeNode::~cgLandscapeNode()
-{
-    dispose( false );
-}
-
-//-----------------------------------------------------------------------------
-//  Name : dispose() (Virtual)
-/// <summary>
-/// Release any memory, references or resources allocated by this object.
-/// </summary>
-/// <copydetails cref="cgScriptInterop::DisposableScriptObject::dispose()" />
-//-----------------------------------------------------------------------------
-void cgLandscapeNode::dispose( bool bDisposeBase )
-{
-    // We are in the process of disposing?
-    m_bDisposing = true;
-
-    
-    // Call base class implementation
-    if ( bDisposeBase == true )
-        cgSpatialTreeNode::dispose( true );
-    else
-        m_bDisposing = false;
-}
-
-//-----------------------------------------------------------------------------
-//  Name : AllocateNew() (Static)
-/// <summary>
-/// Allocate a new node of the required type.
-/// </summary>
-//-----------------------------------------------------------------------------
-cgObjectNode * cgLandscapeNode::AllocateNew( const cgUID & type, cgUInt32 nReferenceId, cgScene * pScene )
-{
-    return new cgLandscapeNode( nReferenceId, pScene );
-}
-
-//-----------------------------------------------------------------------------
-//  Name : AllocateClone() (Static)
-/// <summary>
-/// Allocate a new node of the required type, cloning data from the node
-/// specified.
-/// </summary>
-//-----------------------------------------------------------------------------
-cgObjectNode * cgLandscapeNode::AllocateClone( const cgUID & type, cgUInt32 nReferenceId, cgScene * pScene, cgObjectNode * pInit, cgCloneMethod::Base InitMethod, const cgTransform & InitTransform )
-{
-    return new cgLandscapeNode( nReferenceId, pScene, pInit, InitMethod, InitTransform );
-}
-
-//-----------------------------------------------------------------------------
-//  Name : QueryReferenceType () (Virtual)
-/// <summary>
-/// Allows the application to determine if the inheritance hierarchy 
-/// supports a particular interface.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgLandscapeNode::QueryReferenceType( const cgUID & type ) const
-{
-    // Supports this interface?
-    if ( type == RTID_LandscapeNode )
-        return true;
-
-    // Supported by base?
-    return cgSpatialTreeNode::QueryReferenceType( Type );
-}
-
-//-----------------------------------------------------------------------------
-// Name : UpdateObjectOwnership () (Virtual)
-/// <summary>
-/// Allows the spatial tree to determine if it can / wants to own the specified 
-/// object and optionally inserts it into the relevant leaf.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgLandscapeNode::UpdateObjectOwnership( cgObjectNode * pNode, bool bTestOnly = false )
-{
-    // ToDo: Keep a list of all child spatial tree objects
-    // and ask them to update ownership first.
-
-    // Retrieve the world space bounding box
-    cgBoundingBox Bounds = pNode->getBoundingBox( );
-
-    // Find the leaves into which this object falls
-    cgSceneLeafArray Leaves;
-    if ( collectLeaves( Leaves, Bounds ) == false )
-    {
-        // Was not contained within any leaf, we can't take ownership.
-        return cgSpatialTreeNode::UpdateObjectOwnership( pNode, bTestOnly );
-        
-    } // End if not contained
-    else
-    {
-        // Attach to this spatial tree
-        if ( bTestOnly == false )
-        {
-            pNode->SetSpatialTree( this );
-            pNode->SetSpatialTreeLeaves( Leaves );
-
-        } // End if !Test
-
-        // We assumed ownership of the node
-        return true;
-
-    } // End if contained
-}
-
-//-----------------------------------------------------------------------------
-// Name : getRayIntersect ()
-/// <summary>
-/// Retrieve the 'time' at which a ray intersects the terrain (if at all).
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgLandscapeNode::getRayIntersect( const cgVector3 & vecOrigin, const cgVector3 & vecVelocity, cgFloat & t ) const
-{
-    return getRayIntersect( vecOrigin, vecVelocity, t, 1.0f );
-}
-bool cgLandscapeNode::getRayIntersect( const cgVector3 & vecOrigin, const cgVector3 & vecVelocity, cgFloat & t, cgFloat fAccuracy ) const
-{
-    // Transform input values into object space.
-    cgMatrix mtxInv;
-    cgMatrix::inverse( &mtxInv, CG_NULL, &getWorldTransform( false ) );
-    cgVector3 vObjectOrigin, vObjectEnd = vecOrigin + vecVelocity;
-    CGEVec3TransformCoord( &vObjectOrigin, &vecOrigin, &mtxInv );
-    CGEVec3TransformCoord( &vObjectEnd, &vObjectEnd, &mtxInv );
-
-    // Call referenced object implementations.
-    bool bResult = ((cgLandscape*)m_pReferencedObject)->getRayIntersect( vObjectOrigin, vObjectEnd - vObjectOrigin, t );
-    if ( bResult == false )
-        return false;
-
-    // Scale is not allowed on landscape, so we don't need to recompute the 't' value.
-    // Simply return the intersection success.
-    return true;
-}
-
-//-----------------------------------------------------------------------------
-// Name : CanScale ( )
-/// <summary>Determine if scaling of this node's transform is allowed.</summary>
-//-----------------------------------------------------------------------------
-bool cgLandscapeNode::CanScale( ) const
-{
-    // Landscape cannot be scaled.
-    return false;
-}*/
-
 ///////////////////////////////////////////////////////////////////////////////
 // cgTerrainLOD Member Definitions
 ///////////////////////////////////////////////////////////////////////////////
@@ -5145,6 +4588,7 @@ cgTerrainBlock::cgTerrainBlock( cgLandscape * pParent, cgUInt32 nBlockIndex, con
     mOwnsHeightMap    = false;
     mHeightMap        = CG_NULL;
     mColorMap         = CG_NULL;
+    mPhysicsBody      = CG_NULL;
     mCurrentLOD       = -1;
     mVarianceCount    = 0;
     mBounds.reset();
@@ -5161,6 +4605,11 @@ cgTerrainBlock::cgTerrainBlock( cgLandscape * pParent, cgUInt32 nBlockIndex, con
 //-----------------------------------------------------------------------------
 cgTerrainBlock::~cgTerrainBlock()
 {
+    // Release the physics data if allocated.
+    if ( mPhysicsBody )
+        mPhysicsBody->removeReference( CG_NULL );
+    mPhysicsBody = CG_NULL;
+
     // Release heightmap data if we own it.
     if ( mHeightMap != CG_NULL && mOwnsHeightMap == true )
         delete []mHeightMap;
@@ -5382,6 +4831,9 @@ bool cgTerrainBlock::importBlock( )
 
     } // End if serialize
 
+    // Generate physics body for this block.
+    buildPhysicsBody();
+
     // Success!
     return true;
 }
@@ -5573,6 +5025,9 @@ bool cgTerrainBlock::loadBlock( cgWorldQuery & BlockQuery )
     // We're done with the LOD read query.
     mLoadBlockLODs.reset();
 
+    // Generate physics body for this block.
+    buildPhysicsBody();
+
     // Load texture data (if any).
     return mTextureData->loadLayers();
 }
@@ -5728,8 +5183,57 @@ bool cgTerrainBlock::dataUpdated( )
 
     } // End if serialize
 
+    // Recompute least squares sum occlusion data for all child cells.
+    for ( size_t i = 0; i < mLeafNodes.size(); ++i )
+        mLeafNodes[i]->updateOcclusionData( true );
+
+    // Regenerate physics body for this block.
+    buildPhysicsBody();
+
+    // Update clutter for all loaded layers.
+    if ( mTextureData )
+        mTextureData->updateClutterCells();
+
     // Success!
     return true;
+}
+
+//-----------------------------------------------------------------------------
+// Name : buildPhysicsBody () (Protected)
+/// <summary>
+/// Construct the physics shape and rigid body that will be used to represent
+/// this terrain block within the physics world.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgTerrainBlock::buildPhysicsBody( )
+{
+    // Compute the offset transform for this block's body.
+    cgVector3 cellSize = mParent->getTerrainScale();
+    cgVector3 offset   = mParent->getTerrainOffset();
+    offset += cgVector3( (cgFloat)mSection.blockBounds.left * cellSize.x, 0, (cgFloat)mSection.blockBounds.top * -cellSize.z );
+    
+    // Create a new displacement mesh physics shape to represent this block.
+    cgSize mapPitch( mActiveHeightMapBounds.pitchX, mActiveHeightMapBounds.pitchY );
+    cgDisplacementShape * shape = new cgDisplacementShape( mParent->getScene()->getPhysicsWorld(), mHeightMap, mapPitch, mActiveHeightMapBounds, cellSize );
+
+    // Configure new rigid body.
+    cgRigidBodyCreateParams cp;
+    cp.model            = cgPhysicsModel::CollisionOnly;
+    cp.initialTransform = offset;
+    cp.quality          = cgSimulationQuality::Default;
+    cp.mass             = 0.0f;
+
+    // Construct a new rigid body object.
+    cgRigidBody * rigidBody = new cgRigidBody( mParent->getScene()->getPhysicsWorld(), shape, cp );
+
+    // Release the previous physics body (if any).
+    if ( mPhysicsBody )
+        mPhysicsBody->removeReference( CG_NULL );
+    
+    // Take ownership of the new rigid body.
+    mPhysicsBody = rigidBody;
+    mPhysicsBody->addReference( CG_NULL );
+    mPhysicsBody->setUserData( this );
 }
 
 //-----------------------------------------------------------------------------
@@ -5932,6 +5436,18 @@ void cgTerrainBlock::calculateLODVariance( )
         
     } // Next detail level
 
+}
+
+//-----------------------------------------------------------------------------
+// Name : drawClutter()
+/// <summary>
+/// Render the clutter (foliage, etc.) contained within this terrain block.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgTerrainBlock::drawClutter( cgRenderDriver * driver, cgLandscapeRenderMethod::Base method )
+{
+    if ( mTextureData )
+        mTextureData->drawClutter( driver, method );
 }
 
 //-----------------------------------------------------------------------------
@@ -6219,25 +5735,6 @@ cgFloat cgTerrainBlock::getTerrainHeight( cgFloat fX, cgFloat fZ, bool bAccountF
     cgFloat fPercentX = fX - (cgFloat)iX;
     cgFloat fPercentZ = fZ - (cgFloat)iZ;
 
-    // ToDo: Remove
-    /*// First retrieve the height of each point in the dividing edge
-    fTopRight   = (cgFloat)getHeightMapHeight( iX + 1, iZ ) * vecScale.y;
-    fBottomLeft = (cgFloat)getHeightMapHeight( iX, iZ + 1 ) * vecScale.y;
-
-    // Calculate which triangle of the quad are we in ?
-    if ( fPercentX < (1.0f - fPercentZ)) 
-    {
-        fTopLeft = (cgFloat)getHeightMapHeight( iX, iZ ) * vecScale.y;
-        fBottomRight = fBottomLeft + (fTopRight - fTopLeft);
-    
-    } // End if left Triangle
-    else
-    {
-        fBottomRight = (cgFloat)getHeightMapHeight( iX + 1, iZ + 1 ) * vecScale.y;
-        fTopLeft = fTopRight + (fBottomLeft - fBottomRight);
-
-    } // End if Right Triangle*/
-
     // First retrieve the height of each point in the dividing edge
     fTopLeft     = (cgFloat)getHeightMapHeight( iX, iZ ) * vecScale.y;
     fBottomRight = (cgFloat)getHeightMapHeight( iX + 1, iZ + 1 ) * vecScale.y;
@@ -6275,7 +5772,7 @@ cgFloat cgTerrainBlock::getTerrainHeight( cgFloat fX, cgFloat fZ, bool bAccountF
 cgInt16 cgTerrainBlock::getHeightMapHeight( cgInt32 x, cgInt32 z ) const
 {
     // Retrieve the correct index into the heightmap
-    cgUInt32 nHMIndex = GetHeightMapIndex( x, z );
+    cgUInt32 nHMIndex = getHeightMapIndex( x, z );
     if ( nHMIndex < 0 ) return 0;
 
     // Get the heightmap height value
@@ -6283,14 +5780,14 @@ cgInt16 cgTerrainBlock::getHeightMapHeight( cgInt32 x, cgInt32 z ) const
 }
 
 //-----------------------------------------------------------------------------
-// Name : GetHeightMapIndex ()
+// Name : getHeightMapIndex ()
 /// <summary>
 /// Retrieve the correct index into our internal heightmap buffer given the 
 /// specified coordinates. Note : The coordinates specified are relative to the 
 /// overall heightmap i.e. not to the section of heightmap stored locally
 /// </summary>
 //-----------------------------------------------------------------------------
-cgUInt32 cgTerrainBlock::GetHeightMapIndex( cgInt32 x, cgInt32 z ) const
+cgUInt32 cgTerrainBlock::getHeightMapIndex( cgInt32 x, cgInt32 z ) const
 {
     // Test to ensure it is not out of bounds
     if ( x < mManagedTerrainBounds.left || x >= mManagedTerrainBounds.right ||
@@ -6433,9 +5930,10 @@ cgLandscapeSubNode::cgLandscapeSubNode( cgLandscape * pParent ) : cgSpatialTreeS
 {
     // Initialize variables to sensible defaults.
     setChildNodeCount( 4 );
-    mLandscape = pParent;
+    mLandscape            = pParent;
     minimumHorizonPoints  = CG_NULL;
     maximumHorizonPoints  = CG_NULL;
+    parentNode            = CG_NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -6446,12 +5944,13 @@ cgLandscapeSubNode::cgLandscapeSubNode( cgSpatialTreeSubNode * pInit, cgSpatialT
 {
     // Initialize variables to sensible defaults
     cgLandscapeSubNode * pNode = (cgLandscapeSubNode*)pInit;
-    minimumHorizonPlane = pNode->minimumHorizonPlane;
-    maximumHorizonPlane = pNode->maximumHorizonPlane;
-    mLSSums        = pNode->mLSSums;
-    minimumHorizonPoints     = CG_NULL;
-    maximumHorizonPoints     = CG_NULL;
-    mLandscape    = (cgLandscape*)pParent;
+    mLandscape              = (cgLandscape*)pParent;
+    mLSSums                 = pNode->mLSSums;
+    minimumHorizonPlane     = pNode->minimumHorizonPlane;
+    maximumHorizonPlane     = pNode->maximumHorizonPlane;
+    minimumHorizonPoints    = CG_NULL;
+    maximumHorizonPoints    = CG_NULL;
+    parentNode              = CG_NULL;
 
     // Deep copy required elements
     if ( pNode->minimumHorizonPoints != CG_NULL )
@@ -6534,7 +6033,7 @@ bool cgLandscapeSubNode::collectLeaves( cgSpatialTreeInstance * pIssuer, cgSpati
 void cgLandscapeSubNode::nodeConstructed( )
 {
     // Update the landscape occlusion data.
-    updateOcclusionData();
+    updateOcclusionData( false );
 }
 
 //-----------------------------------------------------------------------------
@@ -6545,7 +6044,7 @@ void cgLandscapeSubNode::nodeConstructed( )
 /// and geometry required.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgLandscapeSubNode::updateOcclusionData( )
+void cgLandscapeSubNode::updateOcclusionData( bool bPushUp )
 {
     cgVector3 * pSamplePoints = CG_NULL;
     cgUInt32    i, nSampleCount = 0;
@@ -6757,7 +6256,7 @@ void cgLandscapeSubNode::updateOcclusionData( )
     // the child MINIMUM horizon geometry (the raster geometry) into this node
     // then do so.
     bool bCollapsed = false;
-    if ( isLeafNode() == false )
+    /*if ( isLeafNode() == false )
     {
         // If the new minimum plane differs in angle significantly from that
         // of it's children, we cannot collapse.
@@ -6794,7 +6293,7 @@ void cgLandscapeSubNode::updateOcclusionData( )
         
         } // End if all matched
 
-    } // End if standard node
+    } // End if standard node*/
 
     // Allocate memory for max horizon geometry (test geom).
     if ( maximumHorizonPoints == CG_NULL )
@@ -6829,6 +6328,10 @@ void cgLandscapeSubNode::updateOcclusionData( )
             minimumHorizonPoints[i].y += -cgMathUtility::distanceToPlane( minimumHorizonPoints[i], minimumHorizonPlane, cgVector3(0,1,0) );
 
     } // Next point
+
+    // Push changes up the hierarchy.
+    if ( bPushUp && parentNode )
+        parentNode->updateOcclusionData( true );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -6895,7 +6398,24 @@ cgLandscapeTextureData::~cgLandscapeTextureData()
     // Release layer reference data
 	for ( size_t i = 0; i < mLayers.size(); ++i )
 	{
-		// Just perform a regular 'disconnect' in this case.
+        // Release clutter cells.
+        LayerReference * pLayer = mLayers[i];
+        for ( size_t j = 0; j < pLayer->clutterCells.size(); ++j )
+            delete pLayer->clutterCells[j];
+
+        // We no longer want to listen for layer material events.
+        if ( pLayer->layerType.isValid() )
+        {
+            pLayer->layerType->unregisterEventListener( this );
+
+            // Unregister from clutter layer too
+            cgMaterialHandle hClutter = ((cgLandscapeLayerMaterial*)pLayer->layerType.getResource(true))->getClutterMaterial();
+            if ( hClutter.isValid() )
+                hClutter->unregisterEventListener( this );
+        
+        } // End if valid
+
+		// Just perform a regular 'disconnect' from the layer material in this case.
 		mLayers[i]->layerType.enableDatabaseUpdate(false, false);
 		delete mLayers[i];
 	
@@ -7007,8 +6527,20 @@ bool cgLandscapeTextureData::loadLayers()
         pNewLayer->blendMap.resize( mBlendMapSize.width * mBlendMapSize.height );
         if ( nBlendMapSize == pNewLayer->blendMap.size() && pBlendMapData != CG_NULL )
             memcpy( &pNewLayer->blendMap[0], pBlendMapData, nBlendMapSize );
+
+        // Listen for events.
+        if ( pNewLayer->layerType.isValid() )
+        {
+            pNewLayer->layerType->registerEventListener( this );
+            
+            // Listen for events from clutter layer too
+            cgMaterialHandle hClutter = ((cgLandscapeLayerMaterial*)pNewLayer->layerType.getResource(true))->getClutterMaterial();
+            if ( hClutter.isValid() )
+                hClutter->registerEventListener( this );
         
-    } // Next Block
+        } // End if valid
+        
+    } // Next Layer
 
     // We're done with the block read query.
     mLoadLayers.reset();
@@ -7016,6 +6548,10 @@ bool cgLandscapeTextureData::loadLayers()
     // Optimize the blend map textures and construct render pass data 
     // ready for rendering in an optimal fashion (max. 4 layers per pass).
     optimizeLayers();
+
+    // Update clutter for all loaded layers.
+    for ( size_t i = 0; i < mLayers.size(); ++i )
+        updateClutterCells( *mLayers[i], cgRect() );
 
     // Success!
     return true;
@@ -7153,7 +6689,7 @@ bool cgLandscapeTextureData::beginPaint( const cgMaterialHandle & hType, const c
 
         // If we are adding a new layer, the first thing we need to do is to
         // allocate the blend map memory into which we will paint.
-        pNewLayer->blendMap.resize( mBlendMapSize.width * mBlendMapSize.height );
+        pNewLayer->blendMap.resize( mBlendMapSize.width * mBlendMapSize.height, 0 );
 
         // Setup remaining layer details.
         pNewLayer->layerType           = hType;
@@ -7171,6 +6707,18 @@ bool cgLandscapeTextureData::beginPaint( const cgMaterialHandle & hType, const c
         pNewLayer->finalDirty          = false;
         pNewLayer->finalDirtyRectangle = cgRect( INT_MAX, INT_MAX, -INT_MAX, -INT_MAX );
 
+        // Listen for events.
+        if ( !Params.erase && pNewLayer->layerType.isValid() )
+        {
+            pNewLayer->layerType->registerEventListener( this );
+
+            // Listen for events from clutter layer too
+            cgMaterialHandle hClutter = ((cgLandscapeLayerMaterial*)pNewLayer->layerType.getResource(true))->getClutterMaterial();
+            if ( hClutter.isValid() )
+                hClutter->registerEventListener( this );
+
+        } // End if valid
+
 		// Hold a reference to the new layer type if necessary.
 		if ( !Params.erase && mParentLandscape->shouldSerialize() )
 			pNewLayer->layerType.enableDatabaseUpdate( true, true );
@@ -7186,7 +6734,7 @@ bool cgLandscapeTextureData::beginPaint( const cgMaterialHandle & hType, const c
     // We also need to create a temporary area into which to paint. This buffer
     // will not actually be committed to the layer until the user completes 
     // the painting operation (click drag release).
-    mLayers[ nLayerIndex ]->blendMapPaint.resize( mBlendMapSize.width * mBlendMapSize.height );
+    mLayers[ nLayerIndex ]->blendMapPaint.resize( mBlendMapSize.width * mBlendMapSize.height, 0 );
 
     // Painting is now enabled for this block.
     mIsPainting  = true;
@@ -7590,6 +7138,9 @@ void cgLandscapeTextureData::endPaint( )
         } // Next Row
     
         pSourceTexture->unlock( false );
+        
+        // Update clutter.
+        updateClutterCells( *pLayer, cgRect() );
 
     } // Next Layer
 
@@ -7623,6 +7174,18 @@ void cgLandscapeTextureData::endPaint( )
             #if defined(_DEBUG)
                 cgAppLog::write( cgAppLog::Debug, _T("Disposing of layer %i.\n"), i );
             #endif
+
+            // We no longer want to listen for material events
+            if ( mLayers[i]->layerType.isValid() )
+            {
+                mLayers[i]->layerType->unregisterEventListener( this );
+
+                // Unregister from clutter layer too
+                cgMaterialHandle hClutter = ((cgLandscapeLayerMaterial*)mLayers[i]->layerType.getResource(true))->getClutterMaterial();
+                if ( hClutter.isValid() )
+                    hClutter->unregisterEventListener( this );
+            
+            } // End if valid
 
             // Destroy the layer, we're done with it (full delete, will update database for
 			// resource handles as necessary).
@@ -8185,6 +7748,149 @@ void cgLandscapeTextureData::updatePaintPreview(  )
 }
 
 //-----------------------------------------------------------------------------
+//  Name : onComponentModified() (Virtual)
+/// <summary>
+/// When a referenced object component is modified, this method is called to
+/// allow us to take any appropriate action.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgLandscapeTextureData::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
+{
+    // What was modified?
+    if ( e->context == _T("ClutterMaterial") )
+    {
+        // We don't want to receive events from the old material.
+        cgMaterialHandle oldMaterial;
+        cgUInt32 oldClutterMaterialId = e->argument;
+        cgResourceManager::getInstance()->getMaterialFromId( &oldMaterial, oldClutterMaterialId );
+        if ( oldMaterial.isValid() )
+            oldMaterial->unregisterEventListener( this );
+
+        // But we do want to receive events from the new material.
+        cgMaterialHandle newMaterial = ((cgLandscapeLayerMaterial*)sender)->getClutterMaterial();
+        if ( newMaterial.isValid() )
+            newMaterial->registerEventListener( this );
+        
+        // Update clutter cells.
+        updateClutterCells();
+
+    } // End if ClutterMaterial
+    else if ( e->context == _T("LayerCreated") || e->context == _T("LayerRemoved") )
+    {
+        // A new layer was added to one of our clutter materials, or an
+        // old layer was removed. Update.
+        updateClutterCells();
+
+    } // End if LayerCreated | LayerRemoved
+}
+
+//-----------------------------------------------------------------------------
+// Name : updateClutterCells()
+/// <summary>
+/// Called in order to update the per-block clutter instance data for each
+/// layer that references a clutter material.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgLandscapeTextureData::updateClutterCells()
+{
+    bool result = true;
+    for ( size_t i = 0; i < mLayers.size(); ++i )
+        result &= updateClutterCells( *mLayers[i], cgRect() );
+    return result;
+}
+
+//-----------------------------------------------------------------------------
+// Name : updateClutterCells() (Protected)
+/// <summary>
+/// Called in order to update the per-block clutter instance data for each
+/// layer that references a clutter material.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgLandscapeTextureData::updateClutterCells( LayerReference & layer, const cgRect & bounds )
+{
+    // Validate layer type.
+    if ( layer.eraseLayer )
+        return true;
+
+    // Get the layer material and confirm that it defines clutter.
+    cgLandscapeLayerMaterial * pMaterial = (cgLandscapeLayerMaterial*)layer.layerType.getResource(true);
+    if ( !pMaterial || !pMaterial->getClutterMaterial().isValid() )
+    {
+        // Material is not valid, or there is no clutter material referenced.
+        // Remove any clutter cells that may already have been defined for this layer.
+        for ( size_t i = 0; i < layer.clutterCells.size(); ++i )
+            delete layer.clutterCells[i];
+        layer.clutterCells.clear();
+        return true;
+
+    } // End if no clutter
+
+    // Ensure that the number of cells is correct (clutter layers may have been added or removed).
+    cgMaterialHandle hClutter = pMaterial->getClutterMaterial();
+    cgClutterMaterial * pClutterMaterial = (cgClutterMaterial*)hClutter.getResource(true);
+    size_t nLayerCount = pClutterMaterial->getLayerCount();
+    if ( layer.clutterCells.size() < nLayerCount )
+    {
+        // There are fewer cells than are required. Allocate more cells.
+        size_t oldSize = layer.clutterCells.size();
+        layer.clutterCells.resize( nLayerCount, CG_NULL );
+        for ( size_t i = oldSize; i < nLayerCount; ++i )
+        {
+            cgClutterLayer * pLayer = pClutterMaterial->getLayer( i );
+            if ( pLayer->getType() == cgClutterType::Foliage )
+                layer.clutterCells[i] = new cgFoliageClutterCell( pLayer );
+
+        } // Next layer
+
+    } // End if more cells required
+    else if ( layer.clutterCells.size() > nLayerCount )
+    {
+        // There are more cells defined than are required. Release excess cells.
+        for ( size_t i = nLayerCount; i < layer.clutterCells.size(); ++i )
+            delete layer.clutterCells[i];
+        layer.clutterCells.resize( nLayerCount );
+
+    } // End if fewer cells required
+
+    // Ensure that each cell references the correct layer, and that it
+    // is correctly initialized.
+    for ( size_t i = 0; i < nLayerCount; ++i )
+    {
+        cgClutterLayer * pLayer = pClutterMaterial->getLayer( i );
+        if ( layer.clutterCells[i]->getLayer() != pLayer )
+        {
+            // Layer is different. Recreate cell.
+            delete layer.clutterCells[i];
+            if ( pLayer->getType() == cgClutterType::Foliage )
+                layer.clutterCells[i] = new cgFoliageClutterCell( pLayer );
+
+        } // End if different
+
+        // Initialize the cell if necessary.
+        cgClutterCell * pCell = layer.clutterCells[i];
+        if ( pCell->getCellGridLayout() == cgSize(0,0) )
+        {
+            cgVector3 cellSize = mParentLandscape->getTerrainScale();
+            cgVector3 offset   = mParentLandscape->getTerrainOffset();
+            offset += cgVector3( (cgFloat)mParentBlock->mSection.blockBounds.left * cellSize.x, 0, (cgFloat)mParentBlock->mSection.blockBounds.top * -cellSize.z );
+            cgSize mapPitch( mParentBlock->mActiveHeightMapBounds.pitchX, mParentBlock->mActiveHeightMapBounds.pitchY );
+            cgSizeF blockSize = cgSizeF(((mParentBlock->mActiveHeightMapBounds.width()-1) * cellSize.x), ((mParentBlock->mActiveHeightMapBounds.height()-1) * cellSize.z) );
+            pCell->setCellLayout( cgPointF(offset.x, offset.z), blockSize, cgSize(1,1) );
+            pCell->setGridDisplacement( 0, 0, mParentBlock->mHeightMap, mapPitch, mParentBlock->mActiveHeightMapBounds, cellSize.y );
+            pCell->setGridGrowthMask( 0, 0, &layer.blendMap[0], mBlendMapSize, cgRect(1, 1, mBlendMapSize.width - 1, mBlendMapSize.height - 1) );
+        
+        } // End if not initialized
+
+        // Invalidate the cells.
+        pCell->invalidate();
+
+    } // Next layer
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
 // Name : updateLayerTexture() (Protected)
 /// <summary>
 /// Called in order to reconstruct the renderable blend map for a layer.
@@ -8196,7 +7902,7 @@ void cgLandscapeTextureData::updateLayerTexture( LayerReference & Layer, const c
     cgUInt32 nPitch;
 
     // Skip if this is an erase layer (it has no texture)
-    if ( Layer.eraseLayer == true )
+    if ( Layer.eraseLayer )
         return;
 
     // Lock and fill the texture
@@ -8520,52 +8226,8 @@ void cgLandscapeTextureData::optimizeLayers()
 
     // First generate and populate the layer data constant buffers for 
     // each rendering batch.
-    for ( size_t i = 0; i < mRenderBatches.size(); ++i )
-    {
-        RenderBatch & Batch = mRenderBatches[i];
-
-        // Allocate the layer data constant buffer for this batch.
-        if ( !pResources->createConstantBuffer( &Batch.layerDataBuffer, mParentLandscape->mLandscapeShader, _T("cbTerrainLayerData"), cgDebugSource() ) )
-        {
-            // ToDo: Log error.
-            return;
-        
-        } // End if failed
-
-        // Lock the buffer ready for population.
-        cgConstantBuffer * pBatchBuffer = Batch.layerDataBuffer.getResource( true );
-        cgAssert( pBatchBuffer != CG_NULL );
-        cgLandscape::cbTerrainLayerData * pBatchData = CG_NULL;
-        if ( !(pBatchData = (cgLandscape::cbTerrainLayerData*)pBatchBuffer->lock( 0, 0, cgLockFlags::WriteOnly | cgLockFlags::Discard ) ) )
-        {
-            cgAppLog::write( cgAppLog::Error, _T("Failed to lock terrain painted layer data constant buffer in preparation for device update.\n") );
-            return;
-
-        } // End if failed
-
-        // Collect the layer states
-        for ( cgInt32 j = 0; j < Batch.layerCount; ++j )
-        {
-            cgLandscapeLayerMaterial * pType = (cgLandscapeLayerMaterial*)mLayers[Batch.layers[j]]->layerType.getResource();
-
-            // Collect texturing properties
-            cgLandscape::ctLayerData & Data = pBatchData->layers[j];
-            cgToDo( "Carbon General", "Use actual texture size?" )
-            Data.textureSize  = cgVector4( 512.0f, 512.0f, 1.0f / 512.0f, 1.0f / 512.0f );
-            Data.scale        = pType->getScale();
-            Data.baseScale    = pType->getBaseScale();
-            Data.offset       = -pType->getOffset();
-            Data.rotation.x   = cosf(CGEToRadian(360.0f - pType->getAngle()));
-            Data.rotation.y   = -sinf(CGEToRadian(360.0f - pType->getAngle()));
-            Data.rotation.z   = -Data.rotation.y;
-            Data.rotation.w   = Data.rotation.x;
-
-        } // Next Layer
-
-        // Buffer is populated.
-        pBatchBuffer->unlock();
-
-    } // Next batch
+    if ( !updateBatchConstants() )
+        return;
 
     // Now, create the high level constant buffer that describes the 
     // overall painted layer rendering procedure.
@@ -8617,6 +8279,104 @@ void cgLandscapeTextureData::optimizeLayers()
 }
 
 //-----------------------------------------------------------------------------
+// Name : updateBatchConstants() (Protected)
+/// <summary>
+/// Update the constant buffer data for the painted layer rendering batches
+/// based on the texture layer parameters.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgLandscapeTextureData::updateBatchConstants( )
+{
+    // Get access to required systems
+    cgResourceManager * pResources = mParentLandscape->getScene()->getResourceManager();
+
+    // Process existing render batches.
+    for ( size_t i = 0; i < mRenderBatches.size(); ++i )
+    {
+        RenderBatch & Batch = mRenderBatches[i];
+
+        // Allocate the layer data constant buffer for this batch.
+        if ( !Batch.layerDataBuffer.isValid() )
+        {
+            if ( !pResources->createConstantBuffer( &Batch.layerDataBuffer, mParentLandscape->mLandscapeShader, _T("cbTerrainLayerData"), cgDebugSource() ) )
+            {
+                // ToDo: Log error.
+                return false;
+            
+            } // End if failed
+        
+        } // End if !valid
+
+        // Lock the buffer ready for population.
+        cgConstantBuffer * pBatchBuffer = Batch.layerDataBuffer.getResource( true );
+        cgAssert( pBatchBuffer != CG_NULL );
+        cgLandscape::cbTerrainLayerData * pBatchData = CG_NULL;
+        if ( !(pBatchData = (cgLandscape::cbTerrainLayerData*)pBatchBuffer->lock( 0, 0, cgLockFlags::WriteOnly | cgLockFlags::Discard ) ) )
+        {
+            cgAppLog::write( cgAppLog::Error, _T("Failed to lock terrain painted layer data constant buffer in preparation for device update.\n") );
+            return false;
+
+        } // End if failed
+
+        // Collect the layer states
+        for ( cgInt32 j = 0; j < Batch.layerCount; ++j )
+        {
+            cgLandscapeLayerMaterial * pType = (cgLandscapeLayerMaterial*)mLayers[Batch.layers[j]]->layerType.getResource();
+
+            // Collect texturing properties
+            cgLandscape::ctLayerData & Data = pBatchData->layers[j];
+            cgToDo( "Carbon General", "Use actual texture size?" )
+            Data.textureSize  = cgVector4( 512.0f, 512.0f, 1.0f / 512.0f, 1.0f / 512.0f );
+            Data.scale        = pType->getScale();
+            Data.baseScale    = pType->getBaseScale();
+            Data.offset       = -pType->getOffset();
+            Data.rotation.x   = cosf(CGEToRadian(360.0f - pType->getAngle()));
+            Data.rotation.y   = -sinf(CGEToRadian(360.0f - pType->getAngle()));
+            Data.rotation.z   = -Data.rotation.y;
+            Data.rotation.w   = Data.rotation.x;
+
+        } // Next Layer
+
+        // Buffer is populated.
+        pBatchBuffer->unlock();
+
+    } // Next batch
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+// Name : drawClutter()
+/// <summary>
+/// Render the clutter (foliage, etc.) contained within this terrain block.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgLandscapeTextureData::drawClutter( cgRenderDriver * driver, cgLandscapeRenderMethod::Base method )
+{
+    cgCameraNode * camera = driver->getCamera();
+    bool depthFill = (method == cgLandscapeRenderMethod::ClutterDepthFill);
+    for ( size_t i = 0; i < mLayers.size(); ++i )
+    {
+        LayerReference * pLayer = mLayers[i];
+        if ( pLayer->eraseLayer )
+            continue;
+
+        for ( size_t j = 0; j < pLayer->clutterCells.size(); ++j )
+        {
+            cgClutterCell * pCell = pLayer->clutterCells[j];
+            if ( pCell->shouldRender( camera ) && pCell->getLayer()->begin( driver, depthFill ) )
+            {
+                pCell->render( driver, depthFill );
+                pCell->getLayer()->end( driver, depthFill );
+            }
+        
+        } // Next cell
+
+    } // Next layer
+}
+
+//-----------------------------------------------------------------------------
 // Name : beginDraw()
 /// <summary>
 /// Called during rendering in order to setup necessary device states.
@@ -8631,21 +8391,15 @@ bool cgLandscapeTextureData::beginDraw( cgRenderDriver * pDriver )
     if ( mRenderBatches.empty() )
         return false;
 
+    // Update the render batch constant buffers as required.
+    if ( !updateBatchConstants() )
+        return false;
+
     // Bind the appropriate constant buffers ready for procedural rendering.
     // The hardware side constant registers in these bound buffers will be 
     // automatically updated as necessary whenever the buffer contents are 
     // modified within the following rendering loops.
     pDriver->setConstantBufferAuto( mTerrainPaintDataBuffer );
-
-    // ToDo: Remove
-    /*for ( int i = 0; i < mCombinedBlendMaps.size(); ++i )
-    {
-        wchar_t Buffer[1024];
-        wsprintf( Buffer, L"BatchMap%i.dds", i );
-        LPDIRECT3DBASETEXTURE9 pTexture = (LPDIRECT3DBASETEXTURE9)mCombinedBlendMaps[i].texture.GetManagedData();
-        D3DXSaveTextureToFile( Buffer, D3DXIFF_DDS, pTexture, CG_NULL );
-        pTexture->release();
-    }*/
 
     // Success!
     return true;

@@ -714,6 +714,7 @@
     <ClCompile Include="..\..\Source\Physics\Shapes\cgConvexHullShape.cpp" />
     <ClCompile Include="..\..\Source\Physics\Shapes\cgConvexShape.cpp" />
     <ClCompile Include="..\..\Source\Physics\Shapes\cgCylinderShape.cpp" />
+    <ClCompile Include="..\..\Source\Physics\Shapes\cgDisplacementShape.cpp" />
     <ClCompile Include="..\..\Source\Physics\Shapes\cgMeshShape.cpp" />
     <ClCompile Include="..\..\Source\Physics\Shapes\cgNullShape.cpp" />
     <ClCompile Include="..\..\Source\Physics\Shapes\cgSphereShape.cpp" />
@@ -746,6 +747,7 @@
     <ClCompile Include="..\..\Source\Resources\cgAnimationSet.cpp" />
     <ClCompile Include="..\..\Source\Resources\cgAudioBuffer.cpp" />
     <ClCompile Include="..\..\Source\Resources\cgBufferFormatEnum.cpp" />
+    <ClCompile Include="..\..\Source\Resources\cgClutterMaterial.cpp" />
     <ClCompile Include="..\..\Source\Resources\cgConstantBuffer.cpp" />
     <ClCompile Include="..\..\Source\Resources\cgDepthStencilTarget.cpp" />
     <ClCompile Include="..\..\Source\Resources\cgHardwareShaders.cpp" />
@@ -804,6 +806,7 @@
     <ClCompile Include="..\..\Source\World\cgWorldQuery.cpp" />
     <ClCompile Include="..\..\Source\World\cgWorldResourceComponent.cpp" />
     <ClCompile Include="..\..\Source\World\Elements\cgBSPVisTreeElement.cpp" />
+    <ClCompile Include="..\..\Source\World\Elements\cgLandscapeElement.cpp" />
     <ClCompile Include="..\..\Source\World\Elements\cgNavigationMeshElement.cpp" />
     <ClCompile Include="..\..\Source\World\Elements\cgSkyElement.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgActor.cpp" />
@@ -1435,6 +1438,8 @@
     <ClInclude Include="..\..\Include\Navigation\cgNavigationTypes.h" />
     <ClInclude Include="..\..\Include\Physics\Controllers\cgRagdollController.h" />
     <ClInclude Include="..\..\Include\Physics\Joints\cgBallJoint.h" />
+    <ClInclude Include="..\..\Include\Physics\Shapes\cgDisplacementShape.h" />
+    <ClInclude Include="..\..\Include\Resources\cgClutterMaterial.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\Animation\Types.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\Audio.h" />
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\Audio\AudioDriver.h" />
@@ -1474,6 +1479,7 @@
     <ClInclude Include="..\..\Include\World\cgSceneElement.h" />
     <ClInclude Include="..\..\Include\World\cgSphereTree.h" />
     <ClInclude Include="..\..\Include\World\Elements\cgBSPVisTreeElement.h" />
+    <ClInclude Include="..\..\Include\World\Elements\cgLandscapeElement.h" />
     <ClInclude Include="..\..\Include\World\Elements\cgNavigationMeshElement.h" />
     <ClInclude Include="..\..\Include\World\Elements\cgSkyElement.h" />
     <ClInclude Include="..\..\Include\World\Objects\cgBillboardObject.h" />
@@ -1499,7 +1505,7 @@
     <ClInclude Include="..\..\Lib\AngelScript\source\as_map.h" />
     <ClInclude Include="..\..\Lib\AngelScript\source\as_memory.h" />
     <ClInclude Include="..\..\Lib\AngelScript\source\as_module.h" />
-	<ClInclude Include="..\..\Lib\AngelScript\source\as_namespace.h" />
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_namespace.h" />
     <ClInclude Include="..\..\Lib\AngelScript\source\as_objecttype.h" />
     <ClInclude Include="..\..\Lib\AngelScript\source\as_outputbuffer.h" />
     <ClInclude Include="..\..\Lib\AngelScript\source\as_parser.h" />
@@ -1850,7 +1856,7 @@
     <ClInclude Include="..\..\Include\System\Platform\cgWinAppWindow.h" />
     <ClInclude Include="..\..\Include\System\Platform\cgWinImage.h" />
     <ClInclude Include="..\..\Include\System\Platform\cgWinThreading.h" />
-	<ClInclude Include="..\..\Include\System\Platform\Containers\cgArray.h" />
+    <ClInclude Include="..\..\Include\System\Containers\cgArray.h" />
     <ClInclude Include="..\..\Include\Rendering\cgBillboardBuffer.h" />
     <ClInclude Include="..\..\Include\Rendering\cgImageProcessor.h" />
     <ClInclude Include="..\..\Include\Rendering\cgObjectRenderContext.h" />

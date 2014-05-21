@@ -464,6 +464,7 @@ namespace Types
             // Register Values
             BINDSUCCESS( engine->registerEnumValue( "MaterialType", "Standard"      , cgMaterialType::Standard ) );
             BINDSUCCESS( engine->registerEnumValue( "MaterialType", "LandscapeLayer", cgMaterialType::LandscapeLayer ) );
+            BINDSUCCESS( engine->registerEnumValue( "MaterialType", "Clutter"       , cgMaterialType::Clutter ) );
             
             ///////////////////////////////////////////////////////////////////////
             // cgConstantDesc (Struct)

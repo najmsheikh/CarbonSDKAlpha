@@ -636,10 +636,10 @@ bool cgActorNode::onNodeLoading( const cgUID & objectType, cgWorldQuery * nodeDa
 /// order to notify any listeners of this fact.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgActorNode::onComponentModified( cgComponentModifiedEventArgs * e )
+void cgActorNode::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
 {
     // Call base class implementation last
-    cgObjectNode::onComponentModified( e );
+    cgObjectNode::onComponentModified( sender, e );
 }
 
 //-----------------------------------------------------------------------------

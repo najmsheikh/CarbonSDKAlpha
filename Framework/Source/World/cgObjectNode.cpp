@@ -3012,7 +3012,7 @@ void cgObjectNode::onParentLevelChanged( )
 /// allow us to take any appropriate action.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgObjectNode::onComponentModified( cgComponentModifiedEventArgs * e )
+void cgObjectNode::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
 {
     // What property was modified?
     if ( e->context == _T("BaseMass") || e->context == _T("MassTransformAdjust") )

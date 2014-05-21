@@ -238,7 +238,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgWorldComponentEventListener)
     //-------------------------------------------------------------------------
-    virtual void                    onComponentModified     ( cgComponentModifiedEventArgs * e );
+    virtual void                    onComponentModified     ( cgReference * sender, cgComponentModifiedEventArgs * e );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides cgReference)

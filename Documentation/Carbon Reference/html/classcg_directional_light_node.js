@@ -35,7 +35,7 @@ var classcg_directional_light_node =
     [ "getShadowSplitDistance", "classcg_directional_light_node.html#a2b7e5b3f1fecf0a8b5f80a183534ea64", null ],
     [ "getShadowSplitOverlap", "classcg_directional_light_node.html#ae54bac5234412162bfb2ff08feb8f69c", null ],
     [ "getShadowUpdateRate", "classcg_directional_light_node.html#ad3161ff0f2e3ec2a0c4424e788fbfe39", null ],
-    [ "onComponentModified", "classcg_directional_light_node.html#ae79e78d9ae68fbe63d0fd4dfa8ee27d2", null ],
+    [ "onComponentModified", "classcg_directional_light_node.html#a54ab3786bc465f720f9c3f2e74cfc953", null ],
     [ "pointInVolume", "classcg_directional_light_node.html#ac218b97a810401b6145b8889fc6ccc14", null ],
     [ "postCreate", "classcg_directional_light_node.html#a220277bc113f5e9cf2ac635cf6e0bf15", null ],
     [ "queryReferenceType", "classcg_directional_light_node.html#a01d40fd2b2a7c50e787e4967cf5f6fa5", null ],

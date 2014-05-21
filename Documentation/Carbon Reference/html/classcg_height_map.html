@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
    </div>
   </td>
  </tr>
@@ -167,6 +167,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad0b1b1573c290154d0fec86f3fc19a72"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_height_map.html#ad0b1b1573c290154d0fec86f3fc19a72">scale</a> (<a class="el" href="cg_base_types_8h.html#a205b36290def5db7b358b851cfb45586">cgInt16</a> scale)</td></tr>
 <tr class="memdesc:ad0b1b1573c290154d0fec86f3fc19a72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scale the heightmap cells by the specified amount. Values will be clamped at the min / max limits.  <a href="#ad0b1b1573c290154d0fec86f3fc19a72"></a><br/></td></tr>
 <tr class="separator:ad0b1b1573c290154d0fec86f3fc19a72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64c08f22379381d9f0c2d9ffde742adc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_height_map.html#a64c08f22379381d9f0c2d9ffde742adc">fill</a> (<a class="el" href="cg_base_types_8h.html#a205b36290def5db7b358b851cfb45586">cgInt16</a> value)</td></tr>
+<tr class="memdesc:a64c08f22379381d9f0c2d9ffde742adc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill the entire heightmap with the specified value.  <a href="#a64c08f22379381d9f0c2d9ffde742adc"></a><br/></td></tr>
+<tr class="separator:a64c08f22379381d9f0c2d9ffde742adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af321e6c5aff6371be00eec712b992fa0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_height_map.html#af321e6c5aff6371be00eec712b992fa0">computeHeightRange</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;minOut, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;maxOut) const </td></tr>
+<tr class="memdesc:af321e6c5aff6371be00eec712b992fa0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the minimum and maximum height values currently stored in the height map buffer.  <a href="#af321e6c5aff6371be00eec712b992fa0"></a><br/></td></tr>
+<tr class="separator:af321e6c5aff6371be00eec712b992fa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdfb8d9a31b31de710bc78b14047e295"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_height_map.html#abdfb8d9a31b31de710bc78b14047e295">computeHeightRange</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;minOut, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;maxOut, const <a class="el" href="structcg_rect.html">cgRect</a> &amp;section) const </td></tr>
+<tr class="memdesc:abdfb8d9a31b31de710bc78b14047e295"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the minimum and maximum height values currently stored in the specified region of the height map buffer.  <a href="#abdfb8d9a31b31de710bc78b14047e295"></a><br/></td></tr>
+<tr class="separator:abdfb8d9a31b31de710bc78b14047e295"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1bc14e95490914e1e9131c0ec727912"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_size.html">cgSize</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_height_map.html#ab1bc14e95490914e1e9131c0ec727912">getSize</a> () const </td></tr>
 <tr class="memdesc:ab1bc14e95490914e1e9131c0ec727912"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the size of the loaded heightmap data in pixels.  <a href="#ab1bc14e95490914e1e9131c0ec727912"></a><br/></td></tr>
 <tr class="separator:ab1bc14e95490914e1e9131c0ec727912"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -248,7 +257,7 @@ Protected Attributes</h2></td></tr>
           <td class="memname">cgHeightMap::cgHeightMap </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classcg_height_map.html">cgHeightMap</a> &amp;&#160;</td>
-          <td class="paramname"><em>Init</em></td><td>)</td>
+          <td class="paramname"><em>init</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -266,7 +275,7 @@ Protected Attributes</h2></td></tr>
           <td class="memname">cgHeightMap::cgHeightMap </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structcg_size.html">cgSize</a> &amp;&#160;</td>
-          <td class="paramname"><em>Size</em></td><td>)</td>
+          <td class="paramname"><em>size</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -284,13 +293,13 @@ Protected Attributes</h2></td></tr>
           <td class="memname">cgHeightMap::cgHeightMap </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structcg_size.html">cgSize</a> &amp;&#160;</td>
-          <td class="paramname"><em>Size</em>, </td>
+          <td class="paramname"><em>size</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a205b36290def5db7b358b851cfb45586">cgInt16</a>&#160;</td>
-          <td class="paramname"><em>nInit</em>&#160;</td>
+          <td class="paramname"><em>initValue</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -330,6 +339,86 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="af321e6c5aff6371be00eec712b992fa0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgHeightMap::computeHeightRange </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;&#160;</td>
+          <td class="paramname"><em>minOut</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;&#160;</td>
+          <td class="paramname"><em>maxOut</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compute the minimum and maximum height values currently stored in the height map buffer. </p>
+
+</div>
+</div>
+<a class="anchor" id="abdfb8d9a31b31de710bc78b14047e295"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgHeightMap::computeHeightRange </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;&#160;</td>
+          <td class="paramname"><em>minOut</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> &amp;&#160;</td>
+          <td class="paramname"><em>maxOut</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcg_rect.html">cgRect</a> &amp;&#160;</td>
+          <td class="paramname"><em>section</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compute the minimum and maximum height values currently stored in the specified region of the height map buffer. </p>
+
+</div>
+</div>
+<a class="anchor" id="a64c08f22379381d9f0c2d9ffde742adc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgHeightMap::fill </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a205b36290def5db7b358b851cfb45586">cgInt16</a>&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Fill the entire heightmap with the specified value. </p>
+
+</div>
+</div>
 <a class="anchor" id="acefde8677bca95eef99be79d9f1f8b01"></a>
 <div class="memitem">
 <div class="memproto">
@@ -445,19 +534,19 @@ Protected Attributes</h2></td></tr>
           <td class="memname">bool cgHeightMap::loadRaw </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classcg_input_stream.html">cgInputStream</a>&#160;</td>
-          <td class="paramname"><em>Stream</em>, </td>
+          <td class="paramname"><em>stream</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="structcg_size.html">cgSize</a> &amp;&#160;</td>
-          <td class="paramname"><em>Size</em>, </td>
+          <td class="paramname"><em>size</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classcg_height_map.html#a49b24addc665479744d0cecd3063d0df">RawFormat</a>&#160;</td>
-          <td class="paramname"><em>Format</em>&#160;</td>
+          <td class="paramname"><em>format</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -482,31 +571,31 @@ Protected Attributes</h2></td></tr>
           <td class="memname">bool cgHeightMap::loadRawSection </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classcg_input_stream.html">cgInputStream</a>&#160;</td>
-          <td class="paramname"><em>Stream</em>, </td>
+          <td class="paramname"><em>stream</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="structcg_size.html">cgSize</a> &amp;&#160;</td>
-          <td class="paramname"><em>Size</em>, </td>
+          <td class="paramname"><em>size</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classcg_height_map.html#a49b24addc665479744d0cecd3063d0df">RawFormat</a>&#160;</td>
-          <td class="paramname"><em>Format</em>, </td>
+          <td class="paramname"><em>format</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="structcg_rect.html">cgRect</a> &amp;&#160;</td>
-          <td class="paramname"><em>rcSection</em>, </td>
+          <td class="paramname"><em>section</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">cgInt16Array &amp;&#160;</td>
-          <td class="paramname"><em>aDataOut</em>&#160;</td>
+          <td class="paramname"><em>dataOut</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -533,13 +622,13 @@ Protected Attributes</h2></td></tr>
           <td class="memname">bool cgHeightMap::loadSquareRaw </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classcg_input_stream.html">cgInputStream</a>&#160;</td>
-          <td class="paramname"><em>Stream</em>, </td>
+          <td class="paramname"><em>stream</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classcg_height_map.html#a49b24addc665479744d0cecd3063d0df">RawFormat</a>&#160;</td>
-          <td class="paramname"><em>Format</em>&#160;</td>
+          <td class="paramname"><em>format</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -561,13 +650,13 @@ Protected Attributes</h2></td></tr>
           <td class="memname">void cgHeightMap::normalize </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
-          <td class="paramname"><em>nMin</em>, </td>
+          <td class="paramname"><em>minimum</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
-          <td class="paramname"><em>nMax</em>&#160;</td>
+          <td class="paramname"><em>maximum</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -601,7 +690,7 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
-          <td class="paramname"><em>nOffset</em>&#160;</td>
+          <td class="paramname"><em>offset</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -623,7 +712,7 @@ Protected Attributes</h2></td></tr>
           <td class="memname">void cgHeightMap::scale </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a205b36290def5db7b358b851cfb45586">cgInt16</a>&#160;</td>
-          <td class="paramname"><em>nScale</em></td><td>)</td>
+          <td class="paramname"><em>scale</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -653,7 +742,7 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a205b36290def5db7b358b851cfb45586">cgInt16</a>&#160;</td>
-          <td class="paramname"><em>nValue</em>&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -762,7 +851,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_height_map.html">cgHeightMap</a></li>
-    <li class="footer">Generated on Mon May 12 2014 08:23:34 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Wed May 21 2014 19:31:37 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

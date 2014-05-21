@@ -432,6 +432,30 @@ struct CGE_API cgRect
         bottom -= p.y;
         return *this;
     }
+    inline bool operator<( const cgRect & b ) const
+    {
+		cgInt32 r = left - b.left;
+        if ( r ) return (r<0);
+        r = top - b.top;
+        if ( r ) return (r<0);
+        r = right - b.right;
+        if ( r ) return (r<0);
+        r = bottom - b.bottom;
+        if ( r ) return (r<0);
+        return false;
+    }
+    inline bool operator>( const cgRect & b ) const
+    {
+		cgInt32 r = left - b.left;
+        if ( r ) return (r>0);
+        r = top - b.top;
+        if ( r ) return (r>0);
+        r = right - b.right;
+        if ( r ) return (r>0);
+        r = bottom - b.bottom;
+        if ( r ) return (r>0);
+        return false;
+    }
 
     // Static inline functions
     static cgRect inflate( const cgRect & rc, cgInt32 x, cgInt32 y )
@@ -484,6 +508,30 @@ struct CGE_API cgRectF
         top -= p.y;
         bottom -= p.y;
         return *this;
+    }
+    inline bool operator<( const cgRectF & b ) const
+    {
+		cgFloat r = left - b.left;
+        if ( r ) return (r<0);
+        r = top - b.top;
+        if ( r ) return (r<0);
+        r = right - b.right;
+        if ( r ) return (r<0);
+        r = bottom - b.bottom;
+        if ( r ) return (r<0);
+        return false;
+    }
+    inline bool operator>( const cgRectF & b ) const
+    {
+		cgFloat r = left - b.left;
+        if ( r ) return (r>0);
+        r = top - b.top;
+        if ( r ) return (r>0);
+        r = right - b.right;
+        if ( r ) return (r>0);
+        r = bottom - b.bottom;
+        if ( r ) return (r>0);
+        return false;
     }
 
     // Static inline functions

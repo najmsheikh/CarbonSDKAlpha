@@ -76,6 +76,9 @@ public:
     bool                loadSquareRaw       ( cgInputStream stream, RawFormat format );
     void                normalize           ( cgInt32 minimum, cgInt32 maximum );
     void                scale               ( cgInt16 scale );
+    void                fill                ( cgInt16 value );
+    void                computeHeightRange  ( cgInt32 & minOut, cgInt32 & maxOut ) const;
+    void                computeHeightRange  ( cgInt32 & minOut, cgInt32 & maxOut, const cgRect & section ) const;
     
     // Properties
     const cgSize      & getSize             ( ) const;

@@ -22,5 +22,8 @@ var searchData=
   ['gridminprev',['gridMinPrev',['../structcg_radiance_grid_1_1__cb_grid.html#a61fa1c02af7369e28f096f2fed6062cd',1,'cgRadianceGrid::_cbGrid']]],
   ['gridshift',['gridShift',['../structcg_radiance_grid_1_1__cb_grid.html#a92b566873c89c0bd0a13439d70fde604',1,'cgRadianceGrid::_cbGrid']]],
   ['grouptoid',['groupToId',['../classcg_message.html#a1c84f4f8995ff6643c87ffc12ee55046',1,'cgMessage']]],
+  ['growthmask',['growthMask',['../structcg_clutter_cell_1_1_grid_data.html#a6efdd7557b58215e311b2128c4c28def',1,'cgClutterCell::GridData']]],
+  ['growthmaskpitch',['growthMaskPitch',['../structcg_clutter_cell_1_1_grid_data.html#ade734fee0b35e3c76c65ef0cc65ce8ae',1,'cgClutterCell::GridData']]],
+  ['growthmaskregion',['growthMaskRegion',['../structcg_clutter_cell_1_1_grid_data.html#a0d38c639b45e17a6c66b765c5420c7e7',1,'cgClutterCell::GridData']]],
   ['guaranteeddata',['guaranteedData',['../classcg_message.html#aff1f8644c9fab1edb06abb31e95a8a87',1,'cgMessage']]]
 ];

@@ -21,7 +21,7 @@ var classcg_sound_emitter_node =
     [ "isLooping", "classcg_sound_emitter_node.html#a8f54a170d7905eec283c9ed79e63ffa8", null ],
     [ "isPlaying", "classcg_sound_emitter_node.html#a99812c2214b1737abdd7b74cb63a812e", null ],
     [ "isStreaming", "classcg_sound_emitter_node.html#a4e7c308325a7347d4b0a6a1c0f2f8174", null ],
-    [ "onComponentModified", "classcg_sound_emitter_node.html#a7741a15f6986363f3321528b6353ec74", null ],
+    [ "onComponentModified", "classcg_sound_emitter_node.html#acaa740fd0b95d5fe5b5de5fb7ad96953", null ],
     [ "onNodeInit", "classcg_sound_emitter_node.html#ac5837b29c69481c9e2bd3b355ac69ac3", null ],
     [ "play", "classcg_sound_emitter_node.html#a51d2bb1f48f143685e5e6da96d336d17", null ],
     [ "queryReferenceType", "classcg_sound_emitter_node.html#a45d641d3c48cff739861a8886776f012", null ],

@@ -94,6 +94,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Methods
     //-------------------------------------------------------------------------
+    virtual bool                    canBatch                    ( ) const { return false; }
     virtual bool                    apply                       ( cgRenderDriver * driver ) = 0;
     virtual bool                    loadMaterial                ( cgUInt32 sourceRefId, cgResourceManager * resourceManager = CG_NULL ) = 0;
     virtual void                    reset                       ( cgRenderDriver * driver );

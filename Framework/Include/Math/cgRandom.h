@@ -97,13 +97,13 @@ namespace cgRandom
         cgFloat             getValue        ( const cgVector2 & pos ) const;
         NoiseType           getNoiseType    ( ) const;
         cgUInt32            getSeed         ( ) const;
-        cgFloat             getPersistance  ( ) const;
+        cgFloat             getPersistence  ( ) const;
         cgFloat             getFrequency    ( ) const;
         cgFloat             getOctaves      ( ) const;
         cgFloat             getAmplitude    ( ) const;
         void                setNoiseType    ( NoiseType type );
         void                setSeed         ( cgUInt32 seed );
-        void                setPersistance  ( cgFloat value );
+        void                setPersistence  ( cgFloat value );
         void                setFrequency    ( cgFloat value );
         void                setOctaves      ( cgFloat value );
         void                setAmplitude    ( cgFloat value );
@@ -151,7 +151,7 @@ namespace cgRandom
         /// <summary>Random seed to use during noise generation.</summary>
         cgUInt32        mSeed;
         /// <summary>Various noise generation parameters.</summary>
-        cgFloat         mPersistance;
+        cgFloat         mPersistence;
         cgFloat         mFrequency;
         cgFloat         mOctaves;
         cgFloat         mAmplitude;

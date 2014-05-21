@@ -43,6 +43,7 @@
 #include <World/Objects/cgMeshObject.h>
 #include <World/Elements/cgNavigationMeshElement.h>     // ToDo: 9999 - remove this if navigation elements are stepped in an alternate fashion.
 #include <World/Elements/cgBSPVisTreeElement.h>
+#include <World/Elements/cgLandscapeElement.h>
 #include <Navigation/cgNavigationHandler.h>             // ToDo: 9999 - remove this if navigation elements are stepped in an alternate fashion.
 #include <Resources/cgResourceManager.h>
 #include <Resources/cgStandardMaterial.h>
@@ -478,6 +479,9 @@ bool cgScene::reload( )
 
     // Reload the scene
     bool result = load();
+
+    // Dispatch notification
+    onSceneReloaded( &cgSceneEventArgs(this) );
     
     // We're done.
     return result;
@@ -779,7 +783,7 @@ bool cgScene::load( )
         importParams.blockBlendMapSize = cgSize(32,32);
         importParams.initFlags         = cgLandscapeFlags::Dynamic | cgLandscapeFlags::LODIgnoreY;
         importParams.heightMap         = new cgHeightMap( cgSize((maxCellsX * importParams.blockGrid.width) + 1, 
-                                                          (maxCellsZ * importParams.blockGrid.height) + 1) );
+                                                          (maxCellsZ * importParams.blockGrid.height) + 1), 0 );
         importLandscape( importParams );
         
         // Was this successful?
@@ -794,6 +798,22 @@ bool cgScene::load( )
         } // End if imported
     
     } // End if generate landscape
+
+    // If there is a landscape assigned, create an 'internal' landscape scene element
+    // to wrap it. This will not be serialized to the database, but does allow the
+    // landscape to be exposed to the host application as a scene element type.
+    if ( mLandscape )
+    {
+        cgSceneElement * element = mWorld->createSceneElement( true, RTID_LandscapeElement, this );
+        if ( element )
+        {
+            element->addReference( this, true );
+            mElements.push_back( element );
+            mElementTypes[ element->getReferenceType() ].push_back( element );
+        
+        } // End if valid
+    
+    } // End if has landscape
 
     // Success!!
     return true;
@@ -1938,7 +1958,7 @@ cgSceneElement * cgScene::createSceneElement( bool internalElement, const cgUID 
     mElements.push_back( element );
     mElementTypes[ element->getReferenceType() ].push_back( element );
 
-    // Scene is now dirty.
+    // Scene is now dirty if this was not an internal element.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
         setDirty( true );
 
@@ -2072,7 +2092,7 @@ cgObjectNode * cgScene::createObjectNode( bool internalNode, const cgUID & objec
     // Automatically resolve any information which was not initially computed.
     newNode->resolvePendingUpdates( cgDeferredUpdateFlags::All );
     
-    // Scene has been modified
+    // Scene has been modified?
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
         setDirty( true );
 
@@ -5247,6 +5267,29 @@ void cgScene::onSceneLoadProgress( cgSceneLoadProgressEventArgs * e )
     // Also send message via messaging system.
     cgMessage msg;
     msg.messageId = cgSystemMessages::Scene_LoadProgressUpdate;
+    cgReferenceManager::sendMessageToGroup( getReferenceId(), cgSystemMessageGroups::MGID_Scene, &msg );
+}
+
+//-----------------------------------------------------------------------------
+// Name : onSceneReloaded () (Virtual)
+/// <summary>
+/// Can be overriden or called by derived class in order to trigger the event
+/// with matching name. All listeners will subsequently be notified.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgScene::onSceneReloaded( cgSceneEventArgs * e )
+{
+	if ( mSuppressEvents )
+		return;
+
+    // Trigger 'onSceneLoadProgress' of all listeners.
+    EventListenerList::iterator itListener;
+    for ( itListener = mEventListeners.begin(); itListener != mEventListeners.end(); ++itListener )
+        ((cgSceneEventListener*)(*itListener))->onSceneReloaded( e );
+
+    // Also send message via messaging system.
+    cgMessage msg;
+    msg.messageId = cgSystemMessages::Scene_Reloaded;
     cgReferenceManager::sendMessageToGroup( getReferenceId(), cgSystemMessageGroups::MGID_Scene, &msg );
 }
 

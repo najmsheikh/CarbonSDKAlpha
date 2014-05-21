@@ -566,6 +566,21 @@ bool cgBoundingBox::containsPoint( const cgVector3& Point, const cgVector3& Tole
 }
 
 //-----------------------------------------------------------------------------
+//  Name : containsPoint()
+/// <summary>
+/// Tests to see if a point falls within this bounding box or not
+/// including a specific tolerance around the box.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgBoundingBox::containsPoint( const cgVector3& Point, cgFloat Tolerance ) const
+{
+    if (Point.x < min.x - Tolerance || Point.x > max.x + Tolerance) return false;
+    if (Point.y < min.y - Tolerance || Point.y > max.y + Tolerance) return false;
+    if (Point.z < min.z - Tolerance || Point.z > max.z + Tolerance) return false;
+    return true;
+}
+
+//-----------------------------------------------------------------------------
 //  Name : closestPoint ()
 /// <summary>
 /// Compute a point, on the surface of the AABB, that falls closest to 

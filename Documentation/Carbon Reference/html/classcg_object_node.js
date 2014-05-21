@@ -121,7 +121,7 @@ var classcg_object_node =
     [ "navigateTo", "classcg_object_node.html#a1a71bc8015596a4af3b0c3c45b8f7f27", null ],
     [ "nodeUpdated", "classcg_object_node.html#af44d34ba13b8450bec593395a856ebbd", null ],
     [ "onAnimationTransformUpdated", "classcg_object_node.html#a2e929b245771032b9d86f03ed7a91050", null ],
-    [ "onComponentModified", "classcg_object_node.html#aef9ac9ef2316bc9f32dfb2c93443ee3f", null ],
+    [ "onComponentModified", "classcg_object_node.html#a051a491b419fdf2b2ca7546b7035546a", null ],
     [ "onNavigationAgentReposition", "classcg_object_node.html#a2bb22b6f1bdd3ddda39cb1da39a55c92", null ],
     [ "onNodeCreated", "classcg_object_node.html#a7cd3006d9590fd9980fc57b7ffc3df7d", null ],
     [ "onNodeDeleted", "classcg_object_node.html#a540100713959c9bf75ed173c4944e0fe", null ],

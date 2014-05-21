@@ -39,7 +39,7 @@ var classcg_projector_light_node =
     [ "getShadowUpdateRate", "classcg_projector_light_node.html#af6ec9abeef0866e0e609f04f89c28e6f", null ],
     [ "getSize", "classcg_projector_light_node.html#a578da6385c21ed771b2705bc91a3d74c", null ],
     [ "getTiling", "classcg_projector_light_node.html#ace4eb2ace86722a4fa5d0f56db40fa2b", null ],
-    [ "onComponentModified", "classcg_projector_light_node.html#aea95d6414202133ddc0e97df52697238", null ],
+    [ "onComponentModified", "classcg_projector_light_node.html#a83188fa5037b4be069110a11f41dd41e", null ],
     [ "pointInVolume", "classcg_projector_light_node.html#a6390254803809a64d6a466e285445eca", null ],
     [ "postCreate", "classcg_projector_light_node.html#ac662ec18129ebcd732e39cd2d986dbb0", null ],
     [ "queryReferenceType", "classcg_projector_light_node.html#a8ddc5db1d26cc659930c98ea9f82a123", null ],

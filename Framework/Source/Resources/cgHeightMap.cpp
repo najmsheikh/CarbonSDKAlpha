@@ -45,33 +45,33 @@ cgHeightMap::cgHeightMap( )
 // Name : cgHeightMap() (Constructor)
 /// <summary>Class constructor.</summary>
 //-----------------------------------------------------------------------------
-cgHeightMap::cgHeightMap( const cgHeightMap & Init )
+cgHeightMap::cgHeightMap( const cgHeightMap & init )
 {
     // Clone heightmap.
-    mSize       = Init.mSize;
-    mImageData = Init.mImageData;
+    mSize      = init.mSize;
+    mImageData = init.mImageData;
 }
 
 //-----------------------------------------------------------------------------
 // Name : cgHeightMap() (Constructor)
 /// <summary>Class constructor.</summary>
 //-----------------------------------------------------------------------------
-cgHeightMap::cgHeightMap( const cgSize & Size )
+cgHeightMap::cgHeightMap( const cgSize & size )
 {
     // Initialize variables to sensible defaults
-    mImageData.resize( Size.width * Size.height );
-    mSize = Size;
+    mImageData.resize( size.width * size.height );
+    mSize = size;
 }
 
 //-----------------------------------------------------------------------------
 // Name : cgHeightMap() (Constructor)
 /// <summary>Class constructor.</summary>
 //-----------------------------------------------------------------------------
-cgHeightMap::cgHeightMap( const cgSize & Size, cgInt16 nInit )
+cgHeightMap::cgHeightMap( const cgSize & size, cgInt16 initValue )
 {
     // Initialize variables to sensible defaults
-    mImageData.resize( Size.width * Size.height, nInit );
-    mSize = Size;
+    mImageData.resize( size.width * size.height, initValue );
+    mSize = size;
 }
 
 //-----------------------------------------------------------------------------
@@ -106,40 +106,40 @@ cgFloat cgHeightMap::getInterpolatedCell( cgFloat x, cgFloat y )
     // Retrieve the underlying pixel
     if ( x >= 0 && x < (mSize.width-1) && y >= 0 && y < (mSize.height-1) )
     {
-        cgFloat fTopLeft, fTopRight, fBottomLeft, fBottomRight;
+        cgFloat topLeft, topRight, bottomLeft, bottomRight;
 
         // First retrieve the Heightmap Points
-        cgInt iX = (cgInt)x;
-        cgInt iY = (cgInt)y;
+        cgInt ix = (cgInt)x;
+        cgInt iy = (cgInt)y;
     	
         // Calculate the remainder (percent across quad)
-        cgFloat fPercentX = x - (cgFloat)iX;
-        cgFloat fPercentY = y - (cgFloat)iY;
+        cgFloat deltaX = x - (cgFloat)ix;
+        cgFloat deltaY = y - (cgFloat)iy;
 
         // First retrieve the height of each point in the dividing edge
-        fTopLeft     = (cgFloat)mImageData[ iX + iY * mSize.width ];
-        fBottomRight = (cgFloat)mImageData[ (iX + 1) + (iY + 1) * mSize.width ];
+        topLeft     = (cgFloat)mImageData[ ix + iy * mSize.width ];
+        bottomRight = (cgFloat)mImageData[ (ix + 1) + (iy + 1) * mSize.width ];
 
         // Which triangle of the quad are we in ?
-        if ( fPercentX < fPercentY )
+        if ( deltaX < deltaY )
         {
-            fBottomLeft = (cgFloat)mImageData[ iX + (iY + 1) * mSize.width ];
-	        fTopRight = fTopLeft + (fBottomRight - fBottomLeft);
+            bottomLeft = (cgFloat)mImageData[ ix + (iy + 1) * mSize.width ];
+	        topRight = topLeft + (bottomRight - bottomLeft);
         
         } // End if left Triangle
         else
         {
-            fTopRight   = (cgFloat)mImageData[ (iX + 1) + iY * mSize.width ];
-	        fBottomLeft = fTopLeft + (fBottomRight - fTopRight);
+            topRight   = (cgFloat)mImageData[ (ix + 1) + iy * mSize.width ];
+	        bottomLeft = topLeft + (bottomRight - topRight);
 
         } // End if Right Triangle
         
         // Calculate the height interpolated across the top and bottom edges
-        cgFloat fTopHeight    = fTopLeft    + ((fTopRight - fTopLeft) * fPercentX );
-        cgFloat fBottomHeight = fBottomLeft + ((fBottomRight - fBottomLeft) * fPercentX );
+        cgFloat topHeight    = topLeft    + ((topRight - topLeft) * deltaX );
+        cgFloat bottomHeight = bottomLeft + ((bottomRight - bottomLeft) * deltaX );
 
         // Calculate the resulting height interpolated between the two heights
-        return fTopHeight + ((fBottomHeight - fTopHeight) * fPercentY );
+        return topHeight + ((bottomHeight - topHeight) * deltaY );
     
     } // End if valid
 
@@ -153,10 +153,10 @@ cgFloat cgHeightMap::getInterpolatedCell( cgFloat x, cgFloat y )
 /// Set the height at the specified pixel location.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgHeightMap::setCell( cgInt32 x, cgInt32 y, cgInt16 nValue )
+void cgHeightMap::setCell( cgInt32 x, cgInt32 y, cgInt16 value )
 {
     // Set the height
-    mImageData[ x + y * mSize.width ] = nValue;
+    mImageData[ x + y * mSize.width ] = value;
 }
 
 //-----------------------------------------------------------------------------
@@ -165,24 +165,24 @@ void cgHeightMap::setCell( cgInt32 x, cgInt32 y, cgInt16 nValue )
 /// Adjust the height of the pixel at the location specified.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgHeightMap::offsetCell( cgInt32 x, cgInt32 y, cgInt32 nOffset )
+void cgHeightMap::offsetCell( cgInt32 x, cgInt32 y, cgInt32 offset )
 {
-    cgInt32 nNewHeight;
-
     // Validate.
     if ( x >= mSize.width || y >= mSize.height )
         return;
 
     // Generate the new height value
-    nNewHeight  = (cgInt32)mImageData[ x + y * mSize.width ];
-    nNewHeight += nOffset;
+    cgInt32 newHeight = (cgInt32)mImageData[ x + y * mSize.width ];
+    newHeight += offset;
 
     // Clamp it
-    if ( nNewHeight < MinCellHeight ) nNewHeight = MinCellHeight;
-    if ( nNewHeight > MaxCellHeight ) nNewHeight = MaxCellHeight;
+    if ( newHeight < MinCellHeight )
+        newHeight = MinCellHeight;
+    if ( newHeight > MaxCellHeight )
+        newHeight = MaxCellHeight;
 
     // Store the new height
-    mImageData[ x + y * mSize.width ] = (cgInt16)nNewHeight;
+    mImageData[ x + y * mSize.width ] = (cgInt16)newHeight;
 }
 
 //-----------------------------------------------------------------------------
@@ -193,26 +193,25 @@ void cgHeightMap::offsetCell( cgInt32 x, cgInt32 y, cgInt32 nOffset )
 /// file.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgHeightMap::loadRaw( cgInputStream Stream, const cgSize & Size, RawFormat Format )
+bool cgHeightMap::loadRaw( cgInputStream stream, const cgSize & size, RawFormat format )
 {
-    cgInt64 nDataLength = 0, nExpectedLength = 0;
-    cgInt32 nRowPitch = 0, nCounter = 0;
-    
     // Validate requirements
-    if ( Size.width <= 0 || Size.height <= 0 )
+    if ( size.width <= 0 || size.height <= 0 )
         return false;
 
     // Compute the expected size of the RAW file (in bytes)
-    switch ( Format )
+    cgInt64 expectedLength = 0;
+    cgInt32 rowPitch = 0;
+    switch ( format )
     {
         case Gray8:
-            nExpectedLength = (Size.width * Size.height);
-            nRowPitch = Size.width;
+            expectedLength = (size.width * size.height);
+            rowPitch = size.width;
             break;
 
         case Gray16:
-            nExpectedLength = (Size.width * Size.height) * 2;
-            nRowPitch = Size.width * 2;
+            expectedLength = (size.width * size.height) * 2;
+            rowPitch = size.width * 2;
             break;
         
         default:
@@ -222,51 +221,51 @@ bool cgHeightMap::loadRaw( cgInputStream Stream, const cgSize & Size, RawFormat 
     } // End format switch
 
     // Open the stream
-    if ( Stream.open( ) == false )
+    if ( !stream.open( ) )
     {
-        cgAppLog::write( cgAppLog::Error, _T("Failed to open requested raw image file '%s' for import.\n"), Stream.getName() );
+        cgAppLog::write( cgAppLog::Error, _T("Failed to open requested raw image file '%s' for import.\n"), stream.getName().c_str() );
         return false;
     
     } // End if failed
 
      // Retrieve the size of the file so that we can validate their options
-    nDataLength = Stream.getLength();
+    cgInt64 dataLength = stream.getLength();
 
     // Sizes do not match?
-    if ( nExpectedLength != nDataLength )
+    if ( expectedLength != dataLength )
     {
-        Stream.close( );
-        cgAppLog::write( cgAppLog::Error, _T("RAW image file size %i did not match the expected %i size based on supplied parameters.\n"), nDataLength, nExpectedLength );
+        stream.close( );
+        cgAppLog::write( cgAppLog::Error, _T("RAW image file size %i did not match the expected %i size based on supplied parameters.\n"), dataLength, expectedLength );
         return false;
     
     } // End if mismatch
 
     // Allocate image data
     mImageData.clear();
-    mImageData.resize( (size_t)nDataLength );
-    mSize = Size;
+    mImageData.resize( (size_t)dataLength );
+    mSize = size;
 
     // Load the raw data from file a row at a time.
-    cgByte * pRow = new cgByte[nRowPitch], * pData;
-    for ( cgInt32 y = 0; y < mSize.height; ++y )
+    cgByte * row = new cgByte[rowPitch], * data;
+    for ( cgInt32 y = 0, counter = 0; y < mSize.height; ++y )
     {
         // Read a whole row of data.
-        Stream.read( pRow, nRowPitch );
-        pData = pRow;
+        stream.read( row, rowPitch );
+        data = row;
 
         // Extract pixels
         for ( cgInt32 x = 0; x < mSize.width; ++x )
         {
-            if ( Format == Gray8 )
+            if ( format == Gray8 )
             {
                 // scale up to the MinCellHeight->MaxCellHeight range.
-                mImageData[nCounter++] = (cgInt16)((*pData++) * (MaxCellHeight/255));
+                mImageData[counter++] = (cgInt16)((*data++) * (MaxCellHeight/255));
 
             } // End if 8 bit grayscale
-            else if ( Format == Gray16 )
+            else if ( format == Gray16 )
             {
-                mImageData[nCounter++] = *(cgInt16*)pData;
-                pData += 2;
+                mImageData[counter++] = *(cgInt16*)data;
+                data += 2;
 
             } // End if 16 bit grayscale
 
@@ -275,8 +274,8 @@ bool cgHeightMap::loadRaw( cgInputStream Stream, const cgSize & Size, RawFormat 
     } // Next Row
 
     // Clean up
-    delete pRow;
-    Stream.close();
+    delete []row;
+    stream.close();
     
     // Success!
     return true;
@@ -289,21 +288,21 @@ bool cgHeightMap::loadRaw( cgInputStream Stream, const cgSize & Size, RawFormat 
 /// the width and height of the image will be automatically detected.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgHeightMap::loadSquareRaw( cgInputStream Stream, RawFormat Format )
+bool cgHeightMap::loadSquareRaw( cgInputStream stream, RawFormat format )
 {
     // Retrieve the size of the file so that we can validate
-    cgInt64 nDataLength = Stream.getLength();
+    cgInt64 dataLength = stream.getLength();
 
     // Compute the the dimensions of the RAW file (in pixels) given the specified format.
-    cgInt32 nImageSide = 0;
-    switch ( Format )
+    cgInt32 imageSide = 0;
+    switch ( format )
     {
         case Gray8:
-            nImageSide = (cgInt32)sqrtf( (cgFloat)nDataLength );
+            imageSide = (cgInt32)sqrtf( (cgFloat)dataLength );
             break;
 
         case Gray16:
-            nImageSide = (cgInt32)sqrtf( (cgFloat)nDataLength / 2 );
+            imageSide = (cgInt32)sqrtf( (cgFloat)dataLength / 2 );
             break;
         
         default:
@@ -313,7 +312,48 @@ bool cgHeightMap::loadSquareRaw( cgInputStream Stream, RawFormat Format )
     } // End format switch
 
     // Pass through to standard load function/
-    return loadRaw( Stream, cgSize(nImageSide, nImageSide), Format );
+    return loadRaw( stream, cgSize(imageSide, imageSide), format );
+}
+
+//-----------------------------------------------------------------------------
+// Name : computeHeightRange ()
+/// <summary>
+/// Compute the minimum and maximum height values currently stored in the
+/// height map buffer.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgHeightMap::computeHeightRange( cgInt32 & minOut, cgInt32 & maxOut ) const
+{
+    computeHeightRange( minOut, maxOut, cgRect(0,0,mSize.width,mSize.height) );
+}
+
+//-----------------------------------------------------------------------------
+// Name : computeHeightRange ()
+/// <summary>
+/// Compute the minimum and maximum height values currently stored in the
+/// specified region of the height map buffer.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgHeightMap::computeHeightRange( cgInt32 & minOut, cgInt32 & maxOut, const cgRect & section ) const
+{
+    minOut = MaxCellHeight;
+    maxOut = MinCellHeight;
+    const cgInt16 * buffer = &mImageData[section.left + section.top * mSize.width];
+    for ( cgInt32 y = section.top; y < section.bottom; ++y )
+    {
+        for ( cgInt32 x = section.left; x < section.right; ++x, ++buffer )
+        {
+            if ( *buffer < minOut )
+                minOut = *buffer;
+            if ( *buffer > maxOut )
+                maxOut = *buffer;
+
+        } // Next Column
+
+        // Move to start of next row.
+        buffer += mSize.width - section.width();
+
+    } // Next Row
 }
 
 //-----------------------------------------------------------------------------
@@ -322,46 +362,31 @@ bool cgHeightMap::loadSquareRaw( cgInputStream Stream, RawFormat Format )
 /// normalize the heightmap into the specified range.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgHeightMap::normalize( cgInt32 nMin, cgInt32 nMax )
+void cgHeightMap::normalize( cgInt32 minimum, cgInt32 maximum )
 {
-    cgInt32   x, y;
-    cgInt32   nValue;
-    cgInt16 * pHeightMap = &mImageData[0];
-
     // First determine the current min / max range.
-    cgInt32 nOrigMin = MaxCellHeight, nOrigMax = MinCellHeight;
-    for ( y = 0; y < mSize.height; ++y )
-    {
-        for ( x = 0; x < mSize.width; ++x, ++pHeightMap )
-        {
-            if ( *pHeightMap < nOrigMin )
-                nOrigMin = *pHeightMap;
-            if ( *pHeightMap > nOrigMax )
-                nOrigMax = *pHeightMap;
-
-        } // Next Column
-
-    } // Next Row
+    cgInt32 originalMin, originalMax;
+    computeHeightRange( originalMin, originalMax );
 
     // If landscape is completely flat, we can't normalize.
-    if ( nOrigMax == nOrigMin )
+    if ( originalMax == originalMin )
         return;
 
     // Compute scale
-    cgFloat fScale = (cgFloat)(nMax - nMin) / (cgFloat)(nOrigMax - nOrigMin);
+    cgFloat scale = (cgFloat)(maximum - minimum) / (cgFloat)(originalMax - originalMin);
 
     // normalize values
-    pHeightMap = &mImageData[0];
-    for ( y = 0; y < mSize.height; ++y )
+    cgInt16 * heightMap = &mImageData[0];
+    for ( cgInt32 y = 0; y < mSize.height; ++y )
     {
-        for ( x = 0; x < mSize.width; ++x, ++pHeightMap )
+        for ( cgInt32 x = 0; x < mSize.width; ++x, ++heightMap )
         {
-            nValue = (cgInt32)((cgFloat)((cgInt32)*pHeightMap - nOrigMin) * fScale + nMin);
-            if ( nValue > MaxCellHeight )
-                nValue = MaxCellHeight;
-            if ( nValue < MinCellHeight )
-                nValue = MinCellHeight;
-            *pHeightMap = (cgInt16)nValue;
+            cgInt32 value = (cgInt32)((cgFloat)((cgInt32)*heightMap - originalMin) * scale + minimum);
+            if ( value > MaxCellHeight )
+                value = MaxCellHeight;
+            if ( value < MinCellHeight )
+                value = MinCellHeight;
+            *heightMap = (cgInt16)value;
 
         } // Next Column
 
@@ -375,23 +400,20 @@ void cgHeightMap::normalize( cgInt32 nMin, cgInt32 nMax )
 /// at the min / max limits.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgHeightMap::scale( cgInt16 nScale )
+void cgHeightMap::scale( cgInt16 scale )
 {
-    cgInt32   x, y;
-    cgInt32   nValue;
-    cgInt16 * pHeightMap = &mImageData[0];
-
     // Scale values
-    for ( y = 0; y < mSize.height; ++y )
+    cgInt16 * heightMap = &mImageData[0];
+    for ( cgInt32 y = 0; y < mSize.height; ++y )
     {
-        for ( x = 0; x < mSize.width; ++x, ++pHeightMap )
+        for ( cgInt32 x = 0; x < mSize.width; ++x, ++heightMap )
         {
-            nValue = ((cgInt32)*pHeightMap) * nScale;
-            if ( nValue > MaxCellHeight )
-                nValue = MaxCellHeight;
-            if ( nValue < MinCellHeight )
-                nValue = MinCellHeight;
-            *pHeightMap = (cgInt16)nValue;
+            cgInt32 value = ((cgInt32)*heightMap) * scale;
+            if ( value > MaxCellHeight )
+                value = MaxCellHeight;
+            if ( value < MinCellHeight )
+                value = MinCellHeight;
+            *heightMap = (cgInt16)value;
 
         } // Next Column
 
@@ -405,27 +427,25 @@ void cgHeightMap::scale( cgInt16 nScale )
 /// in a file, without having to load the entire heightmap first.
 /// </summary>
 //-----------------------------------------------------------------------------
-bool cgHeightMap::loadRawSection( cgInputStream Stream, const cgSize & Size, RawFormat Format, const cgRect & rcSection, cgInt16Array & aDataOut )
+bool cgHeightMap::loadRawSection( cgInputStream stream, const cgSize & size, RawFormat format, const cgRect & section, cgInt16Array & dataOut )
 {
-    cgRect      rcIntersect;
-    cgInt32     nSectionWidth, nSectionHeight, nPixelStride, nCounter = 0;
-    cgInt64     nDataLength = 0, nExpectedLength = 0;
-
     // Validate requirements
-    if ( Size.width <= 0 || Size.height <= 0 )
+    if ( size.width <= 0 || size.height <= 0 )
         return false;
 
     // Compute the expected size of the RAW file (in bytes)
-    switch ( Format )
+    cgInt64 expectedLength = 0;
+    cgInt32 pixelStride;
+    switch ( format )
     {
         case Gray8:
-            nExpectedLength = (Size.width * Size.height);
-            nPixelStride    = 1;
+            expectedLength = (size.width * size.height);
+            pixelStride    = 1;
             break;
 
         case Gray16:
-            nExpectedLength = (Size.width * Size.height) * 2;
-            nPixelStride    = 2;
+            expectedLength = (size.width * size.height) * 2;
+            pixelStride    = 2;
             break;
         
         default:
@@ -435,79 +455,90 @@ bool cgHeightMap::loadRawSection( cgInputStream Stream, const cgSize & Size, Raw
     } // End format switch
 
     // Pre-compute width and height values for efficient testing
-    nSectionWidth  = rcSection.width();
-    nSectionHeight = rcSection.height();
+    cgInt32 sectionWidth  = section.width();
+    cgInt32 sectionHeight = section.height();
 
     // Calculate the intersection of the heightmap total rectangle and the specified
     // rectangle to ensure that we are not attempting to read out of bounds.
-    cgRect rcHeightMap( 0, 0, Size.width, Size.height );
-    rcIntersect = cgRect::intersect( rcHeightMap, rcSection );
+    cgRect intersect = cgRect::intersect( cgRect( 0, 0, size.width, size.height ), section );
     
     // Ensure that the specified rectangle is valid in position and size.
-    if ( rcIntersect != rcSection || nSectionWidth < 1 || nSectionHeight < 1 )
+    if ( intersect != section || sectionWidth < 1 || sectionHeight < 1 )
         return false;
 
     // Retrieve the size of the file so that we can validate their options
-    nDataLength = Stream.getLength();
+    cgInt64 dataLength = stream.getLength();
 
     // Sizes do not match?
-    if ( nExpectedLength != nDataLength )
+    if ( expectedLength != dataLength )
     {
-        cgAppLog::write( cgAppLog::Error, _T("RAW image file size %i did not match the expected %i size based on supplied parameters.\n"), nDataLength, nExpectedLength );
+        cgAppLog::write( cgAppLog::Error, _T("RAW image file size %i did not match the expected %i size based on supplied parameters.\n"), dataLength, expectedLength );
         return false;
     
     } // End if mismatch
 
     // Open the stream
-    if ( Stream.open( ) == false )
+    if ( stream.open( ) == false )
     {
-        cgAppLog::write( cgAppLog::Error, _T("Failed to open requested raw image file '%s' for import.\n"), Stream.getName() );
+        cgAppLog::write( cgAppLog::Error, _T("Failed to open requested raw image file '%s' for import.\n"), stream.getName().c_str() );
         return false;
     
     } // End if failed
 
     // Ensure output buffer is large enough to contain the image data.
-    if ( aDataOut.size() < (size_t)(nSectionWidth * nSectionHeight) )
-        aDataOut.resize( (nSectionWidth * nSectionHeight) );
+    if ( dataOut.size() < (size_t)(sectionWidth * sectionHeight) )
+        dataOut.resize( (sectionWidth * sectionHeight) );
     
     // Seek to the correct initial position in the heightmap
-    cgInt32 nInputPitch  = Size.width * nPixelStride;
-    cgInt32 nOutputPitch = nSectionWidth * nPixelStride;
-    Stream.seek( (rcSection.left * nPixelStride) + (rcSection.top * nInputPitch), cgInputStream::Begin );
+    cgInt32 inputPitch  = size.width * pixelStride;
+    cgInt32 outputPitch = sectionWidth * pixelStride;
+    stream.seek( (section.left * pixelStride) + (section.top * inputPitch), cgInputStream::Begin );
         
     // Load the raw data from file a row at a time.
-    cgByte * pRow = new cgByte[nOutputPitch], * pData;
-    for ( cgInt32 y = 0; y < nSectionHeight; ++y )
+    cgByte * row = new cgByte[outputPitch], * data;
+    for ( cgInt32 y = 0, counter = 0; y < sectionHeight; ++y )
     {
         // Read a whole row of data.
-        Stream.read( pRow, nOutputPitch );
-        pData = pRow;
+        stream.read( row, outputPitch );
+        data = row;
 
         // Extract pixels
-        for ( cgInt32 x = 0; x < nSectionWidth; ++x )
+        for ( cgInt32 x = 0; x < sectionWidth; ++x )
         {
-            if ( Format == Gray8 )
+            if ( format == Gray8 )
             {
                 // Scale up to the MinCellHeight->MaxCellHeight range.
-                aDataOut[nCounter++] = (cgInt16)((*pData++) * (MaxCellHeight/255));
+                dataOut[counter++] = (cgInt16)((*data++) * (MaxCellHeight/255));
 
             } // End if 8 bit grayscale
-            else if ( Format == Gray16 )
+            else if ( format == Gray16 )
             {
-                aDataOut[nCounter++] = *(cgInt16*)pData;
-                pData += 2;
+                dataOut[counter++] = *(cgInt16*)data;
+                data += 2;
 
             } // End if 16 bit grayscale
 
         } // Next Column
 
         // Seek to the next position in the heightmap
-        Stream.seek( nInputPitch - nOutputPitch, cgInputStream::Current );
+        stream.seek( inputPitch - outputPitch, cgInputStream::Current );
 
     } // Next Row
         
     // Success!
     return true;
+}
+
+//-----------------------------------------------------------------------------
+// Name : fill ( )
+/// <summary>
+/// Fill the entire heightmap with the specified value.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgHeightMap::fill( cgInt16 value )
+{
+    if ( !mImageData.empty() )
+        std::fill( mImageData.begin(), mImageData.end(), value );
 }
 
 //-----------------------------------------------------------------------------

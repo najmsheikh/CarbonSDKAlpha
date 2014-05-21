@@ -13,6 +13,8 @@ var cg_landscape_types_8h =
       [ "TerrainDepthFill", "cg_landscape_types_8h.html#a9b26366b0d13b47d2e804ed527d18a69a6f14143f2f98b24011c4deb13269d942", null ],
       [ "TerrainShadowFill", "cg_landscape_types_8h.html#a9b26366b0d13b47d2e804ed527d18a69a789fd74c433a6a1e9c6efeb49ba2b495", null ],
       [ "TerrainGBufferFill", "cg_landscape_types_8h.html#a9b26366b0d13b47d2e804ed527d18a69aaa697ba85bdf79467000ca26930c65f9", null ],
-      [ "TerrainGBufferPost", "cg_landscape_types_8h.html#a9b26366b0d13b47d2e804ed527d18a69a4f9d32b13fcb7dd6e908e82e758ac7a6", null ]
+      [ "TerrainGBufferPost", "cg_landscape_types_8h.html#a9b26366b0d13b47d2e804ed527d18a69a4f9d32b13fcb7dd6e908e82e758ac7a6", null ],
+      [ "ClutterDepthFill", "cg_landscape_types_8h.html#a9b26366b0d13b47d2e804ed527d18a69a5388936876944d47061ea31f7adbc2bf", null ],
+      [ "ClutterGBufferFill", "cg_landscape_types_8h.html#a9b26366b0d13b47d2e804ed527d18a69ad6e91228f8e27cae835270140675380d", null ]
     ] ]
 ];

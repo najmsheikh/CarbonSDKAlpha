@@ -553,7 +553,7 @@ bool cgSpatialTreeNode::onNodeLoading( const cgUID & ObjectType, cgWorldQuery * 
 /// order to notify any listeners of this fact.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgSpatialTreeNode::onComponentModified( cgComponentModifiedEventArgs * e )
+void cgSpatialTreeNode::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
 {
     /*// What was modified?
     if ( e->strContext == _T("MeshData") )
@@ -569,7 +569,7 @@ void cgSpatialTreeNode::onComponentModified( cgComponentModifiedEventArgs * e )
     NodeUpdated();*/
 
     // Call base class implementation last
-    cgObjectNode::onComponentModified( e );
+    cgObjectNode::onComponentModified( sender, e );
 }
 
 //-----------------------------------------------------------------------------

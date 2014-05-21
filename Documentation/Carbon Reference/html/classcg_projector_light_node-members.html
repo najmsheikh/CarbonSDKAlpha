@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.16</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
    </div>
   </td>
  </tr>
@@ -454,10 +454,10 @@ $(document).ready(function(){initNavTree('classcg_projector_light_node.html','')
   <tr class="even"><td class="entry"><a class="el" href="classcg_object_node.html#a1a71bc8015596a4af3b0c3c45b8f7f27">navigateTo</a>(const cgVector3 &amp;position)</td><td class="entry"><a class="el" href="classcg_object_node.html">cgObjectNode</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_object_node.html#af44d34ba13b8450bec593395a856ebbd">nodeUpdated</a>(cgUInt32 deferredUpdates, cgUInt32 childDeferredUpdates)</td><td class="entry"><a class="el" href="classcg_object_node.html">cgObjectNode</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_object_node.html#a2e929b245771032b9d86f03ed7a91050">onAnimationTransformUpdated</a>(const cgTransform &amp;transform)</td><td class="entry"><a class="el" href="classcg_object_node.html">cgObjectNode</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_world_component_event_listener.html#aec1fbddd4171bf02ed298610d1012677">onComponentCreated</a>(cgComponentCreatedEventArgs *e)</td><td class="entry"><a class="el" href="classcg_world_component_event_listener.html">cgWorldComponentEventListener</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classcg_world_component_event_listener.html#a447393eaec66edd8013a2bf415da6911">onComponentDeleted</a>()</td><td class="entry"><a class="el" href="classcg_world_component_event_listener.html">cgWorldComponentEventListener</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_world_component_event_listener.html#a9e98241e5c4608a3917604a2ec575dd5">onComponentLoading</a>(cgComponentLoadingEventArgs *e)</td><td class="entry"><a class="el" href="classcg_world_component_event_listener.html">cgWorldComponentEventListener</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classcg_projector_light_node.html#aea95d6414202133ddc0e97df52697238">onComponentModified</a>(cgComponentModifiedEventArgs *e)</td><td class="entry"><a class="el" href="classcg_projector_light_node.html">cgProjectorLightNode</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_world_component_event_listener.html#a28c90c95b37cbe9f8f73cd99de9bc7bb">onComponentCreated</a>(cgReference *sender, cgComponentCreatedEventArgs *e)</td><td class="entry"><a class="el" href="classcg_world_component_event_listener.html">cgWorldComponentEventListener</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_world_component_event_listener.html#aac4c6da2a112b46f4a054c0ec6b4567e">onComponentDeleted</a>(cgReference *sender)</td><td class="entry"><a class="el" href="classcg_world_component_event_listener.html">cgWorldComponentEventListener</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_world_component_event_listener.html#aada83cd9fc08bf5bf91202bd2f5ca26e">onComponentLoading</a>(cgReference *sender, cgComponentLoadingEventArgs *e)</td><td class="entry"><a class="el" href="classcg_world_component_event_listener.html">cgWorldComponentEventListener</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_projector_light_node.html#a83188fa5037b4be069110a11f41dd41e">onComponentModified</a>(cgReference *sender, cgComponentModifiedEventArgs *e)</td><td class="entry"><a class="el" href="classcg_projector_light_node.html">cgProjectorLightNode</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_object_node.html#a2bb22b6f1bdd3ddda39cb1da39a55c92">onNavigationAgentReposition</a>(cgNavigationAgent *sender, cgNavigationAgentRepositionEventArgs *e)</td><td class="entry"><a class="el" href="classcg_object_node.html">cgObjectNode</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_light_node.html#af19a31cb16639d8f4448b8927c057536">onNodeCreated</a>(const cgUID &amp;objectType, cgCloneMethod::Base cloneMethod)</td><td class="entry"><a class="el" href="classcg_light_node.html">cgLightNode</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_object_node.html#a540100713959c9bf75ed173c4944e0fe">onNodeDeleted</a>()</td><td class="entry"><a class="el" href="classcg_object_node.html">cgObjectNode</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
@@ -616,7 +616,7 @@ $(document).ready(function(){initNavTree('classcg_projector_light_node.html','')
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon May 12 2014 08:23:38 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Wed May 21 2014 19:31:42 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

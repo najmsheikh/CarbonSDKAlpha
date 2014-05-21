@@ -99,6 +99,7 @@ public:
     bool                        addVisibleMaterial      ( const cgMaterialHandle & material, cgObjectNode * object );
     void                        addVisibleLeaf          ( cgSpatialTreeInstance * tree, cgSpatialTreeLeaf * leaf );
     void                        addVisibleGroup         ( void * context, cgInt32 groupId );
+    void                        clearVisibleGroups      ( void * context );
     bool                        query                   ( cgObjectNode * node ) const;
     void                        setSearchFlags          ( cgUInt32 flags );
     cgObjectNodeList          & getVisibleObjects       ( );

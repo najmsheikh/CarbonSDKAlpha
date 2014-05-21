@@ -1154,7 +1154,7 @@ bool cgSoundEmitterNode::queryReferenceType( const cgUID & type ) const
 /// order to notify any listeners of this fact.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgSoundEmitterNode::onComponentModified( cgComponentModifiedEventArgs * e )
+void cgSoundEmitterNode::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
 {
     cgAudioBuffer * buffer = mAudioBuffer.getResource(true);
     if ( buffer && !buffer->isLoaded() )
@@ -1200,7 +1200,7 @@ void cgSoundEmitterNode::onComponentModified( cgComponentModifiedEventArgs * e )
     } // End if SourceFile | Streaming
 
     // Call base class implementation last
-    cgObjectNode::onComponentModified( e );
+    cgObjectNode::onComponentModified( sender, e );
 }
 
 //-----------------------------------------------------------------------------

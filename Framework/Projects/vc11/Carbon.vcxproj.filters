@@ -1161,6 +1161,15 @@
     <ClCompile Include="..\..\Lib\AngelScript-JIT\virtual_asm_x86.cpp">
       <Filter>Source Files\Scripting\Angelscript-JIT</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Resources\cgClutterMaterial.cpp">
+      <Filter>Source Files\Resources\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Physics\Shapes\cgDisplacementShape.cpp">
+      <Filter>Source Files\Physics\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\World\Elements\cgLandscapeElement.cpp">
+      <Filter>Source Files\World\Elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Lib\AngelScript\source\as_array.h">
@@ -1214,7 +1223,7 @@
     <ClInclude Include="..\..\Lib\AngelScript\source\as_module.h">
       <Filter>Source Files\Scripting\Angelscript\Include</Filter>
     </ClInclude>
-	<ClInclude Include="..\..\Lib\AngelScript\source\as_namespace.h">
+    <ClInclude Include="..\..\Lib\AngelScript\source\as_namespace.h">
       <Filter>Source Files\Scripting\Angelscript\Include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Lib\AngelScript\source\as_objecttype.h">
@@ -2524,6 +2533,21 @@
     </ClInclude>
     <ClInclude Include="..\..\Lib\AngelScript-JIT\as_jit.h">
       <Filter>Source Files\Scripting\Angelscript-JIT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Lib\AngelScript-JIT\virtual_asm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\Containers\cgArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Physics\Shapes\cgDisplacementShape.h">
+      <Filter>Header Files\Physics\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Resources\cgClutterMaterial.h">
+      <Filter>Header Files\Resources\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\World\Elements\cgLandscapeElement.h">
+      <Filter>Header Files\World\Elements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

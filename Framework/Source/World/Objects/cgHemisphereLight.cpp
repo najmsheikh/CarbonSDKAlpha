@@ -1669,7 +1669,7 @@ bool cgHemisphereLightNode::endLighting( )
 /// order to notify any listeners of this fact.
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgHemisphereLightNode::onComponentModified( cgComponentModifiedEventArgs * e )
+void cgHemisphereLightNode::onComponentModified( cgReference * sender, cgComponentModifiedEventArgs * e )
 {
     // What property was modified?
     if ( e->context == _T("OuterRange") || e->context == _T("RangeAdjust") || e->context == _T("ApplyRescale") )
@@ -1691,7 +1691,7 @@ void cgHemisphereLightNode::onComponentModified( cgComponentModifiedEventArgs * 
     } // End if Range | RangeAdjust | ApplyRescale
 
     // Call base class implementation last
-    cgLightNode::onComponentModified( e );
+    cgLightNode::onComponentModified( sender, e );
 }
 
 //-----------------------------------------------------------------------------
