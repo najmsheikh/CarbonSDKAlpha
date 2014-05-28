@@ -115,6 +115,7 @@ public:
     virtual bool            getImageData            ( cgImage & imageOut ) = 0;
     virtual bool            updateMipLevels         ( ) = 0;
     virtual bool            clone                   ( cgTexture * destinationTexture, const cgRect & sourceRectangle, const cgRect & destinationRectangle ) = 0;
+    virtual bool            isValid                 ( ) const = 0;
 
     //-------------------------------------------------------------------------
     // Public Virtual Methods (cgResource)

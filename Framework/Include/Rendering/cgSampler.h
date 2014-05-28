@@ -128,21 +128,24 @@ protected:
     void                    prepareQueries      ( );
     bool                    insertComponentData ( );
     void                    defaultSamplerStates( );
+    void                    updateCachedValues  ( );
 
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    cgInt32                 mSamplerIndex;  // Index of the sampler register to which this will be applied.
-	cgString                mName;          // Sampler base name (e.g., Diffuse, Light, Normal, etc.)
-    cgRenderDriver        * mDriver;        // Render driver associated with this sampler
-	cgTextureHandle         mTexture;       // Handle of the physical texture resource to apply
-	cgSamplerStateDesc      mStateDesc;     // Description of the device sampler sampler states to apply.
-    cgSamplerStateHandle    mStates;        // Handle to device state object to be applied.
-    cgSurfaceShaderHandle   mShader;        // Any applicable surface shader to use during application.
-    cgFloat                 mStrength;      // Strength of the sampled data / how much it should influence the result.
+    cgInt32                 mSamplerIndex;          // Index of the sampler register to which this will be applied.
+	cgString                mName;                  // Sampler base name (e.g., Diffuse, Light, Normal, etc.)
+    cgRenderDriver        * mDriver;                // Render driver associated with this sampler
+	cgTextureHandle         mTexture;               // Handle of the physical texture resource to apply
+	cgSamplerStateDesc      mStateDesc;             // Description of the device sampler sampler states to apply.
+    cgSamplerStateHandle    mStates;                // Handle to device state object to be applied.
+    cgSurfaceShaderHandle   mShader;                // Any applicable surface shader to use during application.
+    cgFloat                 mStrength;              // Strength of the sampled data / how much it should influence the result.
     // ToDo: 9999 - I don't think the system sampler concept even applies any more. Remove?
-	bool                    mSystemSampler; // Does the sampler destination belong to the core shader lib?
-    bool                    mStatesDirty;   // Sampler states have been updated since the last application?
+	bool                    mSystemSampler;         // Does the sampler destination belong to the core shader lib?
+    bool                    mApplyDefaultDiffuse;   // Should the default diffuse texture be applied?
+    bool                    mApplyDefaultNormal;    // Should the default normal texture be applied?
+    bool                    mStatesDirty;           // Sampler states have been updated since the last application?
 
     //-------------------------------------------------------------------------
     // Protected Static Variables

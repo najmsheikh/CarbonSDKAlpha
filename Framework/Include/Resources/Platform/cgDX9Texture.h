@@ -87,6 +87,7 @@ public:
     virtual bool            getImageData        ( cgImage & imageOut );
     virtual bool            updateMipLevels     ( );
     virtual bool            clone               ( cgTexture * destinationTexture, const cgRect & sourceRectangle, const cgRect & destinationRectangle );
+    virtual bool            isValid             ( ) const;
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (cgResource)
@@ -1192,6 +1193,20 @@ bool cgDX9Texture<_BaseClass>::updateMipLevels( )
 
 	// Return success
 	return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isValid ()
+/// <summary>
+/// Underlying texture is currently resident. This method is separate from
+/// isLoaded(), which may actually return a positive result in sandbox mode
+/// even if the texture failed to load.
+/// </summary>
+//-----------------------------------------------------------------------------
+template <class _BaseClass>
+bool cgDX9Texture<_BaseClass>::isValid( ) const
+{
+    return (mTexture != CG_NULL);
 }
 
 #endif // CGE_DX9_RENDER_SUPPORT

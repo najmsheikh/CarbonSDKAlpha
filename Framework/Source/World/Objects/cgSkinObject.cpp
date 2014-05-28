@@ -734,6 +734,8 @@ void cgSkinObject::sandboxRender( cgUInt32 flags, cgCameraNode * pCamera, cgVisi
 
     // Disable vertex blending
     pDriver->setVertexBlendData( CG_NULL, CG_NULL, 0, -1 );
+    if ( currentMaxBlendIndex != -1 )
+        pShader->commitChanges( );
 
     // Call base class implementation last (skipping mesh, straight to world object -- this is not a bug).
     cgWorldObject::sandboxRender( flags, pCamera, pVisData, GridPlane, pIssuer );

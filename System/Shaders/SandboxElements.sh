@@ -458,7 +458,7 @@ class SandboxElements : ISurfaceShader
 		?>
         if ( maxBlendIndex >= 0 )
         {
-			logWrite( "MaxBlendIndex = " + maxBlendIndex + ", UseVTFBlending = " + (useVTFBlending ? "true" : "false") + "\n" );
+			//logWrite( "MaxBlendIndex = " + maxBlendIndex + ", UseVTFBlending = " + (useVTFBlending ? "true" : "false") + "\n" );
 		    <?getWorldMatrix( worldTransform, blendWeights, blendIndices, $maxBlendIndex, $useVTFBlending );?>
 		}
         else
@@ -466,10 +466,10 @@ class SandboxElements : ISurfaceShader
 
         <?
         // Compute world space position of vertex
-        float3 worldPosition = mul( float4(sourcePosition,1), worldTransform );
+        float4 worldPosition = mul( float4(sourcePosition,1), worldTransform );
 
         // Compute standard output values.
-        clipPosition = mul( float4(worldPosition,1), _viewProjectionMatrix );
+        clipPosition = mul( worldPosition, _viewProjectionMatrix );
         ?>
 
         // Generate the color as appropriate

@@ -71,6 +71,9 @@ cgSampler::cgSampler( cgSampler * pInit ) :
     mShader         = pInit->mShader;
     mSamplerIndex   = pInit->mSamplerIndex;
     mStrength       = pInit->mStrength;
+
+    // Update cache.
+    updateCachedValues();
 }
 
 //-----------------------------------------------------------------------------
@@ -93,6 +96,9 @@ cgSampler::cgSampler( cgRenderDriver * pDriver, const cgString & strName, const 
 
     // Setup sampler state defaults
     defaultSamplerStates();
+
+    // Update cache
+    updateCachedValues();
 }
 
 //-----------------------------------------------------------------------------
@@ -115,6 +121,9 @@ cgSampler::cgSampler( cgUInt32 nReferenceId, cgWorld * pWorld, cgRenderDriver * 
 
     // Setup sampler state defaults
     defaultSamplerStates();
+
+    // Update cache.
+    updateCachedValues();
 }
 
 //-----------------------------------------------------------------------------
@@ -143,6 +152,9 @@ cgSampler::cgSampler( cgRenderDriver * pDriver, const cgSurfaceShaderHandle & hS
     // Duplicate conditional values.
     if ( mDriver == pInit->mDriver && mShader == pInit->mShader )
         mSamplerIndex = pInit->mSamplerIndex;
+
+    // Update cache
+    updateCachedValues();
 }
 
 //-----------------------------------------------------------------------------
@@ -171,6 +183,9 @@ cgSampler::cgSampler( cgUInt32 nReferenceId, cgWorld * pWorld, cgRenderDriver * 
     // Duplicate conditional values.
     if ( mDriver == pInit->mDriver && mShader == pInit->mShader )
         mSamplerIndex = pInit->mSamplerIndex;
+
+    // Update cache
+    updateCachedValues();
 }
 
 //-----------------------------------------------------------------------------
@@ -222,6 +237,27 @@ void cgSampler::defaultSamplerStates( )
     mStateDesc.borderColor          = 0;
     mStateDesc.minimumMipmapLOD     = 0.0f;
     mStateDesc.maximumMipmapLOD     = 3.402823466e+38f;	
+}
+
+//-----------------------------------------------------------------------------
+//  Name : updateCachedValues () (Protected)
+/// <summary>
+/// This method should be called whenever the name of this sampler is adjusted,
+/// or when the assigned texture is replaced. Certain necessary values based on
+/// these properties will then be cached to save runtime overhead.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgSampler::updateCachedValues( )
+{
+    mApplyDefaultDiffuse = false;
+    mApplyDefaultNormal  = false;
+
+    static const cgString diffuseSamplerName = _T("Diffuse");
+    static const cgString normalSamplerName = _T("Normal");
+    if ( mName == diffuseSamplerName && (!mTexture.isValid() || !mTexture->isValid()) )
+        mApplyDefaultDiffuse = true;
+    else if ( mName == normalSamplerName && (!mTexture.isValid() || !mTexture->isValid()) )
+        mApplyDefaultNormal = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -368,9 +404,15 @@ bool cgSampler::apply( )
     if ( pTexture )
         pTexture->update();
 
-    // Bind to the device.
-    mDriver->setTexture( mSamplerIndex, mTexture );
-    
+    // If no texture is available, and this is the diffuse / normal sampler, apply the 
+    // appropriate default texture. Otherwise, simply bind the current texture to the device.
+    if ( mApplyDefaultDiffuse )
+        mDriver->setTexture( mSamplerIndex, mDriver->getResourceManager()->getDefaultSampler( cgResourceManager::DefaultDiffuseSampler )->getTexture() );
+    else if ( mApplyDefaultNormal )
+        mDriver->setTexture( mSamplerIndex, mDriver->getResourceManager()->getDefaultSampler( cgResourceManager::DefaultNormalSampler )->getTexture() );
+    else
+        mDriver->setTexture( mSamplerIndex, mTexture );
+
     // Success!
     return true;
 }
@@ -407,8 +449,14 @@ bool cgSampler::apply( cgUInt32 nSamplerRegister )
     if ( pTexture )
         pTexture->update();
 
-    // Bind to the device.
-    mDriver->setTexture( nSamplerRegister, mTexture );
+    // If no texture is available, and this is the diffuse / normal sampler, apply the 
+    // appropriate default texture. Otherwise, simply bind the current texture to the device.
+    if ( mApplyDefaultDiffuse )
+        mDriver->setTexture( nSamplerRegister, mDriver->getResourceManager()->getDefaultSampler( cgResourceManager::DefaultDiffuseSampler )->getTexture() );
+    else if ( mApplyDefaultNormal )
+        mDriver->setTexture( nSamplerRegister, mDriver->getResourceManager()->getDefaultSampler( cgResourceManager::DefaultNormalSampler )->getTexture() );
+    else
+        mDriver->setTexture( nSamplerRegister, mTexture );
     
     // Success!
     return true;
@@ -461,6 +509,9 @@ bool cgSampler::setTexture( const cgTextureHandle & hTexture, bool bNoSerialize 
 
     // Store the new texture handle
     mTexture = hTexture;
+
+    // Update cache
+    updateCachedValues();
 
     // Notify subscribers that the texture has changed.
     cgMessage Msg;
@@ -1508,6 +1559,8 @@ bool cgSampler::onComponentLoading( cgComponentLoadingEventArgs * e )
     // ToDo: 9999 - Child flags and debug source.
     if ( !strFile.empty() && pResources->loadTexture( &hTexture, strFile, 0, cgDebugSource() /*nFlags, _debugSource*/ ) == true )
         setTexture( hTexture, true );
+    else
+        updateCachedValues();
 
     // Call base class implementation to read remaining data.
     if ( !cgWorldComponent::onComponentLoading( e ) )
