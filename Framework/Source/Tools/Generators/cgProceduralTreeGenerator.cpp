@@ -300,7 +300,6 @@ bool cgProceduralTreeGenerator::onComponentLoading( cgComponentLoadingEventArgs 
     } // End if failed
 
     // Process each level.
-    cgProceduralTreeGrowthLevel level;
     while ( mLoadLevels.nextRow() )
     {
         // Get the level type so we know what we're loading.
@@ -308,6 +307,7 @@ bool cgProceduralTreeGenerator::onComponentLoading( cgComponentLoadingEventArgs 
         mLoadLevels.getColumn( _T("LevelType"), levelType );
 
         // Load the level.
+        cgProceduralTreeGrowthLevel level;
         if ( !deserializeLevel( mLoadLevels, (mReferenceId != e->sourceRefId), level ) )
         {
             // Clean up.
@@ -1038,6 +1038,7 @@ void cgProceduralTreeGenerator::setParameters( const cgProceduralTreeGrowthPrope
         } // End if more
 
         // Serialize frond data.
+        newParams.frondData.mDatabaseId = mParams.frondData.mDatabaseId;
         if ( !serializeFrond( newParams.frondData, mReferenceId, mWorld ) )
         {
             mWorld->rollbackTransaction( _T("ProceduralTreeGenerator::setParameters") );
@@ -1099,6 +1100,31 @@ void cgProceduralTreeGenerator::setParameters( const cgProceduralTreeGrowthPrope
 //-----------------------------------------------------------------------------
 cgMeshHandle cgProceduralTreeGenerator::generate( )
 {
+    // ToDo: Remove
+    // PRNG Placement
+    // Iteration[0] = Global Scale & Trunk Length (-Variance => +Variance)
+    // Iteration[1] = Start Angle Azimuth
+    // Iteration[2] = Start Angle Polar (-Variance => +Variance)
+    // Iteration[3] = Base Gravity (-Variance => +Variance)
+    // Iteration[4] = Base Radius (-Variance => + Variance)
+    // Iteration[5] = ??? - Possibly Flexibility?
+    // Iteration[6] = ???
+    // --- Segment Begin ---
+    // Iteration[7] = Disturbance Angle Azimuth (-Variance => +Variance)
+    // Iteration[8] = Disturbance Angle Polar (-Variance => +Variance)
+    // Iteration[9] = Radius Profile (-Variance * EvaluatedProfile => +Variance * EvaluatedProfile)
+    // Iteration[10] = ??? - Possibly Flexibility Profile?
+    // Iteration[11] = Gravity Profile (-Variance => +Variance)
+    // --- First Segment Only ---
+    // Iteration[12] = ???
+    // Iteration[13] = ???
+    // Iteration[14] = ???
+    // --- Segment End ---
+
+    // Z = Up
+    //-Y = 0 degrees azimuth
+    // +Z = -90 polar
+
     // Clear out any old data
     clear();
 
@@ -1176,9 +1202,9 @@ void cgProceduralTreeGenerator::growTrunk( )
     cgDouble baseRadius = eval( trunkLevel.radius, cgBezierSpline2::NormalizePlusVariance, 0, prng.next() );
     baseRadius = min( (cgDouble)trunkLevel.radius.getRange().max, baseRadius ) * mGlobalScale;
 
-    // Iteration[5]
+    // Iteration[5] = ??? - Possibly Flexibility?
     prng.next();
-    // Iteration[6]
+    // Iteration[6] = ???
     prng.next();
 
     // Generate the correct starting matrix for the trunk (-X = direction of growth)
@@ -1243,7 +1269,7 @@ void cgProceduralTreeGenerator::growTrunk( )
         if ( currentSegment.radius < 0.0 )
             currentSegment.radius = 0.0;
         
-        // Iteration[10]
+        // ??? - Possibly Flexibility Profile (Iteration[10])
         prng.next();
 
         // Compute the final gravity twisting for this segment (Iteration[11])
@@ -1251,6 +1277,11 @@ void cgProceduralTreeGenerator::growTrunk( )
         cgVector3 gravity( 0, 0, -1 );
         cgDouble gravityAdjust;
         cgDouble angleForGravity = CGEToDegree( asin( (cgDouble)cgVector3::dot(gravity, -currentTransform.xAxis() ) ) );
+
+        // ToDo: Remove this if the new version is confirmed working.
+        /*cgDouble gravityProfile      = ((cgDouble)trunkLevel.gravityProfile.evaluateForX( (float)fSegEval, 5 ) - 0.5) * 2.0;
+        cgDouble gravityVariance     = (cgDouble)trunkLevel.GravityProfile.Variance * 2.0;
+        fGravityProfile             = prng.Next( fGravityProfile - fGravityVariance, fGravityProfile + fGravityVariance );*/
         cgDouble gravityProfile = (eval( trunkLevel.gravityProfile, cgBezierSpline2::NormalizePlusVariance, segmentEval, prng.next() ) - 0.5) * 2.0;
         if ( angleForGravity < 0.0 )
             gravityAdjust = (90 - (pow(angleForGravity,2) / 90)) * baseGravity * gravityProfile;
@@ -1561,9 +1592,9 @@ bool cgProceduralTreeGenerator::growBranch( cgDouble growthRand, cgProceduralTre
     baseRadius = (baseRadius * mGlobalScale) * 0.75f; 
     baseRadius = min(maxRadius, baseRadius); 
 
-    // Iteration[5]
+    // Iteration[5] = ??? - Possibly Flexibility?
     prng.next();
-    // Iteration[6]
+    // Iteration[6] = ???
     prng.next();
 
     // Record the direction of growth of the parent branch so that
@@ -1632,7 +1663,7 @@ bool cgProceduralTreeGenerator::growBranch( cgDouble growthRand, cgProceduralTre
         if ( currentSegment.radius < 0.0 )
             currentSegment.radius = 0.0;
         
-        /// Iteration[10]
+        /// ??? - Possibly Flexibility Profile (Iteration[10])
         prng.next();
 
         // Compute the final gravity twisting for this segment (Iteration[11])
@@ -2576,7 +2607,7 @@ cgProceduralTreeGrowthProperties::cgProceduralTreeGrowthProperties( )
     branch2.pruneDistance                           = 0;
 
     // Frequency
-    branch2.frequency                               = 30;
+    branch2.frequency                               = 3;
     branch2.frequencyProfile.setRange( 0, 1 );
     branch2.frequencyProfile.setVariance( 0 );
     branch2.frequencyProfile.setDescription( cgBezierSpline2::Maximum );
