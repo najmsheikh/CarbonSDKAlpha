@@ -659,15 +659,15 @@ void cgBoneObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertBone.isPrepared() == false )
+        if ( !mInsertBone.isPrepared( mWorld ) )
             mInsertBone.prepare( mWorld, _T("INSERT INTO 'Objects::Bone' VALUES(?1,?2,?3)"), true );
-        if ( mUpdateProperties.isPrepared() == false )
+        if ( !mUpdateProperties.isPrepared( mWorld ) )
             mUpdateProperties.prepare( mWorld, _T("UPDATE 'Objects::Bone' SET HasCollisionVolume=?1 WHERE RefId=?2"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadBone.isPrepared() == false )
+    if ( !mLoadBone.isPrepared( mWorld ) )
         mLoadBone.prepare( mWorld, _T("SELECT * FROM 'Objects::Bone' WHERE RefId=?1"), true );
 }
 

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.18</span>
    </div>
   </td>
  </tr>
@@ -148,6 +148,7 @@ $(document).ready(function(){initNavTree('cg_base_8cpp.html','');});
 <code>#include &lt;<a class="el" href="cg_sound_emitter_object_8h_source.html">World/Objects/cgSoundEmitterObject.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_navigation_patrol_point_8h_source.html">World/Objects/cgNavigationPatrolPoint.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_billboard_object_8h_source.html">World/Objects/cgBillboardObject.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="cg_procedural_tree_object_8h_source.html">World/Objects/cgProceduralTreeObject.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_box_collision_shape_element_8h_source.html">World/Objects/Elements/cgBoxCollisionShapeElement.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_sphere_collision_shape_element_8h_source.html">World/Objects/Elements/cgSphereCollisionShapeElement.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="cg_cylinder_collision_shape_element_8h_source.html">World/Objects/Elements/cgCylinderCollisionShapeElement.h</a>&gt;</code><br/>
@@ -185,11 +186,11 @@ Functions</h2></td></tr>
 <tr class="memitem:a50ce6e1b6023748cfffc4ae3f097fd05"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cg_base_8cpp.html#a50ce6e1b6023748cfffc4ae3f097fd05">cgEngineYield</a> ()</td></tr>
 <tr class="memdesc:a50ce6e1b6023748cfffc4ae3f097fd05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Yield to any engine threads that need to process.  <a href="#a50ce6e1b6023748cfffc4ae3f097fd05"></a><br/></td></tr>
 <tr class="separator:a50ce6e1b6023748cfffc4ae3f097fd05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab50fa369b9ed69d03770db601321ed6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cg_base_8cpp.html#aab50fa369b9ed69d03770db601321ed6">cgFPUDoublePrecision</a> ()</td></tr>
-<tr class="memdesc:aab50fa369b9ed69d03770db601321ed6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the FPU to run in double precision mode until the next call to <a class="el" href="cg_base_8cpp.html#a61ab6f5c289fefe889a8415a111d738a" title="Restore the FPU&#39;s previous precision prior to any call to cgFPUDoublePrecision(). ...">cgFPURestorePrecision()</a>.  <a href="#aab50fa369b9ed69d03770db601321ed6"></a><br/></td></tr>
-<tr class="separator:aab50fa369b9ed69d03770db601321ed6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49333647910ffac22fc978842e9ce71a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cg_base_8cpp.html#a49333647910ffac22fc978842e9ce71a">cgFPUDoublePrecision</a> ()</td></tr>
+<tr class="memdesc:a49333647910ffac22fc978842e9ce71a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the FPU to run in double precision mode until the next call to <a class="el" href="cg_base_8cpp.html#a61ab6f5c289fefe889a8415a111d738a" title="Restore the FPU&#39;s previous precision prior to any call to cgFPUDoublePrecision(). ...">cgFPURestorePrecision()</a>.  <a href="#a49333647910ffac22fc978842e9ce71a"></a><br/></td></tr>
+<tr class="separator:a49333647910ffac22fc978842e9ce71a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61ab6f5c289fefe889a8415a111d738a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cg_base_8cpp.html#a61ab6f5c289fefe889a8415a111d738a">cgFPURestorePrecision</a> ()</td></tr>
-<tr class="memdesc:a61ab6f5c289fefe889a8415a111d738a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restore the FPU's previous precision prior to any call to <a class="el" href="cg_base_8cpp.html#aab50fa369b9ed69d03770db601321ed6" title="Allow the FPU to run in double precision mode until the next call to cgFPURestorePrecision(). ">cgFPUDoublePrecision()</a>.  <a href="#a61ab6f5c289fefe889a8415a111d738a"></a><br/></td></tr>
+<tr class="memdesc:a61ab6f5c289fefe889a8415a111d738a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restore the FPU's previous precision prior to any call to <a class="el" href="cg_base_8cpp.html#a49333647910ffac22fc978842e9ce71a" title="Allow the FPU to run in double precision mode until the next call to cgFPURestorePrecision(). ">cgFPUDoublePrecision()</a>.  <a href="#a61ab6f5c289fefe889a8415a111d738a"></a><br/></td></tr>
 <tr class="separator:a61ab6f5c289fefe889a8415a111d738a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7735ac9a30a68a1d63a9b5c5a12a42aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cg_base_8cpp.html#a7735ac9a30a68a1d63a9b5c5a12a42aa">cgAssertHandler</a> (wchar_t *_Expr, wchar_t *_File, int _Line, wchar_t *_Msg)</td></tr>
 <tr class="memdesc:a7735ac9a30a68a1d63a9b5c5a12a42aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used by the 'cgAssert' macro to output critical (debug) runtime errors and to halt the execution of the application.  <a href="#a7735ac9a30a68a1d63a9b5c5a12a42aa"></a><br/></td></tr>
@@ -323,12 +324,12 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aab50fa369b9ed69d03770db601321ed6"></a>
+<a class="anchor" id="a49333647910ffac22fc978842e9ce71a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void cgFPUDoublePrecision </td>
+          <td class="memname">bool cgFPUDoublePrecision </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -353,7 +354,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Restore the FPU's previous precision prior to any call to <a class="el" href="cg_base_8cpp.html#aab50fa369b9ed69d03770db601321ed6" title="Allow the FPU to run in double precision mode until the next call to cgFPURestorePrecision(). ">cgFPUDoublePrecision()</a>. </p>
+<p>Restore the FPU's previous precision prior to any call to <a class="el" href="cg_base_8cpp.html#a49333647910ffac22fc978842e9ce71a" title="Allow the FPU to run in double precision mode until the next call to cgFPURestorePrecision(). ">cgFPUDoublePrecision()</a>. </p>
 
 </div>
 </div>
@@ -500,7 +501,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_65cb1e81656fd908372bbce03574f466.html">Source</a></li><li class="navelem"><a class="el" href="cg_base_8cpp.html">cgBase.cpp</a></li>
-    <li class="footer">Generated on Wed May 21 2014 19:31:27 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon Jul 7 2014 04:51:22 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.18</span>
    </div>
   </td>
  </tr>
@@ -142,6 +142,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa5760f27c060bdeb15d524a670201b63"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#aa5760f27c060bdeb15d524a670201b63">getSceneCount</a> () const </td></tr>
 <tr class="memdesc:aa5760f27c060bdeb15d524a670201b63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the total number of scenes contained within the loaded world configuration.  <a href="#aa5760f27c060bdeb15d524a670201b63"></a><br/></td></tr>
 <tr class="separator:aa5760f27c060bdeb15d524a670201b63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac81a8c3c70f967fc54f548366566270e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_world_type.html#ae25700bef3e243c265450227a0ceb796">cgWorldType::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#ac81a8c3c70f967fc54f548366566270e">getWorldType</a> () const </td></tr>
+<tr class="memdesc:ac81a8c3c70f967fc54f548366566270e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the world type as defined within the world configuration table.  <a href="#ac81a8c3c70f967fc54f548366566270e"></a><br/></td></tr>
+<tr class="separator:ac81a8c3c70f967fc54f548366566270e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeaea2344f6c9f2f91813df461242bf0a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#aeaea2344f6c9f2f91813df461242bf0a">getWorldIdentifier</a> () const </td></tr>
+<tr class="memdesc:aeaea2344f6c9f2f91813df461242bf0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the unique identifier that has been assigned to this world.  <a href="#aeaea2344f6c9f2f91813df461242bf0a"></a><br/></td></tr>
+<tr class="separator:aeaea2344f6c9f2f91813df461242bf0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a198d49eb4e7e9cfecdcf294f1ee4139a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_world_database_status.html#aa5a2c78726e22bd70f3b7bc626271a80">cgWorldDatabaseStatus::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a198d49eb4e7e9cfecdcf294f1ee4139a">getLayoutStatus</a> () const </td></tr>
 <tr class="memdesc:a198d49eb4e7e9cfecdcf294f1ee4139a"><td class="mdescLeft">&#160;</td><td class="mdescRight">When the database configuration is loaded, version testing is performed and the layout of the database is potentially updated. The layout status returned by this method indicates the action (if any) that was taken during this process when the configuration was first loaded.  <a href="#a198d49eb4e7e9cfecdcf294f1ee4139a"></a><br/></td></tr>
 <tr class="separator:a198d49eb4e7e9cfecdcf294f1ee4139a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -248,6 +254,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:ae7f90ab6d28c23c0ed37628f2a57f87a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7fe2f4b0402ba64a1ac15f3a99883e6e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a89e22fa63a03e79f51d5c795bb9f9f44">cgUInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a7fe2f4b0402ba64a1ac15f3a99883e6e">mVersion</a></td></tr>
 <tr class="separator:a7fe2f4b0402ba64a1ac15f3a99883e6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4acbc14c7582e4c284044ecbb1e2f5f4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_u_i_d.html">cgUID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a4acbc14c7582e4c284044ecbb1e2f5f4">mIdentifier</a></td></tr>
+<tr class="separator:a4acbc14c7582e4c284044ecbb1e2f5f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a789164452862dae6f03de446b0e457d3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecg_world_database_status.html#aa5a2c78726e22bd70f3b7bc626271a80">cgWorldDatabaseStatus::Base</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a789164452862dae6f03de446b0e457d3">mLayoutStatus</a></td></tr>
 <tr class="separator:a789164452862dae6f03de446b0e457d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a00499a61c66378ffaa43d0f8dbc413"><td class="memItemLeft" align="right" valign="top">cgWorldObjectTypeDesc::Map&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_configuration.html#a2a00499a61c66378ffaa43d0f8dbc413">mObjectTypes</a></td></tr>
@@ -618,6 +626,40 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the database layout version code as specified within the opened world database. Use '<a class="el" href="cg_a_p_i_8h.html#afc4b6ecea2a16bc0e88f1cbb07ed2383">cgDecomposeVersion()</a>' to separate the version code into its 'major' version, subversion and revision components. </p>
+
+</div>
+</div>
+<a class="anchor" id="aeaea2344f6c9f2f91813df461242bf0a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classcg_u_i_d.html">cgUID</a> &amp; cgWorldConfiguration::getWorldIdentifier </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the unique identifier that has been assigned to this world. </p>
+
+</div>
+</div>
+<a class="anchor" id="ac81a8c3c70f967fc54f548366566270e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacecg_world_type.html#ae25700bef3e243c265450227a0ceb796">cgWorldType::Base</a> cgWorldConfiguration::getWorldType </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the world type as defined within the world configuration table. </p>
 
 </div>
 </div>
@@ -1137,6 +1179,26 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a4acbc14c7582e4c284044ecbb1e2f5f4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_u_i_d.html">cgUID</a> cgWorldConfiguration::mIdentifier</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a789164452862dae6f03de446b0e457d3"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1467,7 +1529,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_world_configuration.html">cgWorldConfiguration</a></li>
-    <li class="footer">Generated on Wed May 21 2014 19:31:47 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon Jul 7 2014 04:51:42 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

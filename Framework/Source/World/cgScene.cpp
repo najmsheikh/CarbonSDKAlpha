@@ -5185,13 +5185,13 @@ void cgScene::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertMaterialUsage.isPrepared() == false )
+        if ( !mInsertMaterialUsage.isPrepared( mWorld ) )
             mInsertMaterialUsage.prepare( mWorld, _T("INSERT INTO 'Scenes::MaterialUsage' VALUES(NULL,?1,?2,?3)"), true );
-        if ( mDeleteMaterialUsage.isPrepared() == false )
+        if ( !mDeleteMaterialUsage.isPrepared( mWorld ) )
             mDeleteMaterialUsage.prepare( mWorld, _T("DELETE FROM 'Scenes::MaterialUsage' WHERE MaterialId=?1 AND SceneId=?2"), true );
-        if ( mInsertElementUsage.isPrepared() == false )
+        if ( !mInsertElementUsage.isPrepared( mWorld ) )
             mInsertElementUsage.prepare( mWorld, _T("INSERT INTO 'Scenes::Elements' VALUES(?1,?2,?3)"), true );
-        if ( mDeleteElementUsage.isPrepared() == false )
+        if ( !mDeleteElementUsage.isPrepared( mWorld ) )
             mDeleteElementUsage.prepare( mWorld, _T("DELETE FROM 'Scenes::Elements' WHERE ElementId=?1"), true );
     
     } // End if sandbox

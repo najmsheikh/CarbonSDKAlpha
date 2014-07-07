@@ -10,7 +10,7 @@ var searchData=
   ['ellipsis',['Ellipsis',['../namespacecg_text_truncation_mode.html#ac3b5904d9a76bff8bdd635b99dd2ff7ea31422f4a070836f1438bf470f79755e5',1,'cgTextTruncationMode']]],
   ['emissive',['Emissive',['../classcg_render_driver.html#a277e73b233f4d3d8aec4a7e18b7432dba2f1f65004d332c1bef1cf4f712cc09cd',1,'cgRenderDriver::Emissive()'],['../namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8a9856523f535e2b11068e65676c859b6e',1,'cgSystemState::Emissive()']]],
   ['emissivedirty',['EmissiveDirty',['../classcg_standard_material.html#a253bc8f6d60c77a6a3754f559ce84a51a033ff997c518983f9b2a92e4c68267ba',1,'cgStandardMaterial']]],
-  ['enabled',['Enabled',['../namespacecg_sandbox_mode.html#a446a0d273ff8b4f240f1f0f0d18c3e69a9371efff5551b60f823a3d5a98819c0f',1,'cgSandboxMode']]],
+  ['enabled',['Enabled',['../namespacecg_sandbox_mode.html#a446a0d273ff8b4f240f1f0f0d18c3e69a9371efff5551b60f823a3d5a98819c0f',1,'cgSandboxMode::Enabled()'],['../namespacecg_procedural_tree_growth_condition.html#aebe8429fda197eeb1c73ea2c71cfe649a9668f176e5a1b9774df3023d254a9b7b',1,'cgProceduralTreeGrowthCondition::Enabled()']]],
   ['end',['End',['../classcg_input_stream.html#a074dc4e7b0553d24a4096291bb2bf531a610db38f2da00d0a37e6b09a84efdf44',1,'cgInputStream::End()'],['../namespacecg_keys.html#a4febbfd6b5ecb1f73aaf2c2b711a21a6adc85d2bc5863b5432547e12573135cc5',1,'cgKeys::End()']]],
   ['endoffile',['EndOfFile',['../namespacecg_x_m_l_error.html#abf5c0aeff79d3a6dcde25ee0cb8a8fc0a431d5528cbde8663adb6b8d3bf66a41e',1,'cgXMLError']]],
   ['environmentmap',['EnvironmentMap',['../namespacecg_reflection_mode.html#af68bfaa6195f902578b0634e0efd1fb7abddadea81b1506a8c9f55e433b5e5170',1,'cgReflectionMode']]],
@@ -27,5 +27,6 @@ var searchData=
   ['exposure',['Exposure',['../namespacecg_image_operation.html#aba9f133ddf90648b8fbe232df8af0a98a5e0f0e313119c348a16d3b733b31cf77',1,'cgImageOperation']]],
   ['extents',['Extents',['../namespacecg_resample_method.html#a5dc20c9d7f5b626f218a9b50858af8a2ab372b488118029b1443a3ddd2933b2b8',1,'cgResampleMethod']]],
   ['extentsbits16',['ExtentsBits16',['../namespacecg_shadow_method.html#acf7076ff28e0dff7301a6561920d1456a2bb34fb349ae330e0bb0a411a7cb0c57',1,'cgShadowMethod']]],
-  ['exterior',['Exterior',['../namespacecg_scene_type.html#a344d305ea77fddca96f09c1e455d2979a3fe2ddbb7e3016e6b3a1e344f143d056',1,'cgSceneType']]]
+  ['exterior',['Exterior',['../namespacecg_scene_type.html#a344d305ea77fddca96f09c1e455d2979a3fe2ddbb7e3016e6b3a1e344f143d056',1,'cgSceneType']]],
+  ['extrusion',['Extrusion',['../namespacecg_procedural_tree_frond_type.html#a3b7122211102380f19632009a85bf471a07aa59322662f14b7e2e9d547a856d16',1,'cgProceduralTreeFrondType']]]
 ];

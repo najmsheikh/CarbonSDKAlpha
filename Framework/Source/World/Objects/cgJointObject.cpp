@@ -245,15 +245,15 @@ void cgJointObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertBaseJoint.isPrepared() )
+        if ( !mInsertBaseJoint.isPrepared( mWorld ) )
             mInsertBaseJoint.prepare( mWorld, _T("INSERT INTO 'Objects::Base::Joint' VALUES(?1,?2)"), true );
-        if ( !mUpdateBaseJointProperties.isPrepared() )
+        if ( !mUpdateBaseJointProperties.isPrepared( mWorld ) )
             mUpdateBaseJointProperties.prepare( mWorld, _T("UPDATE 'Objects::Base::Joint' SET BodyCollision=?1 WHERE RefId=?2"), true );
 
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadBaseJoint.isPrepared() )
+    if ( !mLoadBaseJoint.isPrepared( mWorld ) )
         mLoadBaseJoint.prepare( mWorld, _T("SELECT * FROM 'Objects::Base::Joint' WHERE RefId=?1"), true );
 }
 

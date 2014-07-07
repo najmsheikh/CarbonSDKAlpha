@@ -26,6 +26,7 @@ var classcg_texture =
     [ "getInfo", "classcg_texture.html#aa060a7d1c04cab199941dff5e8977123", null ],
     [ "getReferenceType", "classcg_texture.html#a9e3f96ef58eddbd8e8659b574d255975", null ],
     [ "getSize", "classcg_texture.html#a78e66598d7786246b6f34264e09d3bf8", null ],
+    [ "isValid", "classcg_texture.html#a71322d4e15eeca3dd8cf0e705776582e", null ],
     [ "loadResource", "classcg_texture.html#a031a6b378df1caa22a10ff0357d82b16", null ],
     [ "lock", "classcg_texture.html#a37681c6bf96b7f428142fc68a781fe46", null ],
     [ "lock", "classcg_texture.html#a311d76ca9dda9ec3381f57abc2b6fe59", null ],

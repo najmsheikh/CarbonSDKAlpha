@@ -47,6 +47,19 @@ class cgVertexFormat;
 const cgUID RTID_MeshResource = {0xBD9FFCCF, 0xF907, 0x4D3F, {0x9D, 0xB5, 0xB5, 0xE5, 0x20, 0x36, 0xC9, 0xFA}};
 
 //-----------------------------------------------------------------------------
+// Global Enumerations
+//-----------------------------------------------------------------------------
+namespace cgTriangleFlags
+{
+    enum Base
+    {
+        None        = 0,
+        Degenerate  = 0x1,
+    };
+
+} // End namespace : cgTriangleFlags
+
+//-----------------------------------------------------------------------------
 // Main Class Declarations
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -223,9 +236,12 @@ public:
     // Structure describing data for a single triangle in the mesh.
     struct Triangle
     {
+        Triangle() : dataGroupId(0), flags(0) {}
+
         cgUInt32            dataGroupId;
         cgMaterialHandle    material;
         cgUInt32            indices[3];
+        cgByte              flags;
 
     }; // End Struct Triangle
 

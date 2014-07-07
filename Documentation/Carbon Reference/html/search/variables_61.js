@@ -1,6 +1,7 @@
 var searchData=
 [
   ['a',['a',['../structcg_color_value.html#a6e02b0f8520b2d3e5d65d58817df8a4b',1,'cgColorValue::a()'],['../classcg_plane.html#acf794dd46bb6490b90e4684c1454c563',1,'cgPlane::a()']]],
+  ['abovecondition',['aboveCondition',['../classcg_procedural_tree_frond_desc.html#a2bae27f4aee57a15b71edeef739dbac4',1,'cgProceduralTreeFrondDesc']]],
   ['accumulatedtime',['accumulatedTime',['../structcg_motion_blur_processor_1_1_camera_data.html#ad7304a93731b80a8de829d6ab35cd395',1,'cgMotionBlurProcessor::CameraData']]],
   ['actiontype',['actionType',['../structcg_app_state_1_1_event_action_desc.html#a9790e7766e227a9ea514f3908b1cfa77',1,'cgAppState::EventActionDesc']]],
   ['activeregion',['activeRegion',['../structcg_u_i_control_1_1_render_frame_desc.html#a9306055e49e543d21757db1ba32649ca',1,'cgUIControl::RenderFrameDesc::activeRegion()'],['../structcg_u_i_skin_element.html#a51db99bec2ec62141deafa3abf6417b3',1,'cgUISkinElement::activeRegion()']]],
@@ -49,5 +50,7 @@ var searchData=
   ['autogeneratemipmaps',['autoGenerateMipmaps',['../structcg_image_info.html#a418b8125a89ee05a300be1243d69ef9e',1,'cgImageInfo::autoGenerateMipmaps()'],['../structcg_shadow_settings_system.html#a8c126c9dada14c2776f6032691e07a05',1,'cgShadowSettingsSystem::autoGenerateMipmaps()']]],
   ['autosize',['autoSize',['../classcg_image_box_control.html#a554e29db166deb3800f9bfb9a8be066d',1,'cgImageBoxControl']]],
   ['averagebytespersecond',['averageBytesPerSecond',['../structcg_audio_buffer_format.html#a6a32e29ad9e5df95807de32135e6c1d0',1,'cgAudioBufferFormat']]],
-  ['avoidancequality',['avoidanceQuality',['../structcg_navigation_agent_create_params.html#a83c69c3d35d75c8cfeb27643c595532a',1,'cgNavigationAgentCreateParams']]]
+  ['avoidancequality',['avoidanceQuality',['../structcg_navigation_agent_create_params.html#a83c69c3d35d75c8cfeb27643c595532a',1,'cgNavigationAgentCreateParams']]],
+  ['azimuthinitial',['azimuthInitial',['../classcg_procedural_tree_growth_level.html#a819c47c4ffe10a31aa3317c3fee9d170',1,'cgProceduralTreeGrowthLevel']]],
+  ['azimuthtwist',['azimuthTwist',['../classcg_procedural_tree_growth_level.html#a0031ff6e463a2d2db241ecb41e4ff29a',1,'cgProceduralTreeGrowthLevel']]]
 ];

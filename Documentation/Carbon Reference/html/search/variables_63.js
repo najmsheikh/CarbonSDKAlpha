@@ -32,6 +32,7 @@ var searchData=
   ['channels',['channels',['../structcg_audio_driver_1_1_init_config.html#ad6115061863007608a6d21761b34bdfc',1,'cgAudioDriver::InitConfig::channels()'],['../structcg_audio_buffer_format.html#a63ed7bde46549cf7ee93f5d38ce2aceb',1,'cgAudioBufferFormat::channels()']]],
   ['channelusage',['channelUsage',['../structcg_landscape_texture_data_1_1_batched_map.html#a50d7cbd0fe5c1306cedd263bb9fa3e81',1,'cgLandscapeTextureData::BatchedMap']]],
   ['characters',['characters',['../structcg_text_metrics_1_1_text_line.html#ab9d23d3f1973f49c633e26e66c188599',1,'cgTextMetrics::TextLine']]],
+  ['childbranches',['childBranches',['../structcg_procedural_tree_generator_1_1_branch.html#a6fc3d5f2c9fe33cf456c67bd83bdfac5',1,'cgProceduralTreeGenerator::Branch']]],
   ['childpackages',['childPackages',['../structcg_script_engine_1_1_package_entry.html#a44e6a90b9810aa3dea62f346a5df8f68',1,'cgScriptEngine::PackageEntry']]],
   ['children',['children',['../structcg_mesh_shape_1_1_b_v_h_node.html#a4fb5131c1930ef42a2e5fa8dcccef7de',1,'cgMeshShape::BVHNode::children()'],['../structcg_profiler_statistics.html#af94e3b2a1c709354d05f7b29abb16a15',1,'cgProfilerStatistics::children()']]],
   ['classid',['classId',['../structcg_world_configuration_1_1_render_class_desc.html#ab81f777073bd45ccbf4f955e07a136e8',1,'cgWorldConfiguration::RenderClassDesc']]],

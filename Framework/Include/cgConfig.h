@@ -92,7 +92,7 @@
 // Engine versioning information
 #define CGE_ENGINE_VERSION      0
 #define CGE_ENGINE_SUBVERSION   8
-#define CGE_ENGINE_REVISION     17
+#define CGE_ENGINE_REVISION     18
 
 //-----------------------------------------------------------------------------
 // World Configuration
@@ -105,7 +105,7 @@
 #define CGE_WORLD_SUBVERSION    0   
 
 // Current world database revision number
-#define CGE_WORLD_REVISION      9
+#define CGE_WORLD_REVISION      10
 
 // Minimum supported world database major version number
 #define CGE_WORLD_MIN_VERSION       1   

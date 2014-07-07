@@ -972,19 +972,19 @@ void cgPointLightObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertPointLight.isPrepared() )
+        if ( !mInsertPointLight.isPrepared( mWorld ) )
             mInsertPointLight.prepare( mWorld, _T("INSERT INTO 'Objects::PointLight' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14)"), true );
-        if ( !mUpdateRanges.isPrepared() )
+        if ( !mUpdateRanges.isPrepared( mWorld ) )
             mUpdateRanges.prepare( mWorld, _T("UPDATE 'Objects::PointLight' SET OuterRange=?1, InnerRange=?2 WHERE RefId=?3"), true );
-        if ( !mUpdateShadowConfigSources.isPrepared() )
+        if ( !mUpdateShadowConfigSources.isPrepared( mWorld ) )
             mUpdateShadowConfigSources.prepare( mWorld, _T("UPDATE 'Objects::PointLight' SET ShadowFrustumsLinked=?1 WHERE RefId=?2"), true );
-        if ( !mUpdateShadowRate.isPrepared() )
+        if ( !mUpdateShadowRate.isPrepared( mWorld ) )
             mUpdateShadowRate.prepare( mWorld, _T("UPDATE 'Objects::PointLight' SET ShadowUpdateRate=?1 WHERE RefId=?2"), true );
         
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadPointLight.isPrepared() )
+    if ( !mLoadPointLight.isPrepared( mWorld ) )
         mLoadPointLight.prepare( mWorld, _T("SELECT * FROM 'Objects::PointLight' WHERE RefId=?1"), true );
 }
 

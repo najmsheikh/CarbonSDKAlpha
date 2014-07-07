@@ -135,7 +135,8 @@ namespace cgWorldType
     {
         Master = 0,
         Merge,
-        Data
+        Data,
+        TransientMaster
     };
 
 }; // End Namespace : cgWorldType

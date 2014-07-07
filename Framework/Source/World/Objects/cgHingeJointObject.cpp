@@ -634,15 +634,15 @@ void cgHingeJointObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertJoint.isPrepared() == false )
+        if ( !mInsertJoint.isPrepared( mWorld ) )
             mInsertJoint.prepare( mWorld, _T("INSERT INTO 'Objects::HingeJoint' VALUES(?1,?2,?3,?4,?5,?6)"), true );
-        if ( mUpdateLimits.isPrepared() == false )
+        if ( !mUpdateLimits.isPrepared( mWorld ) )
             mUpdateLimits.prepare( mWorld, _T("UPDATE 'Objects::HingeJoint' SET UseLimits=?1, MinimumAngle=?2, MaximumAngle=?3 WHERE RefId=?4"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadJoint.isPrepared() == false )
+    if ( !mLoadJoint.isPrepared( mWorld ) )
         mLoadJoint.prepare( mWorld, _T("SELECT * FROM 'Objects::HingeJoint' WHERE RefId=?1"), true );
 }
 
@@ -1205,17 +1205,17 @@ void cgHingeJointNode::prepareQueries()
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         // Prepare the SQL statements as necessary.
-        if ( !mInsertInstanceData.isPrepared() )
+        if ( !mInsertInstanceData.isPrepared( pWorld ) )
             mInsertInstanceData.prepare( pWorld, _T("INSERT INTO 'Objects::HingeJoint::InstanceData' VALUES(NULL,?1,?2,?3,?4)"), true );
-        if ( !mUpdateInstanceData.isPrepared() )
+        if ( !mUpdateInstanceData.isPrepared( pWorld ) )
             mUpdateInstanceData.prepare( pWorld, _T("UPDATE 'Objects::HingeJoint::InstanceData' SET Body0Id=?1, Body1Id=?2 WHERE NodeRefId=?3"), true );
-        if ( !mDeleteInstanceData.isPrepared() )
+        if ( !mDeleteInstanceData.isPrepared( pWorld ) )
             mDeleteInstanceData.prepare( pWorld, _T("DELETE FROM 'Objects::HingeJoint::InstanceData' WHERE NodeRefId=?1"), true );
 
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadInstanceData.isPrepared() )
+    if ( !mLoadInstanceData.isPrepared( pWorld ) )
         mLoadInstanceData.prepare( pWorld, _T("SELECT * FROM 'Objects::HingeJoint::InstanceData' WHERE NodeRefId=?1"), true );
 }
 

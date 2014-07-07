@@ -286,8 +286,8 @@ class LandscapeTerrainShader : ISurfaceShader
 
         // Used to align shadow texel for border repair
         <?
-        clipPosition.x -= _targetSize.z * clipPosition.w;
-        clipPosition.y += _targetSize.w * clipPosition.w;
+        //clipPosition.x -= _targetSize.z * clipPosition.w;
+        //clipPosition.y += _targetSize.w * clipPosition.w;
         ?>
 
         // Valid shader
@@ -569,7 +569,7 @@ class LandscapeTerrainShader : ISurfaceShader
         /////////////////////////////////////////////
         // Shader Code
         /////////////////////////////////////////////
-        <?data0 = depth;?>
+        <?data0 = float4(depth,0,0,0);?>
 
         // Valid shader
         return true;

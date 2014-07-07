@@ -32,6 +32,8 @@ var classcg_terrain_block =
     [ "getHeightMapHeight", "classcg_terrain_block.html#a58b00d3c74051ba08f95b2733ed5ac0b", null ],
     [ "getHeightMapIndex", "classcg_terrain_block.html#ac29c8c3c8bbb50cfeb2354bac9034d64", null ],
     [ "getHeightMapNormal", "classcg_terrain_block.html#ad765e7d70839ad43a38ffa72af67414a", null ],
+    [ "getHeightMapOffset", "classcg_terrain_block.html#a8de0df480033ce0ae78fb149065ddb4e", null ],
+    [ "getLandscape", "classcg_terrain_block.html#a066da455787e1b61d116321fb017d6d8", null ],
     [ "getNeighbor", "classcg_terrain_block.html#a1d954ae8dc34fcacedab14ac3615ad78", null ],
     [ "getTerrainHeight", "classcg_terrain_block.html#a33c3f3c9baff647eab37a833f49077b3", null ],
     [ "getTerrainHeight", "classcg_terrain_block.html#ad5d68f4a13d2cc4e5ba7246615d406e7", null ],

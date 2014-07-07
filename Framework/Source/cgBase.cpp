@@ -79,6 +79,7 @@
 #include <World/Objects/cgSoundEmitterObject.h>
 #include <World/Objects/cgNavigationPatrolPoint.h>
 #include <World/Objects/cgBillboardObject.h>
+#include <World/Objects/cgProceduralTreeObject.h>
 
 // Object sub-element types
 #include <World/Objects/Elements/cgBoxCollisionShapeElement.h>
@@ -295,6 +296,7 @@ bool cgEngineInit( const CGEConfig & Config, cgLogOutput * pOutput /* = CG_NULL 
     cgWorldObject::registerType( RTID_SoundEmitterObject         , _T("Sound Emitter")    , cgSoundEmitterObject::allocateNew, cgSoundEmitterObject::allocateClone, cgSoundEmitterNode::allocateNew, cgSoundEmitterNode::allocateClone );
     cgWorldObject::registerType( RTID_NavigationPatrolPointObject, _T("Patrol Point")     , cgNavigationPatrolPointObject::allocateNew, cgNavigationPatrolPointObject::allocateClone, cgNavigationPatrolPointNode::allocateNew, cgNavigationPatrolPointNode::allocateClone );
     cgWorldObject::registerType( RTID_BillboardObject            , _T("Billboard")        , cgBillboardObject::allocateNew, cgBillboardObject::allocateClone, cgBillboardNode::allocateNew, cgBillboardNode::allocateClone );
+    cgWorldObject::registerType( RTID_ProceduralTreeObject       , _T("Procedural Tree")  , cgProceduralTreeObject::allocateNew, cgProceduralTreeObject::allocateClone, cgProceduralTreeNode::allocateNew, cgProceduralTreeNode::allocateClone );
     
     // Register physics joint object types
     cgWorldObject::registerType( RTID_KinematicControllerJointObject, _T("Kinematic Controller Joint"), cgKinematicControllerJointObject::allocateNew, cgKinematicControllerJointObject::allocateClone, cgKinematicControllerJointNode::allocateNew, cgKinematicControllerJointNode::allocateClone );
@@ -484,10 +486,10 @@ void cgEngineYield()
 /// to cgFPURestorePrecision().
 /// </summary>
 //-----------------------------------------------------------------------------
-void cgFPUDoublePrecision()
+bool cgFPUDoublePrecision()
 {
     if ( bDoubleFPUPrecision == true )
-        return;
+        return false;
 
     // Record the current FPU precision details
     nOriginalFPUPrecision = _controlfp( 0, 0 );
@@ -495,6 +497,7 @@ void cgFPUDoublePrecision()
     // Enable double precision.
     _controlfp( _CW_DEFAULT, 0xfffff );
     bDoubleFPUPrecision = true;
+    return true;
 }
 
 //-----------------------------------------------------------------------------

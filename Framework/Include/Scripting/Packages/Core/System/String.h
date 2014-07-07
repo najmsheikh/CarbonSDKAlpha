@@ -3,6 +3,7 @@
 // Required headers
 #include <Scripting/cgScriptPackage.h>
 #include <System/cgString.h>
+#include <System/cgStringUtility.h>
 
 // Parent hierarchy
 namespace cgScriptPackages { namespace Core { namespace System {
@@ -91,6 +92,9 @@ namespace String
 	        BINDSUCCESS( engine->registerObjectMethod( "String", "String &opAddAssign(uint)", asFUNCTION(addAssignUIntToString), asCALL_CDECL_OBJLAST) );
 	        BINDSUCCESS( engine->registerObjectMethod( "String", "String opAdd(uint) const", asFUNCTION(addStringUInt), asCALL_CDECL_OBJFIRST) );
 	        BINDSUCCESS( engine->registerObjectMethod( "String", "String opAdd_r(uint) const", asFUNCTION(addUIntString), asCALL_CDECL_OBJLAST) );
+
+            // Global functions
+            BINDSUCCESS( engine->registerGlobalFunction( "String toString( const UID&, const String& )", asFUNCTIONPR(cgStringUtility::toString,( const cgUID&, const cgString& ),cgString), asCALL_CDECL ) );
         }
 
         //---------------------------------------------------------------------

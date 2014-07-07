@@ -297,11 +297,11 @@ void cgSplineObject::applyObjectRescale( cgFloat fScale )
     cgBezierSpline3 data = mSpline;
     for ( cgInt32 i = 0; i < data.getPointCount(); ++i )
     {
-        cgBezierSpline3::SplinePoint pt = data.getSplinePoint( i );
+        cgBezierSpline3::SplinePoint pt = data.getPoint( i );
         pt.point *= fScale;
         pt.controlPointOut *= fScale;
         pt.controlPointIn *= fScale;
-        data.setSplinePoint( i, pt );
+        data.setPoint( i, pt );
 
     } // Next point
 
@@ -311,7 +311,7 @@ void cgSplineObject::applyObjectRescale( cgFloat fScale )
         prepareQueries();
         mUpdateSplineData.bindParameter( 1, data.getPointCount() );
         if ( data.getPointCount() > 0 )
-            mUpdateSplineData.bindParameter( 2, &data.getSplinePoints()[0], data.getPointCount() * sizeof(cgBezierSpline3::SplinePoint) );
+            mUpdateSplineData.bindParameter( 2, &data.getPoints()[0], data.getPointCount() * sizeof(cgBezierSpline3::SplinePoint) );
         else
             mUpdateSplineData.bindParameter( 2, CG_NULL, 0 );
         mUpdateSplineData.bindParameter( 3, mReferenceId );
@@ -413,7 +413,7 @@ void cgSplineObject::setSplineData( const cgBezierSpline3 & data )
         prepareQueries();
         mUpdateSplineData.bindParameter( 1, data.getPointCount() );
         if ( data.getPointCount() > 0 )
-            mUpdateSplineData.bindParameter( 2, &data.getSplinePoints()[0], data.getPointCount() * sizeof(cgBezierSpline3::SplinePoint) );
+            mUpdateSplineData.bindParameter( 2, &data.getPoints()[0], data.getPointCount() * sizeof(cgBezierSpline3::SplinePoint) );
         else
             mUpdateSplineData.bindParameter( 2, CG_NULL, 0 );
         mUpdateSplineData.bindParameter( 3, mReferenceId );
@@ -454,8 +454,8 @@ void cgSplineObject::updateBoundingBox()
     {
         for ( cgInt32 i = 0; i < mSpline.getPointCount() - 1; ++i )
         {
-            const cgBezierSpline3::SplinePoint & pt1 = mSpline.getSplinePoint( i );
-            const cgBezierSpline3::SplinePoint & pt2 = mSpline.getSplinePoint( i + 1 );
+            const cgBezierSpline3::SplinePoint & pt1 = mSpline.getPoint( i );
+            const cgBezierSpline3::SplinePoint & pt2 = mSpline.getPoint( i + 1 );
             mBounds.addPoint( pt1.point );
             mBounds.addPoint( pt1.controlPointOut );
             mBounds.addPoint( pt2.controlPointIn );
@@ -463,7 +463,7 @@ void cgSplineObject::updateBoundingBox()
         } // Next Point
 
         // Final point
-        const cgBezierSpline3::SplinePoint & pt = mSpline.getSplinePoint( mSpline.getPointCount()-1 );
+        const cgBezierSpline3::SplinePoint & pt = mSpline.getPoint( mSpline.getPointCount()-1 );
         mBounds.addPoint( pt.point );
 
     } // End if valid spline
@@ -552,7 +552,7 @@ bool cgSplineObject::insertComponentData( )
         mInsertSpline.bindParameter( 2, mDisplayInterpolationSteps );
         mInsertSpline.bindParameter( 3, mSpline.getPointCount() );
         if ( mSpline.getPointCount() > 0 )
-            mInsertSpline.bindParameter( 4, &mSpline.getSplinePoints()[0], mSpline.getPointCount() * sizeof(cgBezierSpline3::SplinePoint) );
+            mInsertSpline.bindParameter( 4, &mSpline.getPoints()[0], mSpline.getPointCount() * sizeof(cgBezierSpline3::SplinePoint) );
         else
             mInsertSpline.bindParameter( 4, CG_NULL, 0 );
         mInsertSpline.bindParameter( 5, mSoftRefCount );
@@ -652,17 +652,17 @@ void cgSplineObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertSpline.isPrepared() == false )
+        if ( !mInsertSpline.isPrepared( mWorld ) )
             mInsertSpline.prepare( mWorld, _T("INSERT INTO 'Objects::Spline' VALUES(?1,?2,?3,?4,?5)"), true );
-        if ( mUpdateSplineData.isPrepared() == false )
+        if ( !mUpdateSplineData.isPrepared( mWorld ) )
             mUpdateSplineData.prepare( mWorld, _T("UPDATE 'Objects::Spline' SET SplineDataSize=?1, SplineData=?2 WHERE RefId=?3"), true );
-        if ( mUpdateDisplayOptions.isPrepared() == false )
+        if ( !mUpdateDisplayOptions.isPrepared( mWorld ) )
             mUpdateDisplayOptions.prepare( mWorld, _T("UPDATE 'Objects::Spline' SET DisplaySteps=?1 WHERE RefId=?2"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadSpline.isPrepared() == false )
+    if ( !mLoadSpline.isPrepared( mWorld ) )
         mLoadSpline.prepare( mWorld, _T("SELECT * FROM 'Objects::Spline' WHERE RefId=?1"), true );
 }
 

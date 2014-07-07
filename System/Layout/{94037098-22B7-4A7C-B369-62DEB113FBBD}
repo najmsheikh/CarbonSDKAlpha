@@ -1,0 +1,48 @@
+--Table: DataSources::NavigationMesh::Tiles
+
+CREATE TABLE IF NOT EXISTS [DataSources::NavigationMesh::Tiles] (
+  [TileId] integer NOT NULL PRIMARY KEY AUTOINCREMENT,  
+  [DataSourceId] integer,
+  [TileX] integer,
+  [TileY] integer,
+  [TileZ] integer,
+  [NavData] blob,
+  [PolyData] blob);
+CREATE INDEX IF NOT EXISTS [DataSources::NavigationMesh::Tiles_DataSourceIdIndex] ON [DataSources::NavigationMesh::Tiles] ([DataSourceId]);
+CREATE UNIQUE INDEX IF NOT EXISTS [DataSources::NavigationMesh::Tiles_TileMatch] ON [DataSources::NavigationMesh::Tiles] ([DataSourceId], [TileX], [TileY], [TileZ]);
+
+--Table: DataSources::NavigationMesh -- {94037098-22B7-4A7C-B369-62DEB113FBBD}
+
+CREATE TABLE IF NOT EXISTS [DataSources::NavigationMesh] (
+  [RefId] integer NOT NULL PRIMARY KEY, 
+  [Flags] smallint, 
+  [TilesX] integer,
+  [TilesY] integer,
+  [TilesZ] integer,
+  [BoundsMinX] real,
+  [BoundsMinY] real,
+  [BoundsMinZ] real,
+  [BoundsMaxX] real,
+  [BoundsMaxY] real,
+  [BoundsMaxZ] real,
+  [CellSize] real,
+  [CellHeight] real,
+  [TileCells] integer,
+  [AgentRadius] real,
+  [AgentHeight] real,
+  [AgentMaximumSlope] real,
+  [AgentMaximumStepHeight] real,
+  [EdgeMaximumLength] real,
+  [EdgeMaximumError] real,
+  [RegionMinimumSize] real,
+  [RegionMergedSize] real,
+  [VerticesPerPoly] integer,
+  [DetailSampleDistance] real,
+  [DetailSampleMaximumError] real,
+  [RefCount] integer);
+CREATE TRIGGER IF NOT EXISTS [DataSources::NavigationMesh_OnDelete]
+BEFORE DELETE
+ON [DataSources::NavigationMesh]
+BEGIN
+  DELETE FROM [DataSources::NavigationMesh::Tiles] WHERE DataSourceId=old.RefId;
+END;

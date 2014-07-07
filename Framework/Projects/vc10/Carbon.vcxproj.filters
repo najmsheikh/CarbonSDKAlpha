@@ -346,6 +346,18 @@
     <Filter Include="Header Files\System\Containers">
       <UniqueIdentifier>{d52e58c4-ae4d-4b25-bab0-08b81a32e4f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Tools">
+      <UniqueIdentifier>{b32c5cf0-a4cb-4af9-9c26-afada277d4cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Tools\Generators">
+      <UniqueIdentifier>{f9d2b853-e61f-451a-aafc-1f607f3b4b17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Tools">
+      <UniqueIdentifier>{68a11a75-f9d8-4484-84f8-ff21361e983c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Tools\Generators">
+      <UniqueIdentifier>{ce372bc5-0561-4969-82af-842bdd5b3a4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\cgBase.cpp">
@@ -1172,6 +1184,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Resources\cgClutterMaterial.cpp">
       <Filter>Source Files\Resources\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Tools\Generators\cgProceduralTreeGenerator.cpp">
+      <Filter>Source Files\Tools\Generators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\World\Objects\cgProceduralTreeObject.cpp">
+      <Filter>Source Files\World\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2548,6 +2566,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\System\Containers\cgArray.h">
       <Filter>Header Files\System\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\World\Objects\cgProceduralTreeObject.h">
+      <Filter>Header Files\World\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Tools\Generators\cgProceduralTreeGenerator.h">
+      <Filter>Header Files\Tools\Generators</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

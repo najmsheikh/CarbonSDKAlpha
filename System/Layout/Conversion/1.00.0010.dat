@@ -1,0 +1,234 @@
+bool upgrade_1000009_to_1000010( World @ world )
+{
+    String sql;
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // New data source table added for navigation meshes / tiles.
+    ///////////////////////////////////////////////////////////////////////////
+    
+    // If the navigation mesh scene element table exists, we may need to
+    // copy data over into the new data source tables.
+    if ( world.tableExists( "SceneElements::NavigationMesh" ) )
+    {
+        // First retrieve the schema for the new data source tables.
+        String layout = loadStringFromStream( "sys://Layout/{94037098-22B7-4A7C-B369-62DEB113FBBD}" );
+        if ( layout.empty() )
+        {
+            logWrite( LogEvent::Error, "[v1.01.0010] Failed to load layout definition for DataSources::NavigationMesh\n" );
+            return false;
+        
+        } // End if no layout
+            
+        // Execute the query to build the tables.
+        if ( !world.executeQuery( layout, false ) )
+        {
+            logWrite( LogEvent::Error, "[v1.01.0010] Failed to create new navigation mesh data region.\n" );
+            return false;
+        
+        } // End if failed
+            
+        // Prepare necessary queries.
+        WorldQuery @ insertQuery  = WorldQuery( world, "INSERT INTO [DataSources::NavigationMesh] VALUES(?1,0,0,0,0,0,0,0,0,0,0,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26)" );
+        WorldQuery @ elementQuery = WorldQuery( world, "SELECT * FROM [SceneElements::NavigationMesh] ORDER BY RefId" );
+        if ( !elementQuery.isPrepared() || !insertQuery.isPrepared() )
+        {
+            logWrite( LogEvent::Error, "[v1.01.0010] Failed to prepare element upgrade statements.\n" );
+			return false;
+        
+        } // End if failed
+            
+        // Execute the read query
+		if ( !elementQuery.step() )
+        {
+            logWrite( LogEvent::Error, "[v1.01.0010] Failed to execute element search statement.\n" );
+			return false;
+        
+        } // End if failed
+            
+        // Step through each element and insert the data. We'll need to record
+        // the new reference ids of each inserted row so that we can update the
+        // scene elements table later.
+        array<uint> refIds;
+		while ( elementQuery.nextRow() )
+		{
+			// Retrieve existing data.
+            float agentRadius, agentHeight, agentMaxSlope, agentMaxStepHeight, edgeMaxLength, edgeMaxError;
+            float regionMinSize, regionMergedSize, vertsPerPoly, detailSampleDistance, detailSampleMaxError;
+            elementQuery.getColumn( "AgentRadius", agentRadius );
+            elementQuery.getColumn( "AgentHeight", agentHeight );
+            elementQuery.getColumn( "AgentMaxSlope", agentMaxSlope );
+            elementQuery.getColumn( "AgentMaxStepHeight", agentMaxStepHeight );
+            elementQuery.getColumn( "EdgeMaxLength", edgeMaxLength );
+            elementQuery.getColumn( "EdgeMaxError", edgeMaxError );
+            elementQuery.getColumn( "RegionMinSize", regionMinSize );
+            elementQuery.getColumn( "RegionMergedSize", regionMergedSize );
+            elementQuery.getColumn( "VertsPerPoly", vertsPerPoly );
+            elementQuery.getColumn( "DetailSampleDistance", detailSampleDistance );
+            elementQuery.getColumn( "DetailSampleMaxError", detailSampleMaxError );
+            
+            // Apply parameters to insert statement.
+            uint refId = world.generateRefId( false );
+            insertQuery.bindParameter( 1, refId );
+            insertQuery.bindParameter( 12, agentRadius * 0.5f );                 // CellSize
+            insertQuery.bindParameter( 13, (agentRadius * 0.5f) * 0.66666666f ); // Cell Height
+            insertQuery.bindParameter( 14, 200 );                                // Tile Cells
+            insertQuery.bindParameter( 15, agentRadius );
+            insertQuery.bindParameter( 16, agentHeight );
+            insertQuery.bindParameter( 17, agentMaxSlope );
+            insertQuery.bindParameter( 18, agentMaxStepHeight );
+            insertQuery.bindParameter( 19, edgeMaxLength );
+            insertQuery.bindParameter( 20, edgeMaxError );
+            insertQuery.bindParameter( 21, regionMinSize );
+            insertQuery.bindParameter( 22, regionMergedSize );
+            insertQuery.bindParameter( 23, vertsPerPoly );
+            insertQuery.bindParameter( 24, detailSampleDistance );
+            insertQuery.bindParameter( 25, detailSampleMaxError );
+            insertQuery.bindParameter( 26, 1 );                                 // Ref count
+            
+            // Attempt to run the insert query.
+            if ( !insertQuery.step(true) )
+            {
+                logWrite( LogEvent::Error, "[v1.01.0010] Failed to execute data source insert statement.\n" );
+                return false;
+            
+            } // End if failed
+            
+            // Store the new reference id, we'll need them later.
+            refIds.push_back( refId );
+		
+		} // Next result
+        
+        // Reset the queries. We'll need at least the element query again later.
+        elementQuery.reset();
+        insertQuery.reset();
+        
+        // Now we need to modify the scene element table to remove all of the 
+        // arguments that were just moved over into the data source.
+        sql  = "CREATE TEMPORARY TABLE [TEMP_SceneElements::NavigationMesh] AS SELECT * FROM [SceneElements::NavigationMesh];";
+        sql += "DROP TABLE [SceneElements::NavigationMesh];";
+        
+        // Create the updated table.
+        sql += "CREATE TABLE [SceneElements::NavigationMesh] (";
+        sql += "  [RefId] integer NOT NULL PRIMARY KEY,";
+        sql += "  [EditorName] VARCHAR(128), ";
+        sql += "  [DataSourceId] integer DEFAULT 0,";
+        sql += "  [SandboxRenderMethod] SMALLINT DEFAULT(0),";
+        sql += "  [ManualRebuild] tinyint(1) DEFAULT 0, ";
+        sql += "  [RefCount] integer DEFAULT 0);";
+
+        sql += "CREATE TRIGGER [SceneElements::NavigationMesh_OnDelete]";
+        sql += "  BEFORE DELETE";
+        sql += "  ON [SceneElements::NavigationMesh]";
+        sql += "  BEGIN";
+        sql += "    DELETE FROM [Scenes::Elements] WHERE ElementId=old.RefId;";
+        sql += "  END;";
+        
+        // Copy data over to new table.
+        sql += "INSERT INTO [SceneElements::NavigationMesh] SELECT";
+        sql += "  [RefId], ";
+        sql += "  [EditorName], ";
+        sql += "  0, ";
+        sql += "  [SandboxRenderMethod], ";
+        sql += "  [ManualRebuild], ";
+        sql += "  [RefCount] FROM [TEMP_SceneElements::NavigationMesh];";
+
+        // Drop the temporary table.
+        sql += "DROP TABLE [TEMP_SceneElements::NavigationMesh];";
+        
+        // Execute the query
+        if ( !world.executeQuery( sql, false ) )
+        {
+            logWrite( LogEvent::Error, "[v1.01.0010] Failed to convert navigation element region.\n" );
+            return false;
+        
+        } // End if failed
+            
+        // Now we need to update the scene elements to connect them to the new data sources.
+        // First prepare necessary statements.
+        WorldQuery @ updateQuery = WorldQuery( world, "UPDATE [SceneElements::NavigationMesh] SET DataSourceId=?1 WHERE RefId=?2" );
+        if ( !updateQuery.isPrepared() )
+        {
+            logWrite( LogEvent::Error, "[v1.01.0010] Failed to prepare element connection statement.\n" );
+            return false;
+        
+        } // End if failed
+            
+        // Iterate scene elements IN THE SAME ORDER.
+        if ( !elementQuery.step() )
+        {
+            logWrite( LogEvent::Error, "[v1.01.0010] Failed to execute element search statement in phase 2.\n" );
+			return false;
+        
+        } // End if failed
+        for ( int i = 0; elementQuery.nextRow(); ++i )
+		{
+            uint refId;
+            elementQuery.getColumn( "RefId", refId );
+            updateQuery.bindParameter( 1, refIds[i] );
+            updateQuery.bindParameter( 2, refId );
+            if ( !updateQuery.step(true) )
+            {
+                logWrite( LogEvent::Error, "[v1.01.0010] Failed to connect element to new navigation mesh data source.\n" );
+                return false;
+            
+            } // End if failed
+        
+        } // Next element
+        
+        // All done! CF will automatically rebuild necessary data.
+        
+    } // End if exists
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // New 'Identifier' column added to world configuration table.
+    ///////////////////////////////////////////////////////////////////////////
+    
+    // Backup table data.
+    sql  = "CREATE TEMPORARY TABLE [TEMP_Configuration] AS SELECT * FROM [Configuration];";
+    sql += "DROP TABLE [Configuration];";
+    
+    // Create the updated table.
+    sql += "CREATE TABLE [Configuration] (";
+    sql += "  [Type] varchar(255) NOT NULL PRIMARY KEY UNIQUE DEFAULT 'Primary',";
+    sql += "  [FileType] smallint DEFAULT 0,";
+    sql += "  [Version] smallint DEFAULT 1,";
+    sql += "  [Subversion] smallint DEFAULT 0,";
+    sql += "  [Revision] integer DEFAULT 0,";
+    sql += "  [NextRefId] integer DEFAULT 1,";
+    sql += "  [Identifier] varchar(255));";
+    
+    // Generate a new identifier for this world.
+    String identifier = toString( generateRandomUID(), "B" );
+    
+    // Copy data over to new table.
+    sql += "INSERT INTO [Configuration] SELECT";
+    sql += "  [Type], ";
+    sql += "  [FileType], ";
+    sql += "  [Version], ";
+    sql += "  [Subversion], ";
+    sql += "  [Revision], ";
+    sql += "  [NextRefId], ";
+    sql += "  '" + identifier + "' FROM [TEMP_Configuration];";
+
+    // Drop the temporary table.
+    sql += "DROP TABLE [TEMP_Configuration];";
+    
+    // Execute the query
+    if ( !world.executeQuery( sql, false ) )
+    {
+        logWrite( LogEvent::Error, "[v1.01.0010] Failed to convert world configuration region.\n" );
+        return false;
+    
+    } // End if failed
+    
+    // Update version number to 1.00.0010
+    if ( !world.executeQuery( "UPDATE [Configuration] SET Version=1,Subversion=0,Revision=10 WHERE Type='Primary'", false ) )
+    {
+        logWrite( LogEvent::Error, "[v1.01.0010] Failed to update world configuration.\n" );
+        return false;
+    
+    } // End if failed
+
+    // Success!
+    return true;
+}

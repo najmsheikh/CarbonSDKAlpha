@@ -277,23 +277,23 @@ void cgAnimationSet::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertSet.isPrepared() )
+        if ( !mInsertSet.isPrepared( mWorld ) )
             mInsertSet.prepare( mWorld, _T("INSERT INTO 'DataSources::AnimationSet' VALUES(?1,?2,?3,?4,?5)"), true );
-        if ( !mInsertTargetData.isPrepared() )
+        if ( !mInsertTargetData.isPrepared( mWorld ) )
             mInsertTargetData.prepare( mWorld, _T("INSERT INTO 'DataSources::AnimationSet::Targets' VALUES(NULL,?1,?2)"), true );
-        if ( !mUpdateFrameRate.isPrepared() )
+        if ( !mUpdateFrameRate.isPrepared( mWorld ) )
             mUpdateFrameRate.prepare( mWorld, _T("UPDATE 'DataSources::AnimationSet' SET FrameRate=?1 WHERE RefId=?2"), true );
-        if ( !mUpdateName.isPrepared() )
+        if ( !mUpdateName.isPrepared( mWorld ) )
             mUpdateName.prepare( mWorld, _T("UPDATE 'DataSources::AnimationSet' SET Name=?1 WHERE RefId=?2"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadSet.isPrepared() )
+    if ( !mLoadSet.isPrepared( mWorld ) )
         mLoadSet.prepare( mWorld, _T("SELECT * FROM 'DataSources::AnimationSet' WHERE RefId=?1"), true );
-    if ( !mLoadTargetData.isPrepared() )
+    if ( !mLoadTargetData.isPrepared( mWorld ) )
         mLoadTargetData.prepare( mWorld, _T("SELECT * FROM 'DataSources::AnimationSet::Targets' WHERE DataSourceId=?1"), true );
-    if ( !mLoadTargetControllers.isPrepared() )
+    if ( !mLoadTargetControllers.isPrepared( mWorld ) )
         mLoadTargetControllers.prepare( mWorld, _T("SELECT * FROM 'DataSources::AnimationSet::TargetControllers' WHERE TargetDataId=?1"), true );
 }
 
@@ -964,7 +964,7 @@ void cgAnimationSet::targetDataUpdated( bool recomputeRange )
                         const cgFloatCurveAnimationChannel * pChannel = &((cgPositionXYZTargetController*)pController)->getAnimationChannel(0);
                         if ( pChannel )
                         {
-                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getPoints();
                             if ( !Keys.empty() )
                             {
                                 cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
@@ -982,7 +982,7 @@ void cgAnimationSet::targetDataUpdated( bool recomputeRange )
                         pChannel = &((cgPositionXYZTargetController*)pController)->getAnimationChannel(1);
                         if ( pChannel )
                         {
-                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getPoints();
                             if ( !Keys.empty() )
                             {
                                 cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
@@ -1000,7 +1000,7 @@ void cgAnimationSet::targetDataUpdated( bool recomputeRange )
                         pChannel = &((cgPositionXYZTargetController*)pController)->getAnimationChannel(2);
                         if ( pChannel )
                         {
-                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getPoints();
                             if ( !Keys.empty() )
                             {
                                 cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
@@ -1054,7 +1054,7 @@ void cgAnimationSet::targetDataUpdated( bool recomputeRange )
                         const cgFloatCurveAnimationChannel * pChannel = &((cgEulerAnglesTargetController*)pController)->getAnimationChannel(0);
                         if ( pChannel )
                         {
-                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getPoints();
                             if ( !Keys.empty() )
                             {
                                 cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
@@ -1072,7 +1072,7 @@ void cgAnimationSet::targetDataUpdated( bool recomputeRange )
                         pChannel = &((cgEulerAnglesTargetController*)pController)->getAnimationChannel(1);
                         if ( pChannel )
                         {
-                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getPoints();
                             if ( !Keys.empty() )
                             {
                                 cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
@@ -1090,7 +1090,7 @@ void cgAnimationSet::targetDataUpdated( bool recomputeRange )
                         pChannel = &((cgEulerAnglesTargetController*)pController)->getAnimationChannel(2);
                         if ( pChannel )
                         {
-                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getPoints();
                             if ( !Keys.empty() )
                             {
                                 cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
@@ -1123,7 +1123,7 @@ void cgAnimationSet::targetDataUpdated( bool recomputeRange )
                         const cgFloatCurveAnimationChannel * pChannel = &((cgScaleXYZTargetController*)pController)->getAnimationChannel(0);
                         if ( pChannel )
                         {
-                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getPoints();
                             if ( !Keys.empty() )
                             {
                                 cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
@@ -1141,7 +1141,7 @@ void cgAnimationSet::targetDataUpdated( bool recomputeRange )
                         pChannel = &((cgScaleXYZTargetController*)pController)->getAnimationChannel(1);
                         if ( pChannel )
                         {
-                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getPoints();
                             if ( !Keys.empty() )
                             {
                                 cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
@@ -1159,7 +1159,7 @@ void cgAnimationSet::targetDataUpdated( bool recomputeRange )
                         pChannel = &((cgScaleXYZTargetController*)pController)->getAnimationChannel(2);
                         if ( pChannel )
                         {
-                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getPoints();
                             if ( !Keys.empty() )
                             {
                                 cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );
@@ -1180,7 +1180,7 @@ void cgAnimationSet::targetDataUpdated( bool recomputeRange )
                         const cgFloatCurveAnimationChannel * pChannel = &((cgUniformScaleTargetController*)pController)->getAnimationChannel();
                         if ( pChannel )
                         {
-                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getSplinePoints();
+                            const cgBezierSpline2::SplinePointArray & Keys = pChannel->data.getPoints();
                             if ( !Keys.empty() )
                             {
                                 cgInt nFirst = cgAnimationChannel::integerFrameIndex( Keys.front().point.x );

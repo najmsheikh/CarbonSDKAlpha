@@ -311,21 +311,21 @@ void cgBSPVisTreeElement::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertCompileParams.isPrepared() )
+        if ( !mInsertCompileParams.isPrepared( mWorld ) )
             mInsertCompileParams.prepare( mWorld, _T("INSERT INTO 'SceneElements::BSPVisTree' VALUES(?1,?2,?3,?4,?5)"), true );
-        if ( !mInsertGeometryRef.isPrepared() )
+        if ( !mInsertGeometryRef.isPrepared( mWorld ) )
             mInsertGeometryRef.prepare( mWorld, _T("INSERT INTO 'SceneElements::BSPVisTree::Occluders' VALUES(NULL,?1,?2)"), true );
-        if ( !mClearGeometryRefs.isPrepared() )
+        if ( !mClearGeometryRefs.isPrepared( mWorld ) )
             mClearGeometryRefs.prepare( mWorld, _T("DELETE FROM 'SceneElements::BSPVisTree::Occluders' WHERE ElementId=?1"), true );
-        //if ( !mUpdateCompileParams.isPrepared() )
+        //if ( !mUpdateCompileParams.isPrepared( mWorld ) )
             //mUpdateCompileParams.prepare( mWorld, _T("UPDATE 'SceneElements::BSPVisTree' SET OccluderGeometryId=?1 WHERE RefId=?2"), true );
 
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadCompileParams.isPrepared() )
+    if ( !mLoadCompileParams.isPrepared( mWorld ) )
         mLoadCompileParams.prepare( mWorld, _T("SELECT * FROM 'SceneElements::BSPVisTree' WHERE RefId=?1"), true );
-    if ( !mLoadGeometryRefs.isPrepared() )
+    if ( !mLoadGeometryRefs.isPrepared( mWorld ) )
         mLoadGeometryRefs.prepare( mWorld, _T("SELECT * FROM 'SceneElements::BSPVisTree::Occluders' WHERE ElementId=?1"), true );
 }
 

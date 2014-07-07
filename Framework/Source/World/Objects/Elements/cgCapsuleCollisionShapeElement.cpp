@@ -261,13 +261,13 @@ void cgCapsuleCollisionShapeElement::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertCapsuleCollisionShape.isPrepared() == false )
+        if ( !mInsertCapsuleCollisionShape.isPrepared( mWorld ) )
             mInsertCapsuleCollisionShape.prepare( mWorld, _T("INSERT INTO 'ObjectSubElements::CapsuleCollisionShape' VALUES(?1,?2)"), true );
         
     } // End if sandcapsule
 
     // Read queries
-    if ( mLoadCapsuleCollisionShape.isPrepared() == false )
+    if ( !mLoadCapsuleCollisionShape.isPrepared( mWorld ) )
         mLoadCapsuleCollisionShape.prepare( mWorld, _T("SELECT * FROM 'ObjectSubElements::CapsuleCollisionShape' WHERE RefId=?1"), true );
 }
 

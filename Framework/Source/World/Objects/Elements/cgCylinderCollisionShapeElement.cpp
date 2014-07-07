@@ -260,13 +260,13 @@ void cgCylinderCollisionShapeElement::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertCylinderCollisionShape.isPrepared() == false )
+        if ( !mInsertCylinderCollisionShape.isPrepared( mWorld ) )
             mInsertCylinderCollisionShape.prepare( mWorld, _T("INSERT INTO 'ObjectSubElements::CylinderCollisionShape' VALUES(?1,?2)"), true );
         
     } // End if sandcylinder
 
     // Read queries
-    if ( mLoadCylinderCollisionShape.isPrepared() == false )
+    if ( !mLoadCylinderCollisionShape.isPrepared( mWorld ) )
         mLoadCylinderCollisionShape.prepare( mWorld, _T("SELECT * FROM 'ObjectSubElements::CylinderCollisionShape' WHERE RefId=?1"), true );
 }
 

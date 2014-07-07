@@ -2,6 +2,7 @@
 
 // Required headers
 #include <Scripting/cgScriptPackage.h>
+#include <System/cgUID.h>
 
 // Parent hierarchy
 namespace cgScriptPackages { namespace Core { namespace System {
@@ -29,6 +30,9 @@ namespace UID
             BINDSUCCESS( engine->registerObjectProperty( "UID", "uint16 data2", offsetof(cgUID,data2) ) );
             BINDSUCCESS( engine->registerObjectProperty( "UID", "uint16 data3", offsetof(cgUID,data3) ) );
             BINDSUCCESS( engine->registerObjectProperty( "UID", "uint64 data4", offsetof(cgUID,data4) ) );
+
+            // Global functions
+            BINDSUCCESS( engine->registerGlobalFunction( "UID generateRandomUID()", asFUNCTION(cgUID::generateRandom), asCALL_CDECL ) );
         }
 
     }; // End Class : Package

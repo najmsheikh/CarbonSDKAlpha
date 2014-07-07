@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.18</span>
    </div>
   </td>
  </tr>
@@ -170,12 +170,18 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a554706e85ea585bcec8be098124dbcff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecf85dda6a08b67bc724d8c1d9226b96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#aecf85dda6a08b67bc724d8c1d9226b96">calculateLOD</a> (<a class="el" href="classcg_camera_node.html">cgCameraNode</a> *camera, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> terrainDetail, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> detailLevelAdjust)</td></tr>
 <tr class="separator:aecf85dda6a08b67bc724d8c1d9226b96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a066da455787e1b61d116321fb017d6d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_landscape.html">cgLandscape</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#a066da455787e1b61d116321fb017d6d8">getLandscape</a> ()</td></tr>
+<tr class="memdesc:a066da455787e1b61d116321fb017d6d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the parent landscape that owns this terrain block.  <a href="#a066da455787e1b61d116321fb017d6d8"></a><br/></td></tr>
+<tr class="separator:a066da455787e1b61d116321fb017d6d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad765e7d70839ad43a38ffa72af67414a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_vector3.html">cgVector3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#ad765e7d70839ad43a38ffa72af67414a">getHeightMapNormal</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> x, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> z) const </td></tr>
 <tr class="memdesc:ad765e7d70839ad43a38ffa72af67414a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the normal at this position in the heightmap.  <a href="#ad765e7d70839ad43a38ffa72af67414a"></a><br/></td></tr>
 <tr class="separator:ad765e7d70839ad43a38ffa72af67414a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58b00d3c74051ba08f95b2733ed5ac0b"><td class="memItemLeft" align="right" valign="top">short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#a58b00d3c74051ba08f95b2733ed5ac0b">getHeightMapHeight</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> x, <a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> z) const </td></tr>
 <tr class="memdesc:a58b00d3c74051ba08f95b2733ed5ac0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the height of the heightmap at the specified location. Note : The coordinates specified are relative to the overall heightmap i.e. not to the section of heightmap stored locally  <a href="#a58b00d3c74051ba08f95b2733ed5ac0b"></a><br/></td></tr>
 <tr class="separator:a58b00d3c74051ba08f95b2733ed5ac0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8de0df480033ce0ae78fb149065ddb4e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_point.html">cgPoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#a8de0df480033ce0ae78fb149065ddb4e">getHeightMapOffset</a> () const </td></tr>
+<tr class="memdesc:a8de0df480033ce0ae78fb149065ddb4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the x &amp; y offset, within the overall heightmap, that represents the vertex in the top left corner of this terrain block.  <a href="#a8de0df480033ce0ae78fb149065ddb4e"></a><br/></td></tr>
+<tr class="separator:a8de0df480033ce0ae78fb149065ddb4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33c3f3c9baff647eab37a833f49077b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_terrain_block.html#a33c3f3c9baff647eab37a833f49077b3">getTerrainHeight</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> x, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> z) const </td></tr>
 <tr class="memdesc:a33c3f3c9baff647eab37a833f49077b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the height of the terrain at the specified location.  <a href="#a33c3f3c9baff647eab37a833f49077b3"></a><br/></td></tr>
 <tr class="separator:a33c3f3c9baff647eab37a833f49077b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -803,6 +809,40 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Retrieves the normal at this position in the heightmap. </p>
+
+</div>
+</div>
+<a class="anchor" id="a8de0df480033ce0ae78fb149065ddb4e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcg_point.html">cgPoint</a> cgTerrainBlock::getHeightMapOffset </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the x &amp; y offset, within the overall heightmap, that represents the vertex in the top left corner of this terrain block. </p>
+
+</div>
+</div>
+<a class="anchor" id="a066da455787e1b61d116321fb017d6d8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcg_landscape.html">cgLandscape</a> * cgTerrainBlock::getLandscape </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the parent landscape that owns this terrain block. </p>
 
 </div>
 </div>
@@ -1599,7 +1639,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_terrain_block.html">cgTerrainBlock</a></li>
-    <li class="footer">Generated on Wed May 21 2014 19:31:45 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon Jul 7 2014 04:51:40 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

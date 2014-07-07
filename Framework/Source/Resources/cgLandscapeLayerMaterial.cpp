@@ -236,31 +236,31 @@ void cgLandscapeLayerMaterial::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertMaterial.isPrepared() == false )
+        if ( !mInsertMaterial.isPrepared( mWorld ) )
             mInsertMaterial.prepare( mWorld, _T("INSERT INTO 'Materials::LandscapeLayer' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15)"), true );  
-        if ( mUpdateName.isPrepared() == false )
+        if ( !mUpdateName.isPrepared( mWorld ) )
             mUpdateName.prepare( mWorld, _T("UPDATE 'Materials::LandscapeLayer' SET Name=?1 WHERE RefId=?2"), true );  
-        if ( mUpdateSamplers.isPrepared() == false )
+        if ( !mUpdateSamplers.isPrepared( mWorld ) )
             mUpdateSamplers.prepare( mWorld, _T("UPDATE 'Materials::LandscapeLayer' SET ColorSamplerId=?1, NormalSamplerId=?2 WHERE RefId=?3"), true );  
-        if ( mUpdateBaseScale.isPrepared() == false )
+        if ( !mUpdateBaseScale.isPrepared( mWorld ) )
             mUpdateBaseScale.prepare( mWorld, _T("UPDATE 'Materials::LandscapeLayer' SET BaseScaleU=?1, BaseScaleV=?2 WHERE RefId=?3"), true );  
-        if ( mUpdateScale.isPrepared() == false )
+        if ( !mUpdateScale.isPrepared( mWorld ) )
             mUpdateScale.prepare( mWorld, _T("UPDATE 'Materials::LandscapeLayer' SET ScaleU=?1, ScaleV=?2 WHERE RefId=?3"), true );  
-        if ( mUpdateOffset.isPrepared() == false )
+        if ( !mUpdateOffset.isPrepared( mWorld ) )
             mUpdateOffset.prepare( mWorld, _T("UPDATE 'Materials::LandscapeLayer' SET OffsetU=?1, OffsetV=?2 WHERE RefId=?3"), true );  
-        if ( mUpdateAngle.isPrepared() == false )
+        if ( !mUpdateAngle.isPrepared( mWorld ) )
             mUpdateAngle.prepare( mWorld, _T("UPDATE 'Materials::LandscapeLayer' SET Rotation=?1 WHERE RefId=?2"), true );  
-        if ( mUpdateTilingReduction.isPrepared() == false )
+        if ( !mUpdateTilingReduction.isPrepared( mWorld ) )
             mUpdateTilingReduction.prepare( mWorld, _T("UPDATE 'Materials::LandscapeLayer' SET TilingReduction=?1 WHERE RefId=?2"), true );  
-        if ( mUpdateClutter.isPrepared() == false )
+        if ( !mUpdateClutter.isPrepared( mWorld ) )
             mUpdateClutter.prepare( mWorld, _T("UPDATE 'Materials::LandscapeLayer' SET AssociatedClutterId=?1 WHERE RefId=?2"), true );  
-        if ( mUpdatePreview.isPrepared() == false )
+        if ( !mUpdatePreview.isPrepared( mWorld ) )
             mUpdatePreview.prepare( mWorld, _T("UPDATE 'Materials::LandscapeLayer' SET PreviewImage=?1 WHERE RefId=?2"), true ); 
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadMaterial.isPrepared() == false )
+    if ( !mLoadMaterial.isPrepared( mWorld ) )
         mLoadMaterial.prepare( mWorld, _T("SELECT * FROM 'Materials::LandscapeLayer' WHERE RefId=?1"), true );
 }
 

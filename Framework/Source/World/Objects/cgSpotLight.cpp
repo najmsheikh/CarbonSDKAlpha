@@ -1039,21 +1039,21 @@ void cgSpotLightObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertSpotLight.isPrepared() )
+        if ( !mInsertSpotLight.isPrepared( mWorld ) )
             mInsertSpotLight.prepare( mWorld, _T("INSERT INTO 'Objects::SpotLight' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11)"), true );
-        if ( !mUpdateRanges.isPrepared() )
+        if ( !mUpdateRanges.isPrepared( mWorld ) )
             mUpdateRanges.prepare( mWorld, _T("UPDATE 'Objects::SpotLight' SET OuterRange=?1, InnerRange=?2 WHERE RefId=?3"), true );
-        if ( !mUpdateConeAngles.isPrepared() )
+        if ( !mUpdateConeAngles.isPrepared( mWorld ) )
             mUpdateConeAngles.prepare( mWorld, _T("UPDATE 'Objects::SpotLight' SET OuterCone=?1, InnerCone=?2 WHERE RefId=?3"), true );
-        if ( !mUpdateFalloff.isPrepared() )
+        if ( !mUpdateFalloff.isPrepared( mWorld ) )
             mUpdateFalloff.prepare( mWorld, _T("UPDATE 'Objects::SpotLight' SET Falloff=?1 WHERE RefId=?2"), true );
-        if ( !mUpdateShadowRate.isPrepared() )
+        if ( !mUpdateShadowRate.isPrepared( mWorld ) )
             mUpdateShadowRate.prepare( mWorld, _T("UPDATE 'Objects::SpotLight' SET ShadowUpdateRate=?1 WHERE RefId=?2"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadSpotLight.isPrepared() )
+    if ( !mLoadSpotLight.isPrepared( mWorld ) )
         mLoadSpotLight.prepare( mWorld, _T("SELECT * FROM 'Objects::SpotLight' WHERE RefId=?1"), true );
 }
 

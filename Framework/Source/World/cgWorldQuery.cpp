@@ -271,7 +271,7 @@ void cgWorldQuery::unprepare( )
         mWorld->unregisterEventListener( this );
 
     // Clear any prepared statements.
-    if ( mStatements != NULL )
+    if ( mStatements )
     {
         for ( int i = 0; i < mStatementCount; ++i )
         {
@@ -289,8 +289,8 @@ void cgWorldQuery::unprepare( )
     // Clear variables
     mWorld            = CG_NULL;
     mDatabase         = CG_NULL;
-    mStatements      = CG_NULL;
-    mStatementCount       = 0;
+    mStatements       = CG_NULL;
+    mStatementCount   = 0;
     mCurrentStatement = -1;
     mHasResults       = false;
     mFirstRowCached   = false;
@@ -1229,7 +1229,7 @@ bool cgWorldQuery::hasResults( ) const
 //-----------------------------------------------------------------------------
 cgInt32 cgWorldQuery::getLastInsertId( ) const
 {
-    if ( mDatabase == NULL )
+    if ( !mDatabase )
         return 0;
     return (cgInt32)sqlite3_last_insert_rowid(mDatabase);
 }
@@ -1238,14 +1238,25 @@ cgInt32 cgWorldQuery::getLastInsertId( ) const
 //  Name : isPrepared ()
 /// <summary>
 /// Has the query been prepared (may become unprepared automatically if 
-/// the parent world object to which this is attached gets disposed.
+/// the parent world object to which this is attached gets disposed).
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgWorldQuery::isPrepared( cgWorld * world ) const
+{
+    return ( mDatabase ) && ( mWorld == world );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : isPrepared ()
+/// <summary>
+/// Has the query been prepared (may become unprepared automatically if 
+/// the parent world object to which this is attached gets disposed).
 /// </summary>
 //-----------------------------------------------------------------------------
 bool cgWorldQuery::isPrepared( ) const
 {
-    return ( mDatabase != NULL );
+    return ( mDatabase != CG_NULL );
 }
-
 
 //-----------------------------------------------------------------------------
 //  Name : getWorld( )

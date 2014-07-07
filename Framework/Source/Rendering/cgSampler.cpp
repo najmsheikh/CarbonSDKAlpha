@@ -1594,26 +1594,26 @@ void cgSampler::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertSampler.isPrepared() == false )
+        if ( !mInsertSampler.isPrepared( mWorld ) )
             mInsertSampler.prepare( mWorld, _T("INSERT INTO 'Samplers' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20)"), true ); 
-        if ( mUpdateTexture.isPrepared() == false )
+        if ( !mUpdateTexture.isPrepared( mWorld ) )
             mUpdateTexture.prepare( mWorld, _T("UPDATE 'Samplers' SET Filename=?1 WHERE RefId=?2"), true );
-        if ( mUpdateAddressModes.isPrepared() == false )
+        if ( !mUpdateAddressModes.isPrepared( mWorld ) )
             mUpdateAddressModes.prepare( mWorld, _T("UPDATE 'Samplers' SET AddressU=?1,AddressV=?2,AddressW=?3 WHERE RefId=?4"), true );
-        if ( mUpdateFilterMethods.isPrepared() == false )
+        if ( !mUpdateFilterMethods.isPrepared( mWorld ) )
             mUpdateFilterMethods.prepare( mWorld, _T("UPDATE 'Samplers' SET MinFilter=?1,MagFilter=?2,MipFilter=?3 WHERE RefId=?4"), true );
-        if ( mUpdateLODDetails.isPrepared() == false )
+        if ( !mUpdateLODDetails.isPrepared( mWorld ) )
             mUpdateLODDetails.prepare( mWorld, _T("UPDATE 'Samplers' SET MipLODBias=?1,MinLOD=?2,MaxLOD=?3 WHERE RefId=?4"), true );
-        if ( mUpdateMaxAnisotropy.isPrepared() == false )
+        if ( !mUpdateMaxAnisotropy.isPrepared( mWorld ) )
             mUpdateMaxAnisotropy.prepare( mWorld, _T("UPDATE 'Samplers' SET MaxAnisotropy=?1 WHERE RefId=?2"), true );
-        if ( mUpdateBorderColor.isPrepared() == false )
+        if ( !mUpdateBorderColor.isPrepared( mWorld ) )
             mUpdateBorderColor.prepare( mWorld, _T("UPDATE 'Samplers' SET BorderColorR=?1,BorderColorG=?2,BorderColorB=?3,BorderColorA=?4 WHERE RefId=?5"), true );
-        if ( mUpdateStrength.isPrepared() == false )
+        if ( !mUpdateStrength.isPrepared( mWorld ) )
             mUpdateStrength.prepare( mWorld, _T("UPDATE 'Samplers' SET Strength=?1 WHERE RefId=?2"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadSampler.isPrepared() == false )
+    if ( !mLoadSampler.isPrepared( mWorld ) )
         mLoadSampler.prepare( mWorld, _T("SELECT * FROM 'Samplers' WHERE RefId=?1"), true );
 }

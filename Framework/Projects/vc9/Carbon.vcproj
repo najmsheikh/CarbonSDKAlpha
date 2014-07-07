@@ -1432,6 +1432,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\Source\World\Objects\cgProceduralTreeObject.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\Source\World\Objects\cgSkinObject.cpp"
 						>
 					</File>
@@ -5521,6 +5525,18 @@
 					</File>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="Tools"
+				>
+				<Filter
+					Name="Generators"
+					>
+					<File
+						RelativePath="..\..\Source\Tools\Generators\cgProceduralTreeGenerator.cpp"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -6155,6 +6171,10 @@
 					</File>
 					<File
 						RelativePath="..\..\Include\World\Objects\cgParticleEmitterObject.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Include\World\Objects\cgProceduralTreeObject.h"
 						>
 					</File>
 					<File
@@ -7514,6 +7534,18 @@
 					RelativePath="..\..\Include\Navigation\cgNavigationTypes.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="Tools"
+				>
+				<Filter
+					Name="Generators"
+					>
+					<File
+						RelativePath="..\..\Include\Tools\Generators\cgProceduralTreeGenerator.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter

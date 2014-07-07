@@ -201,7 +201,8 @@ CREATE TABLE [Configuration] (
   [Version] smallint DEFAULT 1,
   [Subversion] smallint DEFAULT 0,
   [Revision] integer DEFAULT 0,
-  [NextRefId] integer DEFAULT 1);
+  [NextRefId] integer DEFAULT 1,
+  [Identifier] varchar(255));
 
 --Table: Configuration::MaterialProperties
 

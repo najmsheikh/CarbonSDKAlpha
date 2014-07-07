@@ -148,7 +148,7 @@ struct cgSandboxModeChangeEventArgs
 bool                CGE_API   cgEngineInit         ( const CGEConfig & config, cgLogOutput * logOutput = CG_NULL );
 void                CGE_API   cgEngineCleanup      ( );
 void                CGE_API   cgEngineYield        ( );
-void                CGE_API   cgFPUDoublePrecision ( );
+bool                CGE_API   cgFPUDoublePrecision ( );
 void                CGE_API   cgFPURestorePrecision( );
 bool                CGE_API   cgSetSandboxMode     ( cgSandboxMode::Base mode );
 bool                CGE_API   cgSetSandboxMode     ( cgSandboxMode::Base mode, bool sendMessage );

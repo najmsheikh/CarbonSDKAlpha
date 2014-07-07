@@ -786,6 +786,7 @@
     <ClCompile Include="..\..\Source\Resources\cgStandardMaterial.cpp" />
     <ClCompile Include="..\..\Source\System\cgCursor.cpp" />
     <ClCompile Include="..\..\Source\System\Platform\cgWinCursor.cpp" />
+    <ClCompile Include="..\..\Source\Tools\Generators\cgProceduralTreeGenerator.cpp" />
     <ClCompile Include="..\..\Source\World\cgBSPVisTree.cpp" />
     <ClCompile Include="..\..\Source\World\cgLandscape.cpp" />
     <ClCompile Include="..\..\Source\World\cgObjectBehavior.cpp" />
@@ -819,6 +820,7 @@
     <ClCompile Include="..\..\Source\World\Objects\cgNavigationPatrolPoint.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgNavigationWaypoint.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgParticleEmitterObject.cpp" />
+    <ClCompile Include="..\..\Source\World\Objects\cgProceduralTreeObject.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgSkinObject.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgSoundEmitterObject.cpp" />
     <ClCompile Include="..\..\Source\World\Objects\cgSplineObject.cpp" />
@@ -1474,6 +1476,7 @@
     <ClInclude Include="..\..\Include\Scripting\Packages\Core\World\Objects\Navigation\NavigationWaypoint.h" />
     <ClInclude Include="..\..\Include\System\cgCursor.h" />
     <ClInclude Include="..\..\Include\System\Platform\cgWinCursor.h" />
+    <ClInclude Include="..\..\Include\Tools\Generators\cgProceduralTreeGenerator.h" />
     <ClInclude Include="..\..\Include\World\cgBSPVisTree.h" />
     <ClInclude Include="..\..\Include\World\cgOctree.h" />
     <ClInclude Include="..\..\Include\World\cgSceneElement.h" />
@@ -1485,6 +1488,7 @@
     <ClInclude Include="..\..\Include\World\Objects\cgBillboardObject.h" />
     <ClInclude Include="..\..\Include\World\Objects\cgNavigationPatrolPoint.h" />
     <ClInclude Include="..\..\Include\World\Objects\cgNavigationWaypoint.h" />
+    <ClInclude Include="..\..\Include\World\Objects\cgProceduralTreeObject.h" />
     <ClInclude Include="..\..\Lib\AngelScript-JIT\as_jit.h" />
     <ClInclude Include="..\..\Lib\AngelScript-JIT\virtual_asm.h" />
     <ClInclude Include="..\..\Lib\AngelScript\include\angelscript.h" />

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.18</span>
    </div>
   </td>
  </tr>
@@ -116,11 +116,11 @@ $(document).ready(function(){initNavTree('classcg_bezier_spline3.html','');});
   <tr class="even"><td class="entry"><a class="el" href="classcg_bezier_spline3.html#a5540383c6410ba1485078f9ee058a033">clear</a>()</td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_bezier_spline3.html#a58e5350c1e444e188a6d119304b2d2a2">evaluate</a>(cgFloat t)</td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_bezier_spline3.html#a1a758e3dff816a08e8aa69a8e003a5e7">evaluateSegment</a>(cgInt32 segment, cgFloat t)</td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_bezier_spline3.html#a850368c813a5607b2fa28d1cc68229e0">getPoint</a>(cgInt32 index) const </td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_bezier_spline3.html#a66ef6311c54bf4ad06f8f7d3b7802899">getPoint</a>(cgInt32 index)</td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_bezier_spline3.html#af26d8df04aa95d76fadd70cae448f6f9">getPointCount</a>() const </td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classcg_bezier_spline3.html#aebb654b95f1e50c31e04b89844202c88">getSegmentCount</a>() const </td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_bezier_spline3.html#ae21c3c88944984b272b04e3a5d337978">getSplinePoint</a>(cgInt32 index) const </td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classcg_bezier_spline3.html#a93cb1a1aef8d5b5d5a30c58812ab0e38">getSplinePoint</a>(cgInt32 index)</td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classcg_bezier_spline3.html#a9636844ca8ca83c33739e621051a32ce">getSplinePoints</a>() const </td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_bezier_spline3.html#add0ede73dde98dbbf073d7cc3b16b578">getPoints</a>() const </td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classcg_bezier_spline3.html#aebb654b95f1e50c31e04b89844202c88">getSegmentCount</a>() const </td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_bezier_spline3.html#abb006f01205d18c17c055a61233767b9">insertPoint</a>(cgInt32 insertAt, const SplinePoint &amp;pt)</td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_bezier_spline3.html#a1b4b6bce3fce9338947cb1633495363f">mLength</a></td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_bezier_spline3.html#a882236069ebe270f03ddab8f0c43f97e">mPointDist</a></td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
@@ -129,7 +129,7 @@ $(document).ready(function(){initNavTree('classcg_bezier_spline3.html','');});
   <tr><td class="entry"><a class="el" href="classcg_bezier_spline3.html#af9b740088a437fc2173c0a0a73d5ed8e">operator=</a>(const cgBezierSpline3 &amp;spline)</td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_bezier_spline3.html#a1247f7f01aed781a8fabe33acd4f4147">operator==</a>(const cgBezierSpline3 &amp;spline) const </td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_bezier_spline3.html#a37290d14be3c4b4cf2cc378dfbd74100">removePoint</a>(cgInt32 index)</td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classcg_bezier_spline3.html#a18e61542e74b6acfdc0b7e626d1d66c7">setSplinePoint</a>(cgInt32 index, const SplinePoint &amp;pt)</td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcg_bezier_spline3.html#a64e4f1b3aafbbf51dd94cc728fff4711">setPoint</a>(cgInt32 index, const SplinePoint &amp;pt)</td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcg_bezier_spline3.html#a17f0bb21f0c63ebeabc5d30d1ec0f0c8">updateSplineData</a>()</td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcg_bezier_spline3.html#ab48d13ffb4d0d1a247c38e0f6596db48">~cgBezierSpline3</a>()</td><td class="entry"><a class="el" href="classcg_bezier_spline3.html">cgBezierSpline3</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
@@ -137,7 +137,7 @@ $(document).ready(function(){initNavTree('classcg_bezier_spline3.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed May 21 2014 19:31:33 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon Jul 7 2014 04:51:27 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

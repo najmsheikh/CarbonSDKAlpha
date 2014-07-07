@@ -1,0 +1,35 @@
+// *************************************************************
+//  Master world database conversion from v1.0.7 to v1.0.8
+// *************************************************************
+#include "1.00.0008.dat"
+
+// *************************************************************
+//  Master world database conversion from v1.0.8 to v1.0.9
+// *************************************************************
+#include "1.00.0009.dat"
+
+// *************************************************************
+//  Master world database conversion from v1.0.9 to v1.0.10
+// *************************************************************
+#include "1.00.0010.dat"
+
+// *************************************************************
+//  Upgrade Stub
+// *************************************************************
+bool upgrade( World @ world, uint sourceVersion, uint destinationVersion )
+{
+    // Check supported versions
+    if ( sourceVersion != 0x1000007 || destinationVersion != 0x100000A ) // v1.00.0007 -> v1.00.0010
+        return false;
+		
+	// Upgrade to v1.00.0008
+    if ( !upgrade_1000007_to_1000008( world ) )
+        return false;
+        
+    // Upgrade to v1.00.0009
+    if ( !upgrade_1000008_to_1000009( world ) )
+        return false;
+
+    // Upgrade to v1.00.0010
+    return upgrade_1000009_to_1000010( world );
+}

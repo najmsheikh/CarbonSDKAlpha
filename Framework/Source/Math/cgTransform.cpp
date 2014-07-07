@@ -1025,7 +1025,8 @@ cgTransform & cgTransform::rotate( cgFloat x, cgFloat y, cgFloat z, const cgVect
         return *this;
 
     // Subtract rotation center.
-    position() -= RotationCenter;
+    cgVector3 c = RotationCenter;
+    position() -= c;
     
     // Rotate the transform
     cgMatrix mtxRot;
@@ -1033,7 +1034,7 @@ cgTransform & cgTransform::rotate( cgFloat x, cgFloat y, cgFloat z, const cgVect
     _m = _m * mtxRot;
 
     // Restore the position
-    position() += RotationCenter;
+    position() += c;
 
     // Make sure identity column remains pure.
     _m._14 = _m._24 = _m._34 = 0.0f;
@@ -1089,7 +1090,8 @@ cgTransform & cgTransform::rotateAxis( cgFloat a, const cgVector3 & v, const cgV
         return *this;
 
     // Subtract rotation center.
-    position() -= RotationCenter;
+    cgVector3 c = RotationCenter;
+    position() -= c;
     
     // Rotate the transform
     cgMatrix mtxRot;
@@ -1097,7 +1099,7 @@ cgTransform & cgTransform::rotateAxis( cgFloat a, const cgVector3 & v, const cgV
     _m = _m * mtxRot;
 
     // Restore the position
-    position() += RotationCenter;
+    position() += c;
 
     // Make sure identity column remains pure.
     _m._14 = _m._24 = _m._34 = 0.0f;
@@ -1176,8 +1178,8 @@ cgTransform & cgTransform::scaleLocal( cgFloat x, cgFloat y, cgFloat z, const cg
     if ( (vFinalLength.z <= MinAxisLength) && vCurrentLength.z )
         z = (z < 0) ? MinAxisLength / vCurrentLength.z : MinAxisLength / -vCurrentLength.z;
 
-    cgVector3 vOriginalCenter;
-    transformCoord( vOriginalCenter, localCenter );
+    cgVector3 vOriginalCenter, c = localCenter;
+    transformCoord( vOriginalCenter, c );
 
     // Apply scale
     cgMatrix mtxScale;
@@ -1186,7 +1188,7 @@ cgTransform & cgTransform::scaleLocal( cgFloat x, cgFloat y, cgFloat z, const cg
 
     // Compute new scaled center position.
     cgVector3 vScaledCenter;
-    transformCoord( vScaledCenter, localCenter );
+    transformCoord( vScaledCenter, c );
     
     // Reposition the object
     position() = position() - (vScaledCenter - vOriginalCenter);
@@ -1244,7 +1246,8 @@ cgTransform & cgTransform::scale( cgFloat x, cgFloat y, cgFloat z, const cgVecto
         return *this;
 
      // Subtract scaling center.
-    position() -= ScalingCenter;
+    cgVector3 c = ScalingCenter;
+    position() -= c;
     
     // Scale the transform
     cgMatrix mtxScale;
@@ -1252,7 +1255,7 @@ cgTransform & cgTransform::scale( cgFloat x, cgFloat y, cgFloat z, const cgVecto
     _m = _m * mtxScale;
 
     // Restore the position
-    position() += ScalingCenter;
+    position() += c;
 
     // Make sure identity column remains pure.
     _m._14 = _m._24 = _m._34 = 0.0f;

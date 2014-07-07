@@ -433,43 +433,43 @@ void cgMesh::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertMesh.isPrepared() )
+        if ( !mInsertMesh.isPrepared( mWorld ) )
             mInsertMesh.prepare( mWorld, _T("INSERT INTO 'DataSources::Mesh' VALUES(?1,?2,?3,?4,?5,?6)"), true );
-        if ( !mDeleteSubsets.isPrepared() )
+        if ( !mDeleteSubsets.isPrepared( mWorld ) )
             mDeleteSubsets.prepare( mWorld, _T("DELETE FROM 'DataSources::Mesh::Subsets' WHERE DataSourceId=?1"), true );
-        if ( !mInsertSubset.isPrepared() )
+        if ( !mInsertSubset.isPrepared( mWorld ) )
             mInsertSubset.prepare( mWorld, _T("INSERT INTO 'DataSources::Mesh::Subsets' VALUES(NULL,?1,?2,?3,?4,?5,?6,?7)"), true );
-        if ( !mUpdateIndices.isPrepared() )
+        if ( !mUpdateIndices.isPrepared( mWorld ) )
             mUpdateIndices.prepare( mWorld, _T("UPDATE 'DataSources::Mesh' SET IndexCount=?1,Indices=?2 WHERE RefId=?3"), true );
-        if ( !mUpdateVertexFormat.isPrepared() )
+        if ( !mUpdateVertexFormat.isPrepared( mWorld ) )
             mUpdateVertexFormat.prepare( mWorld, _T("UPDATE 'DataSources::Mesh' SET Declaration=?1 WHERE RefId=?2"), true );
-        if ( !mDeleteStreams.isPrepared() )
+        if ( !mDeleteStreams.isPrepared( mWorld ) )
             mDeleteStreams.prepare( mWorld, _T("DELETE FROM 'DataSources::Mesh::Streams' WHERE DataSourceId=?1"), true );
-        if ( !mInsertStream.isPrepared() )
+        if ( !mInsertStream.isPrepared( mWorld ) )
             mInsertStream.prepare( mWorld, _T("INSERT INTO 'DataSources::Mesh::Streams' VALUES(NULL,?1,?2,?3,?4,?5)"), true );
-        if ( !mUpdateStream.isPrepared() )
+        if ( !mUpdateStream.isPrepared( mWorld ) )
             mUpdateStream.prepare( mWorld, _T("UPDATE 'DataSources::Mesh::Streams' SET EntryCount=?1,EntryStride=?2,StreamData=?3 WHERE StreamId=?4"), true );
-        if ( !mDeleteSkinBindData.isPrepared() )
+        if ( !mDeleteSkinBindData.isPrepared( mWorld ) )
             mDeleteSkinBindData.prepare( mWorld, _T("DELETE FROM 'DataSources::Mesh::SkinBindData' WHERE DataSourceId=?1"), true );
-        if ( !mInsertSkinInfluence.isPrepared() )
+        if ( !mInsertSkinInfluence.isPrepared( mWorld ) )
             mInsertSkinInfluence.prepare( mWorld, _T("INSERT INTO 'DataSources::Mesh::SkinBindData' VALUES(NULL,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15)"), true );
-        if ( !mDeleteBonePalettes.isPrepared() )
+        if ( !mDeleteBonePalettes.isPrepared( mWorld ) )
             mDeleteBonePalettes.prepare( mWorld, _T("DELETE FROM 'DataSources::Mesh::BonePalettes' WHERE DataSourceId=?1"), true );
-        if ( !mInsertBonePalette.isPrepared() )
+        if ( !mInsertBonePalette.isPrepared( mWorld ) )
             mInsertBonePalette.prepare( mWorld, _T("INSERT INTO 'DataSources::Mesh::BonePalettes' VALUES(NULL,?1,?2,?3,?4,?5,?6,?7)"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadMesh.isPrepared() )
+    if ( !mLoadMesh.isPrepared( mWorld ) )
         mLoadMesh.prepare( mWorld, _T("SELECT * FROM 'DataSources::Mesh' WHERE RefId=?1"), true );
-    if ( !mLoadSubsets.isPrepared() )
+    if ( !mLoadSubsets.isPrepared( mWorld ) )
         mLoadSubsets.prepare( mWorld, _T("SELECT * FROM 'DataSources::Mesh::Subsets' WHERE DataSourceId=?1"), true );
-    if ( !mLoadStreams.isPrepared() )
+    if ( !mLoadStreams.isPrepared( mWorld ) )
         mLoadStreams.prepare( mWorld, _T("SELECT * FROM 'DataSources::Mesh::Streams' WHERE DataSourceId=?1 AND StreamIndex=0"), true );
-    if ( !mLoadSkinBindData.isPrepared() )
+    if ( !mLoadSkinBindData.isPrepared( mWorld ) )
         mLoadSkinBindData.prepare( mWorld, _T("SELECT * FROM 'DataSources::Mesh::SkinBindData' WHERE DataSourceId=?1"), true );
-    if ( !mLoadBonePalettes.isPrepared() )
+    if ( !mLoadBonePalettes.isPrepared( mWorld ) )
         mLoadBonePalettes.prepare( mWorld, _T("SELECT * FROM 'DataSources::Mesh::BonePalettes' WHERE DataSourceId=?1"), true );
 }
 
@@ -2136,8 +2136,26 @@ bool cgMesh::prepareMesh( cgVertexFormat * pVertexFormat, void * pVertices, cgUI
 
     // Populate preparation structures.
     mPrepareData.triangleCount = (cgUInt32)Faces.size();
-    mPrepareData.triangleData   = Faces;
+    mPrepareData.triangleData  = Faces;
     mPrepareData.vertexCount   = nVertexCount;
+
+    // Assign default materials as necessary.
+    if ( mPrepareData.triangleCount )
+    {
+        Triangle * pTri = &mPrepareData.triangleData.front();
+        for ( cgUInt32 i = 0; i < mPrepareData.triangleCount; ++i, ++pTri )
+        {
+            if ( !pTri->material.isValid() )
+            {
+                if ( !mDefaultMaterial.isValid() )
+                    generateDefaultMaterial( );
+                pTri->material = mDefaultMaterial;
+            
+            } // End if invalid
+        
+        } // Next triangle
+    
+    } // End if has tris
 
     // Copy vertex data.
     mPrepareData.vertexData.resize( nVertexCount * pVertexFormat->getStride() );
@@ -4182,6 +4200,23 @@ bool cgMesh::endPrepare( bool bHardwareCopy /* = true */, bool bWeld /* = true *
     // Clear out old data that is no longer necessary in order to preserve memory
     setVertexSource( CG_NULL, 0, CG_NULL );
 
+    // Scan the preparation data for degenerate triangles.
+    cgInt nPositionOffset = mVertexFormat->getElementOffset( D3DDECLUSAGE_POSITION );
+    cgInt nVertexStride   = (cgInt)mVertexFormat->getStride();
+    cgByte * pSrcVertices = &mPrepareData.vertexData[0] + nPositionOffset;
+    for ( cgUInt32 i = 0; i < mPrepareData.triangleCount; ++i )
+    {
+        Triangle & Tri = mPrepareData.triangleData[i];
+        const cgVector3 & v1 = *(cgVector3*)(pSrcVertices + (Tri.indices[0] * nVertexStride));
+        const cgVector3 & v2 = *(cgVector3*)(pSrcVertices + (Tri.indices[1] * nVertexStride));
+        const cgVector3 & v3 = *(cgVector3*)(pSrcVertices + (Tri.indices[2] * nVertexStride));
+
+        cgVector3 c;
+        if ( cgVector3::lengthSq(*cgVector3::cross( c, v2 - v1, v3 - v1 )) < (4.0f * CGE_EPSILON_1UM * CGE_EPSILON_1UM) )
+            Tri.flags |= cgTriangleFlags::Degenerate;
+
+    } // Next triangle
+
     // Process the vertex data in order to generate any additional components that may be necessary
     // (i.e. Normal, Binormal and Tangent)
     if ( generateVertexComponents( bWeld ) == false )
@@ -4373,7 +4408,7 @@ bool cgMesh::sortMeshData( bool bOptimize, bool bBuildHardwareBuffers )
     {
         // Find a matching subset for this triangle
         MeshSubset * pSubset = mSubsetLookup[ mTriangleData[i] ];
-        
+
         // Copy index data over to new buffer, taking care to record the correct
         // vertex values as required. We'll temporarily use VertexStart and VertexCount
         // as a min/max record that we'll come round and correct later.
@@ -4386,7 +4421,7 @@ bool cgMesh::sortMeshData( bool bOptimize, bool bBuildHardwareBuffers )
         if ( nIndex > pSubset->vertexCount )
             pSubset->vertexCount = nIndex;
         pDstIndices[nIndexStart++] = nIndex;
-        
+
         // Index[1]
         nIndex = (cgInt32)(*pSrcIndices++);
         if ( nIndex < pSubset->vertexStart )
@@ -4445,9 +4480,9 @@ bool cgMesh::sortMeshData( bool bOptimize, bool bBuildHardwareBuffers )
         
         // Note: Remember that at this stage, the subset's 'vertexCount' member still describes
         // a 'max' vertex (not a count)... We're correcting this later.
-        if ( bOptimize == true )
-            buildOptimizedIndexBuffer( pSubset, pSrcIndices + (pSubset->faceStart * 3), pDstIndices, pSubset->vertexStart, pSubset->vertexCount );
-        else
+        //if ( bOptimize == true )
+            //buildOptimizedIndexBuffer( pSubset, pSrcIndices + (pSubset->faceStart * 3), pDstIndices, pSubset->vertexStart, pSubset->vertexCount );
+        //else
             memcpy( pDstIndices, pSrcIndices + (pSubset->faceStart * 3), pSubset->faceCount * 3 * sizeof(cgUInt32) );
         
         // This subset's starting face now refers to its location 
@@ -4537,7 +4572,7 @@ bool cgMesh::sortMeshData( bool bOptimize, bool bBuildHardwareBuffers )
 
 	} // End if serializing
 
-	// Destroy old subset data.
+    // Destroy old subset data.
 	for ( i = 0; i < mMeshSubsets.size(); ++i )
 	    delete mMeshSubsets[i];
 	mMeshSubsets.clear();
@@ -4703,6 +4738,8 @@ bool cgMesh::generateVertexNormals( cgUInt32 * pAdjacency, cgUInt32Array * pRema
     for ( i = 0; i < mPrepareData.triangleCount; ++i )
     {
         Triangle & Tri = mPrepareData.triangleData[i];
+        if ( Tri.flags & cgTriangleFlags::Degenerate )
+            continue;
 
         // Process each vertex in the face
         for ( j = 0; j < 3; ++j )
@@ -4759,12 +4796,21 @@ bool cgMesh::generateVertexNormals( cgUInt32 * pAdjacency, cgUInt32Array * pRema
 
             // We should now be at the starting triangle, we can start to walk forwards
             // collecting the face normals. First find the exit edge so we can start walking.
-            for ( k = 0; k < 3; ++k )
+            if ( nCurrentTri != 0xFFFFFFFF )
             {
-                if ( pAdjacency[ (nCurrentTri*3) + k ] == nPreviousTri )
-                    break;
-            
-            } // Next item in adjacency list
+                for ( k = 0; k < 3; ++k )
+                {
+                    if ( pAdjacency[ (nCurrentTri*3) + k ] == nPreviousTri )
+                        break;
+                
+                } // Next item in adjacency list
+            }
+            else
+            {
+                // Couldn't step back, so first triangle is the current triangle
+                nCurrentTri = i;
+                k = j;
+            }
 
             if ( k < 3 )
             {
@@ -5070,9 +5116,13 @@ bool cgMesh::generateAdjacency( cgUInt32Array & adjacency )
         for ( cgUInt32 i = 0; i < mPrepareData.triangleCount; ++i )
         {
             AdjacentEdgeKey Edge;
+
+            // Degenerate triangles cannot participate.
+            const Triangle & Tri = mPrepareData.triangleData[i];
+            if ( Tri.flags & cgTriangleFlags::Degenerate )
+                continue;
             
             // Retrieve positions of each referenced vertex.
-            const Triangle & Tri = mPrepareData.triangleData[i];
             const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (Tri.indices[0] * nVertexStride));
             const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (Tri.indices[1] * nVertexStride));
             const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (Tri.indices[2] * nVertexStride));
@@ -5102,8 +5152,12 @@ bool cgMesh::generateAdjacency( cgUInt32Array & adjacency )
         {
             AdjacentEdgeKey Edge;
 
-            // Retrieve positions of each referenced vertex.
+            // Degenerate triangles cannot participate.
             const Triangle & Tri = mPrepareData.triangleData[i];
+            if ( Tri.flags & cgTriangleFlags::Degenerate )
+                continue;
+
+            // Retrieve positions of each referenced vertex.
             const cgVector3 * v1 = (cgVector3*)(pSrcVertices + (Tri.indices[0] * nVertexStride));
             const cgVector3 * v2 = (cgVector3*)(pSrcVertices + (Tri.indices[1] * nVertexStride));
             const cgVector3 * v3 = (cgVector3*)(pSrcVertices + (Tri.indices[2] * nVertexStride));

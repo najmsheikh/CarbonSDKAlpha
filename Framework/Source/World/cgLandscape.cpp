@@ -257,6 +257,10 @@ void cgLandscape::dispose( bool bDisposeBase )
     // Release resources.
     mNormalTexture.close( );
     mDepthFillDepthState.close( );
+    mShadowFillDepthState.close( );
+    mShadowFillNoColorBlendState.close();
+    mShadowFillFrontRastState.close();
+    mShadowFillBackRastState.close();
     mProceduralDepthState.close( );
     mPaintedDepthState.close( );
     mPostProcessDepthState.close( );
@@ -572,29 +576,29 @@ void cgLandscape::prepareQueries()
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         // Prepare the SQL statements as necessary.
-        if ( mInsertLandscape.isPrepared() == false )
+        if ( !mInsertLandscape.isPrepared( pWorld ) )
             mInsertLandscape.prepare( pWorld, _T("INSERT INTO 'Landscapes' VALUES(NULL,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13)"), true );
-		if ( mDeleteLandscape.isPrepared() == false )
+		if ( !mDeleteLandscape.isPrepared( pWorld ) )
             mDeleteLandscape.prepare( pWorld, _T("DELETE FROM 'Landscapes' WHERE LandscapeId=?1"), true );
-        if ( mInsertProceduralLayer.isPrepared() == false )
+        if ( !mInsertProceduralLayer.isPrepared( pWorld ) )
             mInsertProceduralLayer.prepare( pWorld, _T("INSERT INTO 'Landscapes::ProceduralLayers' VALUES(NULL,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15)"), true );
-        if ( mUpdateLandscapeLayout.isPrepared() == false )
+        if ( !mUpdateLandscapeLayout.isPrepared( pWorld ) )
             mUpdateLandscapeLayout.prepare( pWorld, _T("UPDATE 'Landscapes' SET LayoutU=?1, LayoutV=?2, BlockSizeU=?3, BlockSizeV=?4, DimensionsX=?5, DimensionsY=?6, DimensionsZ=?7, OffsetX=?8, OffsetY=?9, OffsetZ=?10 WHERE LandscapeId=?11"), true );
-        if ( mUpdateTextureConfig.isPrepared() == false )
+        if ( !mUpdateTextureConfig.isPrepared( pWorld ) )
             mUpdateTextureConfig.prepare( pWorld, _T("UPDATE 'Landscapes' SET BlendMapSizeU=?1, BlendMapSizeV=?2 WHERE LandscapeId=?3"), true );
-        if ( mDeleteProceduralLayers.isPrepared() == false )
+        if ( !mDeleteProceduralLayers.isPrepared( pWorld ) )
             mDeleteProceduralLayers.prepare( pWorld, _T("DELETE FROM 'Landscapes::ProceduralLayers' WHERE LandscapeId=?1"), true );
-        if ( mUpdateProceduralLayer.isPrepared() == false )
+        if ( !mUpdateProceduralLayer.isPrepared( pWorld ) )
             mUpdateProceduralLayer.prepare( pWorld, _T("UPDATE 'Landscapes::ProceduralLayers' SET Name=?1, MaterialId=?2, EnableHeight=?3, MinHeight=?4, MaxHeight=?5, HeightAttenBand=?6, SlopeAxisX=?7, SlopeAxisY=?8, SlopeAxisZ=?9, SlopeScale=?10, SlopeBias=?11, InvertSlope=?12, Weight=?13 WHERE LayerId=?14"), true ); 
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadLandscape.isPrepared() == false )
+    if ( !mLoadLandscape.isPrepared( pWorld ) )
         mLoadLandscape.prepare( pWorld, _T("SELECT * FROM 'Landscapes' WHERE LandscapeId=?1"), true );
-    if ( mLoadTerrainBlocks.isPrepared() == false )
+    if ( !mLoadTerrainBlocks.isPrepared( pWorld ) )
         mLoadTerrainBlocks.prepare( pWorld, _T("SELECT * FROM 'Landscapes::Blocks' WHERE LandscapeId=?1"), true );
-    if ( mLoadProceduralLayers.isPrepared() == false )
+    if ( !mLoadProceduralLayers.isPrepared( pWorld ) )
         mLoadProceduralLayers.prepare( pWorld, _T("SELECT * FROM 'Landscapes::ProceduralLayers' WHERE LandscapeId=?1 ORDER BY LayerIndex ASC"), true );
 }
 
@@ -1039,10 +1043,40 @@ bool cgLandscape::postInit( )
         return false;
 
     ///////////////////////////////////////////////
+    // Terrain shadow fill process.
+    ///////////////////////////////////////////////
+    // Depth stencil states
+    DepthStencilDesc                                    = cgDepthStencilStateDesc(); // Defaults
+    DepthStencilDesc.depthEnable                        = true;
+    DepthStencilDesc.depthWriteEnable                   = true;
+    DepthStencilDesc.depthFunction                      = cgComparisonFunction::LessEqual;
+    if ( !pResources->createDepthStencilState( &mShadowFillDepthState, DepthStencilDesc, 0, cgDebugSource() ) )
+        return false;
+
+    // Blend states
+    cgBlendStateDesc BlendDesc;
+    BlendDesc.renderTarget[0].blendEnable               = false;
+    BlendDesc.renderTarget[0].sourceBlend               = cgBlendMode::Zero;
+    BlendDesc.renderTarget[0].destinationBlend          = cgBlendMode::Zero;
+    if ( !pResources->createBlendState( &mShadowFillNoColorBlendState, BlendDesc, 0, cgDebugSource() ) )
+        return false;
+
+    // Rasterizer states
+    cgRasterizerStateDesc RastDesc;
+    RastDesc.cullMode                                   = cgCullMode::Front;
+    if ( !pResources->createRasterizerState( &mShadowFillBackRastState, RastDesc, 0, cgDebugSource() ) )
+        return false;
+    
+    RastDesc                                            = cgRasterizerStateDesc(); // Defaults
+    RastDesc.cullMode                                   = cgCullMode::Back;
+    if ( !pResources->createRasterizerState( &mShadowFillFrontRastState, RastDesc, 0, cgDebugSource() ) )
+        return false;
+
+    ///////////////////////////////////////////////
     // Terrain procedural layer rendering process.
     ///////////////////////////////////////////////
     // Blend states
-    cgBlendStateDesc BlendDesc;
+    BlendDesc                                           = cgBlendStateDesc();       // Defaults
     BlendDesc.renderTarget[0].blendEnable               = true;
     BlendDesc.renderTarget[0].sourceBlend               = cgBlendMode::SrcAlpha;
     BlendDesc.renderTarget[0].destinationBlend          = cgBlendMode::InvSrcAlpha;
@@ -1620,6 +1654,17 @@ cgSpatialTreeLeaf * cgLandscape::allocateLeaf( cgSpatialTreeLeaf * pInit /* = CG
         return new cgLandscapeCell( );
     else
         return new cgLandscapeCell( pInit, this );
+}
+
+//-----------------------------------------------------------------------------
+// Name : getBoundingBox ()
+/// <summary>
+/// Retrieve the world space bounding box of the landscape as a whole.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgBoundingBox & cgLandscape::getBoundingBox( ) const
+{
+    return mBounds;
 }
 
 //-----------------------------------------------------------------------------
@@ -2426,18 +2471,18 @@ bool cgLandscape::renderPass( cgLandscapeRenderMethod::Base Pass, cgCameraNode *
         } // End if TerrainDepthFill
         else if ( Pass == cgLandscapeRenderMethod::TerrainShadowFill )
         {
-            cgToDo( "Effect Overhaul", "Variable states from shadow frustum?." );
-            /*// Setup biasing and culling
-            DepthBias           = ( State_DepthBias );
-            SlopeScaleDepthBias = ( State_SlopeScaleDepthBias );
-            CullMode            = CCW; // Always use CCW mode for landscape.
-            // Enable / disable color writes depending on application request.
-            ColorWriteEnable    = ( State_ColorWriteEnable );*/
-                    
-            // Use default depth stencil and blend states.
+            // Setup states.
+            pDriver->setDepthStencilState( mShadowFillDepthState );
             pDriver->setRasterizerState( cgRasterizerStateHandle::Null );
-            pDriver->setDepthStencilState( cgDepthStencilStateHandle::Null );
-            pDriver->setBlendState( cgBlendStateHandle::Null );
+            
+            if ( pDriver->getSystemState( cgSystemState::ColorWrites ) == cgColorChannel::None )
+                pDriver->setBlendState( mShadowFillNoColorBlendState );
+            else
+                pDriver->setBlendState( cgBlendStateHandle::Null );
+            if ( pDriver->getSystemState( cgSystemState::CullMode ) == cgCullMode::Front )
+			    pDriver->setRasterizerState( mShadowFillBackRastState );
+            else
+			    pDriver->setRasterizerState( mShadowFillFrontRastState );
 
             // Select the vertex and pixel shader.
             // ToDo: This can likely be pre-created in postInit (essentially binding address 
@@ -4342,6 +4387,70 @@ const cgLandscape::TerrainBlockArray & cgLandscape::getTerrainBlocks( ) const
 }
 
 //-----------------------------------------------------------------------------
+// Name : getTerrainBlocks ( )
+/// <summary>
+/// Populate the supplied array with a list of all terrain blocks that 
+/// intersect with the provided bounding box in world space.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgLandscape::getTerrainBlocks( const cgBoundingBox & bounds, TerrainBlockArray & blocksOut ) const
+{
+    // Be polite and clear the output container first.
+    blocksOut.clear();
+
+    // First compute the block indices at the specified box extents.
+    cgFloat dx = ((bounds.min.x - mOffset.x) / ((cgFloat)(mBlockSize.width - 1) * mScale.x));
+    cgFloat dy = (-(bounds.max.z - mOffset.z) / ((cgFloat)(mBlockSize.height - 1) * mScale.z));
+    cgInt minBlockX = (cgInt)floorf(dx);
+    cgInt minBlockY = (cgInt)floorf(dy);
+    dx = ((bounds.max.x - mOffset.x) / ((cgFloat)(mBlockSize.width - 1) * mScale.x));
+    dy = (-(bounds.min.z - mOffset.z) / ((cgFloat)(mBlockSize.height - 1) * mScale.z));
+    cgInt maxBlockX = (cgInt)floorf(dx);
+    cgInt maxBlockY = (cgInt)floorf(dy);
+
+    // Clamp the box extents.
+    if ( minBlockX < 0 )
+        minBlockX = 0;
+    if ( minBlockY < 0 )
+        minBlockY = 0;
+    if ( maxBlockX < 0 )
+        maxBlockX = 0;
+    if ( maxBlockY < 0 )
+        maxBlockY = 0;
+    if ( minBlockX >= mBlockLayout.width )
+        minBlockX = mBlockLayout.width - 1;
+    if ( maxBlockX >= mBlockLayout.width )
+        maxBlockX = mBlockLayout.width - 1;
+    if ( minBlockY >= mBlockLayout.height )
+        minBlockY = mBlockLayout.height - 1;
+    if ( maxBlockY >= mBlockLayout.height )
+        maxBlockY = mBlockLayout.height - 1;
+    
+    // Anything in range?
+    if ( maxBlockX < minBlockX ||
+         maxBlockY < minBlockY )
+         return false;
+
+    // Reserve enough space in the block array assuming every 
+    // block is available, and then add the allocated blocks.
+    blocksOut.reserve( ((maxBlockX - minBlockX) + 1) * ((maxBlockY - minBlockY) + 1) );
+    for ( cgInt y = minBlockY; y <= maxBlockY; ++y )
+    {
+        for ( cgInt x = minBlockX; x <= maxBlockX; ++x )
+        {
+            cgTerrainBlock * block = mTerrainBlocks[ x + y * mBlockLayout.width ];
+            if ( block )
+                blocksOut.push_back( block );
+        
+        } // Next column
+
+    } // Next row
+    
+    // Data available?
+    return !blocksOut.empty();
+}
+
+//-----------------------------------------------------------------------------
 // Name : getProceduralLayers ( )
 /// <summary>
 /// Retrieve the array containing the currently defined procedural rendering
@@ -5045,19 +5154,19 @@ void cgTerrainBlock::prepareQueries()
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         // Prepare the SQL statements as necessary.
-        if ( mInsertBlock.isPrepared() == false )
+        if ( !mInsertBlock.isPrepared( pWorld ) )
             mInsertBlock.prepare( pWorld, _T("INSERT INTO 'Landscapes::Blocks' VALUES(NULL,?1,?2,?3,?4)"), true );
-        if ( mInsertBlockLOD.isPrepared() == false )
+        if ( !mInsertBlockLOD.isPrepared( pWorld ) )
             mInsertBlockLOD.prepare( pWorld, _T("INSERT INTO 'Landscapes::BlockLOD' VALUES(NULL,?1,?2,?3)"), true );
-        if ( mUpdateBlockHeights.isPrepared() == false )
+        if ( !mUpdateBlockHeights.isPrepared( pWorld ) )
             mUpdateBlockHeights.prepare( pWorld, _T("UPDATE 'Landscapes::Blocks' SET HeightData=?1 WHERE BlockId=?2"), true );
-        if ( mDeleteBlockLODs.isPrepared() == false )
+        if ( !mDeleteBlockLODs.isPrepared( pWorld ) )
             mDeleteBlockLODs.prepare( pWorld, _T("DELETE FROM 'Landscapes::BlockLOD' WHERE BlockId=?1"), true );
         
     } // End if sandbox
 
     // Read queries
-    if ( mLoadBlockLODs.isPrepared() == false )
+    if ( !mLoadBlockLODs.isPrepared( pWorld ) )
         mLoadBlockLODs.prepare( pWorld, _T("SELECT * FROM 'Landscapes::BlockLOD' WHERE BlockId=?1"), true );
 }
 
@@ -5804,6 +5913,29 @@ cgUInt32 cgTerrainBlock::getHeightMapIndex( cgInt32 x, cgInt32 z ) const
 }
 
 //-----------------------------------------------------------------------------
+// Name : getHeightMapOffset ()
+/// <summary>
+/// Retrieve the x & y offset, within the overall heightmap, that represents
+/// the vertex in the top left corner of this terrain block.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgPoint cgTerrainBlock::getHeightMapOffset( ) const
+{
+    return cgPoint( mSection.blockBounds.left, mSection.blockBounds.top );
+}
+
+//-----------------------------------------------------------------------------
+// Name : getLandscape ()
+/// <summary>
+/// Retrieve the parent landscape that owns this terrain block.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgLandscape * cgTerrainBlock::getLandscape( )
+{
+    return mParent;
+}
+
+//-----------------------------------------------------------------------------
 // Name : getBoundingBox ()
 /// <summary>
 /// Retrieve the axis aligned bounding box that describes the extents of this
@@ -6439,17 +6571,17 @@ void cgLandscapeTextureData::prepareQueries()
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         // Prepare the SQL statements as necessary.
-        if ( mInsertLayer.isPrepared() == false )
+        if ( !mInsertLayer.isPrepared( pWorld ) )
             mInsertLayer.prepare( pWorld, _T("INSERT INTO 'Landscapes::BlockLayers' VALUES(NULL,?1,?2,?3,?4)"), true );
-        if ( mDeleteLayer.isPrepared() == false )
+        if ( !mDeleteLayer.isPrepared( pWorld ) )
             mDeleteLayer.prepare( pWorld, _T("DELETE FROM 'Landscapes::BlockLayers' WHERE LayerId=?1"), true );
-        if ( mUpdateLayerPaintData.isPrepared() == false )
+        if ( !mUpdateLayerPaintData.isPrepared( pWorld ) )
             mUpdateLayerPaintData.prepare( pWorld, _T("UPDATE 'Landscapes::BlockLayers' SET BlendMapData=?1, PixelRefCount=?2 WHERE LayerId=?3"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadLayers.isPrepared() == false )
+    if ( !mLoadLayers.isPrepared( pWorld ) )
         mLoadLayers.prepare( pWorld, _T("SELECT * FROM 'Landscapes::BlockLayers' WHERE BlockId=?1"), true );
 }
 

@@ -49,9 +49,9 @@ void cgAnimationChannel::prepareQueries( cgWorld * world )
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertChannelData.isPrepared() || mInsertChannelData.getWorld() != world )
+        if ( !mInsertChannelData.isPrepared( world ) )
             mInsertChannelData.prepare( world, _T("INSERT INTO 'DataSources::AnimationSet::ControllerChannels' VALUES(NULL,?1,?2,?3,?4,?5,?6)"), true );
-        if ( !mUpdateChannelData.isPrepared() || mUpdateChannelData.getWorld() != world )
+        if ( !mUpdateChannelData.isPrepared( world ) )
             mUpdateChannelData.prepare( world, _T("UPDATE 'DataSources::AnimationSet::ControllerChannels' SET DataType=?1, DataContext=?2, EntryCount=?3, data=?4 WHERE ControllerChannelId=?5"), true );
     
     } // End if sandbox
@@ -99,7 +99,7 @@ bool cgFloatCurveAnimationChannel::serialize( cgUInt32 targetControllerId, const
             if ( curveType == cgBezierSpline2::Custom && data.getPointCount() > 0 )
             {
                 mInsertChannelData.bindParameter( 5, data.getPointCount() );
-                mInsertChannelData.bindParameter( 6, &data.getSplinePoints().front(), data.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+                mInsertChannelData.bindParameter( 6, &data.getPoints().front(), data.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
             
             } // End if custom
             else
@@ -137,7 +137,7 @@ bool cgFloatCurveAnimationChannel::serialize( cgUInt32 targetControllerId, const
             if ( curveType == cgBezierSpline2::Custom && data.getPointCount() > 0 )
             {
                 mUpdateChannelData.bindParameter( 3, data.getPointCount() );
-                mUpdateChannelData.bindParameter( 4, &data.getSplinePoints().front(), data.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+                mUpdateChannelData.bindParameter( 4, &data.getPoints().front(), data.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
             
             } // End if custom
             else
@@ -249,10 +249,10 @@ void cgFloatCurveAnimationChannel::addLinearKey( cgInt32 frame, cgFloat value )
     // Generate a linear curve between last point (if one exists) and new point.
     if ( data.getPointCount() > 0 )
     {
-        cgBezierSpline2::SplinePoint pt = data.getSplinePoint( data.getPointCount() - 1 );
+        cgBezierSpline2::SplinePoint pt = data.getPoint( data.getPointCount() - 1 );
         inPosition = position - ((position - pt.point) * 0.33333333333f);
         pt.controlPointOut = pt.point + ((position - pt.point) * 0.33333333333f);
-        data.setSplinePoint( data.getPointCount() - 1, pt );
+        data.setPoint( data.getPointCount() - 1, pt );
     
     } // End if !empty
 
@@ -615,13 +615,13 @@ void cgAnimationTargetController::prepareQueries( cgWorld * world )
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertController.isPrepared() || mInsertController.getWorld() != world )
+        if ( !mInsertController.isPrepared( world ) )
             mInsertController.prepare( world, _T("INSERT INTO 'DataSources::AnimationSet::TargetControllers' VALUES(NULL,?1,?2,?3,?4)"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadChannelData.isPrepared() || mLoadChannelData.getWorld() != world )
+    if ( !mLoadChannelData.isPrepared( world ) )
         mLoadChannelData.prepare( world, _T("SELECT * FROM 'DataSources::AnimationSet::ControllerChannels' WHERE TargetControllerId=?1"), true );
 }
 
@@ -649,7 +649,7 @@ cgPositionXYZTargetController::cgPositionXYZTargetController( const cgPositionXY
     for ( size_t i = 0; i < 3; ++i )
     {
         cgBezierSpline2 & destSpline = mCurves[i].data;
-        const cgBezierSpline2::SplinePointArray & srcPoints = init.mCurves[i].data.getSplinePoints();
+        const cgBezierSpline2::SplinePointArray & srcPoints = init.mCurves[i].data.getPoints();
         for ( size_t j = 0; j < srcPoints.size(); ++j )
         {
             if ( srcPoints[j].point.x >= (cgFloat)frameRange.min && srcPoints[j].point.x <= (cgFloat)frameRange.max )
@@ -841,7 +841,7 @@ cgScaleXYZTargetController::cgScaleXYZTargetController( const cgScaleXYZTargetCo
     for ( size_t i = 0; i < 3; ++i )
     {
         cgBezierSpline2 & destSpline = mCurves[i].data;
-        const cgBezierSpline2::SplinePointArray & srcPoints = init.mCurves[i].data.getSplinePoints();
+        const cgBezierSpline2::SplinePointArray & srcPoints = init.mCurves[i].data.getPoints();
         for ( size_t j = 0; j < srcPoints.size(); ++j )
         {
             if ( srcPoints[j].point.x >= (cgFloat)frameRange.min && srcPoints[j].point.x <= (cgFloat)frameRange.max )
@@ -1031,7 +1031,7 @@ cgUniformScaleTargetController::cgUniformScaleTargetController( )
 cgUniformScaleTargetController::cgUniformScaleTargetController( const cgUniformScaleTargetController & init, const cgRange & frameRange )
 {
     cgBezierSpline2 & destSpline = mCurve.data;
-    const cgBezierSpline2::SplinePointArray & srcPoints = init.mCurve.data.getSplinePoints();
+    const cgBezierSpline2::SplinePointArray & srcPoints = init.mCurve.data.getPoints();
     for ( size_t j = 0; j < srcPoints.size(); ++j )
     {
         if ( srcPoints[j].point.x >= (cgFloat)frameRange.min && srcPoints[j].point.x <= (cgFloat)frameRange.max )
@@ -1461,7 +1461,7 @@ cgEulerAnglesTargetController::cgEulerAnglesTargetController( const cgEulerAngle
     for ( size_t i = 0; i < 3; ++i )
     {
         cgBezierSpline2 & destSpline = mCurves[i].data;
-        const cgBezierSpline2::SplinePointArray & srcPoints = init.mCurves[i].data.getSplinePoints();
+        const cgBezierSpline2::SplinePointArray & srcPoints = init.mCurves[i].data.getPoints();
         for ( size_t j = 0; j < srcPoints.size(); ++j )
         {
             if ( srcPoints[j].point.x >= (cgFloat)frameRange.min && srcPoints[j].point.x <= (cgFloat)frameRange.max )
@@ -1672,7 +1672,7 @@ void cgEulerAnglesTargetController::addLinearKey( cgInt32 frame, const cgQuatern
         // in comparison to the previous key to ensure a reasonable rotation.
         if ( !mCurves[i].isEmpty() )
         {
-            const cgBezierSpline2::SplinePoint & pt = mCurves[i].data.getSplinePoints().back();
+            const cgBezierSpline2::SplinePoint & pt = mCurves[i].data.getPoints().back();
             while ( fabsf(e[i] - pt.point.y) > CGE_PI )
                 e[i] = (pt.point.y < e[i]) ? (e[i] - CGE_TWO_PI) : (e[i] + CGE_TWO_PI);
 

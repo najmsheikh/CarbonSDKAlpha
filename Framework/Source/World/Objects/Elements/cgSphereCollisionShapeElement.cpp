@@ -260,13 +260,13 @@ void cgSphereCollisionShapeElement::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertSphereCollisionShape.isPrepared() == false )
+        if ( !mInsertSphereCollisionShape.isPrepared( mWorld ) )
             mInsertSphereCollisionShape.prepare( mWorld, _T("INSERT INTO 'ObjectSubElements::SphereCollisionShape' VALUES(?1,?2)"), true );
         
     } // End if sandsphere
 
     // Read queries
-    if ( mLoadSphereCollisionShape.isPrepared() == false )
+    if ( !mLoadSphereCollisionShape.isPrepared( mWorld ) )
         mLoadSphereCollisionShape.prepare( mWorld, _T("SELECT * FROM 'ObjectSubElements::SphereCollisionShape' WHERE RefId=?1"), true );
 }
 

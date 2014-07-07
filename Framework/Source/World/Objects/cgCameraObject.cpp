@@ -341,15 +341,15 @@ void cgCameraObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertCamera.isPrepared() == false )
+        if ( !mInsertCamera.isPrepared( mWorld ) )
             mInsertCamera.prepare( mWorld, _T("INSERT INTO 'Objects::Camera' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24)"), true );
-        if ( mUpdateProjection.isPrepared() == false )
+        if ( !mUpdateProjection.isPrepared( mWorld ) )
             mUpdateProjection.prepare( mWorld, _T("UPDATE 'Objects::Camera' SET ProjectionMode=?1, FOV=?2, NearClip=?3, FarClip=?4, ZoomFactor=?5 WHERE RefId=?6"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadCamera.isPrepared() == false )
+    if ( !mLoadCamera.isPrepared( mWorld ) )
         mLoadCamera.prepare( mWorld, _T("SELECT * FROM 'Objects::Camera' WHERE RefId=?1"), true );
 }
 

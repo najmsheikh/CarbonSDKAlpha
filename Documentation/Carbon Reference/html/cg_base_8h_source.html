@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.18</span>
    </div>
   </td>
  </tr>
@@ -254,7 +254,7 @@ $(document).ready(function(){initNavTree('cg_base_8h_source.html','');});
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="keywordtype">bool</span>                <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>   <a class="code" href="cg_base_8cpp.html#a57408d318a6919d9f78bb500e37f06e1" title="Initialize the engine ready for use. ">cgEngineInit</a>         ( <span class="keyword">const</span> <a class="code" href="struct_c_g_e_config.html">CGEConfig</a> &amp; config, <a class="code" href="classcg_log_output.html" title="The base class from which a log output source can derive and can subsequently be registered with the ...">cgLogOutput</a> * logOutput = <a class="code" href="cg_base_types_8h.html#ae28f568db83e03f77e0d1f3d96b89449">CG_NULL</a> );</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="keywordtype">void</span>                <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>   <a class="code" href="cg_base_8cpp.html#a9ce7ba962cc0e8260fb707282cc962e1" title="Cleanup the engine after use. ">cgEngineCleanup</a>      ( );</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="keywordtype">void</span>                <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>   <a class="code" href="cg_base_8cpp.html#a50ce6e1b6023748cfffc4ae3f097fd05" title="Yield to any engine threads that need to process. ">cgEngineYield</a>        ( );</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="keywordtype">void</span>                <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>   <a class="code" href="cg_base_8cpp.html#aab50fa369b9ed69d03770db601321ed6" title="Allow the FPU to run in double precision mode until the next call to cgFPURestorePrecision(). ">cgFPUDoublePrecision</a> ( );</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="keywordtype">bool</span>                <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>   <a class="code" href="cg_base_8cpp.html#a49333647910ffac22fc978842e9ce71a" title="Allow the FPU to run in double precision mode until the next call to cgFPURestorePrecision(). ">cgFPUDoublePrecision</a> ( );</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="keywordtype">void</span>                <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>   <a class="code" href="cg_base_8cpp.html#a61ab6f5c289fefe889a8415a111d738a" title="Restore the FPU&#39;s previous precision prior to any call to cgFPUDoublePrecision(). ...">cgFPURestorePrecision</a>( );</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="keywordtype">bool</span>                <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>   <a class="code" href="cg_base_8cpp.html#a4e5cd17c2eaf3a51a7e2d0106de01d92" title="Set the current mode in which the engine is running. Valid sandbox modes accepted by this function ar...">cgSetSandboxMode</a>     ( <a class="code" href="namespacecg_sandbox_mode.html#a446a0d273ff8b4f240f1f0f0d18c3e69">cgSandboxMode::Base</a> mode );</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="keywordtype">bool</span>                <a class="code" href="cg_a_p_i_8h.html#ad55d4262636bc4c28ae3bb4f7ce3e741">CGE_API</a>   <a class="code" href="cg_base_8cpp.html#a4e5cd17c2eaf3a51a7e2d0106de01d92" title="Set the current mode in which the engine is running. Valid sandbox modes accepted by this function ar...">cgSetSandboxMode</a>     ( <a class="code" href="namespacecg_sandbox_mode.html#a446a0d273ff8b4f240f1f0f0d18c3e69">cgSandboxMode::Base</a> mode, <span class="keywordtype">bool</span> sendMessage );</div>
@@ -268,7 +268,7 @@ $(document).ready(function(){initNavTree('cg_base_8h_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bcbb2cf9a3d3d83e5515c82071a07177.html">Framework</a></li><li class="navelem"><a class="el" href="dir_289e7aefe49e2130ef74440eb2250f0c.html">Include</a></li><li class="navelem"><a class="el" href="cg_base_8h.html">cgBase.h</a></li>
-    <li class="footer">Generated on Wed May 21 2014 19:31:21 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon Jul 7 2014 04:51:16 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

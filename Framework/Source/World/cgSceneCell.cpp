@@ -313,9 +313,9 @@ void cgSceneCell::prepareQueries( cgWorld * world )
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         // Prepare the SQL statements as necessary.
-        if ( mInsertCell.isPrepared() == false )
+        if ( !mInsertCell.isPrepared( world ) )
             mInsertCell.prepare( world, _T("INSERT INTO 'Cells' VALUES(NULL,?1,0,NULL,NULL,?2,?3,?4,?5)"), true );
-        if ( mDeleteCell.isPrepared() == false )
+        if ( !mDeleteCell.isPrepared( world ) )
             mDeleteCell.prepare( world, _T("DELETE FROM 'Cells' WHERE CellId=?1"), true );
         
     } // End if sandbox

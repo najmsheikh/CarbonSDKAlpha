@@ -43,6 +43,7 @@ public:
     //-------------------------------------------------------------------------
     typedef size_t              size_type;
     typedef ptrdiff_t           difference_type;
+    typedef char*               storage_type;
 
     //-------------------------------------------------------------------------
     // Constructors & Destructors
@@ -113,7 +114,7 @@ public:
     //-------------------------------------------------------------------------
     inline void * buffer( )
     {
-        return mStart;
+        return (void*)mStart;
     }
 
     //-------------------------------------------------------------------------
@@ -125,8 +126,8 @@ public:
     //-------------------------------------------------------------------------
     inline void alloc_uninitialized( size_type elements, size_type elementSize )
     {
-        mStart = new char*[(elements+1) * elementSize];
-        mEnd   = ((char*)mStart) + (elements * elementSize);
+        mStart = (storage_type)(new char[(elements+1) * elementSize]);
+        mEnd   = (storage_type)(((char*)mStart) + (elements * elementSize));
         mSize  = elements;
         mElementSize = elementSize;
     }
@@ -135,11 +136,11 @@ protected:
     //-------------------------------------------------------------------------
     // Protected Variables
     //-------------------------------------------------------------------------
-    size_type   mSize;          // Number of active elements in the array.
-    void      * mStart;         // Underlying buffer.
-    void      * mEnd;           // Reference to the first byte past the end of the array.
-    size_type   mCapacity;      // Overall capacity of the array, in elements.
-    size_type   mElementSize;   // Size in bytes of a single element in the array.
+    size_type       mSize;          // Number of active elements in the array.
+    storage_type    mStart;         // Underlying buffer.
+    storage_type    mEnd;           // Reference to the first byte past the end of the array.
+    size_type       mCapacity;      // Overall capacity of the array, in elements.
+    size_type       mElementSize;   // Size in bytes of a single element in the array.
 };
 
 //-----------------------------------------------------------------------------
@@ -335,12 +336,12 @@ public:
         // Swap buffer start
         pointer tempPointer = (pointer)mStart;
         mStart = other.mStart;
-        other.mStart = tempPointer;
+        other.mStart = (storage_type)tempPointer;
 
         // Swap buffer end.
         tempPointer = (pointer)mEnd;
         mEnd = other.mEnd;
-        other.mEnd = tempPointer;
+        other.mEnd = (storage_type)tempPointer;
 
         // Swap size.
         size_type tempSize = mSize;
@@ -708,7 +709,7 @@ private:
 
             // This is now our new buffer
             _dealloc();
-            mStart = newBuffer;
+            mStart = (storage_type)newBuffer;
 
         } // End if capacity altered
         else
@@ -767,7 +768,7 @@ private:
         // Resize complete.
         mSize     = newSize;
         mCapacity = newCapacity;
-        mEnd      = (((pointer)mStart)+mSize);
+        mEnd      = (storage_type)(((pointer)mStart)+mSize);
     }
 
     //-------------------------------------------------------------------------

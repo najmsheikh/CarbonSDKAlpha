@@ -43,12 +43,11 @@
 /// cgBezierSpline2 Class Constructor
 /// </summary>
 //-----------------------------------------------------------------------------
-cgBezierSpline2::cgBezierSpline2( ) 
+cgBezierSpline2::cgBezierSpline2( ) :
+    mRange( 0, 1 ), mVariance(0), mLength(0), mComplexSpline(false)
 {
 	// Default to linear attenuation
     setDescription( LinearDecay );
-    mLength        = 0.0f;
-    mComplexSpline = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -57,12 +56,9 @@ cgBezierSpline2::cgBezierSpline2( )
 /// cgBezierSpline2 Class Constructor
 /// </summary>
 //-----------------------------------------------------------------------------
-cgBezierSpline2::cgBezierSpline2( const SplinePointArray & SplinePoints )
+cgBezierSpline2::cgBezierSpline2( const SplinePointArray & SplinePoints ) :
+    mRange(0,1), mVariance(0), mPoints(SplinePoints), mSplineDirty(true), mLength(0), mComplexSpline(false)    
 {
-    mPoints = SplinePoints;
-    mSplineDirty   = true;
-    mLength        = 0.0f;
-    mComplexSpline = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -109,6 +105,8 @@ cgBezierSpline2 & cgBezierSpline2::operator=( const cgBezierSpline2 & Spline )
     mLength           = Spline.mLength;
     mSplineDirty      = Spline.mSplineDirty;
     mComplexSpline    = Spline.mComplexSpline;
+    mRange            = Spline.mRange;
+    mVariance         = Spline.mVariance;
     
     // Return reference to self in order to allow multiple assignments (i.e. a=b=c)
     return *this;
@@ -250,6 +248,41 @@ bool cgBezierSpline2::sortByX( cgUInt32Array * pRemap /* = CG_NULL */ )
 
     } // End if remap
 
+}
+
+//-----------------------------------------------------------------------------
+// Name : evaluateForX()
+/// <summary>
+/// Resolve the Y axis value for the given X axis distance. Note: This method
+/// will return an invalid result (NaN) if this is a complex spline.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloat cgBezierSpline2::evaluateForX( EvaluateMethod method, cgFloat x, cgFloat rand /* = 0 */, bool approximate /* = false */, cgUInt16 digits /* = 4 */ )
+{
+    cgFloat result = evaluateForX( x, approximate, digits );
+    if ( _isnan(result) )
+        return result;
+
+    // Adjust result appropriately.
+    switch ( method )
+    {
+        case NormalizePlusVariance:
+            result = mRange.min + ((mRange.max - mRange.min) * result);
+            return (result - mVariance) + (rand * (mVariance * 2));
+        case NormalizeScaleVariance:
+            result = mRange.min + ((mRange.max - mRange.min) * result);
+            return ((-mVariance) + (rand * (mVariance * 2))) * result;
+        case NormalizeOnly:
+            return mRange.min + ((mRange.max - mRange.min) * result);
+        case SplinePlusVariance:
+            return (result - mVariance) + (rand * (mVariance * 2));
+        case SplineScaleVariance:
+            return ((-mVariance) + (rand * (mVariance * 2))) * result;
+        
+    } // End switch method
+
+    // Just return the result.
+    return result;
 }
 
 //-----------------------------------------------------------------------------
@@ -571,6 +604,99 @@ void cgBezierSpline2::updateSplineData()
 }
 
 //-----------------------------------------------------------------------------
+// Name : setRange ()
+/// <summary>
+/// Set the minimum and maximum 'range' into which any spline sampling result 
+/// will be scaled when evaluating the spline using one of the 
+/// EvaluateMethod::Normalize* evaluation methods.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgBezierSpline2::setRange( const cgRangeF & range )
+{
+    mRange = range;
+}
+
+//-----------------------------------------------------------------------------
+// Name : setRangeMinimum ()
+/// <summary>
+/// Set the minimum value of the 'range' into which any spline sampling result 
+/// will be scaled when evaluating the spline using one of the 
+/// EvaluateMethod::Normalize* evaluation methods.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgBezierSpline2::setRangeMinimum( cgFloat value )
+{
+    mRange.min = value;
+}
+
+//-----------------------------------------------------------------------------
+// Name : setRangeMinimum ()
+/// <summary>
+/// Set the maximum value of the 'range' into which any spline sampling result 
+/// will be scaled when evaluating the spline using one of the 
+/// EvaluateMethod::Normalize* evaluation methods.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgBezierSpline2::setRangeMaximum( cgFloat value )
+{
+    mRange.max = value;
+}
+
+//-----------------------------------------------------------------------------
+// Name : setRange ()
+/// <summary>
+/// Set the minimum and maximum 'range' into which any spline sampling result 
+/// will be scaled when evaluating the spline using one of the 
+/// EvaluateMethod::Normalize* evaluation methods.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgBezierSpline2::setRange( cgFloat minimum, cgFloat maximum )
+{
+    mRange = cgRangeF( minimum, maximum );
+}
+
+//-----------------------------------------------------------------------------
+// Name : getRange ()
+/// <summary>
+/// Retrieve the minimum and maximum 'range' into which any spline sampling
+/// result will be scaled when evaluating the spline using one of the 
+/// EvaluateMethod::Normalize* evaluation methods.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgRangeF & cgBezierSpline2::getRange( ) const
+{
+    return mRange;
+}
+
+//-----------------------------------------------------------------------------
+// Name : setVariance ()
+/// <summary>
+/// Set the variance scalar that will be used to adjust the spline sampling
+/// result when evaluating the spline using one of the 
+/// EvaluateMethod::*Variance evaluation methods. This value will be used in
+/// conjunction with a supplied random value to 'jitter' the result.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgBezierSpline2::setVariance( cgFloat variance )
+{
+    mVariance = variance;
+}
+
+//-----------------------------------------------------------------------------
+// Name : getVariance ()
+/// <summary>
+/// Retrieve the variance scalar that will be used to adjust the spline
+/// sampling result when evaluating the spline using one of the 
+/// EvaluateMethod::*Variance evaluation methods. This value will be used in
+/// conjunction with a supplied random value to 'jitter' the result.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgFloat cgBezierSpline2::getVariance( ) const
+{
+    return mVariance;
+}
+
+//-----------------------------------------------------------------------------
 // Name : getPointCount ()
 /// <summary>Determine the number of control points stored.</summary>
 //-----------------------------------------------------------------------------
@@ -589,37 +715,37 @@ cgInt32 cgBezierSpline2::getSegmentCount( ) const
 }
 
 //-----------------------------------------------------------------------------
-// Name : getSplinePoints ( ) (const overload)
+// Name : getPoints ( ) (const overload)
 /// <summary>Get the list of control points.</summary>
 //-----------------------------------------------------------------------------
-const cgBezierSpline2::SplinePointArray & cgBezierSpline2::getSplinePoints( ) const
+const cgBezierSpline2::SplinePointArray & cgBezierSpline2::getPoints( ) const
 {
     return mPoints;
 }
 
 //-----------------------------------------------------------------------------
-// Name : getSplinePoint ( ) (const overload)
+// Name : getPoint ( ) (const overload)
 /// <summary>Get the specified control point.</summary>
 //-----------------------------------------------------------------------------
-const cgBezierSpline2::SplinePoint & cgBezierSpline2::getSplinePoint( cgInt32 nIndex ) const
+const cgBezierSpline2::SplinePoint & cgBezierSpline2::getPoint( cgInt32 nIndex ) const
 {
     return mPoints[nIndex];
 }
 
 //-----------------------------------------------------------------------------
-// Name : getSplinePoint ( )
+// Name : getPoint ( )
 /// <summary>Get the specified control point.</summary>
 //-----------------------------------------------------------------------------
-cgBezierSpline2::SplinePoint & cgBezierSpline2::getSplinePoint( cgInt32 nIndex )
+cgBezierSpline2::SplinePoint & cgBezierSpline2::getPoint( cgInt32 nIndex )
 {
     return mPoints[nIndex];
 }
 
 //-----------------------------------------------------------------------------
-// Name : setSplinePoint ( )
+// Name : setPoint ( )
 /// <summary>Update the specified control point.</summary>
 //-----------------------------------------------------------------------------
-void cgBezierSpline2::setSplinePoint( cgInt32 nIndex, const SplinePoint & pt )
+void cgBezierSpline2::setPoint( cgInt32 nIndex, const SplinePoint & pt )
 {
     mPoints[nIndex] = pt;
     mSplineDirty = true;
@@ -1152,37 +1278,37 @@ cgInt32 cgBezierSpline3::getSegmentCount( ) const
 }
 
 //-----------------------------------------------------------------------------
-// Name : getSplinePoints ( ) (const overload)
+// Name : getPoints ( ) (const overload)
 /// <summary>Get the list of control points.</summary>
 //-----------------------------------------------------------------------------
-const cgBezierSpline3::SplinePointArray & cgBezierSpline3::getSplinePoints( ) const
+const cgBezierSpline3::SplinePointArray & cgBezierSpline3::getPoints( ) const
 {
     return mPoints;
 }
 
 //-----------------------------------------------------------------------------
-// Name : getSplinePoint ( ) (const overload)
+// Name : getPoint ( ) (const overload)
 /// <summary>Get the specified control point.</summary>
 //-----------------------------------------------------------------------------
-const cgBezierSpline3::SplinePoint & cgBezierSpline3::getSplinePoint( cgInt32 nIndex ) const
+const cgBezierSpline3::SplinePoint & cgBezierSpline3::getPoint( cgInt32 nIndex ) const
 {
     return mPoints[nIndex];
 }
 
 //-----------------------------------------------------------------------------
-// Name : getSplinePoint ( )
+// Name : getPoint ( )
 /// <summary>Get the specified control point.</summary>
 //-----------------------------------------------------------------------------
-cgBezierSpline3::SplinePoint & cgBezierSpline3::getSplinePoint( cgInt32 nIndex )
+cgBezierSpline3::SplinePoint & cgBezierSpline3::getPoint( cgInt32 nIndex )
 {
     return mPoints[nIndex];
 }
 
 //-----------------------------------------------------------------------------
-// Name : setSplinePoint ( )
+// Name : setPoint ( )
 /// <summary>Update the specified control point.</summary>
 //-----------------------------------------------------------------------------
-void cgBezierSpline3::setSplinePoint( cgInt32 nIndex, const SplinePoint & pt )
+void cgBezierSpline3::setPoint( cgInt32 nIndex, const SplinePoint & pt )
 {
     mPoints[nIndex] = pt;
     mSplineDirty = true;

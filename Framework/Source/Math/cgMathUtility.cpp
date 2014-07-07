@@ -29,6 +29,32 @@
 #include <Math/cgMathTypes.h>
 #include <Math/cgRandom.h>
 
+/* See
+ 
+http://randomascii.wordpress.com/2012/01/11/tricks-with-the-floating-point-format/
+ 
+for the potential portability problems with the union and bit-fields below.
+*/
+union Float_t
+{
+    Float_t(float num = 0.0f) : f(num) {}
+    // Portable extraction of components.
+    bool Negative() const { return (i >> 31) != 0; }
+    cgInt32 RawMantissa() const { return i & ((1 << 23) - 1); }
+    cgInt32 RawExponent() const { return (i >> 23) & 0xFF; }
+ 
+    cgInt32 i;
+    cgFloat f;
+#ifdef _DEBUG
+    struct
+    {   // Bitfields for exploration. Do not use in production code.
+        cgUInt32 mantissa : 23;
+        cgUInt32 exponent : 8;
+        cgUInt32 sign : 1;
+    } parts;
+#endif
+};
+
 //-----------------------------------------------------------------------------
 // Name : distanceToLineSegment ()
 // Desc : Calculates the distance from the position specified, and
@@ -470,6 +496,54 @@ void cgMathUtility::solveCubic( cgDouble a, cgDouble b, cgDouble c, cgDouble d, 
 //-----------------------------------------------------------------------------
 // Name : dynamicEpsilonTest () (Static)
 /// <summary>
+/// Compare the two cgVector2 values using a dynamic epsilon test that
+/// allows the caller to specify the 'epsilon' in terms of maximum allowable 
+/// difference in usable floating point values, irrespective of the value
+/// of the floating point number (large or small).
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgMathUtility::dynamicEpsilonTest( const cgVector2 & value1, const cgVector2 & value2, cgInt32 maxUlps )
+{
+    return ( cgMathUtility::dynamicEpsilonTest( value1.x, value2.x, maxUlps ) &&
+             cgMathUtility::dynamicEpsilonTest( value1.y, value2.y, maxUlps ));
+}
+
+//-----------------------------------------------------------------------------
+// Name : dynamicEpsilonTest () (Static)
+/// <summary>
+/// Compare the two cgVector3 values using a dynamic epsilon test that
+/// allows the caller to specify the 'epsilon' in terms of maximum allowable 
+/// difference in usable floating point values, irrespective of the value
+/// of the floating point number (large or small).
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgMathUtility::dynamicEpsilonTest( const cgVector3 & value1, const cgVector3 & value2, cgInt32 maxUlps )
+{
+    return ( cgMathUtility::dynamicEpsilonTest( value1.x, value2.x, maxUlps ) &&
+             cgMathUtility::dynamicEpsilonTest( value1.y, value2.y, maxUlps ) &&
+             cgMathUtility::dynamicEpsilonTest( value1.z, value2.z, maxUlps ));
+}
+
+//-----------------------------------------------------------------------------
+// Name : dynamicEpsilonTest () (Static)
+/// <summary>
+/// Compare the two cgVector4 values using a dynamic epsilon test that
+/// allows the caller to specify the 'epsilon' in terms of maximum allowable 
+/// difference in usable floating point values, irrespective of the value
+/// of the floating point number (large or small).
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgMathUtility::dynamicEpsilonTest( const cgVector4 & value1, const cgVector4 & value2, cgInt32 maxUlps )
+{
+    return ( cgMathUtility::dynamicEpsilonTest( value1.x, value2.x, maxUlps ) &&
+             cgMathUtility::dynamicEpsilonTest( value1.y, value2.y, maxUlps ) &&
+             cgMathUtility::dynamicEpsilonTest( value1.z, value2.z, maxUlps ) &&
+             cgMathUtility::dynamicEpsilonTest( value1.w, value2.w, maxUlps ));
+}
+
+//-----------------------------------------------------------------------------
+// Name : dynamicEpsilonTest () (Static)
+/// <summary>
 /// Compare the two floating point values using a dynamic epsilon test that
 /// allows the caller to specify the 'epsilon' in terms of maximum allowable 
 /// difference in usable floating point values, irrespective of the value
@@ -478,19 +552,23 @@ void cgMathUtility::solveCubic( cgDouble a, cgDouble b, cgDouble c, cgDouble d, 
 //-----------------------------------------------------------------------------
 bool cgMathUtility::dynamicEpsilonTest( cgFloat value1, cgFloat value2, cgInt32 maxUlps )
 {
-    // Make sure maxUlps is non-negative and small enough that the
-    // default NAN won't compare as equal to anything.
-    cgAssert(maxUlps > 0 && maxUlps < 4 * 1024 * 1024);
-    cgInt aInt = *(cgInt*)&value1;
-    // Make aInt lexicographically ordered as a twos-complement int
-    if (aInt < 0)
-        aInt = 0x80000000 - aInt;
-    // Make bInt lexicographically ordered as a twos-complement int
-    cgInt bInt = *(cgInt*)&value2;
-    if (bInt < 0)
-        bInt = 0x80000000 - bInt;
-    cgInt intDiff = abs(aInt - bInt);
-    if (intDiff <= maxUlps)
+    // Check if the numbers are really close -- needed
+    // when comparing numbers near zero.
+    cgFloat absDiff = fabs(value1 - value2);
+    if (absDiff <= CGE_EPSILON_1UM)
         return true;
+ 
+    Float_t uA(value1);
+    Float_t uB(value2);
+ 
+    // Different signs means they do not match.
+    if (uA.Negative() != uB.Negative())
+        return false;
+ 
+    // Find the difference in ULPs.
+    cgInt ulpsDiff = abs(uA.i - uB.i);
+    if (ulpsDiff <= maxUlps)
+        return true;
+ 
     return false;
 }

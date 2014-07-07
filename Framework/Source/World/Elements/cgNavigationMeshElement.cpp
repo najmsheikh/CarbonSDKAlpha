@@ -35,9 +35,9 @@
 //-----------------------------------------------------------------------------
 // Static Member Definitions
 //-----------------------------------------------------------------------------
-cgWorldQuery cgNavigationMeshElement::mInsertMeshParams;
-cgWorldQuery cgNavigationMeshElement::mUpdateMeshParams;
-cgWorldQuery cgNavigationMeshElement::mLoadMeshParams;
+cgWorldQuery cgNavigationMeshElement::mInsertElement;
+cgWorldQuery cgNavigationMeshElement::mUpdateParams;
+cgWorldQuery cgNavigationMeshElement::mLoadElement;
 
 ///////////////////////////////////////////////////////////////////////////////
 // cgNavigationMeshElement Member Functions
@@ -83,8 +83,11 @@ void cgNavigationMeshElement::dispose( bool disposeBase )
     // Clean up allocated items.
     if ( mHandler )
         mHandler->scriptSafeDispose();
+
+    // Disconnect from our navigation mesh (do not allow soft reference
+    // count to decrement -- we want to reconnect later).
     if ( mNavMesh )
-        mNavMesh->scriptSafeDispose();
+        mNavMesh->removeReference( this, true );
 
     // Clear variables.
     mNavMesh                = CG_NULL;
@@ -138,28 +141,6 @@ cgString cgNavigationMeshElement::getDatabaseTable( ) const
 }
 
 //-----------------------------------------------------------------------------
-// Name : onComponentCreated() (Virtual)
-/// <summary>
-/// When the component is first created, it needs to be inserted fully into the
-/// world database. This virtual method allows the component to do so.
-/// </summary>
-//-----------------------------------------------------------------------------
-bool cgNavigationMeshElement::onComponentCreated( cgComponentCreatedEventArgs * e )
-{
-    // Insert the new object sub-element.
-    if ( !insertComponentData( ) )
-        return false;
-
-    // Build the navigation mesh itself. Note: We don't
-    // fail to create the element in this case, but warnings
-    // may be output.
-    buildMesh();
-
-    // Call base class implementation last.
-    return cgSceneElement::onComponentCreated( e );
-}
-
-//-----------------------------------------------------------------------------
 // Name : buildMesh()
 /// <summary>
 /// Construct the navigation mesh based on the specified parameters.
@@ -167,13 +148,14 @@ bool cgNavigationMeshElement::onComponentCreated( cgComponentCreatedEventArgs * 
 //-----------------------------------------------------------------------------
 bool cgNavigationMeshElement::buildMesh( )
 {
-    // Release any previous navigation mesh.
+    // Validate requirements.
+    if ( !mNavMesh )
+        return false;
+
+    // Release any previous navigation handler.
     if ( mHandler )
         mHandler->scriptSafeDispose();
     mHandler = CG_NULL;
-    if ( mNavMesh )
-        mNavMesh->scriptSafeDispose();
-    mNavMesh = CG_NULL;
 
     // Get a list of all static meshes currently defined 
     // in the scene.
@@ -202,11 +184,11 @@ bool cgNavigationMeshElement::buildMesh( )
     } // Next object node
 
     // Build the navigation mesh
-    if ( !meshes.empty() )
+    if ( !meshes.empty() || mParentScene->getLandscape() )
     {
-        // Allocate and build a new navigation mesh.
-        mNavMesh = new cgNavigationMesh();
-        if ( !mNavMesh->build( mParams, (cgUInt32)meshes.size(), &meshes.front(), &transforms.front() ) )
+        // Build a new navigation mesh.
+        if ( !mNavMesh->build( (cgUInt32)meshes.size(), (meshes.empty()) ? CG_NULL : &meshes.front(), 
+                               (transforms.empty()) ? CG_NULL : &transforms.front(), mParentScene->getLandscape() ) )
             return false;
 
         // Create a new handler for this navigation mesh.
@@ -267,6 +249,42 @@ void cgNavigationMeshElement::update( cgFloat timeDelta )
 }
 
 //-----------------------------------------------------------------------------
+// Name : onComponentCreated() (Virtual)
+/// <summary>
+/// When the component is first created, it needs to be inserted fully into the
+/// world database. This virtual method allows the component to do so.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgNavigationMeshElement::onComponentCreated( cgComponentCreatedEventArgs * e )
+{
+    // Create a new navigation mesh item.
+    mNavMesh = new cgNavigationMesh( mWorld->generateRefId( isInternalReference() ), mWorld );
+    if ( !mNavMesh->onComponentCreated( &cgComponentCreatedEventArgs( 0, cgCloneMethod::None ) ) )
+    {
+        mNavMesh->deleteReference();
+        mNavMesh = CG_NULL;
+        return false;
+    
+    } // End if failed
+    
+    // Add us as a reference to this object (don't increment true DB based
+    // reference count if this is an internal element).
+    mNavMesh->addReference( this, isInternalReference() );
+
+    // Insert the new object sub-element BEFORE it has been built.
+    if ( !insertComponentData( ) )
+        return false;
+
+    // Build the navigation mesh itself. Note: We don't
+    // fail to create the element in this case, but warnings
+    // may be output.
+    buildMesh();
+
+    // Call base class implementation last.
+    return cgSceneElement::onComponentCreated( e );
+}
+
+//-----------------------------------------------------------------------------
 // Name : insertComponentData()
 /// <summary>
 /// Insert new records into the world database to represent this object.
@@ -281,28 +299,18 @@ bool cgNavigationMeshElement::insertComponentData( )
 
         // Update database.
         prepareQueries();
-        mInsertMeshParams.bindParameter( 1, mReferenceId );
-        mInsertMeshParams.bindParameter( 2, _T("") );
-        mInsertMeshParams.bindParameter( 3, mParams.agentRadius );
-        mInsertMeshParams.bindParameter( 4, mParams.agentHeight );
-        mInsertMeshParams.bindParameter( 5, mParams.agentMaximumSlope );
-        mInsertMeshParams.bindParameter( 6, mParams.agentMaximumStepHeight );
-        mInsertMeshParams.bindParameter( 7, mParams.edgeMaximumLength );
-        mInsertMeshParams.bindParameter( 8, mParams.edgeMaximumError );
-        mInsertMeshParams.bindParameter( 9, mParams.regionMinimumSize );
-        mInsertMeshParams.bindParameter( 10, mParams.regionMergedSize );
-        mInsertMeshParams.bindParameter( 11, mParams.verticesPerPoly );
-        mInsertMeshParams.bindParameter( 12, mParams.detailSampleDistance );
-        mInsertMeshParams.bindParameter( 13, mParams.detailSampleMaximumError );
-        mInsertMeshParams.bindParameter( 14, (cgUInt32)mSandboxRenderMethod );
-        mInsertMeshParams.bindParameter( 15, (cgUInt32)0 ); // ManualRebuild
-        mInsertMeshParams.bindParameter( 16, mSoftRefCount );
+        mInsertElement.bindParameter( 1, mReferenceId );
+        mInsertElement.bindParameter( 2, _T("") );
+        mInsertElement.bindParameter( 3, (mNavMesh) ? mNavMesh->getReferenceId() : 0 );
+        mInsertElement.bindParameter( 4, (cgUInt32)mSandboxRenderMethod );
+        mInsertElement.bindParameter( 5, (cgUInt32)0 ); // ManualRebuild
+        mInsertElement.bindParameter( 6, mSoftRefCount );
         
         // Execute
-        if ( !mInsertMeshParams.step( true ) )
+        if ( !mInsertElement.step( true ) )
         {
             cgString error;
-            mInsertMeshParams.getLastError( error );
+            mInsertElement.getLastError( error );
             cgAppLog::write( cgAppLog::Error, _T("Failed to insert data for navigation mesh scene element '0x%x' into database. Error: %s\n"), mReferenceId, error.c_str() );
             mWorld->rollbackTransaction( _T("NavigationMeshElement::insertComponentData") );
             return false;
@@ -329,41 +337,71 @@ bool cgNavigationMeshElement::onComponentLoading( cgComponentLoadingEventArgs * 
 {
     // Load the navigation mesh construction data.
     prepareQueries();
-    mLoadMeshParams.bindParameter( 1, e->sourceRefId );
-    if ( !mLoadMeshParams.step( ) || !mLoadMeshParams.nextRow() )
+    mLoadElement.bindParameter( 1, e->sourceRefId );
+    if ( !mLoadElement.step( ) || !mLoadElement.nextRow() )
     {
         // Log any error.
         cgString error;
-        if ( !mLoadMeshParams.getLastError( error ) )
+        if ( !mLoadElement.getLastError( error ) )
             cgAppLog::write( cgAppLog::Error, _T("Failed to retrieve data for navigation mesh scene element '0x%x'. World database has potentially become corrupt.\n"), mReferenceId );
         else
             cgAppLog::write( cgAppLog::Error, _T("Failed to retrieve data for navigation mesh scene element '0x%x'. Error: %s\n"), mReferenceId, error.c_str() );
 
         // Release any pending read operation.
-        mLoadMeshParams.reset();
+        mLoadElement.reset();
         return false;
     
     } // End if failed
     
     // Allow component class to access the data we just retrieved.
-    e->componentData = &mLoadMeshParams;
+    e->componentData = &mLoadElement;
 
     // Load parameters
-    cgUInt32 valueUInt32;
-    mParams = cgNavigationMeshCreateParams(); // Defaults
-    mLoadMeshParams.getColumn( _T("AgentRadius"), mParams.agentRadius );
-    mLoadMeshParams.getColumn( _T("AgentHeight"), mParams.agentHeight );
-    mLoadMeshParams.getColumn( _T("AgentMaxSlope"), mParams.agentMaximumSlope );
-    mLoadMeshParams.getColumn( _T("AgentMaxStepHeight"), mParams.agentMaximumStepHeight );
-    mLoadMeshParams.getColumn( _T("EdgeMaxLength"), mParams.edgeMaximumLength );
-    mLoadMeshParams.getColumn( _T("EdgeMaxError"), mParams.edgeMaximumError );
-    mLoadMeshParams.getColumn( _T("RegionMinSize"), mParams.regionMinimumSize );
-    mLoadMeshParams.getColumn( _T("RegionMergedSize"), mParams.regionMergedSize );
-    mLoadMeshParams.getColumn( _T("VertsPerPoly"), mParams.verticesPerPoly );
-    mLoadMeshParams.getColumn( _T("DetailSampleDistance"), mParams.detailSampleDistance );
-    mLoadMeshParams.getColumn( _T("DetailSampleMaxError"), mParams.detailSampleMaximumError );
-    mLoadMeshParams.getColumn( _T("SandboxRenderMethod"), valueUInt32 );
+    cgUInt32 valueUInt32, dataSourceId;
+    mLoadElement.getColumn( _T("DataSourceId"), dataSourceId );
+    mLoadElement.getColumn( _T("SandboxRenderMethod"), valueUInt32 );
     mSandboxRenderMethod = (SandboxRenderMethod)valueUInt32;
+
+    // Load the referenced navigation mesh data source.
+    if ( dataSourceId != 0 )
+    {
+        // Create a new navigation mesh item.
+        if ( e->cloneMethod == cgCloneMethod::Copy )
+            mNavMesh = new cgNavigationMesh( mWorld->generateRefId( isInternalReference() ), mWorld );
+        else
+            mNavMesh = new cgNavigationMesh( dataSourceId, mWorld );
+
+        // Instruct the data source to load its data.
+        if ( !mNavMesh->onComponentLoading( &cgComponentLoadingEventArgs( dataSourceId, 0, e->cloneMethod, CG_NULL ) ) )
+        {
+            mNavMesh->deleteReference();
+            mNavMesh = CG_NULL;
+            mLoadElement.reset();
+            return false;
+        
+        } // End if failed
+
+        // Reconnect to this component.
+        mNavMesh->addReference( this, true );
+
+    } // End if valid identifier
+    else
+    {
+        // Create a nav mesh if one was not specified.
+        mNavMesh = new cgNavigationMesh( mWorld->generateRefId( isInternalReference() ), mWorld );
+        if ( !mNavMesh->onComponentCreated( &cgComponentCreatedEventArgs( 0, cgCloneMethod::None ) ) )
+        {
+            mNavMesh->deleteReference();
+            mNavMesh = CG_NULL;
+            return false;
+
+        } // End if failed
+
+        // Add us as a reference to this object (don't increment true DB based
+        // reference count if this is an internal element).
+        mNavMesh->addReference( this, isInternalReference() );
+
+    } // End if no identifier
 
     // Call base class implementation to read remaining data.
     if ( !cgSceneElement::onComponentLoading( e ) )
@@ -378,10 +416,16 @@ bool cgNavigationMeshElement::onComponentLoading( cgComponentLoadingEventArgs * 
 
     } // End if cloned
 
-    // Build the navigation mesh itself. Note: We don't
-    // fail to create the element in this case, but warnings
-    // may be output.
-    buildMesh();
+    // If the navigation mesh has no tiles, attempt to rebuild it.
+    if ( !mNavMesh->getTileCount() )
+        buildMesh();
+    else
+    {
+        // Create a new handler for this navigation mesh.
+        mHandler = new cgNavigationHandler();
+        mHandler->initialize( mNavMesh, 256 ); // ToDo: configurable
+    
+    } // End if has tiles
 
     // Success!
     return true;
@@ -396,6 +440,12 @@ bool cgNavigationMeshElement::onComponentLoading( cgComponentLoadingEventArgs * 
 //-----------------------------------------------------------------------------
 void cgNavigationMeshElement::onComponentDeleted( )
 {
+    // Remove us as a valid reference from the object we're referencing (don't
+    // decrement true DB based reference count if this is an internal node).
+    if ( mNavMesh )
+        mNavMesh->removeReference( this, isInternalReference() );
+    mNavMesh = CG_NULL;
+
     // Call base class implementation last.
     cgSceneElement::onComponentDeleted( );
 }
@@ -411,17 +461,16 @@ void cgNavigationMeshElement::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertMeshParams.isPrepared() )
-            mInsertMeshParams.prepare( mWorld, _T("INSERT INTO 'SceneElements::NavigationMesh' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16)"), true );
-        if ( !mUpdateMeshParams.isPrepared() )
-            mUpdateMeshParams.prepare( mWorld, _T("UPDATE 'SceneElements::NavigationMesh' SET EditorName=?1, AgentRadius=?2, AgentHeight=?3, AgentMaxSlope=?4,")
-                                               _T("AgentMaxStepHeight=?5, EdgeMaxLength=?6, EdgeMaxError=?7, RegionMinSize=?8, RegionMergedSize=?9, VertsPerPoly=?10,")
-                                               _T("DetailSampleDistance=?11, DetailSampleMaxError=?12, SandboxRenderMethod=?13, ManualRebuild=?14 WHERE RefId=?15"), true );
+        if ( !mInsertElement.isPrepared( mWorld ) )
+            mInsertElement.prepare( mWorld, _T("INSERT INTO 'SceneElements::NavigationMesh' VALUES(?1,?2,?3,?4,?5,?6)"), true );
+        if ( !mUpdateParams.isPrepared( mWorld ) )
+            mUpdateParams.prepare( mWorld, _T("UPDATE 'SceneElements::NavigationMesh' SET EditorName=?1, ")
+                                               _T("SandboxRenderMethod=?2, ManualRebuild=?3 WHERE RefId=?4"), true );
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadMeshParams.isPrepared() )
-        mLoadMeshParams.prepare( mWorld, _T("SELECT * FROM 'SceneElements::NavigationMesh' WHERE RefId=?1"), true );
+    if ( !mLoadElement.isPrepared( mWorld ) )
+        mLoadElement.prepare( mWorld, _T("SELECT * FROM 'SceneElements::NavigationMesh' WHERE RefId=?1"), true );
 }
 
 //-----------------------------------------------------------------------------
@@ -441,27 +490,16 @@ void cgNavigationMeshElement::setSandboxRenderMethod( SandboxRenderMethod method
     if ( shouldSerialize() )
     {
         prepareQueries();
-        mUpdateMeshParams.bindParameter( 1, _T("") );
-        mUpdateMeshParams.bindParameter( 2, mParams.agentRadius );
-        mUpdateMeshParams.bindParameter( 3, mParams.agentHeight );
-        mUpdateMeshParams.bindParameter( 4, mParams.agentMaximumSlope );
-        mUpdateMeshParams.bindParameter( 5, mParams.agentMaximumStepHeight );
-        mUpdateMeshParams.bindParameter( 6, mParams.edgeMaximumLength );
-        mUpdateMeshParams.bindParameter( 7, mParams.edgeMaximumError );
-        mUpdateMeshParams.bindParameter( 8, mParams.regionMinimumSize );
-        mUpdateMeshParams.bindParameter( 9, mParams.regionMergedSize );
-        mUpdateMeshParams.bindParameter( 10, mParams.verticesPerPoly );
-        mUpdateMeshParams.bindParameter( 11, mParams.detailSampleDistance );
-        mUpdateMeshParams.bindParameter( 12, mParams.detailSampleMaximumError );
-        mUpdateMeshParams.bindParameter( 13, (cgUInt32)method );
-        mUpdateMeshParams.bindParameter( 14, (cgUInt32)0 ); // ManualRebuild
-        mUpdateMeshParams.bindParameter( 15, mReferenceId );
+        mUpdateParams.bindParameter( 1, _T("") );
+        mUpdateParams.bindParameter( 2, (cgUInt32)method );
+        mUpdateParams.bindParameter( 3, (cgUInt32)0 ); // ManualRebuild
+        mUpdateParams.bindParameter( 4, mReferenceId );
 
         // Execute
-        if ( !mUpdateMeshParams.step( true ) )
+        if ( !mUpdateParams.step( true ) )
         {
             cgString error;
-            mUpdateMeshParams.getLastError( error );
+            mUpdateParams.getLastError( error );
             cgAppLog::write( cgAppLog::Error, _T("Failed to update sandbox render method for navigation mesh element '0x%x'. Error: %s\n"), mReferenceId, error.c_str() );
             return;
         
@@ -500,7 +538,7 @@ cgNavigationMeshElement::SandboxRenderMethod cgNavigationMeshElement::getSandbox
 //-----------------------------------------------------------------------------
 void cgNavigationMeshElement::setAgentRadius( cgFloat radius, bool rebuild /* = false */ )
 {
-    cgNavigationMeshCreateParams params = mParams;
+    cgNavigationMeshCreateParams params = getParameters();
     params.agentRadius = radius;
     setParameters( params, rebuild );
 }
@@ -516,7 +554,7 @@ void cgNavigationMeshElement::setAgentRadius( cgFloat radius, bool rebuild /* = 
 //-----------------------------------------------------------------------------
 void cgNavigationMeshElement::setAgentHeight( cgFloat height, bool rebuild /* = false */ )
 {
-    cgNavigationMeshCreateParams params = mParams;
+    cgNavigationMeshCreateParams params = getParameters();
     params.agentHeight = height;
     setParameters( params, rebuild );
 }
@@ -532,7 +570,7 @@ void cgNavigationMeshElement::setAgentHeight( cgFloat height, bool rebuild /* = 
 //-----------------------------------------------------------------------------
 void cgNavigationMeshElement::setAgentMaximumSlope( cgFloat degrees, bool rebuild /* = false */ )
 {
-    cgNavigationMeshCreateParams params = mParams;
+    cgNavigationMeshCreateParams params = getParameters();
     params.agentMaximumSlope = degrees;
     setParameters( params, rebuild );
 }
@@ -549,7 +587,7 @@ void cgNavigationMeshElement::setAgentMaximumSlope( cgFloat degrees, bool rebuil
 //-----------------------------------------------------------------------------
 void cgNavigationMeshElement::setAgentMaximumStepHeight( cgFloat height, bool rebuild /* = false */ )
 {
-    cgNavigationMeshCreateParams params = mParams;
+    cgNavigationMeshCreateParams params = getParameters();
     params.agentMaximumStepHeight = height;
     setParameters( params, rebuild );
 }
@@ -566,43 +604,11 @@ void cgNavigationMeshElement::setAgentMaximumStepHeight( cgFloat height, bool re
 void cgNavigationMeshElement::setParameters( const cgNavigationMeshCreateParams & params, bool rebuild /* = false */ )
 {
     // Is this a no-op?
-    if ( memcmp( &params, &mParams, sizeof(cgNavigationMeshCreateParams) ) == 0 )
+    if ( memcmp( &params, &mNavMesh->getParameters(), sizeof(cgNavigationMeshCreateParams) ) == 0 )
         return;
 
-    // Update database.
-    if ( shouldSerialize() )
-    {
-        prepareQueries();
-        mUpdateMeshParams.bindParameter( 1, _T("") );
-        mUpdateMeshParams.bindParameter( 2, params.agentRadius );
-        mUpdateMeshParams.bindParameter( 3, params.agentHeight );
-        mUpdateMeshParams.bindParameter( 4, params.agentMaximumSlope );
-        mUpdateMeshParams.bindParameter( 5, params.agentMaximumStepHeight );
-        mUpdateMeshParams.bindParameter( 6, params.edgeMaximumLength );
-        mUpdateMeshParams.bindParameter( 7, params.edgeMaximumError );
-        mUpdateMeshParams.bindParameter( 8, params.regionMinimumSize );
-        mUpdateMeshParams.bindParameter( 9, params.regionMergedSize );
-        mUpdateMeshParams.bindParameter( 10, params.verticesPerPoly );
-        mUpdateMeshParams.bindParameter( 11, params.detailSampleDistance );
-        mUpdateMeshParams.bindParameter( 12, params.detailSampleMaximumError );
-        mUpdateMeshParams.bindParameter( 13, (cgUInt32)mSandboxRenderMethod );
-        mUpdateMeshParams.bindParameter( 14, (cgUInt32)0 ); // ManualRebuild
-        mUpdateMeshParams.bindParameter( 15, mReferenceId );
-
-        // Execute
-        if ( !mUpdateMeshParams.step( true ) )
-        {
-            cgString error;
-            mUpdateMeshParams.getLastError( error );
-            cgAppLog::write( cgAppLog::Error, _T("Failed to update creation parameters for navigation mesh element '0x%x'. Error: %s\n"), mReferenceId, error.c_str() );
-            return;
-        
-        } // End if failed
-    
-    } // End if serialize
-
-    // Update local member.
-    mParams = params;
+    // Update parameters.
+    mNavMesh->setParameters( params );
 
     // Notify any listeners of this change.
     static const cgString strContext = _T("CreationParameters");
@@ -624,7 +630,7 @@ void cgNavigationMeshElement::setParameters( const cgNavigationMeshCreateParams 
 //-----------------------------------------------------------------------------
 const cgNavigationMeshCreateParams & cgNavigationMeshElement::getParameters( ) const
 {
-    return mParams;
+    return mNavMesh->getParameters();
 }
 
 //-----------------------------------------------------------------------------

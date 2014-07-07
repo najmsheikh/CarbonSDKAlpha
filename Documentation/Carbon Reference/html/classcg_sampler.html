@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.18</span>
    </div>
   </td>
  </tr>
@@ -368,6 +368,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:afce881a05ab286600776969b12dcead9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_sampler.html#afce881a05ab286600776969b12dcead9">defaultSamplerStates</a> ()</td></tr>
 <tr class="memdesc:afce881a05ab286600776969b12dcead9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates sampler state structure with defaults. These default values may not match the API defaults (i.e. D3D), but instead default to values that make the most sense for the engine / editor combination.  <a href="#afce881a05ab286600776969b12dcead9"></a><br/></td></tr>
 <tr class="separator:afce881a05ab286600776969b12dcead9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a099abefd601d74ace5e81d4a0afc2467"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_sampler.html#a099abefd601d74ace5e81d4a0afc2467">updateCachedValues</a> ()</td></tr>
+<tr class="memdesc:a099abefd601d74ace5e81d4a0afc2467"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method should be called whenever the name of this sampler is adjusted, or when the assigned texture is replaced. Certain necessary values based on these properties will then be cached to save runtime overhead.  <a href="#a099abefd601d74ace5e81d4a0afc2467"></a><br/></td></tr>
+<tr class="separator:a099abefd601d74ace5e81d4a0afc2467"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -389,6 +392,10 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a673b069739e70370be688e119a8d100f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62d8dca6bbacc0a69bb876d316952b53"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_sampler.html#a62d8dca6bbacc0a69bb876d316952b53">mSystemSampler</a></td></tr>
 <tr class="separator:a62d8dca6bbacc0a69bb876d316952b53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cf5600689d2f94d8180084997d62214"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_sampler.html#a1cf5600689d2f94d8180084997d62214">mApplyDefaultDiffuse</a></td></tr>
+<tr class="separator:a1cf5600689d2f94d8180084997d62214"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3894d3b2624683902db1369dd83f10c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_sampler.html#af3894d3b2624683902db1369dd83f10c">mApplyDefaultNormal</a></td></tr>
+<tr class="separator:af3894d3b2624683902db1369dd83f10c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c029bf55aec1ffe594eebe62ca3d22f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_sampler.html#a6c029bf55aec1ffe594eebe62ca3d22f">mStatesDirty</a></td></tr>
 <tr class="separator:a6c029bf55aec1ffe594eebe62ca3d22f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classcg_world_component"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classcg_world_component')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classcg_world_component.html">cgWorldComponent</a></td></tr>
@@ -1472,7 +1479,72 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a099abefd601d74ace5e81d4a0afc2467"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgSampler::updateCachedValues </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This method should be called whenever the name of this sampler is adjusted, or when the assigned texture is replaced. Certain necessary values based on these properties will then be cached to save runtime overhead. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a1cf5600689d2f94d8180084997d62214"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgSampler::mApplyDefaultDiffuse</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af3894d3b2624683902db1369dd83f10c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgSampler::mApplyDefaultNormal</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a9f8c1e0716ab09b4a4316f2de1d46aa0"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1863,7 +1935,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_sampler.html">cgSampler</a></li>
-    <li class="footer">Generated on Wed May 21 2014 19:31:43 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon Jul 7 2014 04:51:37 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

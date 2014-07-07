@@ -136,15 +136,14 @@ protected:
     SandboxRenderMethod             mSandboxRenderMethod;   // Method used to render when in sandbox mode.
     cgNavigationMesh              * mNavMesh;               // Constructed navigation mesh
     cgNavigationHandler           * mHandler;               // Navigation handler associated with this mesh. Performs agent updates as required.
-    cgNavigationMeshCreateParams    mParams;                // Navigation mesh generation parameters.
     
     //-------------------------------------------------------------------------
     // Protected Static Variables
     //-------------------------------------------------------------------------
     // Cached database queries.
-    static cgWorldQuery mInsertMeshParams;
-    static cgWorldQuery mUpdateMeshParams;
-    static cgWorldQuery mLoadMeshParams;
+    static cgWorldQuery mInsertElement;
+    static cgWorldQuery mUpdateParams;
+    static cgWorldQuery mLoadElement;
 };
 
 #endif // !_CGE_CGNAVIGATIONMESHELEMENT_H_

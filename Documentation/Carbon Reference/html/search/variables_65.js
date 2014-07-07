@@ -18,7 +18,8 @@ var searchData=
   ['emitterdirection',['emitterDirection',['../structcg_particle_emitter_properties.html#a196f6e35890cc7daeb45bbfea19af632',1,'cgParticleEmitterProperties']]],
   ['emittertype',['emitterType',['../structcg_particle_emitter_properties.html#aa59a2285c45ae9a7bbc28f8f0408edc0',1,'cgParticleEmitterProperties']]],
   ['empty',['Empty',['../classcg_bounding_box.html#ab32449cb5845a850a9775b00271eb283',1,'cgBoundingBox::Empty()'],['../classcg_bounding_sphere.html#a5c758849e71f0fc38d130f8fc9769d9e',1,'cgBoundingSphere::Empty()'],['../classcg_string.html#a5beec1c2e58592a7ea02328d0729ffe9',1,'cgString::Empty()'],['../classcg_u_i_d.html#ae0bb84d8bdcdfad56e2d42ea7693a8c7',1,'cgUID::Empty()'],['../classcg_x_m_l_attribute.html#a2c4ec174916a4e1bc98749342833c5d0',1,'cgXMLAttribute::Empty()'],['../classcg_x_m_l_node.html#ac245e46bd6bfff0f7f8bf2ab627b1f9b',1,'cgXMLNode::Empty()']]],
-  ['enabled',['enabled',['../structcg_animation_track_desc.html#af60e08601929ca6ba7dc05b731c7ee74',1,'cgAnimationTrackDesc::enabled()'],['../structcg_profiler_1_1_init_config.html#afe525c8a21bdc161e9bdfbbc8e3ea278',1,'cgProfiler::InitConfig::enabled()']]],
+  ['enabled',['enabled',['../structcg_animation_track_desc.html#af60e08601929ca6ba7dc05b731c7ee74',1,'cgAnimationTrackDesc::enabled()'],['../structcg_profiler_1_1_init_config.html#afe525c8a21bdc161e9bdfbbc8e3ea278',1,'cgProfiler::InitConfig::enabled()'],['../classcg_procedural_tree_frond_desc.html#aae50b79c65df14e76be6a3062634ee27',1,'cgProceduralTreeFrondDesc::enabled()']]],
+  ['enableforkprune',['enableForkPrune',['../classcg_procedural_tree_growth_level.html#a2b4255f62da335566450755dc6834739',1,'cgProceduralTreeGrowthLevel']]],
   ['enableheight',['enableHeight',['../structcg_landscape_1_1_procedural_layer_ref.html#a5e311a32d79d0587b4adced8d947d686',1,'cgLandscape::ProceduralLayerRef']]],
   ['enableheighteffect',['enableHeightEffect',['../structcg_landscape_paint_params.html#a04820343557146fa9acde7b265af7d23',1,'cgLandscapePaintParams']]],
   ['enableslopeeffect',['enableSlopeEffect',['../structcg_landscape_paint_params.html#a24fe29dc650f77febf01f747f7612abf',1,'cgLandscapePaintParams']]],
@@ -31,5 +32,7 @@ var searchData=
   ['eventhandler',['EventHandler',['../classcg_u_i_control.html#a84d3ceb884c4a04d2a86fc151168c7f5',1,'cgUIControl']]],
   ['exponent',['exponent',['../structcg_shadow_settings_light.html#a21a2fd69713adc6ad82e16a83b280485',1,'cgShadowSettingsLight::exponent()'],['../structcg_shadow_settings.html#a051727a93d20244f730832d28c979b81',1,'cgShadowSettings::exponent()']]],
   ['exponents',['exponents',['../structcg_random_1_1_noise_generator_1_1_noise_tables.html#a39aea2ca25446584001d160638f9b90c',1,'cgRandom::NoiseGenerator::NoiseTables']]],
-  ['extrudedplanes',['extrudedPlanes',['../classcg_extruded_bounding_box.html#a962485639dcc03b6b13b3851af5967c6',1,'cgExtrudedBoundingBox']]]
+  ['extrudedplanes',['extrudedPlanes',['../classcg_extruded_bounding_box.html#a962485639dcc03b6b13b3851af5967c6',1,'cgExtrudedBoundingBox']]],
+  ['extrusionprofile',['extrusionProfile',['../classcg_procedural_tree_frond_desc.html#ae7f80752b1f779f377bcedfe91969dc0',1,'cgProceduralTreeFrondDesc']]],
+  ['extrusionsegments',['extrusionSegments',['../classcg_procedural_tree_frond_desc.html#af0719031913880dbccb048e32503c56a',1,'cgProceduralTreeFrondDesc']]]
 ];

@@ -528,17 +528,17 @@ void cgKinematicControllerJointObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertJoint.isPrepared() == false )
+        if ( !mInsertJoint.isPrepared( mWorld ) )
             mInsertJoint.prepare( mWorld, _T("INSERT INTO 'Objects::KinematicControllerJoint' VALUES(?1,?2,?3,?4,?5)"), true );
-        if ( mUpdateConstraintMode.isPrepared() == false )
+        if ( !mUpdateConstraintMode.isPrepared( mWorld ) )
             mUpdateConstraintMode.prepare( mWorld, _T("UPDATE 'Objects::KinematicControllerJoint' SET ConstraintMode=?1 WHERE RefId=?2"), true );
-        if ( mUpdateFrictions.isPrepared() == false )
+        if ( !mUpdateFrictions.isPrepared( mWorld ) )
             mUpdateFrictions.prepare( mWorld, _T("UPDATE 'Objects::KinematicControllerJoint' SET MaxLinearFriction=?1, MaxAngularFriction=?2 WHERE RefId=?3"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadJoint.isPrepared() == false )
+    if ( !mLoadJoint.isPrepared( mWorld ) )
         mLoadJoint.prepare( mWorld, _T("SELECT * FROM 'Objects::KinematicControllerJoint' WHERE RefId=?1"), true );
 }
 

@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.18</span>
    </div>
   </td>
  </tr>
@@ -252,8 +252,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6374490360c49c6d3923e0f2c2e099bd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_query.html#a6374490360c49c6d3923e0f2c2e099bd">getLastError</a> (<a class="el" href="classcg_string.html">cgString</a> &amp;messageOut) const </td></tr>
 <tr class="memdesc:a6374490360c49c6d3923e0f2c2e099bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the message of the last error that occurred if any.  <a href="#a6374490360c49c6d3923e0f2c2e099bd"></a><br/></td></tr>
 <tr class="separator:a6374490360c49c6d3923e0f2c2e099bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a262b7556e3ce3a853a39da637905a48f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_query.html#a262b7556e3ce3a853a39da637905a48f">isPrepared</a> (<a class="el" href="classcg_world.html">cgWorld</a> *world) const </td></tr>
+<tr class="memdesc:a262b7556e3ce3a853a39da637905a48f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Has the query been prepared (may become unprepared automatically if the parent world object to which this is attached gets disposed).  <a href="#a262b7556e3ce3a853a39da637905a48f"></a><br/></td></tr>
+<tr class="separator:a262b7556e3ce3a853a39da637905a48f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7115417065a2e7d24a00c2bc79435aab"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_query.html#a7115417065a2e7d24a00c2bc79435aab">isPrepared</a> () const </td></tr>
-<tr class="memdesc:a7115417065a2e7d24a00c2bc79435aab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Has the query been prepared (may become unprepared automatically if the parent world object to which this is attached gets disposed.  <a href="#a7115417065a2e7d24a00c2bc79435aab"></a><br/></td></tr>
+<tr class="memdesc:a7115417065a2e7d24a00c2bc79435aab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Has the query been prepared (may become unprepared automatically if the parent world object to which this is attached gets disposed).  <a href="#a7115417065a2e7d24a00c2bc79435aab"></a><br/></td></tr>
 <tr class="separator:a7115417065a2e7d24a00c2bc79435aab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cce97ee52d3302246f1097d92a5e0a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_world.html">cgWorld</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_world_query.html#a6cce97ee52d3302246f1097d92a5e0a8">getWorld</a> () const </td></tr>
 <tr class="memdesc:a6cce97ee52d3302246f1097d92a5e0a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the world on which this query is operating (if any).  <a href="#a6cce97ee52d3302246f1097d92a5e0a8"></a><br/></td></tr>
@@ -1475,6 +1478,24 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a262b7556e3ce3a853a39da637905a48f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgWorldQuery::isPrepared </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_world.html">cgWorld</a> *&#160;</td>
+          <td class="paramname"><em>world</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Has the query been prepared (may become unprepared automatically if the parent world object to which this is attached gets disposed). </p>
+
+</div>
+</div>
 <a class="anchor" id="a7115417065a2e7d24a00c2bc79435aab"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1488,7 +1509,7 @@ Static Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Has the query been prepared (may become unprepared automatically if the parent world object to which this is attached gets disposed. </p>
+<p>Has the query been prepared (may become unprepared automatically if the parent world object to which this is attached gets disposed). </p>
 
 </div>
 </div>
@@ -2870,7 +2891,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_world_query.html">cgWorldQuery</a></li>
-    <li class="footer">Generated on Wed May 21 2014 19:31:47 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon Jul 7 2014 04:51:42 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

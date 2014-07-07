@@ -343,6 +343,18 @@
     <Filter Include="Source Files\Scripting\Angelscript-JIT">
       <UniqueIdentifier>{742dccde-f395-4763-9e0b-d77ce92a3168}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Tools">
+      <UniqueIdentifier>{70a39334-449c-439f-bd83-5154eaee0e1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Tools\Generators">
+      <UniqueIdentifier>{776fea77-c02e-4acf-9ebe-cb82c6763a1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Tools">
+      <UniqueIdentifier>{a66aa231-a964-42c9-b00f-7a1cc1eeecca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Tools\Generators">
+      <UniqueIdentifier>{5a67609a-c30c-498f-8119-73f52b1b0436}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\cgBase.cpp">
@@ -1169,6 +1181,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\World\Elements\cgLandscapeElement.cpp">
       <Filter>Source Files\World\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Tools\Generators\cgProceduralTreeGenerator.cpp">
+      <Filter>Source Files\Tools\Generators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\World\Objects\cgProceduralTreeObject.cpp">
+      <Filter>Source Files\World\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2273,9 +2291,6 @@
     <ClInclude Include="..\..\Include\System\Platform\cgWinThreading.h">
       <Filter>Header Files\System\Platform</Filter>
     </ClInclude>
-	<ClInclude Include="..\..\Include\System\Containers\cgArray.h">
-      <Filter>Header Files\System\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\Rendering\cgBillboardBuffer.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
@@ -2548,6 +2563,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\World\Elements\cgLandscapeElement.h">
       <Filter>Header Files\World\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\Containers\cgArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\World\Objects\cgProceduralTreeObject.h">
+      <Filter>Header Files\World\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Tools\Generators\cgProceduralTreeGenerator.h">
+      <Filter>Header Files\Tools\Generators</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

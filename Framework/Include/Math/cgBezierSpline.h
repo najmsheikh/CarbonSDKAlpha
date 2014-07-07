@@ -53,6 +53,15 @@ public:
         Maximum         = 3,
         Minimum         = 4
     };
+    enum EvaluateMethod
+    {
+        NormalizePlusVariance  = 0,
+        NormalizeScaleVariance = 1,
+        NormalizeOnly          = 2,
+        SplinePlusVariance     = 3,
+        SplineScaleVariance    = 4,
+        SplineOnly             = 5
+    };
 
     //------------------------------------------------------------------------
     // Public Structures
@@ -91,18 +100,26 @@ public:
     // Sampling methods
     cgVector2               evaluate            ( cgFloat t );
     cgFloat                 evaluateForX        ( cgFloat x, bool approximate = false, cgUInt16 digits = 4 );
+    cgFloat                 evaluateForX        ( EvaluateMethod method, cgFloat x, cgFloat rand = 0, bool approximate = false, cgUInt16 digits = 4 );
     cgVector2               evaluateSegment     ( cgInt32 segment, cgFloat t );
 
     // Accessors
-    const SplinePointArray& getSplinePoints     ( ) const;
-    const SplinePoint     & getSplinePoint      ( cgInt32 index ) const;
-    SplinePoint           & getSplinePoint      ( cgInt32 index );
-    void                    setSplinePoint      ( cgInt32 index, const SplinePoint & pt );
+    const SplinePointArray& getPoints           ( ) const;
+    const SplinePoint     & getPoint            ( cgInt32 index ) const;
+    SplinePoint           & getPoint            ( cgInt32 index );
+    void                    setPoint            ( cgInt32 index, const SplinePoint & pt );
     cgInt32                 getPointCount       ( ) const;
     cgInt32                 getSegmentCount     ( ) const;
     bool                    isComplex           ( );
     SplineDescription       getDescription      ( ) const;
     void                    setDescription      ( SplineDescription desc );
+    void                    setRange            ( const cgRangeF & range );
+    void                    setRange            ( cgFloat minimum, cgFloat maximum );
+    void                    setRangeMinimum     ( cgFloat value );
+    void                    setRangeMaximum     ( cgFloat value );
+    const cgRangeF        & getRange            ( ) const;
+    void                    setVariance         ( cgFloat variance );
+    cgFloat                 getVariance         ( ) const;
     
     //-------------------------------------------------------------------------
     // Public Operator Overloads
@@ -121,6 +138,8 @@ protected:
     SplinePointArray    mPoints;
     cgFloatArray        mPointDist;
     cgFloat             mLength;
+    cgRangeF            mRange;
+    cgFloat             mVariance;
     bool                mSplineDirty;
     bool                mComplexSpline;
 };
@@ -173,10 +192,10 @@ public:
     cgVector3               evaluateSegment     ( cgInt32 segment, cgFloat t );
 
     // Accessors
-    const SplinePointArray& getSplinePoints     ( ) const;
-    const SplinePoint     & getSplinePoint      ( cgInt32 index ) const;
-    SplinePoint           & getSplinePoint      ( cgInt32 index );
-    void                    setSplinePoint      ( cgInt32 index, const SplinePoint & pt );
+    const SplinePointArray& getPoints           ( ) const;
+    const SplinePoint     & getPoint            ( cgInt32 index ) const;
+    SplinePoint           & getPoint            ( cgInt32 index );
+    void                    setPoint            ( cgInt32 index, const SplinePoint & pt );
     cgInt32                 getPointCount       ( ) const;
     cgInt32                 getSegmentCount     ( ) const;
     

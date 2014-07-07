@@ -281,15 +281,15 @@ void cgHullCollisionShapeElement::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertHullCollisionShape.isPrepared() )
+        if ( !mInsertHullCollisionShape.isPrepared( mWorld ) )
             mInsertHullCollisionShape.prepare( mWorld, _T("INSERT INTO 'ObjectSubElements::HullCollisionShape' VALUES(?1,?2,?3,?4)"), true );
-        if ( !mUpdateSerializedData.isPrepared() )
+        if ( !mUpdateSerializedData.isPrepared( mWorld ) )
             mUpdateSerializedData.prepare( mWorld, _T("UPDATE 'ObjectSubElements::HullCollisionShape' SET HullData=?1 WHERE RefId=?2"), true );
         
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadHullCollisionShape.isPrepared() )
+    if ( !mLoadHullCollisionShape.isPrepared( mWorld ) )
         mLoadHullCollisionShape.prepare( mWorld, _T("SELECT * FROM 'ObjectSubElements::HullCollisionShape' WHERE RefId=?1"), true );
 }
 

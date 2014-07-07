@@ -1487,27 +1487,27 @@ void cgProjectorLightObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertProjectorLight.isPrepared() == false )
+        if ( !mInsertProjectorLight.isPrepared( mWorld ) )
             mInsertProjectorLight.prepare( mWorld, _T("INSERT INTO 'Objects::ProjectorLight' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16)"), true );
-        if ( mUpdateRanges.isPrepared() == false )
+        if ( !mUpdateRanges.isPrepared( mWorld ) )
             mUpdateRanges.prepare( mWorld, _T("UPDATE 'Objects::ProjectorLight' SET OuterRange=?1, InnerRange=?2 WHERE RefId=?3"), true );
-        if ( mUpdateSize.isPrepared() == false )
+        if ( !mUpdateSize.isPrepared( mWorld ) )
             mUpdateSize.prepare( mWorld, _T("UPDATE 'Objects::ProjectorLight' SET SizeU=?1, SizeV=?2 WHERE RefId=?3"), true );
-        if ( mUpdateFOV.isPrepared() == false )
+        if ( !mUpdateFOV.isPrepared( mWorld ) )
             mUpdateFOV.prepare( mWorld, _T("UPDATE 'Objects::ProjectorLight' SET FoVU=?1, FoVV=?2 WHERE RefId=?3"), true );
-        if ( mUpdateTiling.isPrepared() == false )
+        if ( !mUpdateTiling.isPrepared( mWorld ) )
             mUpdateTiling.prepare( mWorld, _T("UPDATE 'Objects::ProjectorLight' SET TilingU=?1, TilingV=?2 WHERE RefId=?3"), true );
-        if ( mUpdateShadowRate.isPrepared() == false )
+        if ( !mUpdateShadowRate.isPrepared( mWorld ) )
             mUpdateShadowRate.prepare( mWorld, _T("UPDATE 'Objects::ProjectorLight' SET ShadowUpdateRate=?1 WHERE RefId=?2"), true );
-        if ( mUpdatePlaybackRate.isPrepared() == false )
+        if ( !mUpdatePlaybackRate.isPrepared( mWorld ) )
             mUpdatePlaybackRate.prepare( mWorld, _T("UPDATE 'Objects::ProjectorLight' SET ProjectionPlaybackRate=?1 WHERE RefId=?2"), true );
-        if ( mUpdateColorSamplerId.isPrepared() == false )
+        if ( !mUpdateColorSamplerId.isPrepared( mWorld ) )
             mUpdateColorSamplerId.prepare( mWorld, _T("UPDATE 'Objects::ProjectorLight' SET LightSamplerId=?1 WHERE RefId=?2"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadProjectorLight.isPrepared() == false )
+    if ( !mLoadProjectorLight.isPrepared( mWorld ) )
         mLoadProjectorLight.prepare( mWorld, _T("SELECT * FROM 'Objects::ProjectorLight' WHERE RefId=?1"), true );
 }
 

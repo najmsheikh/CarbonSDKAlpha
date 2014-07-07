@@ -28,6 +28,7 @@
 //-----------------------------------------------------------------------------
 #include <Navigation/cgNavigationTile.h>
 #include <Navigation/cgNavigationTypes.h>
+#include <World/cgLandscape.h>
 #include <Resources/cgMesh.h>
 #include <Resources/cgResourceManager.h>
 #include <Resources/cgConstantBuffer.h>
@@ -37,6 +38,12 @@
 #include "../../Lib/Detour/Include/DetourNavMesh.h"
 #include "../../Lib/Detour/Include/DetourNavMeshBuilder.h"
 #include "../../Lib/Recast/Include/Recast.h"
+#include "../../Lib/Recast/Include/RecastAlloc.h"
+
+//-----------------------------------------------------------------------------
+// Static Member Definitions
+//-----------------------------------------------------------------------------
+cgWorldQuery cgNavigationTile::mInsertTile;
 
 ///////////////////////////////////////////////////////////////////////////////
 // cgNavigationTile Members
@@ -57,6 +64,7 @@ cgNavigationTile::cgNavigationTile( cgInt32 tileX, cgInt32 tileY, cgInt32 tileZ,
     mTileRef    = 0xFFFFFFFF;
     mPolyMesh   = CG_NULL;
     mDetailMesh = CG_NULL;
+    mDatabaseId = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -100,6 +108,18 @@ void cgNavigationTile::dispose( bool disposeBase )
 //-----------------------------------------------------------------------------
 bool cgNavigationTile::buildTile( const cgNavigationMeshCreateParams & params, const cgBoundingBox & tileBounds, cgUInt32 meshCount, cgMeshHandle meshData[], cgTransform meshTransforms[] )
 {
+    return buildTile( params, tileBounds, meshCount, meshData, meshTransforms, 0, CG_NULL );
+}
+
+//-----------------------------------------------------------------------------
+//  Name : buildTile ()
+/// <summary>
+/// Construct the navigation data for this tile based on the supplied geometry
+/// and construction parameters.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgNavigationTile::buildTile( const cgNavigationMeshCreateParams & params, const cgBoundingBox & tileBounds, cgUInt32 meshCount, cgMeshHandle meshData[], cgTransform meshTransforms[], cgUInt32 terrainBlockCount, cgTerrainBlock * blockData[] )
+{
     // Deriving configuration values - http://digestingduck.blogspot.fi/2009/08/recast-settings-uncovered.html
     
     // Release the prior data.
@@ -110,32 +130,43 @@ bool cgNavigationTile::buildTile( const cgNavigationMeshCreateParams & params, c
     cgInt totalVertices = 0, totalTriangles = 0;
     for ( cgUInt32 i = 0; i < meshCount; ++i )
     {
-        cgMesh * pMesh = meshData[i].getResource(true);
-        totalVertices  += (cgInt)pMesh->getVertexCount();
-        totalTriangles += (cgInt)pMesh->getFaceCount();
+        cgMesh * mesh = meshData[i].getResource(true);
+        totalVertices  += (cgInt)mesh->getVertexCount();
+        totalTriangles += (cgInt)mesh->getFaceCount();
 
     } // Next mesh
+
+    // Add terrain block geometry.
+    for ( cgUInt32 i = 0; i < terrainBlockCount; ++i )
+    {
+        cgTerrainBlock * block = blockData[i];
+        cgLandscape * landscape = block->getLandscape();
+        const cgSize & size = landscape->getBlockSize();
+        totalVertices += size.width * size.height;
+        totalTriangles += ((size.width-1) * (size.height-1)) * 2;
+    
+    } // Next terrain block
 
     // Allocate space for vertices / triangles.
     cgArray<cgVector3> vertices( totalVertices );
     cgArray<cgInt> indices( totalTriangles * 3 );
 
-    // Extract the data.
+    // Extract the mesh data.
     totalVertices = totalTriangles = 0;
     for ( cgUInt32 i = 0; i < meshCount; ++i )
     {
-        cgMesh * pMesh = meshData[i].getResource(true);
+        cgMesh * mesh = meshData[i].getResource(true);
         
         // Copy vertex positions (transformed).
-        cgInt    meshVertexCount  = pMesh->getVertexCount();
-        cgInt    meshVertexStride = pMesh->getVertexFormat()->getStride();
-        cgByte * meshVertices     = pMesh->getSystemVB();
+        cgInt    meshVertexCount  = mesh->getVertexCount();
+        cgInt    meshVertexStride = mesh->getVertexFormat()->getStride();
+        cgByte * meshVertices     = mesh->getSystemVB();
         for ( cgInt j = 0; j < meshVertexCount; ++j, meshVertices += meshVertexStride )
             meshTransforms[i].transformCoord( vertices[totalVertices+j], *(cgVector3*)meshVertices );
 
         // Copy indices (flip winding)
-        cgInt meshTriangleCount = (cgInt)pMesh->getFaceCount();
-        cgUInt32 * meshIndices  = pMesh->getSystemIB();
+        cgInt meshTriangleCount = (cgInt)mesh->getFaceCount();
+        cgUInt32 * meshIndices  = mesh->getSystemIB();
         for ( cgInt j = 0; j < meshTriangleCount; ++j )
         {
             indices[(totalTriangles+j)*3+0] = (cgInt)meshIndices[(j*3)+0] + totalVertices;
@@ -149,6 +180,48 @@ bool cgNavigationTile::buildTile( const cgNavigationMeshCreateParams & params, c
         totalTriangles += meshTriangleCount;
 
     } // Next mesh
+
+    // Extract terrain block data.
+    for ( cgUInt32 i = 0; i < terrainBlockCount; ++i )
+    {
+        // Retrieve the data we need to perform this computation.
+        cgTerrainBlock* block        = blockData[i];
+        cgLandscape   * landscape    = block->getLandscape();
+        cgSize          size         = landscape->getBlockSize();
+        cgVector3       scale        = landscape->getTerrainScale();
+        cgVector3       offset       = landscape->getTerrainOffset();
+        cgPoint         heightOffset = block->getHeightMapOffset();
+
+        // Process each triangle
+        for ( cgInt y = 0; y < size.height - 1; ++y )
+        {
+            for ( cgInt x = 0; x < size.width - 1; ++x )
+            {
+                indices[totalTriangles*3+0] = totalVertices + (x + y * size.height);
+                indices[totalTriangles*3+1] = totalVertices + ((x+1) + y * size.height);
+                indices[totalTriangles*3+2] = totalVertices + (x + (y+1) * size.height);
+                indices[totalTriangles*3+3] = totalVertices + (x + (y+1) * size.height);
+                indices[totalTriangles*3+4] = totalVertices + ((x+1) + y * size.height);
+                indices[totalTriangles*3+5] = totalVertices + ((x+1) + (y+1) * size.height);
+                totalTriangles += 2;
+            
+            } // Next column
+        
+        } // Next row
+
+        // Process each vertex.
+        for ( cgInt y = heightOffset.y, endY = heightOffset.y + size.height; y < endY; ++y )
+        {
+            for ( cgInt x = heightOffset.x, endX = heightOffset.x + size.width; x < endX; ++x )
+            {
+                cgInt16 height = block->getHeightMapHeight( x, y );
+                vertices[totalVertices++] = cgVector3( x * scale.x + offset.x, (cgFloat)height * scale.y + offset.y, -y * scale.z + offset.z );
+            
+            } // Next column
+        
+        } // Next row
+
+    } // Next block
     
 	// Init build configuration
     rcConfig config;
@@ -263,7 +336,7 @@ bool cgNavigationTile::buildTile( const cgNavigationMeshCreateParams & params, c
 			m_ctx->log(RC_LOG_ERROR, "buildNavigation: Could not build regions.");
 			return 0;
 		}
-	}
+	} 
 	else
 	{
 		// Prepare for region partitioning, by calculating distance field along the walkable surface.
@@ -714,4 +787,210 @@ void cgNavigationTile::buildDebugMeshes( cgResourceManager * resources )
 		dd->vertex(x,y,z, colv);
 	}
 	dd->end();*/
+}
+
+//-----------------------------------------------------------------------------
+//  Name : serialize ()
+/// <summary>
+/// Insert (or update) the database entries associated with this navigation
+/// tile.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgNavigationTile::serialize( cgUInt32 parentId, cgWorld * world )
+{
+    if ( (cgGetSandboxMode() == cgSandboxMode::Enabled) && !mDatabaseId )
+    {
+        cgByte * dataOut = CG_NULL;
+
+        // Insert data for this controller.
+        prepareQueries( world );
+        mInsertTile.bindParameter( 1, parentId );
+        mInsertTile.bindParameter( 2, mTileX );
+        mInsertTile.bindParameter( 3, mTileY );
+        mInsertTile.bindParameter( 4, mTileZ );
+        if ( !mNavData.empty() )
+            mInsertTile.bindParameter( 5, &mNavData[0], mNavData.size() );
+        else
+            mInsertTile.bindParameter( 5, CG_NULL, 0 );
+
+        // Build data for poly mesh.
+        mInsertTile.bindParameter( 6, CG_NULL, 0 );
+        if ( mPolyMesh )
+        {
+            // Compute size.
+            cgUInt32 dataSize = 52; // Basic properties
+            dataSize += sizeof(unsigned short)*mPolyMesh->nverts*3; // verts
+            dataSize += sizeof(unsigned short)*mPolyMesh->npolys*mPolyMesh->nvp*2; // polys
+            dataSize += sizeof(unsigned short)*mPolyMesh->npolys; // regs
+            dataSize += sizeof(unsigned char)*mPolyMesh->npolys; // areas
+            dataSize += sizeof(unsigned short)*mPolyMesh->npolys; // flags
+
+            // Allocate storage
+            dataOut = new cgByte[dataSize];
+            cgByte * data = dataOut;
+            
+            // Build basic properties.
+            memcpy( data, &mPolyMesh->nverts, sizeof(cgInt32) );
+            data += sizeof(cgInt32);
+            memcpy( data, &mPolyMesh->npolys, sizeof(cgInt32) );
+            data += sizeof(cgInt32);
+            memcpy( data, &mPolyMesh->maxpolys, sizeof(cgInt32) );
+            data += sizeof(cgInt32);
+            memcpy( data, &mPolyMesh->nvp, sizeof(cgInt32) );
+            data += sizeof(cgInt32);
+            memcpy( data, mPolyMesh->bmin, sizeof(cgFloat) * 3 );
+            data += sizeof(cgFloat) * 3;
+            memcpy( data, mPolyMesh->bmax, sizeof(cgFloat) * 3 );
+            data += sizeof(cgFloat) * 3;
+            memcpy( data, &mPolyMesh->cs, sizeof(cgFloat) );
+            data += sizeof(cgFloat);
+            memcpy( data, &mPolyMesh->ch, sizeof(cgFloat) );
+            data += sizeof(cgFloat);
+            memcpy( data, &mPolyMesh->borderSize, sizeof(cgInt32) );
+            data += sizeof(cgInt32);
+
+            // Copy data.
+            memcpy( data, mPolyMesh->verts, sizeof(unsigned short)*mPolyMesh->nverts*3 );
+            data += sizeof(unsigned short)*mPolyMesh->nverts*3;
+            memcpy( data, mPolyMesh->polys, sizeof(unsigned short)*mPolyMesh->npolys*mPolyMesh->nvp*2 );
+            data += sizeof(unsigned short)*mPolyMesh->npolys*mPolyMesh->nvp*2;
+            memcpy( data, mPolyMesh->regs, sizeof(unsigned short)*mPolyMesh->npolys );
+            data += sizeof(unsigned short)*mPolyMesh->npolys;
+            memcpy( data, mPolyMesh->areas, sizeof(unsigned char)*mPolyMesh->npolys );
+            data += sizeof(unsigned char)*mPolyMesh->npolys;
+            memcpy( data, mPolyMesh->flags, sizeof(unsigned short)*mPolyMesh->npolys );
+            data += sizeof(unsigned short)*mPolyMesh->npolys;
+
+            // Output!
+            mInsertTile.bindParameter( 6, dataOut, dataSize );        
+
+        } // End if valid poly mesh
+        
+        // Process!
+        if ( !mInsertTile.step( true ) )
+        {
+            delete []dataOut;
+            cgString error;
+            mInsertTile.getLastError( error );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to insert data for navigation tile <%i, %i, %i>. Error: %s\n"), mTileX, mTileY, mTileZ, error.c_str() );
+            return false;
+
+        } // End if failed
+
+        // Clean up
+        delete []dataOut;
+
+        // Retrieve the new database record identifier for
+        // later alterations.
+        mDatabaseId = mInsertTile.getLastInsertId();
+
+    } // End if can insert
+
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : deserialize ()
+/// <summary>
+/// Import the data associated with this animation tile based on the supplied 
+/// query object.
+/// </summary>
+//-----------------------------------------------------------------------------
+bool cgNavigationTile::deserialize( cgWorldQuery & tileQuery, bool cloning )
+{
+    // Get the required basic parameters for this tile
+    cgUInt32 databaseId;
+    tileQuery.getColumn( _T("TileId"), databaseId );
+    tileQuery.getColumn( _T("TileX"), mTileX );
+    tileQuery.getColumn( _T("TileY"), mTileY );
+    tileQuery.getColumn( _T("TileZ"), mTileZ );
+
+    // Retrieve navigation data
+    cgByte * data;
+    cgUInt32 dataSize;
+    tileQuery.getColumn( _T("NavData"), (void**)&data, dataSize );
+    if ( data && dataSize > 0 )
+    {
+        mNavData.resize( dataSize );
+        memcpy( &mNavData[0], data, dataSize );
+    
+    } // End if valid nav data
+
+    // Retrieve poly mesh.
+    tileQuery.getColumn( _T("PolyData"), (void**)&data, dataSize );
+    if ( data && dataSize > 0 )
+    {
+        // Allocate new mesh
+        mPolyMesh = rcAllocPolyMesh();
+
+        // Get basic properties.
+        memcpy( &mPolyMesh->nverts, data, sizeof(cgInt32) );
+        data += sizeof(cgInt32);
+        memcpy( &mPolyMesh->npolys, data, sizeof(cgInt32) );
+        data += sizeof(cgInt32);
+        memcpy( &mPolyMesh->maxpolys, data, sizeof(cgInt32) );
+        data += sizeof(cgInt32);
+        memcpy( &mPolyMesh->nvp, data, sizeof(cgInt32) );
+        data += sizeof(cgInt32);
+        memcpy( mPolyMesh->bmin, data, sizeof(cgFloat) * 3 );
+        data += sizeof(cgFloat) * 3;
+        memcpy( mPolyMesh->bmax, data, sizeof(cgFloat) * 3 );
+        data += sizeof(cgFloat) * 3;
+        memcpy( &mPolyMesh->cs, data, sizeof(cgFloat) );
+        data += sizeof(cgFloat);
+        memcpy( &mPolyMesh->ch, data, sizeof(cgFloat) );
+        data += sizeof(cgFloat);
+        memcpy( &mPolyMesh->borderSize, data, sizeof(cgInt32) );
+        data += sizeof(cgInt32);
+
+        // Allocate storage.
+        mPolyMesh->verts = (unsigned short*)rcAlloc(sizeof(unsigned short)*mPolyMesh->nverts*3, RC_ALLOC_PERM);
+        mPolyMesh->polys = (unsigned short*)rcAlloc(sizeof(unsigned short)*mPolyMesh->npolys*mPolyMesh->nvp*2, RC_ALLOC_PERM);
+        mPolyMesh->regs  = (unsigned short*)rcAlloc(sizeof(unsigned short)*mPolyMesh->npolys, RC_ALLOC_PERM);
+        mPolyMesh->areas = (unsigned char*)rcAlloc(sizeof(unsigned char)*mPolyMesh->npolys, RC_ALLOC_PERM);
+        mPolyMesh->flags = (unsigned short*)rcAlloc(sizeof(unsigned short)*mPolyMesh->npolys, RC_ALLOC_PERM);
+
+        // Load data.
+        memcpy( mPolyMesh->verts, data, sizeof(unsigned short)*mPolyMesh->nverts*3 );
+        data += sizeof(unsigned short)*mPolyMesh->nverts*3;
+        memcpy( mPolyMesh->polys, data, sizeof(unsigned short)*mPolyMesh->npolys*mPolyMesh->nvp*2 );
+        data += sizeof(unsigned short)*mPolyMesh->npolys*mPolyMesh->nvp*2;
+        memcpy( mPolyMesh->regs, data, sizeof(unsigned short)*mPolyMesh->npolys );
+        data += sizeof(unsigned short)*mPolyMesh->npolys;
+        memcpy( mPolyMesh->areas, data, sizeof(unsigned char)*mPolyMesh->npolys );
+        data += sizeof(unsigned char)*mPolyMesh->npolys;
+        memcpy( mPolyMesh->flags, data, sizeof(unsigned short)*mPolyMesh->npolys );
+        data += sizeof(unsigned short)*mPolyMesh->npolys;
+    
+    } // End if valid poly data
+
+    // Only associate with the original database row identifier if we were
+    // not instructed to clone data. By ensuring that the 'databaseId'
+    // is '0', this will force the insertion of a new entry on next serialize.
+    if ( cloning )
+        mDatabaseId = 0;
+    else
+        mDatabaseId = databaseId;
+    
+    // Success!
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+// Name : prepareQueries ( ) (Protected)
+/// <summary>
+/// Prepare any cached world queries as necessary.
+/// </summary>
+//-----------------------------------------------------------------------------
+void cgNavigationTile::prepareQueries( cgWorld * world )
+{
+    // Prepare the SQL statements as necessary.
+    if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
+    {
+        // Prepare the SQL statements as necessary.
+        if ( !mInsertTile.isPrepared( world ) )
+            mInsertTile.prepare( world, _T("INSERT INTO 'DataSources::NavigationMesh::Tiles' VALUES(NULL,?1,?2,?3,?4,?5,?6)"), true );
+        
+    } // End if sandbox
 }

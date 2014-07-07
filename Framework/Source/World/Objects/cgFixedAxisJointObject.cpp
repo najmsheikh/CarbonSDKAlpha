@@ -752,13 +752,13 @@ void cgFixedAxisJointObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertJoint.isPrepared() == false )
+        if ( !mInsertJoint.isPrepared( mWorld ) )
             mInsertJoint.prepare( mWorld, _T("INSERT INTO 'Objects::FixedAxisJoint' VALUES(?1,?2)"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadJoint.isPrepared() == false )
+    if ( !mLoadJoint.isPrepared( mWorld ) )
         mLoadJoint.prepare( mWorld, _T("SELECT * FROM 'Objects::FixedAxisJoint' WHERE RefId=?1"), true );
 }
 

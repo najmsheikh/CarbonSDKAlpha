@@ -430,13 +430,11 @@ bool cgWorld::create( cgWorldType::Base type )
     
     } // End if already open
 
-    // Write debug to log.
-    cgAppLog::write( cgAppLog::Info, _T("Creating new world database utilizing the v%i.%02i.%04i layout definition.\n"), CGE_WORLD_VERSION, CGE_WORLD_SUBVERSION, CGE_WORLD_REVISION );
-
     // Retrieve the statements that define the required file layout.
     cgString layout;
     switch ( type )
     {
+        case cgWorldType::TransientMaster:
         case cgWorldType::Master:
             layout = cgFileSystem::loadStringFromStream( _T("sys://Layout/MasterWorld") );
             break;
@@ -445,6 +443,10 @@ bool cgWorld::create( cgWorldType::Base type )
             return false;
     
     } // End switch FileType
+
+    // Write debug to log.
+    if ( type == cgWorldType::Master )
+        cgAppLog::write( cgAppLog::Info, _T("Creating new master world database utilizing the v%i.%02i.%04i layout definition.\n"), CGE_WORLD_VERSION, CGE_WORLD_SUBVERSION, CGE_WORLD_REVISION );
 
     // Valid?
     if ( layout.empty() )
@@ -467,12 +469,19 @@ bool cgWorld::create( cgWorldType::Base type )
 
     // Database was successfully opened. Create tables / indexes / triggers as required.
     // Uses a transaction to improve performance.
-    if ( !executeQuery( layout, true ) )
+    cgWorldQuery query;
+    query.prepare( mDatabase, _T("BEGIN") );
+    query.step( true );
+    if ( !executeQuery( layout, false ) )
     {
+        query.prepare( mDatabase, _T("ROLLBACK") );
+        query.step( true );
         dispose( false );
         return false;
     
     } // End if failed
+    query.prepare( mDatabase, _T("COMMIT") );
+    query.step( true );
 
     // Use the temporary file as the input stream.
     mOriginalStream     = cgInputStream( temporaryFile );
@@ -1291,7 +1300,7 @@ bool cgWorld::tableExists( const cgString & name )
 {
     static const cgString queryString = _T("SELECT name FROM sqlite_master WHERE type='table' AND name=?1");
     cgWorldQuery query( this, queryString );
-    if ( !query.isPrepared() )
+    if ( !query.isPrepared( this ) )
         return false;
 
     // Execute the query and get the result.

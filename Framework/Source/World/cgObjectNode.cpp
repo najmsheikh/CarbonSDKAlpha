@@ -4639,147 +4639,147 @@ void cgObjectNode::prepareQueries()
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         // Prepare the SQL statements as necessary.
-        if ( !mNodeInsert.isPrepared() )
+        if ( !mNodeInsert.isPrepared( world ) )
         {
             cgString statement = _T("INSERT INTO 'Nodes' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44,?45,?46)");
             mNodeInsert.prepare( world, statement, true );
         
         } // End if !prepared
         
-        if ( !mNodeDelete.isPrepared() )
+        if ( !mNodeDelete.isPrepared( world ) )
         {
             cgString statement = _T("DELETE FROM 'Nodes' WHERE RefId=?1");
             mNodeDelete.prepare( world, statement, true );
         
         } // End if !prepared
 
-        if ( !mNodeUpdateCell.isPrepared() )
+        if ( !mNodeUpdateCell.isPrepared( world ) )
         {
             cgString statement = _T("UPDATE 'Nodes' SET CellId=?1,PositionX=?2,PositionY=?3,PositionZ=?4 WHERE RefId=?5");
             mNodeUpdateCell.prepare( world, statement, true );
         
         } // End if !prepared
 
-        if ( !mNodeUpdateTransform.isPrepared() )
+        if ( !mNodeUpdateTransform.isPrepared( world ) )
         {
             cgString statement = _T("UPDATE 'Nodes' SET PositionX=?1,PositionY=?2,PositionZ=?3,RotationX=?4,RotationY=?5,RotationZ=?6,RotationW=?7,ShearXY=?8,ShearXZ=?9,ShearYZ=?10,ScaleX=?11,ScaleY=?12,ScaleZ=?13 WHERE RefId=?14");
             mNodeUpdateTransform.prepare( world, statement, true );
         
         } // End if !prepared
 
-        if ( !mNodeUpdateOffsetTransform.isPrepared() )
+        if ( !mNodeUpdateOffsetTransform.isPrepared( world ) )
         {
             cgString statement = _T("UPDATE 'Nodes' SET OffsetPositionX=?1,OffsetPositionY=?2,OffsetPositionZ=?3,OffsetRotationX=?4,OffsetRotationY=?5,OffsetRotationZ=?6,OffsetRotationW=?7,OffsetShearXY=?8,OffsetShearXZ=?9,OffsetShearYZ=?10,OffsetScaleX=?11,OffsetScaleY=?12,OffsetScaleZ=?13 WHERE RefId=?14");
             mNodeUpdateOffsetTransform.prepare( world, statement, true );
         
         } // End if !prepared
 
-        if ( !mNodeUpdateColor.isPrepared() )
+        if ( !mNodeUpdateColor.isPrepared( world ) )
         {
             cgString statement = _T("UPDATE 'Nodes' SET EditorColor=?1 WHERE RefId=?2");
             mNodeUpdateColor.prepare( world, statement, true );
         
         } // End if !prepared
 
-        if ( !mNodeUpdateName.isPrepared() )
+        if ( !mNodeUpdateName.isPrepared( world ) )
         {
             cgString statement = _T("UPDATE 'Nodes' SET EditorName=?1 WHERE RefId=?2");
             mNodeUpdateName.prepare( world, statement, true );
         
         } // End if !prepared
 
-        if ( !mNodeUpdateInstanceIdentifier.isPrepared() )
+        if ( !mNodeUpdateInstanceIdentifier.isPrepared( world ) )
         {
             cgString statement = _T("UPDATE 'Nodes' SET InstanceIdentifier=?1 WHERE RefId=?2");
             mNodeUpdateInstanceIdentifier.prepare( world, statement, true );
         
         } // End if !prepared
 
-        if ( !mNodeUpdateParent.isPrepared() )
+        if ( !mNodeUpdateParent.isPrepared( world ) )
         {
             cgString statement = _T("UPDATE 'Nodes' SET ParentRefId=?1,Level=?2 WHERE RefId=?3");
             mNodeUpdateParent.prepare( world, statement, true );
         
         } // End if !prepared
 
-        if ( !mNodeUpdateLevel.isPrepared() )
+        if ( !mNodeUpdateLevel.isPrepared( world ) )
         {
             cgString statement = _T("UPDATE 'Nodes' SET Level=?1 WHERE RefId=?2");
             mNodeUpdateLevel.prepare( world, statement, true );
         
         } // End if !prepared
 
-        if ( !mNodeUpdateGroup.isPrepared() )
+        if ( !mNodeUpdateGroup.isPrepared( world ) )
         {
             cgString statement = _T("UPDATE 'Nodes' SET OwnerGroup=?1 WHERE RefId=?2");
             mNodeUpdateGroup.prepare( world, statement, true );
         
         } // End if !prepared
 
-        if ( !mNodeUpdatePhysicsProperties.isPrepared() )
+        if ( !mNodeUpdatePhysicsProperties.isPrepared( world ) )
         {
             cgString statement = _T("UPDATE 'Nodes' SET PhysicsModel=?1,SimulationQuality=?2 WHERE RefId=?3");
             mNodeUpdatePhysicsProperties.prepare( world, statement, true );
         
         } // End if !prepared
 
-        if ( !mNodeUpdateUpdateRate.isPrepared() )
+        if ( !mNodeUpdateUpdateRate.isPrepared( world ) )
         {
             cgString statement = _T("UPDATE 'Nodes' SET UpdateRate=?1 WHERE RefId=?2");
             mNodeUpdateUpdateRate.prepare( world, statement, true );
         
         } // End if !prepared
 
-        if ( !mNodeUpdateVisibility.isPrepared() )
+        if ( !mNodeUpdateVisibility.isPrepared( world ) )
         {
             cgString statement = _T("UPDATE 'Nodes' SET Visible=?1 WHERE RefId=?2");
             mNodeUpdateVisibility.prepare( world, statement, true );
         
         } // End if !prepared
 
-        if ( !mNodeUpdateTargetReference.isPrepared() )
+        if ( !mNodeUpdateTargetReference.isPrepared( world ) )
         {
             cgString statement = _T("UPDATE 'Nodes' SET TargetId=?1 WHERE RefId=?2");
             mNodeUpdateTargetReference.prepare( world, statement, true );
 
         } // End if !prepared
 
-        if ( !mNodeClearCustomProperties.isPrepared() )
+        if ( !mNodeClearCustomProperties.isPrepared( world ) )
         {
             cgString statement = _T("DELETE FROM 'Nodes::CustomProperties' WHERE NodeId=?1");
             mNodeClearCustomProperties.prepare( world, statement, true );
 
         } // End if !prepared
 
-        if ( !mNodeRemoveCustomProperty.isPrepared() )
+        if ( !mNodeRemoveCustomProperty.isPrepared( world ) )
         {
             cgString statement = _T("DELETE FROM 'Nodes::CustomProperties' WHERE Name=?1 AND NodeId=?2");
             mNodeRemoveCustomProperty.prepare( world, statement, true );
 
         } // End if !prepared
 
-        if ( !mNodeUpdateCustomProperty.isPrepared() )
+        if ( !mNodeUpdateCustomProperty.isPrepared( world ) )
         {
             cgString statement = _T("UPDATE 'Nodes::CustomProperties' SET Type=?1, Value=?2 WHERE Name=?3 AND NodeID=?4");
             mNodeUpdateCustomProperty.prepare( world, statement, true );
 
         } // End if !prepared
 
-        if ( !mNodeInsertCustomProperty.isPrepared() )
+        if ( !mNodeInsertCustomProperty.isPrepared( world ) )
         {
             cgString statement = _T("INSERT INTO 'Nodes::CustomProperties' VALUES (NULL,?1,?2,?3,?4)");
             mNodeInsertCustomProperty.prepare( world, statement, true );
 
         } // End if !prepared
 
-        if ( !mNodeDeleteBehavior.isPrepared() )
+        if ( !mNodeDeleteBehavior.isPrepared( world ) )
         {
             cgString statement = _T("DELETE FROM 'Nodes::Behaviors' WHERE BehaviorId=?1");
             mNodeDeleteBehavior.prepare( world, statement, true );
 
         } // End if !prepared
 
-        if ( !mNodeInsertBehavior.isPrepared() )
+        if ( !mNodeInsertBehavior.isPrepared( world ) )
         {
             cgString statement = _T("INSERT INTO 'Nodes::Behaviors' VALUES (NULL,?1,?2,?3,?4,?5,?6)");
             mNodeInsertBehavior.prepare( world, statement, true );
@@ -4788,7 +4788,7 @@ void cgObjectNode::prepareQueries()
 
     } // End if sandbox
 
-    if ( !mNodeLoadTransforms.isPrepared() )
+    if ( !mNodeLoadTransforms.isPrepared( world ) )
     {
         // Select the node transform data and the /original/ parent cell location
         // (as it existed prior to the update) so that we can reconstruct a valid
@@ -4805,14 +4805,14 @@ void cgObjectNode::prepareQueries()
     
     } // End if !prepared
 
-    if ( !mNodeLoadCustomProperties.isPrepared() )
+    if ( !mNodeLoadCustomProperties.isPrepared( world ) )
     {
         cgString statement = _T("SELECT * FROM [Nodes::CustomProperties] WHERE NodeId=?1");
         mNodeLoadCustomProperties.prepare( world, statement, true );
 
     } // End if !prepared
 
-    if ( !mNodeLoadBehaviors.isPrepared() )
+    if ( !mNodeLoadBehaviors.isPrepared( world ) )
     {
         cgString statement = _T("SELECT * FROM [Nodes::Behaviors] WHERE NodeId=?1 ORDER BY LoadOrder ASC");
         mNodeLoadBehaviors.prepare( world, statement, true );

@@ -1245,21 +1245,21 @@ void cgHemisphereLightObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertHemisphereLight.isPrepared() == false )
+        if ( !mInsertHemisphereLight.isPrepared( mWorld ) )
             mInsertHemisphereLight.prepare( mWorld, _T("INSERT INTO 'Objects::HemisphereLight' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14)"), true );
-        if ( mUpdateRanges.isPrepared() == false )
+        if ( !mUpdateRanges.isPrepared( mWorld ) )
             mUpdateRanges.prepare( mWorld, _T("UPDATE 'Objects::HemisphereLight' SET OuterRange=?1, InnerRange=?2 WHERE RefId=?3"), true );
-        if ( mUpdateHemisphereHDRScalars.isPrepared() == false )
+        if ( !mUpdateHemisphereHDRScalars.isPrepared( mWorld ) )
             mUpdateHemisphereHDRScalars.prepare( mWorld, _T("UPDATE 'Objects::HemisphereLight' SET DiffuseBackHDRScalar=?1, SpecularBackHDRScalar=?2 WHERE RefId=?3"), true );
-        if ( mUpdateDiffuseBackColor.isPrepared() == false )
+        if ( !mUpdateDiffuseBackColor.isPrepared( mWorld ) )
             mUpdateDiffuseBackColor.prepare( mWorld, _T("UPDATE 'Objects::HemisphereLight' SET DiffuseBackR=?1, DiffuseBackG=?2, DiffuseBackB=?3 WHERE RefId=?4"), true );
-        if ( mUpdateSpecularBackColor.isPrepared() == false )
+        if ( !mUpdateSpecularBackColor.isPrepared( mWorld ) )
             mUpdateSpecularBackColor.prepare( mWorld, _T("UPDATE 'Objects::HemisphereLight' SET SpecularBackR=?1, SpecularBackG=?2, SpecularBackB=?3 WHERE RefId=?4"), true );
         
     } // End if sandbox
 
     // Read queries
-    if ( mLoadHemisphereLight.isPrepared() == false )
+    if ( !mLoadHemisphereLight.isPrepared( mWorld ) )
         mLoadHemisphereLight.prepare( mWorld, _T("SELECT * FROM 'Objects::HemisphereLight' WHERE RefId=?1"), true );
 }
 

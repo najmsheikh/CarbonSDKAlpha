@@ -281,15 +281,15 @@ void cgActorObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertActor.isPrepared() )
+        if ( !mInsertActor.isPrepared( mWorld ) )
             mInsertActor.prepare( mWorld, _T("INSERT INTO 'Objects::Actor' VALUES(?1,?2,?3)"), true );
-        if ( !mUpdateOpen.isPrepared() )
+        if ( !mUpdateOpen.isPrepared( mWorld ) )
             mUpdateOpen.prepare( mWorld, _T("UPDATE 'Objects::Actor' SET Open=?1 WHERE RefId=?2"), true );
         
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadActor.isPrepared() )
+    if ( !mLoadActor.isPrepared( mWorld ) )
         mLoadActor.prepare( mWorld, _T("SELECT * FROM 'Objects::Actor' WHERE RefId=?1"), true );
 }
 

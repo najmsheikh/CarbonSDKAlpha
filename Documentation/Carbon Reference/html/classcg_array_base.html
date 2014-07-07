@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.18</span>
    </div>
   </td>
  </tr>
@@ -123,16 +123,20 @@ Inheritance diagram for cgArrayBase:</div>
   <img src="classcg_array_base.png" usemap="#cgArrayBase_map" alt=""/>
   <map id="cgArrayBase_map" name="cgArrayBase_map">
 <area href="classcg_array.html" title="Templated array container akin to std::vector. " alt="cgArray&lt; T &gt;" shape="rect" coords="233,56,456,80"/>
-<area href="classcg_array.html" alt="cgArray&lt; cgClutterCell * &gt;" shape="rect" coords="233,112,456,136"/>
-<area href="classcg_array.html" alt="cgArray&lt; cgClutterLayer * &gt;" shape="rect" coords="233,168,456,192"/>
-<area href="classcg_array.html" alt="cgArray&lt; cgFloat &gt;" shape="rect" coords="233,224,456,248"/>
-<area href="classcg_array.html" alt="cgArray&lt; cgInt &gt;" shape="rect" coords="233,280,456,304"/>
-<area href="classcg_array.html" alt="cgArray&lt; cgLandscapeSubNode * &gt;" shape="rect" coords="233,336,456,360"/>
-<area href="classcg_array.html" alt="cgArray&lt; cgTerrainBlock * &gt;" shape="rect" coords="233,392,456,416"/>
-<area href="classcg_array.html" alt="cgArray&lt; cgVector2 &gt;" shape="rect" coords="233,448,456,472"/>
-<area href="classcg_array.html" alt="cgArray&lt; cgVector3 &gt;" shape="rect" coords="233,504,456,528"/>
-<area href="classcg_array.html" alt="cgArray&lt; GridData &gt;" shape="rect" coords="233,560,456,584"/>
-<area href="classcg_array.html" alt="cgArray&lt; LODLevel &gt;" shape="rect" coords="233,616,456,640"/>
+<area href="classcg_array.html" alt="cgArray&lt; Branch &gt;" shape="rect" coords="233,112,456,136"/>
+<area href="classcg_array.html" alt="cgArray&lt; cgClutterCell * &gt;" shape="rect" coords="233,168,456,192"/>
+<area href="classcg_array.html" alt="cgArray&lt; cgClutterLayer * &gt;" shape="rect" coords="233,224,456,248"/>
+<area href="classcg_array.html" alt="cgArray&lt; cgFloat &gt;" shape="rect" coords="233,280,456,304"/>
+<area href="classcg_array.html" alt="cgArray&lt; cgInt &gt;" shape="rect" coords="233,336,456,360"/>
+<area href="classcg_array.html" alt="cgArray&lt; cgInt32 &gt;" shape="rect" coords="233,392,456,416"/>
+<area href="classcg_array.html" alt="cgArray&lt; cgLandscapeSubNode * &gt;" shape="rect" coords="233,448,456,472"/>
+<area href="classcg_array.html" alt="cgArray&lt; cgTerrainBlock * &gt;" shape="rect" coords="233,504,456,528"/>
+<area href="classcg_array.html" alt="cgArray&lt; cgVector2 &gt;" shape="rect" coords="233,560,456,584"/>
+<area href="classcg_array.html" alt="cgArray&lt; cgVector3 &gt;" shape="rect" coords="233,616,456,640"/>
+<area href="classcg_array.html" alt="cgArray&lt; GridData &gt;" shape="rect" coords="233,672,456,696"/>
+<area href="classcg_array.html" alt="cgArray&lt; Level &gt;" shape="rect" coords="233,728,456,752"/>
+<area href="classcg_array.html" alt="cgArray&lt; LODLevel &gt;" shape="rect" coords="233,784,456,808"/>
+<area href="classcg_array.html" alt="cgArray&lt; Segment &gt;" shape="rect" coords="233,840,456,864"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -142,6 +146,8 @@ Public Types</h2></td></tr>
 <tr class="separator:a346f7d688fcdb54524d107570de3af6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a028c3837fdaa7136f8ce252323ff7570"><td class="memItemLeft" align="right" valign="top">typedef ptrdiff_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_array_base.html#a028c3837fdaa7136f8ce252323ff7570">difference_type</a></td></tr>
 <tr class="separator:a028c3837fdaa7136f8ce252323ff7570"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acda242d580249a19a32dfc503d43cf43"><td class="memItemLeft" align="right" valign="top">typedef char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_array_base.html#acda242d580249a19a32dfc503d43cf43">storage_type</a></td></tr>
+<tr class="separator:acda242d580249a19a32dfc503d43cf43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -171,10 +177,10 @@ Public Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:af60770e638560d68312405fce07b943d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_array_base.html#af60770e638560d68312405fce07b943d">mSize</a></td></tr>
 <tr class="separator:af60770e638560d68312405fce07b943d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86d2a30c07c3f0bfe96eab053777926b"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_array_base.html#a86d2a30c07c3f0bfe96eab053777926b">mStart</a></td></tr>
-<tr class="separator:a86d2a30c07c3f0bfe96eab053777926b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aacb1535a6137e880896f2d47f6d2f282"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_array_base.html#aacb1535a6137e880896f2d47f6d2f282">mEnd</a></td></tr>
-<tr class="separator:aacb1535a6137e880896f2d47f6d2f282"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a64ca75293e0ea2766a9bbdf31c7256"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_array_base.html#acda242d580249a19a32dfc503d43cf43">storage_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_array_base.html#a8a64ca75293e0ea2766a9bbdf31c7256">mStart</a></td></tr>
+<tr class="separator:a8a64ca75293e0ea2766a9bbdf31c7256"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41183fd301009d9671832e5d7cac2c5d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_array_base.html#acda242d580249a19a32dfc503d43cf43">storage_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_array_base.html#a41183fd301009d9671832e5d7cac2c5d">mEnd</a></td></tr>
+<tr class="separator:a41183fd301009d9671832e5d7cac2c5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65af6aa92b7a3d9b17d89953f5b4d8ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_array_base.html#a65af6aa92b7a3d9b17d89953f5b4d8ca">mCapacity</a></td></tr>
 <tr class="separator:a65af6aa92b7a3d9b17d89953f5b4d8ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d5fd9c7622911f4ff69803fe81029f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">size_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_array_base.html#a4d5fd9c7622911f4ff69803fe81029f1">mElementSize</a></td></tr>
@@ -201,6 +207,18 @@ Protected Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">typedef size_t <a class="el" href="classcg_array_base.html#a346f7d688fcdb54524d107570de3af6c">cgArrayBase::size_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="acda242d580249a19a32dfc503d43cf43"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef char* <a class="el" href="classcg_array_base.html#acda242d580249a19a32dfc503d43cf43">cgArrayBase::storage_type</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -437,7 +455,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aacb1535a6137e880896f2d47f6d2f282"></a>
+<a class="anchor" id="a41183fd301009d9671832e5d7cac2c5d"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -445,7 +463,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void* cgArrayBase::mEnd</td>
+          <td class="memname"><a class="el" href="classcg_array_base.html#acda242d580249a19a32dfc503d43cf43">storage_type</a> cgArrayBase::mEnd</td>
         </tr>
       </table>
   </td>
@@ -477,7 +495,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a86d2a30c07c3f0bfe96eab053777926b"></a>
+<a class="anchor" id="a8a64ca75293e0ea2766a9bbdf31c7256"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -485,7 +503,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void* cgArrayBase::mStart</td>
+          <td class="memname"><a class="el" href="classcg_array_base.html#acda242d580249a19a32dfc503d43cf43">storage_type</a> cgArrayBase::mStart</td>
         </tr>
       </table>
   </td>
@@ -506,7 +524,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_array_base.html">cgArrayBase</a></li>
-    <li class="footer">Generated on Wed May 21 2014 19:31:33 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon Jul 7 2014 04:51:27 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

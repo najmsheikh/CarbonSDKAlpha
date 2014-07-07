@@ -262,47 +262,47 @@ void cgStandardMaterial::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertMaterial.isPrepared() == false )
+        if ( !mInsertMaterial.isPrepared( mWorld ) )
             mInsertMaterial.prepare( mWorld, _T("INSERT INTO 'Materials::Standard' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44,?45,?46)"), true );  
-        if ( mInsertSampler.isPrepared() == false )
+        if ( !mInsertSampler.isPrepared( mWorld ) )
             mInsertSampler.prepare( mWorld, _T("INSERT INTO 'Materials::Standard::Samplers' VALUES(NULL,?1,?2)"), true );  
-        if ( mDeleteSamplers.isPrepared() == false )
+        if ( !mDeleteSamplers.isPrepared( mWorld ) )
             mDeleteSamplers.prepare( mWorld, _T("DELETE FROM 'Materials::Standard::Samplers' WHERE MaterialId=?1"), true );
-        if ( mUpdateName.isPrepared() == false )
+        if ( !mUpdateName.isPrepared( mWorld ) )
             mUpdateName.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET Name=?1 WHERE RefId=?2"), true );  
-        if ( mUpdateProperties.isPrepared() == false )
+        if ( !mUpdateProperties.isPrepared( mWorld ) )
             mUpdateProperties.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET PropertiesHighPart=?1, PropertiesLowPart=?2 WHERE RefId=?3"), true );  
-        if ( mUpdateDiffuse.isPrepared() == false )
+        if ( !mUpdateDiffuse.isPrepared( mWorld ) )
             mUpdateDiffuse.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET DiffuseReflectanceR=?1,DiffuseReflectanceG=?2,DiffuseReflectanceB=?3 WHERE RefId=?4"), true );  
-        if ( mUpdateAmbient.isPrepared() == false )
+        if ( !mUpdateAmbient.isPrepared( mWorld ) )
             mUpdateAmbient.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET AmbientReflectanceR=?1,AmbientReflectanceG=?2,AmbientReflectanceB=?3 WHERE RefId=?4"), true );  
-        if ( mUpdateSpecular.isPrepared() == false )
+        if ( !mUpdateSpecular.isPrepared( mWorld ) )
             mUpdateSpecular.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET SpecularReflectanceR=?1,SpecularReflectanceG=?2,SpecularReflectanceB=?3,Gloss=?4 WHERE RefId=?5"), true );  
-        if ( mUpdateEmissive.isPrepared() == false )
+        if ( !mUpdateEmissive.isPrepared( mWorld ) )
             mUpdateEmissive.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET EmissiveColorR=?1,EmissiveColorG=?2,EmissiveColorB=?3,EmissiveHDRScalar=?4 WHERE RefId=?5"), true );  
-        if ( mUpdateMetalness.isPrepared() == false )
+        if ( !mUpdateMetalness.isPrepared( mWorld ) )
             mUpdateMetalness.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET MetalnessAmount=?1, MetalnessDiffuse=?2, MetalnessSpecular=?3 WHERE RefId=?4"), true );  
-        if ( mUpdateRimLight.isPrepared() == false )
+        if ( !mUpdateRimLight.isPrepared( mWorld ) )
             mUpdateRimLight.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET RimIntensity=?1, RimExponent=?2 WHERE RefId=?3"), true );  
-        if ( mUpdateReflection.isPrepared() == false )
+        if ( !mUpdateReflection.isPrepared( mWorld ) )
             mUpdateReflection.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET ReflectionMode=?1, ReflectionIntensity=?2, ReflectionBumpiness=?3, ReflectionMipLevel=?4 WHERE RefId=?5"), true );  
-        if ( mUpdateFresnel.isPrepared() == false )
+        if ( !mUpdateFresnel.isPrepared( mWorld ) )
             mUpdateFresnel.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET FresnelDiffuse=?1, FresnelSpecular=?2, FresnelReflection=?3, FresnelOpacity=?4, FresnelExponent=?5 WHERE RefId=?6"), true );  
-        if ( mUpdateBlending.isPrepared() == false )
+        if ( !mUpdateBlending.isPrepared( mWorld ) )
             mUpdateBlending.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET BlendingMode=?1, Opacity=?2, AlphaTestValue=?3, SpecularOpacity=?4, SpecularOpacityLinked=?5, DiffuseOpacityMapStrength=?6, SpecularOpacityMapStrength=?7 WHERE RefId=?8"), true );  
-        if ( mUpdateTransmission.isPrepared() == false )
+        if ( !mUpdateTransmission.isPrepared( mWorld ) )
             mUpdateTransmission.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET TransmissionType=?1, TransmissionCurveSize=?2, TransmissionCurve=?3 WHERE RefId=?4"), true );  
-        if ( mUpdateShader.isPrepared() == false )
+        if ( !mUpdateShader.isPrepared( mWorld ) )
             mUpdateShader.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET ShaderSource=?1 WHERE RefId=?2"), true );  
-        if ( mUpdatePreview.isPrepared() == false )
+        if ( !mUpdatePreview.isPrepared( mWorld ) )
             mUpdatePreview.prepare( mWorld, _T("UPDATE 'Materials::Standard' SET PreviewImage=?1 WHERE RefId=?2"), true ); 
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadMaterial.isPrepared() == false )
+    if ( !mLoadMaterial.isPrepared( mWorld ) )
         mLoadMaterial.prepare( mWorld, _T("SELECT * FROM 'Materials::Standard' WHERE RefId=?1"), true );
-    if ( mLoadSamplers.isPrepared() == false )
+    if ( !mLoadSamplers.isPrepared( mWorld ) )
         mLoadSamplers.prepare( mWorld, _T("SELECT * FROM 'Materials::Standard::Samplers' WHERE MaterialId=?1"), true );
 }
 
@@ -386,7 +386,7 @@ bool cgStandardMaterial::serializeMaterial( )
             if ( nTransmissionType == cgBezierSpline2::Custom )
             {
                 mInsertMaterial.bindParameter( 41, mTransmissionCurve.getPointCount() );
-                mInsertMaterial.bindParameter( 42, &mTransmissionCurve.getSplinePoints()[0], mTransmissionCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+                mInsertMaterial.bindParameter( 42, &mTransmissionCurve.getPoints()[0], mTransmissionCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
             
             } // End if custom
             else
@@ -753,7 +753,7 @@ bool cgStandardMaterial::serializeMaterial( )
             if ( nType == cgBezierSpline2::Custom )
             {
                 mUpdateTransmission.bindParameter( 2, mTransmissionCurve.getPointCount() );
-                mUpdateTransmission.bindParameter( 3, &mTransmissionCurve.getSplinePoints()[0], mTransmissionCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+                mUpdateTransmission.bindParameter( 3, &mTransmissionCurve.getPoints()[0], mTransmissionCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
             
             } // End if custom
             else

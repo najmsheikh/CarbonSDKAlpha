@@ -128,7 +128,8 @@ namespace World
 			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "int32 getLastInsertId( ) const", asMETHODPR(cgWorldQuery,getLastInsertId,( ) const, cgInt32), asCALL_THISCALL) );
 			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getLastError( ) const", asMETHODPR(cgWorldQuery,getLastError,( ) const, bool), asCALL_THISCALL) );
 			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool getLastError( String &inout ) const", asMETHODPR(cgWorldQuery,getLastError,( cgString& ) const, bool), asCALL_THISCALL) );
-			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool isPrepared( ) const", asMETHODPR(cgWorldQuery,isPrepared,( ) const, bool), asCALL_THISCALL) );
+            BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool isPrepared( ) const", asMETHODPR(cgWorldQuery,isPrepared,( ) const, bool), asCALL_THISCALL) );
+			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "bool isPrepared( World@+ ) const", asMETHODPR(cgWorldQuery,isPrepared,( cgWorld* ) const, bool), asCALL_THISCALL) );
 			BINDSUCCESS( engine->registerObjectMethod( "WorldQuery", "World@+ getWorld( ) const", asMETHODPR(cgWorldQuery,getWorld,( ) const, cgWorld*), asCALL_THISCALL) );
 
             ///////////////////////////////////////////////////////////////////////

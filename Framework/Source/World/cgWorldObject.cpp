@@ -1060,28 +1060,28 @@ void cgWorldObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertBaseObject.isPrepared() )
+        if ( !mInsertBaseObject.isPrepared( mWorld ) )
         {
             cgString sSQL = _T("INSERT INTO 'Objects::Base::All' VALUES(?1,?2,?3)");
             mInsertBaseObject.prepare( mWorld, sSQL, true );
         
         } // End if !prepared
 
-        if ( !mInsertSubElement.isPrepared() )
+        if ( !mInsertSubElement.isPrepared( mWorld ) )
         {
             cgString sSQL = _T("INSERT INTO 'Objects::Base::All::SubElements' VALUES(NULL,?1,?2,?3)");
             mInsertSubElement.prepare( mWorld, sSQL, true );
         
         } // End if !prepared
 
-        if ( !mDeleteSubElement.isPrepared() )
+        if ( !mDeleteSubElement.isPrepared( mWorld ) )
         {
             cgString sSQL = _T("DELETE FROM 'Objects::Base::All::SubElements' WHERE ObjectId=?1 AND SubElementId=?2");
             mDeleteSubElement.prepare( mWorld, sSQL, true );
         
         } // End if !prepared
 
-        if ( !mUpdateMassProperties.isPrepared() )
+        if ( !mUpdateMassProperties.isPrepared( mWorld ) )
         {
             cgString sSQL = _T("UPDATE 'Objects::Base::All' SET Mass=?1, MassTransformAmount=?2 WHERE RefId=?3");
             mUpdateMassProperties.prepare( mWorld, sSQL, true );
@@ -1091,8 +1091,8 @@ void cgWorldObject::prepareQueries()
     } // End if sandbox
 
     // Read queries
-    if ( mLoadBaseObject.isPrepared() == false )
+    if ( !mLoadBaseObject.isPrepared( mWorld ) )
         mLoadBaseObject.prepare( mWorld, _T("SELECT * FROM 'Objects::Base::All' WHERE RefId=?1"), true );
-    if ( mLoadSubElements.isPrepared() == false )
+    if ( !mLoadSubElements.isPrepared( mWorld ) )
         mLoadSubElements.prepare( mWorld, _T("SELECT * FROM 'Objects::Base::All::SubElements' WHERE ObjectId=?1"), true );
 }

@@ -42,6 +42,7 @@ var classcg_world_query =
     [ "getLastInsertId", "classcg_world_query.html#ab3be4c80afc89431fe0b6311a70146df", null ],
     [ "getWorld", "classcg_world_query.html#a6cce97ee52d3302246f1097d92a5e0a8", null ],
     [ "hasResults", "classcg_world_query.html#a11d94ecadc214781aa59edcc329309a5", null ],
+    [ "isPrepared", "classcg_world_query.html#a262b7556e3ce3a853a39da637905a48f", null ],
     [ "isPrepared", "classcg_world_query.html#a7115417065a2e7d24a00c2bc79435aab", null ],
     [ "memoryDBFileCheckReservedLock", "classcg_world_query.html#a20c0285dfbe2ced7c83de20cf320e890", null ],
     [ "memoryDBFileClose", "classcg_world_query.html#a52702ede15e53bc3be926cf384cdec32", null ],

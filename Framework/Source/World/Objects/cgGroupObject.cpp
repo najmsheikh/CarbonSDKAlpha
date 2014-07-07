@@ -292,15 +292,15 @@ void cgGroupObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertGroup.isPrepared() == false )
+        if ( !mInsertGroup.isPrepared( mWorld ) )
             mInsertGroup.prepare( mWorld, _T("INSERT INTO 'Objects::Group' VALUES(?1,?2,NULL)"), true );
-        if ( mUpdateOpen.isPrepared() == false )
+        if ( !mUpdateOpen.isPrepared( mWorld ) )
             mUpdateOpen.prepare( mWorld, _T("UPDATE 'Objects::Group' SET Open=?1 WHERE RefId=?2"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadGroup.isPrepared() == false )
+    if ( !mLoadGroup.isPrepared( mWorld ) )
         mLoadGroup.prepare( mWorld, _T("SELECT * FROM 'Objects::Group' WHERE RefId=?1"), true );
 }
 

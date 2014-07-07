@@ -518,15 +518,15 @@ void cgDummyObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertDummy.isPrepared() == false )
+        if ( !mInsertDummy.isPrepared( mWorld ) )
             mInsertDummy.prepare( mWorld, _T("INSERT INTO 'Objects::Dummy' VALUES(?1,?2,?3)"), true );
-        if ( mUpdateSize.isPrepared() == false )
+        if ( !mUpdateSize.isPrepared( mWorld ) )
             mUpdateSize.prepare( mWorld, _T("UPDATE 'Objects::Dummy' SET DisplaySize=?1 WHERE RefId=?2"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadDummy.isPrepared() == false )
+    if ( !mLoadDummy.isPrepared( mWorld ) )
         mLoadDummy.prepare( mWorld, _T("SELECT * FROM 'Objects::Dummy' WHERE RefId=?1"), true );
 }
 

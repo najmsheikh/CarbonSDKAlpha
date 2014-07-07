@@ -2025,45 +2025,45 @@ void cgLightObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertBaseLight.isPrepared() )
+        if ( !mInsertBaseLight.isPrepared( mWorld ) )
             mInsertBaseLight.prepare( mWorld, _T("INSERT INTO 'Objects::Base::Light' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29)"), true );
-        if ( !mInsertShadowFrustum.isPrepared() )
+        if ( !mInsertShadowFrustum.isPrepared( mWorld ) )
             mInsertShadowFrustum.prepare( mWorld, _T("INSERT INTO 'ShadowFrustums' VALUES(NULL,?1,?2,?3,?4)"), true );
-        if ( !mInsertShadowFrustumLOD.isPrepared() )
+        if ( !mInsertShadowFrustumLOD.isPrepared( mWorld ) )
             mInsertShadowFrustumLOD.prepare( mWorld, _T("INSERT INTO 'ShadowFrustums::LOD' VALUES(NULL,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11)"), true );
-        if ( !mDeleteShadowFrustumLODs.isPrepared() )
+        if ( !mDeleteShadowFrustumLODs.isPrepared( mWorld ) )
             mDeleteShadowFrustumLODs.prepare( mWorld, _T("DELETE FROM 'ShadowFrustums::LOD' WHERE FrustumId=?1"), true );
-        if ( !mUpdateShadowFrustum.isPrepared() )
+        if ( !mUpdateShadowFrustum.isPrepared( mWorld ) )
             mUpdateShadowFrustum.prepare( mWorld, _T("UPDATE 'ShadowFrustums' SET Enabled=?1, MinResolutionScale=?2, MaxResolutionScale=?3, Size=?4 WHERE FrustumId=?5"), true );
-        if ( !mUpdateDiffuse.isPrepared() )
+        if ( !mUpdateDiffuse.isPrepared( mWorld ) )
             mUpdateDiffuse.prepare( mWorld, _T("UPDATE 'Objects::Base::Light' SET DiffuseR=?1, DiffuseG=?2, DiffuseB=?3 WHERE RefId=?4"), true );
-        if ( !mUpdateSpecular.isPrepared() )
+        if ( !mUpdateSpecular.isPrepared( mWorld ) )
             mUpdateSpecular.prepare( mWorld, _T("UPDATE 'Objects::Base::Light' SET SpecularR=?1, SpecularG=?2, SpecularB=?3 WHERE RefId=?4"), true );
-        if ( !mUpdateAmbient.isPrepared() )
+        if ( !mUpdateAmbient.isPrepared( mWorld ) )
             mUpdateAmbient.prepare( mWorld, _T("UPDATE 'Objects::Base::Light' SET AmbientR=?1, AmbientG=?2, AmbientB=?3 WHERE RefId=?4"), true );
-        if ( !mUpdateAmbientFar.isPrepared() )
+        if ( !mUpdateAmbientFar.isPrepared( mWorld ) )
             mUpdateAmbientFar.prepare( mWorld, _T("UPDATE 'Objects::Base::Light' SET AmbientFarR=?1, AmbientFarG=?2, AmbientFarB=?3 WHERE RefId=?4"), true );
-        if ( !mUpdateRim.isPrepared() )
+        if ( !mUpdateRim.isPrepared( mWorld ) )
             mUpdateRim.prepare( mWorld, _T("UPDATE 'Objects::Base::Light' SET RimR=?1, RimG=?2, RimB=?3 WHERE RefId=?4"), true );
-        if ( !mUpdateHDRScalars.isPrepared() )
+        if ( !mUpdateHDRScalars.isPrepared( mWorld ) )
             mUpdateHDRScalars.prepare( mWorld, _T("UPDATE 'Objects::Base::Light' SET DiffuseHDRScalar=?1, SpecularHDRScalar=?2, AmbientHDRScalar=?3, AmbientFarHDRScalar=?4, RimHDRScalar=?5 WHERE RefId=?6"), true );
-        if ( !mUpdateProcessStages.isPrepared() )
+        if ( !mUpdateProcessStages.isPrepared( mWorld ) )
             mUpdateProcessStages.prepare( mWorld, _T("UPDATE 'Objects::Base::Light' SET LightStage=?1, ShadowCastStage=?2 WHERE RefId=?3"), true );
-        if ( !mUpdateSpecularAttenuation.isPrepared() )
+        if ( !mUpdateSpecularAttenuation.isPrepared( mWorld ) )
             mUpdateSpecularAttenuation.prepare( mWorld, _T("UPDATE 'Objects::Base::Light' SET SpecularAttenuateBegin=?1, SpecularAttenuateEnd=?2 WHERE RefId=?3"), true );
-        if ( !mUpdateShadowAttenuation.isPrepared() )
+        if ( !mUpdateShadowAttenuation.isPrepared( mWorld ) )
             mUpdateShadowAttenuation.prepare( mWorld, _T("UPDATE 'Objects::Base::Light' SET ShadowAttenuateBegin=?1, ShadowAttenuateEnd=?2 WHERE RefId=?3"), true );
-        if ( !mUpdateShadowLODRanges.isPrepared() )
+        if ( !mUpdateShadowLODRanges.isPrepared( mWorld ) )
             mUpdateShadowLODRanges.prepare( mWorld, _T("UPDATE 'Objects::Base::Light' SET ShadowLODBegin=?1, ShadowLODEnd=?2 WHERE RefId=?3"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadBaseLight.isPrepared() )
+    if ( !mLoadBaseLight.isPrepared( mWorld ) )
         mLoadBaseLight.prepare( mWorld, _T("SELECT * FROM 'Objects::Base::Light' WHERE RefId=?1"), true );
-    if ( !mLoadShadowFrustum.isPrepared() )
+    if ( !mLoadShadowFrustum.isPrepared( mWorld ) )
         mLoadShadowFrustum.prepare( mWorld, _T("SELECT * FROM 'ShadowFrustums' WHERE FrustumId=?1"), true );
-    if ( !mLoadShadowFrustumLODs.isPrepared() )
+    if ( !mLoadShadowFrustumLODs.isPrepared( mWorld ) )
         mLoadShadowFrustumLODs.prepare( mWorld, _T("SELECT * FROM 'ShadowFrustums::LOD' WHERE FrustumId=?1"), true );
 }
 

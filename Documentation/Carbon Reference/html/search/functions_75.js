@@ -41,6 +41,7 @@ var searchData=
   ['updateboundingbox',['updateBoundingBox',['../classcg_spline_object.html#a6e46228228ab5c7edf695fbca5b7a037',1,'cgSplineObject']]],
   ['updatebuffer',['updateBuffer',['../classcg_constant_buffer.html#afcadd23e509c49d66e633142f2b3f9cf',1,'cgConstantBuffer::updateBuffer()'],['../classcg_index_buffer.html#a0d51ec0a7e059dcec929e3ed0a674ad8',1,'cgIndexBuffer::updateBuffer()'],['../classcg_vertex_buffer.html#abcbe38f77afb82f39ecd0a5bf4f1dd96',1,'cgVertexBuffer::updateBuffer()']]],
   ['updatecache',['updateCache',['../classcg_glare_processor.html#a86746f19a55044e69752fbdd1228e16d',1,'cgGlareProcessor']]],
+  ['updatecachedvalues',['updateCachedValues',['../classcg_sampler.html#a099abefd601d74ace5e81d4a0afc2467',1,'cgSampler']]],
   ['updateclusteroffsets',['updateClusterOffsets',['../classcg_foliage_clutter_cell.html#ab38cb1aadb3d34313fcd7d64c3fc425f',1,'cgFoliageClutterCell']]],
   ['updatecluttercells',['updateClutterCells',['../classcg_landscape_texture_data.html#aecd7b936ef644de82e42a8642c67446f',1,'cgLandscapeTextureData::updateClutterCells()'],['../classcg_landscape_texture_data.html#ae28597813bf5b27dcbe44f5e708ba9ea',1,'cgLandscapeTextureData::updateClutterCells(LayerReference &amp;layer, const cgRect &amp;bounds)']]],
   ['updatedisplaymode',['updateDisplayMode',['../classcg_render_driver.html#a798c00808b06a6c67819a34acdecf651',1,'cgRenderDriver']]],

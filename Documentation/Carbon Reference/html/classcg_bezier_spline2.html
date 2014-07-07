@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.18</span>
    </div>
   </td>
  </tr>
@@ -136,6 +136,17 @@ Public Types</h2></td></tr>
 <br/>
  }</td></tr>
 <tr class="separator:aabada3f0020df73222d70debd93dd6da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f8375a792f058fd8b1dceb24012085b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a4f8375a792f058fd8b1dceb24012085b">EvaluateMethod</a> { <br/>
+&#160;&#160;<a class="el" href="classcg_bezier_spline2.html#a4f8375a792f058fd8b1dceb24012085bae2078d4e003093cee4caa98992c96f3a">NormalizePlusVariance</a> = 0, 
+<a class="el" href="classcg_bezier_spline2.html#a4f8375a792f058fd8b1dceb24012085baa4e97cd5929b75485f7bfbf36f2cc0a5">NormalizeScaleVariance</a> = 1, 
+<a class="el" href="classcg_bezier_spline2.html#a4f8375a792f058fd8b1dceb24012085ba18f0c8049fe7758be67bd38416ec2c39">NormalizeOnly</a> = 2, 
+<a class="el" href="classcg_bezier_spline2.html#a4f8375a792f058fd8b1dceb24012085ba1f09a61940bfaf67fbc4865dd130c2ad">SplinePlusVariance</a> = 3, 
+<br/>
+&#160;&#160;<a class="el" href="classcg_bezier_spline2.html#a4f8375a792f058fd8b1dceb24012085ba12bbcb23e5e80d6ee2d4c09d11511719">SplineScaleVariance</a> = 4, 
+<a class="el" href="classcg_bezier_spline2.html#a4f8375a792f058fd8b1dceb24012085ba17c79163848abf509e75b941ce50a51b">SplineOnly</a> = 5
+<br/>
+ }</td></tr>
+<tr class="separator:a4f8375a792f058fd8b1dceb24012085b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -175,21 +186,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af88ef81946feb94bf29c7b38675ad728"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#af88ef81946feb94bf29c7b38675ad728">evaluateForX</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> x, bool approximate=false, <a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> digits=4)</td></tr>
 <tr class="memdesc:af88ef81946feb94bf29c7b38675ad728"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the Y axis value for the given X axis distance. Note: This method will return an invalid result (NaN) if this is a complex spline.  <a href="#af88ef81946feb94bf29c7b38675ad728"></a><br/></td></tr>
 <tr class="separator:af88ef81946feb94bf29c7b38675ad728"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af248554e7b91f8927e9ac3822a2a228a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#af248554e7b91f8927e9ac3822a2a228a">evaluateForX</a> (<a class="el" href="classcg_bezier_spline2.html#a4f8375a792f058fd8b1dceb24012085b">EvaluateMethod</a> method, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> x, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> rand=0, bool approximate=false, <a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a> digits=4)</td></tr>
+<tr class="memdesc:af248554e7b91f8927e9ac3822a2a228a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the Y axis value for the given X axis distance. Note: This method will return an invalid result (NaN) if this is a complex spline.  <a href="#af248554e7b91f8927e9ac3822a2a228a"></a><br/></td></tr>
+<tr class="separator:af248554e7b91f8927e9ac3822a2a228a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a989794f23953c003a4ebea135e51f6d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_vector2.html">cgVector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a989794f23953c003a4ebea135e51f6d7">evaluateSegment</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> segment, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> t)</td></tr>
 <tr class="memdesc:a989794f23953c003a4ebea135e51f6d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the point for the given distance along the specified spline segment.  <a href="#a989794f23953c003a4ebea135e51f6d7"></a><br/></td></tr>
 <tr class="separator:a989794f23953c003a4ebea135e51f6d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac562254357cfca48b875aff14a9d3294"><td class="memItemLeft" align="right" valign="top">const SplinePointArray &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#ac562254357cfca48b875aff14a9d3294">getSplinePoints</a> () const </td></tr>
-<tr class="memdesc:ac562254357cfca48b875aff14a9d3294"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the list of control points. <a href="#ac562254357cfca48b875aff14a9d3294"></a><br/></td></tr>
-<tr class="separator:ac562254357cfca48b875aff14a9d3294"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5f177efa0bc7d7fb34d9624863bedc8"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_bezier_spline2_1_1_spline_point.html">SplinePoint</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#ae5f177efa0bc7d7fb34d9624863bedc8">getSplinePoint</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> index) const </td></tr>
-<tr class="memdesc:ae5f177efa0bc7d7fb34d9624863bedc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the specified control point. <a href="#ae5f177efa0bc7d7fb34d9624863bedc8"></a><br/></td></tr>
-<tr class="separator:ae5f177efa0bc7d7fb34d9624863bedc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4555a83754b10c945224bacdf12e8726"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_bezier_spline2_1_1_spline_point.html">SplinePoint</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a4555a83754b10c945224bacdf12e8726">getSplinePoint</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> index)</td></tr>
-<tr class="memdesc:a4555a83754b10c945224bacdf12e8726"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the specified control point. <a href="#a4555a83754b10c945224bacdf12e8726"></a><br/></td></tr>
-<tr class="separator:a4555a83754b10c945224bacdf12e8726"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11a0841ddd7a1dc6cc629456d10c742b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a11a0841ddd7a1dc6cc629456d10c742b">setSplinePoint</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> index, const <a class="el" href="structcg_bezier_spline2_1_1_spline_point.html">SplinePoint</a> &amp;pt)</td></tr>
-<tr class="memdesc:a11a0841ddd7a1dc6cc629456d10c742b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the specified control point. <a href="#a11a0841ddd7a1dc6cc629456d10c742b"></a><br/></td></tr>
-<tr class="separator:a11a0841ddd7a1dc6cc629456d10c742b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86aeb4a2f70fc3d982f49aa196178943"><td class="memItemLeft" align="right" valign="top">const SplinePointArray &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a86aeb4a2f70fc3d982f49aa196178943">getPoints</a> () const </td></tr>
+<tr class="memdesc:a86aeb4a2f70fc3d982f49aa196178943"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the list of control points. <a href="#a86aeb4a2f70fc3d982f49aa196178943"></a><br/></td></tr>
+<tr class="separator:a86aeb4a2f70fc3d982f49aa196178943"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e15b1b176d12994730df0e3b17b87e7"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_bezier_spline2_1_1_spline_point.html">SplinePoint</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a9e15b1b176d12994730df0e3b17b87e7">getPoint</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> index) const </td></tr>
+<tr class="memdesc:a9e15b1b176d12994730df0e3b17b87e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the specified control point. <a href="#a9e15b1b176d12994730df0e3b17b87e7"></a><br/></td></tr>
+<tr class="separator:a9e15b1b176d12994730df0e3b17b87e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56c5c8324f9e159a07b1b022931c2cd1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_bezier_spline2_1_1_spline_point.html">SplinePoint</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a56c5c8324f9e159a07b1b022931c2cd1">getPoint</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> index)</td></tr>
+<tr class="memdesc:a56c5c8324f9e159a07b1b022931c2cd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the specified control point. <a href="#a56c5c8324f9e159a07b1b022931c2cd1"></a><br/></td></tr>
+<tr class="separator:a56c5c8324f9e159a07b1b022931c2cd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af23717b448e4597b2f2a87e7c7265fe4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#af23717b448e4597b2f2a87e7c7265fe4">setPoint</a> (<a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a> index, const <a class="el" href="structcg_bezier_spline2_1_1_spline_point.html">SplinePoint</a> &amp;pt)</td></tr>
+<tr class="memdesc:af23717b448e4597b2f2a87e7c7265fe4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the specified control point. <a href="#af23717b448e4597b2f2a87e7c7265fe4"></a><br/></td></tr>
+<tr class="separator:af23717b448e4597b2f2a87e7c7265fe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acae784c363d74927e29e709dd99f20d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#acae784c363d74927e29e709dd99f20d9">getPointCount</a> () const </td></tr>
 <tr class="memdesc:acae784c363d74927e29e709dd99f20d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the number of control points stored. <a href="#acae784c363d74927e29e709dd99f20d9"></a><br/></td></tr>
 <tr class="separator:acae784c363d74927e29e709dd99f20d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -205,6 +219,27 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abdcaf033307239255160a402e0ddb306"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#abdcaf033307239255160a402e0ddb306">setDescription</a> (<a class="el" href="classcg_bezier_spline2.html#aabada3f0020df73222d70debd93dd6da">SplineDescription</a> desc)</td></tr>
 <tr class="memdesc:abdcaf033307239255160a402e0ddb306"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the shape of the spline based on the specified description. See the SplineDescription enum for valid types.  <a href="#abdcaf033307239255160a402e0ddb306"></a><br/></td></tr>
 <tr class="separator:abdcaf033307239255160a402e0ddb306"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d6ec7f3de27058c2481bfd99c43f11b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a0d6ec7f3de27058c2481bfd99c43f11b">setRange</a> (const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;range)</td></tr>
+<tr class="memdesc:a0d6ec7f3de27058c2481bfd99c43f11b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the minimum and maximum 'range' into which any spline sampling result will be scaled when evaluating the spline using one of the EvaluateMethod::Normalize* evaluation methods.  <a href="#a0d6ec7f3de27058c2481bfd99c43f11b"></a><br/></td></tr>
+<tr class="separator:a0d6ec7f3de27058c2481bfd99c43f11b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cf7663251e614b6df804cc226b6389e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a0cf7663251e614b6df804cc226b6389e">setRange</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> minimum, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> maximum)</td></tr>
+<tr class="memdesc:a0cf7663251e614b6df804cc226b6389e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the minimum and maximum 'range' into which any spline sampling result will be scaled when evaluating the spline using one of the EvaluateMethod::Normalize* evaluation methods.  <a href="#a0cf7663251e614b6df804cc226b6389e"></a><br/></td></tr>
+<tr class="separator:a0cf7663251e614b6df804cc226b6389e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a406a27d3c905ffa438aca1c97e3385e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a406a27d3c905ffa438aca1c97e3385e0">setRangeMinimum</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> value)</td></tr>
+<tr class="memdesc:a406a27d3c905ffa438aca1c97e3385e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the minimum value of the 'range' into which any spline sampling result will be scaled when evaluating the spline using one of the EvaluateMethod::Normalize* evaluation methods.  <a href="#a406a27d3c905ffa438aca1c97e3385e0"></a><br/></td></tr>
+<tr class="separator:a406a27d3c905ffa438aca1c97e3385e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa67e3e52970ba663a139c012708e8390"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#aa67e3e52970ba663a139c012708e8390">setRangeMaximum</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> value)</td></tr>
+<tr class="memdesc:aa67e3e52970ba663a139c012708e8390"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the maximum value of the 'range' into which any spline sampling result will be scaled when evaluating the spline using one of the EvaluateMethod::Normalize* evaluation methods.  <a href="#aa67e3e52970ba663a139c012708e8390"></a><br/></td></tr>
+<tr class="separator:aa67e3e52970ba663a139c012708e8390"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfd73713959837cb4dbac8f2e7d340c3"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#abfd73713959837cb4dbac8f2e7d340c3">getRange</a> () const </td></tr>
+<tr class="memdesc:abfd73713959837cb4dbac8f2e7d340c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the minimum and maximum 'range' into which any spline sampling result will be scaled when evaluating the spline using one of the EvaluateMethod::Normalize* evaluation methods.  <a href="#abfd73713959837cb4dbac8f2e7d340c3"></a><br/></td></tr>
+<tr class="separator:abfd73713959837cb4dbac8f2e7d340c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74254f589932e9ad914a3e255f23e53c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a74254f589932e9ad914a3e255f23e53c">setVariance</a> (<a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> variance)</td></tr>
+<tr class="memdesc:a74254f589932e9ad914a3e255f23e53c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the variance scalar that will be used to adjust the spline sampling result when evaluating the spline using one of the EvaluateMethod::*Variance evaluation methods. This value will be used in conjunction with a supplied random value to 'jitter' the result.  <a href="#a74254f589932e9ad914a3e255f23e53c"></a><br/></td></tr>
+<tr class="separator:a74254f589932e9ad914a3e255f23e53c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a096893f4c4e18f34057df0200bb6dc20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a096893f4c4e18f34057df0200bb6dc20">getVariance</a> () const </td></tr>
+<tr class="memdesc:a096893f4c4e18f34057df0200bb6dc20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the variance scalar that will be used to adjust the spline sampling result when evaluating the spline using one of the EvaluateMethod::*Variance evaluation methods. This value will be used in conjunction with a supplied random value to 'jitter' the result.  <a href="#a096893f4c4e18f34057df0200bb6dc20"></a><br/></td></tr>
+<tr class="separator:a096893f4c4e18f34057df0200bb6dc20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e25c8134180980a18c906c5f25e8cd6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a3e25c8134180980a18c906c5f25e8cd6">operator=</a> (const <a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a> &amp;spline)</td></tr>
 <tr class="memdesc:a3e25c8134180980a18c906c5f25e8cd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overloaded assignment operator.  <a href="#a3e25c8134180980a18c906c5f25e8cd6"></a><br/></td></tr>
 <tr class="separator:a3e25c8134180980a18c906c5f25e8cd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -223,6 +258,10 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a86dfe0b28874912d201283735d79861e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4869d10acecf7a7583fc6077f103fb1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a4869d10acecf7a7583fc6077f103fb1c">mLength</a></td></tr>
 <tr class="separator:a4869d10acecf7a7583fc6077f103fb1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9907beac061da56e737f989f34de13f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcg_range_f.html">cgRangeF</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#ac9907beac061da56e737f989f34de13f">mRange</a></td></tr>
+<tr class="separator:ac9907beac061da56e737f989f34de13f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04e9e3568c8a068fa03d58be4e190b70"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a04e9e3568c8a068fa03d58be4e190b70">mVariance</a></td></tr>
+<tr class="separator:a04e9e3568c8a068fa03d58be4e190b70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a097247256592ad8d973765f015a96f86"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a097247256592ad8d973765f015a96f86">mSplineDirty</a></td></tr>
 <tr class="separator:a097247256592ad8d973765f015a96f86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a261b2384239916b9c7d8464474473f62"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_bezier_spline2.html#a261b2384239916b9c7d8464474473f62">mComplexSpline</a></td></tr>
@@ -231,6 +270,34 @@ Protected Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains support for evaluating values along a specified set of 2D control points that allow the artist to define a specific curve for certain values such as distance attenuation. </p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
+<a class="anchor" id="a4f8375a792f058fd8b1dceb24012085b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classcg_bezier_spline2.html#a4f8375a792f058fd8b1dceb24012085b">cgBezierSpline2::EvaluateMethod</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" id="a4f8375a792f058fd8b1dceb24012085bae2078d4e003093cee4caa98992c96f3a"></a>NormalizePlusVariance</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a4f8375a792f058fd8b1dceb24012085baa4e97cd5929b75485f7bfbf36f2cc0a5"></a>NormalizeScaleVariance</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a4f8375a792f058fd8b1dceb24012085ba18f0c8049fe7758be67bd38416ec2c39"></a>NormalizeOnly</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a4f8375a792f058fd8b1dceb24012085ba1f09a61940bfaf67fbc4865dd130c2ad"></a>SplinePlusVariance</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a4f8375a792f058fd8b1dceb24012085ba12bbcb23e5e80d6ee2d4c09d11511719"></a>SplineScaleVariance</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a4f8375a792f058fd8b1dceb24012085ba17c79163848abf509e75b941ce50a51b"></a>SplineOnly</em>&nbsp;</td><td>
+</td></tr>
+</table>
+</dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="aabada3f0020df73222d70debd93dd6da"></a>
 <div class="memitem">
 <div class="memproto">
@@ -434,6 +501,52 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="af248554e7b91f8927e9ac3822a2a228a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgBezierSpline2::evaluateForX </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcg_bezier_spline2.html#a4f8375a792f058fd8b1dceb24012085b">EvaluateMethod</a>&#160;</td>
+          <td class="paramname"><em>method</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>rand</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>approximate</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a7ac8c46b13ac10a124c1718a8a4f23df">cgUInt16</a>&#160;</td>
+          <td class="paramname"><em>digits</em> = <code>4</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Resolve the Y axis value for the given X axis distance. Note: This method will return an invalid result (NaN) if this is a complex spline. </p>
+
+</div>
+</div>
 <a class="anchor" id="a989794f23953c003a4ebea135e51f6d7"></a>
 <div class="memitem">
 <div class="memproto">
@@ -479,6 +592,42 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a9e15b1b176d12994730df0e3b17b87e7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structcg_bezier_spline2_1_1_spline_point.html">cgBezierSpline2::SplinePoint</a> &amp; cgBezierSpline2::getPoint </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
+          <td class="paramname"><em>nIndex</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the specified control point.</p>
+
+</div>
+</div>
+<a class="anchor" id="a56c5c8324f9e159a07b1b022931c2cd1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcg_bezier_spline2_1_1_spline_point.html">cgBezierSpline2::SplinePoint</a> &amp; cgBezierSpline2::getPoint </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
+          <td class="paramname"><em>nIndex</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the specified control point.</p>
+
+</div>
+</div>
 <a class="anchor" id="acae784c363d74927e29e709dd99f20d9"></a>
 <div class="memitem">
 <div class="memproto">
@@ -493,6 +642,40 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Determine the number of control points stored.</p>
+
+</div>
+</div>
+<a class="anchor" id="a86aeb4a2f70fc3d982f49aa196178943"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const cgBezierSpline2::SplinePointArray &amp; cgBezierSpline2::getPoints </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the list of control points.</p>
+
+</div>
+</div>
+<a class="anchor" id="abfd73713959837cb4dbac8f2e7d340c3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp; cgBezierSpline2::getRange </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the minimum and maximum 'range' into which any spline sampling result will be scaled when evaluating the spline using one of the EvaluateMethod::Normalize* evaluation methods. </p>
 
 </div>
 </div>
@@ -513,48 +696,12 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ae5f177efa0bc7d7fb34d9624863bedc8"></a>
+<a class="anchor" id="a096893f4c4e18f34057df0200bb6dc20"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="structcg_bezier_spline2_1_1_spline_point.html">cgBezierSpline2::SplinePoint</a> &amp; cgBezierSpline2::getSplinePoint </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
-          <td class="paramname"><em>nIndex</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the specified control point.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4555a83754b10c945224bacdf12e8726"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structcg_bezier_spline2_1_1_spline_point.html">cgBezierSpline2::SplinePoint</a> &amp; cgBezierSpline2::getSplinePoint </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
-          <td class="paramname"><em>nIndex</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the specified control point.</p>
-
-</div>
-</div>
-<a class="anchor" id="ac562254357cfca48b875aff14a9d3294"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const cgBezierSpline2::SplinePointArray &amp; cgBezierSpline2::getSplinePoints </td>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgBezierSpline2::getVariance </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -562,7 +709,7 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get the list of control points.</p>
+<p>Retrieve the variance scalar that will be used to adjust the spline sampling result when evaluating the spline using one of the EvaluateMethod::*Variance evaluation methods. This value will be used in conjunction with a supplied random value to 'jitter' the result. </p>
 
 </div>
 </div>
@@ -665,12 +812,12 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a11a0841ddd7a1dc6cc629456d10c742b"></a>
+<a class="anchor" id="af23717b448e4597b2f2a87e7c7265fe4"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void cgBezierSpline2::setSplinePoint </td>
+          <td class="memname">void cgBezierSpline2::setPoint </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="cg_base_types_8h.html#a97b16012f7c42f34ea3a09e09da20d26">cgInt32</a>&#160;</td>
           <td class="paramname"><em>nIndex</em>, </td>
@@ -690,6 +837,106 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Update the specified control point.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0d6ec7f3de27058c2481bfd99c43f11b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgBezierSpline2::setRange </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structcg_range_f.html">cgRangeF</a> &amp;&#160;</td>
+          <td class="paramname"><em>range</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the minimum and maximum 'range' into which any spline sampling result will be scaled when evaluating the spline using one of the EvaluateMethod::Normalize* evaluation methods. </p>
+
+</div>
+</div>
+<a class="anchor" id="a0cf7663251e614b6df804cc226b6389e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgBezierSpline2::setRange </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>minimum</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>maximum</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the minimum and maximum 'range' into which any spline sampling result will be scaled when evaluating the spline using one of the EvaluateMethod::Normalize* evaluation methods. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa67e3e52970ba663a139c012708e8390"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgBezierSpline2::setRangeMaximum </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the maximum value of the 'range' into which any spline sampling result will be scaled when evaluating the spline using one of the EvaluateMethod::Normalize* evaluation methods. </p>
+
+</div>
+</div>
+<a class="anchor" id="a406a27d3c905ffa438aca1c97e3385e0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgBezierSpline2::setRangeMinimum </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the minimum value of the 'range' into which any spline sampling result will be scaled when evaluating the spline using one of the EvaluateMethod::Normalize* evaluation methods. </p>
+
+</div>
+</div>
+<a class="anchor" id="a74254f589932e9ad914a3e255f23e53c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cgBezierSpline2::setVariance </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a>&#160;</td>
+          <td class="paramname"><em>variance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the variance scalar that will be used to adjust the spline sampling result when evaluating the spline using one of the EvaluateMethod::*Variance evaluation methods. This value will be used in conjunction with a supplied random value to 'jitter' the result. </p>
 
 </div>
 </div>
@@ -817,6 +1064,26 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ac9907beac061da56e737f989f34de13f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcg_range_f.html">cgRangeF</a> cgBezierSpline2::mRange</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a097247256592ad8d973765f015a96f86"></a>
 <div class="memitem">
 <div class="memproto">
@@ -826,6 +1093,26 @@ Protected Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">bool cgBezierSpline2::mSplineDirty</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a04e9e3568c8a068fa03d58be4e190b70"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> cgBezierSpline2::mVariance</td>
         </tr>
       </table>
   </td>
@@ -847,7 +1134,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_bezier_spline2.html">cgBezierSpline2</a></li>
-    <li class="footer">Generated on Wed May 21 2014 19:31:33 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon Jul 7 2014 04:51:27 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

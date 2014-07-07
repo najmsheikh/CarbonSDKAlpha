@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.18</span>
    </div>
   </td>
  </tr>
@@ -152,6 +152,11 @@ $(document).ready(function(){initNavTree('functions_vars_0x72.html','');});
 </li>
 <li>radius
 : <a class="el" href="classcg_bounding_sphere.html#ada4eb5346a95ae5c8d2d8a2cb14e062d">cgBoundingSphere</a>
+, <a class="el" href="structcg_procedural_tree_generator_1_1_segment.html#abcd3f5e85e52c8888af355e78b64f08c">cgProceduralTreeGenerator::Segment</a>
+, <a class="el" href="classcg_procedural_tree_growth_level.html#a9ee1a2dd359acbe00a75fcd557118346">cgProceduralTreeGrowthLevel</a>
+</li>
+<li>radiusProfile
+: <a class="el" href="classcg_procedural_tree_growth_level.html#a038d07a8bb4dcf5fcc03505cda616621">cgProceduralTreeGrowthLevel</a>
 </li>
 <li>raiseEvent
 : <a class="el" href="structcg_app_state_1_1_method_handles.html#ac69f5ec311e0af94c3fa1877cca832b4">cgAppState::MethodHandles</a>
@@ -190,8 +195,8 @@ $(document).ready(function(){initNavTree('functions_vars_0x72.html','');});
 : <a class="el" href="structcg_render_driver_1_1_export_vars.html#afc61d13f8c94c3712b251e612434b4a2">cgRenderDriver::ExportVars</a>
 </li>
 <li>refreshRate
-: <a class="el" href="structcg_display_mode.html#a275f061e552f23a93ce7cd2721d1ea2d">cgDisplayMode</a>
-, <a class="el" href="structcg_render_driver_config.html#a5be8a28f05359096d7268184f111d2db">cgRenderDriverConfig</a>
+: <a class="el" href="structcg_render_driver_config.html#a5be8a28f05359096d7268184f111d2db">cgRenderDriverConfig</a>
+, <a class="el" href="structcg_display_mode.html#a275f061e552f23a93ce7cd2721d1ea2d">cgDisplayMode</a>
 </li>
 <li>regionMergedSize
 : <a class="el" href="structcg_navigation_mesh_create_params.html#adda213ecad3859882450f6b94f2cbcc5">cgNavigationMeshCreateParams</a>
@@ -261,9 +266,9 @@ $(document).ready(function(){initNavTree('functions_vars_0x72.html','');});
 : <a class="el" href="structcg_texture_pool_1_1_config.html#a2a7e22aa1f10e67320985031990392b3">cgTexturePool::Config</a>
 </li>
 <li>resolutionAdjust
-: <a class="el" href="structcg_shadow_settings_system.html#a980a5262500a64919c0a30bb0fb2fe7c">cgShadowSettingsSystem</a>
-, <a class="el" href="structcg_shadow_settings_light.html#aed47e4f348ebe7b5d33f16dc0b9d95ff">cgShadowSettingsLight</a>
+: <a class="el" href="structcg_shadow_settings_light.html#aed47e4f348ebe7b5d33f16dc0b9d95ff">cgShadowSettingsLight</a>
 , <a class="el" href="structcg_shadow_settings.html#a31383e075efef1b499385b1e2660a67e">cgShadowSettings</a>
+, <a class="el" href="structcg_shadow_settings_system.html#a980a5262500a64919c0a30bb0fb2fe7c">cgShadowSettingsSystem</a>
 </li>
 <li>resolveMaxSpeed
 : <a class="el" href="structcg_antialias_processor_1_1__cb_antialiasing.html#a2210d7a98c507c5aa9e8005138f3bd6a">cgAntialiasProcessor::_cbAntialiasing</a>
@@ -284,8 +289,8 @@ $(document).ready(function(){initNavTree('functions_vars_0x72.html','');});
 : <a class="el" href="structcg_shader_call_function_desc.html#ad738c62ae4bc0c55d6c84ea71fb8109e">cgShaderCallFunctionDesc</a>
 </li>
 <li>right
-: <a class="el" href="structcg_rect_f.html#a09b217c5b5fc0a3284df6c1c3a17a186">cgRectF</a>
-, <a class="el" href="structcg_rect.html#aa12a8516f5d77bed0649515cb8f3130c">cgRect</a>
+: <a class="el" href="structcg_rect.html#aa12a8516f5d77bed0649515cb8f3130c">cgRect</a>
+, <a class="el" href="structcg_rect_f.html#a09b217c5b5fc0a3284df6c1c3a17a186">cgRectF</a>
 </li>
 <li>rim
 : <a class="el" href="structcg_light_node_1_1__cb_light.html#a2dadbc569ee59748e3cf2d9d0b25b2d2">cgLightNode::_cbLight</a>
@@ -307,11 +312,35 @@ $(document).ready(function(){initNavTree('functions_vars_0x72.html','');});
 , <a class="el" href="structcg_shadow_settings_system.html#a48634d460739c2e8723980d96fdf62ba">cgShadowSettingsSystem</a>
 </li>
 <li>rotation
-: <a class="el" href="structcg_landscape_1_1ct_layer_data.html#ad1e1bf809e6379681b4ddd7ae3bc0cce">cgLandscape::ctLayerData</a>
-, <a class="el" href="structcg_landscape_1_1_effect_layer_data.html#aa6539d3c21df771074faa5ac2899b0e7">cgLandscape::EffectLayerData</a>
+: <a class="el" href="structcg_landscape_1_1_effect_layer_data.html#aa6539d3c21df771074faa5ac2899b0e7">cgLandscape::EffectLayerData</a>
+, <a class="el" href="structcg_landscape_1_1ct_layer_data.html#ad1e1bf809e6379681b4ddd7ae3bc0cce">cgLandscape::ctLayerData</a>
 </li>
 <li>rotationController
 : <a class="el" href="structcg_animation_set_1_1_target_data.html#a766f2aeeb4abff6a9bc3979d3220c4c4">cgAnimationSet::TargetData</a>
+</li>
+<li>roughnessFrequencyU
+: <a class="el" href="classcg_procedural_tree_growth_level.html#a088baa1db3940e2fa31e788be72ba6d9">cgProceduralTreeGrowthLevel</a>
+</li>
+<li>roughnessFrequencyV
+: <a class="el" href="classcg_procedural_tree_growth_level.html#a8a3d772bd647ab3386a8e9cca44997c0">cgProceduralTreeGrowthLevel</a>
+</li>
+<li>roughnessGnarl
+: <a class="el" href="classcg_procedural_tree_growth_level.html#a8f239f71017d3c654b81951ca1550930">cgProceduralTreeGrowthLevel</a>
+</li>
+<li>roughnessGnarlProfile
+: <a class="el" href="classcg_procedural_tree_growth_level.html#a2bd8f0feb8639790c7bb11667fcfe46f">cgProceduralTreeGrowthLevel</a>
+</li>
+<li>roughnessGnarlUnison
+: <a class="el" href="classcg_procedural_tree_growth_level.html#a7d4af267eb0baf59f0f066c18acd4ea2">cgProceduralTreeGrowthLevel</a>
+</li>
+<li>roughnessProfile
+: <a class="el" href="classcg_procedural_tree_growth_level.html#accc0c855232dbf6c48b484c20791f1dc">cgProceduralTreeGrowthLevel</a>
+</li>
+<li>roughnessValue
+: <a class="el" href="classcg_procedural_tree_growth_level.html#a15f0474b869cfae977c0e1da1b8b4291">cgProceduralTreeGrowthLevel</a>
+</li>
+<li>roughnessVariance
+: <a class="el" href="classcg_procedural_tree_growth_level.html#a79249c78b8d45699fdeea1a4c4012fc9">cgProceduralTreeGrowthLevel</a>
 </li>
 <li>rows
 : <a class="el" href="structcg_constant_desc.html#a4d4731644328be04160472f6b595a0df">cgConstantDesc</a>
@@ -322,7 +351,7 @@ $(document).ready(function(){initNavTree('functions_vars_0x72.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed May 21 2014 19:31:51 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon Jul 7 2014 04:51:45 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

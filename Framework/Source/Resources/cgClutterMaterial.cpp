@@ -219,19 +219,19 @@ void cgClutterMaterial::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertMaterial.isPrepared() == false )
+        if ( !mInsertMaterial.isPrepared( mWorld ) )
             mInsertMaterial.prepare( mWorld, _T("INSERT INTO 'Materials::Clutter' VALUES(?1,?2,?3,?4)"), true );  
-        if ( mUpdateName.isPrepared() == false )
+        if ( !mUpdateName.isPrepared( mWorld ) )
             mUpdateName.prepare( mWorld, _T("UPDATE 'Materials::Clutter' SET Name=?1 WHERE RefId=?2"), true );  
-        if ( mUpdatePreview.isPrepared() == false )
+        if ( !mUpdatePreview.isPrepared( mWorld ) )
             mUpdatePreview.prepare( mWorld, _T("UPDATE 'Materials::Clutter' SET PreviewImage=?1 WHERE RefId=?2"), true ); 
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadMaterial.isPrepared() == false )
+    if ( !mLoadMaterial.isPrepared( mWorld ) )
         mLoadMaterial.prepare( mWorld, _T("SELECT * FROM 'Materials::Clutter' WHERE RefId=?1"), true );
-    if ( mLoadFoliageLayers.isPrepared() == false )
+    if ( !mLoadFoliageLayers.isPrepared( mWorld ) )
         mLoadFoliageLayers.prepare( mWorld, _T("SELECT LayerId FROM 'Materials::Clutter::FoliageLayers' WHERE MaterialId=?1"), true );
 }
 
@@ -1641,29 +1641,29 @@ void cgFoliageClutterLayer::prepareQueries()
     cgWorld * world = mMaterial->getParentWorld();
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertLayer.isPrepared() == false )
+        if ( !mInsertLayer.isPrepared( world ) )
             mInsertLayer.prepare( world, _T("INSERT INTO 'Materials::Clutter::FoliageLayers' VALUES(NULL,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21)"), true );  
-        if ( mUpdateName.isPrepared() == false )
+        if ( !mUpdateName.isPrepared( world ) )
             mUpdateName.prepare( world, _T("UPDATE 'Materials::Clutter::FoliageLayers' SET Name=?1 WHERE LayerId=?2"), true );  
-        if ( mUpdateSamplers.isPrepared() == false )
+        if ( !mUpdateSamplers.isPrepared( world ) )
             mUpdateSamplers.prepare( world, _T("UPDATE 'Materials::Clutter::FoliageLayers' SET ColorSamplerId=?1, NormalSamplerId=?2 WHERE LayerId=?3"), true );  
-        if ( mUpdateRenderProperties.isPrepared() == false )
+        if ( !mUpdateRenderProperties.isPrepared( world ) )
             mUpdateRenderProperties.prepare( world, _T("UPDATE 'Materials::Clutter::FoliageLayers' SET RenderMethod=?1, AnimationMethod=?2 WHERE LayerId=?3"), true );  
-        if ( mUpdateElementProperties.isPrepared() == false )
+        if ( !mUpdateElementProperties.isPrepared( world ) )
             mUpdateElementProperties.prepare( world, _T("UPDATE 'Materials::Clutter::FoliageLayers' SET MinWidth=?1, MaxWidth=?2, MinHeight=?3, MaxHeight=?4, ClusterElements=?5, ClusterEmbed=?6, ClusterRadius=?7 WHERE LayerId=?8"), true );  
-        if ( mUpdateGrowthProperties.isPrepared() == false )
+        if ( !mUpdateGrowthProperties.isPrepared( world ) )
             mUpdateGrowthProperties.prepare( world, _T("UPDATE 'Materials::Clutter::FoliageLayers' SET GrowthChance=?1, ClusterSeparation=?2, Seed=?3 WHERE LayerId=?4"), true );  
-        if ( mUpdateMaterialProperties.isPrepared() == false )
+        if ( !mUpdateMaterialProperties.isPrepared( world ) )
             mUpdateMaterialProperties.prepare( world, _T("UPDATE 'Materials::Clutter::FoliageLayers' SET Color0=?1, Color1=?2 WHERE LayerId=?3"), true );  
-        if ( mUpdateLODProperties.isPrepared() == false )
+        if ( !mUpdateLODProperties.isPrepared( world ) )
             mUpdateLODProperties.prepare( world, _T("UPDATE 'Materials::Clutter::FoliageLayers' SET FadeBeginDistance=?1, FadeEndDistance=?2 WHERE LayerId=?3"), true );  
-        if ( mDeleteLayer.isPrepared() == false )
+        if ( !mDeleteLayer.isPrepared( world ) )
             mDeleteLayer.prepare( world, _T("DELETE FROM 'Materials::Clutter::FoliageLayers' WHERE LayerId=?1"), true );  
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadLayer.isPrepared() == false )
+    if ( !mLoadLayer.isPrepared( world ) )
         mLoadLayer.prepare( world, _T("SELECT * FROM 'Materials::Clutter::FoliageLayers' WHERE LayerId=?1"), true );
 }
 
@@ -1921,7 +1921,7 @@ bool cgFoliageClutterLayer::loadLayer( cgUInt32 sourceLayerId, bool cloning )
         prepareQueries();
         mLoadLayer.bindParameter( 1, sourceLayerId );
         if ( mLoadLayer.step() == false || mLoadLayer.nextRow() == false )
-            throw cgExceptions::ResultException( _T("Failed to retrieve vegeteation clutter layer data. World database has potentially become corrupt."), cgDebugSource() );
+            throw cgExceptions::ResultException( _T("Failed to retrieve vegetation clutter layer data. World database has potentially become corrupt."), cgDebugSource() );
 
         // Get base properties.
         mLoadLayer.getColumn( _T("Name"), mName );
@@ -2034,6 +2034,22 @@ bool cgFoliageClutterLayer::loadLayer( cgUInt32 sourceLayerId, bool cloning )
 //-----------------------------------------------------------------------------
 void cgFoliageClutterLayer::deleteLayer( )
 {
+    // Remove layer from the database.
+    if ( mDatabaseId != 0 && mMaterial->shouldSerialize() )
+    {
+        prepareQueries();
+        mDeleteLayer.bindParameter( 1, mDatabaseId );
+        if ( !mDeleteLayer.step(true) )
+        {
+            cgString error;
+            mDeleteLayer.getLastError( error );
+            cgAppLog::write( cgAppLog::Error, _T("Failed to delete foliage clutter layer '%s' from the world database for material resource '0x%x'. Error: %s"), mName.c_str(), mMaterial->getReferenceId(), error.c_str() );
+            return;
+        
+        } // End if failed
+    
+    } // End if should remove
+
     // Remove our physical references to any child samplers. Full database update 
     // and potentially removal should be allowed to occur (i.e. a full 
     // de-reference rather than a simple disconnect) in this case.
@@ -2043,14 +2059,6 @@ void cgFoliageClutterLayer::deleteLayer( )
         mNormalSampler->removeReference(CG_NULL,mMaterial->isInternalReference());
     mColorSampler  = CG_NULL;
     mNormalSampler = CG_NULL;
-
-    // Remove layer from the database.
-    if ( mDatabaseId != 0 && mMaterial->shouldSerialize() )
-    {
-        prepareQueries();
-        mDeleteLayer.bindParameter( 1, mDatabaseId );
-    
-    } // End if should remove
 }
 
 //-----------------------------------------------------------------------------

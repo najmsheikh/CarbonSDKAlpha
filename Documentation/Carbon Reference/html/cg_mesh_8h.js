@@ -17,6 +17,10 @@ var cg_mesh_8h =
     [ "WeldKey", "structcg_mesh_1_1_weld_key.html", "structcg_mesh_1_1_weld_key" ],
     [ "BoneCombinationKey", "structcg_mesh_1_1_bone_combination_key.html", "structcg_mesh_1_1_bone_combination_key" ],
     [ "_CGE_CGMESH_H_", "cg_mesh_8h.html#ad2d3e5a0c608da531ab1753599aa38ab", null ],
+    [ "Base", "cg_mesh_8h.html#af8ca5dfc90662588471b2714dc33723b", [
+      [ "None", "cg_mesh_8h.html#af8ca5dfc90662588471b2714dc33723ba787bbcf4e1d7869d6fac529cfd149c8d", null ],
+      [ "Degenerate", "cg_mesh_8h.html#af8ca5dfc90662588471b2714dc33723ba282f02c3d7b548f3bd0b5701e147295b", null ]
+    ] ],
     [ "operator<", "cg_mesh_8h.html#a203e96573ac64679cf1e056474307ed0", null ],
     [ "operator<", "cg_mesh_8h.html#ac308b69afbb931b840926c2d93d985b2", null ],
     [ "operator<", "cg_mesh_8h.html#ac85fce0122aecd58d218765335e31609", null ],

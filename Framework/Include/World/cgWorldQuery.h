@@ -119,6 +119,7 @@ public:
     cgInt32         getLastInsertId ( ) const;
     bool            getLastError    ( ) const;
     bool            getLastError    ( cgString & messageOut ) const;
+    bool            isPrepared      ( cgWorld * world ) const;
     bool            isPrepared      ( ) const;
     cgWorld       * getWorld        ( ) const;
 

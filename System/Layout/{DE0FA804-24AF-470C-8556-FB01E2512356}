@@ -3,17 +3,7 @@
 CREATE TABLE [SceneElements::NavigationMesh] (
   [RefId] integer NOT NULL PRIMARY KEY,
   [EditorName] VARCHAR(128), 
-  [AgentRadius] REAL DEFAULT(0.4), 
-  [AgentHeight] REAL DEFAULT(1.8),
-  [AgentMaxSlope] REAL DEFAULT(45), 
-  [AgentMaxStepHeight] REAL DEFAULT(0.4),
-  [EdgeMaxLength] REAL DEFAULT(12),   
-  [EdgeMaxError] REAL DEFAULT(1.3),  
-  [RegionMinSize] REAL DEFAULT(8),  
-  [RegionMergedSize] REAL DEFAULT(20),  
-  [VertsPerPoly] integer DEFAULT(6),  
-  [DetailSampleDistance] REAL DEFAULT(6),  
-  [DetailSampleMaxError] REAL DEFAULT(1),
+  [DataSourceId] integer DEFAULT 0,
   [SandboxRenderMethod] SMALLINT DEFAULT(0),
   [ManualRebuild] tinyint(1) DEFAULT 0, 
   [RefCount] integer DEFAULT 0);

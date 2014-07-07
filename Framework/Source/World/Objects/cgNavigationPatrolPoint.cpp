@@ -258,13 +258,13 @@ void cgNavigationPatrolPointObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertPatrolPoint.isPrepared() )
+        if ( !mInsertPatrolPoint.isPrepared( mWorld ) )
             mInsertPatrolPoint.prepare( mWorld, _T("INSERT INTO 'Objects::NavigationPatrolPoint' VALUES(?1,?2)"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadPatrolPoint.isPrepared() )
+    if ( !mLoadPatrolPoint.isPrepared( mWorld ) )
         mLoadPatrolPoint.prepare( mWorld, _T("SELECT * FROM 'Objects::NavigationPatrolPoint' WHERE RefId=?1"), true );
 }
 

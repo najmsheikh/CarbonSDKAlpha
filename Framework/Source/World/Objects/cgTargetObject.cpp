@@ -579,15 +579,15 @@ void cgTargetObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertTarget.isPrepared() == false )
+        if ( !mInsertTarget.isPrepared( mWorld ) )
             mInsertTarget.prepare( mWorld, _T("INSERT INTO 'Objects::Target' VALUES(?1,?2,?3)"), true );
-        if ( mUpdateAlignment.isPrepared() == false )
+        if ( !mUpdateAlignment.isPrepared( mWorld ) )
             mUpdateAlignment.prepare( mWorld, _T("UPDATE 'Objects::Target' SET Alignment=?1 WHERE RefId=?2"), true );
 
     } // End if sandbox
 
     // Read queries
-    if ( mLoadTarget.isPrepared() == false )
+    if ( !mLoadTarget.isPrepared( mWorld ) )
         mLoadTarget.prepare( mWorld, _T("SELECT * FROM 'Objects::Target' WHERE RefId=?1"), true );
 }
 

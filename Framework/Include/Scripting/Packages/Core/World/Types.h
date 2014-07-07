@@ -86,9 +86,10 @@ namespace Types
             ///////////////////////////////////////////////////////////////////////
             // cgWorldType (Enum)
             ///////////////////////////////////////////////////////////////////////
-            BINDSUCCESS( engine->registerEnumValue( "WorldType", "Master", cgWorldType::Master ) );
-            BINDSUCCESS( engine->registerEnumValue( "WorldType", "Merge" , cgWorldType::Merge ) );
-            BINDSUCCESS( engine->registerEnumValue( "WorldType", "Data"  , cgWorldType::Data ) );
+            BINDSUCCESS( engine->registerEnumValue( "WorldType", "Master"         , cgWorldType::Master ) );
+            BINDSUCCESS( engine->registerEnumValue( "WorldType", "Merge"          , cgWorldType::Merge ) );
+            BINDSUCCESS( engine->registerEnumValue( "WorldType", "Data"           , cgWorldType::Data ) );
+            BINDSUCCESS( engine->registerEnumValue( "WorldType", "TransientMaster", cgWorldType::TransientMaster ) );
 
             ///////////////////////////////////////////////////////////////////////
             // cgSceneType (Enum)

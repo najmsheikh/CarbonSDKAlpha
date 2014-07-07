@@ -31,6 +31,7 @@
 // Forward Declarations
 //-----------------------------------------------------------------------------
 class  cgNavigationMesh;
+class  cgTerrainBlock;
 struct cgNavigationMeshCreateParams;
 struct rcPolyMesh;
 struct rcPolyMeshDetail;
@@ -50,6 +51,11 @@ class CGE_API cgNavigationTile : public cgScriptInterop::DisposableScriptObject
 {
     DECLARE_SCRIPTOBJECT( cgNavigationTile, "NavigationTile" )
 
+    //-------------------------------------------------------------------------
+    // Friend List
+    //-------------------------------------------------------------------------
+    friend class cgNavigationMesh;
+
 public:
     //-------------------------------------------------------------------------
     // Constructors & Destructors
@@ -63,7 +69,10 @@ public:
     cgNavigationMesh  * getNavigationMesh   ( ) const;
     const cgByteArray & getNavigationData   ( ) const;
     bool                buildTile           ( const cgNavigationMeshCreateParams & params, const cgBoundingBox & tileBounds, cgUInt32 meshCount, cgMeshHandle meshData[], cgTransform meshTransforms[] );
+    bool                buildTile           ( const cgNavigationMeshCreateParams & params, const cgBoundingBox & tileBounds, cgUInt32 meshCount, cgMeshHandle meshData[], cgTransform meshTransforms[], cgUInt32 terrainBlockCount, cgTerrainBlock * blockData[] );
     void                debugDraw           ( cgRenderDriver * driver );
+    bool                serialize           ( cgUInt32 parentId, cgWorld * world );
+    bool                deserialize         ( cgWorldQuery & tileQuery, bool cloning );
     
     //-------------------------------------------------------------------------
     // Public Virtual Methods (Overrides DisposableScriptObject)
@@ -72,9 +81,10 @@ public:
 
 protected:
     //-------------------------------------------------------------------------
-    // Protected Variables
+    // Protected Methods
     //-------------------------------------------------------------------------
     void                buildDebugMeshes    ( cgResourceManager * resources );
+    void                prepareQueries      ( cgWorld * world );
 
     //-------------------------------------------------------------------------
     // Protected Variables
@@ -86,6 +96,13 @@ protected:
     rcPolyMesh        * mPolyMesh;                  // Actual polygon navigation mesh.
     rcPolyMeshDetail  * mDetailMesh;                // Detail mesh.
     cgMeshHandle        mDebugMesh;                 // Renderable version of the mesh used for debug rendering.
+    cgUInt32            mDatabaseId;                // Reference in the database to this tile's data.
+
+    //-------------------------------------------------------------------------
+    // Protected Static Variables
+    //-------------------------------------------------------------------------
+    // Cached database queries.
+    static cgWorldQuery mInsertTile;
 };
 
 #endif // !_CGE_CGNAVIGATIONTILE_H_

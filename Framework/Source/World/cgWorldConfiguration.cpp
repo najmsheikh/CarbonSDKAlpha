@@ -68,9 +68,10 @@ cgWorldQuery cgWorldConfiguration::mDeleteScene;
 cgWorldConfiguration::cgWorldConfiguration( cgWorld * world )
 {
     // Initialize variables to sensible defaults
-    mWorld     = world;
-    mWorldType = cgWorldType::Master;
-    mVersion   = 0;
+    mWorld      = world;
+    mWorldType  = cgWorldType::Master;
+    mVersion    = 0;
+    mIdentifier = cgUID::generateRandom();
 }
 
 //-----------------------------------------------------------------------------
@@ -98,36 +99,36 @@ void cgWorldConfiguration::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertScene.isPrepared() )
+        if ( !mInsertScene.isPrepared( mWorld ) )
             mInsertScene.prepare( mWorld, _T("INSERT INTO 'Scenes' VALUES(NULL,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17)"), true );
-		if ( !mDeleteScene.isPrepared() )
+		if ( !mDeleteScene.isPrepared( mWorld ) )
             mDeleteScene.prepare( mWorld, _T("DELETE FROM 'Scenes' WHERE SceneId=?1"), true );
-        if ( !mUpdateScene.isPrepared() )
+        if ( !mUpdateScene.isPrepared( mWorld ) )
             mUpdateScene.prepare( mWorld, _T("UPDATE 'Scenes' SET Type=?1, FriendlyName=?2, EditorName=?3, Description=?4, Flags=?5, RenderControlScript=?6, DistanceDisplayUnits=?6, ")
                                           _T("BoundsMinX=?8, BoundsMinY=?9, BoundsMinZ=?10, BoundsMaxX=?11, BoundsMaxY=?12, BoundsMaxZ=?13, ")
                                           _T("CellDimensionsX=?14, CellDimensionsY=?15, CellDimensionsZ=?16, LandscapeId=?17 WHERE SceneId=?18"), true );
-        if ( !mInsertObjectType.isPrepared() )
+        if ( !mInsertObjectType.isPrepared( mWorld ) )
             mInsertObjectType.prepare( mWorld, _T("INSERT INTO 'ObjectTypes' VALUES(NULL,?1,?2,?3)"), true );
-        if ( !mInsertObjectSubElementType.isPrepared() )
+        if ( !mInsertObjectSubElementType.isPrepared( mWorld ) )
             mInsertObjectSubElementType.prepare( mWorld, _T("INSERT INTO 'ObjectSubElementTypes' VALUES(NULL,?1,?2,?3)"), true );
-        if ( !mInsertSceneElementType.isPrepared() )
+        if ( !mInsertSceneElementType.isPrepared( mWorld ) )
             mInsertSceneElementType.prepare( mWorld, _T("INSERT INTO 'SceneElementTypes' VALUES(NULL,?1,?2,?3)"), true );
-        if ( !mInsertMaterialProperty.isPrepared() )
+        if ( !mInsertMaterialProperty.isPrepared( mWorld ) )
             mInsertMaterialProperty.prepare( mWorld, _T("INSERT INTO 'Configuration::MaterialProperties' VALUES(NULL,?1,?2,?3,?4)"), true );
-        if ( !mInsertRenderClass.isPrepared() )
+        if ( !mInsertRenderClass.isPrepared( mWorld ) )
             mInsertRenderClass.prepare( mWorld, _T("INSERT INTO 'Configuration::RenderClasses' VALUES(NULL,?1,?2)"), true );
-        if ( !mIncrementNextRefId.isPrepared() )
+        if ( !mIncrementNextRefId.isPrepared( mWorld ) )
             mIncrementNextRefId.prepare( mWorld, _T("SELECT NextRefId FROM 'Configuration' WHERE Type='Primary';")
                                                  _T("UPDATE 'Configuration' SET NextRefId=NextRefId+1 WHERE Type='Primary'"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( !mGetObjectType.isPrepared() )
+    if ( !mGetObjectType.isPrepared( mWorld ) )
         mGetObjectType.prepare( mWorld, _T("SELECT * FROM 'ObjectTypes' WHERE Identifier=?1 LIMIT 1"), true );
-    if ( !mGetObjectSubElementType.isPrepared() )
+    if ( !mGetObjectSubElementType.isPrepared( mWorld ) )
         mGetObjectSubElementType.prepare( mWorld, _T("SELECT * FROM 'ObjectSubElementTypes' WHERE Identifier=?1 LIMIT 1") );
-    if ( !mGetSceneElementType.isPrepared() )
+    if ( !mGetSceneElementType.isPrepared( mWorld ) )
         mGetSceneElementType.prepare( mWorld, _T("SELECT * FROM 'SceneElementTypes' WHERE Identifier=?1 LIMIT 1") );
 }
 
@@ -140,8 +141,9 @@ void cgWorldConfiguration::prepareQueries()
 bool cgWorldConfiguration::newConfiguration( cgWorldType::Base type )
 {
     // Store new world details.
-    mWorldType = type;
-    mVersion  = cgMakeVersion( CGE_WORLD_VERSION, CGE_WORLD_SUBVERSION, CGE_WORLD_REVISION );
+    mWorldType  = type;
+    mVersion    = cgMakeVersion( CGE_WORLD_VERSION, CGE_WORLD_SUBVERSION, CGE_WORLD_REVISION );
+    mIdentifier = cgUID::generateRandom();
 
     // Create the required file configuration row using the defaults.
     cgStringParser queryString;
@@ -153,7 +155,9 @@ bool cgWorldConfiguration::newConfiguration( cgWorldType::Base type )
     queryString << CGE_WORLD_SUBVERSION;
     queryString << _T(",");
     queryString << CGE_WORLD_REVISION;
-    queryString << _T(",1)");
+    queryString << _T(",1,'");
+    queryString << cgStringUtility::toString( mIdentifier, _T("B") );
+    queryString << _T("')");
     if ( !mWorld->executeQuery( queryString.str(), false ) )
         return false;
 
@@ -234,12 +238,15 @@ cgConfigResult::Base cgWorldConfiguration::loadConfiguration( cgUInt32 minSuppor
     } // End if failed.
 
     // Update our local members
+    cgString identifier;
     cgInt32 fileType, version, subversion, revision;
     query.getColumn( _T("FileType"), fileType );
     query.getColumn( _T("Version"), version );
     query.getColumn( _T("Subversion"), subversion );
     query.getColumn( _T("Revision"), revision );
+    query.getColumn( _T("Identifier"), identifier );
     mWorldType = (cgWorldType::Base)fileType;
+    cgStringUtility::tryParse( identifier, mIdentifier );
 
     // We're done with the read data, release it.
     query.reset();
@@ -255,16 +262,17 @@ cgConfigResult::Base cgWorldConfiguration::loadConfiguration( cgUInt32 minSuppor
     mLayoutStatus = cgWorldDatabaseStatus::Valid;
     if ( mVersion < maxSupportedVersion )
     {
+        cgUInt32 newVersion, newSubversion, newRevision;
+        cgDecomposeVersion( maxSupportedVersion, newVersion, newSubversion, newRevision );
+
         // Check to see if a conversion file exists (this indicates that an upgrade is REQUIRED)
-        cgString conversionFile = cgString::format( _T("sys://Layout/Conversion/%x_to_%x.dat"), mVersion, maxSupportedVersion );
+        cgString conversionFile = cgString::format( _T("sys://Layout/Conversion/%i%02i%04i_to_%i%02i%04i.dat"), version, subversion, revision, newVersion, newSubversion, newRevision );
         bool conversionRequired = cgFileSystem::fileExists( cgFileSystem::resolveFileLocation( conversionFile ) );
 
         // Upgrade?
         mLayoutStatus = cgWorldDatabaseStatus::LegacyLayout;
         if ( autoUpgrade && conversionRequired )
         {
-            cgUInt32 newVersion, newSubversion, newRevision;
-            cgDecomposeVersion( maxSupportedVersion, newVersion, newSubversion, newRevision );
             cgAppLog::write( cgAppLog::Info, _T("Attempting to upgrade layout of world database from v%i.%02i.%04i to v%i.%02i.%04i.\n"), 
                              version, subversion, revision, newVersion, newSubversion, newRevision );
 
@@ -965,7 +973,7 @@ cgUInt32 cgWorldConfiguration::insertScene( const cgSceneDescriptor & descriptio
 cgUInt32 cgWorldConfiguration::generateRefId( )
 {
     // Prepare statements if necessary.
-    if ( !mIncrementNextRefId.isPrepared() )
+    if ( !mIncrementNextRefId.isPrepared( mWorld ) )
         prepareQueries();
 
     // First statement retrieves the current 'next' identifier.
@@ -1158,6 +1166,28 @@ bool cgWorldConfiguration::insertSceneElementType( const cgUID & typeIdentifier,
 cgUInt32 cgWorldConfiguration::getSceneCount( ) const
 {
     return (cgUInt32)mSceneDescriptors.size();
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getWorldType ()
+/// <summary>
+/// Retrieve the world type as defined within the world configuration table.
+/// </summary>
+//-----------------------------------------------------------------------------
+cgWorldType::Base cgWorldConfiguration::getWorldType( ) const
+{
+    return mWorldType;
+}
+
+//-----------------------------------------------------------------------------
+//  Name : getWorldIdentifier ()
+/// <summary>
+/// Retrieve the unique identifier that has been assigned to this world.
+/// </summary>
+//-----------------------------------------------------------------------------
+const cgUID & cgWorldConfiguration::getWorldIdentifier( ) const
+{
+    return mIdentifier;
 }
 
 //-----------------------------------------------------------------------------

@@ -29,7 +29,7 @@ var cg_base_8h =
     [ "cgEngineCleanup", "cg_base_8h.html#a41b5d5ae7b136d2585a44af7354eb33c", null ],
     [ "cgEngineInit", "cg_base_8h.html#a77378af04a87c5c678d6adab96242f58", null ],
     [ "cgEngineYield", "cg_base_8h.html#ad16166051a2c81c899c9a2f1ed288ce6", null ],
-    [ "cgFPUDoublePrecision", "cg_base_8h.html#a9b58f88dd329265107f6615ef8690f56", null ],
+    [ "cgFPUDoublePrecision", "cg_base_8h.html#a9bcf5fef05fa1b046e12c19b011c05f8", null ],
     [ "cgFPURestorePrecision", "cg_base_8h.html#ab51e30d50e9f69f5ef9656db893645a8", null ],
     [ "cgGetEngineConfig", "cg_base_8h.html#a8a8f5bb9c966a2df2262c4ad0d8855ac", null ],
     [ "cgGetSandboxMode", "cg_base_8h.html#a10bd2e0ab5f1ed2cd1540dd95b7f5379", null ],

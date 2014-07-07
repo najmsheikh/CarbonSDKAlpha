@@ -424,17 +424,17 @@ void cgSkinObject::prepareQueries()
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         // Prepare the SQL statements as necessary.
-        if ( mInsertSkin.isPrepared() == false )
+        if ( !mInsertSkin.isPrepared( mWorld ) )
             mInsertSkin.prepare( mWorld, _T("INSERT INTO 'Objects::Skin' VALUES(?1,?2,?3,?4,?5,NULL)"), true );
-        if ( mUpdateMeshData.isPrepared() == false )
+        if ( !mUpdateMeshData.isPrepared( mWorld ) )
             mUpdateMeshData.prepare( mWorld, _T("UPDATE 'Objects::Skin' SET DataSourceId=?1 WHERE RefId=?2"), true );
-        if ( mUpdateProcessStages.isPrepared() == false )
+        if ( !mUpdateProcessStages.isPrepared( mWorld ) )
             mUpdateProcessStages.prepare( mWorld, _T("UPDATE 'Objects::Skin' SET LightStage=?1, ShadowCastStage=?2, ShadowReceiveStage=?3 WHERE RefId=?4"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadSkin.isPrepared() == false )
+    if ( !mLoadSkin.isPrepared( mWorld ) )
         mLoadSkin.prepare( mWorld, _T("SELECT * FROM 'Objects::Skin' WHERE RefId=?1"), true );
 }
 
@@ -1151,15 +1151,15 @@ void cgSkinNode::prepareQueries()
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         // Prepare the SQL statements as necessary.
-        if ( !mInsertAttachedBone.isPrepared() )
+        if ( !mInsertAttachedBone.isPrepared( pWorld ) )
             mInsertAttachedBone.prepare( pWorld, _T("INSERT INTO 'Objects::Skin::InstanceData::Bones' VALUES(NULL,?1,?2,?3)"), true );
-        if ( !mDeleteAttachedBones.isPrepared() )
+        if ( !mDeleteAttachedBones.isPrepared( pWorld ) )
             mDeleteAttachedBones.prepare( pWorld, _T("DELETE FROM 'Objects::Skin::InstanceData::Bones' WHERE NodeRefId=?1"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadAttachedBones.isPrepared() )
+    if ( !mLoadAttachedBones.isPrepared( pWorld ) )
         mLoadAttachedBones.prepare( pWorld, _T("SELECT * FROM 'Objects::Skin::InstanceData::Bones' WHERE NodeRefId=?1"), true );
 }
 

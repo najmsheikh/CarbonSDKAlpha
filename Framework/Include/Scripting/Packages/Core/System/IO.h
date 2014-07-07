@@ -26,6 +26,20 @@ namespace IO
         // Member bindings
         void bind( cgScriptEngine * engine )
         {
+            engine->registerGlobalFunction( "String loadStringFromStream( const InputStream &in )", asFUNCTIONPR(cgFileSystem::loadStringFromStream,(const cgInputStream&),cgString), asCALL_CDECL );
+            engine->registerGlobalFunction( "String loadStringFromStream( const String &in )", asFUNCTIONPR(loadStringFromStream,(const cgString&),cgString), asCALL_CDECL );
+        }
+
+        //---------------------------------------------------------------------
+        //  Name : loadStringFromStream ()
+        /// <summary>
+        /// Wrapper around cgFileSystem::loadStringFromStream() that accepts
+        /// a string based filename rather than an input stream.
+        /// </summary>
+        //---------------------------------------------------------------------
+        static cgString loadStringFromStream( const cgString & stream )
+        {
+            return cgFileSystem::loadStringFromStream( stream );
         }
 
     }; // End Class : Package

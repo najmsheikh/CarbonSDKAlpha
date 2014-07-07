@@ -613,10 +613,10 @@ bool cgParticleEmitterObject::onComponentCreated( cgComponentCreatedEventArgs * 
         // Default scale curves
         cgVector2 vPoint( 0.0f, 0.6f ), vOffset;
         vOffset = cgVector2(0.25f,0.70f) - vPoint;
-        properties.scaleXCurve.setSplinePoint( 0, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
+        properties.scaleXCurve.setPoint( 0, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
         vPoint = cgVector2( 1.0f, 1.0f );
         vOffset = vPoint - cgVector2(0.75f,0.90f);
-        properties.scaleXCurve.setSplinePoint( 1, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
+        properties.scaleXCurve.setPoint( 1, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
         properties.scaleYCurve = properties.scaleXCurve;
         
         // Default color curves
@@ -634,7 +634,7 @@ bool cgParticleEmitterObject::onComponentCreated( cgComponentCreatedEventArgs * 
         properties.colorACurve.insertPoint( 2, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
         vPoint = cgVector2(1.0f, 0.0f);
         vOffset = vPoint - cgVector2(0.83728f, 0.43456f);
-        properties.colorACurve.setSplinePoint( 3, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
+        properties.colorACurve.setPoint( 3, cgBezierSpline2::SplinePoint( vPoint - vOffset, vPoint, vPoint + vOffset ) );
 
     } // End if new object
 
@@ -725,7 +725,7 @@ bool cgParticleEmitterObject::insertComponentData( )
             if ( nCurveType == cgBezierSpline2::Custom )
             {
                 mInsertEmitterLayer.bindParameter( 39, properties.scaleXCurve.getPointCount() );
-                mInsertEmitterLayer.bindParameter( 40, &properties.scaleXCurve.getSplinePoints()[0], properties.scaleXCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+                mInsertEmitterLayer.bindParameter( 40, &properties.scaleXCurve.getPoints()[0], properties.scaleXCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
             
             } // End if custom
             else
@@ -739,7 +739,7 @@ bool cgParticleEmitterObject::insertComponentData( )
             if ( nCurveType == cgBezierSpline2::Custom )
             {
                 mInsertEmitterLayer.bindParameter( 42, properties.scaleYCurve.getPointCount() );
-                mInsertEmitterLayer.bindParameter( 43, &properties.scaleYCurve.getSplinePoints()[0], properties.scaleYCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+                mInsertEmitterLayer.bindParameter( 43, &properties.scaleYCurve.getPoints()[0], properties.scaleYCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
             
             } // End if custom
             else
@@ -753,7 +753,7 @@ bool cgParticleEmitterObject::insertComponentData( )
             if ( nCurveType == cgBezierSpline2::Custom )
             {
                 mInsertEmitterLayer.bindParameter( 45, properties.colorRCurve.getPointCount() );
-                mInsertEmitterLayer.bindParameter( 46, &properties.colorRCurve.getSplinePoints()[0], properties.colorRCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+                mInsertEmitterLayer.bindParameter( 46, &properties.colorRCurve.getPoints()[0], properties.colorRCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
             
             } // End if custom
             else
@@ -767,7 +767,7 @@ bool cgParticleEmitterObject::insertComponentData( )
             if ( nCurveType == cgBezierSpline2::Custom )
             {
                 mInsertEmitterLayer.bindParameter( 48, properties.colorGCurve.getPointCount() );
-                mInsertEmitterLayer.bindParameter( 49, &properties.colorGCurve.getSplinePoints()[0], properties.colorGCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+                mInsertEmitterLayer.bindParameter( 49, &properties.colorGCurve.getPoints()[0], properties.colorGCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
             
             } // End if custom
             else
@@ -781,7 +781,7 @@ bool cgParticleEmitterObject::insertComponentData( )
             if ( nCurveType == cgBezierSpline2::Custom )
             {
                 mInsertEmitterLayer.bindParameter( 51, properties.colorBCurve.getPointCount() );
-                mInsertEmitterLayer.bindParameter( 52, &properties.colorBCurve.getSplinePoints()[0], properties.colorBCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+                mInsertEmitterLayer.bindParameter( 52, &properties.colorBCurve.getPoints()[0], properties.colorBCurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
             
             } // End if custom
             else
@@ -795,7 +795,7 @@ bool cgParticleEmitterObject::insertComponentData( )
             if ( nCurveType == cgBezierSpline2::Custom )
             {
                 mInsertEmitterLayer.bindParameter( 54, properties.colorACurve.getPointCount() );
-                mInsertEmitterLayer.bindParameter( 55, &properties.colorACurve.getSplinePoints()[0], properties.colorACurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+                mInsertEmitterLayer.bindParameter( 55, &properties.colorACurve.getPoints()[0], properties.colorACurve.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
             
             } // End if custom
             else
@@ -1105,42 +1105,42 @@ void cgParticleEmitterObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertEmitter.isPrepared() )
+        if ( !mInsertEmitter.isPrepared( mWorld ) )
             mInsertEmitter.prepare( mWorld, _T("INSERT INTO 'Objects::ParticleEmitter' VALUES(?1,?2)"), true );
-        if ( !mInsertEmitterLayer.isPrepared() )
+        if ( !mInsertEmitterLayer.isPrepared( mWorld ) )
             mInsertEmitterLayer.prepare( mWorld, _T("INSERT INTO 'Objects::ParticleEmitter::Layers' VALUES(NULL,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,")
                                                  _T("?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44,?45,")
                                                  _T("?46,?47,?48,?49,?50,?51,?52,?53,?54,?55,?56,?57,?58,?59)"), true );
-        if ( !mDeleteEmitterLayer.isPrepared() )
+        if ( !mDeleteEmitterLayer.isPrepared( mWorld ) )
             mDeleteEmitterLayer.prepare( mWorld, _T("DELETE FROM 'Objects::ParticleEmitter::Layers' WHERE LayerId=?1"), true );
-        if ( !mUpdateConeAngles.isPrepared() )
+        if ( !mUpdateConeAngles.isPrepared( mWorld ) )
             mUpdateConeAngles.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET OuterCone=?1, InnerCone=?2 WHERE LayerId=?3"), true );
-        if ( !mUpdateEmissionRadii.isPrepared() )
+        if ( !mUpdateEmissionRadii.isPrepared( mWorld ) )
             mUpdateEmissionRadii.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET EmissionRadius=?1, DeadZoneRadius=?2 WHERE LayerId=?3"), true );
-        if ( !mUpdateParticleCounts.isPrepared() )
+        if ( !mUpdateParticleCounts.isPrepared( mWorld ) )
             mUpdateParticleCounts.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET MaxSimultaneousParticles=?1, MaxFiredParticles=?2 WHERE LayerId=?3"), true );
-        if ( !mUpdateReleaseProperties.isPrepared() )
+        if ( !mUpdateReleaseProperties.isPrepared( mWorld ) )
             mUpdateReleaseProperties.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET BirthFrequency=?1, RandomizeRotation=?2, EmissionEnabled=?3 WHERE LayerId=?4"), true );
-        if ( !mUpdateRenderingProperties.isPrepared() )
+        if ( !mUpdateRenderingProperties.isPrepared( mWorld ) )
             mUpdateRenderingProperties.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET SortedRender=?1, BlendMethod=?2, HDRScalar=?3, VelocityAligned=?4, VelocityScaleStrength=?5 WHERE LayerId=?6"), true );
-        if ( !mUpdateParticleProperties.isPrepared() )
+        if ( !mUpdateParticleProperties.isPrepared( mWorld ) )
             mUpdateParticleProperties.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET MinSpeed=?1, MaxSpeed=?2, MinMass=?3, MaxMass=?4, MinAngularSpeed=?5,")
                                                        _T("MaxAngularSpeed=?6, MinBaseScale=?7, MaxBaseScale=?8, MinLifetime=?9, MaxLifetime=?10, BaseSizeX=?11,")
                                                        _T("BaseSizeY=?12, AirResistance=?13, ParticleTexture=?14, ApplyGravity=?15 WHERE LayerId=?16"), true );
-        if ( !mUpdateColorKeys.isPrepared() )
+        if ( !mUpdateColorKeys.isPrepared( mWorld ) )
             mUpdateColorKeys.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET ColorRCurveType=?1, ColorRCurveSize=?2, ColorRCurve=?3,")
                                               _T("ColorGCurveType=?4, ColorGCurveSize=?5, ColorGCurve=?6,")
                                               _T("ColorBCurveType=?7, ColorBCurveSize=?8, ColorBCurve=?9,")
                                               _T("ColorACurveType=?10, ColorACurveSize=?11, ColorACurve=?12 WHERE LayerId=?13"), true );
-        if ( !mUpdateScaleKeys.isPrepared() )
+        if ( !mUpdateScaleKeys.isPrepared( mWorld ) )
             mUpdateScaleKeys.prepare( mWorld, _T("UPDATE 'Objects::ParticleEmitter::Layers' SET ScaleXCurveType=?1, ScaleXCurveSize=?2, ScaleXCurve=?3,")
                                               _T("ScaleYCurveType=?4, ScaleYCurveSize=?5, ScaleYCurve=?6 WHERE LayerId=?7"), true );
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadEmitter.isPrepared() )
+    if ( !mLoadEmitter.isPrepared( mWorld ) )
         mLoadEmitter.prepare( mWorld, _T("SELECT * FROM 'Objects::ParticleEmitter' WHERE RefId=?1"), true );
-    if ( !mLoadEmitterLayers.isPrepared() )
+    if ( !mLoadEmitterLayers.isPrepared( mWorld ) )
         mLoadEmitterLayers.prepare( mWorld, _T("SELECT * FROM 'Objects::ParticleEmitter::Layers' WHERE EmitterId=?1 ORDER BY LayerOrder ASC"), true );
 }
 
@@ -2753,7 +2753,7 @@ void cgParticleEmitterObject::setColorCurves( cgUInt32 layerIndex, const cgBezie
         if ( curveType == cgBezierSpline2::Custom )
         {
             mUpdateColorKeys.bindParameter( 2, r.getPointCount() );
-            mUpdateColorKeys.bindParameter( 3, &r.getSplinePoints()[0], r.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+            mUpdateColorKeys.bindParameter( 3, &r.getPoints()[0], r.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
         
         } // End if custom
         else
@@ -2769,7 +2769,7 @@ void cgParticleEmitterObject::setColorCurves( cgUInt32 layerIndex, const cgBezie
         if ( curveType == cgBezierSpline2::Custom )
         {
             mUpdateColorKeys.bindParameter( 5, g.getPointCount() );
-            mUpdateColorKeys.bindParameter( 6, &g.getSplinePoints()[0], g.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+            mUpdateColorKeys.bindParameter( 6, &g.getPoints()[0], g.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
         
         } // End if custom
         else
@@ -2785,7 +2785,7 @@ void cgParticleEmitterObject::setColorCurves( cgUInt32 layerIndex, const cgBezie
         if ( curveType == cgBezierSpline2::Custom )
         {
             mUpdateColorKeys.bindParameter( 8, b.getPointCount() );
-            mUpdateColorKeys.bindParameter( 9, &b.getSplinePoints()[0], b.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+            mUpdateColorKeys.bindParameter( 9, &b.getPoints()[0], b.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
         
         } // End if custom
         else
@@ -2801,7 +2801,7 @@ void cgParticleEmitterObject::setColorCurves( cgUInt32 layerIndex, const cgBezie
         if ( curveType == cgBezierSpline2::Custom )
         {
             mUpdateColorKeys.bindParameter( 11, a.getPointCount() );
-            mUpdateColorKeys.bindParameter( 12, &a.getSplinePoints()[0], a.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+            mUpdateColorKeys.bindParameter( 12, &a.getPoints()[0], a.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
         
         } // End if custom
         else
@@ -2857,7 +2857,7 @@ void cgParticleEmitterObject::setScaleCurves( cgUInt32 layerIndex, const cgBezie
         if ( curveType == cgBezierSpline2::Custom )
         {
             mUpdateScaleKeys.bindParameter( 2, x.getPointCount() );
-            mUpdateScaleKeys.bindParameter( 3, &x.getSplinePoints()[0], x.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+            mUpdateScaleKeys.bindParameter( 3, &x.getPoints()[0], x.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
         
         } // End if custom
         else
@@ -2873,7 +2873,7 @@ void cgParticleEmitterObject::setScaleCurves( cgUInt32 layerIndex, const cgBezie
         if ( curveType == cgBezierSpline2::Custom )
         {
             mUpdateScaleKeys.bindParameter( 5, y.getPointCount() );
-            mUpdateScaleKeys.bindParameter( 6, &y.getSplinePoints()[0], y.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
+            mUpdateScaleKeys.bindParameter( 6, &y.getPoints()[0], y.getPointCount() * sizeof(cgBezierSpline2::SplinePoint) );
         
         } // End if custom
         else

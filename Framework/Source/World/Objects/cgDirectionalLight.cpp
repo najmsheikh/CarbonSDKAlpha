@@ -830,13 +830,13 @@ void cgDirectionalLightObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertDirectionalLight.isPrepared() == false )
+        if ( !mInsertDirectionalLight.isPrepared( mWorld ) )
             mInsertDirectionalLight.prepare( mWorld, _T("INSERT INTO 'Objects::DirectionalLight' VALUES(?1,?2,?3,NULL)"), true );
-        if ( mUpdateSplitOverlap.isPrepared() == false )
+        if ( !mUpdateSplitOverlap.isPrepared( mWorld ) )
             mUpdateSplitOverlap.prepare( mWorld, _T("UPDATE 'Objects::DirectionalLight' SET SplitOverlapSize=?1 WHERE RefId=?2"), true );
-        //if ( mUpdateShadowConfigSources.isPrepared() == false )
+        //if ( !mUpdateShadowConfigSources.isPrepared( mWorld ) )
             //mUpdateShadowConfigSources.prepare( mWorld, _T("UPDATE 'Objects::PointLight' SET ShadowFrustumsLinked=?1 WHERE RefId=?2"), true );
-        if ( mUpdateShadowRate.isPrepared() == false )
+        if ( !mUpdateShadowRate.isPrepared( mWorld ) )
             mUpdateShadowRate.prepare( mWorld, _T("UPDATE 'Objects::DirectionalLight' SET ShadowUpdateRate=?1 WHERE RefId=?2"), true );
 
         // ToDo: 9999 - Shadow Config
@@ -844,7 +844,7 @@ void cgDirectionalLightObject::prepareQueries()
     } // End if sandbox
 
     // Read queries
-    if ( mLoadDirectionalLight.isPrepared() == false )
+    if ( !mLoadDirectionalLight.isPrepared( mWorld ) )
         mLoadDirectionalLight.prepare( mWorld, _T("SELECT * FROM 'Objects::DirectionalLight' WHERE RefId=?1"), true );
 }
 

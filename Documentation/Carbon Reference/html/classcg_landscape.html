@@ -28,7 +28,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Carbon Game Development Toolkit
-   &#160;<span id="projectnumber">Alpha Pre-release v0.8.17</span>
+   &#160;<span id="projectnumber">Alpha Pre-release v0.8.18</span>
    </div>
   </td>
  </tr>
@@ -213,6 +213,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a65fb61bdb613277307f12553f7825a29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ee12694764cc76262c5995868e40a13"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#a0ee12694764cc76262c5995868e40a13">getRayIntersect</a> (const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;origin, const <a class="el" href="classcg_vector3.html">cgVector3</a> &amp;velocity, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> &amp;t, <a class="el" href="cg_base_types_8h.html#ac3b2f4169377d4d32e6c8b62a6b4e68a">cgFloat</a> accuracy) const </td></tr>
 <tr class="separator:a0ee12694764cc76262c5995868e40a13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc8eaddebcbb2e0822d1e57138a5cff0"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#adc8eaddebcbb2e0822d1e57138a5cff0">getBoundingBox</a> () const </td></tr>
+<tr class="memdesc:adc8eaddebcbb2e0822d1e57138a5cff0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the world space bounding box of the landscape as a whole.  <a href="#adc8eaddebcbb2e0822d1e57138a5cff0"></a><br/></td></tr>
+<tr class="separator:adc8eaddebcbb2e0822d1e57138a5cff0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55cfedd760721c178cb5d0c8fbea9a1f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#a55cfedd760721c178cb5d0c8fbea9a1f">getTerrainBlocks</a> (const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;bounds, TerrainBlockArray &amp;blocksOut) const </td></tr>
+<tr class="memdesc:a55cfedd760721c178cb5d0c8fbea9a1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populate the supplied array with a list of all terrain blocks that intersect with the provided bounding box in world space.  <a href="#a55cfedd760721c178cb5d0c8fbea9a1f"></a><br/></td></tr>
+<tr class="separator:a55cfedd760721c178cb5d0c8fbea9a1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4173dc37ee93869593fc163b3d62878"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#ac4173dc37ee93869593fc163b3d62878">updateProceduralLayers</a> (const ProceduralLayerArray &amp;layers)</td></tr>
 <tr class="memdesc:ac4173dc37ee93869593fc163b3d62878"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replace procedural layer list with the newly specified version.  <a href="#ac4173dc37ee93869593fc163b3d62878"></a><br/></td></tr>
 <tr class="separator:ac4173dc37ee93869593fc163b3d62878"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -542,6 +548,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a15d7a133ed078248f55ea00b206c1659"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#ac229bf457208a551a409849daa1ae6b1">cgDepthStencilStateHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#a15d7a133ed078248f55ea00b206c1659">mDepthFillDepthState</a></td></tr>
 <tr class="memdesc:a15d7a133ed078248f55ea00b206c1659"><td class="mdescLeft">&#160;</td><td class="mdescRight">Depth stencil states for terrain depth fill pass. <a href="#a15d7a133ed078248f55ea00b206c1659"></a><br/></td></tr>
 <tr class="separator:a15d7a133ed078248f55ea00b206c1659"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3f43217d24e77802bc3db91c4c1efe8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#ac229bf457208a551a409849daa1ae6b1">cgDepthStencilStateHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#ad3f43217d24e77802bc3db91c4c1efe8">mShadowFillDepthState</a></td></tr>
+<tr class="memdesc:ad3f43217d24e77802bc3db91c4c1efe8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Depth stencil states for terrain shadow fill pass. <a href="#ad3f43217d24e77802bc3db91c4c1efe8"></a><br/></td></tr>
+<tr class="separator:ad3f43217d24e77802bc3db91c4c1efe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae75eaa5ccdc5c207393067b150420c29"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#ac229bf457208a551a409849daa1ae6b1">cgDepthStencilStateHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#ae75eaa5ccdc5c207393067b150420c29">mProceduralDepthState</a></td></tr>
 <tr class="memdesc:ae75eaa5ccdc5c207393067b150420c29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Depth stencil states for terrain procedural layer rendering pass. <a href="#ae75eaa5ccdc5c207393067b150420c29"></a><br/></td></tr>
 <tr class="separator:ae75eaa5ccdc5c207393067b150420c29"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -551,6 +560,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a1a281d06603c17f8a10dad59ca8de02d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#ac229bf457208a551a409849daa1ae6b1">cgDepthStencilStateHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#a1a281d06603c17f8a10dad59ca8de02d">mPostProcessDepthState</a></td></tr>
 <tr class="memdesc:a1a281d06603c17f8a10dad59ca8de02d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Depth stencil states for G-buffer post-processing pass. <a href="#a1a281d06603c17f8a10dad59ca8de02d"></a><br/></td></tr>
 <tr class="separator:a1a281d06603c17f8a10dad59ca8de02d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adedb9268de48251090c8f75eeb29d18d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#a0be152d32d9db55a0389e11b997fc8e1">cgBlendStateHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#adedb9268de48251090c8f75eeb29d18d">mShadowFillNoColorBlendState</a></td></tr>
+<tr class="memdesc:adedb9268de48251090c8f75eeb29d18d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blend states for terrain shadow fill pass in no color write case. <a href="#adedb9268de48251090c8f75eeb29d18d"></a><br/></td></tr>
+<tr class="separator:adedb9268de48251090c8f75eeb29d18d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae971284c0b94b6cd974ac71ced6391d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#a0be152d32d9db55a0389e11b997fc8e1">cgBlendStateHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#ae971284c0b94b6cd974ac71ced6391d8">mProceduralBlendState</a></td></tr>
 <tr class="memdesc:ae971284c0b94b6cd974ac71ced6391d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blend states for terrain procedural layer rendering pass. <a href="#ae971284c0b94b6cd974ac71ced6391d8"></a><br/></td></tr>
 <tr class="separator:ae971284c0b94b6cd974ac71ced6391d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -560,6 +572,12 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a18d66c662999c3e71a4382d63cd308d0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#a0be152d32d9db55a0389e11b997fc8e1">cgBlendStateHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#a18d66c662999c3e71a4382d63cd308d0">mPostProcessBlendState</a></td></tr>
 <tr class="memdesc:a18d66c662999c3e71a4382d63cd308d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blend states for G-buffer post-processing pass. <a href="#a18d66c662999c3e71a4382d63cd308d0"></a><br/></td></tr>
 <tr class="separator:a18d66c662999c3e71a4382d63cd308d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc5dbcf5c1c7339b619407fe57d57d32"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#a6a29cd2d4e44186cdd6252d5be21174b">cgRasterizerStateHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#afc5dbcf5c1c7339b619407fe57d57d32">mShadowFillFrontRastState</a></td></tr>
+<tr class="memdesc:afc5dbcf5c1c7339b619407fe57d57d32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rasterizer states for terrain shadow fill pass in front fill case. <a href="#afc5dbcf5c1c7339b619407fe57d57d32"></a><br/></td></tr>
+<tr class="separator:afc5dbcf5c1c7339b619407fe57d57d32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ebda829df31411eec7289f58790fc61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#a6a29cd2d4e44186cdd6252d5be21174b">cgRasterizerStateHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#a1ebda829df31411eec7289f58790fc61">mShadowFillBackRastState</a></td></tr>
+<tr class="memdesc:a1ebda829df31411eec7289f58790fc61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rasterizer states for terrain shadow fill pass in back fill case. <a href="#a1ebda829df31411eec7289f58790fc61"></a><br/></td></tr>
+<tr class="separator:a1ebda829df31411eec7289f58790fc61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09e42d3c1739c23def6a372a1d873ecc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cg_resource_handles_8h.html#ab97540de7c37a6f14dc75aee9c04dd3f">cgConstantBufferHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcg_landscape.html#a09e42d3c1739c23def6a372a1d873ecc">mTerrainBaseDataBuffer</a></td></tr>
 <tr class="memdesc:a09e42d3c1739c23def6a372a1d873ecc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base terrain rendering shader constant buffer. <a href="#a09e42d3c1739c23def6a372a1d873ecc"></a><br/></td></tr>
 <tr class="separator:a09e42d3c1739c23def6a372a1d873ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1147,6 +1165,23 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="adc8eaddebcbb2e0822d1e57138a5cff0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp; cgLandscape::getBoundingBox </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the world space bounding box of the landscape as a whole. </p>
+
+</div>
+</div>
 <a class="anchor" id="aba6ef8be72dd90d725874fbfb7decbf2"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1468,6 +1503,34 @@ Static Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Retrieve one of the common samplers used to bind layer normal maps to the rendering effect. </p>
+
+</div>
+</div>
+<a class="anchor" id="a55cfedd760721c178cb5d0c8fbea9a1f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cgLandscape::getTerrainBlocks </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcg_bounding_box.html">cgBoundingBox</a> &amp;&#160;</td>
+          <td class="paramname"><em>bounds</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TerrainBlockArray &amp;&#160;</td>
+          <td class="paramname"><em>blocksOut</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Populate the supplied array with a list of all terrain blocks that intersect with the provided bounding box in world space. </p>
 
 </div>
 </div>
@@ -3421,6 +3484,94 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a1ebda829df31411eec7289f58790fc61"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_resource_handles_8h.html#a6a29cd2d4e44186cdd6252d5be21174b">cgRasterizerStateHandle</a> cgLandscape::mShadowFillBackRastState</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Rasterizer states for terrain shadow fill pass in back fill case.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad3f43217d24e77802bc3db91c4c1efe8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_resource_handles_8h.html#ac229bf457208a551a409849daa1ae6b1">cgDepthStencilStateHandle</a> cgLandscape::mShadowFillDepthState</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Depth stencil states for terrain shadow fill pass.</p>
+
+</div>
+</div>
+<a class="anchor" id="afc5dbcf5c1c7339b619407fe57d57d32"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_resource_handles_8h.html#a6a29cd2d4e44186cdd6252d5be21174b">cgRasterizerStateHandle</a> cgLandscape::mShadowFillFrontRastState</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Rasterizer states for terrain shadow fill pass in front fill case.</p>
+
+</div>
+</div>
+<a class="anchor" id="adedb9268de48251090c8f75eeb29d18d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cg_resource_handles_8h.html#a0be152d32d9db55a0389e11b997fc8e1">cgBlendStateHandle</a> cgLandscape::mShadowFillNoColorBlendState</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Blend states for terrain shadow fill pass in no color write case.</p>
+
+</div>
+</div>
 <a class="anchor" id="a09e42d3c1739c23def6a372a1d873ecc"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3713,7 +3864,7 @@ Static Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcg_landscape.html">cgLandscape</a></li>
-    <li class="footer">Generated on Wed May 21 2014 19:31:38 for Carbon Game Development Toolkit by
+    <li class="footer">Generated on Mon Jul 7 2014 04:51:32 for Carbon Game Development Toolkit by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
   </ul>

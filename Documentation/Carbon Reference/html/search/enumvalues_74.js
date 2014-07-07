@@ -46,6 +46,7 @@ var searchData=
   ['transformresolve',['TransformResolve',['../namespacecg_transform_source.html#aa39c63df0b3694bc72e0f5197d24b743acd487d355b91cd3e40bc12a7ce6e5023',1,'cgTransformSource']]],
   ['transforms',['Transforms',['../namespacecg_deferred_update_flags.html#a81978683cf2b0cfa0713cbbb85d46861ae10c09dec0ef1dbdbd14d1c7dd1184c2',1,'cgDeferredUpdateFlags']]],
   ['transient',['Transient',['../namespacecg_node_type.html#adacb2d67e53952e40b969ae12d7fcf9aaf89cc6ca0805003e470aae9d28eeffaa',1,'cgNodeType']]],
+  ['transientmaster',['TransientMaster',['../namespacecg_world_type.html#ae25700bef3e243c265450227a0ceb796ad23568797fc01cb6126da7cc247a1daf',1,'cgWorldType']]],
   ['translucency',['Translucency',['../namespacecg_shadow_method.html#acf7076ff28e0dff7301a6561920d1456a250460bb78f15c23e2276fa7065090c5',1,'cgShadowMethod']]],
   ['translucent',['Translucent',['../classcg_render_driver.html#a277e73b233f4d3d8aec4a7e18b7432dbab421e0cbef34c0dbcdb5086d30f613b2',1,'cgRenderDriver::Translucent()'],['../namespacecg_system_state.html#a5b957e4e2ce6cfb3e220e9eeffeea8c8afb2ed8865ba54483b2f6fbf42e17e4f9',1,'cgSystemState::Translucent()']]],
   ['transmissiondirty',['TransmissionDirty',['../classcg_standard_material.html#a253bc8f6d60c77a6a3754f559ce84a51a37a70b673f0d2aab67f3da9c0a24bd47',1,'cgStandardMaterial']]],

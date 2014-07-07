@@ -5,7 +5,7 @@ var cg_base_8cpp =
     [ "cgEngineCleanup", "cg_base_8cpp.html#a9ce7ba962cc0e8260fb707282cc962e1", null ],
     [ "cgEngineInit", "cg_base_8cpp.html#a57408d318a6919d9f78bb500e37f06e1", null ],
     [ "cgEngineYield", "cg_base_8cpp.html#a50ce6e1b6023748cfffc4ae3f097fd05", null ],
-    [ "cgFPUDoublePrecision", "cg_base_8cpp.html#aab50fa369b9ed69d03770db601321ed6", null ],
+    [ "cgFPUDoublePrecision", "cg_base_8cpp.html#a49333647910ffac22fc978842e9ce71a", null ],
     [ "cgFPURestorePrecision", "cg_base_8cpp.html#a61ab6f5c289fefe889a8415a111d738a", null ],
     [ "cgGetEngineConfig", "cg_base_8cpp.html#af37b8d7693aa13c1d9d0601aa44f71ef", null ],
     [ "cgGetSandboxMode", "cg_base_8cpp.html#a81a2bbb493535659f996080cacf9b916", null ],

@@ -1036,17 +1036,17 @@ void cgSoundEmitterObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertSoundEmitter.isPrepared() == false )
+        if ( !mInsertSoundEmitter.isPrepared( mWorld ) )
             mInsertSoundEmitter.prepare( mWorld, _T("INSERT INTO 'Objects::SoundEmitter' VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?19)"), true );
-        if ( mUpdateProperties.isPrepared() == false )
+        if ( !mUpdateProperties.isPrepared( mWorld ) )
             mUpdateProperties.prepare( mWorld, _T("UPDATE 'Objects::SoundEmitter' SET SourceFile=?1, Streaming=?2, DefaultVolume=?3, AutoPlay=?4, Looping=?5, MuteOutsideRange=?6 WHERE RefId=?7"), true );
-        if ( mUpdateRanges.isPrepared() == false )
+        if ( !mUpdateRanges.isPrepared( mWorld ) )
             mUpdateRanges.prepare( mWorld, _T("UPDATE 'Objects::SoundEmitter' SET OuterRange=?1, InnerRange=?2 WHERE RefId=?3"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadSoundEmitter.isPrepared() == false )
+    if ( !mLoadSoundEmitter.isPrepared( mWorld ) )
         mLoadSoundEmitter.prepare( mWorld, _T("SELECT * FROM 'Objects::SoundEmitter' WHERE RefId=?1"), true );
 }
 

@@ -604,15 +604,15 @@ void cgBillboardObject::prepareQueries()
     /*// Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( mInsertBillboard.isPrepared() == false )
+        if ( !mInsertBillboard.isPrepared( mWorld ) )
             mInsertBillboard.prepare( mWorld, _T("INSERT INTO 'Objects::Billboard' VALUES(?1,?2,?3)"), true );
-        if ( mUpdateSize.isPrepared() == false )
+        if ( !mUpdateSize.isPrepared( mWorld ) )
             mUpdateSize.prepare( mWorld, _T("UPDATE 'Objects::Billboard' SET DisplaySize=?1 WHERE RefId=?2"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadBillboard.isPrepared() == false )
+    if ( !mLoadBillboard.isPrepared( mWorld ) )
         mLoadBillboard.prepare( mWorld, _T("SELECT * FROM 'Objects::Billboard' WHERE RefId=?1"), true );*/
 }
 

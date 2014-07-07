@@ -1,0 +1,17 @@
+--Table: Objects::ProceduralTree -- {61F28388-5F12-4262-84C9-AAD2EB84627B}
+  
+CREATE TABLE [Objects::ProceduralTree] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [DataSourceId] integer,
+  [LightStage] smallint DEFAULT 2,
+  [ShadowCastStage] smallint DEFAULT 2,
+  [ShadowReceiveStage] smallint DEFAULT 2,
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER [Objects::ProceduralTree_OnDelete]
+  BEFORE DELETE
+  ON [Objects::ProceduralTree]
+  BEGIN
+    DELETE FROM [Objects::ProceduralTree::All] WHERE RefId=old.RefId;  
+  END;
+

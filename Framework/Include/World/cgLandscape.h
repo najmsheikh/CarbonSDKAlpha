@@ -226,6 +226,8 @@ public:
     cgVector3                       getHeightMapNormal      ( cgInt32 x, cgInt32 z ) const;
     bool                            getRayIntersect         ( const cgVector3 & origin, const cgVector3 & velocity, cgFloat & t ) const;
     bool                            getRayIntersect         ( const cgVector3 & origin, const cgVector3 & velocity, cgFloat & t, cgFloat accuracy ) const;
+    const cgBoundingBox           & getBoundingBox          ( ) const;
+    bool                            getTerrainBlocks        ( const cgBoundingBox & bounds, TerrainBlockArray & blocksOut ) const;
 
     // Procedural layer management
     void                            updateProceduralLayers  ( const ProceduralLayerArray & layers );
@@ -457,18 +459,26 @@ protected:
     // States
     /// <summary>Depth stencil states for terrain depth fill pass.</summary>
     cgDepthStencilStateHandle       mDepthFillDepthState;
+    /// <summary>Depth stencil states for terrain shadow fill pass.</summary>
+    cgDepthStencilStateHandle       mShadowFillDepthState;
     /// <summary>Depth stencil states for terrain procedural layer rendering pass.</summary>
     cgDepthStencilStateHandle       mProceduralDepthState;
     /// <summary>Depth stencil states for terrain painted layer rendering pass.</summary>
     cgDepthStencilStateHandle       mPaintedDepthState;
     /// <summary>Depth stencil states for G-buffer post-processing pass.</summary>
     cgDepthStencilStateHandle       mPostProcessDepthState;
+    /// <summary>Blend states for terrain shadow fill pass in no color write case.</summary>
+    cgBlendStateHandle              mShadowFillNoColorBlendState;
     /// <summary>Blend states for terrain procedural layer rendering pass.</summary>
     cgBlendStateHandle              mProceduralBlendState;
     /// <summary>Blend states for terrain painted layer rendering pass.</summary>
     cgBlendStateHandle              mPaintedBlendState;
     /// <summary>Blend states for G-buffer post-processing pass.</summary>
     cgBlendStateHandle              mPostProcessBlendState;
+    /// <summary>Rasterizer states for terrain shadow fill pass in front fill case.</summary>
+    cgRasterizerStateHandle         mShadowFillFrontRastState;
+    /// <summary>Rasterizer states for terrain shadow fill pass in back fill case.</summary>
+    cgRasterizerStateHandle         mShadowFillBackRastState;
 
     // Constants
     /// <summary>Base terrain rendering shader constant buffer.</summary>
@@ -624,8 +634,10 @@ public:
     void                    calculateLOD            ( cgCameraNode * camera );
     void                    calculateLOD            ( cgCameraNode * camera, cgFloat terrainDetail );
     void                    calculateLOD            ( cgCameraNode * camera, cgFloat terrainDetail, cgInt32 detailLevelAdjust );
+    cgLandscape           * getLandscape            ( );
     cgVector3               getHeightMapNormal      ( cgInt32 x, cgInt32 z ) const;
     short                   getHeightMapHeight      ( cgInt32 x, cgInt32 z ) const;
+    cgPoint                 getHeightMapOffset      ( ) const;
     cgFloat                 getTerrainHeight        ( cgFloat x, cgFloat z ) const;
     cgFloat                 getTerrainHeight        ( cgFloat x, cgFloat z, bool accountForLOD ) const;
     const cgBoundingBox   & getBoundingBox          ( ) const;

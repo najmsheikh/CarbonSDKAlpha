@@ -250,13 +250,13 @@ void cgNavigationWaypointObject::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertBaseWaypoint.isPrepared() )
+        if ( !mInsertBaseWaypoint.isPrepared( mWorld ) )
             mInsertBaseWaypoint.prepare( mWorld, _T("INSERT INTO 'Objects::Base::NavigationWaypoint' VALUES(?1,?2)"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadBaseWaypoint.isPrepared() )
+    if ( !mLoadBaseWaypoint.isPrepared( mWorld ) )
         mLoadBaseWaypoint.prepare( mWorld, _T("SELECT * FROM 'Objects::Base::NavigationWaypoint' WHERE RefId=?1"), true );
 }
 

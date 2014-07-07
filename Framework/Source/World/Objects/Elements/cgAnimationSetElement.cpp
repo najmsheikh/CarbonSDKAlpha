@@ -431,14 +431,14 @@ void cgAnimationSetElement::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertAnimationSetRef.isPrepared() )
+        if ( !mInsertAnimationSetRef.isPrepared( mWorld ) )
             mInsertAnimationSetRef.prepare( mWorld, _T("INSERT INTO 'ObjectSubElements::AnimationSet' VALUES(?1,?2,?3)"), true );
-        if ( !mUpdateAnimationSetRef.isPrepared() )
+        if ( !mUpdateAnimationSetRef.isPrepared( mWorld ) )
             mUpdateAnimationSetRef.prepare( mWorld, _T("UPDATE 'ObjectSubElements::AnimationSet' SET DataSourceId=?1 WHERE RefId=?2"), true );
         
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadAnimationSetRef.isPrepared() )
+    if ( !mLoadAnimationSetRef.isPrepared( mWorld ) )
         mLoadAnimationSetRef.prepare( mWorld, _T("SELECT * FROM 'ObjectSubElements::AnimationSet' WHERE RefId=?1"), true );
 }

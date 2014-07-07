@@ -56,7 +56,8 @@ var cg_world_types_8h =
     [ "Base", "cg_world_types_8h.html#ae25700bef3e243c265450227a0ceb796", [
       [ "Master", "cg_world_types_8h.html#ae25700bef3e243c265450227a0ceb796ab227bfac303f615dbe65bd5dcfd0c88b", null ],
       [ "Merge", "cg_world_types_8h.html#ae25700bef3e243c265450227a0ceb796a5398a2a673a02cb75b4e170fae43789c", null ],
-      [ "Data", "cg_world_types_8h.html#ae25700bef3e243c265450227a0ceb796a685a9d6a57b7b48dd0303f2c578f9938", null ]
+      [ "Data", "cg_world_types_8h.html#ae25700bef3e243c265450227a0ceb796a685a9d6a57b7b48dd0303f2c578f9938", null ],
+      [ "TransientMaster", "cg_world_types_8h.html#ae25700bef3e243c265450227a0ceb796ad23568797fc01cb6126da7cc247a1daf", null ]
     ] ],
     [ "Base", "cg_world_types_8h.html#aa5a2c78726e22bd70f3b7bc626271a80", [
       [ "Valid", "cg_world_types_8h.html#aa5a2c78726e22bd70f3b7bc626271a80a3a380008bae45aac53952971fdd412c8", null ],

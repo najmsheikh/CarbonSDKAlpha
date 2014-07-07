@@ -1190,17 +1190,17 @@ void cgMeshObject::prepareQueries()
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
         // Prepare the SQL statements as necessary.
-        if ( mInsertMesh.isPrepared() == false )
-            mInsertMesh.prepare( mWorld, _T("INSERT INTO 'Objects::Mesh' VALUES(?1,?2,?3,?4,?5,NULL)"), true );
-        if ( mUpdateMeshData.isPrepared() == false )
+        if ( !mInsertMesh.isPrepared( mWorld ) )
+            mInsertMesh.prepare( mWorld, _T("INSERT INTO 'Objects::Mesh' VALUES(?1,?2,?3,?4,?5,?6)"), true );
+        if ( !mUpdateMeshData.isPrepared( mWorld ) )
             mUpdateMeshData.prepare( mWorld, _T("UPDATE 'Objects::Mesh' SET DataSourceId=?1 WHERE RefId=?2"), true );
-        if ( mUpdateProcessStages.isPrepared() == false )
+        if ( !mUpdateProcessStages.isPrepared( mWorld ) )
             mUpdateProcessStages.prepare( mWorld, _T("UPDATE 'Objects::Mesh' SET LightStage=?1, ShadowCastStage=?2, ShadowReceiveStage=?3 WHERE RefId=?4"), true );
     
     } // End if sandbox
 
     // Read queries
-    if ( mLoadMesh.isPrepared() == false )
+    if ( !mLoadMesh.isPrepared( mWorld ) )
         mLoadMesh.prepare( mWorld, _T("SELECT * FROM 'Objects::Mesh' WHERE RefId=?1"), true );
 }
 

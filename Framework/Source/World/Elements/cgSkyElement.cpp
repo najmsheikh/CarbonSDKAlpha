@@ -294,17 +294,17 @@ void cgSkyElement::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertSkyElement.isPrepared() )
+        if ( !mInsertSkyElement.isPrepared( mWorld ) )
             mInsertSkyElement.prepare( mWorld, _T("INSERT INTO 'SceneElements::Sky' VALUES(?1,?2,?3,?4,?5)"), true );
-        if ( !mUpdateSkyProperties.isPrepared() )
+        if ( !mUpdateSkyProperties.isPrepared( mWorld ) )
             mUpdateSkyProperties.prepare( mWorld, _T("UPDATE 'SceneElements::Sky' SET Type=?1, BaseSamplerId=?2, BaseHDRScalar=?3 WHERE RefId=?4"), true );
-        if ( !mDeleteSkyElement.isPrepared() )
+        if ( !mDeleteSkyElement.isPrepared( mWorld ) )
             mDeleteSkyElement.prepare( mWorld, _T("DELETE FROM 'SceneElements::Sky' WHERE RefId=?1"), true );
         
     } // End if sandbox
 
     // Read queries
-    if ( !mLoadSkyElement.isPrepared() )
+    if ( !mLoadSkyElement.isPrepared( mWorld ) )
         mLoadSkyElement.prepare( mWorld, _T("SELECT * FROM 'SceneElements::Sky' WHERE RefId=?1"), true );
 }
 

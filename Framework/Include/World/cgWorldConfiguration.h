@@ -83,6 +83,8 @@ public:
     cgWorld                                   * getParentWorld                  ( ) const;
     cgUInt32                                    getVersion                      ( ) const;
     cgUInt32                                    getSceneCount                   ( ) const;
+    cgWorldType::Base                           getWorldType                    ( ) const;
+    const cgUID                               & getWorldIdentifier              ( ) const;
     cgWorldDatabaseStatus::Base                 getLayoutStatus                 ( ) const;
     const cgSceneDescriptor                   * getSceneDescriptor              ( cgUInt32 index ) const;
     const cgSceneDescriptor                   * getSceneDescriptorById          ( cgUInt32 sceneId ) const;
@@ -149,6 +151,7 @@ protected:
     cgWorld                           * mWorld;                         // Parent world described by this configuration.
     cgWorldType::Base                   mWorldType;                     // The type of world file opened / being managed.
     cgUInt32                            mVersion;                       // World database version number.
+    cgUID                               mIdentifier;                    // Unique identifier for this world.
     cgWorldDatabaseStatus::Base         mLayoutStatus;                  // Was the database layout upgraded during configuration load?
 
     cgWorldObjectTypeDesc::Map          mObjectTypes;                   // Local copy of the type descriptor map with database specific entries completed.

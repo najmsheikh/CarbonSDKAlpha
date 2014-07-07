@@ -121,7 +121,7 @@ struct cgNavigationMeshCreateParams
     {
         cellSize                 = 0.3f;
 	    cellHeight               = 0.2f;
-        tileCells                = 32;
+        tileCells                = 200;
         agentRadius              = 0.6f;
         agentHeight              = 1.8f;
         agentMaximumSlope        = 45.0f;

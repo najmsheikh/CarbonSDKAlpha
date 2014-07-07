@@ -311,14 +311,14 @@ void cgCollisionShapeElement::prepareQueries()
     // Prepare the SQL statements as necessary.
     if ( cgGetSandboxMode() == cgSandboxMode::Enabled )
     {
-        if ( !mInsertBaseCollisionShape.isPrepared() )
+        if ( !mInsertBaseCollisionShape.isPrepared( mWorld ) )
         {
             cgString sSQL = _T("INSERT INTO 'ObjectSubElements::Base::CollisionShape' VALUES(?1,?2,?3,?4,?5,?6,?7,")
                             _T("?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20)");
             mInsertBaseCollisionShape.prepare( mWorld, sSQL, true );
         
         } // End if !prepared
-        if ( !mUpdateTransformAndBounds.isPrepared() )
+        if ( !mUpdateTransformAndBounds.isPrepared( mWorld ) )
         {
             cgString sSQL= _T("UPDATE 'ObjectSubElements::Base::CollisionShape' SET OffsetPositionX=?1,OffsetPositionY=?2,")
                            _T("OffsetPositionZ=?3,OffsetRotationX=?4,OffsetRotationY=?5,OffsetRotationZ=?6,OffsetRotationW=?7,")
@@ -332,7 +332,7 @@ void cgCollisionShapeElement::prepareQueries()
     } // End if sandbox
 
     // Read queries
-    if ( mLoadBaseCollisionShape.isPrepared() == false )
+    if ( !mLoadBaseCollisionShape.isPrepared( mWorld ) )
         mLoadBaseCollisionShape.prepare( mWorld, _T("SELECT * FROM 'ObjectSubElements::Base::CollisionShape' WHERE RefId=?1"), true );
 }
 
