@@ -1,0 +1,13 @@
+--Table: Objects::CustomDummy -- {7CFB4CFE-4094-488b-80D5-6C03740002D2}
+
+CREATE TABLE [Objects::CustomDummy] (
+  [RefId] integer NOT NULL PRIMARY KEY,
+  [DisplaySize] real DEFAULT 3,
+  [RefCount] integer DEFAULT 0);
+
+CREATE TRIGGER [Objects::CustomDummy_OnDelete]
+  BEFORE DELETE
+  ON [Objects::CustomDummy]
+  BEGIN
+    DELETE FROM [Objects::Base::All] WHERE RefId=old.RefId;  
+  END;

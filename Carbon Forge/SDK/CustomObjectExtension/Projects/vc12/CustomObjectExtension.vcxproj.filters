@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Carbon Object">
+      <UniqueIdentifier>{874189c5-1349-468c-8b12-b7c9ade28d00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Carbon Forge Integration">
+      <UniqueIdentifier>{3470a3d4-91ad-4a11-b0e1-233d7fc24757}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Carbon Object">
+      <UniqueIdentifier>{e24aec4e-9747-4f82-8f33-e92be6add3bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Carbon Forge Integration">
+      <UniqueIdentifier>{57142791-15ea-44ec-bf64-1f425bc8bb65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\AssemblyInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Extension.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\CustomDummy.cpp">
+      <Filter>Source Files\Carbon Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\CustomDummyProperties.cpp">
+      <Filter>Source Files\Carbon Forge Integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ToolCreateCustomDummy.cpp">
+      <Filter>Source Files\Carbon Forge Integration</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Include\Extension.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\CustomDummy.h">
+      <Filter>Header Files\Carbon Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\CustomDummyProperties.h">
+      <Filter>Header Files\Carbon Forge Integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ToolCreateCustomDummy.h">
+      <Filter>Header Files\Carbon Forge Integration</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\Res\Common.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
